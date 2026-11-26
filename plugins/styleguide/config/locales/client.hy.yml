@@ -23,6 +23,9 @@ hy:
           cross_list_primary: "Հիմնական"
         colors:
           title: "Գույներ"
+        design_variables:
+          type: "Տիպ"
+          default: "Լռելյայն"
         icons:
           title: "Պատկերակներ"
         categories:

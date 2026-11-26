@@ -40,12 +40,20 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualizar"
+        columns:
+          user: "Usuario"
+          created: "Creado"
+          status: "Estado"
       copied: "Copiado"
       ai_decoded_transcript:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
       discourse_workflows:
+        ai_tool:
+          list_item: "Elemento da listaxe"
         classify:
           text: "Texto"
           upload_ids: "Imaxes"
@@ -75,12 +83,14 @@ gl:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todas"
           reset: "Restabelecer"
         sentiment:
           enabled: "Activado"
         search:
           name: "Buscar"
+        review_queue:
+          setting_groups:
+            settings: "Configuración"
         image_caption:
           setting_groups:
             settings: "Configuración"
@@ -220,6 +230,25 @@ gl:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporando"
+      concepts:
+        edit: "Editar"
+        delete: "Eliminar"
+        columns:
+          status: "Estado"
+          topics: "Temas"
+          posts: "Publicacións"
+        statuses:
+          active: "Activo"
+        form:
+          name: "Nome"
+          description: "Descrición"
+          status: "Estado"
+        tagged_topics: "Temas etiquetados"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primario"
+          relevance: "Relevancia"
+        primary_badge: "Primario"
       decision_models:
         no_preset: "Ningunha"
         display_name: "Nome"

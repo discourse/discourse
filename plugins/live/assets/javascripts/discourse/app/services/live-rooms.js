@@ -32,14 +32,6 @@ function sortParticipants(participants) {
   });
 }
 
-// Speaking flips several times per utterance, so it lives outside the room
-// payloads: mutating one tracked flag re-renders only the bindings that read
-// it, instead of invalidating `rooms` and rebuilding every sidebar link and
-// tile on each flip.
-class ParticipantSpeakingState {
-  @tracked speaking = false;
-}
-
 export default class LiveRoomsService extends Service {
   @service currentUser;
   @service messageBus;
@@ -53,6 +45,10 @@ export default class LiveRoomsService extends Service {
   #roomsBySlug = new Map();
   #roomSubscriptions = new Map();
   #roomHandlers = new Map();
+  // Speaking flips several times per utterance, so it lives outside the room
+  // payloads: flipping one tracked flag re-renders only the bindings that read
+  // it, instead of invalidating `rooms` and rebuilding every sidebar link and
+  // tile on each flip.
   #speakingByKey = new Map();
 
   constructor() {
@@ -156,7 +152,11 @@ export default class LiveRoomsService extends Service {
       return;
     }
 
-    if (payload.type === "participants") {
+    if (payload.type === "chat_disabled") {
+      room.chat_available = false;
+      room.chat_channel_id = null;
+      this.rooms = [...this.rooms];
+    } else if (payload.type === "participants") {
       this.#setRoomParticipants(room.id, payload.participants || []);
     } else if (payload.type === "role_change") {
       this.setParticipantRole(payload.room_id, payload.user_id, payload.role);
@@ -166,6 +166,20 @@ export default class LiveRoomsService extends Service {
         payload.user_id,
         payload.raised ? payload.raised_at : null
       );
+    } else if (payload.type === "speak_invitation") {
+      this.setParticipantSpeakInvitation(
+        payload.room_id,
+        payload.user_id,
+        payload.invited
+          ? {
+              invited_at: payload.invited_at,
+              inviter_username: payload.inviter_username,
+              inviter_id: payload.inviter_id,
+            }
+          : null
+      );
+    } else if (payload.type === "force_mute") {
+      this.setParticipantMuted(payload.room_id, payload.user_id, true);
     } else if (payload.type === "recording") {
       this.setRoomRecording(payload.room_id, payload.recording);
     } else if (payload.type === "ringing") {
@@ -229,14 +243,11 @@ export default class LiveRoomsService extends Service {
   }
 
   isParticipantSpeaking(roomId, userId) {
-    return this.#speakingState(roomId, userId).speaking;
+    return this.#speakingState(roomId, userId).value;
   }
 
   setParticipantSpeaking(roomId, userId, speaking) {
-    const state = this.#speakingState(roomId, userId);
-    if (state.speaking !== !!speaking) {
-      state.speaking = !!speaking;
-    }
+    this.#speakingState(roomId, userId).value = !!speaking;
   }
 
   setParticipantMuted(roomId, userId, muted) {
@@ -415,6 +426,43 @@ export default class LiveRoomsService extends Service {
     }
   }
 
+  setParticipantSpeakInvitation(roomId, userId, invitation) {
+    const targetId = Number(userId);
+    if (!targetId) {
+      return;
+    }
+
+    const room = this.#roomsById.get(roomId);
+    if (!room || !Array.isArray(room.active_participants)) {
+      return;
+    }
+
+    let changed = false;
+    room.active_participants = room.active_participants.map((participant) => {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId !== targetId) {
+        return participant;
+      }
+
+      changed = true;
+      const updated = { ...participant };
+      if (invitation) {
+        updated.speak_invited_at = invitation.invited_at;
+        updated.speak_invited_by = invitation.inviter_username;
+        updated.speak_invited_by_id = invitation.inviter_id;
+      } else {
+        delete updated.speak_invited_at;
+        delete updated.speak_invited_by;
+        delete updated.speak_invited_by_id;
+      }
+      return updated;
+    });
+
+    if (changed) {
+      this.rooms = [...this.rooms];
+    }
+  }
+
   setParticipantDeafened(roomId, userId, deafened) {
     const targetId = Number(userId);
     if (!targetId) {
@@ -529,7 +577,7 @@ export default class LiveRoomsService extends Service {
     const key = `${roomId}:${Number(userId)}`;
     let state = this.#speakingByKey.get(key);
     if (!state) {
-      state = new ParticipantSpeakingState();
+      state = tracked(false);
       this.#speakingByKey.set(key, state);
     }
     return state;

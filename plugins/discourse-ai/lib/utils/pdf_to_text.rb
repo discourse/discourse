@@ -49,12 +49,7 @@ class DiscourseAi::Utils::PdfToText
   end
 
   def extract_text
-    pdf_path =
-      if upload.local?
-        Discourse.store.path_for(upload)
-      else
-        Discourse.store.download(upload, max_file_size_kb: MAX_PDF_SIZE)
-      end
+    pdf_path = Discourse.store.download(upload, max_file_size_kb: MAX_PDF_SIZE)
 
     raise Discourse::InvalidParameters.new("Failed to download PDF") if pdf_path.nil?
 

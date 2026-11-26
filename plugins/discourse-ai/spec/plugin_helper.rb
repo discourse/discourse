@@ -35,6 +35,22 @@ module DiscourseAi::ChatBotHelper
   end
 end
 
+RSpec.shared_context "with AI bot enabled" do
+  # Provision the built-in agents' users once, inside the group's transaction.
+  # Per-example activation still provisions any agents created by the example's fixtures.
+  if respond_to?(:before_all)
+    before_all do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_bot_enabled = true
+    end
+  end
+
+  before do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_bot_enabled = true
+  end
+end
+
 RSpec.configure do |config|
   config.include DiscourseAi::ChatBotHelper
   config.before { AiAgent.agent_cache.flush! }

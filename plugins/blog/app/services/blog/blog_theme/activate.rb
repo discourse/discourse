@@ -7,15 +7,18 @@ class Blog::BlogTheme::Activate
   params do
     attribute :theme_id, :string
     attribute :revision, :integer
+    attribute :blog_id, :integer
 
     validates :theme_id, :revision, presence: true
   end
 
   policy :can_manage_themes
+  model :blog
 
   lock do
     transaction do
       model :theme
+      policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
       policy :revision_is_current, class_name: Blog::BlogTheme::Policy::RevisionIsCurrent
       model :active_theme, :activate_theme
       step :prune_snapshots
@@ -29,12 +32,17 @@ class Blog::BlogTheme::Activate
     guardian.is_admin?
   end
 
+  def fetch_blog(params:)
+    return Blog::Instance.find_cached(params.blog_id) if params.blog_id
+    Blog::Instance.default_blog
+  end
+
   def fetch_theme(params:)
     Blog::ThemePresets.find(params.theme_id) || Blog::BlogTheme.find_and_lock(params.theme_id)
   end
 
-  def activate_theme(theme:)
-    Blog::BlogTheme.activate(theme)
+  def activate_theme(theme:, blog:)
+    Blog::BlogTheme.activate(theme, blog)
   end
 
   def prune_snapshots

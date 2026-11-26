@@ -402,11 +402,6 @@ sv:
   too_many_mentions_newuser:
     one: "Tyvärr kan besökare bara nämna en annan användare i ett inlägg."
     other: "Tyvärr kan besökare bara nämna %{count} användare i ett inlägg."
-  no_embedded_media_allowed_group: "Tyvärr kan du inte bädda in media i ett inlägg."
-  no_embedded_media_allowed: "Tyvärr kan nya användare inte bädda in media i inlägg."
-  too_many_embedded_media:
-    one: "Tyvärr kan nya användare bara lägga in ett enda inbäddat medieobjekt i ett inlägg."
-    other: "Tyvärr kan nya användare bara lägga in %{count} inbäddade medieobjekt i ett inlägg."
   no_attachments_allowed: "Tyvärr kan nya användare inte bifoga filer till inlägg."
   too_many_attachments:
     one: "Tyvärr kan nya användare bara bifoga en fil till ett inlägg."
@@ -2101,6 +2096,10 @@ sv:
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
+    keywords:
+      company_url: "webbplats"
+      logo: "primär logotyp"
+      title: "forumets namn"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2477,20 +2476,6 @@ sv:
     post_hidden:
       title: "Inlägget dolt"
       subject_template: "Inlägg dolt på grund av att det flaggats av forumets medlemmar"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. Tänk på hur du kan ändra ditt meddelande för att reflektera deras respons. **Du kan redigera ditt meddelande efter %{edit_delay} minuter, då kommer det automatiskt att visas igen.**
-
-        Däremot, om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det fortsatt att döljas tills det har hanterats av personal.
-
-        För ytterligare information, se våra [forumriktlinjer](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Feedback om ditt inlägg"
       subject_template: "Feedback på ditt inlägg i %{topic_title}"
@@ -2500,31 +2485,9 @@ sv:
     post_hidden_again:
       title: "Inlägget dolt igen"
       subject_template: "Inlägget döljdes på grund av att det flaggats av forumets medlemmar, personal har aviserats"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts på nytt.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. **Eftersom ditt inlägg har dolts mer än en gång kommer det att förbli dolt tills ärendet har hanterats av personalen.**
-
-        För ytterligare information, se våra [gemensamma riktlinjer](%{base_url}/guidelines).
     queued_by_staff:
       title: "Inlägget måste godkännas"
       subject_template: "Inlägg dolt av personalen i väntan på godkännande"
-      text_body_template: |
-        Hej,
-
-        Detta är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt inlägg är dolt.
-
-        <%{base_url}%{url}>
-
-        Ditt inlägg förblir dolt tills personalen kan granska det.
-
-        För mer information, se våra [forumriktlinjer](%{base_url}/guidelines).
     flags_disagreed:
       title: "Flaggat inlägg återställt av personal"
       subject_template: "Flaggat inlägg återställt av personal"
@@ -3182,12 +3145,6 @@ sv:
     account_suspended_forever:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-    account_silenced:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
-    account_silenced_forever:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"
@@ -3315,10 +3272,6 @@ sv:
     signup_after_reject:
       title: "Registrering efter avslag"
       subject_template: "Du har avvisats på %{site_name}"
-      text_body_template: |
-        Personal avvisade ditt konto på %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Bli medlem"
       subject_template: "%{email_prefix} Bekräfta ditt nya konto"
@@ -3769,7 +3722,6 @@ sv:
       dracula: "Dracula"
       grey_amber: "Grå bärnsten"
       latte: "Latte"
-      dark_rose: "Mörk ros"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -3900,6 +3852,10 @@ sv:
       links:
         category: kategori inställningar
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_keep:
@@ -3936,6 +3892,7 @@ sv:
       delete_and_agree_replies:
         title: "Radera inlägg och svar"
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
+        confirm_title: "Radera inlägg och svar?"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
         title: "Återställ inlägg"
@@ -3961,6 +3918,8 @@ sv:
       approve_post:
         title: "Ja"
         complete: "Inlägget godkändes."
+      deny_and_delete_post:
+        complete: "Inlägg raderat."
       approve_post_closed:
         title: "Ja"
         confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"

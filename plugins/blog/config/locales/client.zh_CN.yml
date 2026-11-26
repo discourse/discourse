@@ -27,7 +27,6 @@ zh_CN:
         go_to_editor: 前往编辑器
         open_blog: 打开博客
         safe_mode: 无需自定义代码即可打开
-        identity: 博客标识
         blog_title: 博客名称
         tagline: 标语
         accent: 强调色
@@ -75,7 +74,17 @@ zh_CN:
         js: 自定义 JavaScript
         js_description: 纯 JavaScript，最多 65,536 字节。脚本标签不会被解析——要加载另一个脚本，请添加一个脚本元素（document.createElement("script")）。
         save: 保存
-        identity_tab: 身份
+        about_tab: 关于
+        blog_slug: 缩略名
+        general_heading: 常规
+        settings_tab: 设置
+        theme_tab: 主题
+        published_status: 已发布
+        column_name: 名称
+        column_category: 类别
+        column_status: 状态
+        needs_attention: 需要关注
+        select_theme: 选择主题
         path_formats:
           custom: 自定义
         themes_index_description: 选择读者看到的界面设计。您可以自定义内置主题或编辑自己的主题；更改在您激活之前都将保持私密状态。
@@ -190,6 +199,7 @@ zh_CN:
           body: 正文
           path: 路径
           excerpt: 摘录
+          cover: 封面图片
           featured: 精选标签
           tags: 标签
           published_at: 发布日期
@@ -197,7 +207,6 @@ zh_CN:
         hide_diff: 隐藏差异
         diff_error: 更改幅度过大，无法以差异比较的形式显示。请改用预览功能。
         settings: 文章设置
-        settings_hint: 路径、摘录、日期、特色
         feedback:
           none: 目前还没有私人反馈
           show: 显示反馈
@@ -268,11 +277,12 @@ zh_CN:
       editor_title: 博客编辑器
       editor_description: 草稿在您发布之前始终保持私密状态。您可以编辑文章以发布、安排发布时间或进行更正。
       editor_table:
-        article: 文章
+        blog: 博客
         edit: 编辑
         status: 状态
         published: 已发布
         replies: 回复
+        title: 标题
         edits_pending: 待编辑
         edits_need_approval: 修改需要审批
         more_actions: 更多操作
@@ -280,18 +290,24 @@ zh_CN:
         view_on_blog: 在博客上查看
       new_draft: 新草稿
       settings: 配置博客设置
-      all: 所有文章
+      all: 所有
       drafts: 草稿
       published: 已发布
       visit_blog: 访问博客
       public_discussion: 公开讨论
       not_published: 博客上没有
+      pages: 页面
       preview: 预览
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
+      blog_field: 博客
       path: 文章路径
       excerpt: 摘录
       excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
+      cover: 封面图片
+      cover_hint: 显示在文章上方，用于文章卡片和链接预览。留空则使用文章中的第一张图片。
+      cover_alt: 封面图片的替代文本
+      cover_alt_hint: 为无法看到封面图片的人描述该图片。
       date: 发布日期
       date_hint: 留空则使用首次发布时间。对于导入的文章，请选择过去的日期。日期采用 UTC 时间。
       featured: 首页专题

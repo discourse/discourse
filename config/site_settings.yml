@@ -155,12 +155,6 @@ required:
   company_url:
     default: ""
     area: "about|legal"
-  governing_law:
-    default: ""
-    area: "about|legal"
-  city_for_disputes:
-    default: ""
-    area: "about|legal"
 
 branding:
   logo:
@@ -388,7 +382,7 @@ basic:
   desktop_category_page_style:
     client: true
     enum: "CategoryPageStyle"
-    default: "categories_and_latest_topics"
+    default: "categories_boxes"
     area: "categories|interface"
   mobile_category_page_style:
     client: true
@@ -1243,10 +1237,16 @@ users:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   hide_silencing_reasons:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   log_personal_messages_views:
     default: false
     area: "users"
@@ -4316,9 +4316,6 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
-  concord_in_wizard:
-    default: true
-    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4834,7 +4831,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
@@ -4881,7 +4878,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
@@ -5067,6 +5064,17 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/416547"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
   update_whispers_allowed_groups_default:
     default: false
     hidden: true
@@ -5086,3 +5094,11 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413150"
+  mobile_footer_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/417307"

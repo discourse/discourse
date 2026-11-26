@@ -19,16 +19,16 @@ RSpec.describe HeatSettingsUpdater do
     end
 
     context "with low activity" do
-      let!(:hottest_topic1) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
-      let!(:hottest_topic2) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
-      let!(:warm_topic1) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
-      let!(:warm_topic2) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
-      let!(:warm_topic3) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
-      let!(:lukewarm_topic1) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
-      let!(:lukewarm_topic2) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
-      let!(:lukewarm_topic3) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
-      let!(:lukewarm_topic4) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
-      let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 10, like_count: 0) }
+      fab!(:hottest_topic1) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
+      fab!(:hottest_topic2) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
+      fab!(:warm_topic1) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
+      fab!(:warm_topic2) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
+      fab!(:warm_topic3) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
+      fab!(:lukewarm_topic1) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
+      fab!(:lukewarm_topic2) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
+      fab!(:lukewarm_topic3) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
+      fab!(:lukewarm_topic4) { Fabricate(:topic, views: 800, posts_count: 10, like_count: 0) }
+      fab!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 10, like_count: 0) }
 
       it "doesn't make settings lower than defaults" do
         expect { update_settings }.to_not change { UserHistory.count }
@@ -64,16 +64,16 @@ RSpec.describe HeatSettingsUpdater do
     end
 
     context "with increased activity" do
-      let!(:hottest_topic1) { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230) }
-      let!(:hottest_topic2) { Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220) }
-      let!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126) }
-      let!(:warm_topic2) { Fabricate(:topic, views: 4010, posts_count: 99, like_count: 116) }
-      let!(:warm_topic3) { Fabricate(:topic, views: 4005, posts_count: 99, like_count: 106) }
-      let!(:lukewarm_topic1) { Fabricate(:topic, views: 2040, posts_count: 99, like_count: 84) }
-      let!(:lukewarm_topic2) { Fabricate(:topic, views: 2030, posts_count: 99, like_count: 74) }
-      let!(:lukewarm_topic3) { Fabricate(:topic, views: 2020, posts_count: 99, like_count: 64) }
-      let!(:lukewarm_topic4) { Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54) }
-      let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 100, like_count: 1) }
+      fab!(:hottest_topic1) { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230) }
+      fab!(:hottest_topic2) { Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220) }
+      fab!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126) }
+      fab!(:warm_topic2) { Fabricate(:topic, views: 4010, posts_count: 99, like_count: 116) }
+      fab!(:warm_topic3) { Fabricate(:topic, views: 4005, posts_count: 99, like_count: 106) }
+      fab!(:lukewarm_topic1) { Fabricate(:topic, views: 2040, posts_count: 99, like_count: 84) }
+      fab!(:lukewarm_topic2) { Fabricate(:topic, views: 2030, posts_count: 99, like_count: 74) }
+      fab!(:lukewarm_topic3) { Fabricate(:topic, views: 2020, posts_count: 99, like_count: 64) }
+      fab!(:lukewarm_topic4) { Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54) }
+      fab!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 100, like_count: 1) }
 
       it "changes settings when difference is significant" do
         expect { update_settings }.to change { UserHistory.count }.by(6)

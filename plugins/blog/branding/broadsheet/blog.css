@@ -159,6 +159,15 @@
   text-align: center;
 }
 
+.broadsheet__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .broadsheet__masthead .broadsheet__kicker {
   justify-content: center;
 }
@@ -464,6 +473,16 @@
 .broadsheet__article-header {
   margin-bottom: 48px;
   text-align: center;
+}
+
+.broadsheet__article-cover {
+  margin: 0 0 48px;
+}
+
+.broadsheet__article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .broadsheet__article-header .broadsheet__kicker {

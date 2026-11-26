@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import {
   click,
@@ -486,6 +487,38 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await click(".fk-d-tooltip__trigger");
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("component");
+  });
+
+  test("removeError", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @type="custom" as |field|>
+            <button
+              class="add-error"
+              type="button"
+              {{on
+                "click"
+                (fn field.addError "foo" (hash title="Foo" message="Bad"))
+              }}
+            ></button>
+            <button
+              class="remove-error"
+              type="button"
+              {{on "click" field.removeError}}
+            ></button>
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    await click(".add-error");
+
+    assert.form().field("foo").hasError("Bad");
+
+    await click(".remove-error");
+
+    assert.form().field("foo").hasNoErrors();
   });
 
   test("legacy yield does not rerender input on keystroke", async function (assert) {

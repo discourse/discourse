@@ -4,9 +4,12 @@ module ::Blog
   class ArticlesController < ::ApplicationController
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
+    THEME_ASSET_ACTIONS = %w[theme_css theme_js highlight_js]
+
     skip_before_action :check_xhr, :preload_json
     # These assets contain public code, never session data.
     skip_before_action :verify_authenticity_token, only: %i[theme_js highlight_js]
+    before_action :load_blog
     before_action :ensure_public_blog
     before_action :load_blog_theme, except: :highlight_js
     layout "blog"
@@ -16,7 +19,7 @@ module ::Blog
     rescue_from ActiveRecord::RecordNotFound, Discourse::NotFound do
       @page_title = I18n.t("blog.not_found_title")
       @description = I18n.t("blog.not_found_body")
-      @canonical_url = "#{Configuration.base_url}#{blog_path}"
+      @canonical_url = "#{Configuration.base_url(@blog)}#{blog_path}"
       @template_variables = template_variables
       response.headers["Cache-Control"] = "private, no-store"
       response.headers["X-Robots-Tag"] = "noindex"
@@ -25,12 +28,22 @@ module ::Blog
 
     def index
       Article::List.call(
-        service_params.deep_merge(params: { query: params[:q], tag_slug: params[:tag] }),
+        service_params.deep_merge(
+          params: {
+            blog_id: @blog.id,
+            query: params[:q],
+            tag_slug: params[:tag],
+            author_username: params[:username],
+          },
+        ),
       ) do
-        on_success do |params:, tag:, listing:|
+        on_success do |params:, tag:, author:, listing:|
           @archive = params.archive
-          @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
-          @canonical_url = "#{Configuration.base_url}#{blog_path}"
+          @page_title =
+            tag&.name || (author && Revision.author_name(author)) ||
+              (@archive ? I18n.t("blog.archive") : @blog.name)
+          @canonical_url =
+            "#{Configuration.base_url(@blog)}#{author ? Revision.author_path(author) : blog_path}"
           @canonical_url += "?page=#{params.page}" if params.page > 1
           @template_variables =
             template_variables(
@@ -40,6 +53,7 @@ module ::Blog
               query: params.query,
               archive: @archive,
               tag:,
+              author:,
             )
           @description = @template_variables.description
           response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
@@ -49,7 +63,9 @@ module ::Blog
     end
 
     def show
-      Article::Find.call(service_params.deep_merge(params: { path: blog_path })) do
+      Article::Find.call(
+        service_params.deep_merge(params: { blog_id: @blog.id, path: blog_path }),
+      ) do
         on_success do |publication:|
           @topic = publication.discussion_topic
           @page_title = publication.article.title
@@ -70,8 +86,8 @@ module ::Blog
 
     def about
       @page_title = I18n.t("blog.about")
-      @description = SiteSetting.blog_description
-      @canonical_url = "#{Configuration.base_url}/about"
+      @description = @blog.description
+      @canonical_url = "#{Configuration.base_url(@blog)}/about"
       @template_variables = template_variables
     end
 
@@ -79,6 +95,8 @@ module ::Blog
       @publications =
         Publication
           .publicly_visible
+          .where(blog_id: @blog.id)
+          .articles
           .newest
           .limit(30)
           .includes(:published_revision, discussion_topic: %i[first_post user])
@@ -89,7 +107,7 @@ module ::Blog
       @publications =
         Publication
           .publicly_visible
-          .where(canonical_url: "")
+          .where(blog_id: @blog.id, canonical_url: "")
           .newest
           .limit(50_000)
           .includes(:published_revision, discussion_topic: :first_post)
@@ -125,7 +143,8 @@ module ::Blog
     end
 
     def robots
-      render plain: "User-agent: *\nAllow: /\nSitemap: #{Configuration.base_url}/sitemap.xml\n"
+      render plain:
+               "User-agent: *\nAllow: /\nSitemap: #{Configuration.base_url(@blog)}/sitemap.xml\n"
     end
 
     private
@@ -144,11 +163,12 @@ module ::Blog
     end
 
     def blog_path
-      @blog_path ||= Configuration.relative_path(request)
+      @blog_path ||= Configuration.relative_path(request, @blog)
     end
 
     def template_variables(**variables)
       TemplateVariables.new(
+        blog: @blog,
         title: @page_title,
         preview_token: @theme_preview_token,
         path: blog_path,
@@ -175,12 +195,29 @@ module ::Blog
       elsif %w[theme_css theme_js].include?(action_name) && params[:blog_theme_snapshot].present?
         @blog_theme = BlogTheme.snapshot(params[:blog_theme_snapshot])
       else
-        @blog_theme = BlogTheme.active
+        @blog_theme = BlogTheme.active_for(@blog)
       end
     end
 
+    # The forum homepage can show the default blog, outside its path.
+    def load_blog
+      @blog = Configuration.blog_for(request) || Instance.default_blog
+    end
+
+    # Draft previews and reviews of an unpublished blog still load its theme assets,
+    # which name nothing. Readers get the main blog's not-found page.
+    def hide_unpublished_blog
+      return if THEME_ASSET_ACTIONS.include?(action_name)
+      @blog = Instance.default_blog
+      raise Discourse::NotFound
+    end
+
     def ensure_public_blog
-      raise Discourse::NotFound unless Configuration.blog_request?(request)
+      raise Discourse::NotFound unless Configuration.blog_request?(request, @blog)
+      # A blog is themed before it is published, through preview links made for it.
+      if !@blog.published? && !ThemePreview.for_blog?(params[:blog_theme_preview], @blog)
+        hide_unpublished_blog
+      end
       # Revoked visibility must take effect on the next request, including feeds and previews.
       response.headers["Cache-Control"] = "private, no-store"
     end

@@ -1307,33 +1307,34 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    shared_examples "importing a conversational agent" do |provisioning_enabled:, expected_new_users:|
-      it "imports the agent with the expected user provisioning" do
-        SiteSetting.ai_bot_enabled = provisioning_enabled
+    it "imports a conversational agent without a user when the bot is disabled" do
+      SiteSetting.ai_bot_enabled = false
 
-        expect do
-          post "/admin/plugins/discourse-ai/ai-agents/import.json",
-               params: valid_import_data,
-               as: :json
-        end.to change(User, :count).by(expected_new_users)
+      expect {
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      }.not_to change(User, :count)
 
-        expect(response).to have_http_status(:created)
-        agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
-        expect(agent.allow_personal_messages).to eq(true)
-        expect(agent.user.present?).to eq(provisioning_enabled)
-      end
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user).to be_nil
     end
 
-    context "with automatic provisioning disabled" do
-      include_examples "importing a conversational agent",
-                       provisioning_enabled: false,
-                       expected_new_users: 0
-    end
+    it "provisions a user when importing a conversational agent with the bot enabled" do
+      SiteSetting.ai_bot_enabled = true
 
-    context "with automatic provisioning enabled" do
-      include_examples "importing a conversational agent",
-                       provisioning_enabled: true,
-                       expected_new_users: 1
+      expect {
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      }.to change(User, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user).to be_present
     end
 
     it "imports a new agent successfully" do
@@ -2101,6 +2102,19 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.parsed_body["errors"].join).to include("either tool_results or tool_result")
+    end
+
+    it "rejects conflicting ID aliases in a tool result" do
+      post "/admin/plugins/discourse-ai/ai-agents/stream-reply.json",
+           params: {
+             resume_token: "not-used-during-input-validation",
+             tool_results: [
+               { tool_call_id: "pending", id: "another", content: "Ambiguous outcome" },
+             ],
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body.fetch("errors").join).to include("tool_call_id")
     end
 
     it "rejects oversized tool result content" do

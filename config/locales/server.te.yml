@@ -1685,6 +1685,10 @@ te:
       delete_rejected_email_after_days: "ఈ సెట్టింగ్‌ని delete_email_logs_after_days సెట్టింగ్ కంటే తక్కువగా లేదా %{max}కంటే ఎక్కువ సెట్ చేయలేరు"
       invalid_uncategorized_category_setting: '''వర్గీకరించని అంశాలను అనుమతించు'' ప్రారంభించబడకపోతే "వర్గీకరించని" వర్గం ఎంచుకోబడదు.'
       invalid_search_ranking_weights: "search_ranking_weights సైట్ సెట్టింగ్ కోసం విలువ చెల్లదు. ఉదాహరణ: '{0.1,0.2,0.3,1.0}'. ప్రతి బరువుకు గరిష్ట విలువ 1.0 అని గమనించండి."
+    keywords:
+      company_url: "వెబ్సైట్"
+      logo: "ప్రాథమిక లోగో"
+      title: "సంఘం పేరు"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2021,10 +2025,6 @@ te:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
       title: "ఖాతా నిలిపివేయబడింది"
-    account_silenced:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
-    account_silenced_forever:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
       subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"
@@ -2443,7 +2443,6 @@ te:
       dracula: "డ్రాక్యులా"
       grey_amber: "గ్రే అంబర్"
       latte: "లాట్టే"
-      dark_rose: "ముదురు గులాబీ"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:
@@ -2534,6 +2533,10 @@ te:
       links:
         category: వర్గం సెట్టింగులు
     actions:
+      answer_yes:
+        title: "అవును"
+      answer_no:
+        title: "లేదు"
       agree:
         title: "అవును"
       agree_and_keep:

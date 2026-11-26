@@ -237,6 +237,24 @@ RSpec.describe "Admin AI features configuration" do
     expect(field.component).to have_content("Test LLM Beta")
   end
 
+  it "configures review queue suggestions from the AI features page" do
+    model = Fabricate(:decision_model)
+    ai_features_page.visit
+    ai_features_page.toggle_not_enabled
+    ai_features_page.click_set_up_module("review_queue")
+    form.field("ai_reviewable_action_suggestions_enabled").check
+    form.field("ai_reviewable_action_decision_model").select(model.id.to_s)
+    form.field("ai_reviewable_action_min_confidence").fill_in("0.85")
+    form.submit
+    expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+
+    ai_features_page.visit
+    ai_features_page.toggle_enabled
+    ai_features_page.expand_module("review_queue")
+    expect(ai_features_page).to have_feature_decision_model("reviewable_action", model)
+    expect(SiteSetting.ai_reviewable_action_min_confidence).to eq(0.85)
+  end
+
   it "lets admins discover mixed sentiment backends without workflows" do
     decision_model = Fabricate(:decision_model)
     SiteSetting.enable_discourse_workflows = false

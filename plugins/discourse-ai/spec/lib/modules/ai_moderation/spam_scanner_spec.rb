@@ -144,6 +144,38 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   end
 
   describe ".perform_scan!" do
+    it "notifies admins when the provider has insufficient credits" do
+      model = Fabricate(:anthropic_model)
+      spam_setting.update!(llm_model: model)
+      stub_request(:post, model.url).to_return(
+        status: 400,
+        body: { error: { message: "Your credit balance is too low" } }.to_json,
+      )
+
+      expect { described_class.perform_scan!(post) }.to raise_error(
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      )
+
+      notice = AdminNotice.find_by(identifier: "ai_spam_scan_errors")
+      expect(notice).to be_present
+      expect(notice.priority).to eq("high")
+      expect(notice.message).to include("AI spam detection", "/admin/plugins/discourse-ai/ai-spam")
+      expect(AiSpamLog.where(post: post)).not_to exist
+    end
+
+    it "notifies admins when the provider rejects an invalid API key" do
+      stub_request(:post, llm_model.url).to_return(
+        status: 401,
+        body: { error: { message: "Invalid API key" } }.to_json,
+      )
+
+      expect { described_class.perform_scan!(post) }.to raise_error(
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      )
+
+      expect(AdminNotice.where(identifier: "ai_spam_scan_errors")).to exist
+    end
+
     it "creates spam log entry when scanning post" do
       expect do
         DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -399,6 +431,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(spam_post.reload.hidden_reason_id).to eq(
         Post.hidden_reasons[:new_user_spam_threshold_reached],
       )
+    end
+
+    it "clears the cached topic excerpts when hiding a first post" do
+      spam_post.sync_first_post_caches
+      topic_localization =
+        Fabricate(:topic_localization, topic: spam_post.topic, excerpt: "A localized excerpt")
+
+      described_class.hide_post(spam_post)
+
+      expect(spam_post.topic.reload.excerpt).to be_nil
+      expect(topic_localization.reload.excerpt).to be_nil
+    end
+
+    it "keeps the cached topic excerpt when hiding a reply" do
+      spam_post.sync_first_post_caches
+
+      expect { described_class.hide_post(second_spam_post) }.not_to change {
+        spam_post.topic.reload.excerpt
+      }
     end
 
     it "doesn't hide the topic for non-first posts" do

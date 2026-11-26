@@ -19,7 +19,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { MAX_HOSTS } from "../../lib/constants.js";
+import { MAX_HOSTS, MAX_REMINDERS } from "../../lib/constants.js";
 import { recurrenceContext } from "../../lib/event-recurrence.js";
 import {
   allDayTransition,
@@ -203,7 +203,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get addReminderDisabled() {
-    return this.event.reminders?.length >= 5;
+    return this.event.reminders?.length >= MAX_REMINDERS;
   }
 
   get showChat() {
@@ -359,8 +359,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  handleReminderFieldChange(field, index, value, { set }) {
-    set(field, value);
+  handleReminderFieldChange(field, index, value, { set, name }) {
+    set(name, value);
     if (!this.event.reminders?.[index]) {
       return;
     }

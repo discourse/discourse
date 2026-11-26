@@ -6,7 +6,7 @@ class Blog::BlogTheme::CreateWorkingPreview
   include Service::Base
 
   STATIC_PAGE_PATHS = { "index" => "/", "archive" => "/archive", "about" => "/about" }.freeze
-  PAGES = [*STATIC_PAGE_PATHS.keys, "not_found", "article"].freeze
+  PAGES = [*STATIC_PAGE_PATHS.keys, "not_found", "article", "page"].freeze
 
   params(base_class: Blog::BlogTheme::AttributesContract) do
     attribute :page, :string
@@ -19,6 +19,10 @@ class Blog::BlogTheme::CreateWorkingPreview
       page == "article"
     end
 
+    def standalone_page?
+      page == "page"
+    end
+
     # The random path guarantees the blog renders its not-found page.
     def static_page_path
       return "/theme-preview-not-found-#{SecureRandom.hex(16)}" if page == "not_found"
@@ -27,6 +31,7 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
   model :preview_path
   model :preview_token, :store_working_copy
 
@@ -37,11 +42,16 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   def fetch_preview_path(params:)
+    return Blog::Publication.publicly_visible.pages.newest.pick(:path) if params.standalone_page?
     return params.static_page_path unless params.article?
     Blog::Publication.publicly_visible.find_by(id: params.article_id)&.path
   end
 
   def store_working_copy(params:, guardian:)
-    Blog::ThemePreview.store_working_copy(params.theme_attributes, user: guardian.user)
+    Blog::ThemePreview.store_working_copy(
+      params.theme_attributes,
+      user: guardian.user,
+      blog: Blog::Instance.default_blog,
+    )
   end
 end

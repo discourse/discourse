@@ -13,6 +13,7 @@ describe "Admin Flags Page" do
   before { sign_in(admin) }
 
   it "allows admin to disable, change order, create, update and delete flags" do
+    SiteSetting.enable_new_reordering_controls = false
     SiteSetting.custom_flags_limit = 4
 
     custom_flag =

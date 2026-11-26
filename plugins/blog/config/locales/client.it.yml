@@ -16,6 +16,14 @@ it:
         desktop: Desktop
         mobile: Mobile
         save: Salva
+        about_tab: Informazioni su
+        blog_slug: Abbreviazione
+        general_heading: Generale
+        settings_tab: Impostazioni
+        theme_tab: Tema
+        column_name: Nome
+        column_category: Categoria
+        column_status: Stato
         path_formats:
           custom: Personalizzato
         back_to_themes: Torna ai temi
@@ -56,7 +64,11 @@ it:
         edit: Modifica
         status: Stato
         replies: Risposte
+        title: Titolo
+        page: Pagina
+      all: Tutte
       drafts: Bozze
+      pages: Pagine
       preview: Anteprima
       unpublish: Annulla pubblicazione
       appearance_link: Aspetto

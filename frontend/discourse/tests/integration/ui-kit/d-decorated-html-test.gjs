@@ -263,4 +263,54 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
     );
     assert.dom("#custom").hasText("Custom");
   });
+
+  test("@id and @className reach the decorated element", async function (assert) {
+    const html = trustHTML("<p>Hello</p>");
+
+    await render(
+      <template>
+        <DDecoratedHtml @className="cooked" @html={{html}} @id="banner" />
+      </template>
+    );
+
+    assert
+      .dom("#banner.cooked p")
+      .hasText(
+        "Hello",
+        "the content is inside the element with @id and @className"
+      );
+  });
+
+  test("passes @model, @context and @decorateArgs to @decorate", async function (assert) {
+    const html = trustHTML("<p>Hello</p>");
+    const model = { id: 1 };
+    const context = { area: "test" };
+    const decorateArgs = { highlight: true };
+    const seen = [];
+    const decorate = (element, helper, args) =>
+      seen.push([helper.model, helper.getModel(), helper.context, args]);
+
+    await render(
+      <template>
+        <DDecoratedHtml
+          @context={{context}}
+          @decorate={{decorate}}
+          @decorateArgs={{decorateArgs}}
+          @html={{html}}
+          @model={{model}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(seen.length, 1, "@decorate is called once");
+    const [seenModel, seenGetModel, seenContext, seenArgs] = seen[0];
+    assert.strictEqual(seenModel, model, "helper.model is @model");
+    assert.strictEqual(seenGetModel, model, "helper.getModel() returns @model");
+    assert.strictEqual(seenContext, context, "helper.context is @context");
+    assert.strictEqual(
+      seenArgs,
+      decorateArgs,
+      "@decorateArgs is passed through"
+    );
+  });
 });

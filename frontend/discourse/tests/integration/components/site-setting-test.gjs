@@ -7,6 +7,7 @@ import {
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
 import ThemeTranslation from "discourse/admin/components/theme-translation";
@@ -36,6 +37,19 @@ function renderSetting(props) {
 
 module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("plain site settings have no theme anchor", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      value: true,
+      type: "bool",
+    });
+
+    assert.dom(".setting").doesNotHaveClass("linkable");
+    assert.dom(".setting").doesNotHaveAttribute("id");
+    assert.dom(".setting-link").doesNotExist();
+    assert.dom(".setting-label h3").doesNotHaveAttribute("tabindex");
+  });
 
   test("displays host-list setting value", async function (assert) {
     await renderSetting({
@@ -109,7 +123,9 @@ module("Integration | Component | SiteSetting", function (hooks) {
       type: "file_types_list",
     });
 
-    assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
+    assert
+      .dom(".form-kit__field .formatted-selection")
+      .hasText("jpg, jpeg, png");
 
     await click(".file-types-list__button.image");
 
@@ -380,6 +396,515 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".tag-chooser").hasClass("is-disabled");
   });
 
+  test("a group list setting saves the picked groups as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_groups", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_groups",
+      value: "1",
+      type: "group_list",
+    });
+
+    const groups = selectKit(".form-kit__field .list-setting");
+    await groups.expand();
+    await groups.selectRowByValue("2");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_groups, "1|2");
+  });
+
+  test("a compact list setting saves the picked choices as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_list", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_list",
+      value: "a",
+      type: "list",
+      list_type: "compact",
+      choices: ["a", "b"],
+    });
+
+    const list = selectKit(".form-kit__field .list-setting");
+    await list.expand();
+    await list.selectRowByValue("b");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_list, "a|b");
+  });
+
+  test("a category list setting saves an emptied selection", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_categories", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const categoryId = Site.current().categories[0].id;
+
+    await renderSetting({
+      setting: "test_categories",
+      value: String(categoryId),
+      type: "category_list",
+    });
+
+    const categories = selectKit(".form-kit__field .category-selector");
+    await categories.expand();
+    await categories.deselectItemByValue(categoryId);
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_categories, "");
+  });
+
+  for (const [type, saved] of [
+    ["list", "a|b"],
+    ["value_list", "a\nb"],
+    ["url_list", "a\nb"],
+  ]) {
+    test(`a ${type} setting saves the added value in its wire format`, async function (assert) {
+      let body;
+      pretender.put("/admin/site_settings/test_values", (request) => {
+        body = parsePostData(request.requestBody);
+        return response(200, {});
+      });
+
+      await renderSetting({ setting: "test_values", value: "a", type });
+
+      const adder = selectKit(".form-kit__field .value-list .select-kit");
+      await adder.expand();
+      await adder.fillInFilter("b");
+      await adder.keyboard("Enter");
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_values, saved);
+    });
+  }
+
+  test("a simple list setting saves the typed values as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_simple", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_simple",
+      value: "a",
+      type: "list",
+      list_type: "simple",
+    });
+
+    await fillIn(".form-kit__field .add-value-input", "b");
+    await click(".form-kit__field .add-value-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_simple, "a|b");
+  });
+
+  test("an emoji list setting saves the remaining emojis as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_emojis", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_emojis",
+      value: "smile|heart",
+      type: "list",
+      list_type: "emoji",
+    });
+
+    await click(
+      ".form-kit__field .emoji-value-list .value[data-index='0'] .remove-value-btn"
+    );
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_emojis, "heart");
+  });
+
+  test("a secret list setting saves key and secret pairs", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_secrets", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+    });
+
+    await fillIn(".form-kit__field .new-value-input.key", "k2");
+    await fillIn(".form-kit__field .new-value-input.secret", "s2");
+    await click(".form-kit__field .add-value-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_secrets, "k1|s1\nk2|s2");
+  });
+
+  test("a secret list setting masks its secrets and reports invalid input", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+      secret: true,
+    });
+
+    assert.dom(".form-kit__control-password").doesNotExist();
+    assert
+      .dom(".value[data-index='0'] .secret")
+      .hasAttribute("type", "password");
+    assert.dom(".new-value-input.secret").hasAttribute("type", "password");
+
+    await click(".value[data-index='0'] .secret-value-list__reveal");
+
+    assert
+      .dom(".value[data-index='0'] .secret")
+      .hasAttribute("type", "text", "the toggle reveals its own row");
+    assert
+      .dom(".new-value-input.secret")
+      .hasAttribute("type", "password", "other rows stay masked");
+
+    await click(".form-kit__field .add-value-btn");
+
+    assert
+      .dom(".form-kit__field .form-kit__errors")
+      .hasText(i18n("admin.site_settings.secret_list.invalid_input"));
+
+    await fillIn(".form-kit__field .new-value-input.key", "k1");
+    await fillIn(".form-kit__field .new-value-input.secret", "s2");
+    await click(".form-kit__field .add-value-btn");
+
+    assert
+      .dom(".form-kit__field .form-kit__errors")
+      .hasText(
+        i18n("admin.site_settings.secret_list.already_exists", { key: "k1" }),
+        "a new rejection replaces the previous message"
+      );
+  });
+
+  test("a secret list setting shows its key and value placeholders", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "",
+      type: "list",
+      list_type: "secret",
+      placeholder: { key: "www.example.com", value: "a secret" },
+    });
+
+    assert
+      .dom(".form-kit__field .new-value-input.key")
+      .hasAttribute("placeholder", "www.example.com");
+    assert
+      .dom(".form-kit__field .new-value-input.secret")
+      .hasAttribute("placeholder", "a secret");
+  });
+
+  test("cancelling a secret list setting clears its invalid input error", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+    });
+
+    await click(".form-kit__field .remove-value-btn");
+    await click(".form-kit__field .add-value-btn");
+
+    assert.dom(".form-kit__field .form-kit__errors").exists();
+
+    await click(".setting-controls__cancel");
+
+    assert.dom(".form-kit__field .form-kit__errors").doesNotExist();
+  });
+
+  test("a file types list setting adds default types to an empty value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_types", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_types",
+      value: "",
+      type: "file_types_list",
+    });
+
+    assert
+      .dom(".form-kit__control-custom > .file-types-list__button")
+      .doesNotExist("the buttons are not stretched as direct control children");
+    assert.dom(".file-types-list > .file-types-list__button").exists();
+
+    await click(".form-kit__field .file-types-list__button.video");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_types, "mov|mp4|webm|m4v|3gp|ogv|avi|mpeg");
+  });
+
+  test("an upload setting shows its restrictions and saves a removed file", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_upload", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_upload",
+      value: "/uploads/default/original/1X/notes.txt",
+      type: "upload",
+      authorized_extensions: "txt",
+      max_file_size_kb: 512,
+      upload: { original_filename: "notes.txt", human_filesize: "4 KB" },
+    });
+
+    assert.dom(".form-kit__field .file-name").hasText("notes.txt");
+    assert.dom(".form-kit__field .file-size").hasText("4 KB");
+    assert
+      .dom(".form-kit__field .file-uploader__restrictions")
+      .includesText(".txt")
+      .includesText("512 KB");
+
+    await click(".form-kit__field .file-uploader .btn-danger");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_upload, "");
+  });
+
+  test("an uploaded image list setting saves the images kept in its modal", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/selectable_avatars", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const modal = getOwner(this).lookup("service:modal");
+    const show = sinon.stub(modal, "show");
+
+    await renderSetting({
+      setting: "selectable_avatars",
+      value: "/a.png|/b.png",
+      type: "uploaded_image_list",
+    });
+
+    await click(".form-kit__field button");
+
+    const { model } = show.firstCall.args[1];
+
+    assert.strictEqual(model.value, "/a.png|/b.png");
+
+    model.changeValue("/b.png");
+    await settled();
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.selectable_avatars, "/b.png");
+  });
+
+  test("a color setting saves the typed hex with its prefix", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_color", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_color",
+      value: "#006699",
+      type: "color",
+    });
+
+    assert.dom(".form-kit__control-color-input-hex").hasValue("006699");
+
+    await fillIn(".form-kit__control-color-input-hex", "ff0000");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_color, "#ff0000");
+
+    await fillIn(".form-kit__control-color-input-hex", "red");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(
+      body.test_color,
+      "red",
+      "named colors are kept as typed"
+    );
+  });
+
+  test("a locale list setting names its choices from the available locales", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_locales", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English" },
+      { value: "fr", name: "Français" },
+    ];
+
+    await renderSetting({
+      setting: "test_locales",
+      value: "en",
+      type: "list",
+      list_type: "locale",
+      valid_values: [
+        { value: "en", name: "en" },
+        { value: "fr", name: "fr" },
+      ],
+    });
+
+    const locales = selectKit(".form-kit__field .list-setting");
+    await locales.expand();
+
+    assert.strictEqual(locales.rowByValue("fr").name(), "Français");
+
+    await locales.selectRowByValue("fr");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_locales, "en|fr");
+  });
+
+  test("a topic setting shows the saved topic", async function (assert) {
+    await renderSetting({
+      setting: "test_topic",
+      value: "280",
+      type: "topic",
+    });
+
+    assert
+      .dom(".form-kit__field .topic-chooser .select-kit-header")
+      .includesText("Internationalization / localization");
+  });
+
+  test("a topic setting saves the picked topic id", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_topic", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    pretender.get("/search/query", () =>
+      response({
+        topics: [{ id: 42, title: "Moderator guide" }],
+        posts: [{ id: 1, topic_id: 42 }],
+      })
+    );
+
+    await renderSetting({
+      setting: "test_topic",
+      value: "",
+      type: "topic",
+    });
+
+    const topics = selectKit(".form-kit__field .topic-chooser");
+    await topics.expand();
+    await topics.fillInFilter("guide");
+    await topics.selectRowByValue(42);
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_topic, "42");
+  });
+
+  test("a datetime setting saves the local time as UTC", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_datetime", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const savedTime = "2026-01-15T10:00:00Z";
+    const pickedLocalTime = "2026-02-01T08:30";
+
+    await renderSetting({
+      setting: "test_datetime",
+      value: savedTime,
+      type: "datetime",
+    });
+
+    assert
+      .dom(".form-kit__field input[type='datetime-local']")
+      .hasValue(
+        moment(savedTime).local().format(moment.HTML5_FMT.DATETIME_LOCAL)
+      );
+
+    await fillIn(
+      ".form-kit__field input[type='datetime-local']",
+      pickedLocalTime
+    );
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(
+      body.test_datetime,
+      moment(pickedLocalTime).utc().format()
+    );
+  });
+
+  test("a date setting saves the picked date", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_date", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_date",
+      value: "",
+      type: "date",
+    });
+    await fillIn(".form-kit__field input[type='date']", "2026-01-15");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_date, "2026-01-15");
+  });
+
+  for (const [type, selector, saved, shown] of [
+    ["date", "input[type='date']", "2026-01-15", "2026-01-15"],
+    [
+      "datetime",
+      "input[type='datetime-local']",
+      "2026-01-15T10:00:00Z",
+      moment("2026-01-15T10:00:00Z")
+        .local()
+        .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    ],
+  ]) {
+    test(`a ${type} setting can be emptied, then reset to a non-empty default`, async function (assert) {
+      let body;
+      pretender.put("/admin/site_settings/test_when", (request) => {
+        body = parsePostData(request.requestBody);
+        return response(200, {});
+      });
+      const input = `.form-kit__field ${selector}`;
+
+      await renderSetting({
+        setting: "test_when",
+        value: saved,
+        default: saved,
+        type,
+      });
+
+      await fillIn(input, "");
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, "", "saves the emptied value");
+      assert.dom(input).hasValue("");
+
+      await click(".setting-controls__undo");
+
+      assert.dom(input).hasValue(shown, "reset restores the default");
+
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, saved);
+    });
+  }
+
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
       setting: "test_setting",
@@ -390,19 +915,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
 
     assert.dom(".form-kit__control-textarea").exists();
     assert.dom(".form-kit__control-password").doesNotExist();
-  });
-
-  test("a secret list setting is not collapsed into a password input", async function (assert) {
-    await renderSetting({
-      setting: "test_setting",
-      type: "list",
-      list_type: "secret",
-      secret: true,
-      value: "key|secret",
-    });
-
-    assert.dom(".form-kit__control-password").doesNotExist();
-    assert.dom(".secret-value-list").exists();
   });
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
@@ -518,10 +1030,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "true",
       type: "bool",
     });
-    this.setProperties({
-      themeSetting,
-      theme: { id: 1, name: "Horizon" },
-    });
+    this.themeSetting = themeSetting;
+    this.theme = { id: 1, name: "Horizon" };
 
     await render(
       <template>
@@ -552,10 +1062,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "A theme",
       textarea: true,
     });
-    this.setProperties({
-      translation,
-      theme: { id: 1, locale: "en" },
-    });
+    this.translation = translation;
+    this.theme = { id: 1, locale: "en" };
 
     await render(
       <template>
@@ -749,7 +1257,7 @@ module(
       await renderMaxImageSizeSetting("1024");
       await fillIn(".file-size-input", "5000");
 
-      assert.dom(".validation-error").hasText(
+      assert.dom(".form-kit__errors").hasText(
         i18n("file_size_input.error.size_too_large", {
           provided_file_size: "4.9 GB",
           max_file_size: "4 MB",
@@ -765,7 +1273,7 @@ module(
       await renderMaxImageSizeSetting("1000");
       await fillIn(".file-size-input", "100");
 
-      assert.dom(".validation-error").hasText(
+      assert.dom(".form-kit__errors").hasText(
         i18n("file_size_input.error.size_too_small", {
           provided_file_size: "100 KB",
           min_file_size: "512 KB",
@@ -781,13 +1289,18 @@ module(
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
 
       await click(".setting-controls .btn-danger");
       assert
         .dom(".file-size-input")
         .hasValue("1000", "the value resets to the saved value");
-      assert.dom(".validation-error").hasClass("hidden");
+      assert.dom(".form-kit__errors").doesNotExist();
+
+      await fillIn(".file-size-input", "");
+      assert
+        .dom(".form-kit__errors")
+        .doesNotExist("the cancelled error does not come back");
     });
 
     test("resetting to the default value changes the content of input field", async function (assert) {
@@ -843,10 +1356,10 @@ module(
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
 
       await fillIn(".file-size-input", "");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
       assert
         .dom(".setting-controls .btn-success")
         .exists("the save button is shown");
@@ -859,7 +1372,7 @@ module(
 
       await click(".setting-controls .btn-danger");
       assert.dom(".file-size-input").hasValue("1000");
-      assert.dom(".validation-error").hasClass("hidden");
+      assert.dom(".form-kit__errors").doesNotExist();
       assert
         .dom(".setting-controls .btn-success")
         .doesNotExist("the save button is not shown");
@@ -880,7 +1393,7 @@ module(
       { value: "times_new_roman", name: "Times New Roman" },
     ];
 
-    test("base_font sets body-font-X classNames on each field choice", async function (assert) {
+    test("sets body-font-X classNames on each field choice", async function (assert) {
       await renderSetting({
         category: "",
         choices: fonts,
@@ -893,36 +1406,11 @@ module(
         type: "font_list",
         value: "arial",
       });
-      const fontSelector = selectKit(".font-selector");
+      const fontSelector = selectKit(".form-kit__field .font-selector");
       await fontSelector.expand();
 
       fonts.forEach((choice) => {
         const fontClass = `body-font-${choice.value.replace(/_/g, "-")}`;
-        assert.true(
-          fontSelector.rowByValue(choice.value).hasClass(fontClass),
-          `has ${fontClass} CSS class`
-        );
-      });
-    });
-
-    test("heading_font sets heading-font-X classNames on each field choice", async function (assert) {
-      await renderSetting({
-        category: "",
-        choices: fonts,
-        default: "",
-        description: "Heading font",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "heading_font",
-        type: "font_list",
-        value: "arial",
-      });
-      const fontSelector = selectKit(".font-selector");
-      await fontSelector.expand();
-
-      fonts.forEach((choice) => {
-        const fontClass = `heading-font-${choice.value.replace(/_/g, "-")}`;
         assert.true(
           fontSelector.rowByValue(choice.value).hasClass(fontClass),
           `has ${fontClass} CSS class`

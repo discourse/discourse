@@ -161,7 +161,7 @@ class Statistics
   # instantly.
   def self.onboarding_minutes_to
     signed_up_at = first_admin_created_at
-    steps = UserHistory::ADMIN_ONBOARDING_STEPS
+    steps = onboarding_step_names
 
     return steps.index_with(nil).symbolize_keys.merge(completed: nil) if signed_up_at.nil?
 
@@ -181,9 +181,11 @@ class Statistics
   end
 
   def self.onboarding_step_events
-    onboarding_events(:admin_onboarding_step_completed).where(
-      subject: UserHistory::ADMIN_ONBOARDING_STEPS,
-    )
+    onboarding_events(:admin_onboarding_step_completed).where(subject: onboarding_step_names)
+  end
+
+  def self.onboarding_step_names
+    UserHistory::ADMIN_ONBOARDING_STEPS + UserHistory::RETIRED_ADMIN_ONBOARDING_STEPS
   end
 
   # Reported as 1/0 flags rather than booleans, to match the integer shape of

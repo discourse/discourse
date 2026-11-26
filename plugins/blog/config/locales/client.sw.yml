@@ -15,6 +15,12 @@ sw:
         desktop: Eneo kazi la Kompyuta
         mobile: Kifaa cha kiganjani
         save: Hifadhi
+        about_tab: Kuhusu
+        general_heading: Jumla
+        settings_tab: Mipangilio
+        theme_tab: Mandhari
+        column_name: Jina
+        column_category: Kikundi
         path_formats:
           custom: Binafsi
         themes: Mandhari
@@ -45,4 +51,6 @@ sw:
       editor_table:
         edit: Hariri
         replies: Majibu
+        title: Kichwa cha Habari
+      all: Yote
       preview: Kihakiki

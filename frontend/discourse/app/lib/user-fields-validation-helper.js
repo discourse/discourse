@@ -39,11 +39,13 @@ class TrackedUserField {
     }
 
     let validation = validResult();
-    if (this.field.required && (!this.value || isEmpty(this.value))) {
+    // Number fields can legitimately hold 0.
+    const missing = this.value !== 0 && (!this.value || isEmpty(this.value));
+    if (this.field.required && missing) {
       const reasonKey =
         this.field.field_type === "confirm"
           ? "user_fields.required_checkbox"
-          : this.field.field_type === "text" || this.field.field_type === "date"
+          : ["text", "date", "number"].includes(this.field.field_type)
             ? "user_fields.required"
             : "user_fields.required_select";
       validation = failedResult({

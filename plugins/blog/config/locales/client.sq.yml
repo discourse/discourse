@@ -12,6 +12,13 @@ sq:
         preview_archive: Arkivoni
         mobile: Mobile
         save: Ruani
+        about_tab: Rreth
+        general_heading: Karakteristika të përgjithshme
+        settings_tab: Rregullimet
+        theme_tab: Tema
+        column_name: Emri
+        column_category: Kategori
+        column_status: Status
         path_formats:
           custom: Grupet e krijuara
         edit: Redaktoni
@@ -45,5 +52,7 @@ sq:
         edit: Redaktoni
         status: Status
         replies: Përgjigjet
+        title: Titulli
+      all: Të gjitha
       drafts: Drafte
       preview: Parashikimi

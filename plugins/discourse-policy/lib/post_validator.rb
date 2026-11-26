@@ -41,11 +41,12 @@ module DiscoursePolicy
     end
 
     def acting_user_can_manage_target_groups?(old_policies, new_policies)
-      old_target_group_names = old_policies.map { |policy| policy_target_group_name(policy) }
+      old_grants = old_policies.map { |policy| policy_grant_attributes(policy) }
 
       new_policies.each_with_index.all? do |policy, index|
-        target_group_name = policy_target_group_name(policy)
-        next true if target_group_name.blank? || target_group_name == old_target_group_names[index]
+        grant = policy_grant_attributes(policy)
+        target_group_name = grant.first
+        next true if target_group_name.blank? || grant == old_grants[index]
 
         target_group = Group.find_by_name(target_group_name)
 
@@ -54,8 +55,9 @@ module DiscoursePolicy
       end
     end
 
-    def policy_target_group_name(policy)
-      Nokogiri::HTML5.fragment(policy).at_css("div.policy")["data-add-users-to-group"]
+    def policy_grant_attributes(policy)
+      node = Nokogiri::HTML5.fragment(policy).at_css("div.policy")
+      %w[data-add-users-to-group data-group data-groups].map { |attribute| node[attribute] }
     end
 
     def user_allowed?(user)

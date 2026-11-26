@@ -68,7 +68,9 @@ RSpec.describe "Blog theme authoring", type: :request do
     expect(response.status).to eq(201)
     url = response.parsed_body["url"]
     expect(Blog::BlogTheme.all).to be_empty
-    expect(Blog::BlogTheme.active["name"]).not_to eq(attributes["name"])
+    expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["name"]).not_to eq(
+      attributes["name"],
+    )
     get url
     expect(response.status).to eq(200)
     expect(response.body).to include("data-working")

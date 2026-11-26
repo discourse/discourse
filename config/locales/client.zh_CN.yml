@@ -35,6 +35,7 @@ zh_CN:
       resize: "调整代码编辑器大小"
     code_editor:
       resize: "调整代码编辑器大小"
+      load_failed: "无法加载代码编辑器。请刷新页面后重试。"
       tab_hint: "按下 Esc 键，然后按 Tab 键将焦点移出编辑器。"
       completions: "完成"
       search:
@@ -579,7 +580,10 @@ zh_CN:
         show_light_screenshot: "显示浅色截图"
         show_dark_screenshot: "显示深色截图"
       create_category:
+        title: "创建一个类别"
+        description: "为对话提供一个栖身之所。"
         action: "创建类别"
+        completed: "创建另一个"
       invite_collaborators:
         title: "邀请协作者"
         description: "早期成员赋予了它生命力。"
@@ -615,7 +619,6 @@ zh_CN:
           title: "外观和感觉"
           description: "选择字体以及会员首先看到的内容。"
       sections:
-        colors: "站点颜色模式"
         fonts: "字体"
         logo: "徽标"
         homepage: "首页"
@@ -624,9 +627,6 @@ zh_CN:
         applying: "应用…"
         custom_theme_notice: "您的网站当前使用 %{name} 作为其默认主题。请选择以下主题进行预览。保存后将替换您当前的主题。"
       colors:
-        description: "为每个模式设置一个默认调色板。成员的外观首选项决定他们看到哪一个。"
-        light_palette: "浅色调"
-        dark_palette: "深色调"
         modes:
           label: "颜色模式"
           both: "浅色与深色"
@@ -635,9 +635,6 @@ zh_CN:
       fonts:
         base_font: "正文"
         heading_font: "标题"
-      logo:
-        description: "显示在站点顶部导航以及站点电子邮件通知的顶部。"
-        help_text: "建议尺寸为 600 x 80 像素。"
       homepage:
         topics: "话题"
         categories: "类别"
@@ -1060,6 +1057,10 @@ zh_CN:
       statuses:
         pending:
           title: "待处理"
+        problem_confirmed:
+          title: "问题已确认"
+        no_problem_found:
+          title: "未发现问题"
         approved:
           title: "已批准"
         approved_flag:
@@ -1141,6 +1142,8 @@ zh_CN:
         reviewed: "已审核"
         approved_by: "由 %{username} 批准 · %{relativeDate}"
         rejected_by: "被 %{username} 拒绝 · %{relativeDate}"
+        problem_confirmed_by: "问题已由 %{username} · %{relativeDate} 确认。"
+        no_problem_found_by: "%{username} · %{relativeDate} 未发现任何问题"
         ignored_by: "被 %{username} 忽略 · %{relativeDate}"
         view_conversation: "查看私信"
         note_added: "版主注释"
@@ -1574,6 +1577,7 @@ zh_CN:
       view_all: "查看全部"
       category: "类别"
       category_list: "显示类别列表"
+      page_layout: "类别页面布局"
       reorder:
         title: "对类别重新排序"
         title_long: "重新组织类别列表"
@@ -2370,6 +2374,7 @@ zh_CN:
         redeemed_tab_with_count: "已确认 (%{count})"
         invited_via: "邀请"
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
+        invited_via_link_without_key: "链接 (%{count} / %{max} 已激活)"
         generating_link: "正在生成链接…"
         groups: "群组"
         topic: "话题"
@@ -2672,6 +2677,7 @@ zh_CN:
       no_results: "没有结果"
       search: "搜索…"
       label: "选择选项"
+      remove_item: "移除 %{name}"
     d_otp:
       screen_reader:
         other: 输入 %{count} 个数字
@@ -2877,6 +2883,10 @@ zh_CN:
       username_unavailable: "该用户名不可用。试试 %{suggestion}。"
     login:
       header_title: "欢迎回来"
+      invitation_gate:
+        title: "本社区仅限受邀者加入。"
+        description: "若要加入，请打开您收到的邀请链接。如果您没有邀请，请联系社区所有者。"
+        existing_member: "已经是这个社区的成员了吗？请在下方登录。"
       title: "登录"
       username: "用户"
       password: "密码"
@@ -3124,6 +3134,9 @@ zh_CN:
         size_too_small: "%{provided_file_size} 小于允许的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜索表情符号
+      search_placeholder: "按表情符号名称和别名搜索…"
+      no_results: "没有结果"
+      favorites: "常用"
       smileys_&_emotion: 笑脸与情感
       people_&_body: 人与身体
       animals_&_nature: 动物与自然
@@ -3255,6 +3268,11 @@ zh_CN:
       emoji: "表情符号 :)"
       more_emoji: "更多…"
       options: "选项"
+      ai_content:
+        code: "代码"
+        quote: "引用"
+        details: "详细信息"
+        placeholder: "AI 生成内容"
       whisper: "密语"
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
@@ -3892,6 +3910,7 @@ zh_CN:
         default_item: "可审核条目 #%{reviewable_id}"
     topics:
       new_messages_marker: "上次访问"
+      list_options: "列表选项"
       bulk:
         select: "批量选择"
         confirm: "确认"
@@ -4565,10 +4584,10 @@ zh_CN:
           label: "已选择"
           title: "点击以将帖子从选择中移除"
         select_replies:
-          label: "选择 +回复"
+          label: "选择 & 回复"
           title: "将帖子及其所有回复添加到选择中"
         select_below:
-          label: "选择 +之后"
+          label: "选择 & 之后"
           title: "将帖子和之后的所有内容添加到选择中"
         delete: 删除所选项
         cancel: 取消选择
@@ -4595,6 +4614,8 @@ zh_CN:
         actions: "批量操作"
     post:
       accessible_heading: "由 %{username} 于 %{date} 发布"
+      ai_generated: "AI"
+      ai_generated_title: "这些内容部分或全部由 AI 生成"
       heading_anchor: "标题链接"
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -4711,6 +4732,7 @@ zh_CN:
         upload_not_authorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
         no_uploads_authorized: "抱歉，未授权上传任何文件。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
+        media_upload_not_allowed: "抱歉，您无法上传图片、视频或音频。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
@@ -4972,6 +4994,8 @@ zh_CN:
         delete_title: "删除此类别"
         delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新指定。"
         delete_title_forbidden: "无法删除此类别"
+      empty_state:
+        edit_category: "编辑类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
@@ -5001,7 +5025,7 @@ zh_CN:
         icon_required: "选择一个图标。"
         groups_required: "为此审批模式选择至少一个群组。"
       name: "类别名称"
-      untitled: "无标题类别"
+      icon_search_placeholder: "搜索…"
       description: "描述"
       logo: "类别徽标图片"
       logo_dark: "深色模式类别徽标图片"
@@ -5009,10 +5033,6 @@ zh_CN:
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
       style: "样式"
-      icon: "图标"
-      emoji: "表情符号"
-      select_emoji: "选择表情符号"
-      select_icon: "选择图标"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -5020,22 +5040,15 @@ zh_CN:
         incorrect_length: "必须匹配格式 #RRGGBB 或 #RGB"
         non_hexdecimal: "必须仅包含十六进制字符（0-9、AF）"
       styles:
-        type: "样式"
         icon: "图标"
         emoji: "表情符号"
         square: "方形"
-        options:
-          square: "方形"
-          icon: "图标"
-          emoji: "表情符号"
       color_used: "使用的颜色"
-      predefined_colors: "预定义颜色选项"
       name_placeholder: "建议使用一到两个词"
       category_types: "类别类型"
       unknown_category_type: "未知类别类型"
       unknown_category_type_description: "此类别不支持或未启用类别类型 '%{categoryType}'。"
       category_types_no_results: "找不到其他类别类型"
-      color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
       list: "列出类别"
@@ -5781,9 +5794,24 @@ zh_CN:
       forward: "前进"
       share: "分享"
       dismiss: "忽略"
+    mobile_tab_bar:
+      label: "站点分区"
+      new_topic: "新建话题"
+      new_personal_message: "新个人消息"
+      create: "创建"
+      menu: "菜单"
+      more: "更多"
+      edit_topic: "编辑标题、类别和标签"
+      menu_with_reviewables:
+        other: "菜单， %{count} 项待审核"
+      back: "返回"
+      topics: "话题"
+      drafts:
+        other: "草稿 (%{count})"
+      hub: "Hub"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
-    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
+    exit_theme_preview: "退出预览"
     theme_preview_failed: "无法预览主题，因为它不存在，或者您没有访问它的权限。"
     image_removed: "（图片被移除）"
     pause_notifications:
@@ -7951,19 +7979,10 @@ zh_CN:
           site_contact_group_help: |
             受邀接收所有自动发送的个人消息的群组。
           your_organization: "您的组织"
-          your_organization_description: "本网站的运营方及其管辖范围等详细信息。"
           company_name: "名称"
           company_name_placeholder: "ExampleCo"
           company_url: "网站"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "适用法律"
-          governing_law_placeholder: "省、州或国家/地区"
-          governing_law_help: |
-            指定网站法律条款的司法管辖区，通常是公司注册地或运营地。
-          city_for_disputes: "争议城市"
-          city_for_disputes_placeholder: "城市"
-          city_for_disputes_help: |
-            指定解决与本论坛相关的法律纠纷的城市。
           extra_groups:
             heading: "群组列表"
             description: "在“关于”页面上显示的额外群组。"
@@ -8532,6 +8551,7 @@ zh_CN:
               at_least:
                 other: "至少需要 %{count} 个标签"
             string:
+              invalid_translation_identifier: "最多使用80个字符，起始于小写字母，只包含小写字母、数字和下划线。"
               too_short:
                 other: "必须至少为 %{count} 个字符"
             number:
@@ -8548,8 +8568,6 @@ zh_CN:
           title: "颜色"
           edit: "编辑"
           view: "查看"
-          set_default_light: "在默认主题 (%{theme}) 中设置为浅色调色板"
-          set_default_dark: "在默认主题 (%{theme}) 中设置为深色调色板"
           set_default_success: "%{schemeName} 设置为 %{themeName} 的默认调色板"
           saved_refreshing: "已保存！正在刷新颜色…"
           from_theme: "来自主题：%{name}"
@@ -9245,8 +9263,6 @@ zh_CN:
         silence_reason_hidden_label: "你为什么要静音？这个文本只会对员工和这个用户可见。请保持简短。"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
-        silence_message: "电子邮件消息"
-        silence_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被禁言用户的电子邮件中。"
         suspended_until: "（直到 %{until}）"
         suspend_forever: "永久封禁"
         cant_suspend: "无法封禁此用户。"
@@ -9553,19 +9569,27 @@ zh_CN:
         description: "您可以自定义论坛上的任何文本。"
         search: "搜索文本或翻译键"
         search_label: "搜索"
+        preview:
+          label: "文本预览： %{key}"
+          customized: "您的文本"
+          default: "默认"
         theme: "主题或组件"
         all_themes: "所有站点文本"
         theme_disabled: "已禁用"
+        usable_keys: "翻译键名"
+        manage_translations: "管理翻译"
         filters: "筛选器"
         filters_active:
           other: "筛选（%{count}）"
         edit_title: "编辑站点文本"
         default_text: "默认文本"
+        default_text_language: "默认文本 · %{language}"
         value_label: "您的文本 · %{language}"
         invalid_title: "无效的插值占位符"
         invalid_description: "此文本使用无法识别的占位符。使用下面可用的插值键。"
         status:
           customized: "定制"
+          unknown: "未知的基准"
           outdated: "过期"
           invalid: "无效"
         title: "网站文本"
@@ -9585,6 +9609,8 @@ zh_CN:
         interpolation_key_insert: "点击插入"
         interpolation_key_used: "已使用"
         interpolation_key_invalid: "未知密钥 – 将不会进行插值"
+        unknown:
+          title: "上一个默认值未被记录"
         outdated:
           title: "此翻译已过时"
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
@@ -9743,7 +9769,6 @@ zh_CN:
           modal_title: 徽章组
         granted_by: 授予人
         granted_at: 授予时间
-        reason_help: '（帖子或话题的链接）'
         save: 保存
         delete: 删除
         delete_confirm: 确定要删除此徽章吗？

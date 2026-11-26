@@ -130,6 +130,21 @@ RSpec.describe Live::LivekitWebhooksController do
       expect(Live::ParticipantTracker.agent_user_ids(room.id)).to be_empty
     end
 
+    it "removes a participant who joins a room they can no longer access" do
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: user.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).not_to have_been_requested
+
+      room.update!(public: false)
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).to have_been_requested.once
+    end
+
     context "with an invalid delivery" do
       it "rejects a request with no Authorization token and records no delivery" do
         body = event_for.to_json
@@ -346,6 +361,30 @@ RSpec.describe Live::LivekitWebhooksController do
         expect(response.status).to eq(200)
         expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
         expect(Live::ParticipantTracker.user_ids(room.id)).to include(user.id)
+      end
+
+      context "with a session-only speaker in a stage room" do
+        before do
+          room.update!(room_type: Live::Room::ROOM_TYPE_STAGE)
+          Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+          Live::ParticipantTracker.add_session_speaker(room.id, user.id)
+        end
+
+        it "keeps the grant when the finish of a previous call arrives during a new one" do
+          Live::ParticipantTracker.add(room.id, user.id)
+
+          post_webhook(event_for(event: "room_finished"))
+
+          expect(response.status).to eq(200)
+          expect(Live::ParticipantTracker.session_speaker?(room.id, user.id)).to eq(true)
+        end
+
+        it "clears the grant once nobody is left in the room" do
+          post_webhook(event_for(event: "room_finished"))
+
+          expect(response.status).to eq(200)
+          expect(Live::ParticipantTracker.session_speaker?(room.id, user.id)).to eq(false)
+        end
       end
 
       it "keeps a mesh room's pin" do

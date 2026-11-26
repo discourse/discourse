@@ -198,13 +198,10 @@ class Setup {
   }
 
   #buildCookFunction(engineOptions, defaultOptions) {
-    // everything except the engine for opts can just point to the other
-    // opts references, they do not change and we don't need to worry about
-    // mutating them. note that this may need to be updated when additional
-    // opts are added to the pipeline
     const options = {};
     options.allowListed = defaultOptions.allowListed;
     options.pluginCallbacks = defaultOptions.pluginCallbacks;
+    // Keep the inherited sanitizer even if the parent disables its own.
     options.sanitizer = defaultOptions.sanitizer;
 
     // everything from the discourse part of defaultOptions can be cloned except
@@ -230,9 +227,15 @@ class Setup {
       typographer: defaultOptions.engine.options.typographer,
     };
 
-    makeEngine(options, markdownItOptions, engineOptions.markdownItRules);
+    const { lazy, markdownItRules } = engineOptions;
+    if (!lazy) {
+      makeEngine(options, markdownItOptions, markdownItRules);
+    }
 
     return function customCookFunction(raw) {
+      if (!options.setup) {
+        makeEngine(options, markdownItOptions, markdownItRules);
+      }
       return cook(raw, options);
     };
   }

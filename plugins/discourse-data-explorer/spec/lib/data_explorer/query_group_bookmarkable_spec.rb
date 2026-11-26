@@ -43,8 +43,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   let!(:query_group1) { Fabricate(:query_group, query: query1, group: group0) }
   let!(:query_group2) { Fabricate(:query_group, query: query1, group: group1) }
   # User is member of both groups.
-  let!(:group_user1) { Fabricate(:group_user, user: user, group: group0) }
-  let!(:group_user2) { Fabricate(:group_user, user: user, group: group1) }
+  fab!(:group_user1) { Fabricate(:group_user, user: user, group: group0) }
+  fab!(:group_user2) { Fabricate(:group_user, user: user, group: group1) }
 
   # Group 1 also has access to query2.
   let!(:query_group3) { Fabricate(:query_group, query: query2, group: group1) }
@@ -53,7 +53,7 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   let!(:query_group4) { Fabricate(:query_group, query: query1, group: group2) }
 
   # User is a member of Group 3, which has no access to Query 1.
-  let!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
+  fab!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
 
   # User bookmarked the same Query 1 twice, from different Groups (0 and 1)
   let!(:bookmark1) do

@@ -13,7 +13,7 @@ module DiscourseAi
               {
                 name: "options",
                 description:
-                  "An array where each element is either a range (e.g., '1-6') or a comma-separated list of options (e.g., 'sam,jane,joe')",
+                  "Add one choice per item to pick one at random. Use a range (e.g. 1-6) or a comma-separated group (e.g. Sam, Jane, Joe) to pick within that item.",
                 type: "array",
                 item_type: "string",
                 required: true,

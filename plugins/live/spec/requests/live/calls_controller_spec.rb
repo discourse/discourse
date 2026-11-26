@@ -77,6 +77,38 @@ RSpec.describe Live::CallsController do
       expect(callee.guardian.can_invite_to_live_room?(room)).to eq(true)
     end
 
+    it "links the existing DM without requiring threading or creating a call thread" do
+      SiteSetting.live_chat_enabled = true
+      SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      channel =
+        Fabricate(:direct_message_channel, users: [caller, callee], threading_enabled: false)
+      sign_in(caller)
+
+      post "/live/calls.json", params: { username: callee.username }
+
+      expect(response.status).to eq(200)
+      room = Live::Room.find(response.parsed_body["room"]["id"])
+      expect(room.chat_channel_id).to eq(channel.id)
+      expect(response.parsed_body["room"]["chat_available"]).to eq(true)
+      expect(Live::ChatSession.start!(room, caller)).to eq(channel_id: channel.id, thread_id: nil)
+      expect(channel.threads.count).to eq(0)
+    end
+
+    it "leaves chat disconnected when there is no existing DM" do
+      SiteSetting.live_chat_enabled = true
+      SiteSetting.chat_enabled = true
+      sign_in(caller)
+
+      expect { post "/live/calls.json", params: { username: callee.username } }.not_to change(
+        Chat::DirectMessageChannel,
+        :count,
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["room"]["chat_available"]).to eq(false)
+    end
+
     it "returns 404 for an unknown username" do
       sign_in(caller)
 

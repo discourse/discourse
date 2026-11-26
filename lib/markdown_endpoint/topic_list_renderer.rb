@@ -73,7 +73,7 @@ module MarkdownEndpoint
       lines << metadata.join("\\\n")
       lines.concat(["", "</div>"])
       excerpt = Nokogiri::HTML5.fragment(topic.excerpt.to_s).text.squish
-      lines.concat(["", escape_text(excerpt)]) if excerpt.present?
+      lines.concat(["", escape_text(excerpt)]) if excerpt.present? && !topic.first_post&.hidden?
       lines.join("\n")
     end
 

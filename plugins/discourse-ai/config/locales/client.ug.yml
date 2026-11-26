@@ -52,6 +52,15 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      review_bulk:
+        refresh: "يېڭىلا"
+        columns:
+          user: "ئىشلەتكۈچى"
+          reason: "پاش قىلىنغان"
+          created: "قۇرغان ۋاقتى"
+          status: "ھالەت"
+        status:
+          applying: "قوللىنىۋاتىدۇ…"
       copied: "كۆچۈرۈلدى"
       ai_decoded_transcript:
         arguments: "ئۆزگەرگۈچى"
@@ -61,6 +70,12 @@ ug:
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
+        ai_tool:
+          arguments: "ئۆزگەرگۈچى"
+          list_item: "تىزىم تۈرى"
+          add_list_item: "تۈر قوش"
+        mcp_tool:
+          arguments: "ئۆزگەرگۈچى"
         classify:
           text: "تېكىست"
           upload_ids: "سۈرەت"
@@ -99,7 +114,6 @@ ug:
         nav:
           enabled: "قوزغىتىلدى"
         filters:
-          all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
         sentiment:
           enabled: "قوزغىتىلدى"
@@ -108,6 +122,9 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        review_queue:
+          setting_groups:
+            settings: "تەڭشەك"
         image_caption:
           setting_groups:
             settings: "تەڭشەك"
@@ -266,6 +283,27 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      concepts:
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        columns:
+          status: "ھالەت"
+          topics: "تېما"
+          posts: "يازما"
+        statuses:
+          all: "بارلىق ھالەت"
+          active: "ئاكتىپ"
+        form:
+          name: "ئىسمى"
+          description: "چۈشەندۈرۈش"
+          aliases: "تەخەللۇس"
+          status: "ھالەت"
+        tagged_topics: "بەلگە سېلىنغان تېما"
+        topic_columns:
+          topic: "تېما"
+          primary: "ئاساسىي"
+          relevance: "مۇناسىۋىتى"
+        primary_badge: "ئاساسىي"
       decision_models:
         no_preset: "يوق"
         display_name: "ئىسمى"

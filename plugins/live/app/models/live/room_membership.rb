@@ -16,6 +16,9 @@ module Live
       "speaker" => ROLE_SPEAKER,
     }.freeze
 
+    after_create :disconnect_direct_call_chat
+    after_create_commit :broadcast_chat_disconnected
+
     scope :moderator, -> { where(role: ROLE_MODERATOR) }
     scope :speaker, -> { where(role: ROLE_SPEAKER) }
 
@@ -47,6 +50,25 @@ module Live
 
     validates :room_id, presence: true
     validates :user_id, presence: true, uniqueness: { scope: :room_id }
+
+    private
+
+    def disconnect_direct_call_chat
+      return unless room.direct_call_chat?
+
+      room.with_lock do
+        if room.direct_call_chat? && !room.chat_channel.chatable.users.exists?(id: user_id)
+          room.update!(chat_channel_id: nil)
+          @chat_disconnected = true
+        end
+      end
+    end
+
+    def broadcast_chat_disconnected
+      return unless @chat_disconnected
+
+      Live::RoomBroadcaster.new(room).publish_room(type: "chat_disabled")
+    end
   end
 end
 

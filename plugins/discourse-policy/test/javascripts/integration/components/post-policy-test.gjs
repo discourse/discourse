@@ -33,8 +33,8 @@ module(
     });
 
     test("post#policy_can_accept", async function (assert) {
-      this.set("post", fabricatePost({ policy_can_accept: true }));
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({ policy_can_accept: true });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -47,8 +47,8 @@ module(
     });
 
     test("post#policy_can_revoke", async function (assert) {
-      this.set("post", fabricatePost({ policy_can_revoke: true }));
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({ policy_can_revoke: true });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -61,8 +61,8 @@ module(
     });
 
     test("post#policy_accepted_by_count", async function (assert) {
-      this.set("post", fabricatePost({ policy_accepted_by_count: 10 }));
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({ policy_accepted_by_count: 10 });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -74,8 +74,8 @@ module(
     });
 
     test("post#policy_not_accepted_by_count", async function (assert) {
-      this.set("post", fabricatePost({ policy_not_accepted_by_count: 10 }));
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({ policy_not_accepted_by_count: 10 });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -87,15 +87,12 @@ module(
     });
 
     test("no possible users", async function (assert) {
-      this.set(
-        "post",
-        fabricatePost({
-          policy_accepted_by_count: 0,
-          policy_not_accepted_by_count: 0,
-          policy_stats: true,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({
+        policy_accepted_by_count: 0,
+        policy_not_accepted_by_count: 0,
+        policy_stats: true,
+      });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -109,14 +106,11 @@ module(
     });
 
     test("does not show 'no possible users' when no access to stats", async function (assert) {
-      this.set(
-        "post",
-        fabricatePost({
-          policy_accepted_by_count: 0,
-          policy_not_accepted_by_count: 0,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({
+        policy_accepted_by_count: 0,
+        policy_not_accepted_by_count: 0,
+      });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -137,16 +131,13 @@ module(
         { id: 3, username: "alex", avatar_template: "/images/avatar.png" },
       ];
 
-      this.set(
-        "post",
-        fabricatePost({
-          policy_accepted_by: acceptedByUsers,
-          policy_accepted_by_count: 1,
-          policy_not_accepted_by: notAcceptedByUsers,
-          policy_not_accepted_by_count: 3,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({
+        policy_accepted_by: acceptedByUsers,
+        policy_accepted_by_count: 1,
+        policy_not_accepted_by: notAcceptedByUsers,
+        policy_not_accepted_by_count: 3,
+      });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -172,20 +163,17 @@ module(
     });
 
     test("accept policy", async function (assert) {
-      this.set("currentUser", {
+      this.currentUser = {
         id: 1,
         username: "bob",
         avatar_template: "/images/avatar.png",
+      };
+      this.post = fabricatePost({
+        policy_can_accept: true,
+        policy_not_accepted_by: [this.currentUser],
+        policy_not_accepted_by_count: 1,
       });
-      this.set(
-        "post",
-        fabricatePost({
-          policy_can_accept: true,
-          policy_not_accepted_by: [this.currentUser],
-          policy_not_accepted_by_count: 1,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -206,20 +194,17 @@ module(
     });
 
     test("revoke policy", async function (assert) {
-      this.set("currentUser", {
+      this.currentUser = {
         id: 1,
         username: "bob",
         avatar_template: "/images/avatar.png",
+      };
+      this.post = fabricatePost({
+        policy_can_revoke: true,
+        policy_accepted_by: [this.currentUser],
+        policy_accepted_by_count: 1,
       });
-      this.set(
-        "post",
-        fabricatePost({
-          policy_can_revoke: true,
-          policy_accepted_by: [this.currentUser],
-          policy_accepted_by_count: 1,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -250,14 +235,11 @@ module(
         { id: 4, username: "dana", avatar_template: "/images/avatar.png" },
       ];
 
-      this.set(
-        "post",
-        fabricatePost({
-          policy_accepted_by: acceptedByUsers,
-          policy_accepted_by_count: 4,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({
+        policy_accepted_by: acceptedByUsers,
+        policy_accepted_by_count: 4,
+      });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>
@@ -291,14 +273,11 @@ module(
         { id: 4, username: "dana", avatar_template: "/images/avatar.png" },
       ];
 
-      this.set(
-        "post",
-        fabricatePost({
-          policy_not_accepted_by: notAcceptedByUsers,
-          policy_not_accepted_by_count: 4,
-        })
-      );
-      this.set("policy", fabricatePolicy());
+      this.post = fabricatePost({
+        policy_not_accepted_by: notAcceptedByUsers,
+        policy_not_accepted_by_count: 4,
+      });
+      this.policy = fabricatePolicy();
 
       await render(
         <template>

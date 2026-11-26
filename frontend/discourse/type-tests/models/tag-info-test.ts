@@ -41,8 +41,10 @@ interface ExpectedTagInfoFields {
   id: number;
   name: string;
   slug: string;
-  description: string | null;
-  description_cooked: string | null;
+  /** Omitted when the tag is restricted to categories the viewer can't see. */
+  description?: string | null;
+  /** Omitted when the tag is restricted to categories the viewer can't see. */
+  description_cooked?: string | null;
   topic_count: number;
   staff: boolean;
   /** Sent only with content localization, when the tag's localizations are preloaded. */

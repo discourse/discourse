@@ -48,6 +48,8 @@ et:
           color: "värv"
         approve_label: "Jah"
         reject_label: "Ei"
+        category_access_levels:
+          readonly: "Vaata"
       tool_summary:
         search: "Otsi"
         time: "Aeg"
@@ -66,6 +68,12 @@ et:
         errors:
           not_found: "Teemat ei leitud."
       edit_category:
+        errors:
+          not_found: "Kategooriat ei leitud."
+      set_category_permissions:
+        errors:
+          not_found: "Kategooriat ei leitud."
+      delete_category:
         errors:
           not_found: "Kategooriat ei leitud."
       change_topic_category:

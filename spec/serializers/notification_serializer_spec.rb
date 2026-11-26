@@ -11,6 +11,15 @@ RSpec.describe NotificationSerializer do
       expect(json[:notification][:user_id]).to eq(user.id)
     end
 
+    it "generates a fallback slug without writing it to the topic" do
+      topic = Fabricate(:topic, title: "A topic with a missing slug")
+      topic.update_column(:slug, nil)
+      notification.update!(topic: topic)
+
+      expect(json[:notification][:slug]).to eq("a-topic-with-a-missing-slug")
+      expect(topic.reload[:slug]).to be_nil
+    end
+
     it "does not include external_id when sso is disabled" do
       expect(json[:notification].key?(:external_id)).to eq(false)
     end

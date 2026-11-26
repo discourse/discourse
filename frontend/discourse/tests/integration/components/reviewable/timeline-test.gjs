@@ -83,6 +83,32 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
       );
   });
 
+  test("distinguishes approval requests from flags on the same item", async function (assert) {
+    const reviewable = reviewableWithReason("Replies require staff approval.");
+    reviewable.reviewable_scores.push({
+      created_at: "2024-01-02T00:00:00.000Z",
+      user: { id: 2, username: "flagger" },
+      score_type: { type: "spam", title: "Spam" },
+    });
+
+    await render(
+      <template><ReviewableTimeline @reviewable={{reviewable}} /></template>
+    );
+
+    assert
+      .dom(".timeline-event:first-child .timeline-event__title")
+      .includesText(
+        "Queued for approval by system",
+        "identifies who queued it"
+      );
+    assert
+      .dom(".timeline-event:last-child .timeline-event__title")
+      .includesText(
+        "Flagged as Spam by flagger",
+        "keeps the actual flag reason"
+      );
+  });
+
   test("renders claimed and unclaimed history events", async function (assert) {
     const reviewable = { reviewable_scores: [] };
     const historyEvents = [

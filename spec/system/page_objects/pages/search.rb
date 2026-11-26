@@ -51,6 +51,26 @@ module PageObjects
         find(".search-cta").click
       end
 
+      def click_search_type(type)
+        find(".search-types__type[data-search-type='#{type}']").click
+      end
+
+      def has_active_search_type?(type)
+        has_css?(".search-types__type.active[data-search-type='#{type}']")
+      end
+
+      def click_category_result(name)
+        find(".fps-category-item", text: name).click
+      end
+
+      def has_category_result?(name)
+        has_css?(".fps-category-item", text: name)
+      end
+
+      def has_user_result?(username)
+        has_css?(".fps-user-item .username", text: username)
+      end
+
       def expand_dropdown
         click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
         self
@@ -127,6 +147,15 @@ module PageObjects
 
       def has_found_no_results?
         page.has_css?(".search-menu-container .results .no-results")
+      end
+
+      def type_post_date(digits)
+        find("#search-post-date").send_keys(digits)
+        self
+      end
+
+      def has_post_date?(date)
+        has_field?("search-post-date", with: date)
       end
 
       def search_term(id = "icon-search-input")

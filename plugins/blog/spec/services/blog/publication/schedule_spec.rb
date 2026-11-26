@@ -40,6 +40,15 @@ RSpec.describe Blog::Publication::Schedule do
       approve_blog_revision(publication, revision, publisher)
     end
 
+    context "when the article's blog is not published" do
+      before do
+        blog = Blog::Instance.create!(name: "Engineering", slug: "engineering", published: false)
+        publication.update_columns(blog_id: blog.id)
+      end
+
+      it { is_expected.to fail_a_policy(:blog_published) }
+    end
+
     context "when contract is invalid" do
       let(:scheduled_at) { 1.minute.ago }
 

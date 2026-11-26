@@ -58,7 +58,7 @@ RSpec.describe StaffActionLogger do
         acting_user_id: admin.id,
         target_user_id: bot.id,
         subject: bot.username,
-        details: "trust_level: #{bot.trust_level}",
+        details: "trust_level: #{bot.trust_level}\ninteractive_bot: #{bot.interactive_bot}",
       )
     end
   end

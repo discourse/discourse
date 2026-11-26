@@ -53,10 +53,12 @@ module Live
     end
 
     def record_participant_join(event)
+      identity = event.dig("participant", "identity").to_s
+      return if ParticipantEvictor.expel_unless_authorized!(event.dig("room", "name"), identity)
+
       room = event_room(event)
       return if room.nil?
 
-      identity = event.dig("participant", "identity").to_s
       if AgentDispatcher.pending?(room.id) && !/\A[1-9]\d*\z/.match?(identity)
         return AgentManager.reconcile(room)
       end
@@ -103,6 +105,9 @@ module Live
       room = event_room(event)
       return if room.nil?
 
+      # Successive calls share the room name, so a late finish from the
+      # previous call must not drop grants made in the one now running.
+      Live::StageRoles.clear_session_speakers!(room) if Live::ParticipantTracker.vacant?(room.id)
       AgentManager.evict_agents_in_room!(room, delete_room: false)
       Live::ParticipantTracker.clear_livekit_sids(room.id)
     end

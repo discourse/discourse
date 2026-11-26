@@ -14,6 +14,7 @@ el:
     about: Σχετικά
     community: Κοινότητα
     preview: Προεπισκόπηση
+    author: Συντάκτης
     search: Αναζήτηση
     replies:
       one: "%{count} απάντηση"

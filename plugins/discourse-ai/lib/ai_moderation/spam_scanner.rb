@@ -279,13 +279,16 @@ module DiscourseAi
               )
             handle_spam(post, log, triggering_user_id: triggering_user_id) if log.is_spam
           end
+          ProblemCheckTracker[:ai_spam_scan_errors].no_problem! if verdict[:llm_model]
         rescue DiscourseAi::Decisions::CreditLimitExceeded
           # with no LLM to fall back on, the post goes unscanned until credits reset
           Rails.logger.warn(
             "Discourse AI: Spam scan skipped for post #{post.id}, the decision model is out of credits",
           )
+        rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
+          ProblemCheckTracker[:ai_spam_scan_errors].problem!
+          raise
         rescue StandardError => e
-          # we need retries otherwise stuff will not be handled
           Discourse.warn_exception(
             e,
             message: "Discourse AI: Error in SpamScanner for post #{post.id}",
@@ -599,7 +602,10 @@ module DiscourseAi
           ],
         )
 
-        Topic.where(id: post.topic_id).update_all(visible: false) if post.post_number == 1
+        if post.post_number == 1
+          Topic.where(id: post.topic_id).update_all(visible: false, excerpt: nil)
+          TopicLocalization.where(topic_id: post.topic_id).update_all(excerpt: nil)
+        end
       end
 
       def self.post_has_existing_flag?(post)

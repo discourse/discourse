@@ -418,6 +418,11 @@ describe "Content Localization" do
           # Viewing translation - Save original title change and displayed title should NOT update (still viewing translation)
           find("#edit-title").fill_in(with: "New Original Title")
           topic_page.click_topic_title_submit_edit
+          expect(topic_page).to have_no_topic_title_editor
+          expect(topic_page).to have_topic_title(original_translated_title)
+
+          # Start the translation edit after the original edit's live reload can no longer overwrite it.
+          page.refresh
           expect(topic_page).to have_topic_title(original_translated_title)
 
           # Viewing translation - Edit translation

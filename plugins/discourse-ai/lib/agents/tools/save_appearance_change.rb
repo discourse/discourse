@@ -10,6 +10,7 @@ module DiscourseAi
           "palettes" => AppearanceChange::DraftPalettes,
           "existing_palettes" => AppearanceChange::DraftExistingPalettes,
           "theme" => AppearanceChange::DraftTheme,
+          "component" => AppearanceChange::DraftComponent,
         }.freeze
         SERVICE_PARAMS = %i[
           theme_id
@@ -19,6 +20,9 @@ module DiscourseAi
           light_palette_id
           dark_palette_id
           site_settings
+          styles
+          replaces_theme_id
+          parent_theme_id
         ].freeze
 
         def self.name
@@ -56,13 +60,15 @@ module DiscourseAi
           # new palettes replace their theme's; a new theme replaces what the
           # site shows now
           live_theme = theme_draft? ? Theme.find_default : target_theme
-          AppearanceAuthoring.color_changes(
-            before: AppearanceAuthoring.theme_palettes(live_theme),
-            after: {
-              light: draft[:light_colors],
-              dark: draft[:dark_colors],
-            },
-          ) + AppearanceAuthoring.font_changes(draft[:site_settings])
+          current = AppearanceAuthoring.theme_palettes(live_theme)
+          # a component may keep its theme's palettes
+          palettes = {
+            light: draft[:light_colors] || current[:light],
+            dark: draft[:dark_colors] || current[:dark],
+          }
+          AppearanceAuthoring.color_changes(before: current, after: palettes) +
+            AppearanceAuthoring.font_changes(draft[:site_settings]) +
+            AppearanceAuthoring.style_changes(draft[:styles], palettes:, previous: replaced_styles)
         end
 
         def approval_details
@@ -81,7 +87,14 @@ module DiscourseAi
               user: context.user,
               phase: execution_phase,
               new_theme: theme_draft?,
-              new_palettes: valid_draft? && draft[:kind] == "palettes",
+              new_component: component_draft?,
+              new_palettes:
+                valid_draft? &&
+                  (
+                    draft[:kind] == "palettes" ||
+                      (component_draft? && draft[:light_colors].present?)
+                  ),
+              styles: valid_draft? && draft[:styles].present?,
             )
           return error_response(refusal) if refusal
           if !valid_draft?
@@ -169,9 +182,27 @@ module DiscourseAi
 
         # Drafts of existing palettes carry their colors too, for the approval
         # card.
+        # The styles of the version a new version replaces, so the approval
+        # card shows what changes, styles it removes too.
+        def replaced_styles
+          return if draft[:replaces_theme_id].blank?
+          AppearanceChange
+            .where(kind: %i[theme component])
+            .find_by(theme_id: draft[:replaces_theme_id])
+            &.styles
+        end
+
         def valid_draft?
-          draft.present? && SERVICES.key?(draft[:kind]) && draft[:name].present? &&
-            draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash) &&
+          return false if draft.blank? || !SERVICES.key?(draft[:kind]) || draft[:name].blank?
+          if draft[:kind] == "component"
+            # palettes are optional, but come in pairs
+            return(
+              draft[:parent_theme_id].is_a?(Integer) &&
+                draft[:light_colors].is_a?(Hash) == draft[:dark_colors].is_a?(Hash)
+            )
+          end
+
+          draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash) &&
             (
               draft[:kind] != "existing_palettes" ||
                 [draft[:light_palette_id], draft[:dark_palette_id]].all?(Integer)
@@ -182,8 +213,16 @@ module DiscourseAi
           valid_draft? && draft[:kind] == "theme"
         end
 
+        def component_draft?
+          valid_draft? && draft[:kind] == "component"
+        end
+
+        # The theme the change gives palettes or a component to.
         def target_theme
-          Theme.find_by(id: draft[:theme_id], component: false)
+          Theme.find_by(
+            id: draft[component_draft? ? :parent_theme_id : :theme_id],
+            component: false,
+          )
         end
       end
     end

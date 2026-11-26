@@ -17,8 +17,9 @@ module("Unit | Initializer | blog-discussion-resize", function (hooks) {
     document.documentElement.classList.add("discourse-blog-discussion");
     const settings = this.owner.lookup("service:site-settings");
     settings.blog_enabled = true;
-    this.owner.lookup("service:site").blog_base_url =
-      "https://blog.example.com";
+    this.owner.lookup("service:site").blogs = [
+      { base_url: "https://blog.example.com" },
+    ];
   });
 
   hooks.afterEach(function () {
@@ -32,7 +33,7 @@ module("Unit | Initializer | blog-discussion-resize", function (hooks) {
   });
 
   test("leaves the embed unmanaged when the blog URL is unusable", function (assert) {
-    this.owner.lookup("service:site").blog_base_url = "not a url";
+    this.owner.lookup("service:site").blogs = [{ base_url: "not a url" }];
     const observe = this.sandbox.stub();
     this.sandbox.stub(window, "ResizeObserver").callsFake(() => ({
       observe,

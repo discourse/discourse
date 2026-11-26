@@ -530,9 +530,6 @@ pt_BR:
       fonts:
         base_font: "Corpo"
         heading_font: "Cabeçalhos"
-      logo:
-        description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
-        help_text: "O tamanho recomendado é 600 x 80 pixels."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -2538,6 +2535,7 @@ pt_BR:
       no_results: "Nenhum resultado"
       search: "Pesquisar…"
       label: "Selecione as opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Digite um número
@@ -2967,6 +2965,9 @@ pt_BR:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      search_placeholder: "Pesquisar por nome de emoji e codinomes..."
+      no_results: "Nenhum resultado"
+      favorites: "Usado frequentemente"
       smileys_&_emotion: Carinhas e emotion
       people_&_body: Pessoas e corpo
       animals_&_nature: Animais e natureza
@@ -3019,6 +3020,10 @@ pt_BR:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citação"
+        details: "Detalhes"
       whisper: "sussuro"
       unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
@@ -4145,10 +4150,8 @@ pt_BR:
           label: "selecionado(a)"
           title: "Clique para remover a postagem da seleção"
         select_replies:
-          label: "selecionar +respostas"
           title: "Adicionar postagem e todas as suas respostas à seleção"
         select_below:
-          label: "selecionar +abaixo"
           title: "Adicionar a postagem e todo o conteúdo abaixo à seleção"
         delete: Excluir selecionados(as)
         cancel: cancelar seleção
@@ -4177,6 +4180,7 @@ pt_BR:
         actions: "Ações em massa"
     post:
       accessible_heading: "postagem por #%{username} em %{date}"
+      ai_generated: "IA"
       heading_anchor: "Link do cabeçalho"
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -4527,6 +4531,8 @@ pt_BR:
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
+      empty_state:
+        edit_category: "Editar categoria"
       create: "Nova categoria"
       create_long: "Criar uma nova categoria"
       type_settings_schema:
@@ -4544,7 +4550,7 @@ pt_BR:
         emoji_required: "Selecione um emoji."
         icon_required: "Selecione um ícone."
       name: "Nome da categoria"
-      untitled: "Categoria sem título"
+      icon_search_placeholder: "Pesquisar…"
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria no modo escuro"
@@ -4552,9 +4558,6 @@ pt_BR:
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem de fundo da categoria no modo escuro"
       style: "Estilo"
-      icon: "Ícone"
-      emoji: "Emoji"
-      select_emoji: "Selecionar emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
@@ -4562,18 +4565,11 @@ pt_BR:
         incorrect_length: "deve corresponder ao formato #RRGGBB ou #RGB"
         non_hexdecimal: "deve conter apenas caracteres hexadecimais (0-9, AF)"
       styles:
-        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         square: "Quadrado"
-        options:
-          square: "Quadrado"
-          icon: "Ícone"
-          emoji: "Emoji"
       color_used: "Cor em uso"
-      predefined_colors: "Opções predefinidas de cor"
       name_placeholder: "Uma ou duas palavras recomendadas"
-      color_placeholder: "Qualquer cor da web"
       delete_confirm: "Tem certeza que quer excluir esta categoria?"
       delete_error: "Houve um erro ao excluir a categoria."
       list: "Listar categorias"
@@ -5260,9 +5256,17 @@ pt_BR:
       forward: "Avançar"
       share: "Compartilhar"
       dismiss: "Descartar"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Voltar"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
-    theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
     theme_preview_failed: "Não foi possível visualizar o tema porque ele não existe ou você não tem permissão para acessá-lo."
     image_removed: "(imagem removida)"
     pause_notifications:
@@ -6855,14 +6859,6 @@ pt_BR:
           company_name: "Nome"
           company_url: "Site"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Lei aplicável"
-          governing_law_placeholder: "Província, estado ou país"
-          governing_law_help: |
-            Especifique a jurisdição à qual pertencem os termos legais do site, geralmente é onde a empresa está registrada ou atua
-          city_for_disputes: "Cidade para disputas"
-          city_for_disputes_placeholder: "Cidade"
-          city_for_disputes_help: |
-            Especifique a cidade para a solução de disputas legais relacionadas a este fórum.
           extra_groups:
             heading: "Listagem de grupos"
             description: "Grupos extras a serem exibidos na página Sobre."
@@ -7424,8 +7420,6 @@ pt_BR:
           title: "Cores"
           edit: "Editar"
           view: "Visualizar"
-          set_default_light: "Definir paleta clara no tema padrão (%{theme})"
-          set_default_dark: "Definir paleta escura no tema padrão (%{theme})"
           set_default_success: "%{schemeName} definido como paleta ativa para %{themeName}"
           saved_refreshing: "Salvou! Atualizando cores..."
           from_theme: "Do tema: %{name}"
@@ -8065,7 +8059,6 @@ pt_BR:
         silence_duration: "Por quanto tempo o(a) usuário(a) será silenciado(a)?"
         silence_reason_title: "Motivo do silêncio"
         silence_reason_placeholder: "Motivo do silêncio"
-        silence_message: "Mensagem do e-mail"
         suspended_until: "(até %{until})"
         suspend_forever: "Suspender para sempre"
         cant_suspend: "Este(a) usuário(a) não pode ser suspenso(a)."
@@ -8379,6 +8372,8 @@ pt_BR:
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
         search_label: "Pesquisar"
+        preview:
+          default: "Padrão"
         theme_disabled: "Desativados"
         filters: "Filtros"
         status:
@@ -8546,7 +8541,7 @@ pt_BR:
           modal_title: Agrupamentos de emblemas
         granted_by: Concedido por
         granted_at: Concedido em
-        reason_help: (Um link para uma postagem ou tópico)
+        reason_help: Um link para uma postagem ou tópico
         save: Salvar
         delete: Excluir
         delete_confirm: Tem certeza de que deseja excluir este emblema?

@@ -161,6 +161,10 @@ export default class FKFieldData extends Component {
     return (this.args.errors ?? {})[this.name];
   }
 
+  get labelId() {
+    return `${this.id}-label`;
+  }
+
   get descriptionId() {
     return `${this.id}-description`;
   }
@@ -319,6 +323,14 @@ export default class FKFieldData extends Component {
     }
 
     this.args.triggerRevalidationFor(this.name);
+  }
+
+  /**
+   * Removes the errors of the field.
+   */
+  @action
+  removeError() {
+    this.args.data.removeError(this.name);
   }
 
   /**

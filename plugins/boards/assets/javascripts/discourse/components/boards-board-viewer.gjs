@@ -115,6 +115,7 @@ export default class BoardsBoardViewer extends Component {
   @service toasts;
 
   @tracked board;
+  @tracked cardDetail = null;
   @tracked columns;
   @tracked dragData = null;
   @tracked dropHighlightCardId = null;
@@ -211,6 +212,10 @@ export default class BoardsBoardViewer extends Component {
       }
     }
     return true;
+  }
+
+  get isCardDetailCovered() {
+    return !!this.modal.activeModal;
   }
 
   @bind
@@ -727,6 +732,26 @@ export default class BoardsBoardViewer extends Component {
     this.router.transitionTo("boards");
   }
 
+  // Rendered from this template rather than through the modal service, so
+  // modals opened from inside it (e.g. the editor's link modal) stack on top
+  // instead of replacing it and discarding the unsaved card.
+  @action
+  openCardDetail(model) {
+    this.cardDetail?.resolve();
+    this.modal.close();
+
+    return new Promise((resolve) => {
+      this.cardDetail = { model, resolve };
+    });
+  }
+
+  @action
+  closeCardDetail() {
+    const resolve = this.cardDetail?.resolve;
+    this.cardDetail = null;
+    resolve?.();
+  }
+
   #handleCardCreated(card) {
     if (card.topic_id && !card.topic) {
       this.#handleBoardUpdated();
@@ -1134,9 +1159,6 @@ export default class BoardsBoardViewer extends Component {
   #openInitialCardModal(card) {
     const boardUrl = boardsBoardUrl(this.board);
     const isTopicCard = card.card_type === "topic" && card.topic;
-    const ModalComponent = isTopicCard
-      ? BoardsTopicCardDetailModal
-      : BoardsCardDetailModal;
     let navigatedAway = false;
 
     const column = this.columns.find((col) => col.id === card.column_id);
@@ -1153,7 +1175,11 @@ export default class BoardsBoardViewer extends Component {
         }
       : { card, board: this.board, onUpdateCard: this.onUpdateCard };
 
-    this.modal.show(ModalComponent, { model }).finally(() => {
+    const shown = isTopicCard
+      ? this.modal.show(BoardsTopicCardDetailModal, { model })
+      : this.openCardDetail(model);
+
+    shown.finally(() => {
       if (!navigatedAway && !this.isDestroying) {
         DiscourseURL.replaceState(boardUrl);
       }
@@ -1443,6 +1469,7 @@ export default class BoardsBoardViewer extends Component {
               @onDrop={{this.onDrop}}
               @onEditColumn={{this.openEditColumnModal}}
               @onMoveColumn={{this.moveColumn}}
+              @onOpenCardDetail={{this.openCardDetail}}
               @onPromoteToTopic={{this.onPromoteToTopic}}
               @onRefreshBoard={{this.refreshBoard}}
               @onUpdateCard={{this.onUpdateCard}}
@@ -1479,5 +1506,13 @@ export default class BoardsBoardViewer extends Component {
         </div>
       {{/if}}
     </div>
+
+    {{#if this.cardDetail}}
+      <BoardsCardDetailModal
+        @closeModal={{this.closeCardDetail}}
+        @hidden={{this.isCardDetailCovered}}
+        @model={{this.cardDetail.model}}
+      />
+    {{/if}}
   </template>
 }

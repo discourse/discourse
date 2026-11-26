@@ -51,6 +51,8 @@ da:
           text_color: "tekst farve"
         approve_label: "Ja"
         reject_label: "Nej"
+        category_access_levels:
+          readonly: "Se"
         empty_value: "Tom"
       tool_summary:
         search: "Søg"
@@ -72,6 +74,12 @@ da:
         errors:
           not_found: "Emne ikke fundet."
       edit_category:
+        errors:
+          not_found: "Denne kategori blev ikke fundet."
+      set_category_permissions:
+        errors:
+          not_found: "Denne kategori blev ikke fundet."
+      delete_category:
         errors:
           not_found: "Denne kategori blev ikke fundet."
       change_topic_category:

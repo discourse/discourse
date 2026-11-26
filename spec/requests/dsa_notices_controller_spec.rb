@@ -189,8 +189,10 @@ RSpec.describe DsaNoticesController do
       SiteSetting.allow_anonymous_mode = true
       SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
       reporter = Fabricate(:user, trust_level: TrustLevel[3])
-      sign_in(AnonymousShadowCreator.get(reporter))
+      sign_in_and_switch_to_anonymous_mode(reporter)
       SiteSetting.allow_anonymous_mode = false
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(reporter.shadow_user.id)
 
       expect do
         post "/dsa/report-illegal-content.json", params: { notice:, token: "" }

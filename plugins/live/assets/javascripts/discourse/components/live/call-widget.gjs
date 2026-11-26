@@ -4,7 +4,6 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -12,12 +11,16 @@ import { avatarUrl } from "discourse/lib/avatar-utils";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
+import { speakQueue } from "../../lib/live/speak-queue.js";
+import { isStageSpeaker } from "../../lib/live/stage-roles.js";
 import {
   computeWidgetGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
+import watchRoom from "../../lib/live/watch-room.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
 import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
@@ -27,6 +30,7 @@ import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
 import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
+import LiveSpeakQueue from "./speak-queue.gjs";
 import LiveTranscriptBadge from "./transcript-badge.gjs";
 import LiveVideoTile from "./video-tile.gjs";
 
@@ -100,7 +104,6 @@ export default class LiveCallWidget extends Component {
     this.#removeResizeListeners();
     this.#removeDragListeners();
     window.clearTimeout(this.dragHoldTimer);
-    this.stopWatchingWidgetRoom();
   }
 
   get room() {
@@ -232,6 +235,18 @@ export default class LiveCallWidget extends Component {
     return trustHTML(
       `--live-tile-width: ${grid.tileWidth}px; --live-tile-height: ${grid.tileHeight}px;`
     );
+  }
+
+  get isStageRoom() {
+    return this.room?.room_type === "stage";
+  }
+
+  get showStageQueue() {
+    return this.isStageRoom && !!this.room?.can_manage;
+  }
+
+  get speakQueueCount() {
+    return speakQueue(this.room).length;
   }
 
   get openRoomTitle() {
@@ -570,30 +585,6 @@ export default class LiveCallWidget extends Component {
   @action
   registerWidget(element) {
     this.widgetElement = element;
-    this.watchWidgetRoom();
-  }
-
-  @action
-  watchWidgetRoom() {
-    const roomId = this.room?.id;
-    if (!roomId) {
-      return;
-    }
-
-    next(this, () => {
-      if (this.isDestroying || this.room?.id !== roomId) {
-        return;
-      }
-
-      this.liveWebrtc.setWatching(roomId, true);
-    });
-  }
-
-  stopWatchingWidgetRoom() {
-    const roomId = this.room?.id;
-    if (roomId) {
-      this.liveWebrtc.setWatching(roomId, false, { keepVideo: true });
-    }
   }
 
   #loadSize() {
@@ -657,12 +648,22 @@ export default class LiveCallWidget extends Component {
   #tileRank(participant) {
     if (participant.id === this.currentUser?.id) {
       const kind = this.liveWebrtc.localVideoKind;
-      return kind === "screen" ? 0 : kind ? 1 : 2;
-    }
-    if (participant.is_screen_sharing) {
+      if (kind === "screen") {
+        return 0;
+      }
+      if (kind) {
+        return 1;
+      }
+    } else if (participant.is_screen_sharing) {
       return 0;
+    } else if (participant.is_video_on) {
+      return 1;
     }
-    return participant.is_video_on ? 1 : 2;
+
+    if (this.isStageRoom) {
+      return isStageSpeaker(participant) ? 2 : 3;
+    }
+    return 2;
   }
 
   #isPublishing(participant) {
@@ -708,7 +709,12 @@ export default class LiveCallWidget extends Component {
         data-room-id={{this.room.id}}
         style={{this.widgetStyle}}
         {{didInsert this.registerWidget}}
-        {{didInsert this.watchWidgetRoom this.room.id}}
+        {{watchRoom
+          this.liveWebrtc
+          this.room.id
+          disabled=this.extraMinimized
+          keepVideo=true
+        }}
         {{on "pointermove" this.dragWidget}}
         {{on "pointerup" this.stopDrag}}
         {{on "pointercancel" this.stopDrag}}
@@ -786,6 +792,28 @@ export default class LiveCallWidget extends Component {
             />
           {{else}}
             <LiveCallControls @room={{this.room}} />
+            {{#if this.showStageQueue}}
+              <DMenu
+                @ariaLabel={{i18n "live.stage.queue_title"}}
+                @identifier="live-widget-speak-queue-menu"
+                @modalForMobile={{true}}
+                @placement="top-end"
+                @title={{i18n "live.stage.queue_title"}}
+                @triggerClass="btn-default live-speak-queue-trigger"
+              >
+                <:trigger>
+                  {{dIcon "list-ol"}}
+                  {{#if this.speakQueueCount}}
+                    <span
+                      class="live-speak-queue-trigger__count"
+                    >{{this.speakQueueCount}}</span>
+                  {{/if}}
+                </:trigger>
+                <:content>
+                  <LiveSpeakQueue @room={{this.room}} />
+                </:content>
+              </DMenu>
+            {{/if}}
             <DButton
               class="btn-default"
               @action={{this.openRoom}}

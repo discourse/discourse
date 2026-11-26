@@ -15,6 +15,13 @@ hy:
         desktop: Համակարգչային
         mobile: Հեռախոսային
         save: Պահպանել
+        about_tab: Մասին
+        general_heading: Ընդհանուր
+        settings_tab: Կարգավորումներ
+        theme_tab: Թեմա
+        column_name: Անուն
+        column_category: Կատեգորիա
+        column_status: Ստատուս
         path_formats:
           custom: Մասնավոր
         themes: Թեմաներ
@@ -51,6 +58,8 @@ hy:
         edit: Խմբագրել
         status: Ստատուս
         replies: Պատասխաններ
+        title: Վերնագիր
+      all: Բոլոր
       drafts: Սևագրեր
       preview: Նախադիտում
       unpublish: Հրապարակումը չեղարկել

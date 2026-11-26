@@ -34,12 +34,6 @@ ja:
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
         notify_author_pm:
           subject: "投稿はレビューのため、一時的に削除されました"
-          body: |
-            @%{username}、こんにちは。
-
-            「%{topic_title}」のあなたの投稿は一時的に削除され、モデレーターによるレビュー待ちとなっています。承認されると、自動的に復元されます。
-
-            参照: %{post_url}
       llm_report:
         title: AI を使った定期レポート
         description: "大規模言語モデルに基づく定期レポート"
@@ -117,6 +111,11 @@ ja:
     ai_translation_include_bot_content: "有効にすると、ボット (0 未満のユーザー ID) が書き込んだコンテンツも翻訳に送信されます。"
     ai_translation_backfill_hourly_rate: "バックフィル操作中に 1 時間あたりに翻訳する投稿とトピックの数。既存のコンテンツの翻訳の自動バックフィルを無効にする場合は 0 に設定します。"
     ai_usage_rollup_after_days: "日次集計にロールアップするまでに、リクエストごとの AI 使用統計を保持する日数。ロールアップを無効にする場合は 0 に設定します。"
+    keywords:
+      ai_default_llm_model: "デフォルトの言語モデル"
+      ai_discord_search_enabled: "discord 統合"
+      ai_summarization_enabled: "要約"
+      ai_summary_gists_enabled: "トピックリストの短い要約"
   reviewables:
     reasons:
       flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。
@@ -299,6 +298,8 @@ ja:
           text_color: "テキストの色"
         approve_label: "はい"
         reject_label: "いいえ"
+        category_access_levels:
+          readonly: "閲覧"
         empty_value: "空"
       agents:
         cannot_have_duplicate_tools: "重複するツールは使用できません"
@@ -460,6 +461,7 @@ ja:
         suspend_user: "ユーザーを凍結する"
         silence_user: "ユーザーを投稿禁止にする"
         edit_post: "投稿を編集する"
+        delete_category: "カテゴリを削除する"
         search: "検索"
         tags: "タグをリスト"
         time: "時刻"
@@ -579,6 +581,8 @@ ja:
         errors:
           not_found: "トピックが見つかりませんでした."
     appearance_authoring:
+      component_on: "オン"
+      component_off: "オフ"
       default_theme: "デフォルトのテーマ"
       colors:
         light:

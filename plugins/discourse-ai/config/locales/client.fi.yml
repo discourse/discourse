@@ -163,6 +163,13 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      review_bulk:
+        refresh: "Päivitä"
+        columns:
+          user: "Käyttäjä"
+          reason: "Liputettu merkinnällä"
+          created: "Luotu"
+          status: "Tila"
       dsa_classification:
         suggest: "Ehdota tekoälyllä"
       copied: "Kopioitiin"
@@ -174,6 +181,12 @@ fi:
       discourse_workflows:
         ai_agent:
           mode: "Tila"
+        ai_tool:
+          tool_ref: "Työkalu"
+          list_item: "Luettelokohde"
+          add_list_item: "Lisää kohde"
+        mcp_tool:
+          tool_name: "Työkalu"
         classify:
           text: "Teksti"
           upload_ids: "Kuvat"
@@ -221,7 +234,6 @@ fi:
         nav:
           enabled: "Käytössä"
         filters:
-          all: "Kaikki"
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"
@@ -269,6 +281,9 @@ fi:
           post_illustrator: "Viestin havainnollistaja"
           setting_groups:
             automation: "Automaatio"
+        review_queue:
+          setting_groups:
+            settings: "Asetukset"
         image_caption:
           setting_groups:
             settings: "Asetukset"
@@ -610,6 +625,25 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      concepts:
+        edit: "Muokkaa"
+        delete: "Poista"
+        columns:
+          status: "Tila"
+          topics: "Aiheet"
+          posts: "Viestejä"
+        statuses:
+          active: "Aktiivinen"
+        form:
+          name: "Nimi"
+          description: "Kuvaus"
+          status: "Tila"
+        tagged_topics: "Tunnisteelliset ketjut"
+        topic_columns:
+          topic: "Ketju"
+          primary: "Ensisijainen"
+          relevance: "Osuvuus"
+        primary_badge: "Ensisijainen"
       decision_models:
         no_preset: "Ei valittu"
         display_name: "Nimi"
@@ -881,7 +915,6 @@ fi:
         filter_standalone: "Erillinen"
       ai_bot:
         title: "Tekoälybotti"
-        llm: "Malli:"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
         try_again: "Yritä uudelleen"
@@ -938,9 +971,9 @@ fi:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "Tekoäly"
           header: "Miten voin auttaa?"
           submit: "Lähetä kysymys"
-          disclaimer: "Generatiivinen tekoäly voi tehdä virheitä. Tarkista tärkeät tiedot."
           placeholder: "Kysy kysymys..."
           new: "Uusi kysymys"
           min_input_length_message:

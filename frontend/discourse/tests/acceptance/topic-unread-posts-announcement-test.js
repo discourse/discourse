@@ -1,7 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
-import { IDLE_ANNOUNCEMENT } from "discourse/components/a11y/live-regions";
 import { cloneJSON } from "discourse/lib/object";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -44,10 +43,7 @@ acceptance("Topic - unread posts announcement", function (needs) {
 
     assert
       .dom("#a11y-announcements-polite")
-      .hasText(
-        IDLE_ANNOUNCEMENT,
-        "no announcement without a last read post number"
-      );
+      .hasNoText("no announcement without a last read post number");
   });
 
   test("stays silent when the topic is fully read", async function (assert) {
@@ -57,10 +53,7 @@ acceptance("Topic - unread posts announcement", function (needs) {
 
     assert
       .dom("#a11y-announcements-polite")
-      .hasText(
-        IDLE_ANNOUNCEMENT,
-        "no announcement when there are no unread posts"
-      );
+      .hasNoText("no announcement when there are no unread posts");
   });
 
   test("does not repeat while moving between posts of the same topic", async function (assert) {

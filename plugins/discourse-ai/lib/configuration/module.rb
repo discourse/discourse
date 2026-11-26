@@ -17,6 +17,7 @@ module DiscourseAi
       AUTOMATION_TRIAGE = "automation_triage"
       ADMIN_DASHBOARD = "admin_dashboard"
       SENTIMENT = "sentiment"
+      REVIEW_QUEUE = "review_queue"
 
       NAMES = [
         SUMMARIZATION,
@@ -33,6 +34,7 @@ module DiscourseAi
         AUTOMATION_TRIAGE,
         ADMIN_DASHBOARD,
         SENTIMENT,
+        REVIEW_QUEUE,
       ].freeze
 
       SUMMARIZATION_ID = 1
@@ -49,6 +51,7 @@ module DiscourseAi
       ADMIN_DASHBOARD_ID = 12
       IMAGE_CAPTION_ID = 13
       SENTIMENT_ID = 14
+      REVIEW_QUEUE_ID = 15
 
       class << self
         def external_module_id(module_name)
@@ -83,6 +86,8 @@ module DiscourseAi
               INFERENCE,
               enabled_by_setting: "inferred_concepts_enabled",
               features: DiscourseAi::Configuration::Feature.inference_features,
+              extra_check: -> { DiscourseAi::Embeddings.enabled? },
+              setup_check: -> { DiscourseAi::Embeddings.enabled? },
               # Nothing displays the concepts yet, so admins would pay for output they cannot see.
               visible: false,
             ),
@@ -121,6 +126,14 @@ module DiscourseAi
                   }
                 end
               end,
+            ),
+            new(
+              REVIEW_QUEUE_ID,
+              REVIEW_QUEUE,
+              enabled_by_setting: "ai_reviewable_action_suggestions_enabled",
+              features: DiscourseAi::Configuration::Feature.review_queue_features,
+              extra_check: -> { DiscourseAi::Configuration::Feature.review_queue_model.present? },
+              setup_check: -> { DiscourseAi::Configuration::Feature.review_queue_model.present? },
             ),
             new(
               SPAM_ID,

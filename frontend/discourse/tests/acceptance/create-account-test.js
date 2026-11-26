@@ -164,6 +164,34 @@ acceptance("Create Account with email code available", function (needs) {
       .doesNotExist("does not show a password field");
   });
 
+  test("uses traditional signup when an invite code is required", async function (assert) {
+    this.siteSettings.require_invite_code = true;
+
+    await visit("/signup");
+
+    assert.dom(".code-login-form").doesNotExist();
+    assert.dom("#inviteCode").exists();
+    assert.dom("#new-account-password").exists();
+
+    await fillIn("#new-account-email", "invited@example.com");
+    await fillIn("#new-account-username", "invited-user");
+    await fillIn("#new-account-password", "a secure password");
+    await fillIn("#new-account-name", "Invited User");
+    await fillIn("#inviteCode", "SECRET");
+
+    pretender.post("/u", (request) => {
+      const data = parsePostData(request.requestBody);
+      assert.step("create account");
+      assert.strictEqual(data.email, "invited@example.com");
+      assert.strictEqual(data.invite_code, "SECRET");
+      return response({ success: true });
+    });
+
+    await click(".signup-fullpage .btn-primary");
+
+    assert.verifySteps(["create account"]);
+  });
+
   test("restores a verified signup after a full page load", async function (assert) {
     this.owner.lookup("service:session-store").setObject({
       key: "email-code-signup-continuation",

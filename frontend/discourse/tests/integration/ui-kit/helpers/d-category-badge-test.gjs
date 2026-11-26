@@ -47,4 +47,40 @@ module("Integration | ui-kit | Helper | dCategoryBadge", function (hooks) {
       "the parent badge precedes the sub-category badge"
     );
   });
+
+  test("renders a span without the link option", async function (assert) {
+    const category = Category.findById(1);
+
+    await render(<template>{{dCategoryBadge category}}</template>);
+
+    assert.dom("span.badge-category__wrapper").exists();
+    assert.dom("a.badge-category__wrapper").doesNotExist();
+  });
+
+  test("passes the options on", async function (assert) {
+    const subcategory = Category.findById(1002);
+
+    await render(
+      <template>
+        <div class="with-parent">{{dCategoryBadge subcategory}}</div>
+        <div class="options">
+          {{dCategoryBadge
+            subcategory
+            hideParent=true
+            previewColor=true
+            styleType="icon"
+            icon="book"
+          }}
+        </div>
+      </template>
+    );
+
+    assert.dom(".with-parent .badge-category").hasClass("--has-parent");
+    assert
+      .dom(".options .badge-category")
+      .doesNotHaveClass("--has-parent")
+      .hasClass("--style-icon")
+      .hasAttribute("style", `--category-badge-color: #${subcategory.color}`);
+    assert.dom(".options .d-icon-book").exists();
+  });
 });

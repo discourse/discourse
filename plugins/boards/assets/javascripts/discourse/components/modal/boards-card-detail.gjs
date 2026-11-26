@@ -91,6 +91,7 @@ export default class BoardsCardDetail extends Component {
     <DModal
       class="discourse-boards-card-detail-modal"
       @closeModal={{@closeModal}}
+      @hidden={{@hidden}}
       @hideHeader={{true}}
       @inline={{@inline}}
       @submitOnEnter={{false}}

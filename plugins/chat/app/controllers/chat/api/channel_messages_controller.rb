@@ -93,9 +93,11 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       on_failed_policy(:channel_allows_message_creation) do |policy|
         render_json_error(policy.reason)
       end
+      on_failed_policy(:can_see_reply) { raise Discourse::NotFound }
       on_failed_policy(:ensure_valid_thread_for_channel) do
         render_json_error(I18n.t("chat.errors.thread_invalid_for_channel"))
       end
+      on_failed_policy(:can_see_thread) { raise Discourse::NotFound }
       on_failed_policy(:ensure_thread_matches_parent) do
         render_json_error(I18n.t("chat.errors.thread_does_not_match_parent"))
       end

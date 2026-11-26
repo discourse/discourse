@@ -62,13 +62,16 @@ RSpec.describe StaticController do
 
       it "serves the default favicon when the file is not in the store" do
         SiteSetting.favicon = upload
-        SiteIconManager.favicon.update_columns(url: "/403.html")
 
-        get "/favicon/proxied"
+        ["/403.html", "#{Discourse.store.relative_base_url}/missing.png"].each do |url|
+          SiteIconManager.favicon.update_columns(url:)
 
-        expect(response.body.b).to eq(
-          File.binread(Rails.public_path.join("images/default-favicon.png")),
-        )
+          get "/favicon/proxied"
+
+          expect(response.body.b).to eq(
+            File.binread(Rails.public_path.join("images/default-favicon.png")),
+          )
+        end
       end
     end
 
@@ -82,12 +85,15 @@ RSpec.describe StaticController do
         )
       end
 
-      before { setup_s3 }
+      before do
+        setup_s3
+        FileUtils.rm_rf(FileStore::BaseStore::CACHE_DIR)
+      end
 
       it "can proxy a favicon correctly" do
         SiteSetting.favicon = upload
 
-        stub_request(:get, "https:/#{upload.url}").to_return(status: 200, body: file)
+        stub_request(:get, "#{SiteSetting.scheme}:#{upload.url}").to_return(status: 200, body: file)
 
         get "/favicon/proxied"
 
@@ -97,7 +103,10 @@ RSpec.describe StaticController do
       end
 
       context "when favicon fails to load" do
-        before { FileHelper.stubs(:download).raises(SocketError) }
+        before do
+          SiteSetting.favicon = upload
+          FileHelper.stubs(:download).raises(SocketError)
+        end
 
         it "creates an admin notice" do
           expect { get "/favicon/proxied" }.to change { AdminNotice.problem.count }.by(1)
@@ -328,6 +337,26 @@ RSpec.describe StaticController do
       expect(response.body).to include(
         PrettyText.cook(I18n.t("login_required.welcome_message", title: SiteSetting.title)),
       )
+    end
+
+    it "includes dimensions for the login logo and its dark variant" do
+      SiteSetting.login_required = true
+      SiteSetting.logo = Fabricate(:upload, width: 600, height: 200)
+      SiteSetting.logo_dark = Fabricate(:upload, width: 500, height: 150)
+      Fabricate(
+        :theme,
+        color_scheme: ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]),
+      )
+
+      get "/login"
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body.at_css(".site-logo").attributes.transform_values(&:value),
+      ).to include("src" => SiteSetting.site_logo_url, "width" => "600", "height" => "200")
+      expect(
+        response.parsed_body.at_css(".logo-container source").attributes.transform_values(&:value),
+      ).to include("srcset" => SiteSetting.site_logo_dark_url, "width" => "500", "height" => "150")
     end
 
     context "when login_required is enabled" do

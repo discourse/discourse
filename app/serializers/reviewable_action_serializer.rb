@@ -6,6 +6,7 @@ class ReviewableActionSerializer < ApplicationSerializer
              :icon,
              :button_class,
              :label,
+             :confirm_title,
              :confirm_message,
              :confirm_destructive,
              :description,
@@ -18,6 +19,15 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def label
     I18n.t(object.label)
+  end
+
+  def confirm_title
+    I18n.t(
+      object.confirm_title,
+      default: nil,
+      fallback: false,
+      **(object.confirm_message_args || {}),
+    )
   end
 
   def confirm_message
@@ -38,6 +48,10 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def include_description?
     description.present?
+  end
+
+  def include_confirm_title?
+    object.confirm_title.present? && confirm_title.present?
   end
 
   def include_confirm_message?

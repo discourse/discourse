@@ -12,6 +12,6 @@ class Blog::Policy::Ready < Service::PolicyBase
   private
 
   def readiness
-    @readiness ||= Blog::Readiness.new
+    @readiness ||= Blog::Readiness.new(context[:publication]&.blog || Blog::Instance.default_blog)
   end
 end

@@ -59,8 +59,9 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
     next
   end
 
-  action_id = args[:action_id]
-  if !reviewable_class.method_defined?(:"perform_#{action_id}")
+  action_id = args[:action_id].to_sym
+  perform_method = :"perform_#{reviewable_class.action_aliases[action_id] || action_id}"
+  if !reviewable_class.method_defined?(perform_method)
     raise "#{reviewable_class} doesn't support an action with the name #{action_id.inspect}."
   end
 
@@ -79,7 +80,16 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
     elsif input == count.to_s
       puts "Performing #{action_id.inspect} on #{count} #{reviewable_class} records..."
       failed = []
+      skipped = 0
       relation.find_each do |reviewable|
+        # Actions like deleting a user also resolve that user's other reviewables mid-run.
+        reviewable.reload
+        if !reviewable.pending?
+          putc "s"
+          skipped += 1
+          next
+        end
+
         result = reviewable.perform(acting_user, action_id)
 
         if result.success?
@@ -94,7 +104,7 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
       end
 
       puts ""
-      puts "#{count - failed.size} records have been processed successfully and #{failed.size} failed."
+      puts "#{count - failed.size - skipped} records have been processed successfully, #{skipped} were already resolved and #{failed.size} failed."
 
       if failed.size > 0
         puts "Here's a detailed report of each record that failed:"

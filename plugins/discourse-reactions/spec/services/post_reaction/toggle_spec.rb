@@ -100,6 +100,38 @@ RSpec.describe DiscourseReactions::PostReaction::Toggle do
       end
     end
 
+    context "when the post is a whisper" do
+      fab!(:acting_user, :admin)
+      fab!(:whispering_user, :moderator)
+      let(:post) { Fabricate(:whisper, topic: topic, user: whispering_user) }
+
+      it "publishes the reaction change to staff and the whisper's author only" do
+        expect(messages.size).to eq(1)
+        expect(messages.first.user_ids).to contain_exactly(acting_user.id, whispering_user.id)
+        expect(messages.first.group_ids).to be_nil
+      end
+    end
+
+    context "when the post is a whisper in a private message" do
+      fab!(:acting_user, :admin)
+      fab!(:whispering_user, :moderator)
+      fab!(:unrelated_staff, :moderator)
+      fab!(:participant, :user)
+      fab!(:private_topic) do
+        Fabricate(:private_message_topic, user: whispering_user, recipient: acting_user)
+      end
+      let(:post) { Fabricate(:whisper, topic: private_topic, user: whispering_user) }
+
+      before { private_topic.allowed_users << participant }
+
+      it "publishes the reaction change only to staff who can see the private message" do
+        expect(messages.size).to eq(1)
+        expect(messages.first.user_ids).to contain_exactly(acting_user.id, whispering_user.id)
+        expect(messages.first.user_ids).not_to include(participant.id, unrelated_staff.id)
+        expect(messages.first.group_ids).to be_nil
+      end
+    end
+
     context "when the reaction can be toggled" do
       it { is_expected.to run_successfully }
 

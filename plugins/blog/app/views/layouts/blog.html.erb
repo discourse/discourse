@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%= @page_title %><%= " · #{SiteSetting.blog_title}" unless @page_title == SiteSetting.blog_title %></title>
+    <title><%= @page_title %><%= " · #{current_blog.name}" unless @page_title == current_blog.name %></title>
     <meta name="description" content="<%= @description %>">
     <% if @preview || @theme_preview_token %>
       <meta name="robots" content="noindex, nofollow">
@@ -12,17 +12,20 @@
     <% end %>
     <meta property="og:title" content="<%= @page_title %>">
     <meta property="og:description" content="<%= @description %>">
-    <meta property="og:site_name" content="<%= SiteSetting.blog_title %>">
+    <meta property="og:site_name" content="<%= current_blog.name %>">
     <meta property="og:url" content="<%= @canonical_url %>">
-    <meta property="og:type" content="<%= @article_metadata ? 'article' : 'website' %>">
+    <meta property="og:type" content="<%= @article_metadata && !@article_metadata.page? ? 'article' : 'website' %>">
     <meta name="twitter:card" content="<%= @article_metadata&.twitter_card || 'summary' %>">
     <% if @article_metadata && !@preview %>
       <% if @article_metadata.image_url %><meta property="og:image" content="<%= @article_metadata.image_url %>"><% end %>
-      <meta property="article:published_time" content="<%= @article_metadata.published_time %>">
-      <meta property="article:modified_time" content="<%= @article_metadata.modified_time %>">
+      <% if @article_metadata.image_alt %><meta property="og:image:alt" content="<%= @article_metadata.image_alt %>"><% end %>
+      <% unless @article_metadata.page? %>
+        <meta property="article:published_time" content="<%= @article_metadata.published_time %>">
+        <meta property="article:modified_time" content="<%= @article_metadata.modified_time %>">
+      <% end %>
       <script type="application/ld+json" nonce="<%= csp_nonce_placeholder %>"><%= raw ERB::Util.json_escape(@article_metadata.schema) %></script>
     <% end %>
-    <link rel="alternate" type="application/rss+xml" title="<%= SiteSetting.blog_title %>" href="<%= blog_url('/feed.xml') %>">
+    <link rel="alternate" type="application/rss+xml" title="<%= current_blog.name %>" href="<%= blog_url('/feed.xml') %>">
     <% if SiteSetting.favicon %><link rel="icon" href="<%= ::UrlHelper.absolute(SiteSetting.favicon.url) %>"><% end %>
     <%= discourse_color_scheme_stylesheets %>
     <link rel="stylesheet" href="<%= Discourse.base_url %>/plugins/blog/blog.css">
@@ -49,7 +52,7 @@
       <aside class="blog__preview"><%= t('blog.customizations_disabled') %></aside>
     <% end %>
     <% if @theme_preview_token %>
-      <aside class="blog__preview"><strong><%= t('blog.themes.preview', name: blog_theme["name"]) %></strong> <%= t('blog.themes.preview_notice') %> <a href="<%= ::Blog::Configuration.base_url %><%= ::Blog::Configuration.relative_path(request) %>"><%= t('blog.themes.exit_preview') %></a></aside>
+      <aside class="blog__preview"><strong><%= t('blog.themes.preview', name: blog_theme["name"]) %></strong> <%= t('blog.themes.preview_notice') %> <a href="<%= ::Blog::Configuration.base_url(current_blog) %><%= ::Blog::Configuration.relative_path(request, current_blog) %>"><%= t('blog.themes.exit_preview') %></a></aside>
     <% end %>
     <% if @preview %>
       <aside class="blog__preview"><strong><%= t('blog.preview') %></strong> <%= t('blog.preview_notice') %> <a href="<%= @topic.url %>"><%= t('blog.back_to_editor') %></a></aside>

@@ -334,7 +334,9 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    agree(performed_by, args) do |action|
+      moderation_action(performed_by:, args:).hide(post_action_type_id: action.post_action_type_id)
+    end
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -390,26 +392,26 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    destroyer(performed_by, post).destroy
+    moderation_action(performed_by:, args:).delete
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    moderation_action(performed_by:, args:).delete_with_replies
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
-    destroyer(performed_by, post).destroy
+    moderation_action(performed_by:, args:).delete
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    moderation_action(performed_by:, args:).delete_with_replies
     result
   end
 
@@ -524,8 +526,12 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  def destroyer(performed_by, post)
-    PostDestroyer.new(performed_by, post, reviewable_id: id)
+  def moderation_action(performed_by:, args:)
+    ReviewableModerationActions.new(
+      reviewable: self,
+      performed_by:,
+      classification: args[:dsa_classification],
+    )
   end
 
   def notify_poster(performed_by)
@@ -536,7 +542,6 @@ class ReviewableFlaggedPost < Reviewable
       user_id: post.user_id,
       message_type: "flags_disagreed",
       message_options: {
-        **Dsa::AppealInstructions.message_options,
         flagged_post_raw_content: post.raw,
         url: post.url,
       },

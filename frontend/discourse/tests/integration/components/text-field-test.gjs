@@ -119,11 +119,11 @@ module("Integration | Component | TextField", function (hooks) {
   test("supports onChange", async function (assert) {
     this.called = false;
     this.newValue = null;
-    this.set("value", "hello");
-    this.set("changed", (v) => {
+    this.value = "hello";
+    this.changed = (v) => {
       this.newValue = v;
       this.called = true;
-    });
+    };
 
     await render(
       <template>
@@ -146,11 +146,11 @@ module("Integration | Component | TextField", function (hooks) {
   test("supports onChangeImmediate", async function (assert) {
     this.called = false;
     this.newValue = null;
-    this.set("value", "old");
-    this.set("changed", (v) => {
+    this.value = "old";
+    this.changed = (v) => {
       this.newValue = v;
       this.called = true;
-    });
+    };
 
     await render(
       <template>

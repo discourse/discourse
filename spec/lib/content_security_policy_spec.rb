@@ -102,10 +102,18 @@ RSpec.describe ContentSecurityPolicy do
         expect(frame_ancestors).to include("'self'")
       end
 
-      it "includes all EmbeddableHost" do
+      it "includes all EmbeddableHost and invalidates cache on host changes" do
         frame_ancestors = parse(policy)["frame-ancestors"]
         expect(frame_ancestors).to include("https://a.org")
         expect(frame_ancestors).to include("https://b.org")
+
+        Scheduler::Defer.do_all_work
+        host_c = Fabricate(:embeddable_host, host: "https://c.org")
+        expect(parse(policy)["frame-ancestors"]).to include("https://c.org")
+
+        Scheduler::Defer.do_all_work
+        host_c.destroy!
+        expect(parse(policy)["frame-ancestors"]).not_to include("https://c.org")
       end
     end
 

@@ -77,6 +77,9 @@ lt:
           title: "Šriftų sistema"
         colors:
           title: "Spalvos"
+        design_variables:
+          type: "Tipas"
+          default: "Numatytasis"
         icons:
           title: "Piktogramos"
           full_list: "Peržiūrėkite visą nuostabių šriftų piktogramų sąrašą"

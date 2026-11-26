@@ -13,7 +13,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders the solved-topic detail component registered for the report", async function (assert) {
-      this.set("relatedItems", {
+      this.relatedItems = {
         solved_topics: [
           {
             topic: {
@@ -42,8 +42,8 @@ module(
             },
           },
         ],
-      });
-      this.set("relatedItemsTotals", { solved_topics: 3 });
+      };
+      this.relatedItemsTotals = { solved_topics: 3 };
 
       await render(
         <template>
@@ -92,7 +92,7 @@ module(
     });
 
     test("preserves report dates in positive UTC offsets", async function (assert) {
-      this.set("relatedItems", {
+      this.relatedItems = {
         solved_topics: [
           {
             topic: {
@@ -102,9 +102,9 @@ module(
             solved_by_users: [],
           },
         ],
-      });
-      this.set("startDate", moment.parseZone("2026-07-26T00:00:00+08:00"));
-      this.set("endDate", moment.parseZone("2026-08-27T00:00:00+08:00"));
+      };
+      this.startDate = moment.parseZone("2026-07-26T00:00:00+08:00");
+      this.endDate = moment.parseZone("2026-08-27T00:00:00+08:00");
 
       await render(
         <template>
@@ -163,7 +163,7 @@ module(
       });
 
       const renderer = adminReportRelatedItemsRenderer("accepted_solutions");
-      this.set("tableSummary", renderer.tableSummary);
+      this.tableSummary = renderer.tableSummary;
 
       await render(
         <template>

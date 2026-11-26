@@ -171,9 +171,6 @@ et:
         short:
           one: "%{count} päev"
           other: "%{count} päeva"
-      emoji_picker:
-        objects: "Objektid"
-        flags: "Tähised"
       thread:
         title: "Pealkiri"
         replies:

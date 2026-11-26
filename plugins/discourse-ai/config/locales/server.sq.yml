@@ -44,6 +44,8 @@ sq:
           color: "ngjyra"
         approve_label: "Po"
         reject_label: "Jo"
+        category_access_levels:
+          readonly: "Shiko"
       tool_summary:
         search: "Kërko"
         time: "Koha"

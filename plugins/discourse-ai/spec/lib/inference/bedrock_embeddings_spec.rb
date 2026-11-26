@@ -46,6 +46,29 @@ RSpec.describe DiscourseAi::Inference::BedrockEmbeddings do
       )
     end
 
+    it "maps task modes to Cohere input_type" do
+      stub_invoke
+
+      {
+        document: "search_document",
+        query: "search_query",
+        clustering: "clustering",
+        classification: "classification",
+      }.each do |task, expected_input_type|
+        expect(client.perform!("hello world", task: task)).to eq([0.1, 0.2, 0.3])
+        expect(WebMock).to have_requested(:post, invoke_url).with(
+          body: hash_including(input_type: expected_input_type),
+        )
+      end
+    end
+
+    it "raises ArgumentError for an unknown task on Cohere models" do
+      expect { client.perform!("hello world", task: :unknown) }.to raise_error(
+        ArgumentError,
+        /Unknown embedding task/,
+      )
+    end
+
     context "with dimensions on a Cohere model" do
       let(:dimensions) { 512 }
 
@@ -68,6 +91,19 @@ RSpec.describe DiscourseAi::Inference::BedrockEmbeddings do
         stub_invoke(body: { embedding: [0.4, 0.5] })
 
         expect(client.perform!("hello world")).to eq([0.4, 0.5])
+        expect(WebMock).to have_requested(:post, invoke_url).with(
+          body: {
+            inputText: "hello world",
+            normalize: true,
+            dimensions: 256,
+          },
+        )
+      end
+
+      it "ignores task mode on Titan models" do
+        stub_invoke(body: { embedding: [0.4, 0.5] })
+
+        expect(client.perform!("hello world", task: :query)).to eq([0.4, 0.5])
         expect(WebMock).to have_requested(:post, invoke_url).with(
           body: {
             inputText: "hello world",

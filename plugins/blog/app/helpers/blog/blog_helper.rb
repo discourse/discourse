@@ -2,12 +2,16 @@
 
 module ::Blog
   module BlogHelper
+    def current_blog
+      @blog ||= Instance.default_blog
+    end
+
     def blog_url(path = "")
-      Configuration.url(path, preview_token: @theme_preview_token)
+      Configuration.url(path, blog: current_blog, preview_token: @theme_preview_token)
     end
 
     def blog_theme
-      @blog_theme ||= BlogTheme.active
+      @blog_theme ||= BlogTheme.active_for(current_blog)
     end
 
     def blog_customizations_disabled?
@@ -32,7 +36,7 @@ module ::Blog
         page,
         variables,
         theme: blog_theme,
-        custom: !@preview && !blog_customizations_disabled?,
+        custom: !blog_customizations_disabled?,
         diagnostics: @theme_preview_token.present?,
       ).html_safe
     end

@@ -120,6 +120,7 @@ end
 #  idx_ai_api_audit_logs_payload_id                          (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL))
 #  idx_ai_api_audit_logs_retried_id                          (id) WHERE (request_attempts IS NOT NULL)
 #  idx_ai_api_audit_logs_user_id_id                          (user_id,id)
+#  idx_ai_api_audit_logs_workflow_usage                      (((feature_context ->> 'workflow_id'::text)), created_at) WHERE ((feature_name)::text = ANY (ARRAY[('workflow'::character varying)::text, ('context_compression'::character varying)::text]))
 #  index_ai_api_audit_logs_on_created_at_and_feature_name    (created_at,feature_name)
 #  index_ai_api_audit_logs_on_created_at_and_language_model  (created_at,language_model)
 #  index_ai_api_audit_logs_on_created_at_and_user_id         (created_at,user_id)

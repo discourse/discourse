@@ -254,8 +254,11 @@ class GroupsController < ApplicationController
       allowed_fields += UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
     end
 
-    if params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
-      order = "#{params[:order]} #{dir} NULLS LAST"
+    order_by_activity = params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
+
+    if order_by_activity
+      order =
+        "(CASE WHEN #{member_profile_visible_sql} THEN users.#{params[:order]} END) #{dir} NULLS LAST"
     elsif params[:order] == "added_at"
       order = "group_users.created_at #{dir}"
     elsif include_custom_fields && params[:order] == "custom_field" &&
@@ -265,6 +268,7 @@ class GroupsController < ApplicationController
     end
 
     users = group.listed_users
+    users = users.left_joins(:user_option, :user_stat) if order_by_activity
     total = users.count
 
     if (filter = params[:filter]).present?
@@ -577,6 +581,40 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  # SQL mirror of UserGuardian#can_see_profile? so that member ordering never
+  # depends on activity timestamps the serializer withholds from the requester.
+  def member_profile_visible_sql
+    return "TRUE" if guardian.is_staff?
+    return "FALSE" if !guardian.public_can_see_profiles?
+
+    conditions = []
+
+    if SiteSetting.allow_users_to_hide_profile
+      conditions << "NOT COALESCE(user_options.hide_profile, FALSE)"
+    end
+
+    if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
+         !SiteSetting.must_approve_users
+      has_trust_level_sql =
+        lambda do |level|
+          "(users.admin OR users.moderator OR users.staged OR users.trust_level >= #{level})"
+        end
+
+      if !current_user&.has_trust_level?(TrustLevel[2])
+        conditions << "(COALESCE(user_stats.post_count, 0) > 0 OR #{has_trust_level_sql.call(2)})"
+      end
+
+      conditions << has_trust_level_sql.call(1) if !current_user&.has_trust_level?(TrustLevel[1])
+    end
+
+    return "TRUE" if conditions.empty?
+
+    visible_sql = conditions.join(" AND ")
+    # can_see_profile? short-circuits true for the viewer's own row.
+    visible_sql = "users.id = #{current_user.id.to_i} OR #{visible_sql}" if current_user
+    "(#{visible_sql})"
+  end
 
   def user_selectors
     {

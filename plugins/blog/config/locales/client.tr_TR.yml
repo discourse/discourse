@@ -17,6 +17,15 @@ tr_TR:
         desktop: Masaüstü
         mobile: Mobil
         save: Kaydet
+        about_tab: Hakkında
+        blog_slug: Kısa ad
+        general_heading: Genel
+        settings_tab: Ayarlar
+        theme_tab: Tema
+        column_name: Ad
+        column_category: Kategori
+        column_status: Durum
+        needs_attention: İlgiye ihtiyaç var
         path_formats:
           custom: Özel
         back_to_themes: Temalara geri dön
@@ -57,7 +66,11 @@ tr_TR:
         edit: Düzenle
         status: Durum
         replies: Yanıtlar
+        title: Başlık
+        page: Sayfa
+      all: Tümü
       drafts: Taslaklar
+      pages: Sayfa
       preview: Ön izle
       unpublish: Yayından kaldır
       appearance_link: Görünüm

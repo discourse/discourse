@@ -516,11 +516,6 @@ hu:
   too_many_mentions_newuser:
     one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
     other: "Sajnáljuk, de az új felhasználók csak %{count} felhasználót említhetnek meg."
-  no_embedded_media_allowed_group: "Sajnáljuk, nem ágyazhat be médiaelemeket egy bejegyzésbe."
-  no_embedded_media_allowed: "Sajnáljuk, az új felhasználók nem ágyazhatnak be médiaelemeket a bejegyzésekbe."
-  too_many_embedded_media:
-    one: "Sajnáljuk, az új felhasználók csak egy beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
-    other: "Sajnáljuk, az új felhasználók csak %{count} beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
   no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak mellékleteket egy bejegyzéshez."
   too_many_attachments:
     one: "Sajnáljuk, de az új felhasználók csak egy mellékletet adhatnak egy bejegyzéshez."
@@ -2417,8 +2412,6 @@ hu:
     automatically_clean_unused_tags: "Naponta automatikusan törölje azokat a címkéket, amelyeket nem használ semmilyen témában vagy személyes üzenetben."
     default_watched_precedence_over_muted: "Értesítés küldése a felhasználóknak azokról a figyelt kategóriákba vagy címkékhez tartozó témákról, amelyek egyúttal elnémított kategóriához vagy címkéhez is tartoznak."
     company_name: "Cége vagy szervezet neve."
-    governing_law: "Adja meg azt a joghatóságot, amely szabályozza a webhely jogi vonatkozásait, beleértve a Szolgáltatási feltételeket és az Adatvédelmi irányelveket. Ez általában az az ország vagy állam, ahol a webhelyet üzemeltető vállalat be van jegyezve vagy üzleti tevékenységet folytat."
-    city_for_disputes: "Adja meg azt a várost, amely a fórum használatával kapcsolatos viták rendezésének joghatósága alá tartozik. Ezt az információt általában jogi dokumentumok tartalmazzák, például a fórum használati feltételei."
     shared_drafts_category: "A Megosztott vázlatok funkció engedélyezése egy kategória kijelölésével a téma vázlatok számára. Az ebben a kategóriában lévő témák el lesznek rejtve a személyzeti felhasználók téma listáiból."
     shared_drafts_allowed_groups: "Engedélyezze, hogy az e csoportokhoz tartozó felhasználók láthassák és szerkeszthessék a megosztott piszkozatokat."
     push_notifications_prompt: "Felhasználói hozzájárulási sáv megjelenítése a push értesítésekhez. Ez a beállítás egy felkérést jelenít meg, amely engedélyt kér a felhasználóktól push értesítések küldésére. Ez csak akkor jelenik meg, ha a push értesítések még nincsenek engedélyezve, a felhasználó eszköze támogatja azokat, és a felhasználó vagy már írt bejegyzést, vagy Progresszív Web Alkalmazást (PWA) használ. A felkérés nem jelenik meg újra, ha a felhasználó már elutasította, vagy megadta/megtagadta az engedélyt."
@@ -2548,10 +2541,28 @@ hu:
       mediaconvert_output_subdirectory_required: "A MediaConvert kimeneti alkönyvtárának megadása kötelező."
       s3_credentials_required_for_video_conversion: "S3 hitelesítő adatok szükségesek a videókonvertáláshoz. Kérjük, konfigurálja az S3 hozzáférési kulcsokat, vagy engedélyezze az IAM profilt."
     keywords:
+      about_banner_image: "banner kép"
+      about_page_extra_groups: "csoportos felsorolás"
+      about_page_extra_groups_initial_members: "bővített tagok"
+      about_page_extra_groups_order: "rendezési sorrend"
+      about_page_extra_groups_show_description: "leírás hozzáadása"
       clean_up_inactive_users_after_days: "deaktiválva|inaktív|nem aktivált"
+      company_url: "weboldal"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      extended_site_description: "közösség leírása"
+      large_icon: "négyzet alakú ikon"
+      logo: "elsődleges logó"
+      logo_dark: "elsődleges sötét logó"
+      logo_small: "kis logó"
+      logo_small_dark: "kis sötét logó"
       navigation_menu: "oldalsáv|lenyíló fejléc"
       purge_unactivated_users_grace_period_days: "deaktiválva|inaktív|nem aktivált"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      short_site_description: "közösségi cím"
+      site_contact_group_name: "webhely kapcsolattartó csoportja"
+      site_contact_username: "a webhely kapcsolattartójának neve"
+      site_description: "közösségi összefoglaló"
+      title: "közösség neve"
+      welcome_banner_image: "háttérkép"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3051,20 +3062,6 @@ hu:
       title: "Rejtett bejegyzés"
       preview: "A bejegyzés elrejtve a közösségi tagok általi megjelölés miatt."
       subject_template: "A bejegyzést a közösségi megjelölések rejtik el"
-      text_body_template: |
-        Üdv!
-
-        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését elrejtették.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ezt a bejegyzést a közösség jelzései miatt rejtettük el, ezért fontolja meg, hogyan módosíthatná úgy a bejegyzését, hogy megfeleljen a közösség visszajelzésének. **A bejegyzését %{edit_delay} perc múlva szerkesztheti, és utána automatikusan fel lesz fedve.**
-
-        Ha azonban a közösség másodszor is elrejti a bejegyzést, akkor rejtve marad, amíg a stáb nem kezeli.
-
-        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Visszajelzés a bejegyzéséről"
       subject_template: "Visszajelzés a bejegyzéséről itt: %{topic_title}"
@@ -3075,31 +3072,9 @@ hu:
       title: "Bejegyzés újra elrejtve"
       preview: "A bejegyzést ismét elrejtették a közösség tagjai."
       subject_template: "A bejegyzés a közösség megjelölései által elrejtve, stábtagok értesítve."
-      text_body_template: |
-        Üdv!
-
-        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését ismét elrejtették.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A közösség jelentette ezt a bejegyzést, és most el van rejtve. **Mivel ez a bejegyzés már egynél többször lett jelentve, így a bejegyzés most már addig rejtve marad, amíg valamelyik stábtag nem kezeli.**
-
-        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     queued_by_staff:
       title: "A bejegyzés jóváhagyásra vár."
       subject_template: "A bejegyzést a stábtag elrejtette, jóváhagyásra vár"
-      text_body_template: |
-        Üdvözöljük!
-
-        Ez egy automatikus üzenet a %{site_name} feladótól, amely tudatja Önnel, hogy bejegyzése el van rejtve.
-
-        <%{base_url}%{url}>
-
-        A bejegyzés rejtve marad mindaddig, amíg egy stábtag át nem tekinti.
-
-        További útmutatásért tekintse meg [közösségi irányelveinket] (%{base_url}/guidelines).
     flags_disagreed:
       title: "A megjelölt bejegyzést egy stábtag visszaállította"
       subject_template: "A megjelölt bejegyzést egy stábtag visszaállította"
@@ -3536,7 +3511,6 @@ hu:
     user_automatically_silenced_with_reason:
       title: "A felhasználó automatikusan elnémítva"
       subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
-      text_body_template: "Ez egy automatikus üzenet.\n\nA(z) %{username}(%{user_url}) nevű új felhasználó automatikusan elnémításra került. \n\nIndok: %{reason}\n\nKérjük, tekintse át a jelentéseket(%{base_url}/review). Ha %{username} elnémítása tévedésből történt, kattintson az elnémítás feloldása gombra a felhasználó adminisztrációs oldalán(%{user_url}).\n\nEz a határérték a silence_new_user webhelybeállításnál módosítható.\n"
     spam_post_blocked:
       title: "Spam bejegyzés blokkolva"
       subject_template: "Új felhasználó %{username} bejegyzései blokkolva az ismétlődő linkek miatt"
@@ -3881,12 +3855,6 @@ hu:
     account_suspended_forever:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
-    account_silenced:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
-    account_silenced_forever:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
     account_deleted:
       title: "Fiók törölve"
       subject_template: "[%{email_prefix}] A fiókját törölték"
@@ -4071,10 +4039,6 @@ hu:
     signup_after_reject:
       title: "Regisztráció elutasítás után"
       subject_template: "A jelentkezésedet visszautasítottuk a %{site_name} oldalon."
-      text_body_template: |
-        Egy stábtag elutasította a fiókját a(z) %{site_name} oldalon.
-
-        %{reject_reason}
     signup:
       title: "Feliratkozás"
       preview: "Erősítse meg fiókját."
@@ -4677,7 +4641,6 @@ hu:
       dracula: "Drakula"
       grey_amber: "Szürke borostyán"
       latte: "Tejeskávé"
-      dark_rose: "Sötét rózsa"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -4848,6 +4811,10 @@ hu:
       no_context:
         watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. További információért ellenőrizze a(z) %{link} oldalt."
     actions:
+      answer_yes:
+        title: "Igen"
+      answer_no:
+        title: "Nem"
       agree:
         title: "Igen"
       agree_and_keep:
@@ -4888,6 +4855,7 @@ hu:
       delete_and_ignore_replies:
         title: "Bejegyzés és válaszok törlése, a jelentés figyelmen kívül hagyása"
         description: "A bejegyzés és az összes rá érkezett válasz törlése, majd a jelentés figyelmen kívül hagyása a várólistáról való eltávolítással; ha ez az első bejegyzés, a rendszer a témát is törli."
+        confirm_title: "Bejegyzés és válaszok törlése, a jelentés figyelmen kívül hagyása?"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:
@@ -4897,6 +4865,7 @@ hu:
       delete_and_agree_replies:
         title: "Bejegyzés és válaszok törlése"
         description: "Egyetértek a jelöléssek és bejegyzés törlése az össze válasszal; ha ez az első hozzászólás, akkor töröld a témát is."
+        confirm_title: "Bejegyzés és válaszok törlése?"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       disagree_and_restore:
@@ -4931,6 +4900,8 @@ hu:
       approve_post:
         title: "Igen"
         complete: "Bejegyzés jóváhagyva."
+      deny_and_delete_post:
+        complete: "Bejegyzés törölve."
       approve_post_closed:
         title: "Igen"
         confirm: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"

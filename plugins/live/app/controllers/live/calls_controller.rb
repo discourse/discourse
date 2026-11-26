@@ -59,6 +59,13 @@ module Live
             ).truncate(80),
           # A call has no host: either side may pull someone else in.
           moderators: [callee],
+          chat_channel_id:
+            if Live::ChatSession.chat_available?
+              ::Chat::DirectMessage
+                .for_user_ids([current_user.id, callee.id])
+                &.direct_message_channel
+                &.id
+            end,
         )
 
       begin

@@ -15,20 +15,40 @@ export default {
 
     withPluginApi((api) => {
       if (currentUser) {
-        if (!currentUser.can_see_any_boards) {
+        if (!currentUser.can_manage_boards && !currentUser.can_see_any_boards) {
           return;
         }
       } else if (!PreloadStore.get("boards:visibility")?.can_see_any_boards) {
         return;
       }
 
+      const label = i18n("boards.manage.title");
       api.addCommunitySectionLink({
         name: "boards",
         route: "boards",
-        icon: "boards",
-        text: i18n("boards.manage.title"),
-        title: i18n("boards.manage.title"),
+        icon: "table-columns",
+        text: label,
+        title: label,
       });
+
+      api.addSidebarPanel(
+        (BaseCustomSidebarPanel) =>
+          class BoardsSidebarPanel extends BaseCustomSidebarPanel {
+            hidden = true;
+            key = "boards";
+
+            get mobileTab() {
+              return {
+                label,
+                icon: "table-columns",
+                url: "/boards",
+                ownsRoute: ({ name }) =>
+                  name === "boards" || name.startsWith("boardsBoard"),
+                isNestedRoute: ({ name }) => name !== "boards",
+              };
+            }
+          }
+      );
     });
   },
 };

@@ -459,9 +459,6 @@ it:
       fonts:
         base_font: "Corpo"
         heading_font: "Titoli"
-      logo:
-        description: "Appare nella barra di navigazione superiore del sito e nella parte superiore delle notifiche e-mail del sito."
-        help_text: "La dimensione consigliata è 600 x 80 pixel."
       homepage:
         topics: "Argomenti"
         categories: "Categorie"
@@ -2062,6 +2059,7 @@ it:
         redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
         invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
+        invited_via_link_without_key: "Link (%{count} / %{max} riscattati)"
         groups: "Gruppi"
         topic: "Argomento"
         sent: "Creato/Ultimo Invio"
@@ -2743,6 +2741,9 @@ it:
         size_too_small: "%{provided_file_size} è più piccolo del minimo consentito %{min_file_size}"
     emoji_picker:
       filter_placeholder: Ricerca per emoji
+      search_placeholder: "Cerca per nome emoji e alias..."
+      no_results: "Nessun risultato"
+      favorites: "Utilizzati di frequente"
       smileys_&_emotion: Smileys ed Emotion
       people_&_body: Persone e parti del corpo
       animals_&_nature: Animali e Natura
@@ -2776,6 +2777,10 @@ it:
       emoji: "Emoji :)"
       more_emoji: "altro…"
       options: "Opzioni"
+      ai_content:
+        code: "Codice"
+        quote: "Cita"
+        details: "Dettagli"
       whisper: "sussurro"
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
@@ -3817,10 +3822,8 @@ it:
           label: "selezionato"
           title: "Clicca per rimuovere un messaggio dalla selezione"
         select_replies:
-          label: "seleziona +risposte"
           title: "Aggiungi il messaggio e tutte le risposte alla selezione"
         select_below:
-          label: "seleziona +seguenti"
           title: "Aggiungi questo messaggio e tutti quelli seguenti alla selezione"
         delete: elimina i selezionati
         cancel: annulla selezione
@@ -3838,6 +3841,7 @@ it:
         clear_all: "Deseleziona tutto"
         actions: "Azioni collettive"
     post:
+      ai_generated: "IA"
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
       quote_reply_shortcut: "Cita (o premi q)"
@@ -4175,27 +4179,19 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       validations:
         icon_required: "Seleziona un'icona."
+      icon_search_placeholder: "Cerca…"
       description: "Descrizione"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
       style: "Stile"
-      icon: "Icona"
-      emoji: "Emoji"
       background_color: "Colore"
       foreground_color: "Colore del testo"
       color_validations:
         cant_be_empty: "non può essere vuoto"
       styles:
-        type: "Stile"
         icon: "Icona"
         emoji: "Emoji"
         square: "Quadrato"
-        options:
-          square: "Quadrato"
-          icon: "Icona"
-          emoji: "Emoji"
       color_used: "Colore in uso"
-      predefined_colors: "Opzioni di colore predefinite"
-      color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
       list: "Elenca le categorie"
@@ -4812,9 +4808,17 @@ it:
       forward: "Inoltra"
       share: "Condividi"
       dismiss: "Ignora"
+    mobile_tab_bar:
+      new_topic: "Nuovo argomento"
+      create: "Crea"
+      more: "Altro"
+      back: "Indietro"
+      topics: "Argomenti"
+      drafts:
+        one: "Bozze (%{count})"
+        other: "Bozze (%{count})"
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
-    theme_preview_notice: "Al momento stai visualizzando in anteprima un tema. Chiudi questa scheda o finestra del browser per tornare alla configurazione normale del sito."
     image_removed: "(immagine rimossa)"
     pause_notifications:
       title: "Sospendi le notifiche per…"
@@ -6269,14 +6273,6 @@ it:
           company_name: "Nome"
           company_url: "Sito web"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Diritto applicabile"
-          governing_law_placeholder: "Provincia, Stato o Paese"
-          governing_law_help: |
-            Specifica la giurisdizione per i termini legali del sito, in genere quella in cui l'azienda è registrata oppure opera.
-          city_for_disputes: "Sede per eventuali controversie"
-          city_for_disputes_placeholder: "Città"
-          city_for_disputes_help: |
-            Specifica la città in cui risolvere le controversie legali relative a questo forum.
           extra_groups:
             heading: "Elenco gruppi"
             description: "Gruppi aggiuntivi da visualizzare nella pagina Informazioni."
@@ -6808,8 +6804,6 @@ it:
           dark: "scuro"
           title: "Colori"
           edit: "Modifica"
-          set_default_light: "Imposta come schema chiaro sul tema predefinito (%{theme})"
-          set_default_dark: "Imposta come schema scuro sul tema predefinito (%{theme})"
           saved_refreshing: "Salvato! Aggiornamento dei colori..."
           from_theme: "Dal tema: %{name}"
           filters:
@@ -7429,7 +7423,6 @@ it:
         silence_duration: "Per quanto tempo l'utente sarà silenziato? "
         silence_reason_title: "Motivo del silenzio"
         silence_reason_placeholder: "Motivo Silenzio"
-        silence_message: "Messaggio Email"
         suspended_until: "(fino a %{until})"
         suspend_forever: "Sospendi definitivamente"
         cant_suspend: "Questo utente non può essere sospeso."
@@ -7717,6 +7710,8 @@ it:
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
         search_label: "Cerca"
+        preview:
+          default: "Predefinito"
         theme_disabled: "Disabilitati"
         filters: "Filtri"
         status:
@@ -7866,7 +7861,7 @@ it:
           modal_title: Raggruppamento Distintivi
         granted_by: Assegnato da
         granted_at: Assegnata in data
-        reason_help: (Un collegamento a un messaggio o argomento)
+        reason_help: Un collegamento a un messaggio o argomento
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler cancellare questo distintivo?

@@ -50,6 +50,9 @@ tr_TR:
           title: "Yazı Tipi Sistemi"
         colors:
           title: "Renkler"
+        design_variables:
+          type: "Tür"
+          default: "Varsayılan"
         dialog:
           title: "Diyalog"
         drag_and_drop:

@@ -38,12 +38,20 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      review_bulk:
+        refresh: "Թարմացնել"
+        columns:
+          user: "Օգտատեր"
+          created: "Ստեղծված"
+          status: "Ստատուս"
       copied: "Պատճենված է"
       ai_decoded_transcript:
         type: "Տիպ"
         error: "Սխալ"
         response: "Արձագանք"
       discourse_workflows:
+        ai_tool:
+          list_item: "Ցանկի տարր"
         classify:
           text: "Տեքստ"
           upload_ids: "Նկարներ"
@@ -70,10 +78,12 @@ hy:
         no_groups: "Ոչ մի"
         edit: "Կարգավորումներ"
         filters:
-          all: "Բոլոր"
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        review_queue:
+          setting_groups:
+            settings: "Կարգավորումներ"
         image_caption:
           setting_groups:
             settings: "Կարգավորումներ"
@@ -207,6 +217,25 @@ hy:
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      concepts:
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        columns:
+          status: "Ստատուս"
+          topics: "Թեմաներ"
+          posts: "Գրառումներ"
+        statuses:
+          active: "Ակտիվ"
+        form:
+          name: "Անուն"
+          description: "Նկարագրություն"
+          status: "Ստատուս"
+        tagged_topics: "Թեգերով թեմաներ"
+        topic_columns:
+          topic: "Թեմա"
+          primary: "Հիմնական"
+          relevance: "Համապատասխանության"
+        primary_badge: "Հիմնական"
       decision_models:
         no_preset: "Ոչ մի"
         display_name: "Անուն"

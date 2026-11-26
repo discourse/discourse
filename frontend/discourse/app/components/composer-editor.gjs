@@ -32,7 +32,9 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { sanitizeAlt } from "discourse/lib/markdown-image-builder";
 import { generateCookFunction } from "discourse/lib/text";
+import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreImageExtensions,
@@ -474,8 +476,79 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, helper) {
-    decorateImageControls(preview);
+  decoratePreviewImageControls(preview, _helper, { rawText } = {}) {
+    const openDescriptions = applyValueTransformer(
+      "composer-image-descriptions-opener",
+      null
+    );
+
+    if (!openDescriptions || this.showFormTemplateForm) {
+      decorateImageControls(preview);
+      return;
+    }
+
+    const model = this.composer.model;
+    const locale = this.composer.selectedTranslationLocale;
+    const matches = [...(rawText ?? "").matchAll(IMAGE_MARKDOWN_REGEX)];
+    const matchSources = matches.map((match) => match[5].split(/\s/, 1)[0]);
+    // Short URL resolution can remove data-orig-src before the pencil is clicked.
+    const sources = new Map(
+      [...preview.querySelectorAll("img[data-image-index][data-scale]")].map(
+        (image) => [image, image.dataset.origSrc]
+      )
+    );
+    const count = (list, src) => list.filter((item) => item === src).length;
+
+    decorateImageControls(preview, (image) => {
+      const editor = this.textManipulation;
+      const index = Number(image.dataset.imageIndex);
+      const match = matches[index];
+      const src = sources.get(image);
+      const isCurrent = () =>
+        !this.isDestroying &&
+        image.isConnected &&
+        this.composer.model === model &&
+        this.composer.selectedTranslationLocale === locale &&
+        this.textManipulation === editor &&
+        model?.reply === rawText &&
+        editor.textarea.isConnected &&
+        !editor.textarea.disabled &&
+        !editor.textarea.readOnly &&
+        editor.value === rawText;
+
+      const onSaveAlt =
+        editor instanceof TextareaTextManipulation &&
+        src &&
+        matchSources[index] === src &&
+        count(matchSources, src) === count([...sources.values()], src) &&
+        isCurrent()
+          ? (alt) => {
+              if (!isCurrent()) {
+                return false;
+              }
+
+              const escaped = sanitizeAlt(alt).replace(/`/g, "\\`");
+              const replacement = `![${escaped}|${match[2]}${match[3] || ""}${match[4]}](${match[5]})`;
+              const expected =
+                rawText.slice(0, match.index) +
+                replacement +
+                rawText.slice(match.index + match[0].length);
+              editor.replaceText(match[0], replacement, {
+                regex: IMAGE_MARKDOWN_REGEX,
+                index,
+                skipFocus: true,
+              });
+              return editor.value === expected;
+            }
+          : null;
+
+      openDescriptions({ image, alt: image.alt, onSaveAlt });
+    });
+  }
+
+  @action
+  previewUpdated(preview, helper, options) {
+    this.decoratePreviewImageControls(preview, helper, options);
 
     this._renderMentions(preview);
     this._renderHashtags(preview);
@@ -813,7 +886,10 @@ export default class ComposerEditor extends Component {
 
   @bind
   _handleAltTextEditButtonClick(event) {
-    if (!event.target.classList.contains("alt-text-edit-btn")) {
+    if (
+      event.defaultPrevented ||
+      !event.target.classList.contains("alt-text-edit-btn")
+    ) {
       return;
     }
 
@@ -897,18 +973,20 @@ export default class ComposerEditor extends Component {
       10
     );
     const reply = this.get("composer.model.reply");
-    const matches = reply.match(IMAGE_MARKDOWN_REGEX);
-    const closingIndex =
-      index + parseInt(event.target.dataset.imageCount, 10) - 1;
+    const matches = [...reply.matchAll(IMAGE_MARKDOWN_REGEX)];
+    const opening = matches[index];
+    const closing =
+      matches[index + Number(event.target.dataset.imageCount) - 1];
+    const textArea = this.element.querySelector(".d-editor-input");
 
-    if (!matches?.[index] || !matches[closingIndex]) {
+    if (!opening || !closing || !textArea) {
       return;
     }
 
-    const textArea = this.element.querySelector(".d-editor-input");
-    textArea.selectionStart = reply.indexOf(matches[index]);
-    textArea.selectionEnd =
-      reply.indexOf(matches[closingIndex]) + matches[closingIndex].length;
+    textArea.setSelectionRange(
+      opening.index,
+      closing.index + closing[0].length
+    );
 
     this.appEvents.trigger(
       `${this.composerEventPrefix}:apply-surround`,
@@ -1002,6 +1080,7 @@ export default class ComposerEditor extends Component {
       </div>
     {{else if this.showTranslationEditor}}
       <PostTranslationEditor
+        @decoratePreviewImageControls={{this.decoratePreviewImageControls}}
         @extraButtons={{this.extraButtons}}
         @setupEditor={{this.setupEditor}}
         @showLink={{this.showLink}}
@@ -1014,6 +1093,7 @@ export default class ComposerEditor extends Component {
         @categoryId={{this.composer.model.category.id}}
         @change={{this.replyChanged}}
         @composerEvents={{true}}
+        @composerImageDescriptions={{true}}
         @disabled={{this.composer.disableTextarea}}
         @disableSubmit={{this.composer.disableSubmit}}
         @extraButtons={{this.extraButtons}}

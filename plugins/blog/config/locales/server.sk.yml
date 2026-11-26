@@ -14,6 +14,7 @@ sk:
     about: O stránke
     community: Komunita
     preview: Náhľad
+    author: Autor
     search: Hľadať
     replies:
       one: "%{count} odpoveď"

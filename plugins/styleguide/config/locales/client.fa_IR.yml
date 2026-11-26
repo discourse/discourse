@@ -36,6 +36,9 @@ fa_IR:
           title: "سیستم فونت"
         colors:
           title: "رنگ‌ها"
+        design_variables:
+          type: "نوع"
+          default: "پیش‌فرض"
         icons:
           title: "آیکون‌ها"
           full_list: "نمایش کامل لیست آیکون‌های فونت‌های بسیار جذاب"

@@ -66,6 +66,15 @@ ur:
               label: "موضوع چھپائیں"
     discourse_ai:
       title: "مصنوعی ذہانت"
+      review_bulk:
+        refresh: "تازہ کریں"
+        columns:
+          user: "رکن"
+          reason: "کے طور پرنشن زد"
+          created: "بنایا گیا"
+          status: "حیثیت"
+        status:
+          applying: "لاگو ہو رہا ہے…"
       copied: "کاپی کر لیا"
       view_raw: "خام دیکھیں"
       ai_decoded_transcript:
@@ -76,6 +85,12 @@ ur:
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
+        ai_tool:
+          arguments: "دلائل"
+          list_item: "فہرست آئٹم"
+          add_list_item: "آئٹم شامل کریں"
+        mcp_tool:
+          arguments: "دلائل"
         classify:
           text: "ٹیکسٹ"
           upload_ids: "تصاویر"
@@ -113,7 +128,6 @@ ur:
         nav:
           enabled: "فعال شدہ"
         filters:
-          all: "تمام"
           reset: "رِی سَیٹ"
         sentiment:
           emotion: "جذبات"
@@ -129,6 +143,9 @@ ur:
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        review_queue:
+          setting_groups:
+            settings: "سیٹِنگ"
         image_caption:
           setting_groups:
             settings: "سیٹِنگ"
@@ -294,6 +311,26 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      concepts:
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        columns:
+          status: "حیثیت"
+          topics: "موضوعات"
+          posts: "دھاگے"
+        statuses:
+          active: "فعال"
+        form:
+          name: "نام"
+          description: "تفصیل"
+          aliases: "مستعاری اسماء"
+          status: "حیثیت"
+        tagged_topics: "ٹیگ ہوے ٹاپک"
+        topic_columns:
+          topic: "ٹاپک"
+          primary: "بنیادی"
+          relevance: "مطابقت"
+        primary_badge: "بنیادی"
       decision_models:
         no_preset: "کوئی نہیں"
         display_name: "نام"
@@ -411,6 +448,7 @@ ur:
         share_modal:
           copy: "کاپی"
         conversations:
+          tab_label: "مصنوعی ذہانت"
           today: "آج"
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"

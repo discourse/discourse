@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
+import randomUUID from "discourse/lib/random-uuid";
 import { i18n } from "discourse-i18n";
 import {
   isSingleValueOperator,
@@ -212,7 +213,7 @@ export default class ConditionBuilder extends Component {
   @action
   emptyCondition() {
     return {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       leftValue: "",
       operator: {
         operation: "equals",

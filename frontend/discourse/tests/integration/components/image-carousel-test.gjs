@@ -28,7 +28,7 @@ module("Integration | Component | ImageCarousel", function (hooks) {
   ];
 
   test("it renders and navigates via buttons", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+    this.data = { items, mode: "carousel" };
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
@@ -48,7 +48,7 @@ module("Integration | Component | ImageCarousel", function (hooks) {
   });
 
   test("it wraps around in carousel mode", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+    this.data = { items, mode: "carousel" };
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
@@ -68,7 +68,7 @@ module("Integration | Component | ImageCarousel", function (hooks) {
   });
 
   test("it handles keyboard navigation", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+    this.data = { items, mode: "carousel" };
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 

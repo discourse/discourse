@@ -133,11 +133,6 @@ th:
       retention_reminders:
         short:
           other: "%{count} วัน"
-      emoji_picker:
-        objects: "วัตถุ"
-        activities: "กิจกรรม"
-        flags: "ธง"
-        symbols: "สัญลักษณ์"
       thread:
         title: "ชื่อเรื่อง"
         replies:

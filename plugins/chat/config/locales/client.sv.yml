@@ -559,19 +559,6 @@ sv:
         notify_moderators: "Detta meddelande kräver personalens uppmärksamhet av en annan anledning som inte anges ovan."
       flagging:
         action: "Flagga meddelande"
-      emoji_picker:
-        favorites: "Används ofta"
-        smileys_&_emotion: "Smileys och emojis"
-        objects: "Objekt"
-        people_&_body: "Människor och kropp"
-        travel_&_places: "Resor och platser"
-        animals_&_nature: "Djur och natur"
-        food_&_drink: "Mat och dryck"
-        activities: "Aktiviteter"
-        flags: "Flaggor"
-        symbols: "Symboler"
-        search_placeholder: "Sök efter emojinamn och alias..."
-        no_results: "Inga resultat"
       thread:
         title: "Rubrik"
         view_thread: Visa tråd

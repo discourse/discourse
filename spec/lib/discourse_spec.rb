@@ -95,17 +95,13 @@ RSpec.describe Discourse do
     it "applies worker-specific database variable overrides in a production environment" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
-      temp_discourse_conf = Tempfile.new("discourse.conf")
-      temp_discourse_conf.write <<~TEXT
-      db_name = #{test_database_config["database"]}
-      db_username = ""
-      db_variables_statement_timeout = 10s
-      unicorn_worker_db_variables_statement_timeout = 100s
-      TEXT
-      temp_discourse_conf.rewind
+      ENV["DISCOURSE_DB_NAME"] = test_database_config["database"]
+      ENV["DISCOURSE_DB_USERNAME"] = ""
+      ENV["DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT"] = "10s"
+      ENV["DISCOURSE_UNICORN_WORKER_DB_VARIABLES_STATEMENT_TIMEOUT"] = "100s"
 
       Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("production"))
-      GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
+      GlobalSetting.configure!(use_blank_provider: false)
       GlobalSetting.load_defaults
 
       Discourse.apply_worker_db_variables_overrides
@@ -120,8 +116,6 @@ RSpec.describe Discourse do
       ].each { |method| GlobalSetting.singleton_class.remove_method(method) }
 
       allow(Rails).to receive(:env).and_call_original
-      temp_discourse_conf&.close
-      temp_discourse_conf&.unlink
     end
   end
 

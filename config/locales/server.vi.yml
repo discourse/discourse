@@ -325,10 +325,6 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một tút."
-  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các tệp phương tiện vào một tút."
-  no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào tút."
-  too_many_embedded_media:
-    other: "Xin lỗi, thành viên mới chỉ có thể nhúng %{count} tệp phương tiện vào một tút."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong tút."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một tút."
@@ -1474,6 +1470,25 @@ vi:
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
       content_localization_crawler_param_requirements: "Bạn cần bật tùy chọn 'Đặt ngôn ngữ từ tham số' trước khi kích hoạt cài đặt này."
+    keywords:
+      about_banner_image: "hình ảnh banner"
+      about_page_extra_groups: "danh sách nhóm"
+      about_page_extra_groups_initial_members: "thành viên mở rộng"
+      about_page_extra_groups_order: "thứ tự sắp xếp"
+      about_page_extra_groups_show_description: "bao gồm mô tả"
+      company_url: "trang web"
+      extended_site_description: "mô tả cộng đồng"
+      large_icon: "biểu tượng hình vuông"
+      logo: "logo chính"
+      logo_dark: "logo chính Chế độ tối"
+      logo_small: "logo nhỏ"
+      logo_small_dark: "logo nhỏ Chế độ tối"
+      short_site_description: "tiêu đề cộng đồng"
+      site_contact_group_name: "nhóm liên hệ trang web"
+      site_contact_username: "tên liên hệ trang web"
+      site_description: "tóm tắt cộng đồng"
+      title: "tên cộng đồng"
+      welcome_banner_image: "hình nền"
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -2261,255 +2276,8 @@ vi:
       Trang web này được vận hành bởi đội ngũ điều hành thân thiện của bạn [đội ngũ điều hành thân thiện](%{base_path}/about) và *bạn*, cộng đồng. Nếu bạn có bất kỳ câu hỏi nào khác về cách thức hoạt động của trang web này, hãy mở một chủ đề mới tại %{feedback_category} và cùng thảo luận! Nếu có vấn đề cấp bách hoặc khẩn cấp không thể giải quyết qua chủ đề meta hoặc báo cáo, hãy [liên hệ với các moderator](%{base_path}/about).
   tos_topic:
     title: "Điều khoản Dịch vụ"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Thay đổi nội dung này</a></h2>
-
-      Quản trị viên diễn đàn thân mến, dưới đây là văn bản mẫu cho điều khoản sử dụng và chính sách riêng tư. Vui lòng tùy chỉnh lại cho phù hợp với diễn đàn của bạn.
-
-      Các điều khoản này hiện chưa áp dụng, nhưng có thể sẽ điều chỉnh việc sử dụng diễn đàn tại <%{base_url}> trong tương lai. Khi đó, để tiếp tục sử dụng diễn đàn, bạn phải đồng ý với các điều khoản này với %{company_name}, công ty vận hành diễn đàn.
-
-      Công ty có thể cung cấp các sản phẩm và dịch vụ khác theo các điều khoản riêng. Các điều khoản này chỉ áp dụng cho việc sử dụng diễn đàn.
-
-      Chuyển nhanh đến:
-
-      - [Điều khoản quan trọng](#heading--important-terms)
-      - [Quyền sử dụng diễn đàn](#heading--permission)
-      - [Điều kiện sử dụng diễn đàn](#heading--conditions)
-      - [Quy định sử dụng](#heading--acceptable-use)
-      - [Tiêu chuẩn nội dung](#heading--content-standards)
-      - [Xử lý vi phạm](#heading--enforcement)
-      - [Tài khoản của bạn](#heading--your-account)
-      - [Nội dung của bạn](#heading--your-content)
-      - [Trách nhiệm của bạn](#heading--responsibility)
-      - [Tuyên bố miễn trừ trách nhiệm](#heading--disclaimers)
-      - [Giới hạn trách nhiệm pháp lý](#heading--liability)
-      - [Ý kiến đóng góp](#heading--feedback)
-      - [Chấm dứt dịch vụ](#heading--termination)
-      - [Giải quyết tranh chấp](#heading--disputes)
-      - [Điều khoản chung](#heading--general)
-      - [Liên hệ](#heading--contact)
-      - [Thay đổi điều khoản](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Điều khoản quan trọng</a></h2>
-
-      ***Các điều khoản này bao gồm một số quy định quan trọng ảnh hưởng đến quyền và trách nhiệm của bạn, chẳng hạn như miễn trừ trách nhiệm tại mục [Tuyên bố miễn trừ trách nhiệm](#heading--disclaimers), giới hạn trách nhiệm pháp lý của công ty tại mục [Giới hạn trách nhiệm pháp lý](#heading--liability), cam kết bồi thường cho công ty nếu bạn vi phạm quy định tại mục [Trách nhiệm của bạn](#heading--responsibility), và thỏa thuận giải quyết tranh chấp bằng trọng tài tại mục [Giải quyết tranh chấp](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Quyền sử dụng diễn đàn</a></h2>
-
-      Tuân thủ các điều khoản này, công ty cấp quyền cho bạn sử dụng diễn đàn. Mọi người dùng đều phải đồng ý với các điều khoản này khi tham gia.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Điều kiện sử dụng diễn đàn</a></h2>
-
-      Quyền sử dụng diễn đàn của bạn phải tuân thủ các điều kiện sau:
-
-      1. Bạn phải từ đủ 18 tuổi trở lên.
-
-      2. Bạn không được tiếp tục sử dụng diễn đàn nếu công ty thông báo trực tiếp về việc chấm dứt quyền truy cập của bạn.
-
-      3. Bạn phải sử dụng diễn đàn tuân theo [Quy định sử dụng](#heading--acceptable-use) và [Tiêu chuẩn nội dung](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Quy định sử dụng</a></h2>
-
-      1. Không được vi phạm pháp luật khi sử dụng diễn đàn.
-
-      2. Không được sử dụng hoặc cố gắng sử dụng tài khoản của người khác khi chưa được cho phép.
-
-      3. Không được mua, bán hoặc giao dịch tên người dùng hay các mã định danh duy nhất khác trên diễn đàn.
-
-      4. Không được gửi quảng cáo, thư dây chuyền hoặc các hình thức lôi kéo khác, cũng như không thu thập địa chỉ email hay dữ liệu cá nhân cho mục đích thương mại.
-
-      5. Không được tự động hóa truy cập hoặc theo dõi diễn đàn bằng công cụ như web crawler, phần mềm mở rộng trình duyệt (Plugin/Extension) hay chương trình máy tính không phải trình duyệt web tiêu chuẩn. Bạn chỉ được phép quét dữ liệu (Crawl) để lập chỉ mục cho các máy cụ tìm kiếm công khai.
-
-      6. Không được dùng diễn đàn để gửi thư điện tử (Email) đến danh sách phân phối, nhóm tin hoặc các hộp thư nhóm.
-
-      7. Không được giả mạo hoặc cố ý gây hiểu nhầm rằng bạn có liên kết hoặc được sự bảo trợ từ công ty.
-
-      8. Không được nhúng liên kết trực tiếp (Hotlink) đến hình ảnh hoặc các nội dung phi văn bản của diễn đàn lên các trang web khác.
-
-      9. Không được xóa bỏ các dấu hiệu nhận diện bản quyền hoặc sở hữu trí tuệ khỏi tài liệu tải về từ diễn đàn.
-
-      10. Không được hiển thị bất kỳ phần nào của diễn đàn trên trang web khác bằng thẻ `<iframe>`.
-
-      11. Không được vô hiệu hóa, né tránh hoặc phá vỡ các biện pháp bảo mật và giới hạn truy cập của diễn đàn.
-
-      12. Không được gây áp lực lên hạ tầng diễn đàn bằng số lượng yêu cầu bất thường hoặc cố ý làm quá tải hệ thống thông tin.
-
-      13. Không được mạo danh người khác trên diễn đàn.
-
-      14. Không được khuyến khích hoặc giúp đỡ bất kỳ ai vi phạm các điều khoản này.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Tiêu chuẩn nội dung</a></h2>
-
-      1. Không đăng tải nội dung bất hợp pháp, xúc phạm hoặc gây hại cho người khác, bao gồm hành vi quấy rối, không phù hợp, lăng mạ hoặc thù thịnh.
-
-      2. Không đăng tải nội dung vi phạm pháp luật, xâm phạm quyền sở hữu trí tuệ, vi phạm quyền riêng tư hoặc phá vỡ các thỏa thuận với bên thứ ba.
-
-      3. Không gửi nội dung chứa mã độc máy tính như vi-rút (Virus) hay phần mềm độc hại/gián điệp (Spyware).
-
-      4. Không đăng nội dung giữ chỗ chỉ để chiếm dụng địa chỉ, tên người dùng hoặc mã định danh.
-
-      5. Không sử dụng diễn đàn để tiết lộ thông tin mà bạn không có quyền công khai, chẳng hạn như thông tin bảo mật hoặc dữ liệu cá nhân của người khác.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Xử lý vi phạm</a></h2>
-
-      Công ty có quyền điều tra và xử lý các hành vi vi phạm điều khoản này theo quy định pháp luật. Công ty có thể thông báo và hợp tác với cơ quan chức năng để truy cứu trách nhiệm đối với các hành vi vi phạm.
-
-      Công ty bảo lưu quyền thay đổi, chỉnh sửa hoặc xóa nội dung trên diễn đàn vì bất kỳ lý do gì. Nếu phát hiện nội dung vi phạm điều khoản, vui lòng [liên hệ với chúng tôi ngay lập tức](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Tài khoản của bạn</a></h2>
-
-      Bạn cần tạo và đăng nhập tài khoản để sử dụng một số tính năng của diễn đàn.
-
-      Khi đăng ký, bạn cần cung cấp một số thông tin cá nhân. Bạn cam kết cung cấp tối thiểu một địa chỉ thư điện tử (Email) hợp lệ và duy trì cập nhật địa chỉ này. Bạn có thể đóng tài khoản bất kỳ lúc nào bằng cách gửi email đến <%{contact_email}>.
-
-      Bạn chịu trách nhiệm cho mọi hoạt động diễn ra dưới tài khoản của mình, cho đến khi tài khoản được đóng hoặc bạn thông báo cho công ty rằng tài khoản đã bị xâm nhập. Vui lòng chọn mật khẩu an toàn và giữ bảo mật.
-
-      Công ty có thể giới hạn, tạm dừng hoặc đóng tài khoản của bạn nếu có yêu cầu gỡ bỏ do vi phạm bản quyền, hoặc khi có lý do hợp lý cho thấy bạn đã vi phạm các điều khoản này.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Nội dung của bạn</a></h2>
-
-      Các điều khoản này không chuyển giao quyền sở hữu trí tuệ đối với nội dung bạn chia sẻ trên diễn đàn (như thông tin tài khoản, bài viết, bình luận) cho công ty. Ngược lại, bạn cũng không có quyền sở hữu đối với tài sản trí tuệ của công ty.
-
-      Bạn hoàn toàn chịu trách nhiệm về nội dung mình đăng tải. Bạn cam kết không gây hiểu nhầm rằng nội dung của bạn được bảo trợ hoặc phê duyệt bởi công ty. Công ty không có nghĩa vụ phải lưu trữ, duy trì hoặc cung cấp bản sao nội dung của bạn.
-
-      Nội dung bạn đăng tải thuộc sở hữu của bạn. Tuy nhiên, tối thiểu bạn cấp cho công ty quyền cung cấp nội dung đó tới những người dùng khác trên diễn đàn. Quyền này cho phép công ty sao chép, xuất bản và phân tích nội dung bạn gửi.
-
-      Khi nội dung bị gỡ bỏ khỏi diễn đàn, quyền hạn của công ty sẽ chấm dứt khi bản sao cuối cùng xóa khỏi hệ thống sao lưu và bộ nhớ đệm (Cache). Các giấy phép khác bạn áp dụng cho nội dung (như [Creative Commons](https://creativecommons.org)) vẫn có thể tiếp tục có hiệu lực.
-
-      Công ty không chịu trách nhiệm nếu người khác sử dụng lại nội dung của bạn vi phạm các điều khoản giấy phép mà bạn đã thiết lập.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Trách nhiệm của bạn</a></h2>
-
-      Bạn đồng ý bồi thường cho công ty trước các khiếu nại pháp lý từ bên thứ ba liên quan đến việc bạn vi phạm các điều khoản này. Hai bên cam kết thông báo cho nhau sớm nhất có thể về các khiếu nại phát sinh. Bạn đồng ý để công ty kiểm soát việc điều tra, bào chữa và thương lượng hòa giải.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Tuyên bố miễn trừ trách nhiệm</a></h2>
-
-      ***Bạn chấp nhận mọi rủi ro khi sử dụng diễn đàn và các nội dung trên diễn đàn. Trong phạm vi pháp luật cho phép, công ty cung cấp dịch vụ nguyên trạng ("as is") mà không có bất kỳ sự bảo đảm nào.***
-
-      Diễn đàn có thể chứa liên kết tới các dịch vụ do bên thứ ba vận hành. Công ty không bảo đảm cho các dịch vụ hoặc nội dung từ các bên này.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Giới hạn trách nhiệm pháp lý</a></h2>
-
-      ***Công ty và các nhà cung cấp sẽ không chịu trách nhiệm cho các thiệt hại do vi phạm hợp đồng mà nhân viên không thể lường trước một cách hợp lý.***
-
-      ***Trong phạm vi pháp luật cho phép, tổng trách nhiệm pháp lý đối với các khiếu nại liên quan đến diễn đàn sẽ bị giới hạn ở mức 50 USD.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Ý kiến đóng góp</a></h2>
-
-      Công ty luôn hoan nghênh các đóng góp và gợi ý của bạn. Xem mục [Liên hệ](#heading--contact) bên dưới để biết cách gửi phản hồi.
-
-      Bạn đồng ý rằng công ty có toàn quyền sử dụng các ý kiến đóng góp đó mà không cần thông báo, xin phép hay trả phí. Vui lòng không gửi các thông tin mà bạn cho là bảo mật hoặc thuộc sở hữu riêng.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Chấm dứt dịch vụ</a></h2>
-
-      Bạn hoặc công ty có thể chấm dứt thỏa thuận này bất kỳ lúc nào. Khi chấm dứt, quyền sử dụng diễn đàn của bạn cũng sẽ kết thúc.
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Giải quyết tranh chấp</a></h2>
-
-      %{governing_law} sẽ điều chỉnh mọi tranh chấp liên quan đến các điều khoản này hoặc việc sử dụng diễn đàn của bạn.
-
-      Mọi tranh chấp sẽ được giải quyết tại tòa án thuộc %{city_for_disputes}.
-
-      <h2 id="heading--general"><a href="#heading--general">Điều khoản chung</a></h2>
-
-      Nếu bất kỳ điều khoản nào không thể thi hành, điều khoản đó sẽ được điều chỉnh ở mức tối thiểu để có thể thi hành, hoặc sẽ bị gỡ bỏ.
-
-      Bạn không được chuyển nhượng thỏa thuận này. Công ty có thể chuyển nhượng thỏa thuận cho các công ty liên kết hoặc đơn vị nhận sáp nhập/mua lại.
-
-      Các điều khoản này cấu thành toàn bộ thỏa thuận giữa bạn và công ty về việc sử dụng diễn đàn.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Liên hệ</a></h2>
-
-      Bạn có thể gửi thông báo hoặc thắc mắc cho công ty qua địa chỉ thư điện tử (Email) <%{contact_email}>.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Thay đổi điều khoản</a></h2>
-
-      Lần cập nhật gần nhất là [INSERT LAST UPDATE DATE HERE]. Công ty có thể tiếp tục cập nhật điều khoản và sẽ thông báo trên diễn đàn hoặc qua email.
   privacy_topic:
     title: "Chính sách Riêng tư"
-    body: |
-      ## [Quản trị viên diễn đàn thân mến, dưới đây là bản mẫu chính sách riêng tư mà bạn nên tùy chỉnh cho phù hợp với diễn đàn của mình.]
-
-      <a name="collect"></a>
-
-      ## [Chúng tôi thu thập những thông tin nào?](#collect)
-
-      Chúng tôi thu thập thông tin khi bạn đăng ký tài khoản, đọc, viết bài hoặc tương tác với các nội dung trên diễn đàn.
-
-      Khi đăng ký, bạn có thể được yêu cầu nhập tên và địa chỉ thư điện tử (Email). Bạn vẫn có thể truy cập diễn đàn mà không cần đăng ký. Địa chỉ email sẽ được xác thực qua một liên kết duy nhất.
-
-      Khi bạn đăng bài, hệ thống sẽ ghi nhận địa chỉ IP. Nhật ký máy chủ (Server log) cũng có thể lưu trữ địa chỉ IP của mọi yêu cầu gửi đến hệ thống.
-
-      <a name="use"></a>
-
-      ## [Chúng tôi sử dụng thông tin của bạn làm gì?](#use)
-
-      Thông tin thu thập được có thể dùng để:
-
-      * Cá nhân hóa trải nghiệm của bạn &mdash; giúp đáp ứng tốt hơn các nhu cầu cá nhân.
-      * Cải thiện diễn đàn &mdash; liên tục nâng cấp chất lượng dựa trên phản hồi của bạn.
-      * Nâng cao dịch vụ hỗ trợ &mdash; xử lý các yêu cầu trợ giúp hiệu quả hơn.
-      * Gửi email định kỳ &mdash; gửi thông báo về các thay đổi bài viết, phản hồi tên người dùng hoặc trả lời thắc mắc.
-
-      <a name="protect"></a>
-
-      ## [Chúng tôi bảo vệ thông tin của bạn như thế nào?](#protect)
-
-      Chúng tôi áp dụng nhiều biện pháp bảo mật để đảm bảo an toàn cho thông tin cá nhân của bạn khi nhập, gửi hoặc truy cập.
-
-      <a name="data-retention"></a>
-
-      ## [Chính sách lưu trữ dữ liệu ra sao?](#data-retention)
-
-      Chúng tôi cam kết:
-
-      * Lưu trữ nhật ký máy chủ chứa địa chỉ IP không quá [SỐ NGÀY] ngày.
-
-      <a name="cookies"></a>
-
-      ## [Chúng tôi có sử dụng cookie không?](#cookies)
-
-      Có. Cookie là các tệp nhỏ được lưu trên ổ cứng máy tính thông qua trình duyệt web (nếu bạn cho phép), giúp diễn đàn nhận diện trình duyệt và liên kết với tài khoản đã đăng ký của bạn.
-
-      Chúng tôi dùng cookie để lưu cài đặt cá nhân cho các lần truy cập sau và phân tích dữ liệu lượng truy cập.
-
-      <a name="disclose"></a>
-
-      ## [Chúng tôi có tiết lộ thông tin ra bên ngoài không?](#disclose)
-
-      Chúng tôi không bán, giao dịch hoặc chuyển giao thông tin cá nhân của bạn cho bên thứ ba. Điều này không bao gồm các đối tác tin cậy hỗ trợ vận hành diễn đàn, miễn là họ cam kết bảo mật thông tin. Chúng tôi cũng có thể cung cấp thông tin khi có yêu cầu pháp lý hoặc để bảo vệ quyền lợi, tài sản và an toàn.
-
-      <a name="third-party"></a>
-
-      ## [Liên kết của bên thứ ba](#third-party)
-
-      Đôi khi, chúng tôi có thể đưa liên kết đến các sản phẩm/dịch vụ của bên thứ ba. Các trang web này có chính sách riêng tư độc lập. Chúng tôi không chịu trách nhiệm cho nội dung hay hoạt động của các trang web liên kết đó.
-
-      <a name="coppa"></a>
-
-      ## [Tuân thủ đạo luật bảo vệ quyền riêng tư của trẻ em trên mạng (COPPA)](#coppa)
-
-      Diễn đàn và các dịch vụ chỉ dành cho người từ đủ 18 tuổi trở lên. Nếu máy chủ đặt tại Hoa Kỳ và bạn dưới 18 tuổi, vui lòng không sử dụng trang web này theo quy định của COPPA.
-
-      <a name="online"></a>
-
-      ## [Phạm vi áp dụng chính sách](#online)
-
-      Chính sách riêng tư trực tuyến này chỉ áp dụng cho thông tin thu thập qua trang web, không áp dụng cho thông tin thu thập ngoại tuyến (Offline).
-
-      <a name="consent"></a>
-
-      ## [Sự đồng ý của bạn](#consent)
-
-      Khi sử dụng diễn đàn, bạn đồng ý với chính sách riêng tư của chúng tôi.
-
-      <a name="changes"></a>
-
-      ## [Thay đổi chính sách riêng tư](#changes)
-
-      Mọi thay đổi về chính sách riêng tư sẽ được cập nhật công khai tại trang này.
-
-      Tài liệu này áp dụng giấy phép CC-BY-SA. Lần cập nhật gần nhất: [INSERT LAST UPDATE DATE HERE].
   badges:
     editor:
       name: Lần Đầu Sửa Tút
@@ -2830,6 +2598,10 @@ vi:
       fast_typer_time:
         other: "%{count} giây"
     actions:
+      answer_yes:
+        title: "Đồng ý"
+      answer_no:
+        title: "Không"
       agree:
         title: "Đồng ý"
       agree_and_keep_deleted:
@@ -2864,6 +2636,10 @@ vi:
         title: "Đồng ý"
       approve_post:
         title: "Đồng ý"
+      deny_and_delete_post:
+        complete: "Tút đã bị xóa."
+      deny_and_keep_deleted:
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       approve_post_closed:
         title: "Đồng ý"
       reject_post_bundle:

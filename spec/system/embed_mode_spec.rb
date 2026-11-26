@@ -8,16 +8,22 @@ describe "Embed mode" do
 
   before { SiteSetting.embed_full_app = true }
 
-  it "applies embed-mode class to body when embed_mode=true" do
+  it "shows topic content, navigation, and the first-reply prompt in embed mode" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
     expect(page).to have_css("body.embed-mode")
+    expect(page).to have_css("#topic-title .fancy-title", text: topic.title, visible: :all)
+    expect(page).to have_css("#post_1")
+    expect(page).to have_css(".topic-navigation")
+    expect(page).to have_css(".embed-topic-footer__first-reply")
+    expect(page).to have_css(".embed-topic-footer__first-reply .btn-primary")
   end
 
-  it "does not apply embed-mode class without the param" do
+  it "shows the regular topic page without the embed mode parameter" do
     visit("/t/#{topic.slug}/#{topic.id}")
 
     expect(page).to have_no_css("body.embed-mode")
+    expect(page).to have_no_css(".embed-topic-footer")
   end
 
   it "hides suggested topics in embed mode" do
@@ -26,27 +32,6 @@ describe "Embed mode" do
 
     expect(page).to have_css("body.embed-mode")
     expect(page).to have_no_css(".suggested-topics")
-  end
-
-  it "shows the topic navigation widget" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-
-    expect(page).to have_css(".topic-navigation")
-  end
-
-  it "loads topic content without JS errors" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-
-    expect(page).to have_css("body.embed-mode")
-    expect(page).to have_css("#topic-title .fancy-title", text: topic.title, visible: :all)
-    expect(page).to have_css("#post_1")
-  end
-
-  it "shows 'be the first to reply' message for topic with no replies" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-
-    expect(page).to have_css(".embed-topic-footer__first-reply")
-    expect(page).to have_css(".embed-topic-footer__first-reply .btn-primary")
   end
 
   it "shows powered by discourse badge" do
@@ -63,12 +48,6 @@ describe "Embed mode" do
     expect(page).to have_no_css(".embed-topic-footer .powered-by-discourse")
   end
 
-  it "does not show embed footer without embed mode" do
-    visit("/t/#{topic.slug}/#{topic.id}")
-
-    expect(page).to have_no_css(".embed-topic-footer")
-  end
-
   context "when logged in" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
@@ -78,10 +57,12 @@ describe "Embed mode" do
       fab!(:no_reply_topic, :topic)
       fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
-      it "shows the docked composer" do
+      it "shows the docked composer without the standard composer or floating timeline button" do
         visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
         expect(topic_page).to have_docked_composer
+        expect(topic_page).to have_no_floating_timeline_button
+        expect(page).to have_no_css("#reply-control.open")
       end
 
       it "does not show the docked composer outside embed mode" do
@@ -89,27 +70,16 @@ describe "Embed mode" do
 
         expect(topic_page).to have_no_docked_composer
       end
-
-      it "does not show floating timeline button" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
-
-        expect(topic_page).to have_no_floating_timeline_button
-      end
-
-      it "hides the standard composer" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
-
-        expect(page).to have_no_css("#reply-control.open")
-      end
     end
 
     context "with a topic that has replies" do
       fab!(:reply) { Fabricate(:post, topic: topic) }
 
-      it "shows the docked composer" do
+      it "shows the docked composer without the first-reply prompt" do
         visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
         expect(topic_page).to have_docked_composer
+        expect(page).to have_no_css(".embed-topic-footer__first-reply")
       end
 
       it "focuses the docked composer when clicking reply" do
@@ -150,12 +120,14 @@ describe "Embed mode" do
       context "with many replies" do
         before { 15.times { Fabricate(:post, topic: topic) } }
 
-        it "shows floating timeline button when footer is not visible" do
+        it "shows floating timeline controls and a progress bar at the bottom" do
           visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
           expect(topic_page).to have_post_number(2)
 
           expect(topic_page).to have_floating_timeline_button
           expect(topic_page).to have_no_floating_reply_button
+          expect(page).to have_css("#topic-progress-wrapper", visible: :visible)
+          expect(page).to have_css(".topic-navigation.with-topic-progress", visible: :visible)
         end
 
         it "opens the timeline when clicking the floating timeline button" do
@@ -165,20 +137,6 @@ describe "Embed mode" do
           topic_page.click_floating_timeline_button
           expect(page).to have_css(".timeline-fullscreen.show")
         end
-
-        it "shows the topic progress bar at the bottom (not sticky)" do
-          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-          expect(topic_page).to have_post_number(2)
-
-          expect(page).to have_css("#topic-progress-wrapper", visible: :visible)
-          expect(page).to have_css(".topic-navigation.with-topic-progress", visible: :visible)
-        end
-      end
-
-      it "does not show 'be the first to reply' message" do
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-
-        expect(page).to have_no_css(".embed-topic-footer__first-reply")
       end
 
       it "still shows powered by discourse badge" do
@@ -194,16 +152,11 @@ describe "Embed mode" do
     fab!(:no_reply_topic, :topic)
     fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
-    it "does not show the docked composer" do
-      visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
-
-      expect(topic_page).to have_no_docked_composer
-    end
-
-    it "shows login label on the embed first-reply footer" do
+    it "shows a login prompt instead of a docked composer" do
       visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
       expect(page).to have_button(I18n.t("js.topic.login_reply"))
+      expect(topic_page).to have_no_docked_composer
     end
   end
 end

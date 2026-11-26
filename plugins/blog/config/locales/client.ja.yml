@@ -17,6 +17,14 @@ ja:
         desktop: デスクトップ
         mobile: モバイル
         save: 保存
+        about_tab: 情報
+        blog_slug: スラッグ
+        general_heading: 一般
+        settings_tab: 設定
+        theme_tab: テーマ
+        column_name: 名前
+        column_category: カテゴリ
+        column_status: ステータス
         path_formats:
           custom: カスタム
         back_to_themes: テーマに戻る
@@ -57,7 +65,10 @@ ja:
         edit: 編集
         status: ステータス
         replies: 返信
+        title: タイトル
+      all: すべて
       drafts: 下書き
+      pages: ページ
       preview: プレビュー
       unpublish: 公開を取り消す
       appearance_link: 外観

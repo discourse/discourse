@@ -4,7 +4,7 @@ require "liquid"
 
 module ::Blog
   class TemplateRenderer
-    PAGES = %w[layout index article about not_found].freeze
+    PAGES = %w[layout index article page about not_found].freeze
     MAX_TEMPLATE_BYTES = 65_536
     TEMPLATE_ROOT = File.expand_path("../../templates", __dir__)
 

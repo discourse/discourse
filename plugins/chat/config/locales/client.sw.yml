@@ -140,9 +140,6 @@ sw:
         short:
           one: "siku %{count}"
           other: "siku %{count}"
-      emoji_picker:
-        objects: "Vitu"
-        flags: "Bendera"
       thread:
         title: "Kichwa cha Habari"
         replies:

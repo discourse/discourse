@@ -73,6 +73,13 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Atualizar"
+        columns:
+          user: "Utilizador"
+          reason: "Sinalizado como"
+          created: "Criado"
+          status: "Estado"
       copied: "Copiado"
       ai_decoded_transcript:
         type: "Tipo"
@@ -81,6 +88,8 @@ pt:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        ai_tool:
+          list_item: "Item da Lista"
         classify:
           text: "Texto"
           upload_ids: "Imagens"
@@ -120,7 +129,6 @@ pt:
         nav:
           enabled: "Ativado"
         filters:
-          all: "Todos"
           reset: "Repor"
         sentiment:
           emotion: "Emoção"
@@ -146,6 +154,9 @@ pt:
           markdown_tables: "Gerar tabela de Marcação"
           custom_prompt: "Janela personalizada"
           translator: "Tradutor"
+        review_queue:
+          setting_groups:
+            settings: "Configurações"
         image_caption:
           setting_groups:
             settings: "Configurações"
@@ -322,6 +333,25 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      concepts:
+        edit: "Editar"
+        delete: "Eliminar"
+        columns:
+          status: "Estado"
+          topics: "Tópicos"
+          posts: "Mensagens"
+        statuses:
+          active: "Ativo"
+        form:
+          name: "Nome"
+          description: "Descrição"
+          status: "Estado"
+        tagged_topics: "Tópicos etiquetados"
+        topic_columns:
+          topic: "Tópico"
+          primary: "Principal"
+          relevance: "Relevância"
+        primary_badge: "Principal"
       decision_models:
         no_preset: "Nenhuma"
         display_name: "Nome"
@@ -411,7 +441,6 @@ pt:
         copy_link: "Copiar hiperligação"
         filter_all: "Todos"
       ai_bot:
-        llm: "Modelo:"
         debug_ai_modal:
           duration_label: "Duração:"
           request: "Pedido"
@@ -423,6 +452,7 @@ pt:
         share_modal:
           copy: "Copiar"
         conversations:
+          tab_label: "IA"
           today: "Hoje"
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"

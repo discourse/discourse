@@ -41,18 +41,21 @@ class ReviewableQueuedPost < Reviewable
     build_approve_action(actions, consistent_answers:) if !consistent_answers
 
     if pending?
-      reject_label =
-        if consistent_answers
-          "reviewables.actions.answer_yes.title"
-        else
-          "reviewables.actions.reject_post_bundle.title"
-        end
-      reject_bundle = actions.add_bundle("#{id}-reject-post", label: reject_label)
+      if consistent_answers
+        deny_label =
+          topic_id ? "reviewables.actions.deny_post.title" : "reviewables.actions.deny_topic.title"
+      end
+      reject_bundle =
+        actions.add_bundle(
+          "#{id}-reject-post",
+          label: deny_label || "reviewables.actions.reject_post_bundle.title",
+        )
 
       build_action(
         actions,
         :reject_post,
         bundle: reject_bundle,
+        label: deny_label,
         icon: "xmark",
         dsa_classification_required: true,
       )
@@ -79,7 +82,6 @@ class ReviewableQueuedPost < Reviewable
       end
     end
 
-    # "Yes, there's a problem" comes first, so approval follows as "No".
     build_approve_action(actions, consistent_answers:) if consistent_answers
 
     build_action(actions, :delete) if guardian.can_delete?(self)
@@ -278,15 +280,14 @@ class ReviewableQueuedPost < Reviewable
   def build_approve_action(actions, consistent_answers:)
     return if approved?
 
-    label =
-      if !consistent_answers
-        nil
-      elsif pending?
-        "reviewables.actions.answer_no.title"
-      else
-        # Resolved items have no question to answer, so approval is named outright.
-        "reviewables.actions.approve_post.action_title"
-      end
+    if consistent_answers
+      label =
+        if pending? && !topic_id
+          "reviewables.actions.approve_topic.title"
+        else
+          "reviewables.actions.approve_post.action_title"
+        end
+    end
 
     if topic&.closed?
       build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)

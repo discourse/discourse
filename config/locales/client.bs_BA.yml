@@ -1744,6 +1744,10 @@ bs_BA:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        code: "Šifra"
+        quote: "Citiraj"
+        details: "Details"
       whisper: "šapat"
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
@@ -2391,10 +2395,8 @@ bs_BA:
           label: "označeno"
           title: "Klikni kako bi odstranio objavu iz označenog"
         select_replies:
-          label: "označi +odgovore"
           title: "Odaberi objavu i sve njene odgovore"
         select_below:
-          label: "označi +ispod"
           title: "Odaberi objavu i sve ispod nje"
         delete: delete selected
         cancel: cancel selecting
@@ -2608,16 +2610,10 @@ bs_BA:
       validations:
         icon_required: "Odaberi ikonu."
       description: "Description"
-      icon: "Icon"
-      emoji: "Emoji"
       background_color: "Color"
       styles:
         icon: "Icon"
         emoji: "Emoji"
-        options:
-          icon: "Icon"
-          emoji: "Emoji"
-      color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       no_description: "Please add a description for this category."
@@ -3079,6 +3075,12 @@ bs_BA:
       forward: "Naprijed"
       share: "Podijeli"
       dismiss: "Odpusti"
+    mobile_tab_bar:
+      new_topic: "Nova tema"
+      create: "napravi"
+      more: "Više"
+      back: "Prethodno"
+      topics: "Topics"
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
     image_removed: "(slika uklonjena)"
@@ -4342,7 +4344,6 @@ bs_BA:
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "Email Poruka"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
@@ -4518,6 +4519,8 @@ bs_BA:
           dropdown: "Ispustiti"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Uobičajen"
         theme_disabled: "Neomogućen"
         edit: "Edit"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
@@ -4598,7 +4601,7 @@ bs_BA:
           modal_title: Grupiranje bedževa
         granted_by: Dat od
         granted_at: Dato na
-        reason_help: (Veza do posta ili teme)
+        reason_help: Veza do posta ili teme
         save: Sačuvaj
         delete: Obriši
         delete_confirm: Are you sure you want to delete this badge?

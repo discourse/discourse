@@ -19,3 +19,17 @@ Fabricator(:theme_appearance_change, from: :appearance_change) do
     )
   end
 end
+
+# A theme installed from the list of popular themes, which comes with files of
+# its own and, here, no palettes.
+Fabricator(:installed_theme_appearance_change, from: :appearance_change) do
+  kind :installed_theme
+  light_color_scheme nil
+  dark_color_scheme nil
+  theme do
+    Fabricate(:theme).tap do |theme|
+      theme.set_field(target: :common, name: :scss, value: ".mint { color: red; }")
+      theme.save!
+    end
+  end
+end

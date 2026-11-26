@@ -586,13 +586,6 @@ cs:
     few: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatele v příspěvku."
     many: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
     other: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
-  no_embedded_media_allowed_group: "Je nám líto, ale do příspěvku nelze vkládat média."
-  no_embedded_media_allowed: "Litujeme, noví uživatelé nemohou do příspěvků vkládat média"
-  too_many_embedded_media:
-    one: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze jeden mediální prvek."
-    few: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediální prvky."
-    many: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediálních prvků."
-    other: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediální prvky."
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
   too_many_attachments:
     one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jednu přílohu."
@@ -2358,7 +2351,25 @@ cs:
       staged_users_disabled: "Než toto nastavení povolíte, musíte nejprve povolit „předběžně založené uživatele“."
       delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
     keywords:
+      about_banner_image: "obrázek (banner)"
+      about_page_extra_groups: "seznam skupin"
+      about_page_extra_groups_initial_members: "viditelní členové"
+      about_page_extra_groups_order: "řazení"
+      about_page_extra_groups_show_description: "zahrnout popis"
+      company_url: "webová stránka"
+      extended_site_description: "popis komunity"
+      large_icon: "čtvercová ikona"
+      logo: "primární logo"
+      logo_dark: "primární tmavé logo"
+      logo_small: "malé logo"
+      logo_small_dark: "malé tmavé logo"
       navigation_menu: "postranní panel|rozbalovací nabídka v záhlaví"
+      short_site_description: "titulek komunity"
+      site_contact_group_name: "kontaktní skupina webu"
+      site_contact_username: "kontaktní osoba webu"
+      site_description: "souhrnný popis komunity"
+      title: "název komunity"
+      welcome_banner_image: "obrázek pozadí"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -2851,20 +2862,6 @@ cs:
     post_hidden:
       title: "Skrytý příspěvek"
       subject_template: "Příspěvek skrytý nahlášeními komunity"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva od %{site_name} , která vás informuje, že váš příspěvek byl skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Tento příspěvek byl skryt z důvodu nahlášení z komunity, proto prosím zvažte, jak byste jej mohli upravit aby váš příspěvek odrážel jejich zpětnou vazbu. **Svůj příspěvek můžete upravit po %{edit_delay} minutách a automaticky se zobrazí.**
-
-        Pokud však příspěvek skryje komunita podruhé, zůstane skrytý, dokud jej nezpracuje redakce.
-
-        Další pokyny naleznete v našich [pravidlech komunity](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Zpětná vazba na váš příspěvek"
       subject_template: "Zpětná vazba na váš příspěvek v %{topic_title}"
@@ -2874,31 +2871,9 @@ cs:
     post_hidden_again:
       title: "Příspěvek byl opět skryt"
       subject_template: "Příspěvek skryt nahlášeními komunity, redakce byla upozorněna"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva z %{site_name} , která vás informuje, že váš příspěvek byl znovu skryt.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Komunita nahlásila tento příspěvek a nyní je skrytý. **Protože tento příspěvek byl skryt vícekrát, váš příspěvek nyní zůstane skrytý, dokud nebude zpracován členem redakce.**
-
-        Další pokyny najdete v našich [pravidlech komunity](%{base_url}/guidelines).
     queued_by_staff:
       title: "Příspěvek potřebuje schválení"
       subject_template: "Příspěvek skrytý redakcí, čeká na schválení"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva od %{site_name}, která vás informuje o tom, že váš příspěvek byl skryt.
-
-        <%{base_url}%{url}>
-
-        Váš příspěvek zůstane skrytý, dokud jej nezkontroluje člen redakce.
-
-        Další pokyny naleznete v našich [zásadách komunity](%{base_url}/guidelines).
     flags_disagreed:
       text_body_template: |
         Dobrý den,
@@ -3580,12 +3555,6 @@ cs:
     account_suspended_forever:
       title: "Účet pozastaven"
       subject_template: "[%{email_prefix}] Váš účet byl pozastaven"
-    account_silenced:
-      title: "Účet ztišen"
-      subject_template: "[%{email_prefix}] Váš účet byl ztišen"
-    account_silenced_forever:
-      title: "Účet ztišen"
-      subject_template: "[%{email_prefix}] Váš účet byl ztišen"
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"
@@ -3735,11 +3704,6 @@ cs:
         Věříme v [civilizované chování komunity](%{base_url}/guidelines) za všech okolností.
 
         Užijte si svůj pobyt!
-    signup_after_reject:
-      text_body_template: |
-        Člen redakce odmítl váš účet na webu %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registrace"
       subject_template: "[%{email_prefix}] Potvrďte svůj nový účet"
@@ -4309,7 +4273,6 @@ cs:
       dracula: "Drákula"
       grey_amber: "Šedý jantar"
       latte: "Latte"
-      dark_rose: "Temná růže"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4444,6 +4407,10 @@ cs:
       no_context:
         watched_word: "Tento příspěvek obsahoval sledované slovo. Více informací naleznete v %{link}."
     actions:
+      answer_yes:
+        title: "Ano"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ano"
       agree_and_keep:
@@ -4489,6 +4456,7 @@ cs:
       delete_and_agree_replies:
         title: "Smazat příspěvek a odpovědi"
         description: "Souhlasit s nahlášením a odstranit tento příspěvek a všechny jeho odpovědi; pokud jde první příspěvek, smaže i téma."
+        confirm_title: "Smazat příspěvek a odpovědi?"
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
         complete: "Příspěvek a odpovědi byly odstraněny."
       disagree_and_restore:
@@ -4521,6 +4489,8 @@ cs:
       approve_post:
         title: "Ano"
         complete: "Příspěvek schválen."
+      deny_and_delete_post:
+        complete: "Příspěvek smazán."
       approve_post_closed:
         title: "Ano"
         confirm: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"

@@ -45,15 +45,22 @@ describe "Live stage speak queue" do
     ".fk-d-menu[data-identifier='live-speak-queue-menu']"
   end
 
-  it "promotes the listener to speaker when a moderator approves their request" do
+  it "separates stage from audience and promotes an approved listener as a session-only speaker" do
     using_session(:alice) { join_room(moderator) }
 
     using_session(:bob) do
       join_room(listener)
 
+      expect(page).to have_css(
+        ".live-video-tile[data-user-id='#{moderator.id}'] .live-video-tile__role.--moderator",
+      )
+      expect(page).to have_css(".live-room-page__audience-member[data-user-id='#{listener.id}']")
+      expect(page).to have_no_css(".live-call-controls__mic-combo")
+
       expect(page).to have_css(".live-call-controls__raise-hand")
       find(".live-call-controls__raise-hand").click
       expect(page).to have_css(".live-call-controls__raise-hand.--active")
+      expect(page).to have_css(".live-call-controls__queue-badge", text: "#1")
     end
 
     using_session(:alice) do
@@ -73,7 +80,9 @@ describe "Live stage speak queue" do
     using_session(:bob) do
       expect(toasts).to have_success(I18n.t("js.live.stage.promoted_to_speaker"))
       expect(page).to have_no_css(".live-call-controls__raise-hand")
+      expect(page).to have_css(".live-call-controls__step-down")
       expect(page).to have_button(I18n.t("js.live.video.camera_on"))
+      expect(Live::ParticipantTracker.session_speaker?(room.id, listener.id)).to eq(true)
     end
 
     using_session(:alice) do
@@ -82,7 +91,7 @@ describe "Live stage speak queue" do
     end
   end
 
-  it "lets the listener raise their hand again after a moderator dismisses the request" do
+  it "enforces a cooldown after a moderator dismisses a request and allows re-raising once cleared" do
     using_session(:alice) { join_room(moderator) }
 
     using_session(:bob) do
@@ -107,6 +116,13 @@ describe "Live stage speak queue" do
       expect(toasts).to have_default(I18n.t("js.live.stage.request_dismissed"))
       expect(page).to have_css(".live-call-controls__raise-hand:not(.--active)")
 
+      # Immediate re-raise is blocked by the 30-second dismissal cooldown.
+      find(".live-call-controls__raise-hand").click
+      expect(page).to have_css(".dialog-body", wait: 5)
+      find(".dialog-footer .btn-primary").click
+      expect(page).to have_css(".live-call-controls__raise-hand:not(.--active)")
+
+      Live::ParticipantTracker.clear_hand_raise_cooldown(room.id, listener.id)
       find(".live-call-controls__raise-hand").click
       expect(page).to have_css(".live-call-controls__raise-hand.--active")
     end
@@ -140,6 +156,63 @@ describe "Live stage speak queue" do
 
       open_speak_queue
       within(speak_queue_menu) { expect(page).to have_css(".live-speak-queue__empty") }
+    end
+  end
+
+  it "lets a moderator invite a listener to the stage, mute them for everyone, and lets the speaker step down" do
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) { join_room(listener) }
+
+    using_session(:alice) do
+      find(".live-room-page__audience-member[data-user-id='#{listener.id}']", wait: 10).click
+      find(".live-participant-sidebar-context-menu__invite-speak-btn").click
+      expect(page).to have_css(
+        ".live-room-page__audience-member[data-user-id='#{listener.id}'].--invited",
+        wait: 10,
+      )
+    end
+
+    using_session(:bob) do
+      expect(page).to have_css(".live-room-page__stage-invite", wait: 10)
+      find(".live-room-page__stage-invite-accept").click
+
+      expect(toasts).to have_success(I18n.t("js.live.stage.promoted_to_speaker"))
+      expect(page).to have_no_css(".live-room-page__stage-invite")
+      expect(page).to have_css(".live-call-controls__step-down")
+    end
+
+    using_session(:alice) do
+      tile = find(".live-video-tile[data-user-id='#{listener.id}']", wait: 10)
+      tile.hover
+      tile.find(".live-video-tile__menu").click
+      find(".live-participant-sidebar-context-menu__force-mute-btn").click
+    end
+
+    using_session(:bob) do
+      expect(toasts).to have_default(I18n.t("js.live.stage.muted_by_moderator"))
+      find(".live-call-controls__step-down").click
+
+      expect(toasts).to have_default(I18n.t("js.live.stage.demoted_to_listener"))
+      expect(page).to have_css(".live-room-page__audience-member[data-user-id='#{listener.id}']")
+      expect(page).to have_css(".live-call-controls__raise-hand")
+    end
+  end
+
+  it "lets a moderator pause speak requests from the queue popover" do
+    using_session(:alice) { join_room(moderator) }
+    using_session(:bob) { join_room(listener) }
+
+    using_session(:alice) do
+      open_speak_queue
+      within(speak_queue_menu) do
+        PageObjects::Components::DToggleSwitch.new(".live-speak-queue__toggle-requests").toggle
+        expect(page).to have_css(".live-speak-queue__paused", wait: 10)
+      end
+    end
+
+    using_session(:bob) do
+      expect(page).to have_css(".live-call-controls__raise-hand[disabled]", wait: 10)
     end
   end
 end

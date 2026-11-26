@@ -30,6 +30,23 @@ module("Live | Unit | Service | live-rooms", function (hooks) {
     assert.true(room.livekit_enabled, "manager-only settings are preserved");
   });
 
+  test("disconnecting call chat clears the DM integration immediately", function (assert) {
+    const service = this.owner.lookup("service:live-rooms");
+    service.upsertRoom({
+      id: 1,
+      slug: "private-call",
+      ephemeral: true,
+      chat_available: true,
+      chat_channel_id: 42,
+    });
+
+    service.handleRoomBroadcast({ room_id: 1, type: "chat_disabled" });
+
+    const room = service.roomById(1);
+    assert.false(room.chat_available, "the chat panel and toggle are disabled");
+    assert.strictEqual(room.chat_channel_id, null, "the DM link is removed");
+  });
+
   test("user-scoped responses can revoke room permissions", function (assert) {
     const service = this.owner.lookup("service:live-rooms");
     service.upsertRoom({

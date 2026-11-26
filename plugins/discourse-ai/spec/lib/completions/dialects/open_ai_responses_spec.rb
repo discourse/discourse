@@ -5,6 +5,55 @@ RSpec.describe DiscourseAi::Completions::Dialects::OpenAiResponses do
 
   before { enable_current_plugin }
 
+  describe "#tools" do
+    it "makes optional built-in tool parameters nullable in strict mode" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          tools: [DiscourseAi::Agents::Tools::MovePosts.signature],
+        )
+
+      tool = described_class.new(prompt, llm_model).tools.sole
+      schema = tool.fetch(:parameters)
+      properties = schema.fetch(:properties)
+
+      expect(tool).to include(strict: true)
+      expect(schema).to include(additionalProperties: false, required: properties.keys)
+      expect(properties.transform_values { |property| property[:type] }).to eq(
+        "topic_id" => :integer,
+        "post_ids" => :array,
+        "destination_topic_id" => %i[integer null],
+        "new_title" => %i[string null],
+        "category_id" => %i[integer null],
+        "reason" => :string,
+      )
+    end
+
+    it "allows null for an optional enum without changing an explicit JSON schema" do
+      schema = { type: "object", additionalProperties: { type: "string" } }
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          tools: [
+            {
+              name: "choose_color",
+              description: "Choose a color",
+              parameters: [
+                { name: "color", description: "The color", type: "string", enum: %w[red blue] },
+              ],
+            },
+            { name: "custom", description: "A custom tool", json_schema: schema },
+          ],
+        )
+
+      generated, custom = described_class.new(prompt, llm_model).tools
+      expect(generated.dig(:parameters, :properties, "color")).to include(
+        type: %i[string null],
+        enum: ["red", "blue", nil],
+      )
+      expect(custom).not_to have_key(:strict)
+      expect(custom[:parameters]).to eq(schema)
+    end
+  end
+
   describe "#translate" do
     it "does not forward a user message name to the responses API" do
       prompt = DiscourseAi::Completions::Prompt.new("You are a bot")

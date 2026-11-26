@@ -147,6 +147,7 @@ class PostRevisor
     if new_category.nil? && tc.topic.private_message?
       tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
+      tc.topic.reviewables.update_all(category_id: nil)
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags =
         if fields[:tags].present?
@@ -895,7 +896,12 @@ class PostRevisor
         @post.raw_mentions - PostAnalyzer.new(old_raw, @post.topic_id).raw_mentions
       end
 
-    Jobs.enqueue(:post_alert, post_id: @post.id, added_mentions: added_mentions)
+    Jobs.enqueue(
+      :post_alert,
+      post_id: @post.id,
+      added_mentions: added_mentions,
+      editor_id: @editor.id,
+    )
   end
 
   def publish_changes

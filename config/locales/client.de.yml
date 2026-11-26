@@ -10,8 +10,15 @@ de:
       choice_title: "Es ist rechtswidrig"
       go_back: "Zurück"
       title: "Illegale Inhalte melden"
+      name: "Vollständiger Name oder Organisationsname"
       email: "E-Mail-Adresse"
+      declaration_section: "Erklärung"
+      submit: "Bericht absenden"
+      get_email_code: "E-Mail-Code abrufen"
       resend_email_code: "Code erneut senden"
+      email_verified: "Verifiziert"
+      verification_code: "Bestätigungscode"
+      received: "Bericht erhalten"
     code_editor:
       search:
         replace: "Ersetzen"
@@ -575,9 +582,6 @@ de:
       fonts:
         base_font: "Body"
         heading_font: "Überschriften"
-      logo:
-        description: "Erscheint in der oberen Navigation der Website sowie oben in den E-Mail-Benachrichtigungen der Website."
-        help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
       homepage:
         topics: "Themen"
         categories: "Kategorien"
@@ -2320,6 +2324,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        invited_via_link_without_key: "Link (%{count} / %{max} eingelöst)"
         generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
@@ -2631,6 +2636,7 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+      remove_item: "%{name} entfernen"
     d_otp:
       screen_reader:
         one: Gib eine Zahl ein
@@ -3074,6 +3080,9 @@ de:
         size_too_small: "%{provided_file_size} ist kleiner als erlaubtes Minimum von %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji suchen
+      search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
+      no_results: "Keine Ergebnisse"
+      favorites: "Häufig verwendet"
       smileys_&_emotion: Smileys und Emotion
       people_&_body: Menschen und Körper
       animals_&_nature: Tiere und Natur
@@ -3203,6 +3212,10 @@ de:
       emoji: "Emoji :)"
       more_emoji: "mehr …"
       options: "Optionen"
+      ai_content:
+        code: "Code"
+        quote: "Zitieren"
+        details: "Details"
       whisper: "flüstern"
       unlist: "unsichtbar"
       add_warning: "Dies ist eine offizielle Warnung."
@@ -4539,10 +4552,8 @@ de:
           label: "ausgewählt"
           title: "Klicke, um den Beitrag aus der Auswahl zu entfernen"
         select_replies:
-          label: "auswählen inkl. Antworten"
           title: "Beitrag und alle Antworten zu Auswahl hinzufügen"
         select_below:
-          label: "auswählen inkl. folgender"
           title: "Beitrag und alles danach zu Auswahl hinzufügen"
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
@@ -4571,6 +4582,7 @@ de:
         actions: "Massenaktionen"
     post:
       accessible_heading: "Beitrag von %{username} %{date}"
+      ai_generated: "KI"
       heading_anchor: "Link zur Überschrift"
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -4953,6 +4965,8 @@ de:
         delete_title: "Diese Kategorie löschen"
         delete_description: "Sobald diese Kategorie gelöscht ist, können sie und ihre Einstellungen nicht mehr wiederhergestellt werden. Die darin enthaltenen Themen müssen vorher neu zugewiesen werden."
         delete_title_forbidden: "Diese Kategorie kann nicht gelöscht werden"
+      empty_state:
+        edit_category: "Kategorie bearbeiten"
       create: "Neue Kategorie"
       create_with_type: "Neue Kategorie des Typs „%{typeName}“"
       create_long: "Eine neue Kategorie erstellen"
@@ -4981,7 +4995,7 @@ de:
         icon_required: "Wähle ein Symbol."
         groups_required: "Wähle mindestens eine Gruppe für diesen Genehmigungsmodus aus."
       name: "Name der Kategorie"
-      untitled: "Unbenannte Kategorie"
+      icon_search_placeholder: "Suchen …"
       description: "Beschreibung"
       logo: "Logo für Kategorie"
       logo_dark: "Logo der Kategorie im „dunklen Modus“"
@@ -4989,10 +5003,6 @@ de:
       background_image: "Hintergrundbild für Kategorie"
       background_image_dark: "Hintergrundbild für Kategorie im „dunklen Modus“"
       style: "Stil"
-      icon: "Symbol"
-      emoji: "Emojis"
-      select_emoji: "Wähle ein Emoji"
-      select_icon: "Symbol auswählen"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
       color_validations:
@@ -5000,22 +5010,15 @@ de:
         incorrect_length: "muss dem Format #RRGGBB oder #RGB entsprechen"
         non_hexdecimal: "darf nur Hexadezimalzeichen (0-9, A-F) enthalten"
       styles:
-        type: "Stil"
         icon: "Symbol"
         emoji: "Emoji"
         square: "Quadrat"
-        options:
-          square: "Quadrat"
-          icon: "Symbol"
-          emoji: "Emoji"
       color_used: "Verwendete Farbe"
-      predefined_colors: "Vordefinierte Farboptionen"
       name_placeholder: "Ein oder zwei Wörter werden empfohlen"
       category_types: "Kategorietypen"
       unknown_category_type: "Unbekannter Kategorietyp"
       unknown_category_type_description: "Der Kategorietyp „%{categoryType}“ wird bei dieser Kategorie nicht unterstützt oder ist nicht aktiviert."
       category_types_no_results: "Keine anderen Kategorietypen gefunden"
-      color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
       list: "Kategorien auflisten"
@@ -5783,9 +5786,17 @@ de:
       forward: "Vorwärts"
       share: "Teilen"
       dismiss: "Schließen"
+    mobile_tab_bar:
+      new_topic: "Neues Thema"
+      create: "Erstellen"
+      more: "Mehr"
+      back: "Zurück"
+      topics: "Themen"
+      drafts:
+        one: "Entwürfe (%{count})"
+        other: "Entwürfe (%{count})"
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
-    theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
     theme_preview_failed: "Die Vorschau des Themes kann nicht angezeigt werden, da es nicht existiert oder du nicht berechtigt bist, darauf zuzugreifen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
@@ -7613,14 +7624,6 @@ de:
           company_name_placeholder: "Beispiel GmbH"
           company_url: "Website"
           company_url_placeholder: "https://beispiel-gmbh.com"
-          governing_law: "Anzuwendendes Recht"
-          governing_law_placeholder: "Provinz, Bundesland oder Land"
-          governing_law_help: |
-            Gib den Gerichtsstand für die rechtlichen Bestimmungen der Website an. In der Regel ist das der Ort, an dem das Unternehmen registriert oder tätig ist.
-          city_for_disputes: "Stadt für Rechtsstreitigkeiten"
-          city_for_disputes_placeholder: "Stadt"
-          city_for_disputes_help: |
-            Gib die Stadt für die Beilegung von Rechtsstreitigkeiten im Zusammenhang mit diesem Forum an.
           extra_groups:
             heading: "Gruppenauflistung"
             description: "Zusätzliche Gruppen, die auf der Seite „Über uns“ angezeigt werden."
@@ -8203,8 +8206,6 @@ de:
           title: "Farben"
           edit: "Bearbeiten"
           view: "Ansehen"
-          set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
-          set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
           set_default_success: "%{schemeName} als Standard-Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
           from_theme: "Vom Theme: %{name}"
@@ -8872,7 +8873,6 @@ de:
         silence_duration: "Wie lange wird der Benutzer stummgeschaltet?"
         silence_reason_title: "Grund der Stummschaltung"
         silence_reason_placeholder: "Grund der Stummschaltung"
-        silence_message: "E-Mail-Nachricht"
         suspended_until: "(bis %{until})"
         suspend_forever: "Für immer sperren"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
@@ -9193,6 +9193,8 @@ de:
       site_text:
         description: "Du kannst jeden Text in deinem Forum individuell anpassen."
         search_label: "Suche"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiviert"
         filters: "Filter"
         status:
@@ -9372,7 +9374,7 @@ de:
           modal_title: Abzeichen-Gruppierungen
         granted_by: Verliehen von
         granted_at: Verliehen am
-        reason_help: (ein Link zu einem Beitrag oder Thema)
+        reason_help: ein Link zu einem Beitrag oder Thema
         save: Speichern
         delete: Löschen
         delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?

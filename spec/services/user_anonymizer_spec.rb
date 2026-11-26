@@ -255,6 +255,43 @@ RSpec.describe UserAnonymizer do
       expect(user.reload.user_auth_tokens).to be_empty
     end
 
+    it "revokes anonymous shadow credentials" do
+      SiteSetting.allow_anonymous_mode = true
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      shadow = AnonymousShadowCreator.get(master)
+      shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+      shadow_api_key = Fabricate(:user_api_key, user: shadow)
+      subscription = Fabricate(:push_subscription, user: shadow)
+
+      described_class.make_anonymous(master, admin)
+
+      expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+      expect(shadow_api_key.reload.revoked_at).to be_present
+      expect(PushSubscription.exists?(subscription.id)).to eq(false)
+    end
+
+    it "removes only the anonymized shadow's credentials" do
+      master = another_user
+      sibling = Fabricate(:user)
+      AnonymousUser.create!(user: sibling, master_user: master, active: true)
+      AnonymousUser.create!(user: user, master_user: master, active: false)
+      users = [master, sibling, user]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      keys = users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      make_anonymous
+
+      remaining = [master.id, sibling.id]
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to match_array(remaining)
+      expect(PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id)).to match_array(
+        remaining,
+      )
+      expect(UserApiKey.where(id: keys.map(&:id), revoked_at: nil).pluck(:user_id)).to match_array(
+        remaining,
+      )
+    end
+
     it "removes second factor credentials" do
       Fabricate(:user_second_factor_totp, user: user)
 

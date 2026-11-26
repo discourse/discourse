@@ -109,9 +109,12 @@ describe "API keys scoped to query#run" do
     expect(response.parsed_body["columns"]).to eq(["query2_res"])
   end
 
-  it "can run queries via GET public route when allowed" do
+  it "can request typed results via the GET public route only for allowed queries" do
     expect {
       get "/data-explorer/queries/#{query1.id}/run.json",
+          params: {
+            typed: true,
+          },
           headers: {
             "Api-Key" => single_query_api_key.key,
             "Api-Username" => admin.username,
@@ -119,10 +122,16 @@ describe "API keys scoped to query#run" do
     }.to change { query1.reload.last_run_at }
     expect(response.status).to eq(200)
     expect(response.parsed_body["success"]).to eq(true)
-    expect(response.parsed_body["columns"]).to eq(["query1_res"])
+    expect(response.parsed_body["column_schema"]).to eq(
+      [{ "name" => "query1_res", "type" => "int4" }],
+    )
 
     expect {
       get "/data-explorer/queries/#{query2.id}/run.json",
+          params: {
+            typed: true,
+            limit: 0,
+          },
           headers: {
             "Api-Key" => single_query_api_key.key,
             "Api-Username" => admin.username,

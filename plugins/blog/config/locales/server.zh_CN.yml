@@ -5,18 +5,6 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  site_settings:
-    blog_contributor_groups: 允许群组撰写并提交自己的博客草稿。同时，授予这些群组访问私有草稿分类的权限。此操作不会授予论坛工作人员任何权限。
-    blog_editor_groups: 允许群组编辑和提交他们能看到的任何博客草稿。同时授予对私有草稿类别的访问权限。发布内容需要发布者角色。
-    blog_publisher_groups: 拥有审批、发布、撤回和安排博客修订权限的群组可以查看这些内容。发布者可以审批自己的作品。此外，还需授予对私有草稿类别的访问权限，以及在公共博客类别中创建主题的权限。管理员始终保留访问权限。
-    blog_enabled: "一个建立在社区基础上的博客。与您的编辑团队一起撰写和审核文章，以自定义设计发布在 /blog 目录下，并允许读者在链接主题中讨论每篇文章。启用后，即可配置博客和草稿分类。"
-    blog_url: 使用独立的 HTTPS 源提供博客服务，源地址不带尾部斜杠或路径，而不是使用本站的 /blog 路径。博客主机名必须与讨论区主机名不同。在代理和数据库连接中，将此主机名配置为本站的别名。
-    blog_category: 博客上仅显示一个公开的分类，该分类下的主题均已明确列出。子分类不包含在内。主题不会仅仅因为属于此分类就被发布。
-    blog_drafts_category: 为编辑草稿设立单独的私有类别。仅限编辑人员访问。发布时，仅将已批准的文章复制到 {{setting:blog_category}}中的单独讨论区。编辑主题和回复保持私密。禁用安全上传后，上传链接将不再私密。
-    blog_title: 博客名称显示在导航栏、页面标题和订阅源中。
-    blog_description: 首页、信息流和搜索引擎的简短描述。
-    blog_about: 博客“关于”页面的 Markdown 内容。
-    blog_posts_per_page: 每个首页或存档页面上显示的文章数量。
   blog:
     home: 首页
     continue_reading: 继续阅读
@@ -51,6 +39,7 @@ zh_CN:
     footer: 用 Discourse 撰写。欢迎讨论。
     from_the_blog: 来自社区的笔记
     tagged: 归档于 %{tag}
+    author: 作者
     search: 搜索
     search_placeholder: 搜索文章标题和摘要
     featured: 功能
@@ -73,11 +62,11 @@ zh_CN:
     join_community: 加入社区
     not_found_title: 此页面不可用
     not_found_body: 它可能已被移动位置、退回到草稿状态，或者尚未发布。
+    categories:
+      public: 博客
     errors:
       private_site: 博客需要一个已禁用安全上传功能的公共网站。草稿文本保持私密，但如果不启用安全上传功能，上传的文件将无法进行访问控制。
       anonymous_uploads: "该博客要求匿名上传下载。发布或分享评论前，请禁用 prevent_anons_from_downloading_files 选项。"
-      category: 在博客网站设置中选择一个公开的博客类别。
-      drafts_category: 选择一个单独的私有草稿类别，该类别仅对已配置的编辑组或工作人员开放，与核心共享草稿类别不同。
       published_page: 请先取消页面发布此主题，然后再将其发布到博客上。
       path_taken: 已被预留或已属于其他文章
       future_date: 必须在今天或之前发布。使用日程安排控件可以设置文章的发布时间。

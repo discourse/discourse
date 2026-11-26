@@ -495,9 +495,6 @@ hr:
       fonts:
         base_font: "Tijelo"
         heading_font: "Naslovi"
-      logo:
-        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
-        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -2869,6 +2866,7 @@ hr:
         size_too_small: "%{provided_file_size} je manje od minimalno dopuštene vrijednosti %{min_file_size}"
     emoji_picker:
       filter_placeholder: Traži emotikone
+      no_results: "Nema rezultata"
       smileys_&_emotion: Smajlići i emotikoni
       people_&_body: Ljudi i tijelo
       animals_&_nature: Životinje i priroda
@@ -2903,6 +2901,10 @@ hr:
       emoji: "Emoji :)"
       more_emoji: "više…"
       options: "Mogućnosti"
+      ai_content:
+        code: "Šifra"
+        quote: "Citat"
+        details: "Detalji"
       whisper: "šapat"
       unlist: "neobjavljeno"
       add_warning: "Ovo je službeno upozorenje."
@@ -4014,10 +4016,8 @@ hr:
           label: "odabran"
           title: "Kliknite da biste uklonili post iz izbora"
         select_replies:
-          label: "odaberi +odgovori"
           title: "Dodajte post i sve njegove odgovore odabiru"
         select_below:
-          label: "odaberite +ispod"
           title: "Dodaj post i sve nakon toga na odabir"
         delete: obriši odabrano
         cancel: odustani od odabranog
@@ -4393,27 +4393,19 @@ hr:
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:
         icon_required: "Odaberi ikonu."
+      icon_search_placeholder: "Traži…"
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
       style: "Stil"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Boja"
       foreground_color: "Boja teksta"
       color_validations:
         cant_be_empty: "ne može biti prazno"
       styles:
-        type: "Stil"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Kvadrat"
-        options:
-          square: "Kvadrat"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Boja u upotrebi"
-      predefined_colors: "Unaprijed definirane opcije boja"
-      color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
@@ -5052,9 +5044,18 @@ hr:
       forward: "Naprijed"
       share: "Dijeli"
       dismiss: "Skloni"
+    mobile_tab_bar:
+      new_topic: "Nova tema"
+      create: "Stvorite"
+      more: "Više"
+      back: "Natrag"
+      topics: "Tema"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
-    theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
     image_removed: "(slika uklonjena)"
     pause_notifications:
       title: "Pauzirajte obavijesti za"
@@ -6316,8 +6317,6 @@ hr:
           company_name: "Ime"
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Mjerodavno pravo i nadležnost"
-          city_for_disputes_placeholder: "Grad"
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
@@ -7168,7 +7167,6 @@ hr:
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
         silence_reason_placeholder: "Razlog utišavanja"
-        silence_message: "Pošaljite poruku e-mailom"
         suspended_until: "(do %{until})"
         suspend_forever: "Zauvijek suspendirajte"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
@@ -7442,6 +7440,8 @@ hr:
       site_text:
         description: "Možete prilagoditi bilo koji tekst na svom forumu."
         search_label: "Pretraživanje"
+        preview:
+          default: "Zadano"
         theme_disabled: "Onemogućeno"
         filters: "Filteri"
         edit: "Uredi"
@@ -7551,7 +7551,7 @@ hr:
           modal_title: Grupiranja znački
         granted_by: Dodijelio/la
         granted_at: Dodijeljeno pri
-        reason_help: (Poveznica na objavu ili temu)
+        reason_help: Poveznica na objavu ili temu
         save: Spremi
         delete: Obriši
         delete_confirm: Jeste li sigurni da želite izbrisati ovu značku?

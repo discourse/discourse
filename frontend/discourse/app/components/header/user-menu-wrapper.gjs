@@ -3,6 +3,10 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import {
+  menuSheetClosedTransform,
+  menuSheetEdge,
+} from "discourse/lib/menu-sheet";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
@@ -18,8 +22,12 @@ export default class UserMenuWrapper extends Component {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition = isDocumentRTL() ? "-340px" : "340px";
+      const sheetEdge = menuSheetEdge(panel);
+      const transform = sheetEdge
+        ? menuSheetClosedTransform(sheetEdge)
+        : `translate3d(${finishPosition}, 0, 0)`;
       panel
-        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+        .animate([{ transform }], {
           duration: 200,
           fill: "forwards",
           easing: "ease-in",

@@ -179,8 +179,9 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def allowed_users
+    group_allowed_ids = object.group_allowed_user_ids.to_set
     object.topic.allowed_users.reject do |user|
-      object.group_allowed_user_ids.include?(user.id) && user != scope.user
+      group_allowed_ids.include?(user.id) && user != scope.user
     end
   end
 

@@ -544,9 +544,6 @@ cs:
       fonts:
         base_font: "Tělo"
         heading_font: "Nadpisy"
-      logo:
-        description: "Zobrazuje se v horní navigační liště webu a také v horní části e-mailových oznámení webu."
-        help_text: "Doporučená velikost je 600 x 80 pixelů."
       homepage:
         topics: "Témata"
         categories: "Kategorie"
@@ -2673,6 +2670,7 @@ cs:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
       label: "Vyberte možnosti"
+      remove_item: "Odstranit %{name}"
     d_otp:
       screen_reader:
         one: Zadejte číslo
@@ -3119,6 +3117,9 @@ cs:
         size_too_small: "%{provided_file_size} je menší než minimální povolená hodnota %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hledat emoji
+      search_placeholder: "Hledat podle názvu emoji a aliasu..."
+      no_results: "Žádné výsledky"
+      favorites: "Často používané"
       smileys_&_emotion: Smajlíky a emoce
       people_&_body: Lidé a tělo
       animals_&_nature: Zvířata a příroda
@@ -3160,6 +3161,10 @@ cs:
       emoji: "Smajlíky :)"
       more_emoji: "více…"
       options: "Možnosti"
+      ai_content:
+        code: "Kód"
+        quote: "Citovat"
+        details: "Podrobnosti"
       whisper: "šeptat"
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
@@ -4392,10 +4397,8 @@ cs:
           label: "vybrané"
           title: "Kliknutím odstraníte příspěvek z výběru"
         select_replies:
-          label: "vybrat +odpovědi"
           title: "Přidej příspěvek a všechny jeho odpovědi do výběru"
         select_below:
-          label: "vybrat +níže"
           title: "Přidat příspěvek a vše po něm do výběru"
         delete: smazat označené
         cancel: zrušit výběr
@@ -4838,7 +4841,7 @@ cs:
       validations:
         icon_required: "Vyberte ikonu."
       name: "Název kategorie"
-      untitled: "Nepojmenovaná kategorie"
+      icon_search_placeholder: "Vyhledat..."
       description: "Popis"
       logo: "Obrázek loga kategorie"
       logo_dark: "Obrázek loga kategorie (tmavý režim)"
@@ -4846,9 +4849,6 @@ cs:
       background_image: "Obrázek pozadí kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý režim)"
       style: "Styl"
-      icon: "Ikona"
-      emoji: "Emotikon"
-      select_emoji: "Vyberte emotikon"
       background_color: "Barva"
       foreground_color: "Barva textu"
       color_validations:
@@ -4856,18 +4856,11 @@ cs:
         incorrect_length: "musí odpovídat formátu #RRGGBB nebo #RGB"
         non_hexdecimal: "musí obsahovat pouze hexadecimální znaky (0-9, AF)"
       styles:
-        type: "Styl"
         icon: "Ikona"
         emoji: "Smajlíky :)"
         square: "Čtverec"
-        options:
-          square: "Čtverec"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Používaná barva"
-      predefined_colors: "Předdefinované možnosti barev"
       name_placeholder: "Nejlépe jedno nebo dvě slova"
-      color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
       list: "Přehled kategorií"
@@ -5597,9 +5590,19 @@ cs:
       forward: "Vpřed"
       share: "Sdílet"
       dismiss: "Označit jako přečtené"
+    mobile_tab_bar:
+      new_topic: "Nové téma"
+      create: "Vytvořit"
+      more: "Více"
+      back: "Zpět"
+      topics: "Témata"
+      drafts:
+        one: "Koncepty (%{count})"
+        few: "Koncepty (%{count})"
+        many: "Koncepty (%{count})"
+        other: "Koncepty (%{count})"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
-    theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
     theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
@@ -7210,14 +7213,6 @@ cs:
           company_name: "Jméno"
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Rozhodné právo"
-          governing_law_placeholder: "Provincie, stát nebo země"
-          governing_law_help: |
-            Uveďte jurisdikci pro právní podmínky webu, obvykle tam, kde je společnost registrována nebo kde působí.
-          city_for_disputes: "Město pro spory"
-          city_for_disputes_placeholder: "Město"
-          city_for_disputes_help: |
-            Uveďte město pro řešení právních sporů souvisejících s tímto fórem.
           extra_groups:
             heading: "Seznam skupin"
             description: "Další skupiny, které se zobrazují na stránce O tomto webu."
@@ -7783,8 +7778,6 @@ cs:
           title: "Barvy"
           edit: "Upravit"
           view: "Zobrazit"
-          set_default_light: "Nastavit jako světlou paletu ve výchozím motivu (%{theme})"
-          set_default_dark: "Nastavit jako tmavou paletu ve výchozím motivu (%{theme})"
           set_default_success: "%{schemeName} nastavena jako výchozí paleta pro %{themeName}"
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
@@ -8430,7 +8423,6 @@ cs:
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
         silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
-        silence_message: "e-mailová zpráva"
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být pozastaven"
@@ -8772,6 +8764,8 @@ cs:
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
         search_label: "Vyhledat"
+        preview:
+          default: "Výchozí"
         theme_disabled: "Vypnuto"
         filters: "Filtry"
         title: "Texty"
@@ -8943,7 +8937,7 @@ cs:
           modal_title: Skupiny odznaků
         granted_by: Uděleno
         granted_at: Uděleno v
-        reason_help: (Odkaz na příspěvek nebo téma)
+        reason_help: Odkaz na příspěvek nebo téma
         save: Uložit
         delete: Smazat
         delete_confirm: Určitě chcete tento oznak smazat?

@@ -47,16 +47,6 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
-  register_bot_creation_param(:chat_discoverable) do |bot, value|
-    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
-  end
-
-  add_to_serializer(
-    :admin_detailed_user,
-    :chat_discoverable,
-    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
-  ) { object.chat_discoverable_bot.present? }
-
   original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
   MessageBus.group_ids_lookup do |env|
     host = RailsMultisite::ConnectionManagement.host(env)
@@ -683,7 +673,25 @@ after_initialize do
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   register_post_stripper do |nokogiri_fragment|
-    nokogiri_fragment.css(".chat-transcript .mention").remove
+    # A descendant selector rescans every nested transcript's subtree. Carry
+    # transcript state through a single walk instead.
+    removals = []
+    stack = nokogiri_fragment.element_children.map { |child| [child, false] }
+
+    until stack.empty?
+      node, in_transcript = stack.pop
+      classes = node["class"].to_s.split
+
+      if in_transcript && classes.include?("mention")
+        removals << node
+        next
+      end
+
+      below_transcript = in_transcript || classes.include?("chat-transcript")
+      node.element_children.each { |child| stack << [child, below_transcript] }
+    end
+
+    removals.each(&:remove)
   end
 
   Site.markdown_additional_options["chat"] = {
@@ -709,6 +717,11 @@ after_initialize do
 
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
+
+  register_first_admin_bootstrap do |user|
+    # Don't want to greet new admins with the ugly channel retention reminder
+    user.user_option.update!(dismissed_channel_retention_reminder: true)
   end
 end
 

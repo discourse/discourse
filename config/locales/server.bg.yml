@@ -998,6 +998,8 @@ bg:
       invalid_reply_by_email_address: "Стойността трябва да съдържа '%{reply_key}' и да бъде различна от известяващия имейл."
       invalid_uncategorized_category_setting: 'Категорията „Некатегоризирани“ не може да бъде избрана, ако „разрешаване на некатегоризирани теми“ не е активирано.'
       invalid_search_ranking_weights: "Стойността е невалидна за настройката на сайта „search_ranking_weights\". Пример: „{0.1,0.2,0.3,1.0}“. Имайте предвид, че максималната стойност за всяко тегло е 1.0."
+    keywords:
+      company_url: "уебсайт"
   search:
     within_post: "#%{post_number} от %{username}"
     types:
@@ -1463,6 +1465,10 @@ bg:
         one: "%{count} секунда"
         other: "%{count} секунди "
     actions:
+      answer_yes:
+        title: "Да"
+      answer_no:
+        title: "Не"
       agree:
         title: "Да"
       agree_and_keep:
@@ -1493,6 +1499,7 @@ bg:
       delete_and_agree_replies:
         title: "Изтриване на публикацията и отговорите"
         description: "Съгласете се със сигнала и изтрийте публикацията и всички нейни отговори; ако това е първата публикация, изтрийте и темата."
+        confirm_title: "Изтриване на публикацията и отговорите?"
       disagree_and_restore:
         title: "Възстановяване на публикацията"
       disagree_bundle:
@@ -1513,6 +1520,8 @@ bg:
       approve_post:
         title: "Да"
         complete: "Публикацията е одобрена."
+      deny_and_delete_post:
+        complete: "Публикацията е изтрита."
       approve_post_closed:
         title: "Да"
         complete: "Публикацията е одобрена."

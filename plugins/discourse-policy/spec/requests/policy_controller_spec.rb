@@ -305,6 +305,28 @@ describe DiscoursePolicy::PolicyController do
         I18n.t("discourse_policy.errors.policy_group_inaccessible"),
       )
     end
+
+    context "when the policy is in a system message" do
+      let(:system_message) do
+        SystemMessage.create(user1, :plugin_notice, message_title: "Notice", message_raw: "Text")
+      end
+
+      before do
+        post_policy.update!(post: system_message)
+        sign_in(user1)
+        put "/policy/accept.json", params: { post_id: system_message.id }
+      end
+
+      it "responds with an error" do
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.no_policy"),
+        )
+      end
+
+      it "does not add the user to the group" do
+        expect(group2.users).not_to include(user1)
+      end
+    end
   end
 
   describe "#unaccept" do
@@ -338,6 +360,70 @@ describe DiscoursePolicy::PolicyController do
     before do
       audience_group.add(editor)
       target_group.add_owner(admin)
+    end
+
+    it "prevents a policy editor from redirecting a group grant to themselves" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+      original_raw = policy_post.raw
+
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json",
+          params: {
+            post: {
+              raw: original_raw.sub("group=#{group.name}", "groups=#{audience_group.name}"),
+            },
+          }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.no_policy_permission"),
+        )
+        expect(policy_post.reload.raw).to eq(original_raw)
+
+        put "/policy/accept.json", params: { post_id: policy_post.id }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.user_missing"),
+        )
+        expect(target_group.users.exists?(editor.id)).to eq(false)
+      end
+    end
+
+    it "keeps the previous policy when processing an edit fails" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+
+      Jobs.run_later!
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+        [policy group=#{audience_group.name} renew=2147483648]
+        I agree
+        [/policy]
+      MD
+
+      expect(response.status).to eq(200)
+
+      expect { Jobs::ProcessPost.new.execute(post_id: policy_post.id, cook: true) }.to raise_error(
+        ActiveModel::RangeError,
+      )
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(policy_post.reload.post_policy.groups).to contain_exactly(group)
+        expect(target_group.users.exists?(editor.id)).to eq(false)
+      end
     end
 
     it "rejects an HTML policy from an editor without policy permissions" do

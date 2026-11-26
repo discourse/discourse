@@ -38,12 +38,6 @@ tr_TR:
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
-          body: |
-            Merhaba %{username},
-
-            "%{topic_title}" başlıklı gönderiniz geçici olarak kaldırılmış ve moderatörün incelemesi için inceleme kuyruğuna alınmıştır. Onaylanırsa, otomatik olarak geri yüklenecektir.
-
-            Referans: %{post_url}
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
@@ -129,6 +123,12 @@ tr_TR:
     ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
     ai_translation_backfill_parallel_jobs: "Her dolgu döngüsü başına çalıştırılacak paralel gönderi konumlandırma işlerinin sayısı. Daha yüksek değerler iş hacmini artırır ancak daha fazla kaynak tüketir."
     ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
+    keywords:
+      ai_default_llm_model: "varsayılan dil modeli"
+      ai_discord_search_enabled: "discord entegrasyonu"
+      ai_helper_automatic_chat_thread_title: "sohbet başlıkları"
+      ai_summarization_enabled: "özetler"
+      ai_summary_gists_enabled: "konu listesinin kısa özetleri"
   reviewables:
     reasons:
       flagged_by_toxicity: YZ eklentisi, toksik olarak sınıflandırdıktan sonra buna bayrak ekledi.
@@ -363,6 +363,8 @@ tr_TR:
           text_color: "metin rengi"
         approve_label: "Evet"
         reject_label: "Hayır"
+        category_access_levels:
+          readonly: "Bak"
         empty_value: "Boş"
         unexpected_error: "beklenmedik bir hata oluştu"
       agents:
@@ -552,6 +554,7 @@ tr_TR:
         edit_tag: "Etiketi düzenle"
         create_category: "Kategori oluştur"
         edit_category: "Kategoriyi düzenle"
+        delete_category: "Kategoriyi sil"
         set_topic_timer: "Konu zamanlayıcısını ayarla"
         set_slow_mode: "Yavaş modu ayarla"
         move_posts: "Gönderileri taşı"
@@ -747,6 +750,12 @@ tr_TR:
       edit_category:
         errors:
           not_found: "Kategori bulunamadı."
+      set_category_permissions:
+        errors:
+          not_found: "Kategori bulunamadı."
+      delete_category:
+        errors:
+          not_found: "Kategori bulunamadı."
       change_topic_category:
         errors:
           not_found: "Konu bulunamadı."
@@ -824,6 +833,8 @@ tr_TR:
           not_allowed: "İnceleme kuyruğuna erişiminiz yok"
           not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     appearance_authoring:
+      component_on: "Açık"
+      component_off: "Kapalı"
       default_theme: "Varsayılan tema"
       colors:
         light:

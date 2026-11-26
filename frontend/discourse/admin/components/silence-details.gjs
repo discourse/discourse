@@ -22,12 +22,12 @@ export default class SilenceDetails extends Component {
 
     <label>
       <div class="silence-message-label">
-        {{i18n "admin.user.silence_message"}}
+        {{i18n "admin.user.silence_notice_message"}}
       </div>
     </label>
     <Textarea
       class="silence-message"
-      placeholder={{i18n "admin.user.silence_message_placeholder"}}
+      placeholder={{i18n "admin.user.silence_notice_message_placeholder"}}
       @value={{this.message}}
     />
   </template>

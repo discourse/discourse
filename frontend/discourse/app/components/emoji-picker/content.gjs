@@ -35,21 +35,23 @@ import DiversityMenu from "./diversity-menu.gjs";
 
 const DEFAULT_LAST_SECTION = "favorites";
 
-const tonableEmojiTitle = (emoji, diversity) => {
-  if (!emoji.tonable || diversity === 1) {
-    return `:${emoji.name}:`;
-  }
+function tonableEmojiName(emoji, diversity) {
+  return emoji.tonable && diversity > 1
+    ? `${emoji.name}:t${diversity}`
+    : emoji.name;
+}
 
-  return `:${emoji.name}:t${diversity}:`;
-};
+function currentEmoji(emoji, diversity, selected) {
+  return selected && selected === tonableEmojiName(emoji, diversity)
+    ? "true"
+    : undefined;
+}
 
-const tonableEmojiUrl = (emoji, scale) => {
-  if (!emoji.tonable || scale === 1) {
-    return emojiUrlFor(emoji.name);
-  }
+const tonableEmojiTitle = (emoji, diversity) =>
+  `:${tonableEmojiName(emoji, diversity)}:`;
 
-  return emojiUrlFor(`${emoji.name}:t${scale}`);
-};
+const tonableEmojiUrl = (emoji, diversity) =>
+  emojiUrlFor(tonableEmojiName(emoji, diversity));
 
 export default class EmojiPicker extends Component {
   @service emojiStore;
@@ -116,6 +118,10 @@ export default class EmojiPicker extends Component {
   }
 
   get groups() {
+    if (this.args.compact) {
+      return this.emojiStore.list;
+    }
+
     const favorites = {
       favorites: this.emojiStore
         .favoritesForContext(this.args.context)
@@ -487,7 +493,7 @@ export default class EmojiPicker extends Component {
     {{! eslint-disable ember/template-no-nested-interactive }}
 
     <div
-      class={{dConcatClass "emoji-picker"}}
+      class={{dConcatClass "emoji-picker" (if @compact "--compact")}}
       ...attributes
       {{didInsert this.loadEmojis}}
       {{didInsert (if @didInsert @didInsert (noop))}}
@@ -506,7 +512,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <DFilterInput
-            placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
+            placeholder={{i18n "emoji_picker.search_placeholder"}}
             @containerClass="emoji-picker__filter"
             @filterAction={{withEventValue this.didInputFilter}}
             @icons={{hash left="magnifying-glass"}}
@@ -529,40 +535,42 @@ export default class EmojiPicker extends Component {
       </div>
 
       <div class="emoji-picker__content">
-        <DOverflowControls
-          @class="emoji-picker__sections-nav"
-          @wrapperClass="emoji-picker__sections-nav-wrap"
-          {{this.setupSectionsNavScroll}}
-        >
-          {{#each-in this.groups as |section emojis|}}
-            {{#if emojis.length}}
-              <DButton
-                class={{dConcatClass
-                  "btn-flat"
-                  "emoji-picker__section-btn"
-                  (if (eq this.lastVisibleSection section) "active")
-                }}
-                data-section={{section}}
-                tabindex="-1"
-                @action={{fn this.didRequestSection section}}
-              >
-                {{#if (eq section "favorites")}}
-                  {{dReplaceEmoji ":star:"}}
-                {{else}}
-                  <img
-                    class="emoji"
-                    height="18"
-                    src={{tonableEmojiUrl
-                      (get emojis "0")
-                      this.emojiStore.diversity
-                    }}
-                    width="18"
-                  />
-                {{/if}}
-              </DButton>
-            {{/if}}
-          {{/each-in}}
-        </DOverflowControls>
+        {{#unless @compact}}
+          <DOverflowControls
+            @class="emoji-picker__sections-nav"
+            @wrapperClass="emoji-picker__sections-nav-wrap"
+            {{this.setupSectionsNavScroll}}
+          >
+            {{#each-in this.groups as |section emojis|}}
+              {{#if emojis.length}}
+                <DButton
+                  class={{dConcatClass
+                    "btn-flat"
+                    "emoji-picker__section-btn"
+                    (if (eq this.lastVisibleSection section) "active")
+                  }}
+                  data-section={{section}}
+                  tabindex="-1"
+                  @action={{fn this.didRequestSection section}}
+                >
+                  {{#if (eq section "favorites")}}
+                    {{dReplaceEmoji ":star:"}}
+                  {{else}}
+                    <img
+                      class="emoji"
+                      height="18"
+                      src={{tonableEmojiUrl
+                        (get emojis "0")
+                        this.emojiStore.diversity
+                      }}
+                      width="18"
+                    />
+                  {{/if}}
+                </DButton>
+              {{/if}}
+            {{/each-in}}
+          </DOverflowControls>
+        {{/unless}}
 
         {{#if this.emojiStore.list}}
           <div class="emoji-picker__scrollable-content" {{this.scrollListener}}>
@@ -577,6 +585,11 @@ export default class EmojiPicker extends Component {
                   {{#each this.filteredEmojis as |emoji|}}
                     <img
                       alt={{emoji.name}}
+                      aria-current={{currentEmoji
+                        emoji
+                        this.emojiStore.diversity
+                        @selected
+                      }}
                       class="emoji"
                       data-emoji={{emoji.name}}
                       data-tonable={{if emoji.tonable "true"}}
@@ -597,7 +610,7 @@ export default class EmojiPicker extends Component {
                       </div>
                     {{else}}
                       <p class="emoji-picker__no-results">
-                        {{i18n "chat.emoji_picker.no_results"}}
+                        {{i18n "emoji_picker.no_results"}}
                         {{dReplaceEmoji ":crying_cat_face:"}}
                       </p>
                     {{/if}}
@@ -608,7 +621,7 @@ export default class EmojiPicker extends Component {
                   {{#if emojis}}
                     <div
                       aria-label={{i18n
-                        (concat "chat.emoji_picker." section)
+                        (concat "emoji_picker." section)
                         translatedFallback=section
                       }}
                       class={{dConcatClass
@@ -618,27 +631,34 @@ export default class EmojiPicker extends Component {
                       data-section={{section}}
                       role="region"
                     >
-                      <div class="emoji-picker__section-title-container">
-                        {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
-                        <h2 class="emoji-picker__section-title">
-                          {{i18n
-                            (concat "chat.emoji_picker." section)
-                            translatedFallback=section
-                          }}
-                        </h2>
-                        {{#if (eq section "favorites")}}
-                          <DButton
-                            class="btn-transparent"
-                            @action={{this.clearFavorites}}
-                            @icon="trash-can"
-                          />
-                        {{/if}}
-                      </div>
+                      {{#unless @compact}}
+                        <div class="emoji-picker__section-title-container">
+                          {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
+                          <h2 class="emoji-picker__section-title">
+                            {{i18n
+                              (concat "emoji_picker." section)
+                              translatedFallback=section
+                            }}
+                          </h2>
+                          {{#if (eq section "favorites")}}
+                            <DButton
+                              class="btn-transparent"
+                              @action={{this.clearFavorites}}
+                              @icon="trash-can"
+                            />
+                          {{/if}}
+                        </div>
+                      {{/unless}}
                       <div class="emoji-picker__section-emojis">
                         {{! we always want the first emoji for tabbing}}
                         {{#let (get emojis "0") as |emoji|}}
                           <img
                             alt={{emoji.name}}
+                            aria-current={{currentEmoji
+                              emoji
+                              this.emojiStore.diversity
+                              @selected
+                            }}
                             class="emoji"
                             data-emoji={{emoji.name}}
                             data-tonable={{if emoji.tonable "true"}}
@@ -663,6 +683,11 @@ export default class EmojiPicker extends Component {
                             {{#if (gt index 0)}}
                               <img
                                 alt={{emoji.name}}
+                                aria-current={{currentEmoji
+                                  emoji
+                                  this.emojiStore.diversity
+                                  @selected
+                                }}
                                 class="emoji"
                                 data-emoji={{emoji.name}}
                                 data-tonable={{if emoji.tonable "true"}}

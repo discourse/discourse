@@ -528,8 +528,8 @@ module DiscourseAi
         result
       end
 
-      def context_evidence(messages)
-        prompt = Prompt.new(messages: messages)
+      # Evidence slices need the original prompt for upload encoding but need not form valid turns.
+      def context_evidence(messages, prompt:)
         messages.map do |message|
           content = message[:content]
           if content.is_a?(Array)
@@ -554,8 +554,7 @@ module DiscourseAi
         end
       end
 
-      def context_attachments(messages)
-        prompt = Prompt.new(messages: messages)
+      def context_attachments(messages, prompt:)
         messages.each_with_index.filter_map do |message, index|
           next if !message[:content].is_a?(Array)
           attachments =

@@ -55,6 +55,13 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      review_bulk:
+        refresh: "Reîmprospătează"
+        columns:
+          user: "Utilizator"
+          reason: "Semnalat ca"
+          created: "Creat"
+          status: "Stare"
       copied: "Copiat"
       ai_decoded_transcript:
         arguments: "Argumente"
@@ -64,6 +71,11 @@ ro:
       discourse_workflows:
         ai_agent:
           mode: "Mod"
+        ai_tool:
+          arguments: "Argumente"
+          list_item: "Element listă"
+        mcp_tool:
+          arguments: "Argumente"
         classify:
           text: "Text"
           upload_ids: "Imagini"
@@ -95,12 +107,14 @@ ro:
         nav:
           enabled: "Activate"
         filters:
-          all: "Toate"
           reset: "Resetare"
         sentiment:
           enabled: "Activate"
         search:
           name: "Caută"
+        review_queue:
+          setting_groups:
+            settings: "Setări"
         image_caption:
           setting_groups:
             settings: "Setări"
@@ -269,6 +283,23 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      concepts:
+        edit: "Editează"
+        delete: "Șterge"
+        columns:
+          status: "Stare"
+          topics: "Discuții"
+          posts: "Articole"
+        statuses:
+          active: "Activă"
+        form:
+          name: "Nume"
+          description: "Descriere"
+          status: "Stare"
+        tagged_topics: "Subiecte etichetate"
+        topic_columns:
+          topic: "Subiect"
+          relevance: "Relevanță"
       decision_models:
         no_preset: "Nimic"
         display_name: "Nume"

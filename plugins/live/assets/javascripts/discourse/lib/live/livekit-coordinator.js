@@ -238,6 +238,18 @@ export default class LivekitCoordinator {
     }
   }
 
+  async unmuteMicrophone() {
+    for (const [roomId, session] of this.#sessions) {
+      try {
+        await session.unmuteMicrophone();
+      } catch {
+        liveLog.warn(
+          `[live-livekit] failed to unmute the published microphone for room ${roomId}`
+        );
+      }
+    }
+  }
+
   #buildSession(roomId) {
     return new LivekitRoomSession({
       roomId,

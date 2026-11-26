@@ -426,7 +426,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   it "hides tools and authoring instructions when public capability is unavailable" do
     DiscourseWorkflows::AdminAssistant::Capability.stubs(:status).returns(:unconfigured)
     context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
-    assistant = DiscourseAi::Agents::DiscourseAdminAssistant.new
+    assistant = DiscourseAi::Agents::AdminAssistant.new
 
     expect(assistant.runtime_tools(context:)).not_to include(
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
@@ -438,7 +438,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   end
 
   it "registers both workflow tools for the admin assistant and pending replay" do
-    tools = DiscourseAi::Agents::DiscourseAdminAssistant.new.tools
+    tools = DiscourseAi::Agents::AdminAssistant.new.tools
     expect(tools).to include(DiscourseWorkflows::AdminAssistant::GenerateWorkflow, described_class)
     expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateWorkflow")).to eq(
       described_class,
@@ -447,7 +447,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
     )
     prompt =
-      DiscourseAi::Agents::DiscourseAdminAssistant.new.craft_prompt(
+      DiscourseAi::Agents::AdminAssistant.new.craft_prompt(
         DiscourseAi::Agents::BotContext.new(user: admin, messages: []),
       )
     expect(prompt.system_message_text).to include(
@@ -604,6 +604,29 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
       expect(error.allocation).to eq(allocation)
     }
     expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
+  end
+
+  it "is long running and reports progress while the workflow is generated" do
+    SiteSetting.discourse_workflows_ai_authoring_enabled = true
+    SiteSetting.discourse_workflows_workflow_authoring_agent = Fabricate(:ai_agent).id
+    fake_bot = double
+    allow(fake_bot).to receive(:reply).and_return([])
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow_any_instance_of(Jobs::DiscourseWorkflows::AuthorWithAi).to receive(
+      :execute,
+    ).and_call_original
+    progress = []
+
+    tool.invoke { |message| progress << message }
+
+    expect(described_class.long_running?).to eq(true)
+    expect(progress.first(3)).to eq(
+      [
+        I18n.t("discourse_workflows.admin_assistant.generating_progress"),
+        I18n.t("discourse_workflows.ai.progress.loading_context"),
+        I18n.t("discourse_workflows.ai.progress.planning"),
+      ],
+    )
   end
 
   it "does not forward secret-bearing requests to workflow authoring" do
