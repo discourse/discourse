@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -14,6 +14,8 @@ import {
   defaultBlog,
   findBlog,
 } from "discourse/plugins/blog/discourse/lib/site-blogs";
+
+const KINDS = ["article", "page"];
 
 function withoutSlash(path) {
   return path.replace(/^\/+/, "");
@@ -55,7 +57,7 @@ export default class BlogArticleSettings extends Component {
   }
 
   get #savedKind() {
-    return this.args.model.publication.page ? "page" : "article";
+    return this.publication.page ? "page" : "article";
   }
 
   @action
@@ -124,7 +126,7 @@ export default class BlogArticleSettings extends Component {
   }
 
   #snapshot() {
-    const publication = this.args.model.publication;
+    const publication = this.publication;
     return {
       blog_id: publication.blog_id,
       path: withoutSlash(publication.path),
@@ -162,14 +164,12 @@ export default class BlogArticleSettings extends Component {
               as |conditional|
             >
               <conditional.Conditions as |Condition|>
-                <Condition @name="article">
-                  {{dIcon "check"}}
-                  {{i18n "blog.article_settings.kind_article"}}
-                </Condition>
-                <Condition @name="page">
-                  {{dIcon "check"}}
-                  {{i18n "blog.article_settings.kind_page"}}
-                </Condition>
+                {{#each KINDS as |kind|}}
+                  <Condition @name={{kind}}>
+                    {{dIcon "check"}}
+                    {{i18n (concat "blog.article_settings.kind_" kind)}}
+                  </Condition>
+                {{/each}}
               </conditional.Conditions>
             </form.ConditionalContent>
           </form.Container>

@@ -10,6 +10,14 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 const TOPIC_URL = "/t/internationalization-localization/280";
 const PANEL = ".blog-publication-panel";
 const SETTINGS = ".blog-article-settings";
+const GENERATED_PATHS = {
+  article: "/2026/an-unfinished-story",
+  page: "/an-unfinished-story",
+};
+
+function chooseKind(kind) {
+  return click(`${SETTINGS}__form input[type="radio"][value="${kind}"]`);
+}
 
 acceptance("Blog publication panel", function (needs) {
   needs.user({ admin: true });
@@ -491,7 +499,7 @@ acceptance("Blog publication panel", function (needs) {
     assert
       .dom(`${SETTINGS}__form [name="published_at"]`)
       .exists("an article has a publication date");
-    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    await chooseKind("page");
     assert
       .dom(`${SETTINGS} .d-modal__title-text`)
       .hasText("Page settings", "the title follows the type");
@@ -509,10 +517,7 @@ acceptance("Blog publication panel", function (needs) {
     publication = {
       ...publication,
       path: "/2026/an-unfinished-story",
-      generated_paths: {
-        article: "/2026/an-unfinished-story",
-        page: "/an-unfinished-story",
-      },
+      generated_paths: GENERATED_PATHS,
     };
     let savedPath;
     pretender.put("/blog-editor/publications/280.json", (request) => {
@@ -524,17 +529,17 @@ acceptance("Blog publication panel", function (needs) {
 
     await visit(TOPIC_URL);
     await click(`${PANEL}__settings`);
-    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    await chooseKind("page");
     assert
       .dom(`${SETTINGS}__form [name="path"]`)
       .hasValue("an-unfinished-story", "a page drops the date");
 
-    await click(`${SETTINGS}__form input[type="radio"][value="article"]`);
+    await chooseKind("article");
     assert
       .dom(`${SETTINGS}__form [name="path"]`)
       .hasValue("2026/an-unfinished-story", "an article gets it back");
 
-    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    await chooseKind("page");
     await click(`${SETTINGS}__save`);
     assert.strictEqual(
       savedPath,
@@ -546,16 +551,13 @@ acceptance("Blog publication panel", function (needs) {
   test("keeps a path typed by hand when the type changes", async function (assert) {
     publication = {
       ...publication,
-      generated_paths: {
-        article: "/2026/an-unfinished-story",
-        page: "/an-unfinished-story",
-      },
+      generated_paths: GENERATED_PATHS,
     };
 
     await visit(TOPIC_URL);
     await click(`${PANEL}__settings`);
     await formKit(`${SETTINGS}__form`).field("path").fillIn("my-own-path");
-    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    await chooseKind("page");
 
     assert
       .dom(`${SETTINGS}__form [name="path"]`)

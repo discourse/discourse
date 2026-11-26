@@ -564,11 +564,6 @@ export default class BlogPublicationPanel extends Component {
               @disabled={{this.busy}}
               @icon="gear"
               @label="blog.panel.settings_button"
-              @title={{if
-                this.publication.page
-                "blog.panel.page_settings"
-                "blog.panel.settings"
-              }}
             />
             {{#if (eq this.status "scheduled")}}
               <a

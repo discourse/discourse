@@ -216,7 +216,6 @@ module ::Blog
       values
     end
 
-    # The path each kind of draft would get, while the path still follows the title.
     def generated_paths
       return if published_revision_id || draft_metadata["custom_path"]
       { article: false, page: true }.transform_values do |page|

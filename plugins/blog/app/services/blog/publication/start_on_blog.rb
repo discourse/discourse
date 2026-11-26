@@ -9,7 +9,7 @@ class Blog::Publication::StartOnBlog
   params do
     attribute :topic_id, :integer
     attribute :blog_id, :integer
-    attribute :page, :boolean, default: false
+    attribute :page, :boolean
 
     validates :topic_id, presence: true
   end
