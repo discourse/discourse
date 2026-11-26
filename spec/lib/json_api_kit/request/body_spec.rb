@@ -129,11 +129,10 @@ RSpec.describe JsonApiKit::Request::Body do
 
     context "when a writable relationship is unreadable" do
       let(:readable) { ->(_guardian) { false } }
+      let(:pointer) { "/data/relationships/users" }
+      let(:status) { "403" }
 
-      it "accepts the supplied linkage", :aggregate_failures do
-        expect(body).not_to be_invalid
-        expect(body.parameters).to eq(user_ids: ["0012"])
-      end
+      it_behaves_like "invalid relationship input"
     end
 
     context "when relationships is an array" do

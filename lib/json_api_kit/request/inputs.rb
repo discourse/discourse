@@ -13,8 +13,8 @@ module JsonApiKit
       def initialize(request, resource:)
         @request = request
         @resource = resource
-        @query =
-          verify(Input::Individual.new(query_parameters, resource:, edition: resource.edition))
+        verify_request
+        @query = verify(parse_query)
       end
 
       attr_reader :query
@@ -26,6 +26,12 @@ module JsonApiKit
       attr_reader :request, :resource
 
       def id = path_parameters[:id]
+
+      def verify_request = nil
+
+      def parse_query
+        Input::Individual.new(query_parameters, resource:, edition: resource.edition)
+      end
 
       def parse_body
         case request_method

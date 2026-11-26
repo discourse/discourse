@@ -9,10 +9,14 @@ module JsonApiKit
         def detail = "The request body must contain valid JSON."
       end
 
-      def self.parse(json, **options)
-        new(JSON.parse(json), **options)
-      rescue JSON::ParserError
-        raise Unreadable
+      class << self
+        def parse(json, **options) = new(parse_json(json), **options)
+
+        def parse_json(json)
+          JSON.parse(json)
+        rescue JSON::ParserError
+          raise Unreadable
+        end
       end
 
       def initialize(document, resource:)

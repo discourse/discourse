@@ -8,13 +8,17 @@ module JsonApiKit
 
         def parameter_type = resource.identifier_type
 
-        def input_contract = Request::Body::Contract::Relationship::ToOne
-
         def linkage(records, filtering: {}) = Linkage::ToOne.new(records, filtering:)
 
         def related_document = Document::RelatedResource
 
         def linkage_document = Document::Relationship::ToOne
+
+        private
+
+        def write_methods = %w[PATCH]
+
+        def input_contract = Request::Body::Contract::Relationship::ToOne
       end
     end
   end

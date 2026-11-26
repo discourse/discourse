@@ -23,6 +23,14 @@ module JsonApiKit
 
         def base? = segments == ["base"]
 
+        def for_relationship?(relationship)
+          name.to_s == relationship.parameter_name || name.to_s == relationship.name
+        end
+
+        def linkage_location(container)
+          index ? container.child("data", index, "id") : container.child("data")
+        end
+
         private
 
         attr_reader :segments

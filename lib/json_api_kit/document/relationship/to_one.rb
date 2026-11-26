@@ -4,7 +4,11 @@ module JsonApiKit
   class Document
     class Relationship
       class ToOne < RelatedResource
-        def self.input_class = Request::Input::ToOneRelationship
+        class << self
+          def input_class = Request::Input::ToOneRelationship
+
+          def from(record, **context) = from_records(Array.wrap(record), **context)
+        end
 
         private
 

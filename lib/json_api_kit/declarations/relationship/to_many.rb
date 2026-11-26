@@ -9,14 +9,18 @@ module JsonApiKit
         def parameter_type =
           ActiveSupportTypeExtensions::Array.new(element_type: resource.identifier_type)
 
-        def input_contract = Request::Body::Contract::Relationship::ToMany
-
         def linkage(records, filtering: {}) =
           Linkage::ToMany.new(records.page(resource.page_size), filtering:)
 
         def related_document = Document::Collection
 
         def linkage_document = Document::Relationship
+
+        private
+
+        def write_methods = %w[PATCH POST DELETE]
+
+        def input_contract = Request::Body::Contract::Relationship::ToMany
       end
     end
   end

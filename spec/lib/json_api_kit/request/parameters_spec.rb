@@ -439,6 +439,22 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
   end
 
+  context "when the request supports only sort" do
+    let(:request_parameters) do
+      described_class.new(
+        parameters,
+        glossary:,
+        resource: JsonApiKitSpec::ParametersResource,
+        families: %w[sort],
+      )
+    end
+    let(:parameters) { { "sort" => "-createdAt", "include" => "unknown" } }
+
+    it "translates only the sort parameter" do
+      expect(declared_parameters).to eq("sort" => { "created_at" => :desc }, "include" => "unknown")
+    end
+  end
+
   describe "#fieldsets" do
     subject(:fieldsets) { request_parameters.fieldsets }
 
