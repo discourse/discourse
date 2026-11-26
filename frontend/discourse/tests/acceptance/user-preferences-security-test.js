@@ -394,11 +394,80 @@ acceptance("User Preferences - Security", function (needs) {
         "shows set password instead of change after password removed"
       );
   });
+
+  test("confirms passwordless session with email code before adding a passkey", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+    this.owner.lookup("service:current-user").set("no_password", true);
+
+    pretender.get("/u/trusted-session.json", () =>
+      response({
+        failed: "FAILED",
+        methods: {
+          password: false,
+          passkey: false,
+          email_code: true,
+          external_providers: [],
+        },
+      })
+    );
+    pretender.post("/u/confirm-session/email-code.json", () =>
+      response({ success: "OK", email: "eviltrout@example.com" })
+    );
+    pretender.post("/u/confirm-session.json", (request) => {
+      assert.strictEqual(
+        new URLSearchParams(request.requestBody).get("email_code"),
+        "654321",
+        "submits the email confirmation code"
+      );
+      return response({ success: "OK" });
+    });
+
+    let createCalled = 0;
+    pretender.post("/u/create_passkey.json", () => {
+      createCalled++;
+      return response({
+        challenge: "challenge",
+        rp_name: "Discourse",
+        rp_id: "localhost",
+        user_secure_id: "user1",
+        supported_algorithms: [-7],
+        existing_passkey_credential_ids: [],
+      });
+    });
+    const createStub = sinon
+      .stub(navigator.credentials, "create")
+      .rejects(new DOMException("Cancelled", "NotAllowedError"));
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+
+    assert
+      .dom(".dialog-body .confirm-session #password")
+      .doesNotExist("does not show password field for passwordless user");
+    assert
+      .dom(".confirm-session__email-code .btn")
+      .exists("offers email code confirmation");
+
+    await click(".confirm-session__email-code .btn");
+    await fillIn(".confirm-session .d-otp-input", "654321");
+
+    assert.strictEqual(
+      createCalled,
+      1,
+      "starts passkey creation after confirming session with email code"
+    );
+    assert.true(createStub.calledOnce, "starts WebAuthn registration");
+  });
 });
 
 acceptance("User Preferences - Security with external auth", function (needs) {
   needs.user({ no_password: true, user_passkeys: [] });
   needs.settings({ enable_local_logins: false, enable_passkeys: true });
+  needs.pretender((server, helper) => {
+    server.get("/u/trusted-session.json", () =>
+      helper.response({ success: "OK" })
+    );
+  });
 
   test("shows passkey registration when local logins are disabled without confirming session", async function (assert) {
     let createCalled = 0;
@@ -437,6 +506,53 @@ acceptance("User Preferences - Security with external auth", function (needs) {
       .dom(".confirm-session")
       .doesNotExist("does not ask for a local credential");
     assert.true(createStub.calledOnce, "starts WebAuthn registration");
+  });
+
+  test("offers external provider re-authentication when session is stale and provider is connected", async function (assert) {
+    pretender.get("/u/trusted-session.json", () =>
+      response({
+        failed: "FAILED",
+        methods: {
+          password: false,
+          passkey: false,
+          email_code: false,
+          external_providers: ["facebook"],
+        },
+      })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+
+    assert
+      .dom(".confirm-session .confirm-session__provider-btn.facebook")
+      .exists("shows connected external provider confirmation button");
+    assert
+      .dom(".confirm-session #password")
+      .doesNotExist("does not render password form");
+  });
+
+  test("prompts to sign in again when session has no confirmation methods", async function (assert) {
+    pretender.get("/u/trusted-session.json", () =>
+      response({
+        failed: "FAILED",
+        methods: {
+          password: false,
+          passkey: false,
+          email_code: false,
+          external_providers: [],
+        },
+      })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+
+    assert.dom(".dialog-header h3").hasText(i18n("user.confirm_access.title"));
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.passkeys.external_login_required"));
+    assert.dom(".dialog-footer .btn-primary").hasText(i18n("user.log_out"));
   });
 
   test("prompts to sign in again when external passkey grant has expired", async function (assert) {

@@ -28,13 +28,17 @@ RSpec.describe Admin::EmailTemplatesController do
         expect(json["email_templates"]).to be_present
       end
 
-      it "includes the password reset code template" do
+      it "includes the password reset and session confirmation code templates" do
         get "/admin/email/templates.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["email_templates"]).to include(
           a_hash_including(
             "id" => "password_reset_code_mailer",
+            "interpolation_keys" => %w[code minutes site_name],
+          ),
+          a_hash_including(
+            "id" => "session_confirmation_code_mailer",
             "interpolation_keys" => %w[code minutes site_name],
           ),
         )

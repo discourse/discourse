@@ -3762,6 +3762,8 @@ en:
 
   login:
     second_factor_external_login_required: "To confirm your identity before managing two-factor authentication, please log out and log in again with your external account."
+    confirm_session_external_failed: "Unable to confirm your identity. Please try again."
+    confirm_session_external_mismatch: "The %{provider} account you signed in with does not match your current account."
     invalid_second_factor_method: "The selected two-factor method is invalid."
     not_enabled_second_factor_method: "The selected two-factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
@@ -3943,6 +3945,16 @@ en:
       ## %{code}
 
       This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
+
+  session_confirmation_code_mailer:
+    title: "Session confirmation code"
+    subject_template: "%{code} is your confirmation code"
+    text_body_template: |
+      Use this code to confirm your identity on %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request this code, someone may have access to your account and you should change your password or review your security settings.
 
   invite_mailer:
     title: "Invite Mailer"

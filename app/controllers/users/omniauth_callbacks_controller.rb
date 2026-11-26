@@ -33,7 +33,10 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     authenticator = self.class.find_authenticator(params[:provider])
 
-    if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
+    if external_confirm = Auth::SessionConfirmation.consume_external_confirmation!(request)
+      return handle_external_session_confirmation(authenticator, auth, external_confirm)
+    elsif session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? &&
+          current_user
       return redirect_to persist_auth_token(auth)
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
@@ -42,36 +45,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session, cookies, request)
     end
 
-    preferred_origin = request.env["omniauth.origin"]
-    sso_payload = nil
-
-    session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
-    if server_session[:destination_url].present?
-      preferred_origin = server_session[:destination_url]
-    elsif SiteSetting.enable_discourse_connect_provider &&
-          (sso_payload = cookies.delete(:sso_payload))
-      preferred_origin = session_sso_provider_url + "?" + sso_payload
-    elsif cookies[:destination_url].present?
-      preferred_origin = cookies[:destination_url]
-    end
-
-    server_session.delete(:destination_url)
-    cookies.delete(:destination_url)
-
-    if preferred_origin.present?
-      parsed =
-        begin
-          URI.parse(preferred_origin)
-        rescue URI::Error
-        end
-
-      if valid_origin?(parsed)
-        @origin = +"#{parsed.path}"
-        @origin << "?#{parsed.query}" if parsed.query
-      end
-    end
-
-    @origin = Discourse.base_path("/") if @origin.blank?
+    @origin, sso_payload = resolve_origin(include_sso_payload: true)
 
     @auth_result.destination_url = @origin
     @auth_result.authenticator_name = authenticator.name
@@ -109,7 +83,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       signup_authentication = @auth_result.session_data
       if @auth_result.email_valid
-        expires_at = Auth::SecondFactorEnrollment::PROOF_LIFETIME.from_now.to_i
+        expires_at = Auth::SessionConfirmation::FRESH_LOGIN_LIFETIME.from_now.to_i
         signup_authentication[:enrollment_proof_expires_at] = expires_at
       end
       server_session[:authentication] = signup_authentication
@@ -219,6 +193,104 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   protected
+
+  def resolve_origin(include_sso_payload: true)
+    preferred_origin = request.env["omniauth.origin"]
+    sso_payload = nil
+
+    session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
+    if server_session[:destination_url].present?
+      preferred_origin = server_session[:destination_url]
+    elsif include_sso_payload && SiteSetting.enable_discourse_connect_provider &&
+          (sso_payload = cookies.delete(:sso_payload))
+      preferred_origin = session_sso_provider_url + "?" + sso_payload
+    elsif cookies[:destination_url].present?
+      preferred_origin = cookies[:destination_url]
+    end
+
+    server_session.delete(:destination_url)
+    cookies.delete(:destination_url)
+
+    origin = nil
+    if preferred_origin.present?
+      parsed =
+        begin
+          URI.parse(preferred_origin)
+        rescue URI::Error
+        end
+
+      if valid_origin?(parsed)
+        origin = +"#{parsed.path}"
+        origin << "?#{parsed.query}" if parsed.query
+      end
+    end
+
+    origin = Discourse.base_path("/") if origin.blank?
+    [origin, sso_payload]
+  end
+
+  def handle_external_session_confirmation(authenticator, auth, external_confirm)
+    session.delete(:auth_reconnect)
+    @origin, = resolve_origin(include_sso_payload: false)
+
+    token = Auth::SessionConfirmation.browser_token(request, current_user)
+    if !current_user || current_user.id != external_confirm[:user_id] ||
+         token&.id != external_confirm[:token_id] ||
+         authenticator.name != external_confirm[:provider]
+      flash[:error] = I18n.t("login.confirm_session_external_failed")
+      return render("failure")
+    end
+
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !current_user.staff?
+
+    if authenticator.description_for_user(current_user).blank?
+      flash[:error] = I18n.t(
+        "login.confirm_session_external_mismatch",
+        provider: authenticator.display_name,
+      )
+      return render("failure")
+    end
+
+    if authenticator.respond_to?(:is_managed?) && authenticator.is_managed?
+      associated =
+        auth[:uid].present? &&
+          UserAssociatedAccount.exists?(
+            provider_name: authenticator.name,
+            provider_uid: auth[:uid].to_s,
+            user_id: current_user.id,
+          )
+      if !associated
+        flash[:error] = I18n.t(
+          "login.confirm_session_external_mismatch",
+          provider: authenticator.display_name,
+        )
+        return render("failure")
+      end
+    end
+
+    DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
+    @auth_result = authenticator.after_authenticate(auth)
+    DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session, cookies, request)
+
+    return render_auth_result_failure if @auth_result.failed?
+
+    if @auth_result.user&.id != current_user.id
+      flash[:error] = I18n.t(
+        "login.confirm_session_external_mismatch",
+        provider: authenticator.display_name,
+      )
+      return render("failure")
+    end
+
+    if message =
+         pre_activation_blocked_message(current_user) || access_blocked_message(current_user)
+      flash[:error] = message
+      return render("failure")
+    end
+
+    Auth::SessionConfirmation.mark_confirmed!(request, current_user, local: false)
+    redirect_to @origin
+  end
 
   def render_auth_result_failure
     flash[:error] = PrettyText.sanitize(@auth_result.failed_reason).html_safe
@@ -330,7 +402,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
-    Auth::SecondFactorEnrollment.mark_external_login!(request, user)
+    Auth::SessionConfirmation.mark_fresh_login!(request, user)
     Invite.invalidate_for_email(user.email)
     server_session.delete(:authentication)
     @auth_result.authenticated = true

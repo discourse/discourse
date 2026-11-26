@@ -241,11 +241,19 @@ RSpec.describe SessionController do
     end
 
     context "with valid token" do
-      it "returns success" do
+      it "returns success and grants fresh login session trust" do
+        freeze_time
         post "/session/email-login/#{email_token.token}.json"
 
         expect(response.parsed_body["success"]).to eq("OK")
         expect(session[:current_user_id]).to eq(user.id)
+
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        freeze_time 6.minutes.from_now
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["failed"]).to eq("FAILED")
       end
 
       it "fails when local logins via email is disabled" do
@@ -973,13 +981,21 @@ RSpec.describe SessionController do
       end
     end
 
-    it "logs in an existing user with a correct code" do
+    it "logs in an existing user with a correct code and grants fresh login trust" do
+      freeze_time
       post "/session/login-code/verify.json", params: { email: user.email, code: }
 
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("user", "username")).to eq(user.username)
       expect(session[:current_user_id]).to eq(user.id)
       expect(EmailLoginCode.active.for_email(user.email)).to be_empty
+
+      get "/u/trusted-session.json"
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      freeze_time 6.minutes.from_now
+      get "/u/trusted-session.json"
+      expect(response.parsed_body["failed"]).to eq("FAILED")
     end
 
     it "activates the address the code was sent to when the primary email was changed before verification" do
@@ -4120,6 +4136,9 @@ RSpec.describe SessionController do
           expect(UserAuthToken.hash_token(unhashed_token)).to eq(
             user.user_auth_tokens.first.auth_token,
           )
+
+          get "/u/trusted-session.json"
+          expect(response.parsed_body["success"]).to eq("OK")
         end
 
         context "when timezone param is provided" do
@@ -6182,7 +6201,7 @@ RSpec.describe SessionController do
           expect(response.status).to eq(403)
         end
 
-        it "logs the user in" do
+        it "logs the user in and grants fresh login trust" do
           simulate_localhost_passkey_challenge
           user.activate
           user.create_or_fetch_secure_identifier
@@ -6197,6 +6216,9 @@ RSpec.describe SessionController do
           expect(response.parsed_body["error"]).not_to be_present
 
           expect(session[:current_user_id]).to eq(user.id)
+
+          get "/u/trusted-session.json"
+          expect(response.parsed_body["success"]).to eq("OK")
         end
 
         it "does not log in a suspended user" do

@@ -1672,6 +1672,147 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    context "when confirming an existing session" do
+      fab!(:other_user, :user)
+      let(:user_provider_id) { "12345" }
+      let(:other_provider_id) { "99999" }
+
+      before do
+        UserAssociatedAccount.create!(
+          provider_name: "google_oauth2",
+          provider_uid: user_provider_id,
+          user: user,
+        )
+        UserAssociatedAccount.create!(
+          provider_name: "google_oauth2",
+          provider_uid: other_provider_id,
+          user: other_user,
+        )
+        mock_auth(user.email, "Test User", "testuser", user_provider_id)
+      end
+
+      it "confirms the session and redirects back to origin without replacing the auth token" do
+        sign_in(user)
+        original_token = user.user_auth_tokens.sole
+
+        post "/auth/google_oauth2",
+             params: {
+               confirm_session: true,
+               origin: "/u/#{user.username}/preferences/second-factor",
+             }
+        expect(response.status).to eq(302)
+
+        expect { get "/auth/google_oauth2/callback" }.not_to change { UserAuthToken.count }
+
+        expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+        expect(cookies[:authentication_data]).to be_nil
+        expect(user.user_auth_tokens.sole.id).to eq(original_token.id)
+
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        post "/u/second_factors.json"
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["unconfirmed_session"]).to be_nil
+        expect(response.parsed_body["totps"]).to eq([])
+      end
+
+      it "works when local logins are disabled" do
+        SiteSetting.enable_local_logins = false
+        sign_in(user)
+
+        post "/auth/google_oauth2",
+             params: {
+               confirm_session: true,
+               origin: "/u/#{user.username}/preferences/security",
+             }
+        get "/auth/google_oauth2/callback"
+
+        expect(response).to redirect_to("/u/#{user.username}/preferences/security")
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["success"]).to eq("OK")
+      end
+
+      it "rejects a mismatched provider account without switching users or altering associations" do
+        sign_in(user)
+        OmniAuth.config.mock_auth[:google_oauth2].uid = other_provider_id
+        OmniAuth.config.mock_auth[:google_oauth2].info.email = other_user.email
+
+        post "/auth/google_oauth2",
+             params: {
+               confirm_session: true,
+               origin: "/u/#{user.username}/preferences/security",
+             }
+        get "/auth/google_oauth2/callback"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          CGI.escapeHTML(I18n.t("login.confirm_session_external_mismatch", provider: "Google")),
+        )
+        expect(session[:current_user_id]).to eq(user.id)
+        expect(
+          UserAssociatedAccount.find_by(
+            provider_name: "google_oauth2",
+            provider_uid: other_provider_id,
+          ).user_id,
+        ).to eq(other_user.id)
+
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+      end
+
+      it "rejects a cross-provider callback" do
+        enable_auth_provider(:facebook)
+        OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
+          provider: "facebook",
+          uid: user_provider_id,
+          info: OmniAuth::AuthHash::InfoHash.new(email: user.email),
+        )
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:facebook]
+
+        sign_in(user)
+        post "/auth/google_oauth2", params: { confirm_session: true }
+        get "/auth/facebook/callback"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("login.confirm_session_external_failed"))
+
+        get "/u/trusted-session.json"
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+      ensure
+        OmniAuth.config.mock_auth[:facebook] = nil
+      end
+
+      it "does not start session confirmation on GET requests and clears stale confirmation state on normal login" do
+        sign_in(user)
+
+        get "/auth/google_oauth2", params: { confirm_session: true }
+        expect(request.server_session[Auth::SessionConfirmation::EXTERNAL_CONFIRM_KEY]).to be_nil
+
+        post "/auth/google_oauth2", params: { confirm_session: true }
+        expect(
+          request.server_session[Auth::SessionConfirmation::EXTERNAL_CONFIRM_KEY],
+        ).to be_present
+
+        post "/auth/google_oauth2"
+        expect(request.server_session[Auth::SessionConfirmation::EXTERNAL_CONFIRM_KEY]).to be_nil
+      end
+
+      it "refuses confirmation when the current user is suspended" do
+        sign_in(user)
+        post "/auth/google_oauth2", params: { confirm_session: true }
+        user.update!(suspended_at: 1.minute.ago, suspended_till: 1.day.from_now)
+
+        get "/auth/google_oauth2/callback"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("login.confirm_session_external_failed"))
+        expect(request.server_session[Auth::SessionConfirmation::CONFIRMED_SESSION_KEY]).to be_nil
+
+        get "/u/trusted-session.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "after changing email" do
       def login(identity)
         mock_auth(identity[:email], nil, nil, "123545#{identity[:username]}")

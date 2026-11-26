@@ -18,6 +18,7 @@ class UsersController < ApplicationController
                    disable_second_factor
                    list_second_factors
                    confirm_session
+                   send_confirm_session_email_code
                    trusted_session
                    update_second_factor
                    create_second_factor_backup
@@ -843,7 +844,9 @@ class UsersController < ApplicationController
       authentication.finish
       activation.finish
       if expires_at = authentication.enrollment_proof_expires_at
-        Auth::SecondFactorEnrollment.mark_external_login!(request, user, expires_at:)
+        Auth::SessionConfirmation.mark_fresh_login!(request, user, expires_at:)
+      elsif Auth::SessionConfirmation.browser_token(request, user)
+        Auth::SessionConfirmation.mark_fresh_login!(request, user)
       end
       associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
@@ -1096,6 +1099,7 @@ class UsersController < ApplicationController
         "password_reset.success_unapproved"
       else
         log_on_user(@user, replay_anonymous_action: true)
+        Auth::SessionConfirmation.mark_fresh_login!(request, @user)
         "password_reset.success"
       end
 
@@ -1253,6 +1257,7 @@ class UsersController < ApplicationController
       else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
         log_on_user(@user, replay_anonymous_action: true)
+        Auth::SessionConfirmation.mark_fresh_login!(request, @user)
 
         # invites#perform_accept_invitation already sets destination_url, but
         # sometimes it is lost (user changes browser, uses incognito, etc)
@@ -1706,30 +1711,60 @@ class UsersController < ApplicationController
     end
   end
 
+  def send_confirm_session_email_code
+    if current_user.anonymous? || current_user.is_impersonating || is_api? || is_user_api?
+      raise Discourse::InvalidAccess
+    end
+    raise Discourse::NotFound unless email_code_confirmation_allowed?
+
+    RateLimiter.new(nil, "confirm-session-email-hr-#{request.remote_ip}", 30, 1.hour).performed!
+    RateLimiter.new(nil, "confirm-session-email-min-#{request.remote_ip}", 6, 1.minute).performed!
+    RateLimiter.new(current_user, "confirm-session-email-user-hr", 6, 1.hour).performed!
+    RateLimiter.new(current_user, "confirm-session-email-user-min", 3, 1.minute).performed!
+
+    login_code = Auth::SessionConfirmation.issue_email_code!(request, current_user)
+    raise Discourse::InvalidAccess if login_code.nil?
+
+    render json: success_json.merge(email: current_user.email)
+  end
+
   def confirm_session
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
+    end
+    if current_user.anonymous? || current_user.is_impersonating || is_api? || is_user_api?
+      raise Discourse::InvalidAccess
     end
 
     if confirm_server_session
       render json: success_json
     else
-      render json: failed_json.merge(error: I18n.t("login.incorrect_password_or_passkey"))
+      render json:
+               failed_json.merge(
+                 error: @confirm_session_error || I18n.t("login.incorrect_password_or_passkey"),
+               )
     end
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render_json_error(err.message, status: 401)
   end
 
   def trusted_session
-    render json: session_is_trusted? ? success_json : failed_json
+    if session_is_trusted?
+      render json: success_json
+    else
+      webauthn_supported =
+        params.key?(:webauthn_supported) ? params[:webauthn_supported].to_s == "true" : true
+      render json: failed_json.merge(methods: confirm_session_methods(webauthn_supported:))
+    end
   end
 
   def list_second_factors
     raise Discourse::NotFound unless second_factor_management_enabled?
 
-    case second_factor_management_access(
-      webauthn_supported: params[:webauthn_supported].to_s == "true",
-    )
+    webauthn_supported =
+      params.key?(:webauthn_supported) ? params[:webauthn_supported].to_s == "true" : true
+
+    case second_factor_management_access(webauthn_supported:)
     when :allowed
       totp_second_factors =
         current_user
@@ -1749,8 +1784,12 @@ class UsersController < ApplicationController
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     when :external_login_required
       render json: success_json.merge(external_login_required: true)
-    when :local_confirmation_required
-      render json: success_json.merge(unconfirmed_session: true)
+    when :confirmation_required
+      render json:
+               success_json.merge(
+                 unconfirmed_session: true,
+                 methods: confirm_session_methods(webauthn_supported:),
+               )
     else
       raise Discourse::InvalidAccess
     end
@@ -1964,10 +2003,6 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
-  end
-
-  def user_just_created
-    current_user.created_at > 5.minutes.ago
   end
 
   def revoke_account
@@ -2410,8 +2445,17 @@ class UsersController < ApplicationController
       1.minute,
     ).performed!
 
-    if !params[:password].present? && !params[:publicKeyCredential].present?
-      raise Discourse::InvalidParameters.new "Missing password or passkey"
+    if !params[:password].present? && !params[:publicKeyCredential].present? &&
+         !params[:email_code].present?
+      raise Discourse::InvalidParameters.new "Missing password, passkey, or email code"
+    end
+
+    if params[:email_code].present?
+      raise Discourse::NotFound unless email_code_confirmation_allowed?
+    end
+
+    if params[:publicKeyCredential].present?
+      raise Discourse::NotFound unless SiteSetting.enable_passkeys
     end
 
     if params[:password].present?
@@ -2430,40 +2474,77 @@ class UsersController < ApplicationController
       return false if !passkey
     end
 
-    server_session["confirmed-session-#{current_user.id}"] = "true"
+    if params[:email_code].present?
+      unless Auth::SessionConfirmation.verify_email_code!(
+               request,
+               current_user,
+               params[:email_code],
+             )
+        @confirm_session_error = I18n.t("email_login_code.invalid_code")
+        return false
+      end
+      return true
+    end
+
+    Auth::SessionConfirmation.mark_confirmed!(request, current_user, local: true)
   end
 
   def server_session_confirmed?
-    server_session["confirmed-session-#{current_user.id}"] == "true"
+    Auth::SessionConfirmation.confirmed?(
+      request,
+      current_user,
+      local_logins_available:
+        SiteSetting.enable_local_logins && !SiteSetting.enable_discourse_connect,
+    )
   end
 
   def session_is_trusted?
-    server_session_confirmed? || user_just_created
+    if !current_user || current_user.anonymous? || current_user.is_impersonating || is_api? ||
+         is_user_api? || SiteSetting.enable_discourse_connect
+      return false
+    end
+
+    server_session_confirmed? || Auth::SessionConfirmation.fresh_login?(request, current_user)
+  end
+
+  def email_code_confirmation_allowed?
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      SiteSetting.enable_local_logins_via_email && current_user&.active? &&
+      current_user.email_confirmed?
+  end
+
+  def confirm_session_methods(webauthn_supported: true)
+    if !current_user || current_user.anonymous? || current_user.is_impersonating || is_api? ||
+         is_user_api? || SiteSetting.enable_discourse_connect
+      return { password: false, passkey: false, email_code: false, external_providers: [] }
+    end
+
+    local_logins_available = SiteSetting.enable_local_logins
+    {
+      password: local_logins_available && current_user.has_password?,
+      passkey:
+        local_logins_available && webauthn_supported && SiteSetting.enable_passkeys &&
+          current_user.passkey_credential_ids.any?,
+      email_code: email_code_confirmation_allowed?,
+      external_providers: Auth::SessionConfirmation.connected_external_providers(current_user),
+    }
+  end
+
+  def any_confirm_session_method?(methods)
+    methods[:password] || methods[:passkey] || methods[:email_code] ||
+      methods[:external_providers].present?
   end
 
   def second_factor_management_access(webauthn_supported: true)
     if !current_user || current_user.anonymous? || current_user.is_impersonating || is_api? ||
-         is_user_api?
+         is_user_api? || SiteSetting.enable_discourse_connect
       return :denied
     end
 
-    local_logins_available =
-      SiteSetting.enable_local_logins && !SiteSetting.enable_discourse_connect
-    return :allowed if local_logins_available && server_session_confirmed?
-    return :allowed if Auth::SecondFactorEnrollment.recent_external_login?(request, current_user)
-    return :external_login_required unless local_logins_available
+    return :allowed if session_is_trusted?
 
-    if !current_user.authenticated_with_oauth
-      return user_just_created ? :allowed : :local_confirmation_required
-    end
-
-    # Browser capability only selects the prompt; neither prompt grants access.
-    if current_user.has_password? ||
-         (
-           webauthn_supported && SiteSetting.enable_passkeys &&
-             current_user.passkey_credential_ids.any?
-         )
-      :local_confirmation_required
+    if any_confirm_session_method?(confirm_session_methods(webauthn_supported:))
+      :confirmation_required
     else
       :external_login_required
     end

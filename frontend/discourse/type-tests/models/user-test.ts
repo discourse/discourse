@@ -4,8 +4,10 @@ import type Bookmark from "discourse/models/bookmark";
 import type RestModel from "discourse/models/rest";
 import type Topic from "discourse/models/topic";
 import User, {
+  type ConfirmSessionMethods,
   SECOND_FACTOR_METHODS,
   type SecondFactorManagementResponse,
+  type TrustedSessionResponse,
   type UserCreateAttrs,
   type UserFindDetailsOptions,
   type UserGroup,
@@ -169,6 +171,18 @@ expectTypeOf(user.enforcedSecondFactor).toEqualTypeOf<boolean>();
 expectTypeOf(
   user.loadSecondFactorCodes()
 ).resolves.toEqualTypeOf<SecondFactorManagementResponse>();
+expectTypeOf(
+  user.trustedSession()
+).resolves.toEqualTypeOf<TrustedSessionResponse>();
+expectTypeOf<
+  Extract<TrustedSessionResponse, { failed: "FAILED" }>["methods"]
+>().toEqualTypeOf<ConfirmSessionMethods | undefined>();
+expectTypeOf<
+  Extract<
+    SecondFactorManagementResponse,
+    { unconfirmed_session: true }
+  >["methods"]
+>().toEqualTypeOf<ConfirmSessionMethods | undefined>();
 user.updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE);
 user.pickAvatar(1, "custom");
 

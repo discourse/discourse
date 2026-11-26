@@ -172,6 +172,52 @@ describe "User preferences | Security" do
       expect(page).to have_css(".new-second-factor-backup")
       expect(page).to have_no_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
     end
+
+    it "allows a passwordless user to confirm their session with an email code" do
+      Jobs.run_immediately!
+      SiteSetting.enable_local_logins_via_email = true
+      passwordless_user = Fabricate(:user, password: nil, email: "passwordless@user.com")
+      passwordless_user.activate
+      sign_in(passwordless_user)
+
+      confirm_session_modal =
+        user_preferences_security_page.visit(passwordless_user).click_manage_2fa_authentication
+
+      expect(page).to have_no_css(".confirm-session input#password")
+
+      confirm_session_modal.click_email_code
+      expect(page).to have_css(".confirm-session .d-otp-input")
+
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(passwordless_user.email)
+      code = mail.subject[/(\d{6})/, 1]
+
+      confirm_session_modal.submit_email_code(code)
+
+      expect(page).to have_current_path(
+        "/u/#{passwordless_user.username}/preferences/second-factor",
+      )
+      expect(page).to have_css(".totp .new-totp")
+    end
+
+    it "skips the confirm session modal when the user recently logged in" do
+      visit("/")
+      user_menu.sign_out
+
+      find(".d-header .login-button").click
+      find("input#login-account-name").fill_in(with: user.username)
+      find("input#login-account-password").fill_in(with: password)
+      find("#login-button.btn-primary").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      user_preferences_security_page.visit(user)
+      click_button "Manage Two-Factor Authentication"
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
+      expect(page).to have_no_css(".confirm-session")
+      expect(page).to have_css(".totp .new-totp")
+    end
   end
 
   context "when mobile", mobile: true do

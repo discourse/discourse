@@ -288,6 +288,46 @@ acceptance(
       assert.dom(".new-totp").exists("shows controls after confirmation");
       assert.strictEqual(loads, 2, "reloads once after confirmation");
     });
+
+    test("offers email code confirmation when unconfirmed_session includes email_code method", async function (assert) {
+      let confirmed = false;
+      pretender.post("/u/second_factors.json", () => {
+        return response(
+          confirmed
+            ? { success: "OK", totps: [], security_keys: [] }
+            : {
+                success: "OK",
+                unconfirmed_session: true,
+                methods: {
+                  password: false,
+                  passkey: false,
+                  email_code: true,
+                  external_providers: [],
+                },
+              }
+        );
+      });
+      pretender.post("/u/confirm-session/email-code.json", () =>
+        response({ success: "OK", email: "eviltrout@example.com" })
+      );
+      pretender.post("/u/confirm-session.json", () => {
+        confirmed = true;
+        return response({ success: "OK" });
+      });
+
+      await visit("/u/eviltrout/preferences/security");
+      await click(".btn-second-factor");
+
+      assert
+        .dom(".confirm-session #password")
+        .doesNotExist("hides password field when unavailable");
+      await click(".confirm-session__email-code .btn");
+      await fillIn(".confirm-session .d-otp-input", "654321");
+
+      assert
+        .dom(".new-totp")
+        .exists("loads second factor controls after email code confirmation");
+    });
   }
 );
 
