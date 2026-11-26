@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .user-content {
   .assign-controls {
     display: flex;
@@ -77,60 +79,6 @@
   }
 }
 
-.topic-assignments-editor {
-  &__row {
-    &:not(:first-child) {
-      padding-block-start: var(--space-3);
-    }
-    padding-block-end: var(--space-3);
-    border-block-end: 1px solid var(--primary-low);
-  }
-
-  &__person {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-    overflow-wrap: anywhere;
-
-    // to make group icons the same size as avatars for alignment
-    > .d-icon {
-      height: 24px;
-      width: 24px;
-    }
-  }
-
-  &__name {
-    margin-inline-end: auto;
-  }
-
-  &__note {
-    position: relative;
-    padding-inline-start: calc(24px + var(--space-2));
-
-    textarea.form-kit__control-textarea {
-      padding-inline-end: var(--space-8) !important;
-    }
-  }
-
-  &__note-delete {
-    position: absolute;
-    inset-block-start: var(--space-1);
-    inset-inline-end: var(--space-1);
-  }
-
-  .form-kit__collection {
-    gap: 0;
-  }
-
-  textarea.form-kit__control-textarea {
-    max-width: 100%;
-    min-height: var(--space-9);
-    font-size: var(--font-down-1-rem);
-    font-style: italic;
-  }
-}
-
 .topic-body {
   .assigned-to {
     padding-left: 11px;
@@ -156,6 +104,11 @@
 }
 
 .d-modal.assign {
+  .d-modal__body {
+    display: flex;
+    flex-direction: column;
+  }
+
   label {
     font-weight: bold;
 
@@ -247,6 +200,63 @@
     .error-label {
       color: var(--danger);
       font-size: var(--font-down-1);
+    }
+  }
+
+  .topic-assignments-editor {
+    min-height: 0;
+
+    &__row {
+      &:not(:first-child) {
+        padding-block-start: var(--space-3);
+      }
+      padding-block-end: var(--space-3);
+      border-block-end: 1px solid var(--primary-low);
+    }
+
+    &__person {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      overflow-wrap: anywhere;
+
+      // to make group icons the same size as avatars for alignment
+      > .d-icon {
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    &__name {
+      margin-inline-end: auto;
+    }
+
+    &__note {
+      position: relative;
+      padding-inline-start: calc(24px + var(--space-2));
+
+      textarea.form-kit__control-textarea {
+        padding-inline-end: var(--space-8) !important;
+      }
+    }
+
+    &__note-delete {
+      position: absolute;
+      inset-block-start: var(--space-1);
+      inset-inline-end: var(--space-1);
+    }
+
+    .form-kit__collection {
+      gap: 0;
+      overflow-y: auto;
+    }
+
+    textarea.form-kit__control-textarea {
+      max-width: 100%;
+      min-height: var(--space-9);
+      font-size: var(--font-down-1-rem);
+      font-style: italic;
     }
   }
 }
