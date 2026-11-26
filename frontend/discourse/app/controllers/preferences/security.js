@@ -50,10 +50,6 @@ export default class SecurityController extends Controller {
     return !this.model.staged;
   }
 
-  get isCurrentUser() {
-    return this.currentUser?.id === this.model.id;
-  }
-
   get canUsePasskeys() {
     return (
       !this.siteSettings.enable_discourse_connect &&
@@ -229,9 +225,17 @@ export default class SecurityController extends Controller {
       }
     )
       .then(() => {
-        if (!token) {
+        if (!token && this.model.isCurrent) {
           logout();
-        } // All sessions revoked
+          return;
+        }
+
+        this.model.set(
+          "user_auth_tokens",
+          token
+            ? this.model.user_auth_tokens.filter(({ id }) => id !== token.id)
+            : []
+        );
       })
       .catch(popupAjaxError);
   }

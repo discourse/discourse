@@ -172,8 +172,8 @@ export interface UserApiKey {
 
 type WrappedUserApiKey = EmberObject &
   UserApiKey & {
-    revoke(): void;
-    undoRevoke(): void;
+    revoke(): globalThis.Promise<void>;
+    undoRevoke(): globalThis.Promise<void>;
   };
 
 /** Core serializer and client-assigned fields. Plugins augment this interface. */
@@ -348,6 +348,7 @@ export interface UserFields {
   sidebar_tags?: SiteSidebarTag[];
   silence_reason?: string | null;
   silenced_till?: string | null;
+  staff_only_settings?: string[];
   staged?: boolean;
   /** Legacy compatibility field; current serializers do not supply it. */
   stats?: UserActionStat[];
@@ -1054,7 +1055,7 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  @computed()
+  @computed("user_api_keys")
   get userApiKeys(): WrappedUserApiKey[] | undefined {
     const keys = this.user_api_keys;
     if (keys) {
@@ -1064,13 +1065,9 @@ export default class User extends RestModel.extend(Evented) {
           raw as Partial<EmberObject>
         ) as WrappedUserApiKey;
 
-        obj.revoke = () => {
-          this.revokeApiKey(obj);
-        };
+        obj.revoke = () => this.revokeApiKey(obj);
 
-        obj.undoRevoke = () => {
-          this.undoRevokeApiKey(obj);
-        };
+        obj.undoRevoke = () => this.undoRevokeApiKey(obj);
 
         return obj;
       });

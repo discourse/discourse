@@ -52,4 +52,16 @@ RSpec.describe UserOptionSerializer do
       end
     end
   end
+
+  describe "#discourse_rewind_share_publicly" do
+    fab!(:admin)
+
+    it "returns the serialized user's value when viewed by someone else" do
+      user.user_option.update!(discourse_rewind_share_publicly: true)
+
+      json = UserOptionSerializer.new(user.user_option, scope: admin.guardian, root: false).as_json
+
+      expect(json[:discourse_rewind_share_publicly]).to eq(true)
+    end
+  end
 end

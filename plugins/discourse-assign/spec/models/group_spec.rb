@@ -33,6 +33,15 @@ RSpec.describe Group do
 
       expect(SiteSetting.assign_allowed_on_groups).to eq removed_group_setting
     end
+
+    it "keeps a listed group whose id contains the destroyed group's id" do
+      allowed_groups = "3|1#{group.id}"
+      SiteSetting.assign_allowed_on_groups = allowed_groups
+
+      group.destroy!
+
+      expect(SiteSetting.assign_allowed_on_groups).to eq allowed_groups
+    end
   end
 
   describe "#can_show_assigned_tab?" do

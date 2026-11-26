@@ -726,7 +726,7 @@ class UsersController < ApplicationController
 
   def user_from_params_or_current_user
     return current_user if !params[:for_user_id]
-    return User.find(params[:for_user_id]) if current_user&.admin?
+    return User.find(params[:for_user_id]) if current_user&.staff?
 
     if current_user&.id == params[:for_user_id].to_i
       guardian.ensure_can_edit_username!(current_user)
@@ -1570,20 +1570,24 @@ class UsersController < ApplicationController
     if params[:notification_level] == "ignore"
       @error_message = "ignore_error"
       guardian.ensure_can_ignore_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
+
+      expiring_at =
+        begin
+          Time.zone.parse(params.require(:expiring_at).to_s)
+        rescue ArgumentError
+          nil
+        end
+      raise Discourse::InvalidParameters.new(:expiring_at) if expiring_at.nil?
+
       MutedUser.where(user: acting_user, muted_user: target_user).delete_all
-      ignored_user = IgnoredUser.find_by(user: acting_user, ignored_user: target_user)
-      if ignored_user.present?
-        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
-      else
-        IgnoredUser.create!(
-          user: acting_user,
-          ignored_user: target_user,
-          expiring_at: Time.parse(params[:expiring_at]),
-        )
-      end
+      IgnoredUser.find_or_initialize_by(user: acting_user, ignored_user: target_user).update!(
+        expiring_at:,
+      )
     elsif params[:notification_level] == "mute"
       @error_message = "mute_error"
       guardian.ensure_can_mute_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
       IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
       MutedUser.find_or_create_by!(user: acting_user, muted_user: target_user)
     elsif params[:notification_level] == "normal"
@@ -1992,6 +1996,7 @@ class UsersController < ApplicationController
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
       user.revoke_family_sessions!
+      user.logged_out
     end
 
     render json: success_json

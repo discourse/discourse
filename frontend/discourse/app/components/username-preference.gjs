@@ -96,7 +96,11 @@ export default class UsernamePreference extends Component {
   @action
   changeUsername() {
     return this.dialog.yesNoConfirm({
-      title: i18n("user.change_username.confirm"),
+      title: this.args.user.isCurrent
+        ? i18n("user.change_username.confirm")
+        : i18n("user.change_username.confirm_other", {
+            username: this.args.user.username,
+          }),
       didConfirm: async () => {
         this.saving = true;
 

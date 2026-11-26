@@ -3157,6 +3157,17 @@ RSpec.describe UsersController do
 
         include_examples "when username is available"
       end
+
+      context "when a moderator changing it for someone else" do
+        fab!(:user) { Fabricate(:user, username: "hansolo") }
+        before do
+          sign_in(moderator)
+
+          get "/u/check_username.json", params: { username: "HanSolo", for_user_id: user.id }
+        end
+
+        include_examples "when username is available"
+      end
     end
   end
 
@@ -5577,6 +5588,17 @@ RSpec.describe UsersController do
           expect(IgnoredUser.count).to eq(0)
           expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
         end
+
+        it "does not allow admin to make a source user mute themself" do
+          sign_in(admin)
+          put "/u/#{user.username}/notification_level.json",
+              params: {
+                notification_level: "mute",
+                acting_user_id: user.id,
+              }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(MutedUser.exists?(user_id: user.id, muted_user_id: user.id)).to eq(false)
+        end
       end
 
       context "when changing notification level to ignore" do
@@ -5606,6 +5628,47 @@ RSpec.describe UsersController do
           expect(
             IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id),
           ).to be_present
+        end
+
+        it "allows admin to change the ignore status for a source user who cannot ignore" do
+          ignored_user.destroy!
+          user.change_trust_level!(TrustLevel[0])
+          sign_in(admin)
+
+          put "/u/#{another_user.username}/notification_level.json",
+              params: {
+                notification_level: "ignore",
+                acting_user_id: user.id,
+                expiring_at: 3.days.from_now,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(IgnoredUser.exists?(user_id: user.id, ignored_user_id: another_user.id)).to eq(
+            true,
+          )
+        end
+
+        it "does not allow admin to make a source user ignore themself" do
+          sign_in(admin)
+          put "/u/#{user.username}/notification_level.json",
+              params: {
+                notification_level: "ignore",
+                acting_user_id: user.id,
+                expiring_at: 3.days.from_now,
+              }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(IgnoredUser.exists?(user_id: user.id, ignored_user_id: user.id)).to eq(false)
+        end
+
+        it "rejects a missing or unparseable expiring_at and keeps the existing mute" do
+          [nil, "garbage", "2020-13-45"].each do |expiring_at|
+            put "/u/#{another_user.username}/notification_level.json",
+                params: { notification_level: "ignore", expiring_at: }.compact
+
+            expect(response).to have_http_status(:bad_request)
+          end
+
+          expect(MutedUser.exists?(muted_user.id)).to eq(true)
         end
 
         it "does not allow a regular user to change the ignore status for anyone but themself" do
@@ -9489,6 +9552,18 @@ RSpec.describe UsersController do
         expect(user1.user_auth_tokens.count).to eq(0)
         expect(user1.push_subscriptions).to be_empty
         expect(PushSubscription.exists?(other_subscription.id)).to eq(true)
+      end
+
+      it "notifies only the target user's sessions when staff log them out from everywhere" do
+        sign_in(admin)
+
+        messages =
+          MessageBus.track_publish do
+            post "/u/#{user1.username}/preferences/revoke-auth-token.json"
+          end
+
+        logout_channels = messages.map(&:channel).grep(%r{\A/logout/})
+        expect(logout_channels).to contain_exactly("/logout/#{user1.id}")
       end
     end
   end

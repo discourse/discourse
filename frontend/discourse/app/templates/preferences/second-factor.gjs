@@ -53,7 +53,7 @@ export default <template>
                         {{i18n "user.second_factor.totp.default_name"}}
                       {{/if}}
                     </div>
-                    {{#if @controller.isCurrentUser}}
+                    {{#if @controller.model.isCurrent}}
                       <div class="actions">
                         <TokenBasedAuthDropdown
                           @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
@@ -89,7 +89,7 @@ export default <template>
                       {{/if}}
                     </div>
 
-                    {{#if @controller.isCurrentUser}}
+                    {{#if @controller.model.isCurrent}}
                       <div class="actions">
                         <SecurityKeyDropdown
                           @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
@@ -138,7 +138,7 @@ export default <template>
                   {{#if
                     (and
                       @controller.model.second_factor_backup_enabled
-                      @controller.isCurrentUser
+                      @controller.model.isCurrent
                     )
                   }}
                     <div class="actions">
