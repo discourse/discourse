@@ -51,6 +51,9 @@ export default class FKCollection extends Component {
       get data() {
         return instance.args.data;
       },
+      get layout() {
+        return instance.args.layout;
+      },
     };
 
     if (componentClass === FKCollection || componentClass === FKObject) {

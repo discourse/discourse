@@ -86,4 +86,16 @@ RSpec.describe PostActionTypeView do
     expect(post_action_type_view.is_flag?(:like)).to be false
     expect(post_action_type_view.is_flag?(:off_topic)).to be true
   end
+
+  it "memoizes derived flag enums on the instance" do
+    expect(post_action_type_view.types).to equal(post_action_type_view.types)
+    expect(post_action_type_view.flag_types).to equal(post_action_type_view.flag_types)
+    expect(post_action_type_view.public_types).to equal(post_action_type_view.public_types)
+    expect(post_action_type_view.notify_flag_types).to equal(
+      post_action_type_view.notify_flag_types,
+    )
+    expect(post_action_type_view.additional_message_types).to equal(
+      post_action_type_view.additional_message_types,
+    )
+  end
 end

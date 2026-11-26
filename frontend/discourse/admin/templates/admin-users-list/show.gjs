@@ -280,6 +280,13 @@ export default <template>
                 @order={{@controller.order}}
               />
             {{/if}}
+            {{#if @controller.showInteractive}}
+              <div
+                class="directory-table__column-header admin-users-list__interactive-header"
+              >
+                {{i18n "admin.users.bots.interactive_column"}}
+              </div>
+            {{/if}}
             {{#if @controller.showReadTime}}
               <DTableHeaderToggle
                 @asc={{@controller.asc}}
@@ -533,6 +540,20 @@ export default <template>
                     </span>
                     <span class="directory-table__value">
                       {{dNumber user.post_count}}
+                    </span>
+                  </div>
+                {{/if}}
+                {{#if @controller.showInteractive}}
+                  <div
+                    class="directory-table__cell admin-users-list__interactive"
+                  >
+                    <span class="directory-table__label">
+                      <span>{{i18n
+                          "admin.users.bots.interactive_column"
+                        }}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{i18nYesNo user.interactive_bot}}
                     </span>
                   </div>
                 {{/if}}

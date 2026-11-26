@@ -9,7 +9,9 @@ module DiscourseMcp
     def self.eligible_scopes_by_user(users)
       users = Array(users).compact.uniq(&:id)
       scopes_by_user_id = users.to_h { |user| [user.id, []] }
-      eligible_users = users.select { |user| user_available?(user) }
+      shadow_ids = AnonymousUser.where(user_id: scopes_by_user_id.keys).pluck(:user_id).to_set
+      eligible_users =
+        users.select { |user| user_available?(user) && !shadow_ids.include?(user.id) }
       McpGroupScope.ensure_admins! if eligible_users.any?(&:admin?)
       return scopes_by_user_id if eligible_users.blank?
 

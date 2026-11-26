@@ -31,6 +31,32 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         %w[approve_post reviewables.actions.approve_post.action_title],
       )
     end
+
+    it "names both actions for a new topic" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post_topic)
+
+      actions = reviewable.actions_for(moderator.guardian)
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_topic.title")
+      expect(actions.to_a.find { |action| action.server_action == "approve_post" }.label).to eq(
+        "reviewables.actions.approve_topic.title",
+      )
+    end
+
+    it "keeps the closed-topic confirmation on Approve post" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post, topic: Fabricate(:topic, closed: true))
+
+      action =
+        reviewable
+          .actions_for(moderator.guardian)
+          .to_a
+          .find { |candidate| candidate.server_action == "approve_post_closed" }
+
+      expect(action.label).to eq("reviewables.actions.approve_post.action_title")
+      expect(action.confirm_message).to eq("reviewables.actions.approve_post_closed.confirm")
+    end
   end
 
   describe "creating a post" do

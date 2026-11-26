@@ -83,7 +83,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. For other cosmetic changes, such as corners, shadows, borders, sizes, spacing or hiding minor elements, describe them in the styles parameter; they need a new theme. Pass the brand colors too when the administrator also wants new colors; otherwise the current colors are kept. Report the style_changes it returns, and anything under not_supported, which these tools can't do. Never write CSS yourself. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
+            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. For other cosmetic changes, such as corners, shadows, borders, sizes, spacing or hiding minor elements, describe them in the styles parameter. On Horizon they're added to Horizon as a component, so its layout stays, but they can't change colors yet; change colors with brand colors instead. On other themes they need a new theme. Pass the brand colors too when the administrator also wants new colors; otherwise the current colors are kept. Report the style_changes it returns, and anything under not_supported, which these tools can't do. Never write CSS yourself. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change. Pass new_theme only when the administrator asks for a separate theme.
           TEXT
         end
 
@@ -98,6 +98,8 @@ module DiscourseAi
               phase: :generation,
               new_theme: new_theme?,
               styles: style_request.present?,
+              new_component: horizon_parent.present?,
+              new_palettes: horizon_parent.present? && colors_requested?,
             )
           return error_response(refusal) if refusal
 
@@ -118,7 +120,9 @@ module DiscourseAi
           site_settings = fonts.reverse_merge(website_fonts(design))
 
           reason = AppearanceAuthoring.palette_denial(user: context.user, phase: :generation)
-          if theme && reason
+          # styles for Horizon only bring palettes when colors were asked for,
+          # which the access check above already allowed
+          if theme && reason && !horizon_parent
             return(
               existing_palettes_draft(
                 theme,
@@ -138,33 +142,63 @@ module DiscourseAi
             else
               current_palettes
             end
-          authored = authored_styles(light: palettes.light, dark: palettes.dark)
-          edited = edited_change if authored
+          authored =
+            authored_styles(
+              light: palettes.light,
+              dark: palettes.dark,
+              colors_requested: brand.present?,
+            )
+          # a new version replaces the live one's styles as a whole, so one
+          # that only exists because the styles asked for couldn't be made
+          # would remove them; the colors go on the theme instead
+          edited = edited_change if authored && !only_unsupported_styles?(authored)
           styles =
             theme_styles(
               authored,
-              website: (website_styles(design) if theme.nil?),
+              website: (website_styles(design) if theme.nil? || horizon_parent),
               palettes: {
                 light: palettes.light,
                 dark: palettes.dark,
               },
             )
-          draft = {
-            kind: theme ? "palettes" : "theme",
-            theme_id: theme&.id,
-            replaces_theme_id: edited&.theme_id,
-            name: edited&.name || name,
-            light_colors: palettes.light,
-            dark_colors: palettes.dark,
-            site_settings:,
-            styles: styles&.styles,
-          }.compact
+          # on Horizon, styles go in a component; when none of the styles
+          # asked for could be made, the colors still go on Horizon itself
+          component = horizon_parent && (styles&.styles.present? || edited)
+          draft =
+            if component
+              {
+                kind: "component",
+                parent_theme_id: horizon_parent.id,
+                replaces_theme_id: edited&.theme_id,
+                name: edited&.name || name,
+                light_colors: (palettes.light if brand),
+                dark_colors: (palettes.dark if brand),
+                site_settings:,
+                styles: styles&.styles || {},
+              }.compact
+            else
+              {
+                kind: theme ? "palettes" : "theme",
+                theme_id: theme&.id,
+                replaces_theme_id: edited&.theme_id,
+                name: edited&.name || name,
+                light_colors: palettes.light,
+                dark_colors: palettes.dark,
+                site_settings:,
+                styles: styles&.styles,
+              }.compact
+            end
 
           {
             status: "success",
             draft_token: AppearanceAuthoring::Draft.sign(draft, user: context.user),
             name: draft[:name],
-            saves_as: edited ? new_version_target(edited) : saves_as(theme),
+            saves_as:
+              if component
+                component_target(edited)
+              else
+                edited ? new_version_target(edited) : saves_as(theme)
+              end,
             colors: key_colors(light: palettes.light, dark: palettes.dark),
             readability_adjustments: palettes.adjustments.map { |adjustment| describe(adjustment) },
             fonts: site_settings.transform_values { |key| AppearanceAuthoring.font_name(key) },
@@ -182,10 +216,40 @@ module DiscourseAi
           raise Refusal, message
         end
 
-        # Styles only go in a theme of their own.
+        def only_unsupported_styles?(authored)
+          authored.styles.blank? && authored.unsupported.any?
+        end
+
+        # Styles go in a theme of their own, except on Horizon, where they're
+        # added to it as a component so its layout stays. Asking for a new
+        # theme always makes one.
         def new_theme?
-          ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) == true ||
-            style_request.present?
+          return false if horizon_parent
+          explicit_new_theme? || style_request.present?
+        end
+
+        # Whether new colors were asked for, directly or from a website.
+        def colors_requested?
+          COLOR_PARAMETERS.any? { parameters[it].to_s.strip.present? } ||
+            parameters[:website_url].to_s.strip.present?
+        end
+
+        def explicit_new_theme?
+          ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) == true
+        end
+
+        # Horizon, when the site uses it and styles were asked for.
+        def horizon_parent
+          return @horizon_parent if defined?(@horizon_parent)
+
+          current = Theme.find_default
+          @horizon_parent =
+            if style_request.present? && !explicit_new_theme? &&
+                 current&.id ==
+                   AppearanceChange::DraftComponent::SUPPORTED_PARENT_THEME_IDS.first &&
+                 context.user.guardian.can_edit_theme?(current)
+              current
+            end
         end
 
         def style_request
@@ -194,7 +258,9 @@ module DiscourseAi
 
         # Styles from the administrator's description, checked against the
         # palettes they'll be shown with.
-        def authored_styles(light:, dark:)
+        # When colors were asked for too, the colors can still be made though
+        # none of the styles can.
+        def authored_styles(light:, dark:, colors_requested: false)
           return if style_request.blank?
 
           llm = website_llm
@@ -212,13 +278,15 @@ module DiscourseAi
                 dark:,
               },
               current_styles: edited_change&.styles,
+              base_theme_id: horizon_parent&.id,
             )
           if result.is_a?(AppearanceAuthoring::StyleAuthor::Failure)
             refuse(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
           end
           # an edit may remove every style, but not because the rest of the
           # request couldn't be made
-          if result.styles.blank? && (edited_change.nil? || result.unsupported.any?)
+          if result.styles.blank? && (edited_change.nil? || result.unsupported.any?) &&
+               !(horizon_parent && colors_requested)
             refuse(
               I18n.t(
                 "discourse_ai.appearance_authoring.styles_unsupported",
@@ -234,14 +302,42 @@ module DiscourseAi
         # than a separate theme.
         def edited_change
           return @edited_change if defined?(@edited_change)
+          return @edited_change = edited_component if horizon_parent
 
           current = Theme.find_default
           @edited_change =
-            if !ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) &&
-                 AppearanceChange.replaceable?(current) &&
+            if !explicit_new_theme? && AppearanceChange.replaceable?(current) &&
                  context.user.guardian.can_edit_theme?(current)
               AppearanceChange.kind_theme.where(theme_id: current.id).order(:id).last
             end
+        end
+
+        # The component an earlier change added to Horizon that's turned on
+        # now, when nobody has changed it since. Its palettes or fonts may
+        # have changed since; only its styles carry over.
+        def edited_component
+          AppearanceChange
+            .kind_component
+            .where(parent_theme_id: horizon_parent.id)
+            .includes(:theme)
+            .order(:id)
+            .select do |change|
+              change.theme.enabled? && change.theme_unchanged? && !change.theme.user_selectable? &&
+                context.user.guardian.can_edit_theme?(change.theme)
+            end
+            .last
+        end
+
+        def component_target(edited)
+          if edited
+            I18n.t(
+              "discourse_ai.appearance_authoring.component_version_target",
+              name: edited.name,
+              theme: horizon_parent.name,
+            )
+          else
+            I18n.t("discourse_ai.appearance_authoring.component_target", theme: horizon_parent.name)
+          end
         end
 
         def new_version_target(appearance_change)
@@ -264,7 +360,8 @@ module DiscourseAi
 
           combined = (authored&.styles || {}).deep_dup
           combined["variables"] = website["variables"].merge(combined["variables"] || {})
-          result = AppearanceStyles::Policy.call(combined, palettes:)
+          result =
+            AppearanceStyles::Policy.call(combined, palettes:, base_theme_id: horizon_parent&.id)
           if result.valid?
             Styles.new(styles: combined, changes: result.changes)
           elsif authored

@@ -29,18 +29,15 @@ describe "User activity drafts" do
       )
     end
 
-    it "shows bulk select checkboxes for drafts" do
+    it "lets the user select, count, select all, clear, and toggle drafts" do
       drafts_page.visit(user)
 
       expect(drafts_page).to have_drafts(count: 3)
       expect(drafts_page).to have_bulk_select_checkboxes
-    end
-
-    it "shows bulk controls only after selecting items" do
-      drafts_page.visit(user)
 
       # Initially no bulk controls should be visible
       expect(drafts_page).to have_no_bulk_controls
+      expect(drafts_page).to have_checkbox_unchecked(0)
 
       # Select a draft
       drafts_page.select_draft(0)
@@ -48,14 +45,8 @@ describe "User activity drafts" do
       # Now bulk controls should be visible
       expect(drafts_page).to have_bulk_controls
       expect(drafts_page).to have_selected_count(1)
-    end
-
-    it "updates selection count when selecting multiple drafts" do
-      drafts_page.visit(user)
-
-      # Select first draft
-      drafts_page.select_draft(0)
-      expect(drafts_page).to have_selected_count(1)
+      expect(drafts_page).to have_checkbox_checked(0)
+      expect(drafts_page).to have_checkbox_unchecked(1)
 
       # Select second draft
       drafts_page.select_draft(1)
@@ -64,16 +55,10 @@ describe "User activity drafts" do
       # Select third draft
       drafts_page.select_draft(2)
       expect(drafts_page).to have_selected_count(3)
-    end
 
-    it "selects all drafts with select all button" do
-      drafts_page.visit(user)
-
-      # Select one draft to show controls
+      drafts_page.clear_all_selections
       drafts_page.select_draft(0)
       expect(drafts_page).to have_bulk_controls
-
-      # Click select all
       drafts_page.click_bulk_select_all
       expect(drafts_page).to have_selected_count(3)
 
@@ -81,16 +66,8 @@ describe "User activity drafts" do
       expect(drafts_page).to have_checkbox_checked(0)
       expect(drafts_page).to have_checkbox_checked(1)
       expect(drafts_page).to have_checkbox_checked(2)
-    end
 
-    it "clears all selections with clear all button" do
-      drafts_page.visit(user)
-
-      # Select all drafts
-      drafts_page.select_draft(0)
-      drafts_page.select_all_drafts
-
-      # Clear all selections
+      # Clear all selections after select all
       drafts_page.clear_all_selections
 
       # No checkboxes should be checked and controls should be hidden
@@ -98,24 +75,6 @@ describe "User activity drafts" do
       expect(drafts_page).to have_checkbox_unchecked(1)
       expect(drafts_page).to have_checkbox_unchecked(2)
       expect(drafts_page).to have_no_bulk_controls
-    end
-
-    it "shows selected styling on selected items" do
-      drafts_page.visit(user)
-
-      # Select first draft
-      drafts_page.select_draft(0)
-
-      # First item should have selected styling, second should not
-      expect(drafts_page).to have_checkbox_checked(0)
-      expect(drafts_page).to have_checkbox_unchecked(1)
-    end
-
-    it "toggles selection when clicking checkbox" do
-      drafts_page.visit(user)
-
-      # Initially unchecked
-      expect(drafts_page).to have_checkbox_unchecked(0)
 
       # Click to select
       drafts_page.select_draft(0)

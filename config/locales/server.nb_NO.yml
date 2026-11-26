@@ -1472,6 +1472,8 @@ nb_NO:
         title: "Ja"
       approve_post:
         title: "Ja"
+      deny_and_delete_post:
+        complete: "Post slettet."
       approve_post_closed:
         title: "Ja"
       reject_post_bundle:

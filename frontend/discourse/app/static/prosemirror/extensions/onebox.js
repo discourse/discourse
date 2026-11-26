@@ -11,7 +11,11 @@ import {
   isWhiteSpace,
 } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
-import { isTopLevel, ONEBOX_HREF } from "discourse-markdown-it/features/onebox";
+import {
+  hasLeadingSpace,
+  isTopLevel,
+  ONEBOX_HREF,
+} from "discourse-markdown-it/features/onebox";
 
 export const oneboxPluginKey = new PluginKey("onebox");
 
@@ -171,6 +175,19 @@ const extension = {
           node.attrs.title,
         ];
       },
+    },
+  },
+  parse: {
+    // Keep the space that makes the cooked onebox rule render the link inline.
+    inline(state, token) {
+      const children = token.children.flatMap((child, index) =>
+        isLinkifyOpen(child) && hasLeadingSpace(token, index)
+          ? [{ type: "text", content: " " }, child]
+          : [child]
+      );
+
+      state.parseTokens(children);
+      return true;
     },
   },
   serializeNode: {
@@ -638,6 +655,14 @@ const extension = {
     return plugin;
   },
 };
+
+function isLinkifyOpen(token) {
+  return (
+    token.type === "link_open" &&
+    token.markup === "linkify" &&
+    token.info === "auto"
+  );
+}
 
 // True when the link at `pos` is followed only by a single whitespace-only text
 // node (a trailing space the markdown parser trims, so it still cooks to full).

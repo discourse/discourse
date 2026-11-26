@@ -4,7 +4,8 @@ require "swagger_helper"
 RSpec.describe "topics" do
   let(:"Api-Key") { Fabricate(:api_key).key }
   let(:"Api-Username") { "system" }
-  let(:user) { Fabricate(:user) }
+
+  fab!(:user)
 
   before { sign_in(user) }
 

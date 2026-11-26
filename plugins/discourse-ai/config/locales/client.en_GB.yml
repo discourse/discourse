@@ -32,5 +32,8 @@ en_GB:
       tools:
         description: "Description"
         summary: "Summary"
+      concepts:
+        form:
+          description: "Description"
       mcp_servers:
         description: "Description"

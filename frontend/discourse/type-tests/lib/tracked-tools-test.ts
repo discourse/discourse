@@ -1,7 +1,6 @@
 import { expectTypeOf } from "expect-type";
 import {
   autoTrackedArray,
-  dedupeTracked,
   DeferredTrackedSet,
   defineTrackedProperty,
   enumerateTrackedEntries,
@@ -22,9 +21,6 @@ export class Decorated {
   @autoTrackedArray nullableTags: number[] | null = null;
   @autoTrackedArray readonlyTags: readonly string[] = [];
   @trackedArray legacyTags: string[] = [];
-
-  @dedupeTracked name = "";
-  @dedupeTracked count?: number;
 
   @resettableTracked label = "";
   @resettableTracked selection: { id: number } | null = null;

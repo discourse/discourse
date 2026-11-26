@@ -184,13 +184,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def copy_user_stuff
     copy_model(UserProfile, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
 
+    # Push subscriptions are tied to browser sessions, which are not merged.
     [
       UserStat,
       UserOption,
       UserVisit,
       GivenDailyLike,
       UserSecondFactor,
-      PushSubscription,
       DoNotDisturbTiming,
     ].each { |c| copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true) }
 

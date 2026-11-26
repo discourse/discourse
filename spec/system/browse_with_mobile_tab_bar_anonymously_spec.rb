@@ -12,26 +12,19 @@ RSpec.describe "Browse with mobile tab bar anonymously", mobile: true do
     SiteSetting.chat_enabled = false if SiteSetting.respond_to?(:chat_enabled)
   end
 
-  it "offers the topics with their views, and logging in where creating would be" do
+  it "shows visitors the topic views and the path to sign-up through Log in" do
     visit("/latest")
 
-    expect(tab_bar).to have_tabs("main")
     expect(page).to have_css(".mobile-tab-bar__views #navigation-bar")
+    expect(page).to have_no_css(".mobile-tab-bar__tabs")
     expect(page).to have_no_css(".d-header .login-button")
-    expect(tab_bar).to have_named_log_in
-
-    tab_bar.click_log_in
-
-    expect(page).to have_css(".login-fullpage, .d-modal.login-modal, #login-form")
-  end
-
-  it "lets visitors sign up through the login page" do
-    visit("/latest")
-
     expect(tab_bar).to have_named_log_in
     expect(tab_bar).to have_no_sign_up
 
     tab_bar.click_log_in
+
+    expect(page).to have_css(".login-fullpage, .d-modal.login-modal, #login-form")
+
     login_page.open_signup
 
     expect(signup_page).to be_open

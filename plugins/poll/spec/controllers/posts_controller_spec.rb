@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostsController do
-  let!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let!(:title) { "Testing Poll Plugin" }
 
   before do

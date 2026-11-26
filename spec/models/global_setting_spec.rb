@@ -158,7 +158,7 @@ RSpec.describe GlobalSetting::FileProvider do
     file&.unlink
   end
 
-  describe ".load_plugins? and .plugins_to_load" do
+  describe ".load_plugins?, .plugins_to_load and .load_plugin?" do
     around do |example|
       original = ENV["LOAD_PLUGINS"]
       example.run
@@ -170,12 +170,14 @@ RSpec.describe GlobalSetting::FileProvider do
       ENV["LOAD_PLUGINS"] = "1"
       expect(GlobalSetting.load_plugins?).to eq(true)
       expect(GlobalSetting.plugins_to_load).to be_nil
+      expect(GlobalSetting.load_plugin?("chat")).to eq(true)
     end
 
     it "treats `0` as load-none" do
       ENV["LOAD_PLUGINS"] = "0"
       expect(GlobalSetting.load_plugins?).to eq(false)
       expect(GlobalSetting.plugins_to_load).to be_nil
+      expect(GlobalSetting.load_plugin?("chat")).to eq(false)
     end
 
     it "parses a comma-separated list, stripping whitespace and empty entries" do
@@ -187,6 +189,8 @@ RSpec.describe GlobalSetting::FileProvider do
     it "tolerates `plugins/foo` entries by taking the basename" do
       ENV["LOAD_PLUGINS"] = "plugins/chat,plugins/automation"
       expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+      expect(GlobalSetting.load_plugin?("chat")).to eq(true)
+      expect(GlobalSetting.load_plugin?("poll")).to eq(false)
     end
 
     it "raises when given a list outside of dev/test" do

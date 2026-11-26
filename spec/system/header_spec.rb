@@ -8,14 +8,10 @@ RSpec.describe "Glimmer Header" do
   fab!(:current_user, :user)
   fab!(:topic)
 
-  it "renders basics" do
+  it "renders basics and the sign up button" do
     visit "/"
     expect(page).to have_css("header.d-header")
     expect(page).to have_css("#site-logo")
-  end
-
-  it "displays sign up button" do
-    visit "/"
     expect(page).to have_css("button.sign-up-button")
     expect(page).to have_css("button.login-button")
 
@@ -42,46 +38,16 @@ RSpec.describe "Glimmer Header" do
     expect(page).not_to have_css("button.btn-sidebar-toggle")
   end
 
-  it "renders unread notifications count when user's notifications count is updated" do
-    Fabricate(
-      :notification,
-      user: current_user,
-      high_priority: true,
-      read: false,
-      created_at: 8.minutes.ago,
-    )
-
-    sign_in(current_user)
-    visit "/"
-    expect(page).to have_selector(
-      ".header-dropdown-toggle.current-user .unread-notifications",
-      text: "1",
-    )
-  end
-
-  it "doesn't show pending reviewables count for non-legacy navigation menu" do
-    SiteSetting.navigation_menu = "sidebar"
-    current_user.update!(admin: true)
-    Fabricate(:reviewable)
-
-    sign_in(current_user)
-    visit "/"
-    expect(page).not_to have_selector(".hamburger-dropdown .badge-notification")
-  end
-
-  it "closes revamped menu when clicking outside" do
+  it "closes the user menu when clicking outside or when keyboard focus leaves it" do
     sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click
     expect(page).to have_selector(".user-menu.revamped")
     find("header.d-header").click
     expect(page).not_to have_selector(".user-menu.revamped")
-  end
 
-  it "closes menu-panel when keyboard focus leaves it" do
-    sign_in(current_user)
-    visit "/"
     find(".header-dropdown-toggle.current-user").click
+    expect(page).to have_selector(".user-menu.revamped")
     find("##{header.active_element_id}").send_keys(%i[shift tab])
     expect(page).not_to have_selector(".user-menu.revamped")
   end
@@ -213,6 +179,8 @@ RSpec.describe "Glimmer Header" do
 
     sign_in(current_user)
     visit "/"
+    # sidebar navigation (the default) never shows the hamburger reviewables count
+    expect(page).not_to have_selector(".hamburger-dropdown .badge-notification")
     expect(page).not_to have_selector(
       ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
     )
@@ -289,11 +257,11 @@ RSpec.describe "Glimmer Header" do
     fab!(:topic)
     fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
 
-    it "only shows when scrolled down", mobile: true do
+    it "only shows when scrolled down or after jumping to a much later post", mobile: true do
       visit "/t/#{topic.slug}/#{topic.id}"
 
       expect(page).to have_css("#topic-title") # Main topic title
-      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
 
       page.execute_script("document.querySelector('#post_4').scrollIntoView()")
 
@@ -302,21 +270,7 @@ RSpec.describe "Glimmer Header" do
 
       page.execute_script("window.scrollTo(0, 0)")
       expect(page).to have_css("#topic-title") # Main topic title
-      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
-    end
-
-    it "shows when navigating direct to a later post", mobile: true do
-      visit "/t/#{topic.slug}/#{topic.id}/4"
-
-      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
-      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
-    end
-
-    it "shows when jumping from OP to much later post", mobile: true do
-      visit "/t/#{topic.slug}/#{topic.id}"
-
-      expect(page).to have_css("#topic-title") # Main topic title
-      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
 
       page.execute_script("Discourse.visit('/t/#{topic.slug}/#{topic.id}/21');")
 
@@ -324,6 +278,20 @@ RSpec.describe "Glimmer Header" do
 
       expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
       expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+    end
+
+    it "shows when navigating direct to a later post, with visible keyboard focus", mobile: true do
+      topic.update!(category: Fabricate(:category))
+      visit "/t/#{topic.slug}/#{topic.id}/4"
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+
+      page.send_keys(:tab)
+      header.focus_topic_info_link(:title)
+      expect(header).to have_inset_topic_info_focus_outline(:title)
+      header.focus_topic_info_link(:category)
+      expect(header).to have_inset_topic_info_focus_outline(:category)
     end
 
     it "shows and hides do-not-disturb icon" do

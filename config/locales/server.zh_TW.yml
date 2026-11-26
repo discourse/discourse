@@ -5130,7 +5130,6 @@ zh_TW:
       dracula: "德古拉"
       grey_amber: "灰琥珀色"
       latte: "拿鐵"
-      dark_rose: "深玫瑰"
   wizard:
     title: "Discourse 設置"
     step:
@@ -5360,6 +5359,7 @@ zh_TW:
       delete_and_ignore_replies:
         title: "刪除貼文與回復，并忽略檢舉"
         description: "刪除貼文及其所有回復，忽略檢舉，并將其從隊列中移除；如果是第一個貼文，同時刪除主題"
+        confirm_title: "刪除貼文與回復，并忽略檢舉?"
         confirm: "您確定也要刪除此貼文的回覆嗎？"
         complete: "貼文及回覆已刪除。"
       delete_and_agree:
@@ -5369,6 +5369,7 @@ zh_TW:
       delete_and_agree_replies:
         title: "刪除貼文和回復"
         description: "同意檢舉并刪除此貼文及其所有回復；如果是第一個貼文，同時刪除主題。"
+        confirm_title: "刪除貼文和回復?"
         confirm: "您確定也要刪除此貼文的回覆嗎？"
         complete: "貼文及回覆已刪除。"
       disagree_and_restore:
@@ -5408,6 +5409,10 @@ zh_TW:
       approve_post:
         title: "是"
         complete: "貼文已核准。"
+      deny_and_delete_post:
+        complete: "貼文已刪除。"
+      deny_and_keep_deleted:
+        complete: "貼文保持刪除狀態。"
       approve_post_closed:
         title: "是"
         confirm: "此主題已被關閉。仍要創建貼文嗎？"

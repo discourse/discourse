@@ -36,6 +36,7 @@ module Jobs
           # without one (crashed clients, missed leave) must not hold its
           # transport for the next call.
           if ::Live::ParticipantTracker.vacant?(room.id)
+            ::Live::StageRoles.clear_session_speakers!(room)
             # Agent cleanup survives expired pins and retries provider failures.
             ::Live::AgentManager.evict_agents_in_room!(room)
           else

@@ -60,6 +60,8 @@ ur:
           text_color: "متن کا رنگ"
         approve_label: "جی ہاں"
         reject_label: "نہیں "
+        category_access_levels:
+          readonly: "ملاحظہ کریں"
       tool_options:
         update_artifact:
           editor_llm:
@@ -70,6 +72,7 @@ ur:
       tool_summary:
         edit_tag: "ٹیگ ترمیم کریں"
         create_category: "زمرہ بنائیں"
+        delete_category: "زمرہ مٹائیں"
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
@@ -91,6 +94,12 @@ ur:
         errors:
           not_found: "موضوع نہیں ملا."
       edit_category:
+        errors:
+          not_found: "زُمرہ نہیں ملا."
+      set_category_permissions:
+        errors:
+          not_found: "زُمرہ نہیں ملا."
+      delete_category:
         errors:
           not_found: "زُمرہ نہیں ملا."
       change_topic_category:

@@ -38,11 +38,20 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Refresh"
+        columns:
+          user: "User"
+          created: "Stvoreno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
         response: "Odgovor"
+      post_image_captions:
+        image_descriptions:
+          apply: "Snimi"
       discourse_workflows:
         ai_tool:
           list_item: "Listaj predmet"
@@ -215,6 +224,28 @@ bs_BA:
         edit: "Izmijeni"
         delete: "Delete"
         embedding: "Embedding"
+      concepts:
+        edit: "Izmijeni"
+        seed:
+          refresh: "Refresh"
+        delete: "Delete"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Objave"
+        statuses:
+          active: "Active"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} tema"
+        topic_columns:
+          topic: "Topic"
+          relevance: "Bitnost"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime"

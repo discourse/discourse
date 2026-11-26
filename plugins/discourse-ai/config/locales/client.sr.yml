@@ -37,10 +37,19 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Osveži"
+        columns:
+          user: "Korisnik"
+          created: "Napravljeno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
+      post_image_captions:
+        image_descriptions:
+          apply: "Primeni"
       discourse_workflows:
         ai_tool:
           list_item: "Predmet popisa"
@@ -209,6 +218,32 @@ sr:
         edit: "Izmeni"
         delete: "Obriši"
         embedding: "Ugrađivanje"
+      concepts:
+        edit: "Izmeni"
+        seed:
+          refresh: "Osveži"
+        delete: "Obriši"
+        columns:
+          status: "Status"
+          topics: "Teme"
+          posts: "Poruka"
+        statuses:
+          active: "Aktivni"
+        form:
+          name: "Ime foruma"
+          description: "Opis"
+          aliases: "Alijasi"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} tema"
+          other: "%{count} tema"
+        tagged_topics: "Označene teme"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Relevantnost"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime foruma"

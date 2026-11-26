@@ -20,6 +20,8 @@ describe "Lightbox | Photoswipe" do
   end
 
   context "with single image" do
+    let(:image_post) { PageObjects::Components::Post.new(post.post_number) }
+
     before do
       cpp.post_process
       post.update(cooked: cpp.html)
@@ -27,6 +29,10 @@ describe "Lightbox | Photoswipe" do
 
     it "lets the user inspect a single image and quote it into the composer" do
       topic_page.visit_topic(topic)
+
+      page.send_keys(:tab)
+      image_post.focus_lightbox_link
+      expect(image_post).to have_inset_lightbox_focus_outline
 
       lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
       lightbox_image = lightbox_link.find("img", visible: :all)

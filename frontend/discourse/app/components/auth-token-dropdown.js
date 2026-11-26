@@ -10,7 +10,7 @@ import { i18n } from "discourse-i18n";
   showFullTitle: false,
 })
 export default class AuthTokenDropdown extends DropdownSelectBoxComponent {
-  @computed
+  @computed("isCurrentUser")
   get content() {
     return [
       {
@@ -25,7 +25,7 @@ export default class AuthTokenDropdown extends DropdownSelectBoxComponent {
         name: i18n("user.log_out"),
         description: "",
       },
-    ];
+    ].filter(({ id }) => this.isCurrentUser || id !== "notYou");
   }
 
   @action

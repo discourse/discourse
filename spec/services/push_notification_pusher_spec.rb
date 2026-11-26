@@ -16,6 +16,7 @@ RSpec.describe PushNotificationPusher do
 
   context "with user" do
     fab!(:user)
+    let(:user_auth_token_id) { UserAuthToken.generate!(user_id: user.id).id }
     let(:topic_title) { "Topic" }
     let(:base_url) { Discourse.base_url }
     let(:post_url) { "/base/t/1/2" }
@@ -33,7 +34,7 @@ RSpec.describe PushNotificationPusher do
         }
       }
       JSON
-      PushSubscription.create!(user_id: user.id, data: data)
+      PushSubscription.create!(user: user, data: data, user_auth_token_id:)
     end
 
     def execute_push(notification_type: 1, post_number: 1)
@@ -185,13 +186,15 @@ RSpec.describe PushNotificationPusher do
 
       missing_endpoint =
         PushSubscription.create!(
-          user_id: user.id,
+          user: user,
+          user_auth_token_id:,
           data: { p256dh: "public ECDH key", keys: { auth: "private ECDH key" } }.to_json,
         )
 
       missing_p256dh =
         PushSubscription.create!(
-          user_id: user.id,
+          user: user,
+          user_auth_token_id:,
           data: {
             endpoint: "https://fcm.googleapis.com/fcm/send/1",
             keys: {
@@ -202,7 +205,8 @@ RSpec.describe PushNotificationPusher do
 
       missing_auth =
         PushSubscription.create!(
-          user_id: user.id,
+          user: user,
+          user_auth_token_id:,
           data: {
             endpoint: "https://fcm.googleapis.com/fcm/send/2",
             keys: {
@@ -213,7 +217,8 @@ RSpec.describe PushNotificationPusher do
 
       valid_subscription =
         PushSubscription.create!(
-          user_id: user.id,
+          user: user,
+          user_auth_token_id:,
           data: {
             endpoint: "https://fcm.googleapis.com/fcm/send/3",
             keys: {
@@ -282,8 +287,55 @@ RSpec.describe PushNotificationPusher do
     def create_untrusted_subscription(endpoint = "https://push.attacker.test/1")
       PushSubscription.create!(
         user: user,
+        user_auth_token_id:,
         data: { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } }.to_json,
       )
+    end
+
+    it "ignores unbound subscriptions when sending trusted pushes or scheduling untrusted pushes" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(
+        :push_subscription,
+        user: user,
+        data: {
+          endpoint: "https://push.example.org/legacy",
+          keys: {
+            p256dh: "p256dh",
+            auth: "auth",
+          },
+        }.to_json,
+      )
+      WebPush.expects(:payload_send).never
+
+      expect_not_enqueued_with(job: :deliver_untrusted_push_notifications) { execute_push }
+    end
+
+    it "delivers only to subscriptions whose token still exists and is unexpired" do
+      orphan = create_subscription
+      expired = Fabricate(:bound_push_subscription, user: user)
+      expired.user_auth_token.update!(
+        rotated_at: (SiteSetting.maximum_session_age.hours + 1.second).ago,
+      )
+      live =
+        Fabricate(
+          :bound_push_subscription,
+          user: user,
+          data: {
+            endpoint: "https://fcm.googleapis.com/fcm/send/live",
+            keys: {
+              p256dh: "p256dh",
+              auth: "auth",
+            },
+          }.to_json,
+        )
+      UserAuthToken.where(id: orphan.user_auth_token_id).delete_all
+      expect(orphan.reload.user_auth_token_id).to eq(user_auth_token_id)
+      delivered = []
+      WebPush.stubs(:payload_send).with { |args| delivered << args[:endpoint] }
+
+      execute_push
+
+      expect(delivered).to contain_exactly(live.parsed_data["endpoint"])
     end
 
     it "delivers to trusted push services inline and defers other hosts to a background job" do
@@ -302,6 +354,7 @@ RSpec.describe PushNotificationPusher do
         Array.new(PushNotificationPusher::MAX_SUBSCRIPTIONS_PER_USER + 1) do |index|
           PushSubscription.create!(
             user: user,
+            user_auth_token_id:,
             data: {
               endpoint: "https://fcm.googleapis.com/fcm/send/#{index}",
               keys: {
@@ -375,6 +428,7 @@ RSpec.describe PushNotificationPusher do
           user,
           { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
           send_confirmation,
+          user_auth_token_id:,
         )
       end
 
@@ -387,6 +441,78 @@ RSpec.describe PushNotificationPusher do
           user.push_subscriptions.map { |subscription| subscription.parsed_data["endpoint"] }
 
         expect(endpoints).to match_array(untrusted.last(2) + trusted.last(8))
+      end
+
+      it "prunes inactive logins before they can displace a live device under the untrusted cap" do
+        live =
+          Fabricate(
+            :bound_push_subscription,
+            user: user,
+            data: {
+              endpoint: "https://push.example.org/live",
+              keys: {
+                p256dh: "p256dh",
+                auth: "auth",
+              },
+            }.to_json,
+          )
+        orphan =
+          Fabricate(
+            :bound_push_subscription,
+            user: user,
+            data: live.parsed_data.merge("endpoint" => "https://push.example.org/orphan").to_json,
+          )
+        expired =
+          Fabricate(
+            :bound_push_subscription,
+            user: user,
+            data: live.parsed_data.merge("endpoint" => "https://push.example.org/expired").to_json,
+          )
+        expired.user_auth_token.update!(
+          rotated_at: (SiteSetting.maximum_session_age.hours + 1.second).ago,
+        )
+        UserAuthToken.where(id: orphan.user_auth_token_id).delete_all
+        legacy = Fabricate(:push_subscription, user: user)
+        unrelated_orphan =
+          Fabricate(:push_subscription, user_auth_token_id: orphan.user_auth_token_id)
+        new_endpoint = "https://push.example.org/new"
+
+        subscribe(new_endpoint)
+
+        expect(
+          user.push_subscriptions.map { |subscription| subscription.parsed_data["endpoint"] },
+        ).to contain_exactly(
+          live.parsed_data["endpoint"],
+          legacy.parsed_data["endpoint"],
+          new_endpoint,
+        )
+        expect(PushSubscription.exists?(unrelated_orphan.id)).to eq(true)
+      end
+
+      it "confirms a new trusted subscription only after commit and only once" do
+        endpoint = "https://fcm.googleapis.com/fcm/send/new"
+        delivered = []
+        WebPush.stubs(:payload_send).with { |args| delivered << args[:endpoint] }
+
+        PushSubscription.transaction(requires_new: true) do
+          subscribe(endpoint, send_confirmation: "true")
+          expect(delivered).to be_empty
+        end
+        expect(delivered).to contain_exactly(endpoint)
+
+        subscribe(endpoint, send_confirmation: "true")
+        expect(delivered).to contain_exactly(endpoint)
+      end
+
+      it "does not confirm a subscription after its login was bulk-deleted" do
+        WebPush.expects(:payload_send).never
+
+        PushSubscription.transaction(requires_new: true) do
+          subscribe("https://fcm.googleapis.com/fcm/send/new", send_confirmation: "true")
+          UserAuthToken.where(id: user_auth_token_id).delete_all
+        end
+
+        expect(user.push_subscriptions.sole.user_auth_token_id).to eq(user_auth_token_id)
       end
 
       it "ignores revoked endpoints on the .invalid TLD" do

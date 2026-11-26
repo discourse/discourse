@@ -52,12 +52,14 @@ after_initialize do
     end
 
     add_to_serializer(serializer, :discourse_rewind_share_publicly) do
-      scope.user.discourse_rewind_and_profile_public?
+      object.user.discourse_rewind_and_profile_public?
     end
   end
 
-  add_to_serializer(:current_user, :is_rewind_active) do
-    DiscourseRewind.rewind_period? && scope.user.created_at <= 1.month.ago
+  %i[current_user user admin_detailed_user].each do |serializer|
+    add_to_serializer(serializer, :is_rewind_active) do
+      DiscourseRewind.rewind_period? && object.created_at <= 1.month.ago
+    end
   end
 
   Discourse::Application.routes.append do

@@ -53,6 +53,8 @@ pt_BR:
           column_title: "Título"
           icon: "Ícone"
           color: "Cor"
+          color_palette: "Paleta de cores"
+          icon_search_placeholder: "Pesquisar…"
           default_sort_priority: "Prioridade"
           tag: "Etiqueta"
           move_to_assigned_unassign: "Remover atribuição"

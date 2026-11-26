@@ -21,6 +21,7 @@ class CalendarSubscriptionsController < ApplicationController
   end
 
   def create
+    guardian.ensure_can_issue_independent_credentials!
     revoke_existing_key!
 
     client =

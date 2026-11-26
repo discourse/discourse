@@ -140,7 +140,12 @@ export default class FKField extends Component {
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
             >
-              {{#if (and field.showTitle (not (eq field.type "checkbox")))}}
+              {{#if
+                (and
+                  field.showTitle
+                  (or field.isHorizontal (not (eq field.type "checkbox")))
+                )
+              }}
                 <FKLabel
                   class={{dConcatClass
                     "form-kit__container-title"
@@ -158,7 +163,7 @@ export default class FKField extends Component {
                 </FKLabel>
               {{/if}}
 
-              {{#if field.description}}
+              {{#if (and field.description (not field.isHorizontal))}}
                 <FKText
                   class={{dConcatClass
                     "form-kit__container-description"
@@ -184,6 +189,16 @@ export default class FKField extends Component {
 
                 <FKMeta @error={{field.error}} @field={{field}} />
               </div>
+
+              {{#if (and field.description field.isHorizontal)}}
+                <FKText
+                  class={{dConcatClass
+                    "form-kit__container-description"
+                    (if field.labelFormat (concat "--" field.labelFormat))
+                  }}
+                  id={{field.descriptionId}}
+                >{{field.description}}</FKText>
+              {{/if}}
             </div>
           {{else}}
             {{yield}}

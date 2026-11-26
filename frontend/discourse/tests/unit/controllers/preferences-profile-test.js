@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
@@ -36,5 +37,31 @@ module("Unit | Controller | preferences/profile", function (hooks) {
     assert.strictEqual(fields[1], "2", "updates string value");
     assert.strictEqual(fields[2], null, "updates null");
     assert.strictEqual(fields[3], null, "updates empty array as null");
+  });
+
+  test("leaves the viewer's required fields check alone on another user's profile", async function (assert) {
+    const controller = this.owner.lookup("controller:preferences/profile");
+    const currentUser = EmberObject.create({
+      needs_required_fields_check: true,
+    });
+    controller.setProperties({
+      model: EmberObject.create({
+        isCurrent: false,
+        save: () => Promise.resolve({ user: {} }),
+      }),
+      currentUser,
+    });
+
+    assert.false(
+      controller.showEnforcedRequiredFieldsNotice,
+      "hides the required fields notice"
+    );
+
+    await controller.save();
+
+    assert.true(
+      currentUser.needs_required_fields_check,
+      "keeps the viewer's required fields check"
+    );
   });
 });

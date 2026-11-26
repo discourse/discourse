@@ -30,6 +30,10 @@ export default class SettingDefinitionField extends Component {
     return this.args.format ?? this.args.definition.format ?? this.entry.format;
   }
 
+  get name() {
+    return this.args.name ?? this.args.definition.key;
+  }
+
   get validation() {
     return settingFieldValidation(this.args.definition);
   }
@@ -40,7 +44,7 @@ export default class SettingDefinitionField extends Component {
       @disabled={{@disabled}}
       @format={{this.format}}
       @labelFormat={{this.entry.labelFormat}}
-      @name={{@definition.key}}
+      @name={{this.name}}
       @placeholder={{@definition.placeholder}}
       @showControlTitle={{@showControlTitle}}
       @showTitle={{@showTitle}}

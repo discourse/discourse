@@ -492,7 +492,7 @@ RSpec.describe "Nested view" do
       end
     end
 
-    it "collapses a root branch from its header", mobile: true do
+    it "collapses root and child branches from their header or depth line", mobile: true do
       nested_view.visit_nested(topic)
 
       nested_view.click_header_collapse(root_reply)
@@ -501,10 +501,11 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_collapsed_bar_for(root_reply)
       expect(nested_view).to have_no_children_visible_for(root_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
-    end
 
-    it "collapses a child branch from the depth line", mobile: true do
-      nested_view.visit_nested(topic)
+      nested_view.click_collapsed_bar(root_reply)
+
+      expect(nested_view).to have_no_collapsed_bar_for(root_reply)
+      expect(nested_view).to have_children_visible_for(root_reply)
 
       nested_view.click_depth_line(child_reply)
 
@@ -512,20 +513,22 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_collapsed_bar_for(child_reply)
       expect(nested_view).to have_no_children_visible_for(child_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
-    end
 
-    it "collapses a child branch from its header", mobile: true do
-      nested_view.visit_nested(topic)
+      nested_view.click_collapsed_bar(child_reply)
+
+      expect(nested_view).to have_no_collapsed_bar_for(child_reply)
+      expect(nested_view).to have_children_visible_for(child_reply)
 
       nested_view.click_header_collapse(child_reply)
 
       expect(nested_view).to have_collapsed_bar_for(child_reply)
       expect(nested_view).to have_no_children_visible_for(child_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
-    end
 
-    it "collapses a branch with hidden replies from the depth line", mobile: true do
-      nested_view.visit_nested(topic)
+      nested_view.click_collapsed_bar(child_reply)
+
+      expect(nested_view).to have_no_collapsed_bar_for(child_reply)
+      expect(nested_view).to have_children_visible_for(child_reply)
 
       expect(nested_view).to have_replies_toggle_for(great_grandchild_reply)
       expect(nested_view).to have_no_post(fifth_level_reply)

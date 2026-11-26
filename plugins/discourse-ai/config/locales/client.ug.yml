@@ -52,12 +52,24 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      review_bulk:
+        refresh: "يېڭىلا"
+        columns:
+          user: "ئىشلەتكۈچى"
+          reason: "پاش قىلىنغان"
+          created: "قۇرغان ۋاقتى"
+          status: "ھالەت"
+        status:
+          applying: "قوللىنىۋاتىدۇ…"
       copied: "كۆچۈرۈلدى"
       ai_decoded_transcript:
         arguments: "ئۆزگەرگۈچى"
         type: "تىپى"
         error: "خاتالىق"
         response: "ئىنكاس"
+      post_image_captions:
+        image_descriptions:
+          apply: "قوللان"
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
@@ -274,6 +286,32 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      concepts:
+        edit: "تەھرىر"
+        seed:
+          refresh: "يېڭىلا"
+        delete: "ئۆچۈر"
+        columns:
+          status: "ھالەت"
+          topics: "تېما"
+          posts: "يازما"
+        statuses:
+          all: "بارلىق ھالەت"
+          active: "ئاكتىپ"
+        form:
+          name: "ئىسمى"
+          description: "چۈشەندۈرۈش"
+          aliases: "تەخەللۇس"
+          status: "ھالەت"
+        shared_topics_count:
+          one: "%{count} تېما"
+          other: "%{count} تېما"
+        tagged_topics: "بەلگە سېلىنغان تېما"
+        topic_columns:
+          topic: "تېما"
+          primary: "ئاساسىي"
+          relevance: "مۇناسىۋىتى"
+        primary_badge: "ئاساسىي"
       decision_models:
         no_preset: "يوق"
         display_name: "ئىسمى"

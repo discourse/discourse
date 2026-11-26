@@ -3,6 +3,7 @@ import { click, fillIn, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const NOTIFY_USER = {
@@ -15,12 +16,39 @@ const ILLEGAL = {
   name_key: "illegal",
   name: "It's illegal",
   description: "Breaks the law",
+  short_description: "Illegal content",
   require_message: true,
   isIllegal: true,
 };
 
 module("Integration | Component | FlagActionType", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("shows the short description on mobile when available and falls back to the full description", async function (assert) {
+    forceMobile();
+    const customFlag = {
+      name_key: "custom_spoiler",
+      name: "Spoiler",
+      description: "Reveals plot details.",
+      short_description: "",
+    };
+    const flags = [ILLEGAL, customFlag];
+
+    await render(
+      <template>
+        {{#each flags as |flag|}}
+          <FlagActionType @flag={{flag}} />
+        {{/each}}
+      </template>
+    );
+
+    assert
+      .dom(".illegal .description")
+      .hasText(ILLEGAL.short_description, "shows the short description");
+    assert
+      .dom(".custom_spoiler .description")
+      .hasText(customFlag.description, "shows the configured description");
+  });
 
   test("checks the radio of the selected flag", async function (assert) {
     const flags = [NOTIFY_USER, ILLEGAL];

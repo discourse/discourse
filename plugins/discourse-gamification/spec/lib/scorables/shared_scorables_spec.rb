@@ -133,7 +133,11 @@ RSpec.describe DiscourseGamification::LikeReceived do
       Fabricate(:post, user: current_user, topic: private_message_topic)
     end
 
-    let(:after_create_hook) { Post.all.each { |p| Fabricate(:post_action, post: p) } }
+    let(:after_create_hook) do
+      Post.all.each { |p| Fabricate(:post_action, post: p) }
+      deleted_like_post = Fabricate(:post, user: current_user)
+      Fabricate(:post_action, post: deleted_like_post, deleted_at: Time.now)
+    end
   end
 end
 
@@ -176,6 +180,15 @@ RSpec.describe DiscourseGamification::LikeGiven do
     let(:post_2) { Fabricate(:post, topic: private_message_topic, user: current_user) }
     let(:class_action_fabricator_for_pm) do
       Fabricate(:post_action, user: current_user, post: post_2)
+    end
+
+    let(:after_create_hook) do
+      Fabricate(
+        :post_action,
+        user: current_user,
+        post: Fabricate(:post, user: other_user),
+        deleted_at: Time.now,
+      )
     end
   end
 end

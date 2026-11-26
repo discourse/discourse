@@ -5671,7 +5671,6 @@ ar:
       dracula: "دراكولا"
       grey_amber: "العنبر الرمادي"
       latte: "اللاتيه"
-      dark_rose: "الوردي الداكن"
   wizard:
     title: "إعداد Discourse"
     step:
@@ -5919,6 +5918,7 @@ ar:
       delete_and_ignore_replies:
         title: "حذف المنشور والردود، وتجاهل البلاغ"
         description: "احذف المنشور وكافة الردود المرتبطة به، ثم تجاهل البلاغ عن طريق إزالته من قائمة الانتظار؛ وإذا كان هذا المنشور الأول، فاحذف الموضوع أيضًا"
+        confirm_title: "حذف المنشور والردود، وتجاهل البلاغ?"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
         complete: "تم حذف المنشور وردوده."
       delete_and_agree:
@@ -5928,6 +5928,7 @@ ar:
       delete_and_agree_replies:
         title: "حذف المنشور والردود"
         description: "وافق على البلاغ واحذف هذا المنشور وكل الردود عليه. إذا كان هذا هو المنشور الأول، فاحذف الموضوع أيضًا."
+        confirm_title: "حذف المنشور والردود?"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
         complete: "تم حذف المنشور وردوده."
       disagree_and_restore:
@@ -5967,6 +5968,10 @@ ar:
       approve_post:
         title: "نعم"
         complete: "تمت الموافقة على المنشور."
+      deny_and_delete_post:
+        complete: "تم حذف المنشور."
+      deny_and_keep_deleted:
+        complete: "تم إبقاء المنشور محذوفًا."
       approve_post_closed:
         title: "نعم"
         confirm: "تم إغلاق هذا الموضوع. هل ترغب في إنشاء المنشور على أي حال؟"

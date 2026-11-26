@@ -178,7 +178,8 @@ class Auth::PatreonAuthenticator < Auth::ManagedAuthenticator
 
     user = result.user
     discourse_username = SiteSetting.patreon_creator_discourse_username
-    if discourse_username.present? && user && user.username == discourse_username
+    if discourse_username.present? && user && !user.suspended? &&
+         user.username == discourse_username
       SiteSetting.patreon_creator_access_token = auth_token.credentials["token"]
       SiteSetting.patreon_creator_refresh_token = auth_token.credentials["refresh_token"]
     end

@@ -34,7 +34,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
 
     def characters(string)
       string.strip! if @in_a
-      @excerpt << string
+      @excerpt << string.gsub(/[&<>]/, "&" => "&amp;", "<" => "&lt;", ">" => "&gt;")
     end
 
     private

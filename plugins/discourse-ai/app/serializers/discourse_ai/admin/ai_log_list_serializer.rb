@@ -8,6 +8,7 @@ module DiscourseAi
                  :provider_id,
                  :provider_name,
                  :feature_name,
+                 :workflow,
                  :language_model,
                  :llm_id,
                  :model_name,
@@ -22,6 +23,12 @@ module DiscourseAi
                  :duration_msecs,
                  :has_retries,
                  :outcome
+
+      def workflow
+        id = DiscourseAi::WorkflowUsage.workflow_id(object)
+        name = @options[:workflows_by_id]&.[](id)
+        { id: id, name: name } if name
+      end
 
       def outcome
         AiLogSerializerHelpers.outcome(object)

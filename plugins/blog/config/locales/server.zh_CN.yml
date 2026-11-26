@@ -6,15 +6,7 @@
 
 zh_CN:
   site_settings:
-    blog_url: 使用独立的 HTTPS 源提供博客服务，源地址不带尾部斜杠或路径，而不是使用本站的 /blog 路径。博客主机名必须与讨论区主机名不同。在代理和数据库连接中，将此主机名配置为本站的别名。
-    blog_title: 博客名称显示在导航栏、页面标题和订阅源中。
-    blog_description: 首页、信息流和搜索引擎的简短描述。
-    blog_about: 博客“关于”页面的 Markdown 内容。
-    blog_posts_per_page: 每个首页或存档页面上显示的文章数量。
-    keywords:
-      blog_about: "关于页面"
-      blog_description: "标语"
-      blog_title: "博客名称"
+    blog_custom_domains_enabled: 允许博客使用自定义域名而不是社区地址提供服务。
   blog:
     home: 首页
     continue_reading: 继续阅读
@@ -77,6 +69,8 @@ zh_CN:
     errors:
       private_site: 博客需要一个已禁用安全上传功能的公共网站。草稿文本保持私密，但如果不启用安全上传功能，上传的文件将无法进行访问控制。
       anonymous_uploads: "该博客要求匿名上传下载。发布或分享评论前，请禁用 prevent_anons_from_downloading_files 选项。"
+      blog_url_unavailable: 本网站不提供自定义域名服务。
+      blog_url_forum_host: 博客的自定义域名必须与社区的域名不同。
       published_page: 请先取消页面发布此主题，然后再将其发布到博客上。
       path_taken: 已被预留或已属于其他文章
       future_date: 必须在今天或之前发布。使用日程安排控件可以设置文章的发布时间。

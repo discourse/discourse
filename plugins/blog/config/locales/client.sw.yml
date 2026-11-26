@@ -15,6 +15,11 @@ sw:
         desktop: Eneo kazi la Kompyuta
         mobile: Kifaa cha kiganjani
         save: Hifadhi
+        about_tab: Kuhusu
+        settings_tab: Mipangilio
+        theme_tab: Mandhari
+        column_name: Jina
+        column_category: Kikundi
         path_formats:
           custom: Binafsi
         themes: Mandhari

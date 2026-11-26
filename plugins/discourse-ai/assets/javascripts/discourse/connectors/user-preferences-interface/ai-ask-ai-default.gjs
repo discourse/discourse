@@ -3,12 +3,12 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 
 export default class AiAskAiDefault extends Component {
   static shouldRender(args, context) {
-    const { siteSettings, currentUser } = context;
+    const { siteSettings } = context;
 
     return (
       siteSettings.discourse_ai_enabled &&
       siteSettings.ai_ask_ai_enabled &&
-      currentUser?.can_use_ask_ai
+      args.model?.can_use_ask_ai
     );
   }
 

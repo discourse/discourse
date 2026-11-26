@@ -320,6 +320,24 @@ describe "Viewing reviewable item" do
     end
   end
 
+  it "lets staff approve an already-published post" do
+    SiteSetting.review_queue_consistent_answers = true
+    reviewable = ReviewablePost.queue_for_review(Fabricate(:post))
+
+    review_page.visit_reviewable(reviewable)
+
+    expect(review_page).to have_context_question(
+      reviewable,
+      I18n.t("js.review.pending_post_approval"),
+    )
+    expect(review_page).to have_answers_starting_with(reviewable, ["Deny post", "Approve post"])
+
+    review_page.select_action(reviewable, "post-approve")
+
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
+    expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
+  end
+
   describe "when the reviewable item is a queued post" do
     fab!(:reviewable_queued_post)
 
@@ -335,14 +353,17 @@ describe "Viewing reviewable item" do
       expect(page).not_to have_text("hello world post contents.")
     end
 
-    it "asks whether the queued post has a problem, answering Yes before No" do
+    it "lets the moderator deny or approve the queued post" do
       review_page.visit_reviewable(reviewable_queued_post)
 
       expect(review_page).to have_context_question(
         reviewable_queued_post,
-        I18n.t("js.review.context_question.something_wrong_with_post"),
+        I18n.t("js.review.pending_post_approval"),
       )
-      expect(review_page).to have_answers_starting_with(reviewable_queued_post, %w[Yes No])
+      expect(review_page).to have_answers_starting_with(
+        reviewable_queued_post,
+        ["Deny post", "Approve post"],
+      )
       expect(review_page).to have_first_answer(reviewable_queued_post, "reviewable-action-dropdown")
     end
 
@@ -390,7 +411,7 @@ describe "Viewing reviewable item" do
 
       expect(review_page).to have_no_context_question(
         reviewable,
-        I18n.t("js.review.context_question.something_wrong_with_account"),
+        I18n.t("js.review.pending_account_approval"),
       )
 
       review_page.click_scrub_user_button
@@ -429,15 +450,41 @@ describe "Viewing reviewable item" do
 
       expect(review_page).to have_context_question(
         reviewable,
-        I18n.t("js.review.context_question.something_wrong_with_account"),
+        I18n.t("js.review.pending_account_approval"),
       )
-      expect(review_page).to have_answers_starting_with(reviewable, %w[Yes No])
+      expect(review_page).to have_answers_starting_with(
+        reviewable,
+        ["Deny account", "Approve account"],
+      )
 
       review_page.click_approve_user_button
 
       expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
       expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
     end
+  end
+
+  it "lets a moderator approve a flagged account that already has access" do
+    SiteSetting.review_queue_consistent_answers = true
+    member = Fabricate(:user, approved: true)
+    reviewable = Fabricate(:reviewable_user, target: member)
+    reviewable.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      reason: "account_flag",
+    )
+
+    review_page.visit_reviewable(reviewable)
+
+    expect(review_page).to have_context_question(reviewable, I18n.t("js.review.account_review"))
+    expect(review_page).to have_answers_starting_with(
+      reviewable,
+      ["Deny account", "Approve account"],
+    )
+
+    review_page.select_action(reviewable, "user-approve_account_review")
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
+    expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
   end
 
   describe "without consistent review answers" do

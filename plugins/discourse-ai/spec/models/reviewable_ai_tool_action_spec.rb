@@ -227,6 +227,73 @@ RSpec.describe ReviewableAiToolAction do
       expect(Category.find_by!(name: "Bug reports").user_id).to eq(admin.id)
     end
 
+    it "changes category permissions as the approver" do
+      category = Fabricate(:category)
+      tool_action =
+        create_tool_action(
+          tool_name: "set_category_permissions",
+          params: {
+            category_id: category.id,
+            create_reply_see_groups: ["staff"],
+            reason: "Staff only",
+          },
+        )
+
+      result = create_reviewable(tool_action).perform(admin, :approve)
+
+      expect(result.transition_to).to eq(:approved)
+      expect(category.reload.read_restricted).to eq(true)
+      expect(
+        UserHistory.exists?(
+          acting_user_id: admin.id,
+          action: UserHistory.actions[:change_category_settings],
+          category_id: category.id,
+        ),
+      ).to eq(true)
+    end
+
+    it "deletes an empty category as the approver" do
+      category = Fabricate(:category)
+      tool_action =
+        create_tool_action(
+          tool_name: "delete_category",
+          params: {
+            category_id: category.id,
+            reason: "Unused",
+          },
+        )
+
+      result = create_reviewable(tool_action).perform(admin, :approve)
+
+      expect(result.transition_to).to eq(:approved)
+      expect(Category.exists?(category.id)).to eq(false)
+      expect(
+        UserHistory.exists?(
+          acting_user_id: admin.id,
+          action: UserHistory.actions[:delete_category],
+        ),
+      ).to eq(true)
+    end
+
+    it "keeps a category that gained topics while its deletion awaited approval" do
+      category = Fabricate(:category)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "delete_category",
+            params: {
+              category_id: category.id,
+              reason: "Unused",
+            },
+          ),
+        )
+      Fabricate(:topic, category:)
+
+      expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+      expect(Category.exists?(category.id)).to eq(true)
+    end
+
     it "rejects an approval card copied by an unrelated agent" do
       other_agent_user = Fabricate(:ai_agent).create_user!
       source_post = Fabricate(:post, topic: topic)

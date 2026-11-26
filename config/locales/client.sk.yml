@@ -422,9 +422,6 @@ sk:
       fonts:
         base_font: "Telo"
         heading_font: "Nadpisy"
-      logo:
-        description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
-        help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
       homepage:
         topics: "Témy"
         categories: "Kategórie"
@@ -3831,7 +3828,7 @@ sk:
         back_description: "Vrátiť sa k poslednému neprečítanému príspevku"
         replies_short: "%{current} / %{total}"
       progress:
-        title: pozícia v téme
+        title: "pozícia v téme"
         jump_prompt: "choď na..."
         jump_prompt_of:
           one: "z %{count} príspevku"
@@ -4503,27 +4500,19 @@ sk:
       save_error: Nastala chyba počas ukladania kategórie
       validations:
         icon_required: "Vyberte ikonu."
+      icon_search_placeholder: "Hľadať…"
       description: "Popis"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
       style: "Štýl"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Farba"
       foreground_color: "Farba textu"
       color_validations:
         cant_be_empty: "nesmie byť prázdne"
       styles:
-        type: "Štýl"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Štvorec"
-        options:
-          square: "Štvorec"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Používaná farba"
-      predefined_colors: "Preddefinované možnosti farieb"
-      color_placeholder: "Ľubovoľná farba stránky"
       delete_confirm: "Ste si istý že chcete zmazať túto kategóriu?"
       delete_error: "Nastala chyba počas mazania kategórie"
       list: "Zoznam kategórií"
@@ -5211,7 +5200,6 @@ sk:
         other: "Návrhy (%{count})"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
-    theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
     image_removed: "(obrázok odstránený)"
     pause_notifications:
       title: "Pozastavenie oznámení pre…"

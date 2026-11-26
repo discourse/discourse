@@ -44,11 +44,20 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      review_bulk:
+        refresh: "새로 고침"
+        columns:
+          user: "사용자"
+          created: "생성됨"
+          status: "상태"
       copied: "복사되었습니다"
       ai_decoded_transcript:
         type: "형식"
         error: "에러"
         response: "응답"
+      post_image_captions:
+        image_descriptions:
+          apply: "적용"
       discourse_workflows:
         ai_tool:
           list_item: "목록 항목"
@@ -252,6 +261,29 @@ ko:
         edit: "편집"
         delete: "삭제"
         embedding: "삽입(Embedding)"
+      concepts:
+        edit: "편집"
+        seed:
+          refresh: "새로 고침"
+        delete: "삭제"
+        columns:
+          status: "상태"
+          topics: "글"
+          posts: "글"
+        statuses:
+          active: "활성화 사용자"
+        form:
+          name: "그룹명"
+          description: "내용"
+          status: "상태"
+        shared_topics_count:
+          other: "%{count}개의 글"
+        tagged_topics: "태그된 토픽"
+        topic_columns:
+          topic: "글"
+          primary: "기본"
+          relevance: "관련성"
+        primary_badge: "기본"
       decision_models:
         no_preset: "없음"
         display_name: "그룹명"

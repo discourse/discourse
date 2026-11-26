@@ -574,9 +574,6 @@ zh_CN:
         history_label: "历史记录"
         members_label: "成员"
       admin:
-        bot_discoverability:
-          label: "在聊天中显示"
-          description: "让用户在发起聊天私信时找到这个机器人。"
         title: "聊天"
         export_messages:
           title: "导出聊天消息"

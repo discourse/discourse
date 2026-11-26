@@ -44,6 +44,7 @@ RSpec.describe Slug do
 
       it "doesn't generate slugs that are just numbers" do
         expect(Slug.for("123")).to eq(default_slug)
+        expect(Slug.for("---123---")).to eq(default_slug)
       end
 
       it "fallbacks to empty string if it's too long" do

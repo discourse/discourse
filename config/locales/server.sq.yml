@@ -1538,6 +1538,8 @@ sq:
       approve_post:
         title: "Po"
         complete: "Postimi u miratua."
+      deny_and_delete_post:
+        complete: "Postimi u fshi."
       approve_post_closed:
         title: "Po"
         complete: "Postimi u miratua."

@@ -114,6 +114,7 @@ pl_PL:
       moderation_operation_failed: "Nie udało się zweryfikować działania moderacji. Przed ponowieniem próby odczytaj aktualny stan użytkownika."
       moderation_user_not_found: "Użytkownik nie został znaleziony. Użyj dokładnej, istniejącej nazwy użytkownika."
       post_not_found: "Nie znaleziono wpisu"
+      post_not_created: "Nie udało się utworzyć wpisu"
       user_directory_disabled: "Katalog użytkowników jest wyłączony"
       filter_only_for_filtered_view: "Filtr jest obsługiwany tylko przez widok filtrowany"
       filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
@@ -1534,6 +1535,7 @@ pl_PL:
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
     activated: "Przepraszamy, to konto zostało już aktywowane."
     email_change_not_allowed: "To konto było już wcześniej aktywne, więc można je reaktywować tylko przy użyciu aktualnego adresu e-mail."
+    email_change_not_allowed_after_invite: "To konto przyjęło zaproszenie, więc można je aktywować tylko przy użyciu bieżącego adresu e-mail."
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy na pewno chcesz, aby <b>%{target_username} (%{target_email})</b> był administratorem?"
@@ -3181,7 +3183,7 @@ pl_PL:
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
     enable_new_reordering_controls: "Użyj współdzielonych elementów sterujących kolejnością ustawień listy, list administracyjnych, kolumn katalogu użytkowników i łączy paska bocznego, zapewniając każdemu z nich ten sam uchwyt przeciągania, menu przenoszenia i obsługę klawiatury."
     enable_main_outlet_grid_layout_change: "Umieść kompozytora wewnątrz głównej siatki układu, aby motywy mogły go umieścić w kolumnie siatki, i użyj węższego paska bocznego."
-    review_queue_consistent_answers: "Każde pytanie w kolejce recenzji formułuj tak, aby odpowiedź „Tak” zawsze oznaczała, że wystąpił problem, i oznaczaj recenzowane elementy etykietami „Problem potwierdzony” lub „Nie znaleziono problemu” dla każdego typu pytania."
+    review_queue_consistent_answers: 'Użyj opcji „Zatwierdź” i „Odrzuć” w przypadku rejestracji, postów w kolejce i recenzji opublikowanych postów. Flagi i historia recenzji pokazują, czy wykryto problem.'
     enable_composer_toolbar_customization: "Umożliw członkom wybór, które przyciski będą wyświetlane na pasku narzędzi kompozytora, w preferencjach interfejsu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
@@ -3386,6 +3388,7 @@ pl_PL:
         value: "Sekret DiscourseConnect"
   search:
     extreme_load_error: "Strona jest pod ekstremalnym obciążeniem, wyszukiwanie jest wyłączone, spróbuj ponownie później"
+    keyword_search_timeout: "Wyszukiwanie trwało zbyt długo. Wypróbuj bardziej szczegółowe słowa kluczowe."
     within_post: "#%{post_number} przez %{username}"
     types:
       category: "Kategorie"
@@ -5480,15 +5483,23 @@ pl_PL:
     light: "Jasny"
     dark: "Ciemny"
     neutral: "Neutralne"
+    neutral_dark: "Neutralny ciemny"
     grey_amber: "Szary bursztyn"
+    grey_amber_light: "Szaro-bursztynowy jasny"
     shades_of_blue: "Odcienie niebieskiego"
+    shades_of_blue_dark: "Odcienie niebieskiego ciemny"
     latte: "Latte"
+    latte_light: "Latte jasny"
     summer: "Lato"
+    summer_dark: "Letni jasny"
     dark_rose: "Ciemna róża"
+    rose: "Różany"
     wcag: "Jasny WCAG"
     wcag_theme_name: "Jasny WCAG"
     dracula: "Dracula"
     dracula_theme_name: "Dracula"
+    dracula_light: "Drakula jasny"
+    dracula_light_theme_name: "Drakula jasny"
     solarized_light: "Jasny Solarized"
     solarized_light_theme_name: "Jasny Solarized"
     solarized_dark: "Ciemny Solarized"
@@ -5498,11 +5509,17 @@ pl_PL:
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
     neutral_theme_name: "Neutralne"
+    neutral_dark_theme_name: "Neutralny ciemny"
     grey_amber_theme_name: "Szary bursztyn"
+    grey_amber_light_theme_name: "Szaro-bursztynowy jasny"
     shades_of_blue_theme_name: "Odcienie niebieskiego"
+    shades_of_blue_dark_theme_name: "Odcienie niebieskiego ciemny"
     latte_theme_name: "Latte"
+    latte_light_theme_name: "Latte jasny"
     summer_theme_name: "Lato"
+    summer_dark_theme_name: "Letni jasny"
     dark_rose_theme_name: "Ciemna róża"
+    rose_theme_name: "Różany"
     errors:
       cannot_edit_remote_copies: "Edycja zdalnych kopii palet kolorów jest niedozwolona."
   edit_this_page: "Edytuj tę stronę"
@@ -5997,6 +6014,31 @@ pl_PL:
     title: "Tryb programisty"
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
+  popular_themes:
+    graceful:
+      description: "Lekki i elegancki motyw dla Discourse."
+    material_design:
+      description: "Zainspirowany Material Design motyw oferuje kilka palet kolorów."
+    mint:
+      description: "Motyw w kolorze miętowym z wyróżnionymi kategoriami na stronie głównej i banerem wyszukiwania."
+    simple:
+      description: "Uproszczony projekt strony głównej z klasyczną kolorystyką i typografią."
+    brand_header:
+      description: "Dodaj dodatkowy nagłówek górny ze swoim logo, linkami nawigacyjnymi i ikonami mediów społecznościowych."
+    custom_header_links:
+      description: "Łatwe dodawanie niestandardowych linków tekstowych do nagłówka."
+    category_banners:
+      description: "Wyświetlaj banery na stronach kategorii, wykorzystując istniejące szczegóły kategorii."
+    tag_banners:
+      description: "Wyświetlaj banery na stronach tagów, używając istniejących szczegółów tagu."
+    sidebar_theme_toggle:
+      description: "Wyświetla selektor motywu w stopce menu bocznego, pod warunkiem, że użytkownik ma do wyboru więcej niż jeden motyw."
+    header_submenus:
+      description: "Umożliwia zbudowanie menu nagłówkowego z podmenu (listami rozwijanymi)."
+    table_of_contents:
+      description: "Generuje interaktywny spis treści na pasku bocznym wybranego tematu za pomocą jednego kliknięcia w edytorze."
+    easy_footer:
+      description: "Dodaj w pełni responsywną stopkę bez konieczności pisania kodu HTML."
   design_wizard:
     themes:
       concord:
@@ -6014,7 +6056,7 @@ pl_PL:
       dracula: "Dracula"
       grey_amber: "Szary bursztyn"
       latte: "Latte"
-      dark_rose: "Ciemna róża"
+      dark_rose: "Różany"
   wizard:
     title: "Instalacja Discourse"
     step:
@@ -6228,8 +6270,6 @@ pl_PL:
     actions:
       answer_yes:
         title: "Tak"
-        delete_post_title: "Tak, usuń wpis"
-        keep_post_deleted_title: "Tak, zachowaj wpis usunięty"
       answer_no:
         title: "Nie"
       agree:
@@ -6276,6 +6316,7 @@ pl_PL:
       delete_and_ignore_replies:
         title: "Usuń wpis i odpowiedzi, zignoruj flagę"
         description: "Usuń wpis i wszystkie odpowiedzi, a następnie zignoruj flagę, usuwając ją z kolejki; jeśli to pierwszy wpis, usuń również temat"
+        confirm_title: "Usunąć wpis i odpowiedzi, zignorować flagę?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       delete_and_agree:
@@ -6285,6 +6326,7 @@ pl_PL:
       delete_and_agree_replies:
         title: "Usuń post i odpowiedzi"
         description: "Zgódź się z flagą i usuń ten post oraz wszystkie jego odpowiedzi; jeśli to pierwszy post, usuń również temat."
+        confirm_title: "Usunąć wpis i odpowiedzi?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       disagree_and_restore:
@@ -6330,6 +6372,21 @@ pl_PL:
         title: "Tak"
         action_title: "Zatwierdź wpis"
         complete: "Post zatwierdzony."
+      approve_topic:
+        title: "Zatwierdź temat"
+      deny_topic:
+        title: "Odrzuć temat"
+      deny_post:
+        title: "Odrzuć wpis"
+      deny_and_delete_post:
+        title: "Odrzuć i usuń wpis"
+        complete: "Wpis usunięty."
+      deny_and_delete_topic:
+        title: "Odrzuć i usuń temat"
+        complete: "Temat usunięty."
+      deny_and_keep_deleted:
+        title: "Odrzuć i zachowaj usunięty wpis"
+        complete: "Wpis został usunięty."
       approve_post_closed:
         title: "Tak"
         confirm: "Ten temat jest zamknięty. Czy mimo to chcesz utworzyć wpis?"
@@ -6345,17 +6402,24 @@ pl_PL:
         complete: "Awatar został usunięty."
       approve_user:
         title: "Tak"
+        action_title: "Zatwierdź konto"
         complete: "Użytkownik zatwierdzony."
+      deny_account:
+        title: "Odrzuć konto"
+      approve_account_review:
+        complete: "Zatwierdzono przegląd konta."
       reject_user:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm_title: "Usunąć @%{username}?"
           confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm_title: "Usunąć i zablokować @%{username}?"
           confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
@@ -6388,9 +6452,14 @@ pl_PL:
         title: Wyczyść rekord
       approve_and_restore:
         title: "Tak"
+        action_title: "Zatwierdź i przywróć wpis"
         complete: "Post zatwierdzony i przywrócony."
+      approve_and_restore_topic:
+        action_title: "Zatwierdź i przywróć temat"
+        complete: "Temat zaakceptowany i przywrócony."
       approve_and_unhide:
         title: "Tak"
+        action_title: "Zatwierdź i pokaż wpis"
         complete: "Post zatwierdzony i nieukryty"
       silence_user:
         title: "Wycisz użytkownika"

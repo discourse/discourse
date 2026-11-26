@@ -120,7 +120,7 @@ RSpec.describe Blog::EnsureDraftsCategory do
       fab!(:blog_category, :category)
 
       before do
-        SiteSetting.blog_category = blog_category.id
+        update_default_blog(category_id: blog_category.id)
         SiteSetting.blog_drafts_category = blog_category.id
       end
 

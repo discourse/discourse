@@ -26,5 +26,24 @@ describe "Edit user directory columns" do
       columns_modal.open
       expect(columns_modal).to have_columns_in_order([columns.last, *columns[0...-1]])
     end
+
+    it "saves a column reordered by dragging its grip on a touchscreen", :mobile do
+      first, second, *remaining = DirectoryColumn.order(:position)
+      reordered = [second, first, *remaining]
+      visit("/u")
+      columns_modal.open
+
+      columns_modal.drag_after_with_touch(first, second) do
+        expect(columns_modal).to have_touch_drag_feedback(first, after: second)
+      end
+      expect(columns_modal).to have_columns_in_order(reordered)
+      expect(columns_modal).to have_no_touch_drag_feedback
+      columns_modal.save
+      expect(columns_modal).to be_closed
+
+      page.refresh
+      columns_modal.open
+      expect(columns_modal).to have_columns_in_order(reordered)
+    end
   end
 end

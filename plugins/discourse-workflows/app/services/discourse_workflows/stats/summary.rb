@@ -19,7 +19,7 @@ module DiscourseWorkflows
       Execution.recent(RECENT_PERIOD).for_workflow(params.workflow_id)
     end
 
-    def compute_stats(recent_executions:)
+    def compute_stats(recent_executions:, params:)
       total, failed, avg_seconds =
         recent_executions.pick(
           Arel.sql("COUNT(*)"),
@@ -36,7 +36,17 @@ module DiscourseWorkflows
       failure_rate = total > 0 ? (failed.to_f / total * 100).round(1) : 0
       avg_duration = avg_seconds < 1 ? "#{(avg_seconds * 1000).round}ms" : "#{avg_seconds}s"
 
-      { total: total, failed: failed, failure_rate: "#{failure_rate}%", avg_duration: avg_duration }
+      stats = {
+        total: total,
+        failed: failed,
+        failure_rate: "#{failure_rate}%",
+        avg_duration: avg_duration,
+      }
+      DiscoursePluginRegistry.apply_modifier(
+        :discourse_workflows_stats_summary,
+        stats,
+        { workflow_id: params.workflow_id, since: RECENT_PERIOD.ago },
+      )
     end
   end
 end

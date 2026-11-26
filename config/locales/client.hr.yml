@@ -495,9 +495,6 @@ hr:
       fonts:
         base_font: "Tijelo"
         heading_font: "Naslovi"
-      logo:
-        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
-        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -3759,7 +3756,7 @@ hr:
         back_description: "Vrati se na posljednju nepročitanu poruku"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredak teme
+        title: "napredak teme"
         jump_prompt: "idite na"
         jump_prompt_of:
           one: "od %{count} objava"
@@ -4396,27 +4393,19 @@ hr:
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:
         icon_required: "Odaberi ikonu."
+      icon_search_placeholder: "Traži…"
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
       style: "Stil"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Boja"
       foreground_color: "Boja teksta"
       color_validations:
         cant_be_empty: "ne može biti prazno"
       styles:
-        type: "Stil"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Kvadrat"
-        options:
-          square: "Kvadrat"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Boja u upotrebi"
-      predefined_colors: "Unaprijed definirane opcije boja"
-      color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
@@ -5067,7 +5056,6 @@ hr:
         other: "Skice (%{count})"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
-    theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
     image_removed: "(slika uklonjena)"
     pause_notifications:
       title: "Pauzirajte obavijesti za"

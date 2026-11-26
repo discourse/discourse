@@ -68,6 +68,11 @@ module PageObjects
         self
       end
 
+      def click_topic_bookmark(topic)
+        find("#quick-access-bookmarks .bookmark a", text: topic.title).click
+        self
+      end
+
       def click_notification_with_href(href_substring)
         find(".user-menu .notification a[href*='#{href_substring}']").click
         self

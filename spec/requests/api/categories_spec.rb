@@ -2,8 +2,8 @@
 require "swagger_helper"
 
 RSpec.describe "categories" do
-  let(:admin) { Fabricate(:admin) }
-  let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:admin)
+  fab!(:category) { Fabricate(:category, user: admin) }
 
   before do
     Jobs.run_immediately!

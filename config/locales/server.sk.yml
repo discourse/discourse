@@ -4738,7 +4738,6 @@ sk:
       dracula: "Dracula"
       grey_amber: "Šedý jantár"
       latte: "Laté"
-      dark_rose: "Tmavá ruža"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -4950,6 +4949,7 @@ sk:
       delete_and_agree_replies:
         title: "Odstrániť príspevok a odpovede"
         description: "Súhlasiť s označením a vymazať tento príspevok a všetky jeho odpovede; ak je prvý príspevok, vymazať aj tému."
+        confirm_title: "Odstrániť príspevok a odpovede?"
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
@@ -4980,6 +4980,8 @@ sk:
       approve_post:
         title: "Áno"
         complete: "Príspevok schválený."
+      deny_and_delete_post:
+        complete: "Príspevok zmazaný."
       approve_post_closed:
         title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"

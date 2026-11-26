@@ -718,7 +718,6 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
-        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"
@@ -1582,7 +1581,7 @@ be:
       timeline:
         back: "Назад"
       progress:
-        title: прагрэс у тэме
+        title: "прагрэс у тэме"
         jump_prompt_or: "або"
       notifications:
         reasons:
@@ -1728,18 +1727,12 @@ be:
       creation_error: Падчас стварэння катэгорыі адбылася памылка.
       save_error: Падчас захавання катэгорыі адбылася памылка.
       description: "Апісанне"
-      icon: "Значок"
-      emoji: "Эмодзі"
       background_color: "Колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
       styles:
         icon: "Значок"
         emoji: "Эмодзі"
-        options:
-          icon: "Значок"
-          emoji: "Эмодзі"
-      color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
       latest_topics: "Апошнія тэмы"
@@ -1971,6 +1964,7 @@ be:
       back: "Назад"
       share: "Абагуліць"
     mobile_tab_bar:
+      new_topic: "Новая тэма"
       create: "Ствараць"
       more: "Яшчэ"
       back: "Назад"

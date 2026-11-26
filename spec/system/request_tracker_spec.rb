@@ -32,14 +32,12 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
               ),
             ).to eq(
               "page_view_anon_total" => 1,
-              "page_view_anon_browser_total" => 0,
               "page_view_anon_browser_beacon_total" => 1,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,
@@ -64,14 +62,12 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
               ),
             ).to eq(
               "page_view_anon_total" => 2,
-              "page_view_anon_browser_total" => 1,
               "page_view_anon_browser_beacon_total" => 2,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,
@@ -101,14 +97,12 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
               ),
             ).to eq(
               "page_view_anon_total" => 0,
-              "page_view_anon_browser_total" => 0,
               "page_view_anon_browser_beacon_total" => 0,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 1,
@@ -132,18 +126,16 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
+                "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
-                "page_view_logged_in_browser_total",
                 "page_view_logged_in_browser_beacon_total",
               ),
             ).to eq(
               "page_view_anon_total" => 0,
-              "page_view_anon_browser_total" => 0,
+              "page_view_anon_browser_beacon_total" => 0,
               "page_view_logged_in_total" => 1,
               "page_view_crawler_total" => 0,
-              "page_view_logged_in_browser_total" => 0,
               "page_view_logged_in_browser_beacon_total" => 1,
             )
           end
@@ -167,18 +159,16 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
+                "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
-                "page_view_logged_in_browser_total",
                 "page_view_logged_in_browser_beacon_total",
               ),
             ).to eq(
               "page_view_anon_total" => 0,
-              "page_view_anon_browser_total" => 0,
+              "page_view_anon_browser_beacon_total" => 0,
               "page_view_logged_in_total" => 2,
               "page_view_crawler_total" => 0,
-              "page_view_logged_in_browser_total" => 1,
               "page_view_logged_in_browser_beacon_total" => 2,
             )
           end
@@ -208,7 +198,6 @@ describe "Request tracking" do
               ApplicationRequest.stats.slice(
                 "http_4xx_total",
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
@@ -216,7 +205,6 @@ describe "Request tracking" do
             ).to eq(
               "http_4xx_total" => 1,
               "page_view_anon_total" => 0,
-              "page_view_anon_browser_total" => 0,
               "page_view_anon_browser_beacon_total" => 0,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,
@@ -234,7 +222,6 @@ describe "Request tracking" do
           ApplicationRequest.stats.slice(
             "http_4xx_total",
             "page_view_anon_total",
-            "page_view_anon_browser_total",
             "page_view_anon_browser_beacon_total",
             "page_view_logged_in_total",
             "page_view_crawler_total",
@@ -242,7 +229,6 @@ describe "Request tracking" do
         ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 1,
-          "page_view_anon_browser_total" => 0,
           "page_view_anon_browser_beacon_total" => 1,
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
@@ -262,14 +248,12 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
               ),
             ).to eq(
               "page_view_anon_total" => 1,
-              "page_view_anon_browser_total" => 0,
               "page_view_anon_browser_beacon_total" => 1,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,
@@ -299,7 +283,6 @@ describe "Request tracking" do
           ApplicationRequest.stats.slice(
             "http_4xx_total",
             "page_view_anon_total",
-            "page_view_anon_browser_total",
             "page_view_anon_browser_beacon_total",
             "page_view_logged_in_total",
             "page_view_crawler_total",
@@ -307,7 +290,6 @@ describe "Request tracking" do
         ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 0,
-          "page_view_anon_browser_total" => 0,
           "page_view_anon_browser_beacon_total" => 0,
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
@@ -322,7 +304,6 @@ describe "Request tracking" do
           ApplicationRequest.stats.slice(
             "http_4xx_total",
             "page_view_anon_total",
-            "page_view_anon_browser_total",
             "page_view_anon_browser_beacon_total",
             "page_view_logged_in_total",
             "page_view_crawler_total",
@@ -330,8 +311,7 @@ describe "Request tracking" do
         ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 1,
-          "page_view_anon_browser_total" => 1,
-          "page_view_anon_browser_beacon_total" => 0,
+          "page_view_anon_browser_beacon_total" => 1,
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
@@ -353,14 +333,12 @@ describe "Request tracking" do
             expect(
               ApplicationRequest.stats.slice(
                 "page_view_anon_total",
-                "page_view_anon_browser_total",
                 "page_view_anon_browser_beacon_total",
                 "page_view_logged_in_total",
                 "page_view_crawler_total",
               ),
             ).to eq(
               "page_view_anon_total" => 1,
-              "page_view_anon_browser_total" => 0,
               "page_view_anon_browser_beacon_total" => 1,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,

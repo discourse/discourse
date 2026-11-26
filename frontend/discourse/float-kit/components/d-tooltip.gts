@@ -95,7 +95,9 @@ export default class DTooltip<Data = unknown> extends Component<
     this.options.onRegisterApi?.(this.tooltipInstance);
 
     return () => {
-      this.tooltipInstance.destroy();
+      if (this.isDestroying) {
+        this.tooltipInstance.destroy();
+      }
     };
   });
 

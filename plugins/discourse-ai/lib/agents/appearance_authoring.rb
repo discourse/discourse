@@ -41,8 +41,16 @@ module DiscourseAi
 
       # Returns why the user can't change the site's appearance, or nil when
       # they can. A new theme comes with new palettes, and styles come with a
-      # new theme.
-      def self.denial(user:, phase:, new_theme: false, new_palettes: false, styles: false)
+      # new theme, or with a new component (new_component) for the theme the
+      # site keeps, which only brings palettes when new_palettes says so.
+      def self.denial(
+        user:,
+        phase:,
+        new_theme: false,
+        new_palettes: false,
+        styles: false,
+        new_component: false
+      )
         return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
 
         access = access(user:, phase:)
@@ -51,8 +59,9 @@ module DiscourseAi
         end
 
         refusal = style_denial(user:, phase:) if styles
-        new_theme ||= styles
-        refusal ||= theme_denial(user:, phase:) if new_theme
+        new_theme ||= styles && !new_component
+        # a component is a theme record too, so it follows the same limits
+        refusal ||= theme_denial(user:, phase:) if new_theme || new_component
         refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
       end
 
@@ -111,6 +120,10 @@ module DiscourseAi
       end
 
       def self.change_palettes(appearance_change)
+        if uses_theme_palettes?(appearance_change)
+          return theme_palettes(appearance_change.palette_theme)
+        end
+
         {
           light: palette_colors(appearance_change.light_color_scheme),
           dark: palette_colors(appearance_change.dark_color_scheme),
@@ -204,6 +217,17 @@ module DiscourseAi
       end
       private_class_method :style_values
 
+      # A component turned on or off by making a change live or switching back.
+      def self.component_change(component, enabled:)
+        on = I18n.t("discourse_ai.appearance_authoring.component_on")
+        off = I18n.t("discourse_ai.appearance_authoring.component_off")
+        {
+          label: I18n.t("discourse_ai.appearance_authoring.component_label", name: component.name),
+          before: enabled ? off : on,
+          after: enabled ? on : off,
+        }
+      end
+
       def self.default_theme_change(from:, to:)
         {
           label: I18n.t("discourse_ai.appearance_authoring.default_theme"),
@@ -248,15 +272,51 @@ module DiscourseAi
       # theme, both palettes and the change's fonts, so an administrator's own
       # theme or palette choice can't change what the preview shows.
       def self.preview_url(appearance_change)
+        light, dark = preview_palette_ids(appearance_change)
+        component = appearance_change.kind_component?
         query = {
-          preview_theme_id: appearance_change.theme_id,
-          preview_color_scheme_id: appearance_change.light_color_scheme_id,
-          preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
+          preview_theme_id:
+            component ? appearance_change.parent_theme_id : appearance_change.theme_id,
+          preview_component_ids: (appearance_change.theme_id if component),
+          # what making it live turns off, such as the version it replaces
+          preview_hide_component_ids:
+            (
+              if component
+                appearance_change.enabled_sibling_components.pluck(:id).join(",").presence
+              end
+            ),
+          preview_color_scheme_id: light,
+          preview_dark_color_scheme_id: dark,
           preview_base_font: appearance_change.site_settings["base_font"],
           preview_heading_font: appearance_change.site_settings["heading_font"],
         }.compact
         "#{Discourse.base_url}/?#{query.to_query}"
       end
+
+      # A theme the site installed or already had shows its own current
+      # palettes, which an administrator may have changed since it was saved.
+      # Where it has none for a mode, the preview says so ("none") rather than
+      # leaving the viewer's own palette choice in its place.
+      def self.preview_palette_ids(appearance_change)
+        if !uses_theme_palettes?(appearance_change)
+          return appearance_change.light_color_scheme_id, appearance_change.dark_color_scheme_id
+        end
+
+        theme = appearance_change.palette_theme
+        light = theme.color_scheme_id
+        dark = theme.dark_color_scheme_id
+        dark ||= light if theme.theme_modifier_set&.only_theme_color_schemes
+        [light, dark].map { |id| id || ApplicationHelper::NO_PALETTE }
+      end
+      private_class_method :preview_palette_ids
+
+      # Changes that keep the palettes their theme has now: an installed or
+      # existing theme, and a component change that brings no palettes.
+      def self.uses_theme_palettes?(change)
+        change.kind_existing_theme? || change.kind_installed_theme? ||
+          (change.kind_component? && !change.assigns_palettes?)
+      end
+      private_class_method :uses_theme_palettes?
 
       def self.safe_mode_url
         "#{Discourse.base_url}/?safe_mode=no_themes"

@@ -16,6 +16,13 @@ fi:
         desktop: Työpöytä
         mobile: Mobiili
         save: Tallenna
+        about_tab: Tietoja
+        blog_slug: Polkutunnus
+        settings_tab: Asetukset
+        theme_tab: Värimaailma
+        column_name: Nimi
+        column_category: Luokka
+        column_status: Tila
         path_formats:
           custom: Mukautettu
         back_to_themes: Takaisin teemoihin

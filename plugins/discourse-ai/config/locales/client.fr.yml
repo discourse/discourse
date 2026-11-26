@@ -243,6 +243,13 @@ fr:
               description: "Autoriser l'étiquetage des publications créées par l'utilisateur système"
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Actualiser"
+        columns:
+          user: "Utilisateur"
+          reason: "Signalé comme"
+          created: "Création"
+          status: "Statut"
       dsa_classification:
         suggest: "Suggérer avec l'IA"
       copied: "Copié "
@@ -254,11 +261,9 @@ fr:
         error: "Erreur"
         response: "Réponse"
       post_image_captions:
-        edit: "Modifier la légende d'image générée par l'IA"
-        title: "Modifier la légende d'image générée par l'IA"
-        description: "Légende"
-        save: "Enregistrer la légende"
         saved: "Légende d'image générée par l'IA enregistrée"
+        image_descriptions:
+          apply: "Appliquer"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -976,6 +981,32 @@ fr:
         mcp_server_oauth_client_secret: "Secret client OAuth du serveur MCP"
         modal:
           title: "Créer un nouvel identifiant"
+      concepts:
+        edit: "Modifier"
+        seed:
+          refresh: "Actualiser"
+        delete: "Supprimer"
+        columns:
+          status: "Statut"
+          topics: "Sujets"
+          posts: "Publications"
+        statuses:
+          all: "Tous les statuts"
+          active: "Actif"
+        form:
+          name: "Nom"
+          description: "Description"
+          aliases: "Alias"
+          status: "Statut"
+        shared_topics_count:
+          one: "%{count} sujet"
+          other: "%{count} sujets"
+        tagged_topics: "Sujets étiquetés"
+        topic_columns:
+          topic: "Sujet"
+          primary: "Principal"
+          relevance: "Pertinence"
+        primary_badge: "Principal"
       decision_models:
         no_preset: "Jamais"
         display_name: "Nom"

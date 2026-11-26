@@ -4774,7 +4774,6 @@ he:
       dracula: "דרקולה"
       grey_amber: "ענבר אפור"
       latte: "לאטה"
-      dark_rose: "ורד כהה"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -4989,6 +4988,7 @@ he:
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
+        confirm_title: "מחיקת הפוסט והתגובות?"
         confirm: "למחוק גם את התגובות לפוסט?"
         complete: "הפוסט והתגובות נמחקו."
       disagree_and_restore:
@@ -5020,6 +5020,8 @@ he:
       approve_post:
         title: "כן"
         complete: "הפרסום אושר."
+      deny_and_delete_post:
+        complete: "פוסט נמחק."
       approve_post_closed:
         title: "כן"
         confirm: "נושא זה סגור. ליצור את הפוסט בכל אופן?"

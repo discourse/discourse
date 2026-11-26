@@ -726,7 +726,7 @@ class UsersController < ApplicationController
 
   def user_from_params_or_current_user
     return current_user if !params[:for_user_id]
-    return User.find(params[:for_user_id]) if current_user&.admin?
+    return User.find(params[:for_user_id]) if current_user&.staff?
 
     if current_user&.id == params[:for_user_id].to_i
       guardian.ensure_can_edit_username!(current_user)
@@ -995,7 +995,6 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
-        @user.user_auth_tokens.destroy_all
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1035,7 +1034,7 @@ class UsersController < ApplicationController
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if !@login_error && Wizard.user_requires_completion?(@user)
 
         render "password_reset"
       end
@@ -1055,7 +1054,9 @@ class UsersController < ApplicationController
                    success: true,
                    message: @success,
                    requires_approval: !Guardian.new(@user).can_access_forum?,
-                   redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil,
+                   login_error: @login_error,
+                   redirect_to:
+                     !@login_error && Wizard.user_requires_completion?(@user) ? wizard_path : nil,
                  }
         end
       end
@@ -1070,13 +1071,15 @@ class UsersController < ApplicationController
 
   def logon_after_password_reset
     message =
-      if Guardian.new(@user).can_access_forum?
-        # Log in the user
-        log_on_user(@user, replay_anonymous_action: true)
-        "password_reset.success"
-      else
+      if !Guardian.new(@user).can_access_forum?
         @requires_approval = true
         "password_reset.success_unapproved"
+      elsif ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        @login_error = I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username)
+        "password_reset.success_unapproved"
+      else
+        log_on_user(@user, replay_anonymous_action: true)
+        "password_reset.success"
       end
 
     @success = I18n.t(message)
@@ -1150,11 +1153,18 @@ class UsersController < ApplicationController
   end
 
   def toggle_anon
-    user =
-      AnonymousShadowCreator.get_master(current_user) || AnonymousShadowCreator.get(current_user)
+    return render json: failed_json, status: :forbidden unless SiteSetting.allow_anonymous_mode
 
-    if user
-      log_on_user(user)
+    target =
+      with_authenticated_session do |identity|
+        user = identity == current_user ? AnonymousShadowCreator.get(identity) : identity
+        next unless user&.active? && !user.suspended?
+
+        log_on_user(user, { anonymous_mode_exchange: identity })
+        user
+      end
+
+    if target
       render json: success_json
     else
       render json: failed_json, status: :forbidden
@@ -1209,6 +1219,15 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
+      if ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        return(
+          render_json_error(
+            I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username),
+            status: 403,
+          )
+        )
+      end
+
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true
@@ -1291,13 +1310,28 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new if @user.active?
 
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+      # Automatic approval only holds while the unconfirmed address would still be
+      # auto-approved; staff approvals stand.
+      auto_approved =
+        SiteSetting.must_approve_users? && @user.approved? &&
+          (@user.approved_by_id.blank? || @user.approved_by_id == Discourse::SYSTEM_USER_ID)
 
       primary_email = @user.primary_email
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.revoke_approval! if revoke_approval
+        if primary_email.saved_change_to_email? && InvitedUser.exists?(user_id: @user.id)
+          raise Discourse::InvalidAccess.new(
+                  nil,
+                  nil,
+                  custom_message: "activation.email_change_not_allowed_after_invite",
+                )
+        end
+
+        if revoke_approval || (auto_approved && !EmailValidator.can_auto_approve_user?(@user.email))
+          @user.revoke_approval!
+        end
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
@@ -1536,20 +1570,24 @@ class UsersController < ApplicationController
     if params[:notification_level] == "ignore"
       @error_message = "ignore_error"
       guardian.ensure_can_ignore_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
+
+      expiring_at =
+        begin
+          Time.zone.parse(params.require(:expiring_at).to_s)
+        rescue ArgumentError
+          nil
+        end
+      raise Discourse::InvalidParameters.new(:expiring_at) if expiring_at.nil?
+
       MutedUser.where(user: acting_user, muted_user: target_user).delete_all
-      ignored_user = IgnoredUser.find_by(user: acting_user, ignored_user: target_user)
-      if ignored_user.present?
-        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
-      else
-        IgnoredUser.create!(
-          user: acting_user,
-          ignored_user: target_user,
-          expiring_at: Time.parse(params[:expiring_at]),
-        )
-      end
+      IgnoredUser.find_or_initialize_by(user: acting_user, ignored_user: target_user).update!(
+        expiring_at:,
+      )
     elsif params[:notification_level] == "mute"
       @error_message = "mute_error"
       guardian.ensure_can_mute_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
       IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
       MutedUser.find_or_create_by!(user: acting_user, muted_user: target_user)
     elsif params[:notification_level] == "normal"
@@ -1949,19 +1987,16 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:token_id]
-      token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
-      # The user should not be able to revoke the auth token of current session.
-      if !token || guardian.auth_token == token.auth_token
-        raise Discourse::InvalidParameters.new(:token_id)
-      end
-      UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+      UserAuthToken.revoke_device!(
+        user,
+        params[:token_id],
+        current_login_id: guardian.current_login_id,
+      )
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.transaction do
-        UserAuthToken.where(user_id: user.id).each(&:destroy!)
-        PushNotificationPusher.clear_subscriptions(user)
-      end
+      user.revoke_family_sessions!
+      user.logged_out
     end
 
     render json: success_json

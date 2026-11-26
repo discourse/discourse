@@ -17,6 +17,13 @@ ja:
         desktop: デスクトップ
         mobile: モバイル
         save: 保存
+        about_tab: 情報
+        blog_slug: スラッグ
+        settings_tab: 設定
+        theme_tab: テーマ
+        column_name: 名前
+        column_category: カテゴリ
+        column_status: ステータス
         path_formats:
           custom: カスタム
         back_to_themes: テーマに戻る

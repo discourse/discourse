@@ -34,6 +34,7 @@ module("Integration | Component | push-notification-select", function (hooks) {
     );
     this.siteSettings.chat_enabled = true;
     this.model = EmberObject.create({
+      isCurrent: true,
       savedFields: null,
       user_option: EmberObject.create({
         push_notification_level: "all",
@@ -142,6 +143,57 @@ module("Integration | Component | push-notification-select", function (hooks) {
     assert.strictEqual(
       selectKit(".push-notification-select").header().value(),
       "all"
+    );
+  });
+
+  test("stores another user's level without touching the device subscription", async function (assert) {
+    this.model.set("isCurrent", false);
+    this.model.user_option.set("push_notification_level", "none");
+    this.desktopNotifications.isNotSupported = true;
+    this.desktopNotifications.isDeniedPermission = true;
+
+    await render(
+      <template><PushNotificationSelect @model={{this.model}} /></template>
+    );
+
+    await selectKit(".push-notification-select").expand();
+    await selectKit(".push-notification-select").selectRowByValue("all");
+
+    assert.false(
+      this.desktopNotifications.isSubscribed,
+      "the viewer's device is not subscribed"
+    );
+    assert.strictEqual(
+      this.model.user_option.push_notification_level,
+      "all",
+      "the level is stored for the other user"
+    );
+    assert.strictEqual(
+      selectKit(".push-notification-select").header().value(),
+      "all",
+      "the header reflects the other user's level"
+    );
+  });
+
+  test("stores 'none' for another user without unsubscribing the viewer's device", async function (assert) {
+    this.model.set("isCurrent", false);
+    this.desktopNotifications.isSubscribed = true;
+
+    await render(
+      <template><PushNotificationSelect @model={{this.model}} /></template>
+    );
+
+    await selectKit(".push-notification-select").expand();
+    await selectKit(".push-notification-select").selectRowByValue("none");
+
+    assert.true(
+      this.desktopNotifications.isSubscribed,
+      "the viewer's device stays subscribed"
+    );
+    assert.strictEqual(
+      this.model.user_option.push_notification_level,
+      "none",
+      "the level is stored for the other user"
     );
   });
 

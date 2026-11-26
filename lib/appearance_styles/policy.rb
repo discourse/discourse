@@ -22,6 +22,8 @@ module AppearanceStyles
     MAX_VARIABLES = 60
     MAX_RULES = 40
     MAX_DECLARATIONS = 12
+    # failures reported for one area at a time
+    MAX_ERRORS_PER_AREA = 4
     MAX_VALUE_LENGTH = 200
     MAX_CSS_BYTES = 16 * 1024
 
@@ -166,16 +168,18 @@ module AppearanceStyles
     # { "light" => { "primary" => "222222", ... }, "dark" => { ... } }.
     # Without them, contrast is checked against core's own light and dark
     # palettes.
-    def self.call(styles, palettes: nil)
+    def self.call(styles, palettes: nil, base_theme_id: nil)
       new(
         styles,
         registry: VariableRegistry.instance,
         catalog: AreaCatalog.instance,
         palettes:,
+        base_theme_id:,
       ).call
     end
 
-    def initialize(styles, registry:, catalog:, palettes: nil)
+    def initialize(styles, registry:, catalog:, palettes: nil, base_theme_id: nil)
+      @horizon = base_theme_id == Theme::CORE_THEMES["horizon"]
       @draft = styles.is_a?(Hash) ? styles.deep_stringify_keys : {}
       @registry = registry
       @catalog = catalog
@@ -273,6 +277,10 @@ module AppearanceStyles
       variable = @registry[name.to_s]
       return error(path, "unknown variable") if !variable
       return error(path, "not authorable (#{variable.reason})") if !variable.allowed
+
+      if @horizon && !%w[length keyword font_weight].include?(variable.type)
+        return horizon_color_error(path)
+      end
 
       nodes = parse(value, path)
       return if !nodes
@@ -378,7 +386,32 @@ module AppearanceStyles
       @draft_variables = global_variables if global_variables
     end
 
+    def horizon_color_error(path)
+      error(
+        path,
+        "styles on Horizon can't set colors yet, since their contrast can't be checked on Horizon; change colors with palettes instead",
+      )
+    end
+
     def check_property(property, value, path, area)
+      if @horizon &&
+           (
+             COLOR_PROPERTIES.include?(property) ||
+               %w[
+                 background
+                 background-image
+                 border
+                 border-top
+                 border-right
+                 border-bottom
+                 border-left
+                 box-shadow
+                 text-shadow
+                 opacity
+               ].include?(property)
+           )
+        return horizon_color_error(path)
+      end
       spec = PROPERTY_SPECS[property]
       if !spec && area.sizeable && SIZE_PROPERTIES.include?(property)
         return true if value.to_s.strip == "auto"
@@ -473,7 +506,8 @@ module AppearanceStyles
         @checked_rules.each_with_index.map do |rule, index|
           rule.merge(index:, specificity: specificity(rule))
         end
-      @catalog.all.all? { |area| readable_area?(area, rules) }
+      # every area is checked, so all of them can be fixed at once
+      @catalog.all.map { |area| readable_area?(area, rules) }.all?
     end
 
     # Level 0 is the area's own element, which the areas it shares an element
@@ -485,9 +519,16 @@ module AppearanceStyles
       level_rules = levels.map { |nodes| rules.select { |rule| nodes.include?(rule[:area]) } }
       return true if level_rules.all?(&:empty?)
 
-      situations(levels, level_rules).all? do |situation|
-        readable_in?(area, levels, level_rules, situation)
-      end
+      # every situation and mode is checked, so the author hears about all of
+      # them at once; the same failure in several situations is reported once
+      first_error = @errors.size
+      readable =
+        situations(levels, level_rules)
+          .map { |situation| readable_in?(area, levels, level_rules, situation) }
+          .all?
+      area_errors = @errors.slice!(first_error..).uniq.first(MAX_ERRORS_PER_AREA)
+      @errors.concat(area_errors)
+      readable
     end
 
     def situations(levels, level_rules)
@@ -657,44 +698,46 @@ module AppearanceStyles
         return false if !with_variables(element_variables) { readable_variables?(overrides, path) }
       end
 
-      %w[light dark].all? do |mode|
-        text_hex = with_variables(element_variables) { resolve_color(text, mode) }
-        next true if !text_hex.is_a?(String)
+      %w[light dark]
+        .map do |mode|
+          text_hex = with_variables(element_variables) { resolve_color(text, mode) }
+          next true if !text_hex.is_a?(String)
 
-        backgrounds(
-          levels,
-          winners,
-          situation,
-          0,
-          mode,
-        ).all? do |background, background_rules, painted_at|
-          next true if !background.is_a?(String)
-
-          faded(
+          backgrounds(
             levels,
             winners,
             situation,
+            0,
             mode,
-            text_hex,
-            background,
-            painted_at,
-          ).all? do |shown_text, shown_background, opacity_rules|
-            literal_rules = [text_rule, *background_rules, *opacity_rules].compact.uniq
-            next true if literal_rules.empty? && variable_rules.empty?
+          ).all? do |background, background_rules, painted_at|
+            next true if !background.is_a?(String)
 
-            readable_pair?(
-              area,
-              shown_text,
-              shown_background,
-              mode,
+            faded(
+              levels,
+              winners,
               situation,
-              literal_rules:,
-              variable_rules:,
-              own_element: levels.first,
-            )
+              mode,
+              text_hex,
+              background,
+              painted_at,
+            ).all? do |shown_text, shown_background, opacity_rules|
+              literal_rules = [text_rule, *background_rules, *opacity_rules].compact.uniq
+              next true if literal_rules.empty? && variable_rules.empty?
+
+              readable_pair?(
+                area,
+                shown_text,
+                shown_background,
+                mode,
+                situation,
+                literal_rules:,
+                variable_rules:,
+                own_element: levels.first,
+              )
+            end
           end
         end
-      end
+        .all?
     end
 
     # A draft's own colors for an element are held to AA. Anything it shows
@@ -733,12 +776,12 @@ module AppearanceStyles
       if strict
         error(
           path,
-          "text on background is #{ratio}:1 in #{mode} mode#{where}; it needs #{required}:1. Set a readable color too.",
+          "text on background is #{ratio}:1 in #{mode} mode#{where}; it needs #{required}:1 (text ##{text_hex}, background ##{background}). Set a readable color too.",
         )
       else
         error(
           path,
-          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode#{where}; it needs #{required}:1",
+          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode#{where}; it needs #{required}:1 (text ##{text_hex}, background ##{background}). Set a readable color in a rule for the #{area.key} area too.",
         )
       end
     end
@@ -928,6 +971,12 @@ module AppearanceStyles
 
     # Backgrounds without a text variable of their own, with the text core
     # shows on them.
+    # Site-wide text colors that BACKGROUND_TEXT backgrounds rely on.
+    SITE_WIDE_TEXT = %w[--primary --token-color-text-default].freeze
+
+    # Backgrounds an area rule can paint instead, with that area.
+    BACKGROUND_AREAS = { "--d-category-box-background-color" => "category_box" }.freeze
+
     BACKGROUND_TEXT = {
       "--d-badge-card-background-color" => "--primary",
       "--d-category-box-background-color" => "--primary",
@@ -1022,34 +1071,52 @@ module AppearanceStyles
     # defaults miss 4.5:1 in places, so a pair passes when it is AA or at
     # least as readable as core's default.
     def readable_variables?(variables, path = "variables")
-      variable_pairs.all? do |background, text|
-        next true if !variables.key?(background) && !variables.key?(text)
+      variable_pairs
+        .map do |background, text|
+          next true if !variables.key?(background) && !variables.key?(text)
 
-        %w[light dark].all? do |mode|
-          background_hex = shown_variable_background(background, mode)
-          text_hex = resolve_variable(text, mode)
-          if background_hex.nil? && variables.key?(background)
-            next unreadable_unknown(path, background)
-          end
-          next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
-          if text_hex == :translucent && variables.key?(text)
-            next error(path, "#{text}: text needs an opaque color")
-          end
-          next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
+          %w[light dark]
+            .map do |mode|
+              background_hex = shown_variable_background(background, mode)
+              text_hex = resolve_variable(text, mode)
+              if background_hex.nil? && variables.key?(background)
+                next unreadable_unknown(path, background)
+              end
+              next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
+              if text_hex == :translucent && variables.key?(text)
+                next error(path, "#{text}: text needs an opaque color")
+              end
+              next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
 
-          ratio = contrast(text_hex, background_hex)
-          required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
-          default_background = shown_variable_background(background, mode, use_draft: false)
-          default_text = resolve_variable(text, mode, use_draft: false)
-          if default_background.is_a?(String) && default_text.is_a?(String)
-            required = [required, contrast(default_text, default_background)].min
-          end
-          next true if ratio >= required
-          error(
-            path,
-            "#{text} on #{background} is #{ratio}:1 in #{mode} mode; it needs #{required}:1",
-          )
+              ratio = contrast(text_hex, background_hex)
+              required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+              default_background = shown_variable_background(background, mode, use_draft: false)
+              default_text = resolve_variable(text, mode, use_draft: false)
+              if default_background.is_a?(String) && default_text.is_a?(String)
+                required = [required, contrast(default_text, default_background)].min
+              end
+              next true if ratio >= required
+              error(
+                path,
+                "#{text} on #{background} is #{ratio}:1 in #{mode} mode; it needs #{required}:1 (#{text} is ##{text_hex}, #{background} is ##{background_hex}).#{variable_pair_hint(background, text)}",
+              )
+            end
+            .all?
         end
+        .all?
+    end
+
+    # The text color of a background in BACKGROUND_TEXT is used across the
+    # site, so it can't be changed for the background alone. Where an area
+    # rule can paint the same background, the override is better replaced by
+    # a rule that sets both colors.
+    def variable_pair_hint(background, text)
+      return "" if BACKGROUND_TEXT[background] != text || !SITE_WIDE_TEXT.include?(text)
+
+      if (area = BACKGROUND_AREAS[background])
+        " #{text} is used across the site, so instead of overriding #{background}, remove it and set both background-color and a readable color in a rule for the #{area} area."
+      else
+        " #{text} is used across the site and can't change for #{background} alone, so give #{background} a color #{text} stays readable on."
       end
     end
 

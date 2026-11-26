@@ -10,6 +10,7 @@ module Live
                :public,
                :ephemeral,
                :room_type,
+               :speak_requests_enabled,
                :max_participants,
                :created_at,
                :updated_at,

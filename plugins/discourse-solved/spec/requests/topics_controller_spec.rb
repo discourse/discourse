@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsController do
-  let(:p1) { Fabricate(:post, like_count: 1) }
+  fab!(:p1) { Fabricate(:post, like_count: 1) }
   let(:topic) { p1.topic }
   let(:p2) { Fabricate(:post, like_count: 2, topic:, user: Fabricate(:user)) }
   let(:p2_single_answer_json) do

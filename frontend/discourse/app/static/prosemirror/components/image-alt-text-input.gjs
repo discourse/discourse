@@ -13,11 +13,23 @@ export default class ImageAltTextInput extends Component {
   @tracked initialAltText = this.args.data.alt || "";
   @tracked transientAltText = this.initialAltText;
 
+  get altText() {
+    return this.args.data.getAlt();
+  }
+
   @action
   expandInput() {
     this.isExpanded = true;
 
     next(() => this.textarea.select());
+  }
+
+  @action
+  openDescriptions(event) {
+    // focus the trigger so the modal returns focus here, not to the editor,
+    // where adopting a collapsed caret would drop the image selection
+    event.currentTarget.focus();
+    this.args.data.openDescriptions();
   }
 
   @action
@@ -60,7 +72,16 @@ export default class ImageAltTextInput extends Component {
         (if this.isExpanded "--expanded")
       }}
     >
-      {{#if this.isExpanded}}
+      {{#if @data.openDescriptions}}
+        <button
+          aria-haspopup="dialog"
+          class="image-alt-text-input__display"
+          type="button"
+          {{on "click" this.openDescriptions}}
+        >
+          {{or this.altText (i18n "composer.image_alt_text.title")}}
+        </button>
+      {{else if this.isExpanded}}
         <textarea
           class="image-alt-text-input__field"
           placeholder={{i18n "composer.image_alt_text.title"}}

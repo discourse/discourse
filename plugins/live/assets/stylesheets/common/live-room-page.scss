@@ -836,9 +836,31 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   min-width: 16em;
   padding: 0.5em;
 
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    margin-block-end: 0.5em;
+  }
+
   &__title {
-    margin: 0 0 0.5em;
+    margin: 0;
     font-size: var(--font-0);
+  }
+
+  .d-toggle-switch {
+    flex-shrink: 0;
+    font-size: var(--font-down-1);
+  }
+
+  &__paused {
+    margin-block-end: 0.5em;
+    padding: 0.35em 0.5em;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
   }
 
   &__list {
@@ -1077,6 +1099,171 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
 
   &__name {
     overflow-wrap: anywhere;
+  }
+
+  &__role {
+    padding: 0.1em 0.45em;
+    border-radius: 999px;
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    line-height: 1.3;
+    text-shadow: none;
+    white-space: nowrap;
+
+    &.--moderator {
+      background: var(--tertiary);
+      color: var(--secondary);
+    }
+
+    // Dark scrim rather than a light one: avatar tiles are light in the
+    // light scheme, where a translucent white pill disappears.
+    &.--speaker {
+      background: rgb(0 0 0 / 55%);
+      color: #fff;
+    }
+  }
+}
+
+.live-call-controls__queue-badge {
+  margin-inline-start: 0.25em;
+  font-size: var(--font-down-1);
+  font-weight: 600;
+}
+
+.live-room-page__stage-invite {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--tertiary-medium);
+  border-radius: var(--d-border-radius);
+  background: var(--tertiary-very-low);
+
+  &-text {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--primary);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.live-room-page__stage-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-medium);
+  font-size: var(--font-up-1);
+}
+
+.live-room-page__audience {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 9.5rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--primary-very-low);
+  overflow-y: auto;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-title {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary-high);
+  }
+
+  &-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // Doubled up with .btn so the chip look wins over the button variants.
+  &-member.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: 13rem;
+    padding: 0.2rem 0.55rem 0.2rem 0.25rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 999px;
+    background: var(--secondary);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      border-color: var(--tertiary);
+      background: var(--tertiary-very-low);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.85;
+    }
+
+    &.--self {
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--hand-raised {
+      border-color: var(--tertiary);
+      background: var(--tertiary-very-low);
+    }
+
+    &.--invited {
+      border-color: var(--success-medium);
+    }
+
+    .avatar {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-hand {
+    color: var(--tertiary);
+    flex-shrink: 0;
+  }
+
+  &-invited-badge {
+    padding: 0.05em 0.4em;
+    border-radius: 999px;
+    background: var(--success-low);
+    color: var(--success);
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    flex-shrink: 0;
   }
 }
 

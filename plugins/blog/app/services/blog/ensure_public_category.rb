@@ -56,12 +56,9 @@ class Blog::EnsurePublicCategory
     )
   end
 
-  # The default blog's settings stay its source of truth until blogs are edited in
-  # the admin, so the setting is written too or the next sync would clear the row.
   def remember_category(blog:, category:)
     blog.category_id = category.id
     blog.save!(validate: false)
-    SiteSetting.blog_category = category.id if blog.is_default?
   end
 
   def log_category_creation(category:)

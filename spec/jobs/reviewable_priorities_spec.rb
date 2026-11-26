@@ -59,6 +59,15 @@ RSpec.describe Jobs::ReviewablePriorities do
         expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
       end
 
+      it "preserves priorities when no reviewable has enough flags" do
+        Jobs::ReviewablePriorities.new.execute({})
+        reviewables.each { |reviewable| reviewable.reviewable_scores.last.delete }
+
+        expect { Jobs::ReviewablePriorities.new.execute({}) }.not_to change {
+          Reviewable.score_required_to_hide_post
+        }
+      end
+
       it "ignore negative scores when calculating priorities" do
         negative_score = -9
         other_reviewable.update!(score: negative_score)

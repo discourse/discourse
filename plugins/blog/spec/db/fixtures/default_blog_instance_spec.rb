@@ -11,9 +11,10 @@ RSpec.describe Blog::Instance do
     seed_default_blog
 
     expect(described_class.sole).to have_attributes(
-      name: SiteSetting.blog_title,
+      name: described_class::DEFAULT_NAME,
       slug: "blog",
       is_default: true,
+      published: true,
     )
   end
 end

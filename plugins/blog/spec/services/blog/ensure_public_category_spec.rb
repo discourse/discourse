@@ -21,7 +21,7 @@ RSpec.describe Blog::EnsurePublicCategory do
         Fabricate(:category, permissions: { writers.id => CategoryGroup.permission_types[:full] })
       end
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "returns it without changing its permissions or logging anything" do
         expect { result }.not_to change { [Category.count, UserHistory.count] }
@@ -39,7 +39,7 @@ RSpec.describe Blog::EnsurePublicCategory do
       it "creates nothing" do
         expect { result }.not_to change { Category.count }
         expect(result).to fail_a_policy(:name_available)
-        expect(SiteSetting.blog_category).to be_blank
+        expect(Blog::Instance.default_blog.category_id).to be_blank
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe Blog::EnsurePublicCategory do
           [Group::AUTO_GROUPS[:everyone], CategoryGroup.permission_types[:create_post]],
           [publishers.id, CategoryGroup.permission_types[:full]],
         )
-        expect(SiteSetting.blog_category.to_i).to eq(category.id)
+        expect(Blog::Instance.default_blog.category_id.to_i).to eq(category.id)
         expect(blog.reload.category_id).to eq(category.id)
         expect(category.topic.first_post.raw).to eq(I18n.t("blog.categories.public_description"))
         expect(
@@ -84,9 +84,20 @@ RSpec.describe Blog::EnsurePublicCategory do
 
       it "names the category after the blog and stores it on the blog only" do
         expect(result).to run_successfully
-        expect(result[:category].name).to eq("Engineering notes")
+        expect(result[:category]).to have_attributes(
+          name: "Engineering notes Blog",
+          slug: "engineering-notes-blog",
+        )
         expect(blog.reload.category_id).to eq(result[:category].id)
-        expect(SiteSetting.blog_category).to be_blank
+        expect(Blog::Instance.default_blog.category_id).to be_blank
+      end
+
+      context "when the blog's name already ends with the word" do
+        let(:blog) { Blog::Instance.create!(name: "Design blog", slug: "design") }
+
+        it "does not repeat it" do
+          expect(result[:category]).to have_attributes(name: "Design blog", slug: "design-blog")
+        end
       end
     end
 
@@ -102,14 +113,14 @@ RSpec.describe Blog::EnsurePublicCategory do
     context "when the stored blog category was deleted" do
       before do
         deleted = Fabricate(:category)
-        SiteSetting.blog_category = deleted.id
+        update_default_blog(category_id: deleted.id)
         deleted.destroy!
       end
 
       it "creates a new category and stores it" do
         expect { result }.to change { Category.count }.by(1)
         expect(result[:category].name).to eq("Blog")
-        expect(SiteSetting.blog_category.to_i).to eq(result[:category].id)
+        expect(Blog::Instance.default_blog.category_id.to_i).to eq(result[:category].id)
       end
     end
   end

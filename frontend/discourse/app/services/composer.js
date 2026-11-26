@@ -562,24 +562,33 @@ export default class ComposerService extends Service {
           submenu: [
             {
               name: "ai-content-code",
-              action: () => {
-                const placeholder = i18n("composer.ai_content.placeholder");
-                this.appEvents.trigger(
-                  "composer:insert-block",
-                  `\`\`\` ai\n// ${placeholder}\n\`\`\``
+              action: ({ insertBlock, selected }) => {
+                const content = selected.plainText ?? selected.value;
+                if (!content) {
+                  insertBlock("``` ai\n\n```", { moveCursorInside: true });
+                  return;
+                }
+
+                const fenceLength = (content.match(/`+/g) ?? []).reduce(
+                  (length, run) => Math.max(length, run.length + 1),
+                  3
                 );
+                const fence = "`".repeat(fenceLength);
+                insertBlock(`${fence} ai\n${content}\n${fence}`);
               },
               icon: "code",
               label: "composer.ai_content.code",
             },
             {
               name: "ai-content-quote",
-              action: () => {
-                const placeholder = i18n("composer.ai_content.placeholder");
-                this.appEvents.trigger(
-                  "composer:insert-block",
-                  `> [!AI]\n> ${placeholder}`
-                );
+              action: ({ insertBlock, selected }) => {
+                const content =
+                  selected.value || i18n("composer.ai_content.placeholder");
+                const quote = content
+                  .split("\n")
+                  .map((line) => (line ? `> ${line}` : ">"))
+                  .join("\n");
+                insertBlock(`> [!AI]\n${quote}`);
               },
               icon: "quote-right",
               label: "composer.ai_content.quote",
@@ -596,7 +605,7 @@ export default class ComposerService extends Service {
           this._setupPopupMenuOption({
             name: "change-reply-to",
             action: this.openChangeReplyToModal,
-            icon: "share",
+            icon: "reply",
             label: "composer.change_reply_to.open_from_menu",
           })
         );

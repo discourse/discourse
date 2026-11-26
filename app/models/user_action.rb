@@ -368,7 +368,10 @@ class UserAction < ActiveRecord::Base
       )
     end
 
-    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
+    if !Topic
+         .with_deleted
+         .where(id: hash[:target_topic_id], archetype: Archetype.private_message)
+         .exists?
       update_like_count(hash[:user_id], hash[:action_type], -1)
     end
   end

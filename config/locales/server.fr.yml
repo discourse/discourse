@@ -5206,7 +5206,6 @@ fr:
       dracula: "Dracula"
       grey_amber: "Gris ambre"
       latte: "Café crème"
-      dark_rose: "Rose foncé"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5438,6 +5437,7 @@ fr:
       delete_and_ignore_replies:
         title: "Supprimer la publication et ses réponses, puis ignorer le signalement"
         description: "Supprimer la publication et toutes ses réponses, puis ignorer le signalement en le retirant de la file d'attente. S'il s'agit de la première publication, supprimer également le sujet."
+        confirm_title: "Supprimer la publication et ses réponses, puis ignorer le signalement?"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
         complete: "Publication et réponses supprimées."
       delete_and_agree:
@@ -5447,6 +5447,7 @@ fr:
       delete_and_agree_replies:
         title: "Supprimer le message et les réponses"
         description: "Acceptez le signalement et supprimez ce message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet."
+        confirm_title: "Supprimer le message et les réponses?"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
         complete: "Publication et réponses supprimées."
       disagree_and_restore:
@@ -5486,6 +5487,10 @@ fr:
       approve_post:
         title: "Oui"
         complete: "Publication approuvée."
+      deny_and_delete_post:
+        complete: "Publication supprimée."
+      deny_and_keep_deleted:
+        complete: "Publication maintenue supprimée."
       approve_post_closed:
         title: "Oui"
         confirm: "Ce sujet est fermé. Voulez-vous quand même créer la publication ?"

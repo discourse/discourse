@@ -28,7 +28,6 @@ pl_PL:
         view_blog: Zobacz blog
         open_blog: Otwórz blog
         safe_mode: Otwórz bez kodu niestandardowego
-        identity: Tożsamość bloga
         blog_title: Nazwa bloga
         tagline: Slogan
         accent: Kolor akcentowy
@@ -79,11 +78,49 @@ pl_PL:
         js_description: Zwykły JavaScript, do 65 536 bajtów. Tagi skryptów nie są parsowane — załaduj inny skrypt, dodając element skryptu (document.createElement("script")).
         save: Zapisz
         saved: Ustawienia bloga zostały zapisane. Odśwież bloga, aby zobaczyć zmiany.
-        identity_tab: Tożsamość
-        identity_description: Nazwa, wprowadzenie, Informacje o treści i adresy artykułów udostępniane przez wszystkie tematy bloga.
-        article_urls: Adresy URL artykułów
+        about_tab: O stronie
+        about_tab_description: Ustaw nazwę i slogan, które przedstawią tego bloga jego czytelnikom
+        back_to_blogs: Powrót do blogów
+        blogs_tab: Blogi
+        blogs_tab_description: Edytuj blog, aby zmienić jego nazwę, motyw i ustawienia
+        themes_tab_description: Przeglądaj i zarządzaj motywami dostępnymi dla Twojego bloga
+        add_blog: Dodaj blog
+        new_blog: Nowy blog
+        new_blog_description: Blog na początku będzie nieopublikowany, więc możesz go skonfigurować, zanim czytelnicy go zobaczą.
+        create_blog: Utwórz bloga
+        blog_slug: Slug
+        blog_slug_description: "Użyto w adresie społeczności: /blog/<slug>."
+        blog_slug_locked: Na tym blogu opublikowano już artykuły, więc jego slug jest stały, żeby adresy tych wpisów nadal działały.
+        blog_url: Domena własna
+        blog_url_description: Obsługuj bloga z własnej domeny. Domena musi już wskazywać na tę witrynę.
+        blog_category: Kategoria dyskusji
+        blog_category_description: Każdy opublikowany artykuł ma tutaj temat do dyskusji.
+        blog_category_locked: Na tym blogu opublikowano artykuły, więc nie można zmienić kategorii dyskusji.
+        posts_per_page: Artykuły na stronę
+        settings_tab: Ustawienia
+        settings_tab_description: Wybierz miejsce, w którym będzie się znajdował ten blog i sposób adresowania jego artykułów
+        theme_tab: Motyw
+        theme_tab_description: Wybierz odpowiedni motyw dla swojego bloga
+        add_or_edit_themes: Dodaj lub edytuj motywy
+        published_status: Opublikowany
+        unpublished_status: Nie opublikowano
+        publish_blog: Opublikuj blog
+        unpublish_blog: Cofnij publikację bloga
+        publish_blog_confirm: Opublikować „%{name}”? Jego strony, kanał i mapa witryny staną się publiczne.
+        unpublish_blog_confirm: Cofnąć publikację „%{name}”? Czytelnicy stracą dostęp do stron, ale artykuły zostaną zachowane.
+        delete_blog: Usuń blog
+        delete_blog_confirm: Usunąć „%{name}”? Kategoria dyskusji zostaje zachowana.
+        blog_deleted: Blog został usunięty.
+        column_name: Nazwa
+        column_address: Adres
+        column_category: Kategoria
+        column_status: Status
+        needs_attention: Wymaga uwagi
+        select_theme: Wybierz motyw
+        update_to_revision: Aktualizacja do wersji %{revision}
+        active_on: Aktywny w %{blogs}
         path_format: Format adresu
-        path_format_description: Dotyczy nowych artykułów. Do momentu pierwszej publikacji artykułu, jego adres znajduje się po tytule i dniu publikacji. Opublikowane artykuły zachowują swoje adresy.
+        path_format_description: Dotyczy nowych artykułów. Opublikowane artykuły zachowują swoje adresy.
         path_format_sample_slug: mój-artykuł
         path_formats:
           slug: Nazwa artykułu
@@ -93,7 +130,6 @@ pl_PL:
         custom_path_format: Format niestandardowy
         custom_path_format_description: "Użyj {year}, {month}, {day}, {slug} i {id}, a także uwzględnij {slug} lub {id} , aby każdy adres był unikalny."
         custom_path_format_invalid: "Zacznij od / i uwzględnij {slug} lub {id}. Można używać tylko {year}, {month}, {day}, {slug} i {id}."
-        themes_index_description: Wybierz projekt, który zobaczą czytelnicy. Dostosuj dołączony motyw lub edytuj swój własny; zmiany pozostaną prywatne, dopóki ich nie aktywujesz.
         thumbnail:
           journal: Dziennik
           headline: Bądź ciekawy.
@@ -297,6 +333,7 @@ pl_PL:
       editor_title: Edytor bloga
       editor_description: Szkice pozostają prywatne do momentu ich opublikowania. Edytuj artykuł, aby go opublikować, zaplanować lub poprawić.
       editor_table:
+        blog: Blog
         edit: Edytuj
         status: Status
         published: Opublikowany
@@ -311,6 +348,7 @@ pl_PL:
       new_draft: Nowy szkic
       settings: Konfiguruj ustawienia bloga
       all: Wszystkie
+      all_blogs: Wszystkie blogi
       drafts: Szkice
       published: Opublikowany
       visit_blog: Odwiedź blog
@@ -320,6 +358,8 @@ pl_PL:
       preview: Podgląd
       load_more: Załaduj więcej
       unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
+      blog_field: Blog
+      blog_field_hint: Dopóki artykuł nie zostanie po raz pierwszy opublikowany, może zostać przeniesiony na inny blog.
       path: Ścieżka artykułu
       path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem. Stare ścieżki automatycznie przekierowują po zmianie.
       path_hint_dated: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem i datą publikacji. Stare ścieżki automatycznie przekierowują po zmianie.

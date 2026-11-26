@@ -14,6 +14,7 @@ import Board from "discourse/plugins/boards/discourse/models/board";
 import BoardsAddFromTopicColumnSubmenu from "./boards-add-from-topic-column-submenu.gjs";
 
 const SKELETON_ROWS = Array.from({ length: 3 });
+const COLUMN_MENU = "discourse-boards-add-from-topic-column-menu";
 
 const BoardSkeleton = <template>
   <div
@@ -32,6 +33,7 @@ export default class BoardsAddFromTopicMenu extends Component {
   @tracked loading = true;
 
   skeletonRows = SKELETON_ROWS;
+  #hoverOpenedTrigger = null;
   #requestedBoards = false;
 
   get availableBoards() {
@@ -54,16 +56,46 @@ export default class BoardsAddFromTopicMenu extends Component {
 
   @action
   openBoardSubmenu(board, event) {
-    return this.menu.show(event.currentTarget, {
-      identifier: "discourse-boards-add-from-topic-column-menu",
+    const trigger = event.currentTarget;
+    const openedByHover = this.#hoverOpenedTrigger === trigger;
+    this.#hoverOpenedTrigger = null;
+
+    // The click that follows a hover shouldn't toggle the submenu closed.
+    if (openedByHover && this.#isSubmenuOpenFor(trigger)) {
+      return;
+    }
+
+    return this.#showSubmenu(board, trigger);
+  }
+
+  @action
+  openBoardSubmenuOnHover(board, event) {
+    if (
+      event.pointerType === "mouse" &&
+      !this.menu.shouldRenderInModal(true) &&
+      !this.#isSubmenuOpenFor(event.currentTarget)
+    ) {
+      this.#hoverOpenedTrigger = event.currentTarget;
+      return this.#showSubmenu(board, event.currentTarget);
+    }
+  }
+
+  #isSubmenuOpenFor(trigger) {
+    return this.menu.getByIdentifier(COLUMN_MENU)?.trigger === trigger;
+  }
+
+  #showSubmenu(board, trigger) {
+    return this.menu.show(trigger, {
+      identifier: COLUMN_MENU,
       component: BoardsAddFromTopicColumnSubmenu,
+      ariaLabel: board.fancyTitle,
       modalForMobile: true,
       placement: "right-start",
       offset: { mainAxis: 10, crossAxis: -5 },
       data: { board, topic: this.args.data?.topic },
       onClose: (data) => {
-        if (data?.cardSaved) {
-          this.args.close();
+        if (data?.closeParentMenu) {
+          return this.args.close();
         }
       },
     });
@@ -105,19 +137,16 @@ export default class BoardsAddFromTopicMenu extends Component {
             {{#each this.availableBoards as |board|}}
               <dropdown.item
                 class="discourse-boards-add-from-topic-menu__board-item"
-                {{on
-                  "mouseenter"
-                  (fn this.openBoardSubmenu board)
-                  passive=true
-                }}
               >
                 <DButton
                   class="btn-transparent discourse-boards-add-from-topic-menu__board"
                   @action={{this.openBoardSubmenu}}
                   @actionParam={{board}}
                   @forwardEvent={{true}}
+                  @immediate={{true}}
                   @suffixIcon="angle-right"
                   @translatedLabel={{board.fancyTitle}}
+                  {{on "pointerenter" (fn this.openBoardSubmenuOnHover board)}}
                 />
               </dropdown.item>
             {{/each}}
@@ -129,19 +158,16 @@ export default class BoardsAddFromTopicMenu extends Component {
             {{#each this.alreadyAddedBoards as |board|}}
               <dropdown.item
                 class="discourse-boards-add-from-topic-menu__board-item"
-                {{on
-                  "mouseenter"
-                  (fn this.openBoardSubmenu board)
-                  passive=true
-                }}
               >
                 <DButton
                   class="btn-transparent discourse-boards-add-from-topic-menu__board"
                   @action={{this.openBoardSubmenu}}
                   @actionParam={{board}}
                   @forwardEvent={{true}}
+                  @immediate={{true}}
                   @suffixIcon="angle-right"
                   @translatedLabel={{board.fancyTitle}}
+                  {{on "pointerenter" (fn this.openBoardSubmenuOnHover board)}}
                 />
               </dropdown.item>
             {{/each}}

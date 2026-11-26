@@ -646,9 +646,6 @@ en:
         members_label: "Members"
 
       admin:
-        bot_discoverability:
-          label: "Show in chat"
-          description: "Let people find this bot when starting a chat direct message"
         title: "Chat"
         export_messages:
           title: "Export chat messages"

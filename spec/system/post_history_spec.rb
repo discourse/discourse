@@ -136,6 +136,8 @@ describe "Post history with an unlisted revision" do
     post_history_modal.choose_visibility("unlisted")
 
     expect(post_history_modal).to have_unlisted_marker
+
+    resize_window(width: 320) { expect(post_history_modal).to have_revision_arrows_inside_controls }
   end
 
   it "skips the unlisted revision for users until they show all edits" do

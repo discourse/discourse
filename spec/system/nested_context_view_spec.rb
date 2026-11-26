@@ -65,16 +65,11 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_context_banner
     end
 
-    it "marks direct post URLs as context routes" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
-
-      expect(nested_view).to have_context_view
-    end
-
-    it "highlights the target post" do
+    it "opens the context view and highlights the target when the user follows a direct post URL" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
       expect(nested_view).to have_highlighted_post(chain_posts[2])
+      expect(nested_view).to have_context_view
     end
   end
 
@@ -87,13 +82,6 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(chain_posts[0])
       expect(nested_view).to have_no_post(chain_posts[1])
       expect(nested_view).to have_no_post(chain_posts[2])
-    end
-
-    it "keeps the target as the branch root" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
-
-      expect(nested_view).to have_no_post(chain_posts[0])
-      expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
     end
 
     it "offers parent-context navigation" do
@@ -140,12 +128,6 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(deep_chain[12])
       expect(nested_view).to have_post(deep_chain[3])
       expect(nested_view).to have_no_post(deep_chain[1])
-    end
-
-    it "marks truncated contexts as targeted nested views" do
-      nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-
-      expect(nested_view).to have_context_view
     end
 
     it "context=0 starts at the target even when ancestors would be truncated" do
@@ -206,6 +188,45 @@ RSpec.describe "Nested context view" do
       nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
 
       expect(nested_view).to have_highlighted_post(chain_posts[4])
+    end
+
+    it "clears the previous highlight when navigating before its timer expires" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+      nested_view.remember_highlighted_post(chain_posts[2])
+
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
+
+      expect(nested_view).to have_highlighted_post(chain_posts[4])
+      expect(nested_view.previous_post_highlighted?).to eq(false)
+    end
+
+    it "clears the highlight when leaving the nested view" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+      nested_view.remember_highlighted_post(chain_posts[2])
+
+      nested_view.route_to("/latest")
+
+      expect(nested_view).to have_no_nested_view
+      expect(nested_view.previous_post_highlighted?).to eq(false)
+    end
+
+    it "restarts the CSS animation when forcing a scroll to the same target" do
+      nested_view.visit_nested(topic)
+      nested_view.enable_highlight_animations
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+
+      expect(nested_view.force_highlight_restart(chain_posts[2])).to eq(
+        "hadAnimation" => true,
+        "sameElement" => true,
+        "newAnimation" => true,
+        "startsAtBeginning" => true,
+        "previousAnimationCancelled" => true,
+      )
+      expect(nested_view).to have_no_highlighted_post(chain_posts[2])
+      expect(nested_view).to have_post(chain_posts[2])
     end
 
     # Notifications produce /t/slug/id/N URLs; topic/from-params.js

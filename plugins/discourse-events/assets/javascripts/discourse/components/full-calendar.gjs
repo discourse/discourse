@@ -240,6 +240,7 @@ export default class FullCalendar extends Component {
       {{didUpdate
         this.updateCalendar
         @events
+        @leftHeaderToolbar
         @refreshKey
         this.capabilities.viewport.md
       }}

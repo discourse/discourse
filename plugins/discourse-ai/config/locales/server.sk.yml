@@ -261,6 +261,8 @@ sk:
           text_color: "farba textu"
         approve_label: "Áno"
         reject_label: "Nie"
+        category_access_levels:
+          readonly: "Zobraz"
       agents:
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:
@@ -531,6 +533,12 @@ sk:
       edit_category:
         errors:
           not_found: "Kategória sa nenašla."
+      set_category_permissions:
+        errors:
+          not_found: "Kategória sa nenašla."
+      delete_category:
+        errors:
+          not_found: "Kategória sa nenašla."
       change_topic_category:
         errors:
           not_found: "Téma sa nenašla."
@@ -548,6 +556,8 @@ sk:
         errors:
           not_found: "Téma sa nenašla."
     appearance_authoring:
+      component_on: "Zapnuté"
+      component_off: "Vypnuté"
       default_theme: "Predvolená téma"
       colors:
         light:

@@ -98,8 +98,10 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".category-breadcrumb:not(.hidden) .category-drop")
     expect(page).to have_no_css(".navigation-controls .bulk-select")
 
-    find(".mobile-tab-bar__views .navigation-options__trigger").click
-    find(".navigation-options__bulk-select").click
+    within(".mobile-tab-bar__views") do
+      expect(page).to have_css(".navigation-options__bulk-select .d-icon-list")
+      click_button(I18n.t("js.topics.bulk.select"))
+    end
 
     expect(topic_list).to have_bulk_select_enabled
 
@@ -197,11 +199,10 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(SiteSetting.fixed_category_positions).to eq(true)
   end
 
-  it "lets members who can edit a topic's title, category and tags do so from the header" do
+  it "keeps title editing on the topic page when the title docks" do
     SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_0]
     topic = Fabricate(:post, user: Fabricate(:user), raw: "Scrollable post content\n\n" * 50).topic
     topic_page = PageObjects::Pages::Topic.new
-    edit_topic_label = I18n.t("js.mobile_tab_bar.edit_topic")
     sign_in(other_user)
 
     topic_page.visit_topic(topic)
@@ -209,18 +210,51 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(topic_page).to have_topic_title(topic.title)
 
     page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-    expect(page).to have_button(edit_topic_label)
+    within(".d-header .header-title") do
+      expect(page).to have_no_css(".d-icon-pencil")
+      click_link(topic.title)
+    end
 
-    page.execute_script("window.scrollTo(0, 0)")
-    expect(page).to have_no_button(edit_topic_label)
-
-    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-    find_button(edit_topic_label).click
+    topic_page.click_topic_edit_title
 
     expect(topic_page).to have_topic_title_editor
   end
 
-  it "lets the user edit a nested topic's title from the header" do
+  it "gives the docked title room on scroll down and brings the header buttons back on scroll up" do
+    topic = Fabricate(:post, raw: "Scrollable post content\n\n" * 50).topic
+    actions = ".d-header .search-dropdown, .d-header #toggle-current-user"
+    back = ".d-header .mobile-tab-bar-back"
+    docked_title = ".d-header .header-title .topic-link"
+    visit(topic.url)
+
+    expect(page).to have_css(back)
+    expect(page).to have_css(actions, count: 2)
+
+    # Scroll-direction tracking pauses for a second after entering a topic.
+    wait_for_timeout(1100)
+    page.execute_script("window.scrollTo(0, 700)")
+    expect(page).to have_css(docked_title, text: topic.title)
+    expect(page).to have_no_css(actions)
+    expect(page).to have_css(back)
+    expect(page).to have_no_css(".d-header .title")
+
+    page.execute_script(
+      "document.querySelector('.mobile-tab-bar__menu').focus({ preventScroll: true })",
+    )
+    page.send_keys(:tab)
+    expect(page).to have_css(".mobile-tab-bar.--tucked :focus-visible")
+    expect(page).to have_css(actions, count: 2)
+
+    page.execute_script("document.activeElement.blur()")
+    expect(page).to have_no_css(actions)
+
+    page.execute_script("window.scrollBy(0, -150)")
+    expect(page).to have_css(actions, count: 2)
+    expect(page).to have_css(docked_title, text: topic.title)
+    expect(page).to have_css(back)
+  end
+
+  it "keeps title editing on the nested topic page when the title docks" do
     SiteSetting.nested_replies_enabled = true
     topic = Fabricate(:post, user: current_user, raw: "Scrollable post content\n\n" * 50).topic
     Fabricate(:nested_topic, topic:)
@@ -228,7 +262,12 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
     nested_view.visit_nested(topic)
     nested_view.scroll_past_topic_title
-    find_button(I18n.t("js.mobile_tab_bar.edit_topic")).click
+    within(".d-header .header-title") do
+      expect(page).to have_no_css(".d-icon-pencil")
+      click_link(topic.title)
+    end
+
+    nested_view.click_edit_topic
 
     expect(nested_view).to have_topic_title_editor
   end
@@ -288,6 +327,58 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css("#topic-progress-wrapper:not(.docked) #topic-progress .nums")
   end
 
+  it "shows topic progress only after the first reply, even with pin history" do
+    sign_in(other_user)
+    topic = Fabricate(:post, raw: "Scrollable post content\n\n" * 50).topic
+    Fabricate(:small_action, topic: topic, action_code: "pinned.enabled")
+
+    visit(topic.url)
+
+    expect(page).to have_css(".mobile-tab-bar.--no-tabs .mobile-tab-bar__menu")
+    expect(page).to have_no_css(".mobile-tab-bar__views #topic-progress-wrapper", visible: :all)
+    expect(page).to have_no_css("#topic-progress")
+
+    Fabricate(:post, topic: topic)
+    page.refresh
+
+    expect(page).to have_css(".mobile-tab-bar__views #topic-progress")
+  end
+
+  it "keeps the timeline between the footer actions while reading when Topics is the only section" do
+    sign_in(other_user)
+    topic = Fabricate(:topic)
+    Fabricate.times(12, :post, topic: topic)
+    Fabricate(:topic_user, user: other_user, topic: topic, last_read_post_number: 8)
+    progress = ".mobile-tab-bar__menu + .mobile-tab-bar__views #topic-progress"
+
+    visit("#{topic.url}/1")
+
+    expect(page).to have_css("#{progress} .nums", text: "1 / 12", normalize_ws: true)
+    expect(page).to have_css(".mobile-tab-bar__views .progress-back")
+    center_offset = find(progress).evaluate_script(<<~JS)
+        this.getBoundingClientRect().x + this.getBoundingClientRect().width / 2 - window.innerWidth / 2
+      JS
+    expect(center_offset).to be_within(1).of(0)
+    expect(page).to have_css(".mobile-tab-bar__views + .mobile-tab-bar__create")
+    expect(page).to have_css("#topic-progress", count: 1, visible: :all)
+
+    page.execute_script("window.scrollTo(0, document.documentElement.scrollHeight)")
+    expect(page).to have_css(progress, visible: :hidden)
+
+    page.execute_script("window.scrollTo(0, 0)")
+    expect(page).to have_css("#{progress} .nums", text: "1 / 12", normalize_ws: true)
+    find(progress).send_keys(:enter)
+    find(".timeline-fullscreen .now-date").click
+
+    expect(page).to have_no_css(".timeline-fullscreen")
+    expect(page).to have_css(
+      "#{progress} .nums",
+      text: "12 / 12",
+      normalize_ws: true,
+      visible: :all,
+    )
+  end
+
   it "offers a new topic only where the topic list would" do
     SiteSetting.hide_disabled_create_topic_button = true
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
@@ -307,10 +398,9 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     sign_in(Fabricate(:moderator, refresh_auto_groups: true))
 
     visit("/categories")
-    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    within(".mobile-tab-bar__views") { click_button(I18n.t("js.categories.reorder.title")) }
 
-    expect(page).to have_css(".navigation-options__reorder-categories")
-    expect(page).to have_no_css(".navigation-options__page-layout")
+    expect(page).to have_css(".reorder-categories")
   end
 
   it "lets the user start a topic in the category they're looking at from the create button" do
@@ -347,7 +437,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_current_path(category.url)
   end
 
-  it "shows the full logo on a section's top level and a back button below it" do
+  it "shows the full logo on the topic list and beside the back button in a topic" do
     category = Fabricate(:category)
     topic = Fabricate(:post, topic: Fabricate(:topic, category:)).topic
     visit(category.url)
@@ -360,7 +450,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".mobile-tab-bar-back")
     expect(PageObjects::Pages::Topic.new).to have_topic_title(topic.title)
     expect(page).to have_no_css(".d-header .extra-info-wrapper")
-    expect(page).to have_css(".d-header .title--minimized")
+    expect(page).to have_css(".d-header .title:not(.title--minimized)")
 
     find(".mobile-tab-bar-back").click
 
@@ -450,14 +540,22 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css("#user-menu-button-profile")
   end
 
-  it "gives members without other sections the forum tab" do
+  it "puts the topic views between separate actions when Topics is the only section" do
     sign_in(other_user)
 
     visit("/latest")
 
-    expect(tab_bar).to have_tabs("main")
-    expect(page).to have_css(".mobile-tab-bar__create")
+    expect(page).to have_css(".mobile-tab-bar__menu + .mobile-tab-bar__views #navigation-bar")
+    expect(page).to have_no_css(".mobile-tab-bar__tabs")
+    expect(page).to have_css(".mobile-tab-bar__views + .mobile-tab-bar__create")
     expect(page).to have_css("#toggle-current-user img.avatar")
     expect(page).to have_no_css(".hamburger-dropdown")
+
+    visit("/g")
+    expect(tab_bar).to have_no_views
+    tab_bar.open_menu
+    find("#{forum_menu} .sidebar-section-link[data-link-name='everything']").click
+
+    expect(page).to have_current_path("/latest")
   end
 end

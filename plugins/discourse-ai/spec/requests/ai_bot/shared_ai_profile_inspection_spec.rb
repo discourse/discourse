@@ -162,6 +162,32 @@ RSpec.describe "Shared AI profile inspection" do
     )
   end
 
+  it "marks explicitly published artifacts available even when their source is outside the share window" do
+    artifact.update!(post: Fabricate(:post, topic: topic, user: owner))
+    SharedAiConversation.share_conversation(owner, topic, max_posts: 1)
+    sign_in(owner)
+
+    get "#{artifact_path}.json", params: { type: "conversation" }
+
+    expect(response.parsed_body["items"].sole["available"]).to eq(true)
+  end
+
+  it "keeps legacy artifact cards unavailable until the owner shares again" do
+    publication = conversation
+    publication.update!(context: publication.context.map { |post| post.except("artifact_ids") })
+    sign_in(owner)
+    get "#{artifact_path}.json", params: { type: "conversation" }
+    expect(response.parsed_body["items"].sole["available"]).to eq(false)
+
+    sign_in(admin)
+    get "#{artifact_path}.json", params: { user_id: owner.id, type: "conversation" }
+    expect(response.parsed_body["items"]).to eq([])
+
+    SharedAiConversation.share_conversation(owner, topic)
+    get "#{artifact_path}.json", params: { user_id: owner.id, type: "conversation" }
+    expect(response.parsed_body["items"].sole["available"]).to eq(true)
+  end
+
   it "preserves the existing administrator conversation DELETE API despite read-only inspection controls" do
     conversation
     sign_in(admin)

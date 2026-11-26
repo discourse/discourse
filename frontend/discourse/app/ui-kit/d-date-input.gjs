@@ -150,7 +150,14 @@ export default class DDateInput extends Component {
       picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
     picker.setMinDate = (date) => {
-      picker.min = date ? moment(date).format("YYYY-MM-DD") : "";
+      const min = date ? moment(date).format("YYYY-MM-DD") : "";
+
+      // Assigning `min`, even to its current value, resets the browser's
+      // in-progress segment typing, so a year typed digit by digit would be
+      // cut short by the update each keystroke triggers.
+      if (picker.min !== min) {
+        picker.min = min;
+      }
     };
 
     if (this.date) {

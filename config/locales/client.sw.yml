@@ -1692,7 +1692,7 @@ sw:
         back_description: "Rudi kwenye chapisho la mwisho ambalo haujalisoma"
         replies_short: "%{current} / %{total}"
       progress:
-        title: maendeleo ya mada
+        title: "maendeleo ya mada"
         jump_prompt_or: "au"
       notifications:
         title: badilisha mara ngapi utapata taarifa kuhusu mada hii
@@ -2010,18 +2010,12 @@ sw:
       creation_error: Tatizo limetokea wakati wa kutengeneza kategoria.
       save_error: Hitilafu imetokea wakati wa kuhifadhi kategoria.
       description: "Maelezo"
-      icon: "ikoni"
-      emoji: "Emoji"
       background_color: "Rangi"
       color_validations:
         cant_be_empty: "haiwezi kuachwa wazi"
       styles:
         icon: "ikoni"
         emoji: "Emoji"
-        options:
-          icon: "ikoni"
-          emoji: "Emoji"
-      color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
       delete_error: "Hitilafu imetokea wakati wa kuondoa kategoria."
       no_description: "Tafadhali, ongeza maelezo kuhusu kategoria hii."
@@ -2366,6 +2360,7 @@ sw:
       share: "Shirikisha"
       dismiss: "Ondosha"
     mobile_tab_bar:
+      new_topic: "Mada Mpya"
       create: "Tengeneza"
       more: "Zaidi"
       back: "Iliyopita"

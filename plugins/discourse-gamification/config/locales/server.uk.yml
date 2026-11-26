@@ -36,3 +36,4 @@ uk:
       gamification_score:
         invalid_points: "Оцінка має бути цілим числом, відмінним від нуля, отримано: %{points}"
         invalid_date: "Недійсна дата: %{date}"
+        invalid_category: "Категорію не знайдено: %{category_id}"

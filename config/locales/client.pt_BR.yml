@@ -530,9 +530,6 @@ pt_BR:
       fonts:
         base_font: "Corpo"
         heading_font: "Cabeçalhos"
-      logo:
-        description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
-        help_text: "O tamanho recomendado é 600 x 80 pixels."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -987,7 +984,6 @@ pt_BR:
         suspect_user: "Este usuário é spam?"
         approve_post: "Aprovar esta postagem?"
         approve_topic: "Aprovar este tópico?"
-        something_wrong_with_post: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -3901,7 +3897,7 @@ pt_BR:
         back_description: "Voltar para a sua última postagem não lida"
         replies_short: "%{current}/%{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "pular para…"
         jump_prompt_of:
           one: "de %{count} postagem"
@@ -4535,6 +4531,8 @@ pt_BR:
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
+      empty_state:
+        edit_category: "Editar categoria"
       create: "Nova categoria"
       create_long: "Criar uma nova categoria"
       type_settings_schema:
@@ -4552,7 +4550,7 @@ pt_BR:
         emoji_required: "Selecione um emoji."
         icon_required: "Selecione um ícone."
       name: "Nome da categoria"
-      untitled: "Categoria sem título"
+      icon_search_placeholder: "Pesquisar…"
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria no modo escuro"
@@ -4560,9 +4558,6 @@ pt_BR:
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem de fundo da categoria no modo escuro"
       style: "Estilo"
-      icon: "Ícone"
-      emoji: "Emoji"
-      select_emoji: "Selecionar emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
@@ -4570,18 +4565,11 @@ pt_BR:
         incorrect_length: "deve corresponder ao formato #RRGGBB ou #RGB"
         non_hexdecimal: "deve conter apenas caracteres hexadecimais (0-9, AF)"
       styles:
-        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         square: "Quadrado"
-        options:
-          square: "Quadrado"
-          icon: "Ícone"
-          emoji: "Emoji"
       color_used: "Cor em uso"
-      predefined_colors: "Opções predefinidas de cor"
       name_placeholder: "Uma ou duas palavras recomendadas"
-      color_placeholder: "Qualquer cor da web"
       delete_confirm: "Tem certeza que quer excluir esta categoria?"
       delete_error: "Houve um erro ao excluir a categoria."
       list: "Listar categorias"
@@ -5279,7 +5267,6 @@ pt_BR:
         other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
-    theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
     theme_preview_failed: "Não foi possível visualizar o tema porque ele não existe ou você não tem permissão para acessá-lo."
     image_removed: "(imagem removida)"
     pause_notifications:
@@ -7433,8 +7420,6 @@ pt_BR:
           title: "Cores"
           edit: "Editar"
           view: "Visualizar"
-          set_default_light: "Definir paleta clara no tema padrão (%{theme})"
-          set_default_dark: "Definir paleta escura no tema padrão (%{theme})"
           set_default_success: "%{schemeName} definido como paleta ativa para %{themeName}"
           saved_refreshing: "Salvou! Atualizando cores..."
           from_theme: "Do tema: %{name}"

@@ -1,19 +1,23 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import { boardsBoardUrl } from "../lib/boards-urls.js";
 import BoardsConstraintFix from "./modal/boards-constraint-fix.gjs";
 
 export default class BoardsAddFromTopicColumnSubmenu extends Component {
   @service messageBus;
   @service modal;
+  @service site;
   @service toasts;
 
   get availableColumns() {
@@ -63,10 +67,15 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         },
       });
 
-      this.args.close({ data: { cardSaved: true } });
+      this.closeMenus();
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  @action
+  closeMenus() {
+    return this.args.close({ data: { closeParentMenu: true } });
   }
 
   columnStyle(column) {
@@ -146,7 +155,7 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         },
       });
 
-      this.args.close({ data: { cardSaved: true } });
+      this.closeMenus();
     } catch (error) {
       popupAjaxError(error);
       return;
@@ -154,13 +163,18 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
   }
 
   <template>
+    {{#if this.site.mobileView}}
+      <h2 class="discourse-boards-add-from-topic-column-menu__title">
+        {{@data.board.fancyTitle}}
+      </h2>
+    {{/if}}
     <DDropdownMenu
       class="discourse-boards-add-from-topic-column-menu"
       as |dropdown|
     >
       {{#if this.availableColumns.length}}
         <dropdown.subheader>
-          {{@data.board.unicode_name}}
+          {{i18n "boards.topic_footer.add_to_column"}}
         </dropdown.subheader>
         {{#each this.availableColumns as |column|}}
           <dropdown.item>
@@ -191,6 +205,17 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
           </dropdown.item>
         {{/each}}
       {{/if}}
+      {{#if @data.board.columns.length}}
+        <dropdown.divider />
+      {{/if}}
+      <dropdown.item>
+        <DButton
+          class="btn-transparent"
+          @href={{getURL (boardsBoardUrl @data.board)}}
+          @label="boards.manage.view_board"
+          {{on "click" this.closeMenus}}
+        />
+      </dropdown.item>
     </DDropdownMenu>
   </template>
 }

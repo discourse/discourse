@@ -87,6 +87,7 @@ module ::Blog
       topics = topics.where.not(id: Category.select(:topic_id).where.not(topic_id: nil))
       topics = topics.where.not(id: SharedDraft.select(:topic_id))
       joins(:published_revision, discussion_topic: :first_post)
+        .where(blog_id: Instance.cached.select(&:published).map(&:id))
         .where(published: true, discussion_topic_id: topics.select(:id))
         .where("blog_publications.published_at <= ?", Time.current)
         .where(posts: { hidden: false, deleted_at: nil, post_type: Post.types[:regular] })

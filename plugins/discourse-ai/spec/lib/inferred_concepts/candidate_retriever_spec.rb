@@ -1,0 +1,112 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
+  subject(:retriever) { described_class.new }
+
+  before { enable_current_plugin }
+
+  describe "#retrieve" do
+    fab!(:active_concept) { Fabricate(:inferred_concept, name: "Caching", status: :active) }
+    fab!(:candidate_concept) { Fabricate(:inferred_concept, name: "CDN", status: :candidate) }
+    fab!(:retired_concept) { Fabricate(:inferred_concept, name: "Obsolete", status: :retired) }
+
+    it "raises EmbeddingsUnavailableError when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      expect { retriever.retrieve(content: "HTTP caching") }.to raise_error(
+        described_class::EmbeddingsUnavailableError,
+      )
+    end
+
+    context "when embeddings are enabled" do
+      fab!(:vector_def, :cloudflare_embedding_def)
+      fab!(:topic)
+
+      let(:target_vector) { [0.9, 0.1] + ([0.0] * (vector_def.dimensions - 2)) }
+      let(:near_vector) { [0.89, 0.11] + ([0.0] * (vector_def.dimensions - 2)) }
+      let(:far_vector) { [0.0, 1.0] + ([0.0] * (vector_def.dimensions - 2)) }
+
+      before do
+        SiteSetting.ai_embeddings_selected_model = vector_def.id
+        SiteSetting.ai_embeddings_enabled = true
+
+        concepts_schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+        concepts_schema.store(active_concept, far_vector, "d1")
+        concepts_schema.store(candidate_concept, near_vector, "d2")
+        concepts_schema.store(retired_concept, target_vector, "d3")
+      end
+
+      after { DiscourseAi::Embeddings::ProviderHealth.clear!(vector_def) }
+
+      it "reuses a stored topic embedding, excludes retired concepts, and tops up with unembedded concepts" do
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, target_vector, "topic-digest")
+        unembedded = Fabricate(:inferred_concept, name: "Unembedded", status: :active)
+
+        allow(DiscourseAi::Embeddings::Vector).to receive(:instance).and_call_original
+
+        results = retriever.retrieve(content: "irrelevant", target: topic, limit: 3)
+
+        expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+        expect(results).to eq([candidate_concept, active_concept, unembedded])
+        expect(results).not_to include(retired_concept)
+      end
+
+      it "filters to active concepts when active_only is true" do
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, target_vector, "topic-digest")
+
+        results =
+          retriever.retrieve(content: "irrelevant", target: topic, limit: 10, active_only: true)
+
+        expect(results).to eq([active_concept])
+        expect(results).not_to include(candidate_concept, retired_concept)
+      end
+
+      it "returns empty without generating an embedding when require_stored_embedding is true and target has none" do
+        topic_without_embedding = Fabricate(:topic)
+        allow(DiscourseAi::Embeddings::Vector).to receive(:instance)
+
+        results =
+          retriever.retrieve(
+            content: "Kubernetes cluster",
+            target: topic_without_embedding,
+            require_stored_embedding: true,
+          )
+
+        expect(results).to eq([])
+        expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+      end
+
+      it "propagates ProviderPausedError when embedding provider is paused" do
+        DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) do
+          raise DiscourseAi::Inference::EmbeddingInferenceError.new(
+                  provider: vector_def.provider,
+                  category: :authentication_failed,
+                )
+        end
+      rescue DiscourseAi::Inference::EmbeddingInferenceError
+        nil
+      ensure
+        expect { retriever.retrieve(content: "caching query", limit: 10) }.to raise_error(
+          DiscourseAi::Embeddings::ProviderPausedError,
+        )
+      end
+
+      it "skips private messages when ai_embeddings_generate_for_pms is disabled and skips deleted targets" do
+        SiteSetting.ai_embeddings_generate_for_pms = false
+        pm_topic = Fabricate(:private_message_topic)
+        pm_reply = Fabricate(:post, topic: pm_topic, post_number: 2, raw: "Secret PM reply")
+        deleted_topic = Fabricate(:topic, deleted_at: Time.zone.now)
+
+        allow(DiscourseAi::Embeddings::Vector).to receive(:instance)
+
+        expect(retriever.retrieve(content: "Secret PM reply", target: pm_reply, limit: 10)).to eq(
+          [],
+        )
+        expect(
+          retriever.retrieve(content: "Deleted topic", target: deleted_topic, limit: 10),
+        ).to eq([])
+        expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+      end
+    end
+  end
+end

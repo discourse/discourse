@@ -71,8 +71,8 @@ export default class DesignWizardService extends Service {
   @tracked saving = false;
   // a theme preview replaces the whole page, so the panel stays busy until it does
   @tracked applyingTheme = false;
-  // theme id => { mode, light, dark }: the PALETTE_MODES value and each row's
-  // pair key, kept while a row is hidden so switching back restores it
+  // theme id => { mode, key }: the PALETTE_MODES value and the chosen pair's
+  // key, kept when a mode hides that pair so switching back restores it
   @tracked paletteSelections = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
@@ -90,12 +90,24 @@ export default class DesignWizardService extends Service {
   #originalSiteSettings;
   #originalHomepageSettings;
   #originalColorSchemeLinks;
+  #systemDarkQuery;
   #prefetched = false;
   // what the server holds, so a step save only writes choices that differ from it
   #savedSelections;
   // until the admin or a theme switch picks one, the shown homepage may only be
   // the fallback for one the wizard can't offer, which must not be saved
   #homepageChosen = false;
+
+  // the preview pins the page to one mode, so a system mode switch no longer
+  // reaches the stylesheets on its own
+  #followSystemColorMode = () => {
+    const previousMode = this.effectiveColorMode;
+    this.colorMode = renderedColorMode(this.#originalColorSchemeLinks);
+
+    if (this.effectiveColorMode !== previousMode) {
+      this.#previewSelections();
+    }
+  };
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -128,32 +140,27 @@ export default class DesignWizardService extends Service {
     return this.selectedTheme?.palette_pairs ?? [];
   }
 
-  get lightPairs() {
-    return this.pairs.filter((pair) => pair.light);
+  // a mode is only on offer when it has pairs to pick from
+  get availablePaletteModes() {
+    return Object.values(PALETTE_MODES).filter(
+      (mode) => this.pairsForMode(mode).length
+    );
   }
 
-  get darkPairs() {
-    return this.pairs.filter((pair) => pair.dark);
+  get availablePairs() {
+    return this.pairsForMode(this.paletteMode);
   }
 
-  get selectedLightPair() {
-    return this.#selectedPair(this.lightPairs, "light");
-  }
-
-  get selectedDarkPair() {
-    return this.#selectedPair(this.darkPairs, "dark");
+  get selectedPair() {
+    const key = this.paletteSelections.get(this.themeId)?.key;
+    return (
+      this.availablePairs.find((pair) => pair.key === key) ??
+      this.availablePairs[0]
+    );
   }
 
   get paletteMode() {
     return this.paletteSelections.get(this.themeId)?.mode ?? PALETTE_MODES.both;
-  }
-
-  get showsLightPalettes() {
-    return this.paletteMode !== PALETTE_MODES.dark;
-  }
-
-  get showsDarkPalettes() {
-    return this.paletteMode !== PALETTE_MODES.light;
   }
 
   get effectiveColorMode() {
@@ -163,15 +170,15 @@ export default class DesignWizardService extends Service {
   }
 
   get #lightPalette() {
-    return this.showsLightPalettes
-      ? this.selectedLightPair?.light
-      : this.selectedDarkPair?.dark;
+    return this.paletteMode === PALETTE_MODES.dark
+      ? this.selectedPair?.dark
+      : this.selectedPair?.light;
   }
 
   get #darkPalette() {
-    return this.showsDarkPalettes
-      ? this.selectedDarkPair?.dark
-      : this.selectedLightPair?.light;
+    return this.paletteMode === PALETTE_MODES.light
+      ? this.selectedPair?.light
+      : this.selectedPair?.dark;
   }
 
   get previewPalette() {
@@ -198,9 +205,10 @@ export default class DesignWizardService extends Service {
       theme_id: this.themeId,
       light_palette_id: this.#lightPalette?.id,
       // a light-only site has no dark palette
-      dark_palette_id: this.showsDarkPalettes
-        ? this.selectedDarkPair?.dark?.id
-        : undefined,
+      dark_palette_id:
+        this.paletteMode === PALETTE_MODES.light
+          ? undefined
+          : this.#darkPalette?.id,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
@@ -245,6 +253,24 @@ export default class DesignWizardService extends Service {
 
   get #logoChanged() {
     return (this.logo ?? "") !== this.#savedSelections.logo;
+  }
+
+  /**
+   * The pairs offered for a palette mode. Offering both modes only lists
+   * complete pairs, so members switching modes or devices keep one palette.
+   *
+   * @param {string} paletteMode - a PALETTE_MODES value
+   * @returns {Array<Object>}
+   */
+  pairsForMode(paletteMode) {
+    switch (paletteMode) {
+      case PALETTE_MODES.light:
+        return this.pairs.filter((pair) => pair.light);
+      case PALETTE_MODES.dark:
+        return this.pairs.filter((pair) => pair.dark);
+      default:
+        return this.pairs.filter((pair) => pair.light && pair.dark);
+    }
   }
 
   // warms the browser cache for the theme screenshots, which dominate the
@@ -317,6 +343,11 @@ export default class DesignWizardService extends Service {
     this.active = true;
     this.#starting = false;
     this.#originalColorSchemeLinks = captureColorSchemeLinks();
+    this.#systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    this.#systemDarkQuery.addEventListener(
+      "change",
+      this.#followSystemColorMode
+    );
 
     this.#previewSiteSettings();
     await this.#previewSelections();
@@ -423,14 +454,12 @@ export default class DesignWizardService extends Service {
   }
 
   /**
-   * Selects the palette pair used for one color mode, and previews that mode.
+   * Selects the palette pair used for every color mode the site offers.
    *
-   * @param {"light" | "dark"} mode
    * @param {string} pairKey
    */
-  async selectPalette(mode, pairKey) {
-    this.#updatePaletteSelection({ [mode]: pairKey });
-    this.colorMode = mode;
+  async selectPalette(pairKey) {
+    this.#updatePaletteSelection({ key: pairKey });
     this.#persistState();
     await this.#previewSelections();
   }
@@ -534,6 +563,11 @@ export default class DesignWizardService extends Service {
       }
       this.#refreshCategoriesPage();
     }
+    this.#systemDarkQuery?.removeEventListener(
+      "change",
+      this.#followSystemColorMode
+    );
+    this.#systemDarkQuery = undefined;
     restoreColorSchemeLinks(this.#originalColorSchemeLinks);
     this.#reset();
 
@@ -737,7 +771,8 @@ export default class DesignWizardService extends Service {
     );
     this.themeId = stored.themeId;
     this.paletteSelections = new Map(stored.paletteSelections);
-    this.colorMode = stored.colorMode ?? renderedColorMode();
+    // the reload left the page in the admin's own mode, which is what to preview
+    this.colorMode = renderedColorMode();
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
@@ -795,7 +830,6 @@ export default class DesignWizardService extends Service {
         minimized: this.minimized,
         themeId: this.themeId,
         paletteSelections: [...this.paletteSelections.entries()],
-        colorMode: this.colorMode,
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
@@ -847,32 +881,35 @@ export default class DesignWizardService extends Service {
     });
   }
 
-  #selectedPair(pairs, mode) {
-    const key = this.paletteSelections.get(this.themeId)?.[mode];
-    return pairs.find((pair) => pair.key === key) ?? pairs[0];
-  }
-
-  // A key left undefined falls back to the row's first palette, which is also
+  // A key left undefined falls back to the mode's first pair, which is also
   // what a theme without an assigned light palette renders. A theme without a
   // dark palette renders light-only, and one using its dark palette for both
-  // modes renders dark-only.
+  // modes renders dark-only. Mismatched light and dark palettes keep whichever
+  // side belongs to a complete pair, preferring light.
   #currentPaletteSelection(theme) {
     const pairs = theme.palette_pairs ?? [];
     const darkId = theme.dark_color_scheme_id;
-    const dark = darkId && pairs.find((pair) => pair.dark?.id === darkId)?.key;
-    const light = pairs.find(
+    const darkPair = darkId && pairs.find((pair) => pair.dark?.id === darkId);
+    const lightPair = pairs.find(
       (pair) =>
         theme.color_scheme_id && pair.light?.id === theme.color_scheme_id
-    )?.key;
+    );
 
-    let mode = PALETTE_MODES.both;
     if (!darkId) {
-      mode = PALETTE_MODES.light;
-    } else if (dark && theme.color_scheme_id === darkId) {
-      mode = PALETTE_MODES.dark;
+      return { mode: PALETTE_MODES.light, key: lightPair?.key };
+    }
+    if (darkPair && theme.color_scheme_id === darkId) {
+      return { mode: PALETTE_MODES.dark, key: darkPair.key };
     }
 
-    return { mode, light, dark };
+    const complete = (pair) => pair?.light && pair?.dark;
+    const key = complete(lightPair)
+      ? lightPair.key
+      : complete(darkPair)
+        ? darkPair.key
+        : undefined;
+
+    return { mode: PALETTE_MODES.both, key };
   }
 
   async #previewSelections() {

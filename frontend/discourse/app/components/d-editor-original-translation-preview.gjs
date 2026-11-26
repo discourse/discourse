@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -41,12 +41,16 @@ class DecoratedPreviewCookText extends Component {
       return;
     }
 
-    this.cooked = trustHTML(cooked);
+    this.cooked = { html: trustHTML(cooked), rawText };
   }
 
   @action
-  decoratePreview(preview, helper) {
-    decorateImageControls(preview);
+  decoratePreview(preview, helper, options) {
+    if (this.args.decoratePreviewImageControls) {
+      this.args.decoratePreviewImageControls(preview, helper, options);
+    } else {
+      decorateImageControls(preview);
+    }
     applyHtmlDecorators(preview, helper);
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
@@ -56,7 +60,8 @@ class DecoratedPreviewCookText extends Component {
       <DDecoratedHtml
         @className="d-editor-preview"
         @decorate={{this.decoratePreview}}
-        @html={{this.cooked}}
+        @decorateArgs={{hash rawText=this.cooked.rawText}}
+        @html={{this.cooked.html}}
       />
     </div>
   </template>
@@ -147,7 +152,10 @@ export default class DEditorOriginalTranslationPreview extends Component {
           {{/if}}
         {{else}}
           {{#if this.translationText}}
-            <DecoratedPreviewCookText @rawText={{this.translationText}} />
+            <DecoratedPreviewCookText
+              @decoratePreviewImageControls={{@decoratePreviewImageControls}}
+              @rawText={{this.translationText}}
+            />
           {{else}}
             <div class="d-editor-translation-preview-empty">
               {{i18n "composer.translations.no_translation_yet"}}

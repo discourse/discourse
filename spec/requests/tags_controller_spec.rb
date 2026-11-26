@@ -1912,6 +1912,15 @@ RSpec.describe TagsController do
     end
 
     context "with tagging enabled" do
+      it "ignores the search parameter on tag autocomplete" do
+        RateLimiter.enable
+        SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+        2.times { get "/tags/filter/search.json", params: { q: "stuff", search: "ignored" } }
+
+        expect(response).to have_http_status(:ok)
+      end
+
       it "can return some tags" do
         stuff = Fabricate(:tag, name: "stuff")
         stumped = Fabricate(:tag, name: "stumped")

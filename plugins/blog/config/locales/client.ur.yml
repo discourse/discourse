@@ -15,6 +15,14 @@ ur:
         desktop: ڈیسک ٹاپ
         mobile: موبائل
         save: محفوظ
+        about_tab: فورم کے متعلق
+        blog_slug: سلگ
+        settings_tab: سیٹِنگ
+        theme_tab: تھیم
+        column_name: نام
+        column_category: زُمرَہ
+        column_status: حیثیت
+        select_theme: تھیم منتخب کریں
         path_formats:
           custom: اپنی مرضی کا
         back_to_themes: تھیمز پر واپسی

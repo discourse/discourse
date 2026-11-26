@@ -3722,7 +3722,6 @@ sv:
       dracula: "Dracula"
       grey_amber: "Grå bärnsten"
       latte: "Latte"
-      dark_rose: "Mörk ros"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -3893,6 +3892,7 @@ sv:
       delete_and_agree_replies:
         title: "Radera inlägg och svar"
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
+        confirm_title: "Radera inlägg och svar?"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
         title: "Återställ inlägg"
@@ -3918,6 +3918,8 @@ sv:
       approve_post:
         title: "Ja"
         complete: "Inlägget godkändes."
+      deny_and_delete_post:
+        complete: "Inlägg raderat."
       approve_post_closed:
         title: "Ja"
         confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"

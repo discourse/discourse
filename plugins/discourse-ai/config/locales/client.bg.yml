@@ -38,10 +38,19 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      review_bulk:
+        refresh: "Обнови"
+        columns:
+          user: "Потребител"
+          created: "Създадени"
+          status: "Статус"
       copied: "Копирано"
       ai_decoded_transcript:
         type: "Тип"
         error: "Грешка"
+      post_image_captions:
+        image_descriptions:
+          apply: "Приложи"
       discourse_workflows:
         ai_tool:
           list_item: "Списък"
@@ -220,6 +229,29 @@ bg:
         edit: "Редактирай"
         delete: "Изтрий"
         embedding: "Ембедване"
+      concepts:
+        edit: "Редактирай"
+        seed:
+          refresh: "Обнови"
+        delete: "Изтрий"
+        columns:
+          status: "Статус"
+          topics: "Теми"
+          posts: "Публикации"
+        statuses:
+          active: "Активни"
+        form:
+          name: "Име"
+          description: "Описание"
+          status: "Статус"
+        shared_topics_count:
+          one: "%{count} тема"
+          other: "%{count} теми"
+        topic_columns:
+          topic: "Тема"
+          primary: "Основен"
+          relevance: "Приложимост"
+        primary_badge: "Основен"
       decision_models:
         no_preset: "Без"
         display_name: "Име"

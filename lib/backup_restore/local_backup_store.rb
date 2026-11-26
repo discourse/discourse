@@ -57,14 +57,8 @@ module BackupRestore
     end
 
     def path_from_filename(filename)
-      path = File.expand_path(File.join(@base_directory, filename))
-      base_directory = File.expand_path(@base_directory)
-
-      if path.start_with?("#{base_directory}#{File::SEPARATOR}")
-        path
-      else
-        raise Discourse::InvalidParameters.new(:filename)
-      end
+      FileHelper.contained_path(File.join(@base_directory, filename), @base_directory) ||
+        raise(Discourse::InvalidParameters.new(:filename))
     end
 
     def create_file_from_path(path, include_download_source = false)

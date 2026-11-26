@@ -19,15 +19,12 @@ function initializeDetails(api) {
   });
 
   api.addComposerToolbarPopupMenuOption({
-    action() {
+    action({ insertBlock, selected }) {
       const placeholder = i18n("composer.ai_content.placeholder");
       const summary = placeholder.replace(/"/g, "“");
-      api.container
-        .lookup("service:app-events")
-        .trigger(
-          "composer:insert-block",
-          `[details="${summary}" ai]\n${placeholder}\n[/details]`
-        );
+      insertBlock(
+        `[details="${summary}" ai]\n${selected.value || placeholder}\n[/details]`
+      );
     },
     condition: (composer) => composer.siteSettings.details_enabled,
     icon: "angle-right",

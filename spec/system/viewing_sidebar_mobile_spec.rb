@@ -8,27 +8,15 @@ describe "Viewing sidebar mobile", mobile: true do
 
   before { sign_in(user) }
 
-  it "does not display the sidebar by default" do
+  it "lets the user open the initially hidden sidebar and dismiss it by tapping outside" do
     visit("/latest")
 
     expect(sidebar_dropdown).to be_hidden
-  end
-
-  it "does not display the keyboard shortcuts button" do
-    visit("/latest")
 
     sidebar_dropdown.click
 
     expect(sidebar_dropdown).to be_visible
     expect(sidebar_dropdown).to have_no_keyboard_shortcuts_button
-  end
-
-  it "collapses the sidebar when clicking outside of it" do
-    visit("/latest")
-
-    sidebar_dropdown.click
-
-    expect(sidebar_dropdown).to be_visible
 
     sidebar_dropdown.click_outside
 

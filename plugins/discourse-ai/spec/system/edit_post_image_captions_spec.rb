@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Edit AI post image captions" do
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, composition_mode: UserOption.composition_mode_types[:markdown]) }
   fab!(:first_cat_upload) { create_image_upload("100x100.jpg", "first-cat.jpg") }
   fab!(:second_cat_upload) do
     create_image_upload("An image of discobot in action.png", "second-cat.png")
@@ -70,14 +70,14 @@ describe "Edit AI post image captions" do
   let(:japanese_first_cat_caption) { "一匹目の猫の古い説明" }
   let(:japanese_second_cat_caption) { "共有された二匹目の猫の古い説明" }
 
-  around { |example| Jobs.with_immediate_jobs { example.run } }
-
   before do
     enable_current_plugin
     SiteSetting.default_locale = "en"
+    SiteSetting.content_localization_enabled = false
     configure_valid_caption_agent
     SiteSetting.ai_post_image_captions_enabled = true
     SearchIndexer.enable
+    Jobs.run_immediately!
 
     prepare_post(first_post)
     prepare_post(second_post, image_upload: first_cat_upload)
@@ -85,10 +85,7 @@ describe "Edit AI post image captions" do
     prepare_post(other_post, image_upload: dog_upload)
   end
 
-  after { SearchIndexer.disable }
-
   it "lets the user edit one reused cat caption", :aggregate_failures do
-    SiteSetting.content_localization_enabled = false
     seed_english_descriptions
 
     sign_in(admin)
@@ -100,13 +97,11 @@ describe "Edit AI post image captions" do
     expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
     expect(captions).to have_image_caption(third_post, image: 1, description: second_cat_caption)
 
-    topic_page.expand_post_actions(second_post)
-    topic_page.click_post_action_button(second_post, :edit)
-    expect(composer).to be_opened
-    expect(captions).to have_editor_button_count(count: 2)
+    edit_post_in_composer
+    expect(composer).to have_markdown_editor_active
+    expect(captions).to have_preview_caption_buttons(count: 2)
 
-    captions.edit_preview_image_caption(image: 2, description: edited_second_cat_caption)
-    process_description_cooked(post_id: second_post.id, locale: "en")
+    captions.edit_preview_image_caption(alt: "second cat", description: edited_second_cat_caption)
     composer.close
     expect(composer).to be_closed
 
@@ -118,6 +113,81 @@ describe "Edit AI post image captions" do
       description: edited_second_cat_caption,
     )
     expect(captions).to have_image_caption(third_post, image: 1, description: second_cat_caption)
+  end
+
+  it "keeps rich-text alt edits in the draft and saves AI edits separately" do
+    seed_english_descriptions
+    admin.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    edit_post_in_composer
+    expect(composer).to have_rich_editor_active
+
+    captions.select_rich_image(alt: "second cat", upload: second_cat_upload)
+    expect(captions).to have_rich_image_toolbar
+    captions.zoom_out_rich_image
+    expect(captions).to have_rich_image(alt: "second cat", scale: 75)
+    captions.open_rich_image_descriptions(alt: "second cat")
+    expect(captions).to have_descriptions(alt: "second cat", description: second_cat_caption)
+    captions.fill_in_alt_text("A new second cat alt text")
+    captions.fill_in_description(edited_second_cat_caption)
+    captions.apply_descriptions
+
+    expect(captions).to have_rich_image(alt: "A new second cat alt text")
+    expect(captions).to have_post_image_with_alt(second_post, alt: "second cat")
+
+    captions.open_rich_image_descriptions(alt: "A new second cat alt text")
+    expect(captions).to have_descriptions(description: edited_second_cat_caption)
+    captions.cancel_descriptions
+
+    composer.submit
+    expect(composer).to be_closed
+    topic_page.visit_topic(cat_topic)
+    expect(captions).to have_post_image_with_alt(second_post, alt: "A new second cat alt text")
+    expect(captions).to have_image_caption(
+      second_post,
+      image: 2,
+      description: edited_second_cat_caption,
+    )
+  end
+
+  it "explains the pending state and keeps Markdown resize and remove actions inline" do
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    edit_post_in_composer
+    expect(composer).to have_markdown_editor_active
+
+    composer.toggle_rich_editor
+    expect(captions).to have_rich_image(alt: "first cat")
+    composer.toggle_rich_editor
+
+    expect(captions).to have_preview_image_controls(alt: "first cat")
+    captions.open_preview_image_descriptions(alt: "first cat")
+    expect(captions).to have_pending_description
+    captions.fill_in_alt_text("Draft cat description")
+    captions.apply_descriptions
+
+    expect(captions).to have_preview_image(alt: "Draft cat description")
+    captions.resize_preview_image(alt: "Draft cat description", scale: 75)
+    expect(captions).to have_preview_image(alt: "Draft cat description", scale: 75)
+
+    captions.remove_preview_image(alt: "Draft cat description")
+    expect(captions).to have_no_preview_image(alt: "Draft cat description")
+    expect(captions).to have_preview_image(alt: "second cat")
+  end
+
+  it "keeps the original controls in both editors when AI captions are disabled" do
+    SiteSetting.ai_post_image_captions_enabled = false
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    edit_post_in_composer
+    expect(composer).to have_markdown_editor_active
+
+    expect(captions).to have_original_preview_alt_text_controls(count: 2)
+
+    composer.toggle_rich_editor
+    captions.select_rich_image(alt: "first cat", upload: first_cat_upload)
+    expect(captions).to have_original_rich_image_controls(alt: "first cat")
   end
 
   it "shows locale-specific captions and original-locale fallback", :aggregate_failures do
@@ -180,21 +250,35 @@ describe "Edit AI post image captions" do
 
     translation_preview.click_translation_tab
     expect(translation_preview).to have_rendered_preview_image(alt: "二匹目の猫")
-    expect(captions).to have_editor_button_count(count: 2)
+    expect(captions).to have_preview_caption_buttons(count: 2, translated: true)
 
-    captions.edit_preview_image_caption(image: 2, description: "翻訳された二匹目の猫だけの新しい説明")
-    process_description_cooked(post_id: second_post.id, locale: "ja")
+    edited_japanese_caption = "翻訳された二匹目の猫だけの新しい説明"
+    captions.edit_preview_image_caption(
+      alt: "二匹目の猫",
+      description: edited_japanese_caption,
+      translated: true,
+    )
     composer.close
     expect(composer).to be_closed
 
     topic_page.visit_topic(cat_topic)
 
-    expect(captions).to have_image_caption(second_post, image: 2, description: "翻訳された二匹目の猫だけの新しい説明")
+    expect(captions).to have_image_caption(
+      second_post,
+      image: 2,
+      description: edited_japanese_caption,
+    )
 
     admin.user_option.update!(automatically_translate: false)
     topic_page.visit_topic(cat_topic)
 
     expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
+  end
+
+  def edit_post_in_composer
+    topic_page.expand_post_actions(second_post)
+    topic_page.click_post_action_button(second_post, :edit)
+    expect(composer).to be_opened
   end
 
   def create_image_upload(filename, original_filename)

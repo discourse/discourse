@@ -80,7 +80,9 @@ class NestedTopicsController < ApplicationController
       return(redirect_to topic_route_url(params[:post_number]), status: topic_route_redirect_status)
     end
 
-    render json: show_context_response
+    response = show_context_response
+    response = list_roots_response(page: 0) if response[:target_post][:post_number] == 1
+    render json: response
   end
 
   # PUT /n/:slug/:topic_id/pin

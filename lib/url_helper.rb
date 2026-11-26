@@ -2,6 +2,8 @@
 
 class UrlHelper
   MAX_URL_LENGTH = 2_000
+  URI_REGEXP = /\A#{URI.regexp}\z/
+  private_constant :URI_REGEXP
 
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded
@@ -66,11 +68,22 @@ class UrlHelper
   def self.is_local(url)
     url.present? &&
       (
-        Discourse.store.has_been_uploaded?(url) ||
-          !!(url =~ Regexp.new("^#{Discourse.base_path}/(assets|plugins|images)/")) ||
+        Discourse.store.has_been_uploaded?(url) || local_asset_path?(url) ||
           url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
       )
   end
+
+  def self.local_asset_path?(url)
+    base_path = Discourse.base_path
+    if base_path.empty?
+      url.start_with?("/assets/", "/plugins/", "/images/")
+    else
+      url.start_with?(base_path) &&
+        url.byteslice(base_path.bytesize..)&.start_with?("/assets/", "/plugins/", "/images/") ||
+        false
+    end
+  end
+  private_class_method :local_asset_path?
 
   def self.absolute(url, cdn = Discourse.asset_host)
     cdn = "https:#{cdn}" if cdn && cdn =~ %r{\A//}
@@ -105,11 +118,11 @@ class UrlHelper
     # Hopefully we can simplify this back to `Addressable::URI.normalized_encode` in the future.
 
     # edge case where we expect mailto:test%40test.com to normalize to mailto:test@test.com
-    return normalize_with_addressable(url) if url.match(/\Amailto:/)
+    return normalize_with_addressable(url) if url.start_with?("mailto:")
 
     # If it doesn't pass the regexp, it's definitely not gonna parse with URI.parse. Skip
     # to addressable
-    return normalize_with_addressable(url) if !url.match?(/\A#{URI.regexp}\z/)
+    return normalize_with_addressable(url) if !URI_REGEXP.match?(url)
 
     begin
       normalize_with_ruby_uri(url)

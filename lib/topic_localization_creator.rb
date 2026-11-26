@@ -6,7 +6,7 @@ class TopicLocalizationCreator
 
     excerpt = nil
     first_post = topic.first_post
-    if first_post
+    if first_post && !topic.first_post_hidden?
       post_localization = first_post.localizations.find_by(locale:)
       if post_localization
         excerpt =

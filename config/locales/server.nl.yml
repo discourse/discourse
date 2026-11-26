@@ -4882,7 +4882,6 @@ nl:
       dracula: "Dracula"
       grey_amber: "Grijsgeel"
       latte: "Latte"
-      dark_rose: "Donkerroze"
   wizard:
     title: "Discourse instellen"
     step:
@@ -5097,6 +5096,7 @@ nl:
       delete_and_ignore_replies:
         title: "Bericht en antwoorden verwijderen, markering negeren"
         description: "Verwijder het bericht en alle antwoorden, negeer vervolgens de markering door het uit de wachtrij te verwijderen Als het het eerste bericht is, verwijder dan ook het topic."
+        confirm_title: "Bericht en antwoorden verwijderen, markering negeren?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5106,6 +5106,7 @@ nl:
       delete_and_agree_replies:
         title: "Bericht en antwoorden verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht en alle antwoorden. Als dit het eerste bericht is, wordt ook het topic verwijderd."
+        confirm_title: "Bericht en antwoorden verwijderen?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:
@@ -5140,6 +5141,8 @@ nl:
       approve_post:
         title: "Ja"
         complete: "Bericht goedgekeurd."
+      deny_and_delete_post:
+        complete: "Bericht verwijderd."
       approve_post_closed:
         title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"

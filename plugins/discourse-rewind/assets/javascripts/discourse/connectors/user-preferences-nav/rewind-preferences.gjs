@@ -4,13 +4,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class RewindPreferencesNav extends Component {
-  static shouldRender(args, context, owner) {
-    const rewind = owner.lookup("service:rewind");
-
+  static shouldRender(args, context) {
     // This uses the rewind site setting rather than rewind.active
     // from the service because if the user disables rewind,
     // the preferences tab will disappear forever.
-    return context.siteSettings.discourse_rewind_enabled && rewind.active;
+    return (
+      context.siteSettings.discourse_rewind_enabled &&
+      args.model.is_rewind_active
+    );
   }
 
   <template>

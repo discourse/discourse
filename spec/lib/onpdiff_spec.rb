@@ -80,4 +80,30 @@ RSpec.describe ONPDiff do
       )
     end
   end
+
+  describe "UTF-8 strings and Array token interning" do
+    it "diffs multi-byte UTF-8 strings and reversed lengths accurately" do
+      expect(ONPDiff.new("日本語テスト🚀", "日本語変更🔥!").short_diff).to eq(
+        [["日本語", :common], ["変更🔥!", :add], ["テスト🚀", :delete]],
+      )
+      expect(ONPDiff.new("abcdef", "ab").short_diff).to eq([["ab", :common], ["cdef", :delete]])
+    end
+
+    it "does not raise on strings with invalid encoding" do
+      expect { ONPDiff.new("a\xffb", "a\xfec").short_diff }.not_to raise_error
+    end
+
+    it "diffs String arrays correctly across paragraph_diff" do
+      left = %w[<p>one</p> <p>two</p> <p>three</p>]
+      right = %w[<p>one</p> <p>updated</p> <p>three</p>]
+      expect(ONPDiff.new(left, right).paragraph_diff).to eq(
+        [
+          ["<p>one</p>", :common],
+          ["<p>updated</p>", :add],
+          ["<p>two</p>", :delete],
+          ["<p>three</p>", :common],
+        ],
+      )
+    end
+  end
 end

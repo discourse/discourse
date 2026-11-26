@@ -64,12 +64,21 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      review_bulk:
+        refresh: "تازه‌سازی"
+        columns:
+          user: "کاربر"
+          created: "ساخته شده"
+          status: "وضعیت"
       copied: "کپی شد"
       ai_decoded_transcript:
         tool: "ابزار"
         type: "نوع"
         error: "خطا"
         response: "پاسخ"
+      post_image_captions:
+        image_descriptions:
+          apply: "اعمال کردن"
       discourse_workflows:
         ai_tool:
           tool_ref: "ابزار"
@@ -279,6 +288,30 @@ fa_IR:
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      concepts:
+        edit: "ویرایش"
+        seed:
+          refresh: "تازه‌سازی"
+        delete: "حذف"
+        columns:
+          status: "وضعیت"
+          topics: "موضوعات"
+          posts: "فرسته‌ها"
+        statuses:
+          active: "فعال"
+        form:
+          name: "نام"
+          description: "توضیح"
+          status: "وضعیت"
+        shared_topics_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوع"
+        tagged_topics: "موضوعات برچسب خورده"
+        topic_columns:
+          topic: "موضوع"
+          primary: "اصلی"
+          relevance: "ارتباطات"
+        primary_badge: "اصلی"
       decision_models:
         no_preset: "هیچ‌کدام"
         display_name: "نام"

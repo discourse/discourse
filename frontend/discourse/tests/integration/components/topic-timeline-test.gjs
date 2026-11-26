@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import TopicTimeline from "discourse/components/topic-timeline";
@@ -93,5 +93,71 @@ module("Integration | Component | topic-timeline", function (hooks) {
       </template>
     );
     assert.false(sameLine(), "the total wraps out of view");
+  });
+
+  test("scrolling moves the scroller and toggles the last read marker", async function (assert) {
+    const topic = createMegaTopic(this, {
+      last_read_post_id: 5500,
+      last_read_post_number: 55,
+    });
+    const appEvents = this.owner.lookup("service:app-events");
+    const scroll = (postIndex, percent) =>
+      appEvents.trigger("topic:current-post-scrolled", { postIndex, percent });
+
+    await render(
+      <template>
+        <TopicTimeline @enteredIndex={{10}} @model={{topic}} />
+      </template>
+    );
+
+    const padding = find(".timeline-padding");
+    const initialHeight = parseFloat(padding.style.height);
+
+    scroll(11, 0.108);
+
+    assert.true(
+      parseFloat(padding.style.height) > initialHeight,
+      "the scroller moves without waiting for a render"
+    );
+    assert
+      .dom(".timeline-last-read")
+      .exists("the marker shows while away from the last read post");
+
+    scroll(55, 0.54);
+    await settled();
+
+    assert
+      .dom(".timeline-replies")
+      .hasText("55 / 100", "the counter follows the current post");
+    assert
+      .dom(".timeline-last-read")
+      .doesNotExist("the marker hides on the last read post");
+
+    scroll(11, 0.1);
+    await settled();
+
+    assert
+      .dom(".timeline-last-read")
+      .exists("the marker returns after scrolling away");
+  });
+
+  test("hides the scroll area on a short single post topic once the post renders", async function (assert) {
+    const topic = createMegaTopic(this, { highest_post_number: 1 });
+
+    await render(
+      <template>
+        <TopicTimeline @enteredIndex={{0}} @model={{topic}} />
+        <div class="posts-wrapper"></div>
+      </template>
+    );
+
+    this.owner
+      .lookup("service:app-events")
+      .trigger("topic:current-post-scrolled", { postIndex: 1, percent: 0 });
+    await settled();
+
+    assert
+      .dom(".timeline-scrollarea")
+      .doesNotExist("the scroll area is hidden after the first scroll event");
   });
 });

@@ -44,7 +44,7 @@ export default class PushNotificationSelect extends Component {
   }
 
   get value() {
-    if (!this.desktopNotifications.isSubscribed) {
+    if (this.args.model.isCurrent && !this.desktopNotifications.isSubscribed) {
       return "none";
     }
 
@@ -57,6 +57,11 @@ export default class PushNotificationSelect extends Component {
 
   @action
   async onChange(value) {
+    if (!this.args.model.isCurrent) {
+      await this.persistLevel(value);
+      return;
+    }
+
     if (value === "none") {
       await this.desktopNotifications.disable();
       await this.persistLevel("none");
@@ -88,14 +93,16 @@ export default class PushNotificationSelect extends Component {
   }
 
   <template>
-    {{#if this.desktopNotifications.isNotSupported}}
+    {{#if (and @model.isCurrent this.desktopNotifications.isNotSupported)}}
       <DButton
         class="btn-default"
         @disabled="true"
         @icon="bell-slash"
         @label="user.desktop_notifications.not_supported"
       />
-    {{else if this.desktopNotifications.isDeniedPermission}}
+    {{else if
+      (and @model.isCurrent this.desktopNotifications.isDeniedPermission)
+    }}
       <DButton
         class="btn-default"
         @disabled="true"

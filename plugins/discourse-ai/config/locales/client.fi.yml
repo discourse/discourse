@@ -163,6 +163,13 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      review_bulk:
+        refresh: "Päivitä"
+        columns:
+          user: "Käyttäjä"
+          reason: "Liputettu merkinnällä"
+          created: "Luotu"
+          status: "Tila"
       dsa_classification:
         suggest: "Ehdota tekoälyllä"
       copied: "Kopioitiin"
@@ -171,6 +178,9 @@ fi:
         type: "Tyyppi"
         error: "Virhe"
         response: "Vastaus"
+      post_image_captions:
+        image_descriptions:
+          apply: "Käytä"
       discourse_workflows:
         ai_agent:
           mode: "Tila"
@@ -618,6 +628,30 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      concepts:
+        edit: "Muokkaa"
+        seed:
+          refresh: "Päivitä"
+        delete: "Poista"
+        columns:
+          status: "Tila"
+          topics: "Aiheet"
+          posts: "Viestejä"
+        statuses:
+          active: "Aktiivinen"
+        form:
+          name: "Nimi"
+          description: "Kuvaus"
+          status: "Tila"
+        shared_topics_count:
+          one: "%{count} ketju"
+          other: "%{count} ketjua"
+        tagged_topics: "Tunnisteelliset ketjut"
+        topic_columns:
+          topic: "Ketju"
+          primary: "Ensisijainen"
+          relevance: "Osuvuus"
+        primary_badge: "Ensisijainen"
       decision_models:
         no_preset: "Ei valittu"
         display_name: "Nimi"
