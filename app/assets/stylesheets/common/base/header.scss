@@ -197,6 +197,21 @@
     }
   }
 
+  // A select trigger keeps the header icon's box instead of a form field's.
+  .icon.d-select__trigger {
+    box-sizing: content-box;
+    padding: 0.2143em;
+    font-size: inherit;
+    line-height: normal;
+    background: transparent;
+    border-color: transparent;
+    border-radius: var(--d-border-radius);
+
+    .d-select__leading-icon {
+      color: var(--d-header-icon-color);
+    }
+  }
+
   .drop-down-mode & {
     .active .icon,
     .header-color-scheme-toggle .-expanded {

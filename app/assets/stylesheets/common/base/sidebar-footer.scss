@@ -64,10 +64,16 @@
     margin-left: auto;
   }
 
-  .sidebar-footer-actions-button.btn {
+  .sidebar-footer-actions-button:is(.btn, .d-select__trigger) {
     background: transparent;
     border: none;
     padding: 0.25em 0.4em;
+
+    // A select trigger has no text line to give it a button's height.
+    &.d-select__trigger {
+      min-height: calc(1lh + 0.5em);
+      vertical-align: top;
+    }
 
     .d-icon {
       font-size: var(--font-down-1);

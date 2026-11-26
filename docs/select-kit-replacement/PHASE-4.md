@@ -44,8 +44,14 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       viewer can delete. Paused 2026-11-25: every pick saves at once, as a notification level
       does, so it is decided with the notification-level family in `ROLLOUT.md`.
     - ☐ Pinned options (`components/pinned-options.gjs`).
-    - ☐ Color mode (`components/interface-color-selector.gjs`). The trigger shows the mode as
-      an icon.
+    - ☑ Color mode (`components/interface-color-selector.gjs`). A static `DSelect` that can't be
+      emptied, named "Color mode", showing only the current mode's icon, with a check on the
+      current one. It is named by the picked mode's label; the old name read "[missing %{mode}
+      value]" until a mode was picked. In the sidebar footer and the header it takes the flat
+      look of the buttons beside it. It keeps its identifier, so the `-trigger` and `-content`
+      classes and the trigger's `-expanded` state still match. Customer themes that style the
+      old rows as `.interface-color-selector-content .btn` need a migration note before the flag
+      defaults on.
     - ☐ Language switcher (`components/language-switcher.gjs`).
     - ☑ Nested replies sort (`components/nested/sort-selector.gjs`). A static `DSelect` named
       by the visible "Sort by" label and styled as the flat button it replaces. The system
