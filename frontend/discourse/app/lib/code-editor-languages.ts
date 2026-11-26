@@ -52,6 +52,7 @@ const BUILT_IN = new Map<string, CodeEditorLanguageLoader>([
     () => import("discourse/static/codemirror/languages/javascript"),
   ],
   ["json", () => import("discourse/static/codemirror/languages/json")],
+  ["liquid", () => import("discourse/static/codemirror/languages/liquid")],
   ["scss", () => import("discourse/static/codemirror/languages/scss")],
   ["sql", () => import("discourse/static/codemirror/languages/sql")],
   ["text", () => import("discourse/static/codemirror/languages/text")],

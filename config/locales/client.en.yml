@@ -57,6 +57,10 @@ en:
         folded_lines: "Folded lines"
         unfolded_lines: "Unfolded lines"
         to: "to"
+      liquid:
+        sections:
+          tags: "Tags"
+          filters: "Filters"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"

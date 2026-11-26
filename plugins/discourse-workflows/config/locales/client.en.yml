@@ -31,6 +31,11 @@ en:
           description: "AI-assisted workflow authoring"
           workflow_authoring: "Workflow authoring"
     discourse_workflows:
+      liquid_editor:
+        sections:
+          recommended: "Recommended"
+          properties: "Properties"
+          metadata: "Metadata"
       admin_assistant:
         preview:
           label: "Workflow preview"

@@ -255,3 +255,17 @@
     font-style: italic;
   }
 }
+
+// Also shown by bare editors that sit outside `.code-editor`; as specific as
+// the editor's base theme rule it replaces.
+.cm-editor .cm-tooltip.cm-tooltip-autocomplete > ul > completion-section {
+  padding: 0.1em 0.4em;
+  opacity: 1;
+  font-family: var(--font-family);
+  font-size: var(--font-down-3);
+  font-weight: 700;
+  color: var(--primary-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--primary-low);
+}
