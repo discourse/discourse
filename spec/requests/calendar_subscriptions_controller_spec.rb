@@ -55,6 +55,19 @@ RSpec.describe CalendarSubscriptionsController do
       expect(key.reload.revoked_at).to be_present
     end
 
+    it "does not issue a key once a password change revokes the session mid-request" do
+      sign_in(user)
+      allow_any_instance_of(CalendarSubscriptionsController).to receive(
+        :build_scopes,
+      ).and_wrap_original do |original|
+        user.reload.update!(password: "a-new-secure-password")
+        original.call
+      end
+
+      expect { post "/calendar-subscriptions.json" }.not_to change { UserApiKey.count }
+      expect(response.status).to eq(403)
+    end
+
     it "creates a key and returns bookmarks URL" do
       sign_in(user)
       post "/calendar-subscriptions.json"

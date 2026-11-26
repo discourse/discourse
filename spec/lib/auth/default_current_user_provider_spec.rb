@@ -978,6 +978,56 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
+  describe "#authenticated_credential_user" do
+    it "re-reads a User API key authenticated by another provider instance" do
+      key = Fabricate(:user_api_key, user:, scopes: [UserApiKeyScope.new(name: "write")])
+      env = create_request_env(path: "/").merge("HTTP_USER_API_KEY" => key.key)
+      expect(TestProvider.new(env).current_user).to eq(user)
+
+      credential_provider = TestProvider.new(env)
+      expect(credential_provider.authenticated_credential_user).to eq(user)
+
+      key.update!(revoked_at: Time.zone.now)
+      expect(credential_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "rejects a browser session revoked after authentication" do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+      expect(session_provider.authenticated_credential_user).to eq(user)
+
+      token.destroy!
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "rejects a cookie that no longer matches its session" do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+
+      token.update_columns(auth_token: "rotated", prev_auth_token: "rotated")
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "accepts the impersonated user of a valid impersonation session" do
+      GlobalSetting.stubs(:allow_impersonation).returns(true)
+      admin = Fabricate(:admin)
+      token = UserAuthToken.generate!(user_id: admin.id)
+      token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: admin.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+
+      expect(session_provider.authenticated_credential_user).to eq(user)
+
+      token.update!(impersonation_expires_at: 1.minute.ago)
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+  end
+
   describe "#log_on_user" do
     it "rejects active and historical shadows after master deletion even when anonymous mode is disabled" do
       SiteSetting.allow_anonymous_mode = true
