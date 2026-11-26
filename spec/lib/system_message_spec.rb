@@ -92,6 +92,32 @@ RSpec.describe SystemMessage do
       expect(post.topic.allowed_groups).to contain_exactly(group)
     end
 
+    it "escapes params marked for markdown in the body but keeps the subject plain" do
+      group_name = "Staff](https://example.com) **now** [Staff"
+
+      post =
+        SystemMessage.create_from_system_user(
+          user,
+          :user_added_to_group_as_member,
+          group_name: group_name,
+          group_path: "/g/support",
+          escape_markdown_params: %i[group_name],
+        )
+
+      cooked = Nokogiri::HTML5.fragment(post.cooked)
+
+      expect(cooked.css("a").size).to eq(1)
+      expect(cooked.css("a").first["href"]).to end_with("/g/support")
+      expect(cooked.css("a").first.text).to eq(group_name)
+      expect(cooked.css("strong")).to be_empty
+      expect(post.topic.title).to eq(
+        I18n.t(
+          "system_messages.user_added_to_group_as_member.subject_template",
+          group_name: group_name,
+        ),
+      )
+    end
+
     it "sends event with post object" do
       system_message = SystemMessage.new(user)
 

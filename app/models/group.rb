@@ -1089,6 +1089,7 @@ class Group < ActiveRecord::Base
       owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
       group_name: name_full_preferred,
       group_path: "/g/#{name}",
+      escape_markdown_params: %i[group_name],
     )
   end
 
