@@ -8,6 +8,10 @@ module DiscourseDataExplorer
     belongs_to :group
 
     has_many :bookmarks, as: :bookmarkable
+
+    def full_url
+      "#{Discourse.base_url}/g/#{group.name}/reports/#{query_id}"
+    end
   end
 end
 

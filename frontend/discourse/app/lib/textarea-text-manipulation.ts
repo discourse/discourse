@@ -1325,7 +1325,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder,
-      placeholderData.processingPlaceholder
+      placeholderData.processingPlaceholder,
+      { skipFocus: true }
     );
 
     // Safari applies user-defined replacements to text inserted programmatically.
@@ -1333,7 +1334,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
     // where that transformation has been applied to the original placeholder
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder.replace("...", "…"),
-      placeholderData.processingPlaceholder
+      placeholderData.processingPlaceholder,
+      { skipFocus: true }
     );
   }
 
@@ -1348,7 +1350,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.processingPlaceholder,
-      placeholderData.uploadPlaceholder
+      placeholderData.uploadPlaceholder,
+      { skipFocus: true }
     );
     placeholderData.processingPlaceholder = undefined;
   }
@@ -1376,7 +1379,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder.trim(),
-      markdown
+      markdown,
+      { skipFocus: true }
     );
   }
 

@@ -906,8 +906,11 @@ RSpec.describe Email::Receiver do
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
 
-      it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
-        expect { process(:cc) }.to change(Topic, :count)
+      it "invites recipients except incoming and notification addresses" do
+        SiteSetting.notification_email = "notifications@example.com"
+        message = email(:cc).sub("CC: ", "CC: Notifications@example.com, ")
+        expect { Email::Receiver.new(message).process! }.to change(Topic, :count)
+        expect(User.find_by_email(SiteSetting.notification_email)).to be_nil
 
         topic = Topic.last
 
