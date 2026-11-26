@@ -1,4 +1,4 @@
-import { click, fillIn, render, waitFor } from "@ember/test-helpers";
+import { click, fillIn, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import GifPanel from "discourse/components/composer-picker/gif-panel";
@@ -101,6 +101,26 @@ module("Integration | Component | ComposerPicker | GifPanel", function (hooks) {
         "party parrot",
         "renders the category's search results"
       );
+  });
+
+  test("clear keeps late search results out of the picker", async function (assert) {
+    let resolveSearch;
+    this.fetchStub.callsFake((url) => {
+      if (url.includes("/gifs/categories")) {
+        return Promise.resolve(fetchResponse({ tags: [] }));
+      }
+      return new Promise((resolve) => (resolveSearch = resolve));
+    });
+
+    await render(<template><GifPanel @context="topic" /></template>);
+    await fillIn(".gif-panel__filter input", "parrot");
+    await click(".gif-panel__filter .filter-input-clear-btn");
+    resolveSearch(fetchResponse({ results: [PARROT], next: "next-page" }));
+    await settled();
+
+    assert.dom(".gif-panel__filter input").hasValue("");
+    assert.dom(".gif-panel .gifs-result").doesNotExist();
+    assert.dom(".gif-panel__no-results").exists();
   });
 
   test("shows the no-results state when the search is empty", async function (assert) {

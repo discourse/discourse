@@ -38,13 +38,18 @@ export default class GifSearch {
 
   destroy() {
     this.isDestroyed = true;
-    cancel(this.debouncedSearch);
+    this.#invalidateSearch();
   }
 
   @action
   refresh(value) {
+    this.#invalidateSearch();
+    this.#resetResults();
     this.query = value;
     this.searchPending = this.query.length >= MIN_QUERY_LENGTH;
+    if (!this.searchPending || this.isDestroyed) {
+      return;
+    }
     this.debouncedSearch = discourseDebounce(
       this,
       this.search,
@@ -54,8 +59,7 @@ export default class GifSearch {
 
   @action
   clearQuery() {
-    this.query = "";
-    this.search();
+    this.refresh("");
   }
 
   @action
@@ -66,7 +70,12 @@ export default class GifSearch {
 
   @action
   async loadMore() {
-    if (this.loading || !this.hasMore) {
+    if (
+      this.isDestroyed ||
+      this.searchPending ||
+      this.loading ||
+      !this.hasMore
+    ) {
       return;
     }
     await this.search(false);
@@ -122,12 +131,16 @@ export default class GifSearch {
   }
 
   async search(clearResults = true, skipLengthCheck = false) {
-    this.searchPending = false;
+    if (this.isDestroyed) {
+      return;
+    }
+
+    this.#invalidateSearch();
+    const searchId = this.#latestSearchId;
+    const isStale = () => this.isDestroyed || searchId !== this.#latestSearchId;
 
     if (clearResults) {
-      this.currentGifs = [];
-      this.offset = 0;
-      this.hasMore = true;
+      this.#resetResults();
     }
 
     const meetsLengthRequirement =
@@ -147,8 +160,6 @@ export default class GifSearch {
     }
 
     this.loading = true;
-    const searchId = ++this.#latestSearchId;
-    const isStale = () => this.isDestroyed || searchId !== this.#latestSearchId;
 
     try {
       const response = await fetch(this.getEndpoint(this.query, this.offset));
@@ -190,7 +201,7 @@ export default class GifSearch {
       }
       this.dialog.alert({ message: error.message ?? error });
     } finally {
-      if (searchId === this.#latestSearchId) {
+      if (!isStale()) {
         this.loading = false;
       }
     }
@@ -249,5 +260,18 @@ export default class GifSearch {
       pos: offset,
     };
     return getURL(`${GIFS_SEARCH_URL}?${new URLSearchParams(params)}`);
+  }
+
+  #invalidateSearch() {
+    cancel(this.debouncedSearch);
+    this.#latestSearchId++;
+    this.loading = false;
+    this.searchPending = false;
+  }
+
+  #resetResults() {
+    this.currentGifs = [];
+    this.offset = 0;
+    this.hasMore = true;
   }
 }

@@ -146,6 +146,7 @@ module("Unit | Lib | buildChatPickerSelectHandler", function () {
   test("sends any other tab's value as a thread message", async function (assert) {
     const api = { sendChatMessage: sinon.stub().resolves() };
     const { draft, threadDraft } = setupDraft();
+    draft.inReplyTo = null;
     const composer = { context: "thread", draft, onSelectEmoji: sinon.spy() };
 
     await buildChatPickerSelectHandler({
