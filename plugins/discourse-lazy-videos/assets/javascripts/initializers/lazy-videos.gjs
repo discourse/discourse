@@ -2,6 +2,13 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import LazyVideo from "../discourse/components/lazy-video.gjs";
 import getVideoAttributes from "../lib/lazy-video-attributes.js";
 
+const LazyVideoTemplate = <template>
+  <LazyVideo
+    @onLoadedVideo={{@data.onLoadedVideo}}
+    @videoAttributes={{@data.param}}
+  />
+</template>;
+
 function initLazyEmbed(api) {
   api.decorateCookedElement(
     (cooked, helper) => {
@@ -26,16 +33,10 @@ function initLazyEmbed(api) {
           const lazyVideo = document.createElement("p");
           lazyVideo.classList.add("lazy-video-wrapper");
 
-          helper.renderGlimmer(
-            lazyVideo,
-            <template>
-              <LazyVideo
-                @onLoadedVideo={{@data.onLoadedVideo}}
-                @videoAttributes={{@data.param}}
-              />
-            </template>,
-            { param: videoAttributes, onLoadedVideo }
-          );
+          helper.renderGlimmer(lazyVideo, LazyVideoTemplate, {
+            param: videoAttributes,
+            onLoadedVideo,
+          });
 
           container.replaceWith(lazyVideo);
         }

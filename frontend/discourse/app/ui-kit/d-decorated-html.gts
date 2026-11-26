@@ -396,7 +396,7 @@ class DecorateHtmlHelper {
    * Handles deprecation warnings if invalid parameters are passed.
    *
    * @param targetElement - The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
-   * @param component - The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
+   * @param component - The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings. Pass a module-level reference and send per-call values through `data`: the rendering engine keeps every distinct component it renders for the lifetime of the app, so a `<template>` created inside a decorator callback is never released, nor is anything its closure captures.
    * @param data - The data to be passed to the Glimmer component as `@data`.
    * @param opts - Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
    */
