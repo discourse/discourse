@@ -204,13 +204,13 @@ RSpec.describe "Chat composer rich editor" do
 
   it "keeps markup chat doesn't render as plain text" do
     chat_page.visit_channel(channel_1)
-    channel_page.composer.input.send_keys("# not a heading")
+    channel_page.composer.input.send_keys("[ ] not a checkbox")
 
-    expect(channel_page.composer.component).to have_no_css("h1")
+    expect(channel_page.composer.component).to have_no_css(".chcklst-box")
 
     channel_page.composer.enter_shortcut
 
-    expect(channel_page.messages).to have_message(text: "# not a heading")
+    expect(channel_page.messages).to have_message(text: "[ ] not a checkbox")
   end
 
   it "adds a line break on Enter when sending needs Mod+Enter" do
