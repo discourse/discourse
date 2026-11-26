@@ -579,9 +579,19 @@ class SessionController < ApplicationController
         if payload = login_error_check(user)
           @error = payload[:error]
         else
-          log_on_user(user, replay_anonymous_action: true)
-          Discourse.redis.del "otp_#{params[:token]}"
-          return redirect_to path("/")
+          # Re-check the token under the credential lock so a password change
+          # cannot commit between the check and the new session being created.
+          logged_in =
+            user.with_credential_lock do
+              next false if one_time_password_user != user
+
+              log_on_user(user, replay_anonymous_action: true)
+              Discourse.redis.del "otp_#{params[:token]}"
+              true
+            end
+          return redirect_to path("/") if logged_in
+
+          @error = I18n.t("user_api_key.invalid_token")
         end
       else
         # Display the form

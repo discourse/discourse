@@ -86,16 +86,26 @@ class UserApiKeysController < ApplicationController
     @client.application_name = params[:application_name] if @client.new_record?
     @client.save! if @client.new_record? || @client.changed?
 
-    # destroy any old keys the user had with the client
-    @client.keys.where(user_id: current_user.id).destroy_all
+    key, otp_payload =
+      with_revalidated_credential do
+        # destroy any old keys the user had with the client
+        @client.keys.where(user_id: current_user.id).destroy_all
 
-    key =
-      @client.keys.create!(
-        user_id: current_user.id,
-        push_url: params[:push_url],
-        expires_at: expires_at,
-        scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
-      )
+        new_key =
+          @client.keys.create!(
+            user_id: current_user.id,
+            push_url: params[:push_url],
+            expires_at: expires_at,
+            scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
+          )
+
+        if scopes.include?("one_time_password")
+          # encrypt one_time_password separately to bypass 128 chars encryption limit
+          otp = one_time_password(parsed_public_key, current_user)
+        end
+
+        [new_key, otp]
+      end
 
     # we keep the payload short so it encrypts easily with public key
     # it is often restricted to 128 chars
@@ -116,11 +126,6 @@ class UserApiKeysController < ApplicationController
           padding: params[:padding],
         ),
       )
-
-    if scopes.include?("one_time_password")
-      # encrypt one_time_password separately to bypass 128 chars encryption limit
-      otp_payload = one_time_password(parsed_public_key, current_user)
-    end
 
     response_json =
       if params[:auth_redirect]
@@ -291,39 +296,44 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    UserApiKey::DeviceAuth::Authorize.call(
-      device_auth_service_params(device_code: device_code, user_id: current_user.id),
-    ) do
-      on_success do
-        if params[:approval_token].present?
-          device_user_activation.delete_approval_token(params[:approval_token])
+    with_revalidated_credential do
+      UserApiKey::DeviceAuth::Authorize.call(
+        device_auth_service_params(device_code: device_code, user_id: current_user.id),
+      ) do
+        on_success do
+          if params[:approval_token].present?
+            device_user_activation.delete_approval_token(params[:approval_token])
+          end
+          render_device_activation(
+            { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: false },
+          )
         end
-        render_device_activation(
-          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: false },
-        )
-      end
-      on_model_not_found(:user) do
-        trace_device_auth(
-          "device_auth.authorize.failed",
-          reason: "user_not_found",
-          device_code: device_code,
-        )
-        raise Discourse::InvalidAccess
-      end
-      on_failed_step(:authorize_grant) do |failure|
-        render_device_activation(
-          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
-          debug_reason: failure.error,
-        )
-      end
-      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
-        trace_device_auth(
-          "device_auth.authorize.failed",
-          reason: exception.class.name,
-          exception: exception,
-          device_code: device_code,
-        )
-        raise exception
+        on_model_not_found(:user) do
+          trace_device_auth(
+            "device_auth.authorize.failed",
+            reason: "user_not_found",
+            device_code: device_code,
+          )
+          raise Discourse::InvalidAccess
+        end
+        on_failed_step(:authorize_grant) do |failure|
+          render_device_activation(
+            {
+              state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE,
+              expired_code: true,
+            },
+            debug_reason: failure.error,
+          )
+        end
+        on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+          trace_device_auth(
+            "device_auth.authorize.failed",
+            reason: exception.class.name,
+            exception: exception,
+            device_code: device_code,
+          )
+          raise exception
+        end
       end
     end
   end
@@ -424,7 +434,7 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless can_authorize_key?
 
-    otp_payload = one_time_password(parsed_public_key, current_user)
+    otp_payload = with_revalidated_credential { one_time_password(parsed_public_key, current_user) }
     uri = URI.parse(params[:auth_redirect])
     uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
     redirect_path = uri.to_s

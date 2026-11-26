@@ -173,6 +173,22 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create" do
+    it "does not issue a key once a password change revokes the session mid-request" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :can_authorize_key?,
+      ).and_wrap_original do |original|
+        result = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      expect { post "/user-api-key.json", params: args }.not_to change { UserApiKey.count }
+      expect(response.status).to eq(403)
+    end
+
     it "does not allow anon" do
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
@@ -1146,6 +1162,24 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create_otp" do
+    it "does not issue a login token once a password change revokes the session mid-request" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :can_authorize_key?,
+      ).and_wrap_original do |original|
+        result = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      post "/user-api-key/otp.json", params: otp_args
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body).not_to have_key("redirect_url")
+    end
+
     it "denies an OTP to a shadow even when its group may request one" do
       SiteSetting.allow_anonymous_mode = true
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s

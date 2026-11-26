@@ -320,6 +320,23 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
+  # Under the credential lock, re-read whichever credential authenticated this
+  # request so a password change that just revoked it is observed. Admin API
+  # keys are not tied to the user's password, so they stay valid.
+  def authenticated_credential_user
+    return unless user = current_user
+
+    if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
+      self.class.read_shared_session_key(shared_key)
+    elsif is_user_api?
+      UserApiKey.active.where(key_hash: @hashed_user_api_key).first&.user
+    elsif is_api?
+      user
+    elsif @user_token && UserAuthToken.where(id: @user_token.id, user_id: user.id).exists?
+      user
+    end
+  end
+
   # A scoped or delegated credential cannot be exchanged for a browser session.
   # Read the presented token again without repeating request accounting or using
   # results cached before the caller acquired the identity lock.

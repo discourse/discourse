@@ -4942,6 +4942,22 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to be_blank
         end
 
+        it "rejects the token when the password changes while it is being redeemed" do
+          token = SecureRandom.hex
+          store_otp(token, user)
+          allow_any_instance_of(SessionController).to receive(
+            :login_error_check,
+          ).and_wrap_original do |original, *args|
+            user.reload.update!(password: "a-new-secure-password")
+            original.call(*args)
+          end
+
+          post "/session/otp/#{token}"
+
+          expect(response.body).to include(I18n.t("user_api_key.invalid_token"))
+          expect(session[:current_user_id]).to be_blank
+        end
+
         it "rejects a token stored in the legacy username format" do
           token = SecureRandom.hex
           Discourse.redis.setex "otp_#{token}", 10.minutes, user.username

@@ -158,8 +158,7 @@ export default class PasswordResetController extends Controller {
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
-          revoke_user_api_keys:
-            !!this.model?.has_user_api_keys && this.revokeUserApiKeys,
+          revoke_user_api_keys: this.revokeUserApiKeys,
         },
       });
 
