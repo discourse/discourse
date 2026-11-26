@@ -34,5 +34,17 @@ describe Jobs::NotifyUsersAddedToGroup do
       )
       expect(topic.allowed_users).to include(user)
     end
+
+    it "renders the group full name as plain text in the message body" do
+      group.update!(full_name: "Staff](https://example.com)\n\n# Notice [Staff")
+      group.add(user)
+
+      described_class.new.execute(user_ids: [user.id], group_id: group.id)
+
+      topic = Topic.private_messages.last
+      links = Nokogiri::HTML5.fragment(topic.first_post.cooked).css("a").map { |a| a["href"] }
+      expect(links).to eq(["#{Discourse.base_url}/g/#{group.name}"])
+      expect(topic.title).to include(group.full_name)
+    end
   end
 end
