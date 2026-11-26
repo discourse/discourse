@@ -18,5 +18,15 @@ class FinalDestination
         FinalDestination::HTTP.new(env[:url].hostname, port, nil)
       end
     end
+
+    private
+
+    def configure_ssl(http, ssl)
+      if http.respond_to?(:allow_unverified_tls=)
+        http.allow_unverified_tls =
+          ssl_verify_mode(ssl) == OpenSSL::SSL::VERIFY_NONE || ssl[:verify_hostname] == false
+      end
+      super
+    end
   end
 end
