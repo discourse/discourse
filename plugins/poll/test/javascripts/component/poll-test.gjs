@@ -1,6 +1,13 @@
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { click, render, settled, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -1016,5 +1023,82 @@ module("Component | Poll", function (hooks) {
       .dom(".poll-voted-choices__choice")
       .exists({ count: 1 }, "the recorded choice replaces the ballot");
     assert.dom(".poll-buttons .amend-vote").exists();
+  });
+});
+
+module("Component | Poll | ranked choice focus", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.post = EmberObject.create({
+      id: 42,
+      topic: { archived: false },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "ranked_choice",
+      status: "open",
+      results: "always",
+      options: [
+        {
+          id: "1f972d1df351de3ce35a787c89faad29",
+          html: "this",
+          votes: 0,
+          rank: 0,
+        },
+        {
+          id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+          html: "that",
+          votes: 0,
+          rank: 0,
+        },
+        {
+          id: "6c986ebcde3d5822a6e91a695c388094",
+          html: "other",
+          votes: 0,
+          rank: 0,
+        },
+      ],
+      voters: 0,
+      chart_type: "bar",
+    });
+  });
+
+  const THIS =
+    ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']";
+
+  test("ranking an option keeps focus on that option's rank", async function (assert) {
+    await render(
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+    );
+
+    await focus(`${THIS} button`);
+    await click(`${THIS} button`);
+    await click(".dropdown-menu__item:nth-child(2) button");
+
+    assert
+      .dom(`${THIS}[data-poll-option-rank='1']`)
+      .exists("the option is ranked");
+    assert.strictEqual(
+      document.activeElement.closest(".ranked-choice-poll-option")?.dataset
+        .pollOptionId,
+      "1f972d1df351de3ce35a787c89faad29",
+      "focus stays with the option that was ranked"
+    );
+  });
+
+  test("ranking an option keeps its row, rather than rebuilding it", async function (assert) {
+    await render(
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+    );
+    const row = find(THIS);
+
+    await click(`${THIS} button`);
+    await click(".dropdown-menu__item:nth-child(2) button");
+
+    assert.strictEqual(find(THIS), row);
+    assert.dom(`${THIS}[data-poll-option-rank='1']`).exists();
+    assert.dom(`${THIS} button`).hasText("1");
   });
 });

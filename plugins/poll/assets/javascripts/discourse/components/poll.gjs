@@ -258,22 +258,7 @@ export default class PollComponent extends Component {
   }
 
   get options() {
-    let enrichedOptions = this.poll.options;
-
-    if (this.isRankedChoice) {
-      enrichedOptions.forEach((candidate) => {
-        const chosenIdx = this.vote.findIndex(
-          (object) => object.digest === candidate.id
-        );
-        if (chosenIdx === -1) {
-          candidate.rank = 0;
-        } else {
-          candidate.rank = this.vote[chosenIdx].rank;
-        }
-      });
-    }
-
-    return enrichedOptions;
+    return this.poll.options;
   }
 
   get voters() {
@@ -787,11 +772,6 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
-        if (this.poll.type === RANKED_CHOICE) {
-          poll.options.forEach((option) => {
-            option.rank = 0;
-          });
-        }
         this.vote = Object.assign([]);
         this.hasSavedVote = false;
         if (this.args.post.polls_votes) {
