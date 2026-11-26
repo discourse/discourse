@@ -62,6 +62,15 @@ RSpec.describe Onebox::Helpers do
       expect(WebMock).not_to have_requested(:get, internal_url)
     end
 
+    it "keeps certificate verification on for reconnections" do
+      stub_request(:get, "https://example.com/").to_return(status: 200, body: "ok")
+      http = FinalDestination::HTTP.new("example.com", 443)
+      FinalDestination::HTTP.stubs(:new).returns(http)
+
+      expect(described_class.fetch_response("https://example.com/")).to eq("ok")
+      expect(http.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+    end
+
     it "fetches an allowlisted internal host on its configured S3 port" do
       SiteSetting.s3_endpoint = "http://minio.local:9000"
       SiteSetting.allowed_internal_hosts = "minio.local"
@@ -160,6 +169,20 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".fetch_content_length" do
+    it "keeps certificate verification on for reconnections" do
+      stub_request(:head, "https://example.com/file.pdf").to_return(
+        status: 200,
+        headers: {
+          "Content-Length" => "1024",
+        },
+      )
+      http = FinalDestination::HTTP.new("example.com", 443)
+      FinalDestination::HTTP.stubs(:new).returns(http)
+
+      expect(described_class.fetch_content_length("https://example.com/file.pdf")).to eq(1024)
+      expect(http.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+    end
+
     it "does not connect to private IP" do
       uri = "https://www.example.com"
       FinalDestination::TestHelper.stub_to_fail do
