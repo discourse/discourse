@@ -1,10 +1,9 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import Theme from "discourse/admin/models/theme";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -58,18 +57,15 @@ module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
       </template>
     );
 
-    await selectKit().expand();
-    await selectKit().selectRowByValue("box");
+    await fillIn(".form-kit__control-select", "box");
 
     assert.strictEqual(
       setting.buffered.get("value"),
       "box",
       "writes the picked value to the setting's buffer"
     );
-    assert.strictEqual(
-      selectKit().header().value(),
-      "box",
-      "shows the buffered value"
-    );
+    assert
+      .dom(".form-kit__control-select")
+      .hasValue("box", "shows the buffered value");
   });
 });

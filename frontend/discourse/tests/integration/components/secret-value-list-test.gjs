@@ -228,7 +228,6 @@ module("Integration | Component | SecretValueList", function (hooks) {
   test("a reveal follows its entry when the values are restored", async function (assert) {
     const original = "firstKey|FirstValue\nsecondKey|secondValue";
     const values = tracked(original);
-    const setValidationMessage = () => {};
     const changeValueCallback = (newValues) => (values.value = newValues);
 
     await render(
@@ -236,7 +235,6 @@ module("Integration | Component | SecretValueList", function (hooks) {
         <SecretValueList
           @changeValueCallback={{changeValueCallback}}
           @isSecret={{true}}
-          @setValidationMessage={{setValidationMessage}}
           @values={{values.value}}
         />
       </template>
