@@ -106,18 +106,14 @@ export default class PageShell extends Service {
   @tracked animatingPanels = false;
 
   #animationTimer;
-  #aboutPreviewRoute = tracked(null);
   #selectedContextViewId = tracked(null);
 
   constructor() {
     super(...arguments);
     this.#load();
-    const savedView = this.sessionStore.getItem(this.#contextViewStorageKey);
-    if (savedView === ABOUT_CONTEXT_VIEW.id) {
-      this.sessionStore.removeItem(this.#contextViewStorageKey);
-    } else {
-      this.#selectedContextViewId.value = savedView;
-    }
+    this.#selectedContextViewId.value = this.sessionStore.getItem(
+      this.#contextViewStorageKey
+    );
   }
 
   willDestroy() {
@@ -194,13 +190,6 @@ export default class PageShell extends Service {
   }
 
   get #explicitContextView() {
-    if (
-      this.#aboutPreviewRoute.value &&
-      this.#aboutPreviewRoute.value === this.router.currentRoute
-    ) {
-      return ABOUT_CONTEXT_VIEW;
-    }
-
     return this.contextViews.find(
       (view) => view.id === this.#selectedContextViewId.value
     );
@@ -212,9 +201,7 @@ export default class PageShell extends Service {
 
   @action
   selectContextView(id) {
-    this.#aboutPreviewRoute.value =
-      id === ABOUT_CONTEXT_VIEW.id ? this.router.currentRoute : null;
-    if (id === ABOUT_CONTEXT_VIEW.id || id === "follow-page") {
+    if (id === "follow-page") {
       this.#selectedContextViewId.value = null;
       this.sessionStore.removeItem(this.#contextViewStorageKey);
     } else {

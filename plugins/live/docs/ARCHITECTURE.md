@@ -38,7 +38,8 @@ A Context view registers its ID, translated label, and component together throug
 the `page-shell-context-view` transformer. The page shell uses that list for
 the header picker and panel content. An explicit action to open a room or channel
 selects its view. The shell remembers that selection per user and tab across
-navigation. A selected page-aware view resumes when it becomes available again.
+navigation. About also stays selected when picked explicitly. A selected
+page-aware view resumes when it becomes available again.
 
 Follow page clears the selection. The shell then shows Topic summary on topics,
 Category guide on category listings, and About when neither applies. Navigation

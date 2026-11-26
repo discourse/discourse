@@ -407,22 +407,27 @@ acceptance("Page shell | regions", function (needs) {
     await visit("/latest");
     assert
       .dom(`${picker} .d-button-label`)
-      .hasText(
-        "Follow page (About)",
-        "navigation returns the About preview to Follow page"
-      );
+      .hasText("About", "keeps the explicit About selection on Latest");
     await visit("/c/bug/1");
+    assert
+      .dom(`${picker} .d-button-label`)
+      .hasText("About", "keeps About selected in the category");
+    assert
+      .dom("#page-shell-context .context-about")
+      .exists("continues to show About");
+
+    await click(picker);
+    await click('[data-context-view-option="follow-page"]');
     assert
       .dom(`${picker} .d-button-label`)
       .hasText(
         "Follow page (Category guide)",
-        "About does not stick across pages"
+        "follows the category after clearing About"
       );
-    await click(picker);
+    await visit("/latest");
     assert
-      .dom('[data-context-view-option="about"]')
-      .hasText("About", "keeps About in the category picker");
-    await click('[data-context-view-option="follow-page"]');
+      .dom(`${picker} .d-button-label`)
+      .hasText("Follow page (About)", "uses About as the automatic fallback");
 
     await click("#toggle-context-panel");
     await visit("/latest");
