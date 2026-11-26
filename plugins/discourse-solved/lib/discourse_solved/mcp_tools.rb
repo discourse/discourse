@@ -11,6 +11,11 @@ module DiscourseSolved
         )
 
       def self.call(arguments:, request_context:)
+        DiscourseMcp::ToolHelpers.visible_post!(
+          arguments.fetch("post_id"),
+          request_context,
+          access: :write,
+        )
         service =
           (
             if arguments.fetch("accepted")
