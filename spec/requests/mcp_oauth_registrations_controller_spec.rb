@@ -9,12 +9,10 @@ describe McpOauthRegistrationsController do
 
   before { SiteSetting.mcp_server_enabled = true }
 
-  def register(body = metadata, content_type: "application/json")
-    post "/oauth2/mcp/register",
-         params: body.is_a?(String) ? body : body.to_json,
-         headers: {
-           "CONTENT_TYPE" => content_type,
-         }
+  def register(body = metadata, content_type: "application/json", remote_addr: nil)
+    headers = { "CONTENT_TYPE" => content_type }
+    headers["REMOTE_ADDR"] = remote_addr if remote_addr
+    post "/oauth2/mcp/register", params: body.is_a?(String) ? body : body.to_json, headers:
   end
 
   it "registers a public client and describes it" do
@@ -72,6 +70,26 @@ describe McpOauthRegistrationsController do
     expect(response.parsed_body["client_name"]).to eq("agent.example.com")
   end
 
+  it "accepts explicit JSON null for optional metadata fields" do
+    register(
+      metadata.merge(
+        client_name: nil,
+        token_endpoint_auth_method: nil,
+        grant_types: nil,
+        response_types: nil,
+        client_secret: nil,
+      ),
+    )
+
+    expect(response.status).to eq(201)
+    expect(response.parsed_body).to include(
+      "client_name" => "agent.example.com",
+      "token_endpoint_auth_method" => "none",
+      "grant_types" => %w[authorization_code refresh_token],
+      "response_types" => ["code"],
+    )
+  end
+
   it "accepts loopback redirect URIs for apps on the user's computer" do
     register(metadata.merge(redirect_uris: ["http://127.0.0.1:33418/callback"]))
 
@@ -90,6 +108,8 @@ describe McpOauthRegistrationsController do
   end
 
   it "rejects redirect URIs it can't send a code to safely" do
+    long_uri =
+      "https://agent.example.com/#{"a" * DiscourseMcp::OAuth::ClientRegistration::MAX_VALUE_LENGTH}"
     [
       nil,
       [],
@@ -97,6 +117,7 @@ describe McpOauthRegistrationsController do
       ["https://agent.example.com/callback#fragment"],
       ["https://user@agent.example.com/callback"],
       ["agent.example.com/callback"],
+      [long_uri],
       Array.new(21) { |index| "https://agent.example.com/#{index}" },
     ].each do |redirect_uris|
       expect { register(metadata.merge(redirect_uris:)) }.not_to change { McpOauthClient.count }
@@ -120,20 +141,63 @@ describe McpOauthRegistrationsController do
   it "rejects requests that aren't a JSON object" do
     register("{not json")
     expect(response.status).to eq(400)
+    expect(response.headers["Cache-Control"]).to eq("no-store")
+    expect(response.parsed_body["error"]).to eq("invalid_client_metadata")
 
     register([metadata].to_json)
     expect(response.status).to eq(400)
+    expect(response.headers["Cache-Control"]).to eq("no-store")
+    expect(response.parsed_body["error"]).to eq("invalid_client_metadata")
 
     register(metadata, content_type: "application/x-www-form-urlencoded")
     expect(response.status).to eq(400)
+    expect(response.headers["Cache-Control"]).to eq("no-store")
+    expect(response.parsed_body["error"]).to eq("invalid_client_metadata")
     expect(McpOauthClient.count).to eq(0)
+  end
+
+  it "rejects payloads larger than MAX_REQUEST_BYTES" do
+    oversized_valid =
+      metadata.merge(client_name: "a" * McpOauthRegistrationsController::MAX_REQUEST_BYTES).to_json
+    oversized_invalid = "{" * (McpOauthRegistrationsController::MAX_REQUEST_BYTES + 1)
+
+    [oversized_valid, oversized_invalid].each do |body|
+      expect { register(body) }.not_to change { McpOauthClient.count }
+      expect(response.status).to eq(400)
+      expect(response.headers["Cache-Control"]).to eq("no-store")
+      expect(response.parsed_body).to eq(
+        "error" => "invalid_client_metadata",
+        "error_description" => "The metadata is too large.",
+      )
+    end
+  end
+
+  it "rejects metadata values containing null bytes" do
+    [
+      metadata.merge(client_name: "Example\u0000agent"),
+      metadata.merge(software_id: "soft\u0000ware"),
+      metadata.merge(grant_types: ["authorization_code", "custom\u0000type"]),
+    ].each do |body|
+      expect { register(body) }.not_to change { McpOauthClient.count }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["error"]).to eq("invalid_client_metadata")
+    end
+  end
+
+  it "registers clients when login is required" do
+    SiteSetting.login_required = true
+
+    expect { register }.to change { McpOauthClient.count }.by(1)
+    expect(response.status).to eq(201)
   end
 
   it "isn't available when registration is turned off" do
     SiteSetting.mcp_oauth_dynamic_client_registration = false
 
     register
+    expect(response.status).to eq(404)
 
+    register("{not json")
     expect(response.status).to eq(404)
   end
 
@@ -160,6 +224,29 @@ describe McpOauthRegistrationsController do
       expect(response.status).to eq(201)
 
       register
+      expect(response.status).to eq(429)
+    end
+  end
+
+  it "limits registrations across the site without counting invalid requests" do
+    RateLimiter.enable
+    stub_const(described_class, "REGISTRATIONS_PER_HOUR", 2) do
+      register("{not json", remote_addr: "192.0.2.1")
+      expect(response.status).to eq(400)
+
+      register(
+        metadata.merge(redirect_uris: ["http://agent.example.com/callback"]),
+        remote_addr: "192.0.2.2",
+      )
+      expect(response.status).to eq(400)
+
+      register(metadata, remote_addr: "192.0.2.3")
+      expect(response.status).to eq(201)
+
+      register(metadata, remote_addr: "192.0.2.4")
+      expect(response.status).to eq(201)
+
+      register(metadata, remote_addr: "192.0.2.5")
       expect(response.status).to eq(429)
     end
   end

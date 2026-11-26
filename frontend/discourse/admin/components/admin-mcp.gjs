@@ -253,6 +253,26 @@ export default class AdminMcp extends Component {
     return this.clientRecord || this.model.client || this.model;
   }
 
+  get clientManagementLabel() {
+    if (this.client.admin_managed) {
+      return "admin.config.mcp.clients.manual";
+    }
+
+    return this.client.registration_type === "dcr"
+      ? "admin.config.mcp.clients.dynamic"
+      : "admin.config.mcp.clients.automatic";
+  }
+
+  get clientManagementDescription() {
+    if (this.client.admin_managed) {
+      return "admin.config.mcp.clients.manual_description";
+    }
+
+    return this.client.registration_type === "dcr"
+      ? "admin.config.mcp.clients.dynamic_description"
+      : "admin.config.mcp.clients.automatic_description";
+  }
+
   get filteredPrimitives() {
     const filter = (this.primitiveFilter || "").trim().toLowerCase();
 
@@ -1815,13 +1835,7 @@ export default class AdminMcp extends Component {
       />
       <AdminConfigAreaCard @heading="admin.config.mcp.clients.edit">
         <:content>
-          <p>{{i18n
-              (if
-                this.client.admin_managed
-                "admin.config.mcp.clients.manual_description"
-                "admin.config.mcp.clients.automatic_description"
-              )
-            }}</p>
+          <p>{{i18n this.clientManagementDescription}}</p>
           <Form
             class="admin-mcp__edit-client-form"
             @commitOnSubmit={{false}}
@@ -1923,13 +1937,7 @@ export default class AdminMcp extends Component {
                 </ul>
               </dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.management"}}</dt><dd
-              >{{i18n
-                  (if
-                    this.client.admin_managed
-                    "admin.config.mcp.clients.manual"
-                    "admin.config.mcp.clients.automatic"
-                  )
-                }}</dd></div>
+              >{{i18n this.clientManagementLabel}}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.first_seen"}}</dt><dd
               >{{dFormatDate this.client.first_seen_at}}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.last_seen"}}</dt><dd>{{#if

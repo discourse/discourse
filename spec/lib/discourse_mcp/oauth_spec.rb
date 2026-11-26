@@ -137,6 +137,9 @@ describe DiscourseMcp::OAuth do
     def expect_consent_required_only_for_registered_client
       registered_grant = grant(registered_client)
       other_grant = grant(client)
+      access_token = McpOauthAccessToken.issue!(authorization: registered_grant)
+      refresh_token, refresh_record = McpOauthRefreshToken.issue!(authorization: registered_grant)
+      request = Struct.new(:authorization).new("Bearer #{access_token}")
 
       yield
 
@@ -145,6 +148,22 @@ describe DiscourseMcp::OAuth do
       expect(
         DiscourseMcp::AuthorizationStatus.for([registered_grant]).fetch(registered_grant.id),
       ).to eq("consent_required")
+      expect(
+        McpOauthAccessToken.find_by(
+          token_hash: McpOauthAccessToken.digest(access_token),
+        ).revoked_at,
+      ).to be_present
+      expect(refresh_record.reload.revoked_at).to be_present
+      expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
+        DiscourseMcp::AuthenticationError,
+      )
+      expect do
+        described_class::TokenIssuer.refresh!(
+          refresh_token:,
+          client_id: registered_client.client_id,
+          resource: DiscourseMcp.resource_url,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
     end
 
     it "asks for consent again once registration is turned off" do

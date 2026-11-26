@@ -26,7 +26,7 @@ module DiscourseMcp
         software_id
         software_version
       ].freeze
-      # Registrations nobody approved or edited are removed after this long.
+      # Registrations nobody authorized, edited, or blocked are removed after this long.
       UNUSED_LIFETIME = 1.day
 
       class Error < StandardError
@@ -54,11 +54,14 @@ module DiscourseMcp
         validate_authentication!(metadata)
         validate_flows!(metadata)
         recorded = recorded_metadata(metadata)
+        name = client_name(metadata["client_name"], redirect_uris)
+
+        yield if block_given?
 
         client =
           McpOauthClient.create!(
             client_id: "#{CLIENT_ID_PREFIX}#{SecureRandom.hex(16)}",
-            name: client_name(metadata["client_name"], redirect_uris),
+            name:,
             registration_type: "dcr",
             trust_state: "approved",
             redirect_uris:,
@@ -81,6 +84,7 @@ module DiscourseMcp
       def self.unused
         McpOauthClient
           .where(registration_type: "dcr", admin_managed: false)
+          .where.not(trust_state: "blocked")
           .where("created_at < ?", UNUSED_LIFETIME.ago)
           .where.not(id: McpOauthAuthorization.select(:mcp_oauth_client_id))
       end
@@ -88,7 +92,10 @@ module DiscourseMcp
       def self.redirect_uris(value)
         valid =
           value.is_a?(Array) && value.length.between?(1, MAX_REDIRECT_URIS) &&
-            value.all? { |uri| uri.is_a?(String) && McpOauthClient.valid_redirect_uri?(uri) }
+            value.all? do |uri|
+              uri.is_a?(String) && uri.length <= MAX_VALUE_LENGTH &&
+                McpOauthClient.valid_redirect_uri?(uri)
+            end
         if !valid
           raise Error.new(
                   "invalid_redirect_uri",
@@ -101,8 +108,9 @@ module DiscourseMcp
       private_class_method :redirect_uris
 
       def self.validate_authentication!(metadata)
-        method = metadata.fetch("token_endpoint_auth_method", "none")
-        if PUBLIC_AUTH_METHODS.exclude?(method) || metadata.key?("client_secret")
+        method = metadata["token_endpoint_auth_method"]
+        method = "none" if method.nil?
+        if PUBLIC_AUTH_METHODS.exclude?(method) || !metadata["client_secret"].nil?
           raise Error.new(
                   "invalid_client_metadata",
                   "Only public clients can register. They use PKCE instead of a client secret.",
@@ -112,8 +120,10 @@ module DiscourseMcp
       private_class_method :validate_authentication!
 
       def self.validate_flows!(metadata)
-        grant_types = metadata.fetch("grant_types", ["authorization_code"])
-        response_types = metadata.fetch("response_types", ["code"])
+        grant_types = metadata["grant_types"]
+        grant_types = ["authorization_code"] if grant_types.nil?
+        response_types = metadata["response_types"]
+        response_types = ["code"] if response_types.nil?
         if !grant_types.is_a?(Array) || grant_types.exclude?("authorization_code") ||
              !response_types.is_a?(Array) || response_types.exclude?("code")
           raise Error.new(
@@ -131,15 +141,24 @@ module DiscourseMcp
           .filter_map do |key, value|
             case value
             when String
+              reject_null_bytes!(value)
               [key, value.truncate(MAX_VALUE_LENGTH)]
             when Array
               strings = value.grep(String).first(MAX_REDIRECT_URIS)
+              strings.each { |item| reject_null_bytes!(item) }
               [key, strings.map { |item| item.truncate(MAX_VALUE_LENGTH) }]
             end
           end
           .to_h
       end
       private_class_method :recorded_metadata
+
+      def self.reject_null_bytes!(value)
+        if value.include?("\u0000")
+          raise Error.new("invalid_client_metadata", "Metadata values must not contain null bytes.")
+        end
+      end
+      private_class_method :reject_null_bytes!
 
       def self.client_name(value, redirect_uris)
         name = value.is_a?(String) ? value.strip : ""
@@ -263,11 +282,11 @@ module DiscourseMcp
 
         return if ClientRegistration.allowed?
 
-        # An empty list would require consent from every client.
-        registered_ids = McpOauthClient.where(registration_type: "dcr").pluck(:id)
-        if registered_ids.present?
-          McpOauthAuthorization.require_consent!(client_ids: registered_ids)
-        end
+        McpOauthClient
+          .where(registration_type: "dcr")
+          .in_batches do |clients|
+            McpOauthAuthorization.require_consent!(client_ids: clients.pluck(:id))
+          end
       end
 
       def self.valid_client_id_uri?(uri)

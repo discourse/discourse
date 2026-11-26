@@ -93,6 +93,7 @@ describe Jobs::CleanUpMcpRecords do
     abandoned = register.("Abandoned")
     approved = register.("Approved")
     edited = register.("Edited")
+    blocked = register.("Blocked")
     recent = register.("Recent")
     McpOauthAuthorization.create!(
       user:,
@@ -102,15 +103,18 @@ describe Jobs::CleanUpMcpRecords do
       status: "active",
     )
     edited.update_registration!(name: "Named by an admin")
-    McpOauthClient.where(id: [abandoned.id, approved.id, edited.id, client.id]).update_all(
-      created_at: 2.days.ago,
-    )
+    blocked.update!(trust_state: "blocked")
+    McpOauthClient.where(
+      id: [abandoned.id, approved.id, edited.id, blocked.id, client.id],
+    ).update_all(created_at: 2.days.ago)
 
     described_class.new.execute({})
 
     expect(
-      McpOauthClient.where(id: [abandoned.id, approved.id, edited.id, recent.id]).pluck(:name),
-    ).to contain_exactly("Approved", "Named by an admin", "Recent")
+      McpOauthClient.where(id: [abandoned.id, approved.id, edited.id, blocked.id, recent.id]).pluck(
+        :name,
+      ),
+    ).to contain_exactly("Approved", "Named by an admin", "Blocked", "Recent")
     expect(McpOauthClient.exists?(client.id)).to eq(true)
   end
 
