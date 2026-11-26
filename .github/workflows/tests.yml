@@ -351,7 +351,6 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
           DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL: "1"
-          DISCOURSE_SYSTEM_TEST_BATCH_V8_GC: "1"
           DISCOURSE_SYSTEM_TEST_NODE_READ_FAST: "1"
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 

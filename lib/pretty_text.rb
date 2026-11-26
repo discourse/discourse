@@ -710,9 +710,8 @@ module PrettyText
     @mutex.synchronize do
       rval = yield
       collect = GlobalSetting.mini_racer_single_threaded
-      if collect && Rails.env.test? && ENV["DISCOURSE_SYSTEM_TEST_BATCH_V8_GC"] == "1"
-        # Amortize explicit collections in short-lived system test workers;
-        # the context's automatic and idle GC still run between notifications.
+      if collect && Rails.env.test?
+        # Amortize explicit collections in test runs; automatic GC still runs between notifications.
         @v8_calls_since_gc ||= 0
         collect = @v8_calls_since_gc.zero?
         @v8_calls_since_gc = (@v8_calls_since_gc + 1) % 256
