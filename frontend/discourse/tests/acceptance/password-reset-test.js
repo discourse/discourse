@@ -169,4 +169,46 @@ acceptance("Password Reset", function (needs) {
       "it redirects after submitting form"
     );
   });
+
+  function capturePasswordResetRequest() {
+    const captured = {};
+    pretender.put("/u/password-reset/myvalidtoken.json", (request) => {
+      captured.body = parsePostData(request.requestBody);
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          success: true,
+          message: "Password changed.",
+          login_error: "IP denied",
+        }),
+      ];
+    });
+    return captured;
+  }
+
+  test("revokes apps authorized after the page loaded", async function (assert) {
+    const captured = capturePasswordResetRequest();
+    PreloadStore.store("password_reset", { has_connected_apps: false });
+
+    await visit("/u/password-reset/myvalidtoken");
+    assert.dom(".change-password-form__revoke-apps").doesNotExist();
+
+    await fillIn(".password-reset input", "perf3ctly5ecur3");
+    await click(".password-reset form button[type='submit']");
+    assert.strictEqual(captured.body.revoke_connected_apps, "true");
+  });
+
+  test("keeps connected apps when the option is unchecked", async function (assert) {
+    const captured = capturePasswordResetRequest();
+    PreloadStore.store("password_reset", { has_connected_apps: true });
+
+    await visit("/u/password-reset/myvalidtoken");
+    assert.dom(".change-password-form__revoke-apps-checkbox").isChecked();
+
+    await click(".change-password-form__revoke-apps-checkbox");
+    await fillIn(".password-reset input", "perf3ctly5ecur3");
+    await click(".password-reset form button[type='submit']");
+    assert.strictEqual(captured.body.revoke_connected_apps, "false");
+  });
 });

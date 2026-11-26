@@ -13,15 +13,17 @@ class CalendarSubscriptionsController < ApplicationController
   end
 
   def create
-    revoke_existing_key!
-
     client =
       UserApiKeyClient.find_or_create_by!(client_id: CLIENT_ID) do |c|
         c.application_name = I18n.t("calendar_subscriptions.application_name")
       end
 
     scopes = build_scopes
-    api_key = client.keys.create!(user_id: current_user.id, scopes: scopes)
+    api_key =
+      with_revalidated_credential do
+        revoke_existing_key!
+        client.keys.create!(user_id: current_user.id, scopes: scopes)
+      end
     raw_key = api_key.key
 
     render json: { key: raw_key, urls: build_urls(raw_key) }

@@ -2064,6 +2064,7 @@ en:
         choose_new: "Choose a new password"
         choose: "Choose a password"
         verify_identity: "To continue, please verify your identity."
+        revoke_apps: "Also sign out of all connected apps (recommended if you think someone else accessed your account)"
         title: "Password Reset"
         remove: "Remove Password"
         remove_disabled: "The account needs at least one other login method (e.g. a passkey or a linked external account) before removing the password."
