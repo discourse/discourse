@@ -60,6 +60,27 @@ en:
           tabs:
             ads: "Ads"
             settings: "Settings"
+          above_site_header:
+            title: "Above site header"
+            description: "Ads to show at the top of the page, above the site header."
+          topic_list_top:
+            title: "Topic list top ads"
+            description: "Ads to show at the top of topic list pages."
+          topic_above_post_stream:
+            title: "Topic above post stream"
+            description: "Ads to show above the title of a topic on the topic page."
+          topic_above_suggested:
+            title: "Topic above suggested"
+            description: "Ads to show after the last post in a topic, above the suggested topics."
+          post_bottom:
+            title: "Between posts"
+            description: "Ads to show in between posts, after every N posts."
+          topic_list_between:
+            title: "Between topics"
+            description: "Ads to show in between topics, after every N topics."
+          nested_roots_between:
+            title: "Between nested roots"
+            description: "Ads to show in between root replies in the nested replies view, after every N roots."
 
         dfp_settings:
           title: "DFP / GAM"
@@ -84,25 +105,3 @@ en:
           save: "Save"
           save_success: "Category configuration saved."
           delete_success: "Category configuration deleted."
-
-          above_site_header:
-            title: "Above site header"
-            description: "Ads to show at the top of the page, above the site header."
-          topic_list_top:
-            title: "Topic list top ads"
-            description: "Ads to show at the top of topic list pages."
-          topic_above_post_stream:
-            title: "Topic above post stream"
-            description: "Ads to show above the title of a topic on the topic page."
-          topic_above_suggested:
-            title: "Topic above suggested"
-            description: "Ads to show after the last post in a topic, above the suggested topics."
-          post_bottom:
-            title: "Between posts"
-            description: "Ads to show in between posts, after every N posts."
-          topic_list_between:
-            title: "Between topics"
-            description: "Ads to show in between topics, after every N topics."
-          nested_roots_between:
-            title: "Between nested roots"
-            description: "Ads to show in between root replies in the nested replies view, after every N roots."
