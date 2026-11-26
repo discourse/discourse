@@ -1,3 +1,4 @@
+import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -56,5 +57,40 @@ module("Live | Unit | Lib | heartbeat-manager", function (hooks) {
     manager.stop(1);
 
     assert.verifySteps(["expelled 1"]);
+  });
+
+  test("ignores a rejection of a beat sent before a restart", async function (assert) {
+    pretender.post("/live/rooms/1/heartbeat", () => response(404, {}), true);
+    const beats = () =>
+      pretender.handledRequests.filter((request) =>
+        request.url.endsWith("/heartbeat")
+      );
+
+    const manager = new HeartbeatManager({
+      isActiveRoom: () => true,
+      buildPayload: () => ({}),
+      onExpelled: (roomId) => {
+        assert.step(`expelled ${roomId}`);
+        manager.stop(roomId);
+      },
+      intervalMs: 20,
+      timeoutMs: 1000,
+    });
+
+    manager.start(1);
+    await waitUntil(() => beats().length === 1);
+    manager.stop(1);
+    manager.start(1);
+    await waitUntil(() => beats().length === 2);
+
+    const [staleBeat, currentBeat] = beats();
+    pretender.resolve(staleBeat);
+    pretender.resolve(currentBeat);
+    await settled();
+
+    assert.verifySteps(
+      ["expelled 1"],
+      "expels only on the current beat's rejection"
+    );
   });
 });
