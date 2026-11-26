@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 
 export default class PasswordResetController extends Controller {
   @tracked accountPassword;
+  @tracked revokeConnectedApps = true;
 
   passwordRequired = true;
 
@@ -157,6 +158,7 @@ export default class PasswordResetController extends Controller {
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
+          revoke_connected_apps: this.revokeConnectedApps,
         },
       });
 

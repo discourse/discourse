@@ -335,6 +335,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -342,8 +343,27 @@ RSpec.describe UsersController do
 
       it "succeeds with a newly-created user" do
         user.update!(created_at: 1.minute.ago)
+        user.user_password.update_columns(created_at: 1.hour.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
+      end
+
+      it "waits until login tokens issued before a password was added expire" do
+        freeze_time
+        user.user_password.update_columns(created_at: 2.minutes.ago)
+        stub_server_session_confirmed
+
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("remove_password_too_soon", count: 10),
+        )
+        expect(user.reload.user_password).to be_present
+
+        freeze_time 9.minutes.from_now
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+        expect(user.reload.user_password).to be_nil
       end
     end
 
@@ -378,6 +398,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -483,7 +504,7 @@ RSpec.describe UsersController do
         expect(response.body).to have_tag("script#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
-            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_connected_apps":false}',
           )
         end
 
@@ -518,6 +539,133 @@ RSpec.describe UsersController do
 
         expect(WebPush).not_to have_received(:payload_send)
         expect(user1.push_subscriptions).to be_empty
+      end
+
+      describe "authorized apps" do
+        fab!(:user_api_key) { Fabricate(:user_api_key, user: user1) }
+
+        it "reports whether the user has authorized apps" do
+          get "/u/password-reset/#{email_token.token}.json"
+
+          expect(response.parsed_body["has_connected_apps"]).to eq(true)
+        end
+
+        it "keeps authorized apps unless the user asks to revoke them" do
+          put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to be_nil
+        end
+
+        it "revokes authorized apps when requested" do
+          other_key = Fabricate(:user_api_key)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_present
+          expect(other_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to eq("revoked_user_api_keys: 1")
+        end
+
+        context "with an MCP authorization" do
+          fab!(:mcp_client) do
+            McpOauthClient.create!(
+              client_id: "password-reset-client",
+              name: "Password reset client",
+              registration_type: "pre_registered",
+              trust_state: "approved",
+              redirect_uris: ["http://127.0.0.1/callback"],
+            )
+          end
+          fab!(:mcp_authorization) do
+            McpOauthAuthorization.create!(
+              user: user1,
+              client: mcp_client,
+              resource: DiscourseMcp.resource_url,
+              consented_at: Time.zone.now,
+            )
+          end
+
+          before do
+            McpOauthAccessToken.issue!(authorization: mcp_authorization)
+            McpOauthRefreshToken.issue!(authorization: mcp_authorization)
+          end
+
+          it "reports MCP authorizations as authorized apps" do
+            user_api_key.update!(revoked_at: Time.zone.now)
+
+            get "/u/password-reset/#{email_token.token}.json"
+
+            expect(response.parsed_body["has_connected_apps"]).to eq(true)
+          end
+
+          it "keeps MCP authorizations unless the user asks to revoke them" do
+            put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(mcp_authorization.reload).to be_active
+          end
+
+          it "revokes MCP authorizations and their tokens when requested" do
+            put "/u/password-reset/#{email_token.token}.json",
+                params: {
+                  password: "hg9ow8yHG32O",
+                  revoke_connected_apps: true,
+                }
+
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(mcp_authorization.reload).not_to be_active
+            expect(mcp_authorization.revoked_reason).to eq("password_reset")
+            expect(mcp_authorization.access_tokens.where(revoked_at: nil)).to be_empty
+            expect(mcp_authorization.refresh_tokens.where(revoked_at: nil)).to be_empty
+            expect(
+              UserHistory
+                .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+                .last
+                .details,
+            ).to eq("revoked_user_api_keys: 1\nrevoked_mcp_authorizations: 1")
+          end
+        end
+
+        it "leaves expired apps, which the form does not offer to revoke, alone" do
+          user_api_key.update!(expires_at: 1.day.ago)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
+        end
+
+        it "keeps authorized apps when the new password is rejected" do
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "abc",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(user_api_key.reload.revoked_at).to be_nil
+        end
       end
 
       it "disallows double password reset" do
@@ -769,7 +917,7 @@ RSpec.describe UsersController do
           expect(response.body).to have_tag("script#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
-              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_connected_apps":false}',
             )
           end
 

@@ -86,16 +86,26 @@ class UserApiKeysController < ApplicationController
     @client.application_name = params[:application_name] if @client.new_record?
     @client.save! if @client.new_record? || @client.changed?
 
-    # destroy any old keys the user had with the client
-    @client.keys.where(user_id: current_user.id).destroy_all
+    key, otp_payload =
+      with_revalidated_credential do
+        # destroy any old keys the user had with the client
+        @client.keys.where(user_id: current_user.id).destroy_all
 
-    key =
-      @client.keys.create!(
-        user_id: current_user.id,
-        push_url: params[:push_url],
-        expires_at: expires_at,
-        scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
-      )
+        new_key =
+          @client.keys.create!(
+            user_id: current_user.id,
+            push_url: params[:push_url],
+            expires_at: expires_at,
+            scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
+          )
+
+        if scopes.include?("one_time_password")
+          # encrypt one_time_password separately to bypass 128 chars encryption limit
+          otp = one_time_password(parsed_public_key, current_user)
+        end
+
+        [new_key, otp]
+      end
 
     # we keep the payload short so it encrypts easily with public key
     # it is often restricted to 128 chars
@@ -116,11 +126,6 @@ class UserApiKeysController < ApplicationController
           padding: params[:padding],
         ),
       )
-
-    if scopes.include?("one_time_password")
-      # encrypt one_time_password separately to bypass 128 chars encryption limit
-      otp_payload = one_time_password(parsed_public_key, current_user.username)
-    end
 
     response_json =
       if params[:auth_redirect]
@@ -292,7 +297,9 @@ class UserApiKeysController < ApplicationController
     end
 
     UserApiKey::DeviceAuth::Authorize.call(
-      device_auth_service_params(device_code: device_code, user_id: current_user.id),
+      device_auth_service_params(device_code: device_code, user_id: current_user.id).merge(
+        credential_lock: method(:with_revalidated_credential),
+      ),
     ) do
       on_success do
         if params[:approval_token].present?
@@ -424,7 +431,7 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless meets_tl?
 
-    otp_payload = one_time_password(parsed_public_key, current_user.username)
+    otp_payload = with_revalidated_credential { one_time_password(parsed_public_key, current_user) }
     uri = URI.parse(params[:auth_redirect])
     uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
     redirect_path = uri.to_s
@@ -449,7 +456,8 @@ class UserApiKeysController < ApplicationController
   end
 
   def undo_revoke
-    find_key.update_columns(revoked_at: nil)
+    key = find_key
+    with_revalidated_credential { key.update_columns(revoked_at: nil) }
     render json: success_json
   end
 
@@ -697,13 +705,15 @@ class UserApiKeysController < ApplicationController
   # as well as HTML, so this is relied on by non-browser (API key/User API
   # key) consumers, not just browser sessions. Don't restrict this to
   # session auth without accounting for those consumers first.
-  def one_time_password(public_key, username)
+  def one_time_password(public_key, user)
     unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
       raise Discourse::InvalidAccess
     end
 
     otp = SecureRandom.hex
-    Discourse.redis.setex "otp_#{otp}", 10.minutes, username
+    Discourse.redis.setex "otp_#{otp}",
+                          User::ONE_TIME_PASSWORD_LIFETIME,
+                          user.one_time_password_payload
 
     Base64.encode64(
       UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, otp, padding: params[:padding]),

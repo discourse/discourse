@@ -122,12 +122,8 @@ class Auth::DefaultCurrentUserProvider
 
     request = @request
 
-    user_api_key = @env[USER_API_KEY]
+    user_api_key = presented_user_api_key
     api_key = @env[HEADER_API_KEY]
-
-    if @env.present? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
-      user_api_key ||= request[PARAMETER_USER_API_KEY]
-    end
 
     api_key ||= request[API_KEY] if @env.present? && request[API_KEY] && api_parameter_allowed?
 
@@ -269,6 +265,38 @@ class Auth::DefaultCurrentUserProvider
     end
 
     cookie_jar.delete(TOKEN_COOKIE) if !user && cookie_jar.key?(TOKEN_COOKIE)
+  end
+
+  # Under the credential lock, re-read whichever credential authenticated this
+  # request so a password change that just revoked it is observed. Admin API
+  # keys are not tied to the user's password, so they stay valid.
+  def authenticated_credential_user
+    return unless user = current_user
+
+    if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
+      token_id = Discourse.redis.get(self.class.shared_session_redis_key(shared_key))
+      UserAuthToken.unexpired.find_by(id: token_id)&.user if token_id
+    elsif is_user_api?
+      # Hash the presented key again: another provider instance, such as the
+      # overload protection middleware, may have authenticated this request.
+      user_api_key = presented_user_api_key
+      UserApiKey.active.find_by(key_hash: ApiKey.hash_key(user_api_key))&.user if user_api_key
+    elsif is_api?
+      user
+    elsif @user_token && (auth_token = find_auth_token)
+      # Re-read the presented cookie, not the token cached by authentication.
+      # An impersonation session may still issue credentials for its user.
+      hashed = UserAuthToken.hash_token(auth_token)
+      UserAuthToken.uncached do
+        session =
+          UserAuthToken
+            .unexpired
+            .where("auth_token = :token OR prev_auth_token = :token", token: hashed)
+            .lock
+            .find_by(id: @user_token.id)
+        user if session&.user == user
+      end
+    end
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
@@ -441,6 +469,14 @@ class Auth::DefaultCurrentUserProvider
 
   def parameter_api_patterns
     PARAMETER_API_PATTERNS + DiscoursePluginRegistry.api_parameter_routes
+  end
+
+  def presented_user_api_key
+    user_api_key = @env[USER_API_KEY]
+    if @env.present? && @request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+      user_api_key ||= @request[PARAMETER_USER_API_KEY]
+    end
+    user_api_key
   end
 
   # By default we only allow headers for sending API credentials
