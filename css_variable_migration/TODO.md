@@ -72,6 +72,12 @@ Each read needs a role in its split entry, or an override in `overrides.json`. T
 - [ ] `--primary-low`: 30
 - [ ] 21 other variables: 16 or fewer each
 
+## Exploration notes
+
+- **Foundation dark button contrast.** With the compiled CSS in Chromium, primary and success button labels changed from `#222` to `#ddd` while their backgrounds stayed the same. Contrast fell from 5.16:1 to 2.27:1 for primary and from 4.96:1 to 2.36:1 for success. To reproduce, load the Foundation dark palette and common stylesheet in Chromium with dark mode enabled, then inspect `.btn-primary` and `.btn-success` on the base and migration commits. Both variants now use `--d-sys-color-text-inverse`.
+- **Saved appearance drafts.** Activation revalidates the stored styles against the current variable registry before the CSS renamer runs. On the migration branch, pass `{"variables" => {"--d-border-radius" => "12px"}}` to `AppearanceStyles::Policy.call` to reproduce the unknown-variable error for a previously valid draft. Explore normalizing legacy names before revalidation.
+- **Legacy border overrides.** Run the PostCSS renamer with the shipped border mapping. A theme declaration of `--d-button-border: 2px dashed red` produces a solid border. A declaration of `--d-button-border: var(--my-border)` survives, but consumers read the new width and color properties, so the override has no effect. Explore which legacy shorthand forms the compatibility pass should preserve.
+
 ## After the migration
 
 - [ ] Remove `css_variable_migration/`.
