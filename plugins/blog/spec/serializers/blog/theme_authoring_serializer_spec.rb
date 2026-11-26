@@ -57,4 +57,11 @@ RSpec.describe Blog::ThemeAuthoringSerializer do
   it "passes the template variables through" do
     expect(json["variables"]).to eq(variables)
   end
+
+  it "lists the tags and filters templates may use" do
+    expect(json["tags"]).to include("if", "for")
+    expect(json["tags"]).not_to include("render", "include")
+    expect(json["filters"]).to include("upcase", "squish", "h")
+    expect(json["filters"]).to eq(json["filters"].uniq.sort)
+  end
 end

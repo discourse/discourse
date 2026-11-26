@@ -4,18 +4,51 @@ import {
   fillIn as fillControl,
   find,
   triggerEvent,
+  triggerKeyEvent,
   visit,
+  waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import interceptClick from "discourse/lib/intercept-click";
 import {
   codeEditorValue,
+  codeEditorView,
   fillInCodeEditor,
 } from "discourse/tests/helpers/code-editor-helper";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+function completionLabels() {
+  return [
+    ...document.querySelectorAll(
+      ".cm-tooltip-autocomplete .cm-completionLabel"
+    ),
+  ].map((label) => label.textContent.trim());
+}
+
+async function typeAndComplete(view, text, expected) {
+  // An open list survives a whole-document replacement, so close it first.
+  if (document.querySelector(".cm-tooltip-autocomplete")) {
+    await triggerKeyEvent(view.contentDOM, "keydown", "Escape");
+    await waitUntil(() => !document.querySelector(".cm-tooltip-autocomplete"));
+  }
+  view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: text },
+    selection: { anchor: text.length },
+    userEvent: "input.type",
+  });
+  try {
+    await waitUntil(() => completionLabels().includes(expected));
+  } catch {
+    throw new Error(
+      `"${text}" offered [${completionLabels()}], not "${expected}"`
+    );
+  }
+  return completionLabels();
+}
 
 acceptance("Blog themes", function (needs) {
   needs.user({ admin: true });
@@ -237,6 +270,28 @@ acceptance("Blog themes", function (needs) {
       "<main>Unsaved author edits</main>"
     );
     const editor = find(".blog-theme-editor__template-control");
+    const view = codeEditorView('[data-name="template_layout"]');
+    const insertVariable = async (name) => {
+      await click(".blog-theme-editor__variables");
+      await fillControl('input[aria-label="Find a variable"]', name);
+      await click(".blog-theme-variables__insert");
+    };
+
+    await insertVariable("site.title");
+    assert.strictEqual(
+      codeEditorValue('[data-name="template_layout"]'),
+      "<main>Unsaved author edits</main>\n{{ site.title }}",
+      "before the author places the cursor, the snippet goes at the end"
+    );
+
+    await fillInCodeEditor(
+      '[data-name="template_layout"]',
+      "<main>Unsaved author edits</main>"
+    );
+    view.dispatch({
+      selection: { anchor: "<main>".length },
+      userEvent: "select.pointer",
+    });
 
     await click(".blog-theme-editor__variables");
     assert
@@ -256,22 +311,23 @@ acceptance("Blog themes", function (needs) {
     assert
       .dom(".blog-theme-variables")
       .doesNotExist("inserting a snippet closes the reference");
-    assert.true(
-      codeEditorValue('[data-name="template_layout"]').includes(
-        "article.body_html"
-      ),
-      "the inserted snippet is visible in the editor"
-    );
-    assert.true(
-      codeEditorValue('[data-name="template_layout"]').includes(
-        "Unsaved author edits"
-      ),
-      "inserting preserves the author's changes"
+    assert.strictEqual(
+      codeEditorValue('[data-name="template_layout"]'),
+      "<main>{{ article.body_html }}Unsaved author edits</main>",
+      "the snippet lands at the cursor and keeps the author's changes"
     );
     assert.strictEqual(
       find(".blog-theme-editor__template-control"),
       editor,
       "programmatic changes update the existing editor without remounting"
+    );
+
+    const readOnly = sinon.stub(view.state, "readOnly").get(() => true);
+    await insertVariable("site.title");
+    readOnly.restore();
+    assert.false(
+      codeEditorValue('[data-name="template_layout"]').includes("site.title"),
+      "a read-only template is left alone"
     );
 
     await click('[data-authoring-tab="design"]');
@@ -281,6 +337,20 @@ acceptance("Blog themes", function (needs) {
         "article.body_html"
       ),
       "FormKit retains the snippet across tab changes"
+    );
+
+    const remounted = codeEditorView('[data-name="template_layout"]');
+    assert.notStrictEqual(remounted, view, "the template editor was remounted");
+    const previous = remounted.state.doc.toString();
+    await insertVariable("site.title");
+    assert.strictEqual(
+      remounted.state.doc.toString(),
+      `${previous}\n{{ site.title }}`,
+      "insertion targets the new editor and appends until its cursor is placed"
+    );
+    assert.false(
+      view.state.doc.toString().includes("site.title"),
+      "the destroyed editor is no longer used"
     );
 
     await click(".blog-theme-editor__restore-default");
@@ -293,6 +363,141 @@ acceptance("Blog themes", function (needs) {
       .doesNotExist(
         "the override is removed rather than replaced with a hidden copy"
       );
+  });
+
+  for (const declaration of [
+    "{% assign content_html = 'plain' %}",
+    "{% capture content_html %}plain{% endcapture %}",
+  ]) {
+    test(`does not label overwritten HTML as trusted: ${declaration}`, async function (assert) {
+      await visit("/admin/plugins/blog/themes/candidate/edit");
+      await click('[data-authoring-tab="template_layout"]');
+      await click(".blog-theme-editor__customize");
+      await waitFor(
+        ".blog-theme-editor__template-control .cm-content span[class]"
+      );
+      const view = codeEditorView('[data-name="template_layout"]');
+
+      await typeAndComplete(view, `${declaration}{{ content`, "content_html");
+      assert
+        .dom(".cm-tooltip-autocomplete .cm-completionDetail")
+        .doesNotExist("overwritten renderer names do not imply trusted HTML");
+    });
+  }
+
+  test("completes template variables, their properties, and the allowed filters", async function (assert) {
+    pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
+      response({
+        templates: { template_layout: "<main></main>" },
+        articles: [{ id: 1, title: "Published sample" }],
+        variables: {
+          site: { title: "Example blog" },
+          article: { title: "Published sample", body_html: "<p>Body</p>" },
+          articles: [{ title: "Published sample" }],
+          labels: { read_more: "Read more", posted: "Posted %{date}" },
+        },
+        tags: ["for", "if", "raw"],
+        filters: ["h", "upcase"],
+      })
+    );
+
+    await visit("/admin/plugins/blog/themes/candidate/edit");
+    await click('[data-authoring-tab="template_layout"]');
+    await click(".blog-theme-editor__customize");
+    await waitFor(
+      ".blog-theme-editor__template-control .cm-content span[class]"
+    );
+    const view = codeEditorView('[data-name="template_layout"]');
+
+    assert.true(
+      (await typeAndComplete(view, "{{ si", "site")).includes("site"),
+      "top-level variables"
+    );
+    await typeAndComplete(view, "{{ content", "content_html");
+    assert
+      .dom(".cm-tooltip-autocomplete .cm-completionDetail")
+      .doesNotExist("sample names do not establish HTML trust");
+
+    const articleProperties = await typeAndComplete(
+      view,
+      "{{ article.",
+      "body_html"
+    );
+    assert.true(articleProperties.includes("title"), "properties by path");
+    const titleOption = [
+      ...document.querySelectorAll(".cm-tooltip-autocomplete li"),
+    ].find((option) => option.textContent.startsWith("title"));
+    assert
+      .dom(".cm-completionDetail", titleOption)
+      .doesNotExist("escaped values, the default, carry no label");
+
+    assert.deepEqual(
+      await typeAndComplete(view, "{{ articles.first.", "title"),
+      ["title"],
+      "list elements resolve through first"
+    );
+
+    assert.deepEqual(
+      await typeAndComplete(view, "{{ labels.", "read_more"),
+      ["read_more"],
+      "labels that need arguments are left out"
+    );
+    await typeAndComplete(
+      view,
+      "{% assign when = labels.posted %}{{ wh",
+      "when"
+    );
+    await typeAndComplete(
+      view,
+      "{% assign teaser_html = article.title | upcase %}{{ teaser",
+      "teaser_html"
+    );
+    assert
+      .dom(".cm-tooltip-autocomplete .cm-completionDetail")
+      .doesNotExist("a name the template sets renders escaped");
+
+    assert.deepEqual(
+      await typeAndComplete(view, "{{ site.title | h", "h"),
+      ["h"],
+      "filters the server allows beyond the standard list"
+    );
+    assert.deepEqual(
+      await typeAndComplete(view, "{{ site.title | u", "upcase"),
+      ["upcase"],
+      "and only those"
+    );
+
+    assert.false(
+      (await typeAndComplete(view, "{% en", "endif")).includes("render"),
+      "only the tags the server allows"
+    );
+  });
+
+  test("offers no tags before the renderer's list loads", async function (assert) {
+    draft.template_layout = "<main></main>";
+    pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
+      response(500, {})
+    );
+
+    await visit("/admin/plugins/blog/themes/candidate/edit");
+    await click('[data-authoring-tab="template_layout"]');
+    await waitFor(".blog-theme-editor__template-control .cm-content");
+    const view = codeEditorView('[data-name="template_layout"]');
+
+    await typeAndComplete(view, "{{ con", "content_html");
+    await triggerKeyEvent(view.contentDOM, "keydown", "Escape");
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: "{% en" },
+      selection: { anchor: 5 },
+      userEvent: "input.type",
+    });
+    await waitUntil(() => document.querySelector(".cm-tooltip-autocomplete"), {
+      timeout: 500,
+    }).catch(() => {});
+
+    assert
+      .dom(".cm-tooltip-autocomplete")
+      .doesNotExist("standard Liquid would offer tags the renderer rejects");
   });
 
   test("previews unsaved changes in a modal without saving or activating", async function (assert) {

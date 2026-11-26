@@ -2,9 +2,10 @@
 
 module ::Blog
   # Reference material for the theme editor: the built-in templates, the public
-  # articles a preview can use, and the variables templates receive.
+  # articles a preview can use, the variables templates receive, and the tags
+  # and filters they may use.
   class ThemeAuthoringSerializer < ApplicationSerializer
-    attributes :templates, :articles, :has_page, :variables
+    attributes :templates, :articles, :has_page, :variables, :tags, :filters
 
     def templates
       TemplateRenderer::PAGES.to_h { |page| ["template_#{page}", TemplateRenderer.builtin(page)] }
@@ -26,6 +27,14 @@ module ::Blog
 
     def variables
       @options[:variables]
+    end
+
+    def tags
+      TemplateRenderer::ENVIRONMENT.tags.keys.sort
+    end
+
+    def filters
+      TemplateRenderer::ENVIRONMENT.filter_method_names.sort
     end
   end
 end
