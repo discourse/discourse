@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:application_request) do
-  transient request_type: :page_view_logged_in_browser
+  transient request_type: :page_view_logged_in_browser_beacon
 
   date { Date.current }
   count 1
@@ -17,27 +17,19 @@ Fabricator(:anonymous_application_request, from: :application_request) do
 end
 
 Fabricator(:logged_in_browser_application_request, from: :application_request) do
-  transient request_type: :page_view_logged_in_browser
-end
-
-Fabricator(:logged_in_browser_mobile_application_request, from: :application_request) do
-  transient request_type: :page_view_logged_in_browser_mobile
-end
-
-Fabricator(:logged_in_browser_beacon_application_request, from: :application_request) do
   transient request_type: :page_view_logged_in_browser_beacon
 end
 
+Fabricator(:logged_in_browser_mobile_application_request, from: :application_request) do
+  transient request_type: :page_view_logged_in_browser_mobile_beacon
+end
+
 Fabricator(:anonymous_browser_application_request, from: :application_request) do
-  transient request_type: :page_view_anon_browser
+  transient request_type: :page_view_anon_browser_beacon
 end
 
 Fabricator(:anonymous_browser_mobile_application_request, from: :application_request) do
-  transient request_type: :page_view_anon_browser_mobile
-end
-
-Fabricator(:anonymous_browser_beacon_application_request, from: :application_request) do
-  transient request_type: :page_view_anon_browser_beacon
+  transient request_type: :page_view_anon_browser_mobile_beacon
 end
 
 Fabricator(:embedded_application_request, from: :application_request) do

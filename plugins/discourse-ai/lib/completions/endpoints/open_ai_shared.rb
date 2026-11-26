@@ -24,6 +24,7 @@ module DiscourseAi
         # effort they support.
         OPEN_AI_LOW_EFFORT_FLOOR_MODELS = %w[gpt-6-astra gpt-6.1-sol].freeze
         OPEN_AI_MODEL_SNAPSHOT_SUFFIX = /-\d{4}-\d{2}-\d{2}\z/
+        OPEN_AI_REASONING_MODEL_NAME = /\A(o\d|gpt-[5-9])/
         OPEN_AI_REASONING_OUTPUT_RESERVATION = 25_000
         # "minimal" isn't a distinct tier on every OpenAI reasoning model and can
         # be rejected outright, so collapse it into "low".
@@ -97,6 +98,9 @@ module DiscourseAi
             DiscourseAi::Completions::ThinkingConfig.normalize_effort(
               model_params[:thinking_effort],
             )
+          # Non-reasoning models (and OpenAI-compatible hosts) reject the parameter,
+          # so agent-level efforts only apply where the model can reason.
+          effort = nil if !reasoning_model?
           effort ||= legacy_reasoning_effort
 
           if effort.blank?
@@ -167,6 +171,11 @@ module DiscourseAi
 
         def max_effort_maps_to_xhigh?
           OPEN_AI_MAX_TO_XHIGH_MODELS.include?(normalized_model_name)
+        end
+
+        def reasoning_model?
+          legacy_reasoning_effort.present? || reasoning_mode.present? ||
+            normalized_model_name.match?(OPEN_AI_REASONING_MODEL_NAME)
         end
 
         def low_effort_floor_model?

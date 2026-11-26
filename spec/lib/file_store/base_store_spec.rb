@@ -6,6 +6,13 @@ RSpec.describe FileStore::BaseStore do
     Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest("9999"))
   end
 
+  describe "#get_path_for" do
+    it "uses only the file name of the sha1 and extension" do
+      store = described_class.new
+      expect(store.get_path_for("original", 1, "a/b/x", ".png")).to eq("original/1X/x.png")
+    end
+  end
+
   describe "#get_path_for_upload" do
     def expect_correct_path(expected_path)
       expect(described_class.new.get_path_for_upload(upload)).to eq(expected_path)
@@ -193,6 +200,22 @@ RSpec.describe FileStore::BaseStore do
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
+    it "returns the store path of local uploads only when the file exists" do
+      local_store = FileStore::LocalStore.new
+      upload = Fabricate(:upload, url: "#{local_store.relative_base_url}/original/1X/a.png")
+      path = local_store.path_for(upload)
+      FileHelper.expects(:download).never
+
+      expect(local_store.download(upload)).to be_nil
+
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, "a")
+
+      expect(local_store.download(upload)).to eq(path)
+    ensure
+      FileUtils.rm_f(path)
+    end
+
     it "returns a file path" do
       path = store.download(upload_s3)
 
@@ -250,11 +273,25 @@ RSpec.describe FileStore::BaseStore do
       expect { store.download!(upload_s3) }.to raise_error(FileStore::DownloadError)
     end
 
+    it "raises DownloadError when the file is missing" do
+      expect { FileStore::LocalStore.new.download!(Fabricate(:upload)) }.to raise_error(
+        FileStore::DownloadError,
+      )
+    end
+
     it "returns a file path" do
       path = store.download!(upload_s3)
 
       expect(path).to be_a(String)
       expect(File.exist?(path)).to eq(true)
+    end
+  end
+
+  describe "#get_cache_path_for" do
+    it "uses a per-site directory and only the file name" do
+      expect(described_class.new.get_cache_path_for("a/b/c.png")).to eq(
+        File.join(FileStore::BaseStore::CACHE_DIR, "default", "c.png"),
+      )
     end
   end
 
@@ -289,7 +326,7 @@ RSpec.describe FileStore::BaseStore do
         end
       end
 
-      remaining = Dir.glob("#{cache_dir}*")
+      remaining = Dir.glob(File.join(cache_dir, "*", "*"))
       expect(remaining.length).to eq(5)
       expect(File.exist?(store.get_cache_path_for("cached_0.tmp"))).to eq(false)
       expect(File.exist?(store.get_cache_path_for("cached_1.tmp"))).to eq(false)

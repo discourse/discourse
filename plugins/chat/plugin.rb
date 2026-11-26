@@ -231,6 +231,10 @@ after_initialize do
     end,
   ) { true }
 
+  add_to_serializer(:user, :can_chat, include_condition: -> { include_can_edit? && can_edit }) do
+    object.guardian.can_chat?
+  end
+
   add_to_serializer(
     :current_user,
     :can_direct_message,
@@ -446,6 +450,28 @@ after_initialize do
 
   homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
 
+  register_modifier(:design_wizard_homepages) do |options|
+    next options if !SiteSetting.enable_public_channels
+
+    channel = Chat::CategoryChannel.find_by(chatable_id: SiteSetting.general_category_id)
+    next options if !channel || channel.archived? || channel.read_restricted?
+
+    options +
+      [
+        {
+          id: "chat",
+          name: I18n.t("chat.design_wizard_homepage_name"),
+          description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
+          icon: "comments",
+          illustration: "conversation",
+          path: channel.relative_url.delete_prefix(Discourse.base_path),
+          settings: {
+            chat_homepage_channel: channel.id.to_s,
+          },
+        },
+      ]
+  end
+
   register_homepage(
     "chat",
     name: "chat.homepage_option",
@@ -653,12 +679,31 @@ after_initialize do
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   register_post_stripper do |nokogiri_fragment|
-    nokogiri_fragment.css(".chat-transcript .mention").remove
+    # A descendant selector rescans every nested transcript's subtree. Carry
+    # transcript state through a single walk instead.
+    removals = []
+    stack = nokogiri_fragment.element_children.map { |child| [child, false] }
+
+    until stack.empty?
+      node, in_transcript = stack.pop
+      classes = node["class"].to_s.split
+
+      if in_transcript && classes.include?("mention")
+        removals << node
+        next
+      end
+
+      below_transcript = in_transcript || classes.include?("chat-transcript")
+      node.element_children.each { |child| stack << [child, below_transcript] }
+    end
+
+    removals.each(&:remove)
   end
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,
+    onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
 
@@ -678,6 +723,11 @@ after_initialize do
 
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
+
+  register_first_admin_bootstrap do |user|
+    # Don't want to greet new admins with the ugly channel retention reminder
+    user.user_option.update!(dismissed_channel_retention_reminder: true)
   end
 end
 

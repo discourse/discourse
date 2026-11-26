@@ -378,6 +378,8 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
+    keywords:
+      company_url: "เว็บไซต์"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -587,10 +589,21 @@ th:
               private:
                 label: "ส่วนตัว"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "ทุกวัน"
+        ordinals:
+          last: "ล่าสุด"
+        weekdays:
+          monday: "วันจันทร์"
     github:
+      header:
+        success: "สำเร็จ"
       closed: "ปิด"
-      status_date:
-        approved: "อนุมัติแล้ว"
+      pr_status:
+        draft: "แบบร่าง"
+        open: "เปิด"
+        approved: "อนุมัติ"
         closed: "ปิด"
   discourse_push_notifications:
     popup:
@@ -618,6 +631,10 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
+      answer_yes:
+        title: "ใช่"
+      answer_no:
+        title: "ไม่ใช่"
       agree:
         title: "ใช่"
       delete:
@@ -635,6 +652,8 @@ th:
         title: "ใช่"
       approve_post:
         title: "ใช่"
+      deny_and_delete_post:
+        complete: "โพสต์ถูกลบ."
       approve_post_closed:
         title: "ใช่"
       reject_post_bundle:

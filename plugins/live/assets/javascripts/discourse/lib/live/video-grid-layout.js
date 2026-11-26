@@ -4,76 +4,100 @@ import { modifier } from "ember-modifier";
 // intrinsic size yet, and for avatar-only tiles. Matches a landscape camera.
 export const DEFAULT_TILE_ASPECT = 16 / 9;
 
-// Greedy in-order row packing at a candidate uniform row height: walk the
-// tiles, start a new row whenever the next tile would overflow the width.
-// Returns the row count, or Infinity if a single tile is wider than the row.
-function rowsAtHeight(aspects, containerWidth, gap, height) {
-  let rows = 1;
-  let rowWidth = 0;
+// Both grids use uniform tiles rather than each feed's own aspect: a stage is
+// rarely a multiple of 16:9, so aspect-faithful tiles leave large empty bands
+// at most participant counts. Cover-cropping absorbs the difference between a
+// feed's real aspect and the cell's, within each grid's aspect band.
 
-  for (const aspect of aspects) {
-    const tileWidth = height * aspect;
-    if (tileWidth > containerWidth) {
-      return Infinity;
+// Widest cell a tile may take: a wider one would crop the top and bottom of a
+// landscape camera, where the head is.
+const TILE_MAX_ASPECT = DEFAULT_TILE_ASPECT;
+
+// Every column count's uniform tile for `slots` tiles in a width×height box:
+// size the cell, clamp the tile's aspect to the band, fit the tile in the cell.
+function gridCandidates(slots, width, height, gap, minAspect) {
+  const candidates = [];
+
+  for (let cols = 1; cols <= slots; cols++) {
+    const rows = Math.ceil(slots / cols);
+    const cellWidth = (width - (cols - 1) * gap) / cols;
+    const cellHeight = (height - (rows - 1) * gap) / rows;
+    if (cellWidth <= 0 || cellHeight <= 0) {
+      continue;
     }
 
-    const needed = rowWidth === 0 ? tileWidth : gap + tileWidth;
-    if (rowWidth + needed > containerWidth) {
-      rows += 1;
-      rowWidth = tileWidth;
-    } else {
-      rowWidth += needed;
-    }
+    const aspect = Math.min(
+      Math.max(cellWidth / cellHeight, minAspect),
+      TILE_MAX_ASPECT
+    );
+    const tileWidth = Math.min(cellWidth, cellHeight * aspect);
+    const tileHeight = tileWidth / aspect;
+
+    candidates.push({
+      cols,
+      rows,
+      tileWidth,
+      tileHeight,
+      area: tileWidth * tileHeight,
+      emptySlots: cols * rows - slots,
+    });
   }
 
-  return rows;
+  return candidates;
 }
 
-// Largest uniform row height at which all tiles — each rendered at its own
-// aspect ratio (width = height * aspect) — fit the container, packed into rows.
-// Tiles share a height and vary in width, so portrait and landscape feeds sit
-// side by side without cropping or distortion. For a room where every tile has
-// the same aspect this converges to the same optimum as a column-count search;
-// mixed-aspect rooms get a justified-gallery layout. The grid uses
-// `contain: size`, so the result never feeds back into the container size —
-// without it, oversized tiles (e.g. right after exiting fullscreen) would
-// grow the grid, the remeasure would see the inflated box, and the layout
-// would lock there.
-export function bestRowHeight(containerWidth, containerHeight, aspects, gap) {
-  const count = aspects.length;
-  if (!count || containerWidth <= 0 || containerHeight <= 0) {
-    return 0;
+// A webcam frame keeps the face near the center, so the room page can crop
+// down to square cells, which lets a landscape stage fit more columns.
+const ROOM_TILE_MIN_ASPECT = 1;
+
+// A slightly smaller tile is a better trade than a ragged last row.
+const ROOM_FULL_ROW_TOLERANCE = 0.92;
+
+// Uniform grid for the room page: the largest tile for `count` tiles, except
+// that an arrangement with fewer empty slots wins when its tile is within
+// tolerance of the largest. `lineWidth` caps the tile container so flex
+// wrapping breaks exactly at `cols` — the preferred arrangement isn't always
+// the largest one, so an uncapped line could fit an extra tile.
+export function computeRoomGrid({ width, height, count, gap }) {
+  if (!count || width <= 0 || height <= 0) {
+    return null;
   }
 
-  const fits = (height) => {
-    const rows = rowsAtHeight(aspects, containerWidth, gap, height);
-    if (!isFinite(rows)) {
-      return false;
-    }
-    return rows * height + (rows - 1) * gap <= containerHeight;
+  const candidates = gridCandidates(
+    count,
+    width,
+    height,
+    gap,
+    ROOM_TILE_MIN_ASPECT
+  );
+  if (!candidates.length) {
+    return null;
+  }
+
+  const largest = Math.max(...candidates.map((grid) => grid.area));
+  const best = candidates
+    .filter((grid) => grid.area >= largest * ROOM_FULL_ROW_TOLERANCE)
+    .reduce((a, b) =>
+      b.emptySlots < a.emptySlots ||
+      (b.emptySlots === a.emptySlots && b.area > a.area)
+        ? b
+        : a
+    );
+
+  const tileWidth = Math.floor(best.tileWidth);
+
+  return {
+    cols: best.cols,
+    rows: best.rows,
+    tileWidth,
+    tileHeight: Math.floor(best.tileHeight),
+    // One spare pixel absorbs subpixel rounding in the flex line; it can never
+    // admit another tile.
+    lineWidth: best.cols * tileWidth + (best.cols - 1) * gap + 1,
   };
-
-  let low = 0;
-  let high = containerHeight;
-  for (let i = 0; i < 40; i++) {
-    const mid = (low + high) / 2;
-    if (fits(mid)) {
-      low = mid;
-    } else {
-      high = mid;
-    }
-  }
-
-  // The search converges from just below the true maximum, so flooring can
-  // shed the last pixel at an exact boundary (e.g. one tile in a container of
-  // its own height). Reclaim it when the rounded-up height still fits.
-  const rowHeight = Math.floor(low);
-  return fits(rowHeight + 1) ? rowHeight + 1 : rowHeight;
 }
 
-// The widget grid trades the room page's per-tile aspect fidelity for uniform
-// tiles that pack a small box predictably; cover-cropping absorbs the
-// difference between a feed's real aspect and the cell's.
+// The widget stays closer to the feed's own framing than the room page.
 const WIDGET_TILE_MIN_ASPECT = 4 / 3;
 
 // Smallest tile that still reads at a glance: avatar, name, status icons.
@@ -85,33 +109,22 @@ const WIDGET_TILE_MIN_HEIGHT = 66;
 // big grids.
 const WIDGET_MAX_SLOTS = 12;
 
-// Largest uniform tile for `slots` tiles in a width×height box: try every
-// column count, size the cell, clamp the tile's aspect to the allowed band,
-// keep the arrangement with the biggest tile. Ties prefer more columns — when
+// Largest uniform tile for `slots` tiles. Ties prefer more columns — when
 // tiles are height-constrained a wider grid uses the slack width, and it
 // makes an unfloored tile width that fits `cols + 1` per line impossible
 // (that arrangement would have scored at least as high and won the tie).
 function bestGridForSlots(slots, width, height, gap) {
   let best = null;
 
-  for (let cols = 1; cols <= slots; cols++) {
-    const rows = Math.ceil(slots / cols);
-    const cellWidth = (width - (cols - 1) * gap) / cols;
-    const cellHeight = (height - (rows - 1) * gap) / rows;
-    if (cellWidth <= 0 || cellHeight <= 0) {
-      continue;
-    }
-
-    const aspect = Math.min(
-      Math.max(cellWidth / cellHeight, WIDGET_TILE_MIN_ASPECT),
-      DEFAULT_TILE_ASPECT
-    );
-    const tileWidth = Math.min(cellWidth, cellHeight * aspect);
-    const tileHeight = tileWidth / aspect;
-    const area = tileWidth * tileHeight;
-
-    if (!best || area >= best.area) {
-      best = { cols, rows, tileWidth, tileHeight, area };
+  for (const grid of gridCandidates(
+    slots,
+    width,
+    height,
+    gap,
+    WIDGET_TILE_MIN_ASPECT
+  )) {
+    if (!best || grid.area >= best.area) {
+      best = grid;
     }
   }
 

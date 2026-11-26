@@ -83,6 +83,11 @@ module SiteSettingExtension
     @containers[provider.current_site] ||= {}
   end
 
+  def parsed_settings_cache
+    @parsed_settings_cache ||= {}
+    @parsed_settings_cache[provider.current_site] ||= {}
+  end
+
   # Represents settings that actually have a value saved in the
   # database. We currently even store the default value in the
   # DB if an admin saves a different value then changes back
@@ -173,10 +178,12 @@ module SiteSettingExtension
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
   #     learn_more_url: ""
-  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
-  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
-  #       is always present. If `everyone` is included it must be the only value.
-  #       Omit to allow all options (the default permissive behavior).
+  #     group_setting: (optional) name of an existing group_list setting to use as the audience.
+  #       Cannot combine with allow_enabled_for.
+  #     allow_enabled_for: (optional) array restricting the audience admins can pick.
+  #       Valid values: everyone, staff, specific_groups. `everyone` must be the only
+  #       value and marks the change as unscopable, shown locked to the impact role's groups.
+  #       Omit to let admins pick any groups.
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
   #     permanent_warning: (optional) boolean, defaults to true. When the change reaches
@@ -654,6 +661,7 @@ module SiteSettingExtension
         uploads.clear
         client_settings_hashes.delete(provider.current_site)
         client_settings_jsons.delete(provider.current_site)
+        @parsed_settings_cache&.delete(provider.current_site)
 
         upcoming_change_default_overrides.each do |setting_name, override|
           if UpcomingChanges.enabled?(override[:upcoming_change])
@@ -1043,6 +1051,7 @@ module SiteSettingExtension
   def clear_cache!(expire_theme_site_setting_cache: false)
     client_settings_hashes.delete(provider.current_site)
     client_settings_jsons.delete(provider.current_site)
+    @parsed_settings_cache&.delete(provider.current_site)
     Theme.expire_site_setting_cache! if expire_theme_site_setting_cache
     Site.clear_anon_cache!
   end
@@ -1174,8 +1183,13 @@ module SiteSettingExtension
             current[name]
           end
 
-        if mandatory_values[name]
-          return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
+        if (mandatory = mandatory_values[name])
+          m_key = :"#{name}_mandatory"
+          entry = parsed_settings_cache[m_key]
+          return entry[2].dup if entry && entry[0] == mandatory && entry[1] == value
+          merged = (mandatory.split("|") | value.to_s.split("|")).join("|").freeze
+          parsed_settings_cache[m_key] = [mandatory, value, merged]
+          return merged.dup
         end
 
         return enum_wrapper.wrap(value.to_s) if enum_wrapper
@@ -1195,30 +1209,43 @@ module SiteSettingExtension
     # flag is a perfect revert. When the change graduates to stable, a data migration will
     # rewrite stored values and this swap can be removed.
     setting_type = type_supervisor.get_type(name)
+    map_cache_key = :"#{name}_map"
     if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
-        public_send(clean_name).to_s.split("|").map(&:to_i)
+        raw = public_send(clean_name)
+        entry = parsed_settings_cache[map_cache_key]
+        if !entry || entry[0] != raw
+          entry = parsed_settings_cache[map_cache_key] = [raw, raw.to_s.split("|").map(&:to_i)]
+        end
+        entry[1].dup
       end
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
-        ids = public_send(clean_name).to_s.split("|").map(&:to_i)
-        if ids.include?(Group::AUTO_GROUPS[:everyone]) &&
-             SiteSetting.granular_anonymous_and_logged_in_groups_permissions
-          ids =
-            ids
-              .map do |id|
-                id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
-              end
-              .uniq
+        raw = public_send(clean_name)
+        entry = parsed_settings_cache[map_cache_key]
+        if !entry || entry[0] != raw
+          ids = raw.to_s.split("|").map(&:to_i)
+          has_everyone = ids.include?(Group::AUTO_GROUPS[:everyone])
+          swapped =
+            if has_everyone
+              ids
+                .map do |id|
+                  id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
+                end
+                .uniq
+            end
+          entry = parsed_settings_cache[map_cache_key] = [raw, ids, has_everyone, swapped]
         end
-        ids
+        if entry[2] && SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+          entry[3].dup
+        else
+          entry[1].dup
+        end
       end
     end
 
-    # Upcoming change settings have a supplemental array of group IDs that are used to opt-in
-    # certain groups to the change early. We use the data from SiteSettingGroup to define
-    # a getter with _groups_map on the end, e.g. allow_unlimited_uploads_groups_map,
-    # to avoid having to manually split and convert to integer for these settings.
+    # Upcoming changes expose their audience IDs through _groups_map, using either
+    # their linked group-list setting or a supplemental SiteSettingGroup restriction.
     if UpcomingChanges.exists?(name) && type_supervisor.get_type(name) == :bool
       define_singleton_method("#{clean_name}_groups_map") { UpcomingChanges.group_ids_for(name) }
     end
@@ -1230,7 +1257,13 @@ module SiteSettingExtension
 
       if %w[simple compact locale].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
-          public_send(clean_name, scoped_to).to_s.split("|")
+          return public_send(clean_name, scoped_to).to_s.split("|") if scoped_to
+          raw = public_send(clean_name)
+          entry = parsed_settings_cache[map_cache_key]
+          if !entry || entry[0] != raw
+            entry = parsed_settings_cache[map_cache_key] = [raw, raw.to_s.split("|")]
+          end
+          entry[1].dup
         end
       end
     end
@@ -1362,7 +1395,13 @@ module SiteSettingExtension
         hide_settings = opts[:upcoming_change][:hide_settings]
         hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
+          **opts[:upcoming_change].except(
+            :impact,
+            :allow_enabled_for,
+            :hide_settings,
+            :group_setting,
+          ),
+          group_setting: opts[:upcoming_change][:group_setting]&.to_sym,
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,

@@ -4,13 +4,13 @@ RSpec.describe DestroyTask do
   describe "destroy topics" do
     fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
-    let!(:p) { Fabricate(:post, topic: t) }
+    fab!(:p) { Fabricate(:post, topic: t) }
     fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c2) }
-    let!(:p2) { Fabricate(:post, topic: t2) }
+    fab!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
     fab!(:t3) { Fabricate(:topic, category: sc) }
-    let!(:p3) { Fabricate(:post, topic: t3) }
+    fab!(:p3) { Fabricate(:post, topic: t3) }
 
     it "destroys all topics in a category" do
       destroy_task = DestroyTask.new(StringIO.new)
@@ -42,13 +42,13 @@ RSpec.describe DestroyTask do
   describe "destroy categories" do
     fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
-    let!(:p) { Fabricate(:post, topic: t) }
+    fab!(:p) { Fabricate(:post, topic: t) }
     fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c) }
-    let!(:p2) { Fabricate(:post, topic: t2) }
+    fab!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
     fab!(:t3) { Fabricate(:topic, category: sc) }
-    let!(:p3) { Fabricate(:post, topic: t3) }
+    fab!(:p3) { Fabricate(:post, topic: t3) }
 
     it "destroys specified category" do
       destroy_task = DestroyTask.new(StringIO.new)
@@ -70,13 +70,13 @@ RSpec.describe DestroyTask do
   describe "#destroy_posts" do
     let(:task) { DestroyTask.new(StringIO.new) }
 
-    let!(:t1) { Fabricate(:topic) }
-    let!(:t2) { Fabricate(:topic) }
+    fab!(:t1, :topic)
+    fab!(:t2, :topic)
 
-    let!(:p1) { Fabricate(:post, topic: t1) }
-    let!(:p2) { Fabricate(:post, topic: t1) }
-    let!(:p3) { Fabricate(:post, topic: t2) }
-    let!(:p4) { Fabricate(:post, topic: t2) }
+    fab!(:p1) { Fabricate(:post, topic: t1) }
+    fab!(:p2) { Fabricate(:post, topic: t1) }
+    fab!(:p3) { Fabricate(:post, topic: t2) }
+    fab!(:p4) { Fabricate(:post, topic: t2) }
 
     before { p2.trash! }
 
@@ -121,8 +121,8 @@ RSpec.describe DestroyTask do
   end
 
   describe "groups" do
-    let!(:g) { Fabricate(:group) }
-    let!(:g2) { Fabricate(:group) }
+    fab!(:g, :group)
+    fab!(:g2, :group)
 
     it "destroys all groups" do
       destroy_task = DestroyTask.new(StringIO.new)

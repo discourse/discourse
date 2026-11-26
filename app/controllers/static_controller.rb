@@ -184,8 +184,6 @@ class StaticController < ApplicationController
     redirect_to(destination, allow_other_host:)
   end
 
-  FAVICON = -"favicon"
-
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)
   #
@@ -204,29 +202,11 @@ class StaticController < ApplicationController
       data =
         DistributedMemoizer.memoize("FAVICON#{SiteIconManager.favicon_url}", 60 * 30) do
           favicon = SiteIconManager.favicon
-          next "" unless favicon
+          next "" if !favicon || (!favicon.local? && !Discourse.store.external?)
 
-          if Discourse.store.external?
-            begin
-              file =
-                FileHelper.download(
-                  Discourse.store.cdn_url(favicon.url),
-                  max_file_size: favicon.filesize,
-                  tmp_file_name: FAVICON,
-                  follow_redirect: true,
-                )
-
-              file&.read || ""
-            rescue => e
-              ProblemCheckTracker[:bad_favicon_url].problem!
-              Rails.logger.debug("Failed to fetch favicon #{favicon.url}: #{e}\n#{e.backtrace}")
-              ""
-            ensure
-              file&.unlink
-            end
-          else
-            File.read(Rails.public_path.join(favicon.url[1..-1]))
-          end
+          path = Discourse.store.download(favicon, max_file_size_kb: favicon.filesize)
+          ProblemCheckTracker[:bad_favicon_url].problem! if !path && Discourse.store.external?
+          path ? File.read(path) : ""
         end
 
       if data.bytesize == 0
@@ -267,8 +247,8 @@ class StaticController < ApplicationController
 
       render plain: content, content_type: "text/plain"
     else
-      path = Discourse.store.path_for(upload)
-      return head(:not_found) if path.blank? || !File.exist?(path)
+      path = Discourse.store.download(upload) if upload.local?
+      return head(:not_found) if !path
 
       send_file(path, type: "text/plain", disposition: "inline")
     end

@@ -9,7 +9,7 @@ module DiscourseEvents::Events
       sign_in(user)
     end
 
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic_1) { Fabricate(:topic, user: user) }
     let(:post_1) { Fabricate(:post, user: user, topic: topic_1) }
 
@@ -79,11 +79,11 @@ module DiscourseEvents::Events
       end
 
       context "when params are included" do
-        let(:invitee1) { Fabricate(:user, username: "Francis", name: "Francis") }
-        let(:invitee2) { Fabricate(:user, username: "Francisco", name: "Francisco") }
-        let(:invitee3) { Fabricate(:user, username: "Frank", name: "Frank") }
-        let(:invitee4) { Fabricate(:user, username: "Franchesca", name: "Franchesca") }
-        let!(:random_user) { Fabricate(:user, username: "Franny") }
+        fab!(:invitee1) { Fabricate(:user, username: "Francis", name: "Francis") }
+        fab!(:invitee2) { Fabricate(:user, username: "Francisco", name: "Francisco") }
+        fab!(:invitee3) { Fabricate(:user, username: "Frank", name: "Frank") }
+        fab!(:invitee4) { Fabricate(:user, username: "Franchesca", name: "Franchesca") }
+        fab!(:random_user) { Fabricate(:user, username: "Franny") }
         let(:post_event_1) do
           pe = Fabricate(:event, post: post_1)
           pe.create_invitees(

@@ -10,6 +10,10 @@ module PageObjects
         self
       end
 
+      def has_translation?(key, value)
+        find(".theme-translation", text: key).has_field?(with: value)
+      end
+
       def finish_install
         find(".finish-install").click
       end
@@ -60,7 +64,7 @@ module PageObjects
       end
 
       def changes_banner
-        PageObjects::Components::AdminChangesBanner.new
+        PageObjects::Components::DFloatingControlBar.new
       end
 
       def has_color_scheme_selector?
@@ -143,9 +147,9 @@ module PageObjects
       end
 
       def toggle_theme_site_setting(setting_name)
-        find(theme_site_setting_selector(setting_name)).find(
-          ".setting-value input[type='checkbox']",
-        ).click
+        PageObjects::Components::FormKitField.new(
+          find(theme_site_setting_selector(setting_name)).find(".form-kit__field"),
+        ).toggle
         find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
       end
 
@@ -183,12 +187,12 @@ module PageObjects
       end
 
       def fill_in_setting(setting_name, value)
-        find("#{setting_selector(setting_name)} input.input-setting-string").fill_in(with: value)
+        find("#{setting_selector(setting_name)} input.form-kit__control-input").fill_in(with: value)
         self
       end
 
       def has_setting_value?(setting_name, value)
-        has_css?("#{setting_selector(setting_name)} input.input-setting-string") do |input|
+        has_css?("#{setting_selector(setting_name)} input.form-kit__control-input") do |input|
           input.value == value
         end
       end

@@ -2,3 +2,12 @@ discourse_rewind:
   discourse_rewind_enabled:
     default: false
     client: true
+    hidden: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/418257"
+      allow_enabled_for:
+        - "everyone"
+      requires_plugin_enabled: false
+      permanent_warning: false

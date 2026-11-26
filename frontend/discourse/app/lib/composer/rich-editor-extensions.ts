@@ -57,6 +57,8 @@ export interface PluginContext {
   hashtagContext?: string;
   /** ID of the category being edited. */
   categoryId?: number;
+  /** Whether the host enables post composer image descriptions. */
+  composerImageDescriptions?: boolean;
   /** Current application session. */
   session: Session;
   /** Service used to show contextual menus. */
@@ -83,6 +85,8 @@ export interface PluginContext {
   markdownOptions?: MarkdownOptions;
   /** Whether an empty paragraph is kept after a trailing non-paragraph block. */
   trailingParagraph?: boolean;
+  /** Uploads files as attachments, for hosts that don't upload inline; returns false when it can't take them. */
+  uploadFiles?: (files: File[]) => boolean | void;
   /** Registers a rendered component-backed node view. */
   addGlimmerNodeView: (nodeView: GlimmerNodeView) => void;
   /** Unregisters a rendered component-backed node view. */
@@ -247,6 +251,8 @@ export type DiscourseMarkdownSerializerState = MarkdownSerializerState & {
   inTable?: boolean;
   inAutolink?: boolean;
   linkMarkup?: string;
+  linkifyEnd?: number;
+  out: string;
 };
 
 export type SerializeNodeFn = (

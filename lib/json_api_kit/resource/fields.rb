@@ -35,7 +35,17 @@ module JsonApiKit
 
         def writable_attributes = declared_attributes.select(&:writable?)
 
+        def writable_relationships = declared_relationships.select(&:writable?)
+
         def relationships = Declarations::Relationships.new(declared_relationships)
+
+        def related_resource(name)
+          relationships
+            .fetch(name.to_s) do
+              raise UnknownRelationship, "There is no relationship named #{name}."
+            end
+            .resource
+        end
 
         def fields(names = nil, guardian:)
           Declarations::Fields.for(
@@ -43,7 +53,6 @@ module JsonApiKit
             guardian:,
             attributes: declared_attributes,
             relationships: declared_relationships,
-            schema:,
             type:,
           )
         end
@@ -65,6 +74,7 @@ module JsonApiKit
 
       delegate :attribute_names,
                :writable_attributes,
+               :writable_relationships,
                :relationships,
                :fields,
                :resolves?,

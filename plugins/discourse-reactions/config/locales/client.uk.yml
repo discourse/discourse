@@ -38,9 +38,30 @@ uk:
         cant_remove: "Ви більше не можете видалити свій лайк"
         unauthenticated: "Будь ласка, зареєструйтесь або увійдіть, щоб поставити лайк цій публікації"
     discourse_workflows:
+      node_unavailable:
+        requires_reactions: "Потрібно, щоб плагін Reactions був увімкнений"
+      nodes:
+        "action:post_reaction": "Відповісти на допис"
+        "trigger:post_reaction_changed": "Змінено реакцію на допис"
+      node_descriptions:
+        "action:post_reaction": "Додати або прибрати реакцію до публікації"
+        "trigger:post_reaction_changed": "Спрацьовує, коли реакція на публікацію додається, замінюється або видаляється. Користувач – це автор; актор – той, хто відреагував."
+        "trigger:post_reaction_changed_v1": "Спрацьовує, коли реакція на публікацію додається, замінюється або видаляється. Користувачем вважається той, хто відреагував, а не автор."
+      post_reaction:
+        operations:
+          add: "Додати реакцію"
+          remove: "Видалити реакцію"
+        reaction: "Реакція"
+        if_exists: "Якщо користувач вже відреагував"
+        if_exists_description: "Користувачі можуть мати лише одну реакцію на публікацію"
+        if_exists_keep: "Зберігайте їхню реакцію"
+        if_exists_replace: "Замінити їхню реакцію"
       post_reaction_changed:
         changes_added: "Додано"
+        changes_replaced: "Замінено"
         changes_removed: "Вилучені"
+        reaction: "Реакція"
+        reaction_description: "Спрацьовувати лише тоді, коли цю реакцію додано, замінено або видалено. Залиште поле порожнім, щоб відповідати будь-якій реакції."
     notifications:
       reaction_1_user_multiple_posts:
         one: "відреагував(-ла) на %{count} ваш допис"

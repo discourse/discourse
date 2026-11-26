@@ -8,6 +8,12 @@ export default class PreferencesSecondFactor extends RestrictedUserRoute {
     return this.modelFor("user");
   }
 
+  beforeModel() {
+    if (!this.modelFor("user").isCurrent) {
+      this.router.replaceWith("preferences.security");
+    }
+  }
+
   setupController(controller, model) {
     controller.setProperties({ model, newUsername: model.username });
     controller.set("loading", true);

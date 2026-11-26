@@ -32,6 +32,11 @@ module DiscourseWorkflows
                 control: :textarea,
               },
             },
+            body_format: {
+              type: :options,
+              options: %w[plain_text markdown],
+              default: "plain_text",
+            },
             buttons: {
               type: :fixed_collection,
               type_options: {
@@ -102,6 +107,8 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           target_user = resolve_target_user(exec_ctx)
           buttons = build_buttons(exec_ctx, target_user)
+          body = exec_ctx.get_node_parameter("body", 0).to_s
+          markdown = exec_ctx.get_node_parameter("body_format", 0) == "markdown"
 
           MessageBus.publish(
             self.class.user_channel(target_user.id),
@@ -110,7 +117,8 @@ module DiscourseWorkflows
               # Unique per show: close_modal must only dismiss this exact prompt.
               modal_id: SecureRandom.hex(8),
               title: exec_ctx.get_node_parameter("title", 0).to_s,
-              body: exec_ctx.get_node_parameter("body", 0).to_s,
+              body: markdown ? nil : body,
+              cooked_body: markdown && body.present? ? PrettyText.cook(body) : nil,
               buttons: buttons,
             },
             user_ids: [target_user.id],

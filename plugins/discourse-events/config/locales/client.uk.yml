@@ -38,16 +38,35 @@ uk:
           join: "Приєднуйтесь до Zoom"
           frame_title: "Вебінар у Zoom"
           open_in_zoom: "Відкрити в Zoom"
+          pause_notifications:
+            paused: "Сповіщення призупиняються, доки ви не вийдете з вебінару."
+            resume: "Сповіщення про відновлення"
           load_error: "Ви покинули вебінар, або нам не вдається завантажити Zoom на цій сторінці."
           too_early: "Приєднатися до вебінару можна ближче до початку заходу"
           view_topic: "Переглянути тему заходу"
+          guest_prompt:
+            title: "Приєднатися до вебінару"
+            message: "Вам потрібно буде зареєструватися на цьому сайті, щоб взяти участь у чаті прямої трансляції. Бажаєте зареєструватися чи пропустити?"
+            register: "Зареєструватись"
+            skip: "Пропустити"
         chat:
+          sign_up_to_chat: "Зареєструйтесь, щоб приєднатися до чату"
           rsvp_to_event: "Підтвердіть свою участь у події, щоб розпочати спілкування"
           rsvp_to_event_with_link: "Підтвердіть свою присутність на <a href='%{url}'>події</a> , щоб розпочати чат"
           rsvp_body: "Спілкуйтеся з іншими учасниками до, під час та після заходу."
+      calendar_prompt:
+        title: "Додати цю подію до календаря?"
+        subscribed: 'Цю подію буде додано до вашого <a href="%{calendarUrl}">підписаного календаря</a>.'
+        dismiss: "Закрити запит календаря"
+        subscribe: "Підпишіться на свої події"
+        subscribe_with_preferences: "Підпишіться на події або змініть налаштування сповіщень"
       preferences:
         reminders:
+          title: "Нагадування про події"
+          description: "Для подій, на які ви збираєтеся або які вас цікавлять. Організатор вибирає, коли надсилатимуться нагадування."
+          preference: "Надсилати нагадування про події через"
           preferences:
+            personal_message: "Надіслати особисте повідомлення"
             notification: "Сповіщення"
             none: "Немає"
         all_events: "Події дискурсу — Усі події"
@@ -363,6 +382,9 @@ uk:
         topic_id_description: "Тригерувати лише для подій у цій темі. Залиште поле порожнім, щоб відповідати всім подіям."
     discourse_post_event:
       new_event: "Нова подія"
+      onebox:
+        all_day: "Цілий день"
+        all_day_range: "Цілий день · %{start} → %{end}"
       notifications:
         before_event_reminder: "Подія ось-ось розпочнеться"
         after_event_reminder: "Подія завершилася"
@@ -418,6 +440,7 @@ uk:
         remove_invitee: "Видалити запрошення зі списку"
         add_invitee: "Додати запрошення до списку"
         this_event: "Ця подія"
+        first_event_only: "Тільки перша подія"
       bulk_invite_modal:
         confirm: "підтвердити"
         text: "Завантажити файл CSV"
@@ -429,9 +452,11 @@ uk:
         description_private: "Приватні події приймають лише назви груп для масових запрошень."
         download_sample_csv: "Завантажити приклад CSV-файлу"
         send_bulk_invites: "Надіслати запрошення"
+        add_attendee: "Додати учасника"
         group_selector_placeholder: "Виберіть групу..."
         user_selector_placeholder: "Виберіть користувача..."
         attendance_label: "Відвідуваність"
+        recurring: "Застосувати відвідуваність до цієї та всіх наступних подій"
         inline_title: "Вбудоване масове запрошення"
         csv_title: "CSV-масове запрошення"
       upcoming_events:
@@ -486,7 +511,7 @@ uk:
               many: "%{count} запрошені користувачі"
               other: "%{count} запрошені користувачі"
         event:
-          expired: "Термін дії закінчився"
+          expired: "Закінчилося"
           closed: "Закриті"
           full: "Повний"
           status:
@@ -499,12 +524,25 @@ uk:
             private:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
+      allow_anonymous_livestream: "Дозвольте анонімним відвідувачам дивитися цю пряму трансляцію"
+      recording:
+        watch: "Переглянути запис"
+        add: "Додати посилання на запис"
+      recording_modal:
+        add_title: "Додати запис"
+        edit_title: "Редагувати запис"
+        label: "Посилання на запис"
+        save: "Зберегти"
+        remove: "Видалити запис"
+        edit_reason: "Посилання на запис оновлено"
+        no_event: "Подію не вдалося знайти в її публікації."
       composer:
         name_placeholder: "Назва події"
         end_date_placeholder: "Дата завершення"
         location_or_url_placeholder: "Додати місцезнаходження або URL-адресу"
         location_placeholder: "Додати місцезнаходження"
         url_placeholder: "Додати URL"
+        recording_placeholder: "Додати посилання на запис"
         max_attendees_placeholder: "Необмежена кількість учасників"
         max_attendees_display:
           one: "Макс. кількість учасників %{count}"
@@ -625,6 +663,9 @@ uk:
         livestream:
           label: "Пряма трансляція"
           checkbox_label: "Вставте URL-адресу як відео та відкрийте чат прямої трансляції для учасників"
+        recording:
+          label: "Запис"
+          placeholder: "Додати посилання на запис"
         location:
           label: "Місцеположення"
           label_or_url: "Місцезнаходження або URL-адреса"

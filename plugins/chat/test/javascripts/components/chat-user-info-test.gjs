@@ -7,7 +7,7 @@ module("Component | ChatUserInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("avatar and name", async function (assert) {
-    this.set("user", this.currentUser);
+    this.user = this.currentUser;
 
     await render(<template><ChatUserInfo @user={{this.user}} /></template>);
 
@@ -18,7 +18,7 @@ module("Component | ChatUserInfo", function (hooks) {
   test("status message", async function (assert) {
     this.siteSettings.enable_user_status = true;
 
-    this.set("user", this.currentUser);
+    this.user = this.currentUser;
 
     this.user.setProperties({
       status: { description: "happy", emoji: "smile" },

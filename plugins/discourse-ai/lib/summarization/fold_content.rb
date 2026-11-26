@@ -27,12 +27,20 @@ module DiscourseAi
       #
       # @returns { AiSummary } - Resulting summary.
       def summarize(user, &on_partial_blk)
+        source_sha = AiSummary.build_source_sha(strategy, content_to_summarize)
         truncated_content = content_to_summarize.map { |cts| truncate(cts) }
 
         summary = fold(truncated_content, user, &on_partial_blk)
 
         if persist_summaries
-          AiSummary.store!(strategy, llm_model, summary, truncated_content, human: user&.human?)
+          AiSummary.store!(
+            strategy,
+            llm_model,
+            summary,
+            truncated_content,
+            human: user&.human?,
+            source_sha:,
+          )
         else
           AiSummary.new(summarized_text: summary)
         end

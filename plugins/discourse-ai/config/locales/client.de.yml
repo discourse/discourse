@@ -31,7 +31,6 @@ de:
             failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
-          description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
         reports:
           filters:
             group_by:
@@ -65,6 +64,7 @@ de:
         requires_ai: "Erfordert die Aktivierung des KI-Plug-ins."
       nodes:
         "action:ai_agent": "KI-Agent"
+        "action:ai_tool": "KI-Tool"
       node_descriptions:
         "action:ai_agent": "Lass einen KI-Agenten laufen, um Daten zu verarbeiten oder Inhalte zu generieren"
     discourse_automation:
@@ -243,6 +243,17 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      review_bulk:
+        refresh: "Aktualisieren"
+        columns:
+          user: "Nutzer"
+          reason: "Gemeldet als"
+          created: "Erstellt"
+          status: "Status"
+        status:
+          applying: "Wird angewendet…"
+      dsa_classification:
+        suggest: "Mit KI vorschlagen"
       copied: "Kopiert"
       ai_decoded_transcript:
         thinking: "Ich denke"
@@ -252,11 +263,9 @@ de:
         error: "Fehler"
         response: "Antwort"
       post_image_captions:
-        edit: "KI-Bildbeschriftung bearbeiten"
-        title: "KI-Bildbeschriftung bearbeiten"
-        description: "Beschriftung"
-        save: "Bildbeschriftung speichern"
         saved: "KI-Bildbeschriftung gespeichert"
+        image_descriptions:
+          apply: "Anwenden"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -271,6 +280,16 @@ de:
           upload_ids: "Upload-IDs"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wähle einen Agenten aus …"
+        ai_tool:
+          tool_ref: "Tool"
+          llm_model_id: "LLM-Modell"
+          arguments: "Argumente"
+          list_item: "Listenelement"
+          add_list_item: "Element hinzufügen "
+        mcp_tool:
+          mcp_server_id: "MCP-Server"
+          tool_name: "Tool"
+          arguments: "Argumente"
         classify:
           text: "Text"
           upload_ids: "Bilder"
@@ -296,25 +315,34 @@ de:
         none: "Keine Auswahl"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
-        disabled: "(deaktiviert)"
-        agent:
-          one: "Agent:"
-          other: "Agenten:"
-        groups: "Gruppen:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Status"
+          enabled: "Aktiviert"
+          feature: "Funktion"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Gruppen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "An"
+          "off": "Aus"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Neuer Agent"
+          manage_agents: "Agenten verwalten"
+          places:
+            personal_messages: "Persönliche Nachrichten"
+            chat_direct_messages: "Chat-Nachrichten"
+            none: "Nicht verfügbar"
+        toggle: "%{name} aktivieren"
+        set_up: "Einrichten"
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
         edit: "Einstellungen"
-        expand_list:
-          one: "(%{count} weitere)"
-          other: "(%{count} weitere)"
-        collapse_list: "(weniger anzeigen)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -328,11 +356,17 @@ de:
           enabled: "Aktiviert"
           not_enabled: "Nicht aktiviert"
         filters:
-          all: "Gesamt"
-          text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
+        sentiment:
+          sentiment: "Stimmung"
+          emotion: "Emotion"
+          enabled: "Aktiviert"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Stimmung"
+            emotion: "Emotion"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
@@ -352,8 +386,7 @@ de:
             access_control: "Zugriffskontrolle"
         embeddings:
           name: "Einbettungen"
-          description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
-          hyde: "HyDE"
+          related_topics: "Verwandte Themen"
           setting_groups:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
@@ -366,7 +399,6 @@ de:
             settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
-          description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
           setting_groups:
             settings: "Grundlegende Einstellungen"
@@ -402,6 +434,9 @@ de:
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
             agents: "Agenten"
+        review_queue:
+          setting_groups:
+            settings: "Einstellungen"
         image_caption:
           name: "Bildbeschriftung"
           description: "Generiert KI-Bildbeschriftungen für Beitragsbilder und stellt diese Lesern und assistiven Technologien zur Verfügung."
@@ -420,10 +455,6 @@ de:
             one: "Geplante Übersetzung für %{count} unübersetzten Beitrag."
             other: "Geplante Übersetzung für %{count} unübersetzte Beiträge."
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            agents: "Agenten"
-            backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -442,9 +473,20 @@ de:
       translations:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
-        supported_locales: "Unterstützte Sprachen"
-        category_scope: "Kategorien"
-        category_scope_description: "Entscheide, ob automatische Übersetzungen für Inhalte in allen Kategorien, in öffentlichen Kategorien oder in ausgewählten Kategorien gelten sollen."
+        sections:
+          advanced: "Erweitert "
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorien"
+          ai_translation_personal_messages:
+            label: "Persönliche Nachrichten"
+            choices:
+              none: "Keine Erfassung"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Alle"
         cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
         model_progress:
           loading: "Übersetzungsfortschritt wird geladen"
@@ -522,9 +564,7 @@ de:
                 one: "Das Schlagwort wurde vollständig übersetzt."
                 other: "Alle %{count} Schlagwörter wurden vollständig übersetzt."
         admin_actions:
-          translation_settings: "KI-Einstellungen"
-          localization_settings: "App-Spracheinstellungen"
-          enable_translations: "Automatische Übersetzungen aktivieren"
+          enabled: "Aktiviert"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
@@ -563,6 +603,8 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        no_llm_selected: "Keine Erfassung"
+        no_decision_model_selected: "Keine Erfassung"
         select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
@@ -941,6 +983,32 @@ de:
         mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      concepts:
+        edit: "Bearbeiten"
+        seed:
+          refresh: "Aktualisieren"
+        delete: "Löschen"
+        columns:
+          status: "Status"
+          topics: "Themen"
+          posts: "Beiträge"
+        statuses:
+          all: "Alle Status"
+          active: "Aktiv"
+        form:
+          name: "Name"
+          description: "Beschreibung"
+          aliases: "Aliase"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} Thema"
+          other: "%{count} Themen"
+        tagged_topics: "Themen mit Schlagwörtern"
+        topic_columns:
+          topic: "Thema"
+          primary: "Primär"
+          relevance: "Relevanz"
+        primary_badge: "Primär"
       decision_models:
         no_preset: "Keine Erfassung"
         display_name: "Name"
@@ -951,6 +1019,8 @@ de:
         edit: "Bearbeiten"
         delete: "Löschen"
         test: "Test ausführen"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-Server"
         new: "Neuer MCP-Server"
@@ -1038,6 +1108,7 @@ de:
         type: "Typ"
         provider: "Anbieter"
         edit: "Bearbeiten"
+        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         select_type: "Auswählen"
         types:
           embedding: "Einbettung"
@@ -1277,7 +1348,6 @@ de:
         presets: "Wähle eine Voreinstellung aus …"
         configure_manually: "Manuell konfigurieren"
         edit: "Bearbeiten"
-        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         tests:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
@@ -1309,6 +1379,7 @@ de:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Benutzerdefiniert"
         provider_fields:
@@ -1345,8 +1416,7 @@ de:
         filter_standalone: "Einzeln"
       ai_bot:
         title: "KI-Bot"
-        agent: "Agent:"
-        llm: "Modell:"
+        agent_menu_heading: "Agent"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"
@@ -1409,9 +1479,9 @@ de:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "KI"
           header: "Wie kann ich helfen?"
           submit: "Frage abschicken"
-          disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
           placeholder: "Stell eine Frage …"
           new: "Neue Frage"
           min_input_length_message:
@@ -1433,10 +1503,7 @@ de:
           streaming_below: "Neuer Inhalt unten"
           editing_post: "Beitrag wird bearbeitet "
       sentiments:
-        dashboard:
-          title: "Stimmung"
         sidebar:
-          overview: "Stimmungsübersicht"
           analysis: "Stimmungsanalyse"
         sentiment_analysis:
           share_chart: "Link zur Tabelle kopieren"

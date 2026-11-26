@@ -34,10 +34,12 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:path) { "/api/topics" }
   let(:version) { JsonApiKit::Timeline.current.to_s }
   let(:headers) { {} }
+  let(:subfolder) { nil }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
 
   before do
+    set_subfolder(subfolder) if subfolder
     allow(Discourse).to receive(:warn_exception)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
@@ -188,6 +190,20 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       )
     end
 
+    context "when Discourse runs in a subfolder" do
+      let(:subfolder) { "/forum" }
+      let(:query) { { "fields" => { "topics" => "title,posts" }, "include" => "posts" } }
+      let(:topic_url) { "http://test.localhost/forum/api/topics/#{middle.id}" }
+
+      it "keeps the subfolder in resource and relationship links", :aggregate_failures do
+        expect(parsed_body.dig("data", "links", "self")).to eq(topic_url)
+        expect(parsed_body.dig("data", "relationships", "posts", "links")).to include(
+          "self" => "#{topic_url}/relationships/posts",
+          "related" => "#{topic_url}/posts",
+        )
+      end
+    end
+
     context "when no record has that id" do
       let(:path) { "/api/topics/0" }
 
@@ -216,13 +232,17 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       )
     end
 
-    context "when Discourse answers the error itself" do
+    context "when Discourse reports a missing resource" do
       let(:path) { "/api/missing" }
 
       it { expect(response).to have_http_status(:not_found) }
 
-      it "sends JSON" do
-        expect(response.media_type).to eq("application/json")
+      it "sends the JSON:API media type" do
+        expect(response.media_type).to eq(profile_media_type)
+      end
+
+      it "sends a JSON:API error" do
+        expect(error).to eq(not_found.deep_stringify_keys)
       end
     end
   end

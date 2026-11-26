@@ -164,6 +164,44 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    context "when the user flagged a post first" do
+      fab!(:other_flagger, :user)
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+      end
+
+      it "keeps the reviewable with the other flags and notes" do
+        Fabricate(:reviewable_note, reviewable: reviewable)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores.pluck(:user_id)).to contain_exactly(other_flagger.id)
+        expect(reviewable.reviewable_notes.count).to eq(1)
+      end
+
+      it "deletes flags that no one else raised" do
+        solo =
+          Fabricate(
+            :reviewable_flagged_post,
+            created_by: user,
+            reviewable_scores: [Fabricate.build(:reviewable_score, user: user, status: :pending)],
+          )
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(Reviewable.exists?(solo.id)).to eq(false)
+        expect(reviewable.reload).to be_pending
+      end
+    end
+
     context "with a pending reviewable targeting the user" do
       fab!(:queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
       fab!(:flagged_post) do
@@ -241,10 +279,11 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user has posts" do
-      let!(:topic_starter) { Fabricate(:user) }
-      let!(:topic) { Fabricate(:topic, user: topic_starter) }
-      let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
-      let!(:post) { Fabricate(:post, user: user, topic: topic) }
+      fab!(:topic_starter, :user)
+      fab!(:topic) { Fabricate(:topic, user: topic_starter) }
+      fab!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
+      # The post fabricator increments cached user stats; don't mutate the outer fixture.
+      fab!(:post) { Fabricate(:post, user: User.find(user.id), topic: topic) }
 
       context "when delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }

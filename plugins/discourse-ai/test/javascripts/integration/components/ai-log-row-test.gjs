@@ -87,6 +87,32 @@ module("Integration | Component | AiLogRow", function (hooks) {
       );
   });
 
+  test("links an attributed workflow by name", async function (assert) {
+    this.log = {
+      id: 44,
+      outcome: "successful",
+      feature_name: "workflow",
+      created_at: "2026-08-17T12:00:00Z",
+      workflow: { id: 12, name: "Summary demo" },
+    };
+
+    await render(
+      <template>
+        <table><tbody><AiLogRow @log={{this.log}} /></tbody></table>
+      </template>
+    );
+
+    assert
+      .dom(
+        '.ai-logs__col-context a[href="/admin/plugins/discourse-workflows/workflows/12"]'
+      )
+      .hasText(
+        "Workflow: Summary demo",
+        "the workflow is identified and linked"
+      );
+    assert.dom(".ai-logs__empty-value").doesNotExist("context is available");
+  });
+
   test("renders operational metadata and opens details", async function (assert) {
     this.log = {
       id: 42,

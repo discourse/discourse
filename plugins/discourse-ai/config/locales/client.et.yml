@@ -38,12 +38,23 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      review_bulk:
+        refresh: "Värskenda"
+        columns:
+          user: "Kasutaja"
+          created: "Loodud"
+          status: "Staatus"
       copied: "Kopeeritud"
       ai_decoded_transcript:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      post_image_captions:
+        image_descriptions:
+          apply: "Rakenda"
       discourse_workflows:
+        ai_tool:
+          list_item: "Loendi element"
         classify:
           text: "Tekst"
           upload_ids: "Pildid"
@@ -61,20 +72,26 @@ et:
       llm_selector:
         none: "Pole"
       features:
-        disabled: "(välja lülitatud)"
-        groups: "Rühmad:"
+        table:
+          status: "Staatus"
+          enabled: "Sisse lülitatud"
+          groups: "Rühmad"
+        chatbot:
+          places:
+            none: "Pole saadaval"
         no_groups: "Pole"
         edit: "Seaded"
-        expand_list:
-          one: "(veel %{count})"
-          other: "(veel %{count})"
         nav:
           enabled: "Sisse lülitatud"
         filters:
-          all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
+        review_queue:
+          setting_groups:
+            settings: "Seaded"
         image_caption:
           setting_groups:
             settings: "Seaded"
@@ -83,7 +100,17 @@ et:
       modals:
         select_option: "Vali võimalus..."
       translations:
-        category_scope: "Liigid"
+        settings:
+          ai_translation_category_scope:
+            label: "Liigid"
+          ai_translation_personal_messages:
+            choices:
+              none: "Pole"
+              all: "Kõik"
+          content_localization_language_switcher:
+            choices:
+              none: "Mitte keegi"
+              all: "Kõik"
         model_progress:
           detail:
             columns:
@@ -98,6 +125,8 @@ et:
               title: "Kategooriad"
             tag:
               title: "Sildid"
+        admin_actions:
+          enabled: "Sisse lülitatud"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -114,6 +143,8 @@ et:
             other: "%{count} postitust"
       spam:
         short_title: "Spämm"
+        no_llm_selected: "Pole"
+        no_decision_model_selected: "Pole"
         enable: "Luba"
         test_modal:
           spam: "Spämm"
@@ -190,6 +221,28 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      concepts:
+        edit: "Muuda"
+        seed:
+          refresh: "Värskenda"
+        delete: "Kustuta"
+        columns:
+          status: "Staatus"
+          topics: "Teemasid"
+          posts: "Postitust"
+        statuses:
+          active: "Aktiivne"
+        form:
+          name: "Nimi"
+          description: "Kirjeldus"
+          status: "Staatus"
+        shared_topics_count:
+          one: "%{count} teema"
+          other: "%{count} teemat"
+        tagged_topics: "Sildistatud teemad"
+        topic_columns:
+          topic: "Teema"
+          relevance: "Asjakohasus"
       decision_models:
         no_preset: "Pole"
         display_name: "Nimi"

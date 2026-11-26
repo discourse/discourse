@@ -29,7 +29,9 @@ hy:
           other: "%{count} պատասխան"
         assign: "Վերագրել"
         unassign: "Ետ կանչել վերագրումը"
-        created_by: "Ստեղծել է՝"
+        owners:
+          one: "Սեփականատեր"
+          other: "Սեփականատերեր"
       manage:
         name: "Անուն"
         constraint_categories: "Կատեգորիաներ"
@@ -39,6 +41,7 @@ hy:
           column_title: "Վերնագիր"
           icon: "Պատկերակ"
           color: "Գույն"
+          icon_search_placeholder: "Որոնել…"
           move_to_assigned_unassign: "Ետ կանչել վերագրումը"
           move_to_status_open: "Բացել"
           move_to_status_closed: "Փակված է"

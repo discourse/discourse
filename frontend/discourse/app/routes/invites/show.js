@@ -51,8 +51,10 @@ export default class InvitesShow extends DiscourseRoute {
 
     if (model.user_fields) {
       controller.userFields.forEach((userField) => {
-        if (model.user_fields[userField.field.id]) {
-          userField.value = model.user_fields[userField.field.id];
+        const value = model.user_fields[userField.field.id];
+        // Number fields can legitimately hold 0.
+        if (value || value === 0) {
+          userField.value = value;
         }
       });
     }

@@ -16,7 +16,16 @@ module Chat
     def allowed_group_ids
       return if !read_restricted?
 
-      STAFF_GROUP_IDS | category.secure_group_ids
+      STAFF_GROUP_IDS |
+        category
+          .category_groups
+          .where(
+            permission_type: [
+              CategoryGroup.permission_types[:full],
+              CategoryGroup.permission_types[:create_post],
+            ],
+          )
+          .pluck(:group_id)
     end
 
     def title(_ = nil)
@@ -25,8 +34,8 @@ module Chat
 
     def generate_auto_slug
       return if slug.present?
-      self.slug = Slug.for(title.strip, "")
-      self.slug = "" if duplicate_slug?
+      self.slug = Slug.for(title.strip, "", SLUG_MAX_LENGTH)
+      self.slug = "" if slug.length > SLUG_MAX_LENGTH || duplicate_slug?
     end
   end
 end

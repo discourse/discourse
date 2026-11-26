@@ -181,14 +181,14 @@ function wrapIn(nodeType, getAttrs, joinPredicate) {
 
     tr.wrap(range, wrapping);
 
-    const before =
-      range.start > 0 && tr.doc.resolve(range.start - 1).nodeBefore;
+    // the new wrapper starts where the wrapped range did
+    const before = tr.doc.resolve(range.start).nodeBefore;
     if (
       before?.type === nodeType &&
-      canJoin(tr.doc, range.start - 1) &&
+      canJoin(tr.doc, range.start) &&
       (!joinPredicate || joinPredicate(match, before))
     ) {
-      tr.join(range.start - 1);
+      tr.join(range.start);
     }
     return true;
   };
@@ -196,6 +196,16 @@ function wrapIn(nodeType, getAttrs, joinPredicate) {
 
 function setBlock(nodeType, getAttrs) {
   return (tr, $block, match) => {
+    // setBlockType skips blocks that can't change type, which would leave
+    // the typed markup deleted
+    if (
+      !$block
+        .node(-1)
+        .canReplaceWith($block.index(-1), $block.indexAfter(-1), nodeType)
+    ) {
+      return false;
+    }
+
     tr.setBlockType(
       $block.before(),
       $block.after(),

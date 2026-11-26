@@ -28,7 +28,13 @@ module DiscourseAi
           end
 
           def option(name, type:, values: nil, default: nil)
-            Option.new(tool: self, name: name, type: type, values: values, default: default)
+            DiscourseAi::Agents::Tools::Option.new(
+              tool: self,
+              name: name,
+              type: type,
+              values: values,
+              default: default,
+            )
           end
 
           def help
@@ -48,6 +54,11 @@ module DiscourseAi
           end
 
           def mandatory_approval?
+            false
+          end
+
+          # Tools that can take minutes, so conversations can tell the user it is still working.
+          def long_running?
             false
           end
 
@@ -140,8 +151,23 @@ module DiscourseAi
           details
         end
 
+        # Used instead of approval_details when they are longer than an approval
+        # surface allows, such as a chat message. Tools with large details can
+        # override this with a compact version of the same action.
+        def compact_approval_details(max_length:)
+          notice = I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened")
+          available = max_length - notice.length - 2
+          return notice.truncate(max_length) if available <= 0
+
+          "#{notice}\n\n#{approval_details.to_s.truncate(available)}"
+        end
+
         def approval_question
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.question")
+        end
+
+        def parameters_for_approval
+          parameters
         end
 
         def approval_parameters
@@ -347,14 +373,6 @@ module DiscourseAi
           end
 
           llm.tokenizer.truncate(text, target, strict: SiteSetting.ai_strict_token_counting)
-        end
-
-        def accepted_options
-          []
-        end
-
-        def option(name, type:)
-          Option.new(tool: self, name: name, type: type)
         end
 
         def acting_user

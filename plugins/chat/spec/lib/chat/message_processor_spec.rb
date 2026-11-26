@@ -7,6 +7,7 @@ RSpec.describe Chat::MessageProcessor do
     Chat::Message.expects(:cook).with(
       message.message,
       user_id: message.last_editor_id,
+      hashtag_user_ids: message.hashtag_user_ids,
       author_username: message.user.username,
     )
     described_class.new(message)
@@ -16,6 +17,7 @@ RSpec.describe Chat::MessageProcessor do
     Chat::Message.expects(:cook).with(
       message.message,
       user_id: message.last_editor_id,
+      hashtag_user_ids: message.hashtag_user_ids,
       author_username: message.user.username,
       invalidate_oneboxes: true,
     )
@@ -36,6 +38,21 @@ RSpec.describe Chat::MessageProcessor do
 
       # This should not raise an error even though @post is nil
       expect { processor.run! }.not_to raise_error
+    end
+
+    it "honors max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 1
+      urls = %w[https://example.com/1 https://example.com/2 https://example.com/3]
+      message.update!(message: urls.join("\n\n"))
+      Oneboxer.stubs(:cached_onebox).returns(nil)
+      urls.each do |url|
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<aside class='onebox'>#{url}</aside>")
+      end
+
+      processor = described_class.new(message)
+      processor.run!
+
+      expect(processor.html).to have_tag("aside.onebox", count: 1)
     end
   end
 

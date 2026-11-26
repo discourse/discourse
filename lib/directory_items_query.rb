@@ -128,6 +128,14 @@ class DirectoryItemsQuery
     return items.order(default_order => direction, :id => :asc) if user_field.blank?
 
     field_name = "#{User::USER_FIELD_PREFIX}#{user_field.id}"
+    value_order =
+      if user_field.number?
+        value_sql = UserField.number_value_sql("user_custom_fields.value")
+        Arel.sql("#{value_sql} #{direction.to_s.upcase} NULLS LAST")
+      else
+        { user_custom_fields: { value: direction } }
+      end
+
     items
       .joins(
         ActiveRecord::Base.sanitize_sql_array(
@@ -144,7 +152,7 @@ class DirectoryItemsQuery
           "user_custom_fields.name = #{ActiveRecord::Base.connection.quote(field_name)} ASC",
         ),
       )
-      .order(user_custom_fields: { value: direction })
+      .order(value_order)
   end
 
   def prioritize_user!(items, period_type:, page:, group_name:, excluded_user_ids:)

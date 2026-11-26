@@ -17,12 +17,6 @@ el:
       llm_triage:
         notify_author_pm:
           subject: "Η ανάρτησή σας αφαιρέθηκε προσωρινά για έλεγχο."
-          body: |
-            Γεια σας @%{username},
-
-            Η ανάρτησή σας στο θέμα "%{topic_title}" αφαιρέθηκε προσωρινά και τοποθετήθηκε στην ουρά ελέγχου για να την εξετάσει ένας συντονιστής. Εάν εγκριθεί, θα αποκατασταθεί αυτόματα.
-
-            Παραπομπή: %{post_url}
   site_settings:
     ai_nsfw_flag_threshold_drawings: "Όριο για να θεωρηθεί ένα σχέδιο NSFW."
     ai_bot_debugging_allowed_groups: "Να επιτρέπεται σε αυτές τις ομάδες να βλέπουν ένα κουμπί αποσφαλμάτωσης σε αναρτήσεις που εμφανίζει το ακατέργαστο AI αίτημα και απάντηση"
@@ -40,6 +34,9 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Ανίχνευση spam"
       navigation:
         settings:
           title: "Ρυθμίσεις ιστότοπου"
@@ -81,6 +78,8 @@ el:
           text_color: "χρώμα κειμένου"
         approve_label: "Ναι "
         reject_label: "Όχι"
+        category_access_levels:
+          readonly: "Προβολή"
         empty_value: "Κενό"
       agents:
         post_raw_translator:
@@ -94,6 +93,7 @@ el:
         edit_post: "Επεξεργασία ανάρτησης"
         edit_tag: "Επεξεργασία ετικέτας"
         create_category: "Δημιουργία κατηγορίας"
+        delete_category: "Διαγραφή κατηγορίας"
         assign: "Ανάθεση θέματος"
         search: "Αναζήτηση"
         time: "Ώρα"
@@ -124,6 +124,12 @@ el:
       edit_category:
         errors:
           not_found: "Η κατηγορία δεν βρέθηκε."
+      set_category_permissions:
+        errors:
+          not_found: "Η κατηγορία δεν βρέθηκε."
+      delete_category:
+        errors:
+          not_found: "Η κατηγορία δεν βρέθηκε."
       change_topic_category:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
@@ -144,6 +150,21 @@ el:
         errors:
           action_failed: "Αποτυχία ενημέρωσης της κατάστασης επίλυσης."
         success: "Η κατάσταση επίλυσης ενημερώθηκε με επιτυχία."
+    appearance_authoring:
+      component_on: "Ενεργό"
+      component_off: "Ανενεργό"
+      default_theme: "Προεπιλεγμένο θέμα"
+      colors:
+        light:
+          header_background: "Header"
+      fonts:
+        heading_font: "Γραμματοσειρά επικεφαλίδας"
+    mcp_theme_access:
+      "on": "Ενεργό"
+      "off": "Ανενεργό"
+      none: "κανένα"
+    mcp_app_setup:
+      none: "κανένα"
     reviewables:
       ai_tool_action:
         approve:

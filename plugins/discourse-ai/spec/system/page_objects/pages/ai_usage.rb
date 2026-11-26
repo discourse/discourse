@@ -71,6 +71,25 @@ module PageObjects
         page.has_css?(".ai-usage__users-table .ai-usage__total-row")
       end
 
+      def has_workflows_table?
+        page.has_css?(".ai-usage__workflows-table")
+      end
+
+      def has_no_workflows_table?
+        page.has_no_css?(".ai-usage__workflows-table")
+      end
+
+      def has_workflow_usage?(workflow, requests:, tokens:)
+        page.has_css?(
+          ".ai-usage__workflows-row",
+          text: /#{Regexp.escape(workflow.name)}.*#{requests}.*#{tokens}/m,
+        ) &&
+          page.has_css?(
+            ".ai-usage__workflows-row a[href='/admin/plugins/discourse-workflows/workflows/#{workflow.id}']",
+            text: workflow.name,
+          )
+      end
+
       def model_selector
         PageObjects::Components::SelectKit.new(".ai-usage__model-selector")
       end

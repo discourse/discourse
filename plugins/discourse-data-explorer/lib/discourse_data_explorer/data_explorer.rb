@@ -467,6 +467,8 @@ module DiscourseDataExplorer
         site_settings.value
         user_auth_tokens.auth_token
         user_auth_tokens.prev_auth_token
+        retired_user_auth_tokens.token_hash
+        retired_user_auth_tokens.previous_token_hash
         user_auth_token_logs.auth_token
         user_passwords.password_hash
         user_passwords.password_salt

@@ -147,6 +147,16 @@ acceptance("User Preferences - Second Factor", function (needs) {
       .dom(".d-modal__container")
       .doesNotExist("modal is closed when form is submitted via keyboard");
   });
+
+  test("redirects away from another user's second factors", async function (assert) {
+    await visit("/u/charlie/preferences/second-factor");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.security",
+      "it transitions to the other user's security preferences"
+    );
+  });
 });
 
 acceptance(

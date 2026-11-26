@@ -7,8 +7,18 @@
 cs:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásit protizákonný obsah"
       email: "E-mailová adresa"
+    code_editor:
+      search:
+        replace: "Nahradit"
+        next: "Další"
+        previous: "Předchozí"
+        close: "Zavřít"
+        go: "Přejít"
+      fold:
+        to: "do"
     user_api_key:
       title: 'Autorizovat „%{application_name}“'
       authorize: "Autorizovat"
@@ -33,6 +43,7 @@ cs:
     access_control:
       manage:
         access_permission_editor: "Uživatel"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Smazat"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"
@@ -519,25 +530,20 @@ cs:
       pill: "Navrhované"
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
-      start_posting:
-        back: "Zpět"
+      create_category:
+        action: "Vytvořit kategorii"
     design_wizard:
       back: "Zpět"
       next: "Další"
       sections:
-        theme: "Téma"
         fonts: "Písma"
+        logo: "Logo"
         homepage: "Domovská stránka"
-        welcome_banner: "Uvítací banner"
-        search: "Vyhledat"
       theme:
         selected: "Zaškrtnuté"
-      colors:
-        light: "Světlá"
-        dark: "Tmavá"
       fonts:
-        base_font: "Základní písmo"
-        heading_font: "Písmo nadpisů"
+        base_font: "Tělo"
+        heading_font: "Nadpisy"
       homepage:
         topics: "Témata"
         categories: "Kategorie"
@@ -827,7 +833,6 @@ cs:
     dsa_statements:
       category: "Kategorie"
       category_prompt: "Vyberte kategorii"
-      saving: "Ukládání…"
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"
@@ -2665,6 +2670,7 @@ cs:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
       label: "Vyberte možnosti"
+      remove_item: "Odstranit %{name}"
     d_otp:
       screen_reader:
         one: Zadejte číslo
@@ -3111,6 +3117,9 @@ cs:
         size_too_small: "%{provided_file_size} je menší než minimální povolená hodnota %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hledat emoji
+      search_placeholder: "Hledat podle názvu emoji a aliasu..."
+      no_results: "Žádné výsledky"
+      favorites: "Často používané"
       smileys_&_emotion: Smajlíky a emoce
       people_&_body: Lidé a tělo
       animals_&_nature: Zvířata a příroda
@@ -3133,6 +3142,7 @@ cs:
     filter_controls:
       reset: "obnovit výchozí"
       toggle: "Přepnout rozbalovací filtry"
+      sort_label: "Řadit podle"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -3151,6 +3161,10 @@ cs:
       emoji: "Smajlíky :)"
       more_emoji: "více…"
       options: "Možnosti"
+      ai_content:
+        code: "Kód"
+        quote: "Citovat"
+        details: "Podrobnosti"
       whisper: "šeptat"
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
@@ -4109,7 +4123,7 @@ cs:
         back_description: "Přejít na poslední nepřečtený příspěvek"
         replies_short: "%{current} / %{total}"
       progress:
-        title: pozice v tématu
+        title: "pozice v tématu"
         jump_prompt: "přejít na..."
         jump_prompt_of:
           one: "z %{count} příspěvku"
@@ -4383,10 +4397,8 @@ cs:
           label: "vybrané"
           title: "Kliknutím odstraníte příspěvek z výběru"
         select_replies:
-          label: "vybrat +odpovědi"
           title: "Přidej příspěvek a všechny jeho odpovědi do výběru"
         select_below:
-          label: "vybrat +níže"
           title: "Přidat příspěvek a vše po něm do výběru"
         delete: smazat označené
         cancel: zrušit výběr
@@ -4694,6 +4706,9 @@ cs:
           many: "Opravdu chcete sloučit těchto %{count} příspěvků?"
           other: "Opravdu chcete sloučit těchto %{count} příspěvků?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skrytý"
         locale:
           no_locale_set: "Není nastaven žádný jazyk"
           locale_removed: "Jazyk odstraněn"
@@ -4702,9 +4717,6 @@ cs:
           previous: "Předchozí revize"
           next: "Další revize"
           last: "Poslední revize"
-          hide: "Skrýt revizi"
-          show: "Zobrazte revizi"
-          destroy: "Odstranit revize"
           destroy_confirm: "Opravdu chcete odstranit všechny revize tohoto příspěvku? Tuto akci nelze zrušit."
           revert: "Vrátit na revizi %{revision}"
           edit_wiki: "Upravit Wiki"
@@ -4771,7 +4783,6 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "Kategorie&hellip;"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"
@@ -4830,7 +4841,7 @@ cs:
       validations:
         icon_required: "Vyberte ikonu."
       name: "Název kategorie"
-      untitled: "Nepojmenovaná kategorie"
+      icon_search_placeholder: "Vyhledat..."
       description: "Popis"
       logo: "Obrázek loga kategorie"
       logo_dark: "Obrázek loga kategorie (tmavý režim)"
@@ -4838,9 +4849,6 @@ cs:
       background_image: "Obrázek pozadí kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý režim)"
       style: "Styl"
-      icon: "Ikona"
-      emoji: "Emotikon"
-      select_emoji: "Vyberte emotikon"
       background_color: "Barva"
       foreground_color: "Barva textu"
       color_validations:
@@ -4848,18 +4856,11 @@ cs:
         incorrect_length: "musí odpovídat formátu #RRGGBB nebo #RGB"
         non_hexdecimal: "musí obsahovat pouze hexadecimální znaky (0-9, AF)"
       styles:
-        type: "Styl"
         icon: "Ikona"
         emoji: "Smajlíky :)"
         square: "Čtverec"
-        options:
-          square: "Čtverec"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Používaná barva"
-      predefined_colors: "Předdefinované možnosti barev"
       name_placeholder: "Nejlépe jedno nebo dvě slova"
-      color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
       list: "Přehled kategorií"
@@ -5589,9 +5590,19 @@ cs:
       forward: "Vpřed"
       share: "Sdílet"
       dismiss: "Označit jako přečtené"
+    mobile_tab_bar:
+      new_topic: "Nové téma"
+      create: "Vytvořit"
+      more: "Více"
+      back: "Zpět"
+      topics: "Témata"
+      drafts:
+        one: "Koncepty (%{count})"
+        few: "Koncepty (%{count})"
+        many: "Koncepty (%{count})"
+        other: "Koncepty (%{count})"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
-    theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
     theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
@@ -6012,16 +6023,16 @@ cs:
         name: "Název"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Zapnuto"
-        enabled_for: "Povoleno pro..."
+        enabled: "Zapnuto?"
         show_image: "Zobrazit obrázek"
-        edit_groups: "Úprit opt-in skupiny"
+        feedback: "Zpětná vazba"
         groups_updated: "Skupiny aktualizovány!"
         save_groups: "Uložit skupiny"
         add_groups_to_enable: "Pro povolení této funkce přidejte skupiny"
         no_changes_to_save: "Žádné změny k uložení"
         select_groups: "Vyberte skupiny…"
         opt_in_groups: "Opt-in skupiny"
+        settings: "Nastavení"
         opt_in_groups_instructions: "Opt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude zveřejněna pro všechny. Vemte na vědomí, že tyto skupiny budou irelevantní, jakmile změna přejde do stavu Stabilní."
         enabled_for_throttle: "Upravili jste pro koho je tato změna povolena příliš rychle. Počkejte prosím pár vteřin před dalším pokusem."
         change_enabled_for_success: "Tuto změnu jste povolili pro %{enabledFor}"
@@ -6032,7 +6043,6 @@ cs:
         preview: "Náhled"
         enabled_for_options:
           no_one: "Nikdo"
-          everyone: "Všichni"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
             one: "skupinu %{groupNames}"
@@ -6077,6 +6087,9 @@ cs:
           impact_role_staff: "Redakce"
           impact_role_all_members: "Všichni členové"
           impact_role_developers: "Vývojáři"
+        sort:
+          status: "Stav"
+          name: "Jméno"
       config:
         about:
           title: "O vašem webu"
@@ -6595,33 +6608,16 @@ cs:
           anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
-        last_updated: "Nástěnka aktualizována:"
-        discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
         updates_available: "Jsou k dispozici aktualizace."
-        please_update: "Prosím, aktualizujte!"
-        no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."
-        stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby sidekiq."
         version_check_pending: "Zdá se, že jste nedávno aktualizovali. Báječné!"
-        installed_version: "Nainstalováno"
-        github: "GitHub"
-        problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         dismiss_notice: "ignorovat"
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           learn_more: "Více informací..."
-        last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
-        no_problems: "Nenalezeny žádné problémy."
-        moderators: "Moderátoři:"
-        admins: "Administrátoři:"
-        silenced: "Ztišený:"
-        suspended: "Pozastaveno:"
-        private_messages_short: "Zpráv"
-        private_messages_title: "Zprávy"
-        mobile_title: "Mobilní verze"
         space_used: "Použito %{usedSize}"
         space_used_and_free: "%{usedSize} (%{freeSize} volných)"
         uploads: "Nahrané soubory"
@@ -6632,20 +6628,7 @@ cs:
           many: "%{count} záloh na %{location}"
           other: "%{count} záloh na %{location}"
         lastest_backup: "Poslední: %{date}"
-        traffic_short: "Provoz"
-        traffic: "Webové požadavky na aplikaci"
-        page_views: "Zobrazení stránek"
-        page_views_short: "Zobrazení"
-        show_traffic_report: "Zobrazit detailní zprávu o provozu"
-        community_health: Zdraví komunity
-        moderators_activity: Aktivita moderátorů
         whats_new_in_discourse: Co je v Discourse nového?
-        activity_metrics: Ukazatelé aktivity
-        all_reports: "Všechny sestavy"
-        general_tab: "Základní"
-        moderation_tab: "Moderování"
-        security_tab: "Zabezpečení"
-        reports_tab: "Sestavy"
         report_filter_any: "jakýkoliv"
         disabled: Vypnuto
         timeout_error: Omlouváme se, dotaz trvá příliš dlouho, vyberte prosím kratší interval
@@ -6685,7 +6668,6 @@ cs:
             title: "Systémové soukromé zprávy"
             status: "Stav"
             discourse_updated: "Discourse aktualizován"
-            dashboard_updated: "Nástěnka aktualizována"
         reports_section:
           header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
@@ -6698,11 +6680,6 @@ cs:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
           crawler_learn_more: "Zjistit více"
-        period:
-          last_7_days: "Posledních 7 dní"
-          last_30_days: "Posledních 30 dní"
-          last_3_months: "Posledních 3 měsíců"
-          custom: "Přizpůsobené"
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           percent_change_tooltip: "%{percent} změna."
@@ -6756,9 +6733,6 @@ cs:
               many: "%{count} příspěvky"
               other: "%{count} příspěvky"
             deselect: "Zrušit výběr %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Protokol vyhledávání</a>'
-            disabled: 'Přehled trendů vyhledávání je zakázán. Pro shromažďování dat povolte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dotazy na protokol</a>.'
           average_chart_label: Zobrazují se průměry, nikoli součty
           sort_button: "Seřadit podle %{column}"
           sort_button_current: "Seřazeno podle %{column}, %{direction}"
@@ -6947,7 +6921,6 @@ cs:
               list: Seznam nejnovějších příspěvků a soukromých příspěvků. RSS je také podporován.
             revisions:
               read: "Získejte nejnovější nebo konkrétní revizi."
-              modify: "Skrýt, zobrazit nebo vrátit revize."
               permanently_delete: "Trvalé odstranění revize."
             tags:
               list: Seznam značek.
@@ -7237,20 +7210,9 @@ cs:
           site_contact_group_help: |
             Skupina, která dostane pozvánku ke všem automaticky zasílaným soukromým zprávám.
           your_organization: "Vaše organizace"
-          your_organization_description: "Tyto informace použijeme ve Smluvních podmínkách a Oznámení o ochraně osobních údajů, abychom ukázali, kdo provozuje web a pod kterou jurisdikcí."
           company_name: "Jméno"
-          company_name_warning: |
-            Pokud ponecháte prázdné, nebudou poskytnuty žádné standardní Smluvní podmínky ani Oznámení o ochraně osobních údajů.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Rozhodné právo"
-          governing_law_placeholder: "Provincie, stát nebo země"
-          governing_law_help: |
-            Uveďte jurisdikci pro právní podmínky webu, obvykle tam, kde je společnost registrována nebo kde působí.
-          city_for_disputes: "Město pro spory"
-          city_for_disputes_placeholder: "Město"
-          city_for_disputes_help: |
-            Uveďte město pro řešení právních sporů souvisejících s tímto fórem.
           extra_groups:
             heading: "Seznam skupin"
             description: "Další skupiny, které se zobrazují na stránce O tomto webu."
@@ -7459,7 +7421,6 @@ cs:
           uploading: "Nahrávání…"
           uploading_progress: "Nahrávání: %{progress}…"
           success: "'%{filename}' byl úspěšně nahraný. Soubor je nyní zpracováván a do minuty bude ukázán v seznamu. "
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Nastavení"
         operations:
           is_running: "Probíhá úloha..."
@@ -7817,8 +7778,6 @@ cs:
           title: "Barvy"
           edit: "Upravit"
           view: "Zobrazit"
-          set_default_light: "Nastavit jako světlou paletu ve výchozím motivu (%{theme})"
-          set_default_dark: "Nastavit jako tmavou paletu ve výchozím motivu (%{theme})"
           set_default_success: "%{schemeName} nastavena jako výchozí paleta pro %{themeName}"
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
@@ -8411,6 +8370,11 @@ cs:
           all: "Všichni uživatelé"
           activated: "Aktivován"
         approved: "Schválen?"
+        source: "Zdroj"
+        bots:
+          name: "Jméno"
+          username: "Uživatelské jméno"
+          trust_level: "Úroveň důvěry"
         titles:
           active: "Aktivní uživatelé"
           new: "Noví uživatelé"
@@ -8452,16 +8416,13 @@ cs:
           no_constructive_purpose: "Jejich akce nemají jiný konstruktivní cíl než vyvolat nesouhlas v komunitě."
           custom: "Vlastní…"
         suspend_message: "e-mailová zpráva"
-        suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Pozastavil/a"
         silence_reason: "Důvod"
         silenced_by: "Ztišený uživatelem"
         silence_modal_title: "Ztišení uživatele"
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
-        silence_reason_label: "Proč ztišujete tohoto uživatele?"
+        silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
-        silence_message: "e-mailová zpráva"
-        silence_message_placeholder: "()"
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být pozastaven"
@@ -8803,6 +8764,8 @@ cs:
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
         search_label: "Vyhledat"
+        preview:
+          default: "Výchozí"
         theme_disabled: "Vypnuto"
         filters: "Filtry"
         title: "Texty"
@@ -8974,7 +8937,7 @@ cs:
           modal_title: Skupiny odznaků
         granted_by: Uděleno
         granted_at: Uděleno v
-        reason_help: (Odkaz na příspěvek nebo téma)
+        reason_help: Odkaz na příspěvek nebo téma
         save: Uložit
         delete: Smazat
         delete_confirm: Určitě chcete tento oznak smazat?

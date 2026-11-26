@@ -76,6 +76,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
+  @tracked contextualToolbar;
 
   formattingToolbar = this.#buildToolbar();
   richEditorExtensions;
@@ -83,11 +84,14 @@ export default class ChatComposer extends Component {
   // chat addresses the whole channel with @all
   globalMentions = ["all"];
 
+  #addUploads;
+  #richEditorLoading;
+
   constructor() {
     super(...arguments);
 
     if (this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       this.#loadRichEditor();
     }
   }
@@ -124,7 +128,9 @@ export default class ChatComposer extends Component {
   get shouldRenderMessageDetails() {
     return (
       this.draft?.editing ||
-      (this.context === "channel" && this.draft?.inReplyTo)
+      (!!this.draft?.inReplyTo &&
+        (this.siteSettings.chat_thread_improvements ||
+          this.context === "channel"))
     );
   }
 
@@ -219,6 +225,21 @@ export default class ChatComposer extends Component {
     return keymap;
   }
 
+  get showBroadcastOption() {
+    return false;
+  }
+
+  get broadcastChecked() {
+    return false;
+  }
+
+  get broadcastOptionLabel() {
+    return "";
+  }
+
+  @action
+  toggleBroadcast() {}
+
   @action
   persistDraft() {}
 
@@ -238,8 +259,8 @@ export default class ChatComposer extends Component {
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
-        ...options,
         triggerRule: async () => !(await textManipulation.inCodeBlock()),
+        ...options,
       })
     );
 
@@ -261,17 +282,47 @@ export default class ChatComposer extends Component {
     const preference = toggledCompositionMode(this.currentUser);
 
     if (!this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       await this.#loadRichEditor();
     }
 
     // Removing a focused editor mid-render would flip isFocused during the
     // same render that reads it.
     this.editor?.element.blur();
+    this.contextualToolbar = null;
 
     setCompositionMode(this.currentUser, preference);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  replaceToolbar(toolbar, owner) {
+    if (toolbar === null && owner && this.contextualToolbar !== owner) {
+      return;
+    }
+    this.contextualToolbar = toolbar;
+  }
+
+  @action
+  setupUploads(addUploads) {
+    this.#addUploads = addUploads;
+  }
+
+  @action
+  uploadFiles(files) {
+    if (!this.canAttachUploads || !this.#addUploads) {
+      return false;
+    }
+    return this.#addUploads(files, { pasted: true });
+  }
+
+  // the mode is a user preference shared with other open composers
+  @action
+  didUpdateEditorMode() {
+    if (this.useRichEditor) {
+      this.#loadRichEditor();
+    }
   }
 
   @action
@@ -336,7 +387,7 @@ export default class ChatComposer extends Component {
 
   @action
   teardown() {
-    this.composer.stopAwaitingEditor();
+    this.composer.stopAwaitingEditor(this);
     this.pane.sending = false;
   }
 
@@ -392,6 +443,7 @@ export default class ChatComposer extends Component {
       this.draft.uploads = cloneJSON(uploads);
       this.persistDraft();
     }
+    this.args.onUploadActivity?.(this.inProgressUploadsCount);
   }
 
   @action
@@ -426,7 +478,9 @@ export default class ChatComposer extends Component {
     }
 
     await this.args.onSendMessage(this.draft);
-    this.#refreshTextareaHeight();
+    if (!this.isDestroying) {
+      this.#refreshTextareaHeight();
+    }
   }
 
   async reactingToLastMessage() {
@@ -465,7 +519,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel || !this.draft) {
+    if (!this.args.channel || !this.draft || !this.presenceChannelName) {
       return;
     }
 
@@ -539,10 +593,11 @@ export default class ChatComposer extends Component {
   }
 
   async #loadRichEditor() {
-    if (this.richEditorComponent) {
-      return;
-    }
+    this.#richEditorLoading ??= this.#importRichEditor();
+    await this.#richEditorLoading;
+  }
 
+  async #importRichEditor() {
     const component = await loadRichEditor();
 
     // read after the load, which registers the default extensions; mobile
@@ -553,7 +608,9 @@ export default class ChatComposer extends Component {
         ...getExtensions(),
         // the formatting bar already offers the same buttons
         selectionToolbarExtension(() =>
-          this.showFormattingBar ? null : selectionToolbar
+          this.showFormattingBar || this.contextualToolbar
+            ? null
+            : selectionToolbar
         ),
       ];
     }
@@ -753,7 +810,19 @@ export default class ChatComposer extends Component {
       >
         <div class="chat-composer__outer-container">
           <div class="chat-composer__inner-container">
-            {{#if this.showFormattingRow}}
+            {{#if
+              (and
+                this.useRichEditor this.contextualToolbar (not this.disabled)
+              )
+            }}
+              <div
+                aria-label={{i18n "chat.composer.formatting"}}
+                class="chat-composer__contextual-toolbar"
+                role="toolbar"
+              >
+                <ToolbarButtons @data={{this.contextualToolbar}} />
+              </div>
+            {{else if this.showFormattingRow}}
               <div
                 aria-label={{i18n "chat.composer.formatting"}}
                 class="chat-composer__formatting-bar"
@@ -773,6 +842,7 @@ export default class ChatComposer extends Component {
               <div
                 class="chat-composer__input-container"
                 {{on "click" this.focusOrPromptLogin}}
+                {{didUpdate this.didUpdateEditorMode this.useRichEditor}}
               >
                 {{#if this.editorComponent}}
                   <this.editorComponent
@@ -792,9 +862,11 @@ export default class ChatComposer extends Component {
                     @onSetup={{this.setupEditor}}
                     @onSubmit={{this.onSend}}
                     @placeholder={{this.placeholder}}
+                    @replaceToolbar={{this.replaceToolbar}}
                     @submitOnEnter={{this.submitOnEnter}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
+                    @uploadFiles={{this.uploadFiles}}
                     @value={{this.draft.message}}
                   />
                 {{/if}}
@@ -839,6 +911,17 @@ export default class ChatComposer extends Component {
             </div>
           </div>
         </div>
+
+        {{#if this.showBroadcastOption}}
+          <label class="chat-composer__broadcast-option checkbox-label">
+            <input
+              checked={{this.broadcastChecked}}
+              type="checkbox"
+              {{on "change" this.toggleBroadcast}}
+            />
+            <span>{{this.broadcastOptionLabel}}</span>
+          </label>
+        {{/if}}
       </div>
 
       {{#if this.canAttachUploads}}
@@ -846,16 +929,19 @@ export default class ChatComposer extends Component {
           @composerInputEl={{this.editor.element}}
           @existingUploads={{this.draft.uploads}}
           @fileUploadElementId={{this.fileUploadElementId}}
+          @onSetup={{this.setupUploads}}
           @onUploadChanged={{this.onUploadChanged}}
           @uploadDropZone={{@uploadDropZone}}
         />
       {{/if}}
 
-      <div class="chat-replying-indicator-container">
-        <ChatReplyingIndicator
-          @presenceChannelName={{this.presenceChannelName}}
-        />
-      </div>
+      {{#if this.presenceChannelName}}
+        <div class="chat-replying-indicator-container">
+          <ChatReplyingIndicator
+            @presenceChannelName={{this.presenceChannelName}}
+          />
+        </div>
+      {{/if}}
     </div>
   </template>
 }

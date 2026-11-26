@@ -1,13 +1,15 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import pretender, {
   fixturesByUrl,
+  parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
@@ -112,6 +114,66 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".dialog-container .btn-primary");
 
     sinon.assert.calledOnce(stub);
+  });
+
+  test("disables the settings only the user can use on another user's account", async function (assert) {
+    await visit("/u/charlie/preferences/account");
+
+    assert
+      .dom(".pref-data-export .access-notice.--self")
+      .exists("explains only the user can export their data");
+    assert
+      .dom(".btn-request-archive")
+      .isDisabled("disables requesting an archive");
+
+    await click(".user-nav__preferences-calendar-subscriptions a");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.calendar-subscriptions",
+      "opens the calendar subscriptions page"
+    );
+    assert
+      .dom(".calendar-subscriptions .access-notice.--self")
+      .exists("explains only the user can subscribe");
+    assert
+      .dom(".calendar-subscriptions .btn-primary")
+      .isDisabled("disables generating subscription URLs");
+  });
+
+  test("explains once that only the user can connect accounts", async function (assert) {
+    const site = this.owner.lookup("service:site");
+    site.set("auth_providers", [
+      ...site.auth_providers,
+      { name: "github", can_connect: true, can_revoke: true },
+    ]);
+    pretender.get("/u/charlie/emails.json", () =>
+      response({ email: "charlie@example.com", associated_accounts: [] })
+    );
+
+    await visit("/u/charlie/preferences/account");
+    await click(".pref-associated-accounts .btn");
+
+    assert
+      .dom(".pref-associated-accounts .access-notice.--self")
+      .exists({ count: 1 }, "shows the notice once");
+    assert
+      .dom(".pref-associated-accounts .associated-account__actions .btn")
+      .exists({ count: 2 })
+      .isDisabled("disables connecting accounts");
+  });
+
+  test("loads your calendar subscription after viewing another user's", async function (assert) {
+    pretender.get("/calendar-subscriptions.json", () =>
+      response({ has_subscription: true })
+    );
+
+    await visit("/u/charlie/preferences/calendar-subscriptions");
+    await visit("/u/eviltrout/preferences/calendar-subscriptions");
+
+    assert
+      .dom(".calendar-subscriptions__active")
+      .exists("shows your active subscription");
   });
 
   test("Delete dialog", async function (assert) {
@@ -331,6 +393,43 @@ acceptance("User Preferences - Account", function (needs) {
     assert
       .dom(".avatar-choice--associated-account")
       .doesNotExist("provider choices require the same permission as uploads");
+  });
+
+  test("saves the selected primary group", async function (assert) {
+    this.siteSettings.user_selected_primary_groups = true;
+    customUserProps = {
+      primary_group_id: null,
+      groups: [
+        { id: 44, name: "ubuntu", automatic: false },
+        { id: 47, name: "discourse", automatic: false },
+      ],
+    };
+
+    let savedUserData;
+    pretender.put("/u/eviltrout.json", (request) => {
+      savedUserData = parsePostData(request.requestBody);
+      return response({ user: {} });
+    });
+
+    await visit("/u/eviltrout/preferences/account");
+
+    const primaryGroup = selectKit(".pref-primary-group .combo-box");
+    await primaryGroup.expand();
+    await primaryGroup.selectRowByValue(47);
+
+    assert.strictEqual(
+      primaryGroup.header().value(),
+      "47",
+      "shows the selected group"
+    );
+
+    await click(".save-changes");
+
+    assert.strictEqual(
+      savedUserData.primary_group_id,
+      "47",
+      "saves the selected group as the primary group"
+    );
   });
 });
 

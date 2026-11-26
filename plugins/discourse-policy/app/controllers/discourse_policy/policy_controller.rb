@@ -83,7 +83,9 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
 
     raise Discourse::NotFound if !guardian.can_see?(@post)
 
-    return render_json_error(I18n.t("discourse_policy.errors.no_policy")) if !@post.post_policy
+    if !@post.post_policy || @post.system_message?
+      return render_json_error(I18n.t("discourse_policy.errors.no_policy"))
+    end
 
     @group_ids = @post.post_policy.groups.pluck(:id)
 

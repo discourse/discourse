@@ -590,6 +590,55 @@ describe DiscourseMcp::Tools do
   end
 
   describe DiscourseMcp::Tools::CreateTheme do
+    it "rejects upload references for inline code before creating a component" do
+      fields = [{ "name" => "party", "target" => "extra_js", "type" => "js", "upload_id" => 2 }]
+
+      expect do
+        described_class.call(
+          arguments: {
+            "name" => "Party component",
+            "component" => true,
+            "theme_fields" => fields,
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(
+        DiscourseMcp::ToolError,
+        I18n.t("mcp.errors.theme_inline_field_upload", name: "party"),
+      )
+      expect(Theme.where(name: "Party component")).not_to exist
+    end
+
+    it "creates an upload variable only when its upload exists" do
+      missing_upload_id = Upload.maximum(:id).to_i + 1
+      fields = [
+        {
+          "name" => "logo",
+          "target" => "common",
+          "type" => "theme_upload_var",
+          "upload_id" => missing_upload_id,
+        },
+      ]
+      arguments = { "name" => "Assets", "component" => true, "theme_fields" => fields }
+      expect do
+        described_class.call(arguments: arguments, request_context: request_context(admin))
+      end.to raise_error(DiscourseMcp::ToolError, I18n.t("mcp.errors.theme_field_upload_not_found"))
+
+      upload = Fabricate(:upload, user: admin)
+      fields.first["upload_id"] = upload.id
+      fields.first["value"] = "body { color: red; }"
+      expect do
+        described_class.call(arguments: arguments, request_context: request_context(admin))
+      end.to raise_error(DiscourseMcp::ToolError, I18n.t("mcp.errors.theme_field_source_conflict"))
+
+      fields.first.delete("value")
+      result = described_class.call(arguments: arguments, request_context: request_context(admin))
+
+      expect(result.dig(:structuredContent, :theme, :theme_fields)).to contain_exactly(
+        include(name: "logo", upload_id: upload.id),
+      )
+    end
+
     it "creates a theme with fields for an admin and rejects everyone else" do
       expect do
         described_class.call(
@@ -667,6 +716,28 @@ describe DiscourseMcp::Tools do
   describe DiscourseMcp::Tools::UpdateTheme do
     fab!(:theme) { Fabricate(:theme, user: admin) }
 
+    it "rejects missing source without modifying existing theme fields" do
+      theme.set_field(target: :common, name: "scss", value: "body { color: red; }")
+      theme.save!
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "name" => "Should not persist",
+            "theme_fields" => [{ "name" => "scss", "target" => "common" }],
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(
+        DiscourseMcp::ToolError,
+        I18n.t("mcp.errors.theme_field_value_required", name: "scss"),
+      )
+
+      expect(theme.reload.name).not_to eq("Should not persist")
+      expect(theme.theme_fields.find_by(name: "scss").value).to eq("body { color: red; }")
+    end
+
     it "is admin-only" do
       expect do
         described_class.call(
@@ -677,6 +748,44 @@ describe DiscourseMcp::Tools do
           request_context: request_context(moderator),
         )
       end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "respects plugin restrictions on theme edits" do
+      component = Fabricate(:theme, component: true, name: "Restricted")
+      plugin = Plugin::Instance.new
+      modifier = proc { |allowed, _guardian, target| allowed && target.id != component.id }
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => component.id,
+            "name" => "Renamed",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "child_theme_ids" => [component.id],
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(component.reload.name).to eq("Restricted")
+      expect(theme.reload.child_theme_ids).to be_empty
+    ensure
+      if plugin
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
     end
 
     it "updates attributes and fields" do

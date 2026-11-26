@@ -287,6 +287,28 @@ onDirtyCheck(transition) {
 <Form @onDirtyCheck={{this.onDirtyCheck}} />
 ```
 
+### @layout
+
+`stacked` (default) or `horizontal`. The horizontal layout puts each field's title in a label column and its control, help text, errors and description in a value column. Use it for settings pages that people revisit to check or change values; keep the stacked layout for forms filled in once.
+
+The description renders under the control and help text. Below the `sm` breakpoint (40rem), horizontal fields stack like the default layout, with the description above the control. Checkbox fields never stack. Every field keeps its title in the label column and its control in the value column, whatever its `@format`.
+
+Checkbox fields render their title in the label column and the checkbox, followed by the caption block if there is one, in the value column.
+
+**Example**
+
+```hbs
+<Form @layout="horizontal" as |form|>
+  <form.Field @name="title" @title="Site title" @type="input" as |field|>
+    <field.Control />
+  </form.Field>
+
+  <form.Field @name="enabled" @title="Enabled" @type="checkbox" as |field|>
+    <field.Control />
+  </form.Field>
+</Form>
+```
+
 # Field
 
 ## @name
@@ -620,7 +642,11 @@ Displays date picker expanded on desktop. Defaults to true.
 
 ## Code
 
-Renders an `<AceEditor />` component.
+Renders a `<CodeEditor />` component.
+
+Tab indents and Shift-Tab outdents. To move keyboard focus out of the editor,
+press Escape and then Tab (or Shift-Tab). If a completion or search panel is
+open, close it with Escape first.
 
 ### @height
 
@@ -628,7 +654,8 @@ Sets the height of the editor in pixels.
 
 ### @lang
 
-Sets the editor mode.
+Sets the language shortcut: one of `css`, `html`, `javascript`, `json`, `scss`,
+`sql`, `text`, `yaml`, or a name registered with `api.registerCodeEditorLanguage`.
 
 **Example**
 
@@ -652,6 +679,8 @@ Common control arguments:
 - `@collapseSwatchesLabel`: label for the collapsed swatches button
 - `@allowNamedColors`: allow named colors instead of only hex values
 - `@fallbackValue`: value to restore on blur when left blank
+
+The optional `<:prefix>` block replaces the `#` inside the hex prefix.
 
 **Example**
 
@@ -738,7 +767,7 @@ Passes the picker context through to `<EmojiPicker />`.
 
 ## Icon
 
-Renders an `<IconPicker />` component.
+Renders a `<DIconGridPicker />` component.
 
 **Example**
 
@@ -872,6 +901,17 @@ Renders text after the input
 ## Menu
 
 Renders a `<DMenu />` trigger with yielded menu content.
+
+### @preservePlacement
+
+Pass `@preservePlacement={{true}}` to `<field.Control>` to keep the menu's initially
+resolved placement until it closes. This prevents filtered results from making an
+open menu flip between above and below its trigger. Scrolling and viewport resizing
+still update its position. Each opening chooses its placement again. Defaults to `false`.
+
+The menu will not switch sides if its content grows or the available space on the
+chosen side decreases. Enabled shifting and viewport height constraints still apply;
+use a constrained, scrollable content area for results that may grow.
 
 ### @selection
 

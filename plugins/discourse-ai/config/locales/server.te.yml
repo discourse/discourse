@@ -50,6 +50,8 @@ te:
           color: "రంగు"
         approve_label: "అవును"
         reject_label: "లేదు"
+        category_access_levels:
+          readonly: "చూడు"
       tool_summary:
         suspend_user: "సభ్యుడిని సస్పెండు చేయండి"
         silence_user: "సభ్యుని నిశ్శబ్దం చేయండి"
@@ -57,6 +59,17 @@ te:
         time: "కాలం"
       tool_help:
         create_category: "కొత్త వర్గాన్ని సృష్టించండి"
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "హెడర్"
+      fonts:
+        base_font: "బాడీ ఫాంట్"
+        heading_font: "శీర్షిక ఫాంట్"
+    mcp_theme_access:
+      none: "ఏదీకాదు"
+    mcp_app_setup:
+      none: "ఏదీకాదు"
     reviewables:
       ai_tool_action:
         approve:

@@ -47,7 +47,9 @@ module Jobs
         payload.merge!(translated)
       end
 
-      PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
+      if user.push_subscriptions.with_unexpired_login.exists?
+        PushNotificationPusher.push(user, payload.deep_dup)
+      end
       HubPushNotificationPusher.push(user, payload.deep_dup)
     end
 

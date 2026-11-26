@@ -358,8 +358,6 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_embedded_media_allowed_group: "Deja, jūs negalite įterpti medijos elementų į įrašą."
-  no_embedded_media_allowed: "Atsiprašome, nauji vartotojai negali įterpti medijos elementų į įrašus."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   links_require_trust: "Atsiprašome, negalite įtraukti nuorodų į savo įrašus."
@@ -1333,7 +1331,6 @@ lt:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
   site_settings:
-    dsa_community_rules: "Bendruomenės taisyklės, kurias galima naudoti DSA klasifikavimui, kai įjungta funkcija „ {{setting:dsa_reporting_enabled}} “. Kiekvienai taisyklei reikia nurodyti tikslią nuorodą į sutartį (iki 500 simbolių) ir paaiškinimą (iki 2000 simbolių). Norėdami išjungti klasifikavimą, palikite lauką tuščią."
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
     censored_words: "Žodžiai, kurie bus automatiškai pakeisti &#9632;&#9632;&#9632;&#9632;"
@@ -1495,7 +1492,6 @@ lt:
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
     enable_names: "Rodyti visą vartotojo vardą jo profilyje, vartotojo kortelėje ir el. laiškuose. Išjungti, kad visur paslėptumėte visą vardą."
     display_name_on_posts: "Rodyti visą vartotojo vardą jo įrašuose, be @naudotojo vardo."
-    short_progress_text_threshold: "Kai pranešimų skaičius temoje viršys šį skaičių, eigos juostoje bus rodomas tik dabartinis įrašo numeris. Jei pakeisite eigos juostos plotį, gali tekti pakeisti šią reikšmę."
     show_copy_button_on_codeblocks: "Pridėkite mygtuką prie kodų blokų, kad nukopijuotumėte bloko turinį į vartotojo iškarpinę."
     embed_post_limit: "Maskimalus įterpiamų įrašų skaičius."
     embed_username_required: "Kuriant temą reikalingas vartotojo vardas."
@@ -1548,7 +1544,15 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
-      uncategorized_category_missing: "Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja."
+      uncategorized_category_missing: 'Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja.'
+    keywords:
+      company_url: "interneto svetainė"
+      large_icon: "kvadratinė ikona"
+      logo: "pagrindinis logotipas"
+      logo_dark: "pagrindinis logotipas (tamsus)"
+      logo_small: "mažas logotipas"
+      logo_small_dark: "mažas logotipas (tamsus)"
+      welcome_banner_image: "fono paveikslėlis"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1741,31 +1745,9 @@ lt:
       title: "Įrašas paslėptas"
     post_hidden_again:
       title: "Įrašas vėl paslėptas"
-      text_body_template: |
-        Sveiki,
-
-        Tai automatinis pranešimas nuo %{site_name} skirtas pranešti, kad jūsų įrašas vėl buvo paslėptas.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Bendruomenė pažymėjo šį įrašą ir dabar yra paslėpta. ** Kadangi šis įrašas buvo paslėptas daugiau nei vieną kartą, jūsų įrašas liks paslėptas, kol jo nesutvarkys darbuotojas. **
-
-        Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     queued_by_staff:
       title: "Įrašui reikalingas patvirtinimas"
       subject_template: "Įrašą paslėpė darbuotojai, laukiama patvirtinimo"
-      text_body_template: |
-        Sveiki,
-
-        Tai automatinis pranešimas nuo %{site_name} skirtas pranešti, kad jūsų pranešimas buvo paslėptas.
-
-        <%{base_url}%{url}>
-
-        Jūsų įrašas liks paslėptas, kol darbuotojas jį peržiūrės.
-
-        Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     flags_agreed_and_post_deleted_for_responders:
       title: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
       subject_template: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
@@ -2128,12 +2110,6 @@ lt:
     account_suspended_forever:
       title: "Paskyra sustabdyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
-    account_silenced:
-      title: "Paskyra nutildyta"
-      subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
-    account_silenced_forever:
-      title: "Paskyra nutildyta"
-      subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
     account_exists:
       title: "Paskyra jau egzistuoja"
       subject_template: "[%{email_prefix}] Paskyra jau egzistuoja"
@@ -2307,10 +2283,6 @@ lt:
     signup_after_reject:
       title: "Registracija po atmetimo"
       subject_template: "Jūs buvote atmestas %{site_name}"
-      text_body_template: |
-        Administracija atmetė jūsų paskyrą %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registruotis"
       subject_template: "[%{email_prefix}] Patvirtinkite savo naują paskyrą"
@@ -2685,6 +2657,11 @@ lt:
   design_wizard:
     palette_pairs:
       default: "Numatytasis"
+      neutral: "Neutrali"
+      shades_of_blue: "Mėlynos spalvos atspalviai"
+      summer: "Vasara"
+      grey_amber: "Pilkas Gintaras"
+      latte: "Latte"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2703,13 +2680,28 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Kiekvieną dieną"
+        weekdays:
+          sunday: "Sekmadienis"
+          monday: "Pirmadienis"
+          tuesday: "Antradienis"
+          wednesday: "Trečiadienis"
+          thursday: "Ketvirtadienis"
+          friday: "Penktadienis"
+          saturday: "Šeštadienis"
     google_meet:
       meeting_code: "Kodas:"
     github:
+      header:
+        success: "Sėkmingai"
       closed: "uždaryta"
-      status_date:
-        approved: "patvirtinta"
-        closed: "uždaryta"
+      pr_status:
+        draft: "Juodraštis"
+        open: "Atidaryti"
+        approved: "Patvirtinta"
+        closed: "Uždaryta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2724,7 +2716,6 @@ lt:
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
       custom: "Pranešimas nuo %{username} %{site_title}"
   staff_action_logs:
-    admin_onboarding_topic_option: "Pasirinkta opcija: %{option}\nOpcijos ID: %{option_id}"
     not_found: "nerastas"
     unknown: "nežinoma"
     site_setting:
@@ -2760,6 +2751,10 @@ lt:
       links:
         category: kategorijos nustatymai
     actions:
+      answer_yes:
+        title: "Taip"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Taip"
       agree_and_keep_deleted:
@@ -2792,6 +2787,8 @@ lt:
         title: "Taip"
       approve_post:
         title: "Taip"
+      deny_and_delete_post:
+        complete: "Įrašas ištrintas."
       approve_post_closed:
         title: "Taip"
         complete: "Įrašas patvirtintas."

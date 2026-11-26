@@ -13,6 +13,30 @@ RSpec.describe ReviewableUser, type: :model do
   describe "#actions_for" do
     fab!(:reviewable)
 
+    it "requires classification for suspect account restrictions and avatar removal" do
+      user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:suspect_user_reviewable, target: user)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "delete_user",
+        "delete_user_block",
+        "suspend_user",
+        "silence_user",
+        "remove_avatar",
+      )
+    end
+
+    it "keeps registration approval actions outside classification" do
+      user = Fabricate(:user, approved: false, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:reviewable_user, target: user)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required)).to be_empty
+    end
+
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
@@ -20,6 +44,33 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:delete_user_block)).to eq(true)
       expect(actions.has?(:silence_user)).to eq(false)
       expect(actions.has?(:suspend_user)).to eq(false)
+    end
+
+    it "offers Deny account before Approve account for a signup with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_account.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve_user reviewables.actions.approve_user.action_title]])
+    end
+
+    it "offers Deny account and Approve account when a flag is added to a signup review" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable.add_score(
+        moderator,
+        ReviewableScore.types[:needs_approval],
+        reason: "account_flag",
+      )
+
+      actions = reviewable.actions_for(moderator.guardian)
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_account.title")
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.approve_user.action_title"],
+      )
     end
 
     context "when the user was flagged as a possible spammer" do
@@ -248,6 +299,53 @@ RSpec.describe ReviewableUser, type: :model do
   describe "#perform" do
     fab!(:reviewable)
 
+    it "rejects a registration without creating a statement when classification is supplied" do
+      enable_dsa_reporting
+      reviewable = Fabricate(:reviewable_user, target: Fabricate(:user, approved: false))
+
+      result =
+        reviewable.perform(
+          admin,
+          :delete_user,
+          reject_reason: "Membership is limited to employees.",
+          dsa_classification: {
+            community_rule: {
+              "ground" => "Be respectful",
+              "explanation" => "No personal attacks.",
+            },
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_rejected
+      expect(reviewable.dsa_statement_of_records).to be_empty
+    end
+
+    it "classifies avatar removal while leaving the account review pending" do
+      enable_dsa_reporting
+      user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:suspect_user_reviewable, target: user)
+
+      result =
+        reviewable.perform(
+          admin,
+          :remove_avatar,
+          dsa_classification: {
+            community_rule: {
+              "ground" => "Be respectful",
+              "explanation" => "No personal attacks.",
+            },
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(user.reload.uploaded_avatar_id).to be_nil
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.dsa_statement_of_records.sole).to be_ready
+    end
+
     context "when removing an avatar" do
       fab!(:avatar, :upload)
 
@@ -299,6 +397,44 @@ RSpec.describe ReviewableUser, type: :model do
     end
 
     context "when approving" do
+      it "lets staff close a review of an approved account without repeating signup approval" do
+        SiteSetting.review_queue_consistent_answers = true
+        SiteSetting.must_approve_users = true
+        reviewable.target.update!(approved: true, approved_by: admin, approved_at: 1.week.ago)
+        Jobs.run_later!
+
+        expect { reviewable.perform(user, :approve_account_review) }.to raise_error(
+          Reviewable::InvalidAction,
+        )
+        expect_not_enqueued_with(
+          job: :critical_user_email,
+          args: {
+            type: :signup_after_approval,
+          },
+        ) do
+          events =
+            DiscourseEvent.track_events { reviewable.perform(moderator, :approve_account_review) }
+          expect(events.map { |event| event[:event_name] }).not_to include(:user_approved)
+        end
+
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.target.approved_by_id).to eq(admin.id)
+        expect(
+          UserHistory.staff_action_records(moderator, action_name: :approve_account_review),
+        ).to contain_exactly(
+          have_attributes(
+            acting_user_id: moderator.id,
+            target_user_id: reviewable.target_id,
+            reviewable_id: reviewable.id,
+          ),
+        )
+        expect(
+          UserHistory.staff_action_records(moderator, action_name: :approve_user).where(
+            reviewable_id: reviewable.id,
+          ),
+        ).to be_empty
+      end
+
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)
         expect(result.success?).to eq(true)
@@ -493,7 +629,7 @@ RSpec.describe ReviewableUser, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_user handles the user reviewable" do

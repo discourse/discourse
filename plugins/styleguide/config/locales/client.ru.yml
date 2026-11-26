@@ -50,6 +50,9 @@ ru:
           title: "Шрифты"
         colors:
           title: "Цвета"
+        design_variables:
+          type: "Тип"
+          default: "Домашнюю страницу"
         dialog:
           title: "Диалог"
         drag_and_drop:

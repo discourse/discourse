@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import AdminEditableField from "discourse/admin/components/admin-editable-field";
@@ -14,6 +15,7 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
@@ -67,6 +69,30 @@ export default <template>
         @value={{@controller.model.username}}
       />
     </div>
+
+    {{#if @controller.isBot}}
+      <div class="display-row admin-user__bot-indicator">
+        <div class="field">{{i18n "admin.user.account_type"}}</div>
+        <div class="value">{{dIcon "robot"}} {{i18n "admin.user.bot"}}</div>
+      </div>
+    {{/if}}
+
+    {{#if @controller.canChangeBotInteractivity}}
+      <div class="display-row interactive-bot">
+        <div class="field">{{i18n "admin.users.bots.interactive_bot"}}</div>
+        <div class="value">
+          <DToggleSwitch
+            aria-label={{i18n "admin.users.bots.interactive_bot"}}
+            disabled={{@controller.savingBotInteractivity}}
+            @state={{@controller.model.interactive_bot}}
+            {{on "click" @controller.toggleBotInteractivity}}
+          />
+        </div>
+        <div class="controls">{{i18n
+            "admin.users.bots.interactive_bot_description"
+          }}</div>
+      </div>
+    {{/if}}
 
     <div class="display-row name">
       <AdminEditableField
@@ -457,7 +483,7 @@ export default <template>
         {{/if}}
         {{#if @controller.model.can_grant_moderation}}
           <DButton
-            class="btn-default"
+            class="btn-default grant-moderation"
             @action={{@controller.grantModeration}}
             @icon="shield-halved"
             @label="admin.user.grant_moderation"

@@ -3,19 +3,30 @@
 class PushNotificationPusher
   TOKEN_VALID_FOR_SECONDS = 5 * 60
   CONNECTION_TIMEOUT_SECONDS = 5
+  DELIVERY_DEADLINE_SECONDS = 10
+  SLOW_DELIVERY_SECONDS = 3
+  MAX_SUBSCRIPTIONS_PER_USER = 10
+  MAX_UNTRUSTED_SUBSCRIPTIONS_PER_USER = 2
+  MAX_UNTRUSTED_ERRORS = 2
+  SUBSCRIBE_RATE_LIMIT_PER_HOUR = 10
+
+  def self.push_icon_exists?(notification_icon_name)
+    @push_icon_exists ||= {}
+    @push_icon_exists.fetch(notification_icon_name) do
+      @push_icon_exists[notification_icon_name] = File.exist?(
+        File.expand_path(
+          "../../app/assets/images/push-notifications/#{notification_icon_name}.png",
+          __dir__,
+        ),
+      )
+    end
+  end
 
   def self.push(user, payload)
     message = nil
     I18n.with_locale(user.effective_locale) do
       notification_icon_name = Notification.types[payload[:notification_type]]
-      if !File.exist?(
-           File.expand_path(
-             "../../app/assets/images/push-notifications/#{notification_icon_name}.png",
-             __dir__,
-           ),
-         )
-        notification_icon_name = "discourse"
-      end
+      notification_icon_name = "discourse" unless push_icon_exists?(notification_icon_name)
       notification_icon =
         ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
 
@@ -26,16 +37,57 @@ class PushNotificationPusher
         icon: notification_icon,
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
-        url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
+        url: payload[:post_url]&.delete_prefix(Discourse.base_path),
       }
 
       message[:actions] = payload[:actions] if payload[:actions].present?
       message[:action_data] = payload[:action_data] if payload[:action_data].present?
 
-      subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
+      trusted, untrusted = subscriptions(user).partition { |subscription| trusted?(subscription) }
+      trusted.each { |subscription| send_notification(user, subscription, message) }
+
+      if untrusted.present?
+        Jobs::DeliverUntrustedPushNotifications.add(user_id: user.id, message: message)
+      end
     end
 
     message
+  end
+
+  # Called by Jobs::DeliverUntrustedPushNotifications, which limits slow hosts to one
+  # background worker per site.
+  def self.push_untrusted(user, message, subscription_id: nil)
+    scope = subscriptions(user)
+    scope = scope.where(id: subscription_id) if subscription_id
+
+    scope
+      .reject { |subscription| trusted?(subscription) }
+      .first(MAX_UNTRUSTED_SUBSCRIPTIONS_PER_USER)
+      .each { |subscription| send_notification(user, subscription, message) }
+  end
+
+  def self.trusted?(subscription)
+    host = endpoint_host(subscription.parsed_data["endpoint"])
+    return false if host.blank?
+
+    SiteSetting.push_notification_trusted_hosts_map.any? do |trusted_host|
+      host == trusted_host || host.end_with?(".#{trusted_host}")
+    end
+  rescue JSON::ParserError
+    false
+  end
+
+  def self.endpoint_host(endpoint)
+    URI.parse(endpoint.to_s).host&.downcase
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  # Browsers hand out endpoints on the reserved .invalid TLD for revoked
+  # subscriptions; they can never be delivered to.
+  def self.revoked_endpoint?(endpoint)
+    host = endpoint_host(endpoint)
+    host.present? && (host == "invalid" || host.end_with?(".invalid"))
   end
 
   def self.title(payload)
@@ -65,38 +117,82 @@ class PushNotificationPusher
   end
 
   def self.subscriptions(user)
-    user.push_subscriptions
+    user.push_subscriptions.with_unexpired_login.order(id: :desc).limit(MAX_SUBSCRIPTIONS_PER_USER)
   end
 
   def self.clear_subscriptions(user)
     user.push_subscriptions.clear
   end
 
-  def self.subscribe(user, push_params, send_confirmation)
+  def self.subscribe(user, push_params, send_confirmation, user_auth_token_id:)
+    return if revoked_endpoint?(push_params[:endpoint])
+
     data = push_params.to_json
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
-
-    new_subscription =
-      if subscriptions_count > 1
-        subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
-        PushSubscription.create!(user: user, data: data)
+    matching = user.push_subscriptions.where(data: data).order(id: :desc).to_a
+    if subscription = matching.shift
+      if subscription.user_auth_token_id != user_auth_token_id
+        subscription.update!(user_auth_token_id:)
       end
-
-    if send_confirmation == "true"
-      message = {
-        title:
-          I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
-        body: I18n.t("discourse_push_notifications.popup.confirm_body"),
-        icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-        badge: get_badge,
-        tag: "#{Discourse.current_hostname}-subscription",
-      }
-
-      send_notification(user, new_subscription, message)
+      PushSubscription.where(id: matching.map(&:id)).delete_all if matching.present?
+      return
     end
+
+    RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
+    subscription = user.push_subscriptions.create!(data: data, user_auth_token_id:)
+    prune_subscriptions(user)
+    DB.after_commit { confirm_subscription(user, subscription.id) } if send_confirmation == "true"
+  end
+
+  def self.confirm_subscription(user, subscription_id)
+    subscription = user.push_subscriptions.with_unexpired_login.find_by(id: subscription_id)
+    return unless subscription
+
+    message = {
+      title:
+        I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
+      body: I18n.t("discourse_push_notifications.popup.confirm_body"),
+      icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+      badge: get_badge,
+      tag: "#{Discourse.current_hostname}-subscription",
+    }
+
+    if trusted?(subscription)
+      send_notification(user, subscription, message)
+    else
+      Jobs::DeliverUntrustedPushNotifications.add(
+        user_id: user.id,
+        message: message,
+        subscription_id: subscription.id,
+      )
+    end
+  end
+
+  # Keeps the newest subscriptions so the most recently registered browsers still
+  # receive pushes, since users have no UI to manage older ones.
+  def self.prune_subscriptions(user)
+    subscriptions = user.push_subscriptions
+    live_login =
+      UserAuthToken.unexpired.where("user_auth_tokens.id = push_subscriptions.user_auth_token_id")
+    subscriptions.where.not(user_auth_token_id: nil).where.not(live_login.arel.exists).delete_all
+
+    untrusted_kept = 0
+    total_kept = 0
+
+    stale_ids =
+      subscriptions
+        .order(id: :desc)
+        .filter_map do |subscription|
+          if !trusted?(subscription)
+            next subscription.id if untrusted_kept >= MAX_UNTRUSTED_SUBSCRIPTIONS_PER_USER
+            untrusted_kept += 1
+          end
+
+          next subscription.id if total_kept >= MAX_SUBSCRIPTIONS_PER_USER
+          total_kept += 1
+          nil
+        end
+
+    PushSubscription.where(id: stale_ids).delete_all if stale_ids.present?
   end
 
   def self.unsubscribe(user, subscription)
@@ -115,15 +211,7 @@ class PushNotificationPusher
   MIN_ERROR_DURATION = 86_400 # 1 day
 
   def self.handle_generic_error(subscription, error, user, endpoint, message)
-    subscription.error_count += 1
-    subscription.first_error_at ||= Time.zone.now
-
-    delta = Time.zone.now - subscription.first_error_at
-    if subscription.error_count >= MAX_ERRORS && delta > MIN_ERROR_DURATION
-      subscription.destroy!
-    else
-      subscription.save!
-    end
+    record_error(subscription)
 
     Discourse.warn_exception(
       error,
@@ -136,6 +224,27 @@ class PushNotificationPusher
     )
   end
 
+  # Untrusted hosts lose the one-day grace period that covers outages at the
+  # browser vendors' push services, since a slow host is the attack itself.
+  def self.record_error(subscription)
+    subscription.error_count += 1
+    subscription.first_error_at ||= Time.zone.now
+
+    expired =
+      if trusted?(subscription)
+        subscription.error_count >= MAX_ERRORS &&
+          Time.zone.now - subscription.first_error_at > MIN_ERROR_DURATION
+      else
+        subscription.error_count >= MAX_UNTRUSTED_ERRORS
+      end
+
+    expired ? subscription.destroy! : subscription.save!
+  end
+
+  def self.monotonic_now
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
   def self.send_notification(user, subscription, message)
     parsed_data = subscription.parsed_data
 
@@ -143,12 +252,14 @@ class PushNotificationPusher
     p256dh = parsed_data.dig("keys", "p256dh")
     auth = parsed_data.dig("keys", "auth")
 
-    if endpoint.blank? || p256dh.blank? || auth.blank?
+    if endpoint.blank? || p256dh.blank? || auth.blank? || revoked_endpoint?(endpoint)
       subscription.destroy!
       return
     end
 
     begin
+      started_at = monotonic_now
+
       WebPush.payload_send(
         endpoint: endpoint,
         message: message.to_json,
@@ -163,9 +274,12 @@ class PushNotificationPusher
         open_timeout: CONNECTION_TIMEOUT_SECONDS,
         read_timeout: CONNECTION_TIMEOUT_SECONDS,
         ssl_timeout: CONNECTION_TIMEOUT_SECONDS,
+        total_timeout: DELIVERY_DEADLINE_SECONDS,
       )
 
-      if subscription.first_error_at || subscription.error_count != 0
+      if monotonic_now - started_at > SLOW_DELIVERY_SECONDS && !trusted?(subscription)
+        record_error(subscription)
+      elsif subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
 
@@ -188,6 +302,12 @@ class PushNotificationPusher
     end
   end
 
+  private_class_method :confirm_subscription
   private_class_method :send_notification
   private_class_method :handle_generic_error
+  private_class_method :record_error
+  private_class_method :monotonic_now
+  private_class_method :prune_subscriptions
+  private_class_method :endpoint_host
+  private_class_method :revoked_endpoint?
 end

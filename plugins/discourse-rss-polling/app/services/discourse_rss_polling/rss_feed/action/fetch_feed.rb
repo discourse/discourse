@@ -57,6 +57,7 @@ module DiscourseRssPolling
               request_url,
               headers:,
               timeout: SiteSetting.rss_polling_feed_request_timeout,
+              total_timeout: SiteSetting.rss_polling_feed_request_timeout,
             )
 
           fd.get do |response, chunk, uri|

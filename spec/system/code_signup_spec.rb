@@ -72,6 +72,23 @@ describe "Sign up via email code" do
     expect(user.user_password).to be_nil
   end
 
+  it "rolls a new random username on a login-required site" do
+    SiteSetting.enable_random_usernames = true
+    SiteSetting.login_required = true
+
+    open_code_signup
+    submit_email("new.person@example.com")
+    fill_code(latest_emailed_code("new.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__signup-details-step")
+    generated = find("#code-login-username").value
+
+    find(".code-login-form__username-regen").click
+
+    expect(page).to have_no_field("code-login-username", with: generated)
+    expect(page).to have_no_css(".dialog-container")
+  end
+
   it "shows a single heading that is replaced as the flow advances" do
     open_code_signup
 
@@ -339,7 +356,7 @@ describe "Sign up via email code" do
     expect(page).to have_content("Engineer")
     review_page.click_approve_user_button
 
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
     expect(user.reload).to be_approved
     approval_email = ActionMailer::Base.deliveries.last
     expect(approval_email.to).to contain_exactly(email)
@@ -401,7 +418,7 @@ describe "Sign up via email code" do
     review_page.visit_reviewable(reviewable)
     review_page.click_approve_user_button
 
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
     approval_email = ActionMailer::Base.deliveries.last
     expect(approval_email.body.to_s).to include("logging in at:")
     expect(approval_email.body.to_s).not_to include("request a fresh login code")

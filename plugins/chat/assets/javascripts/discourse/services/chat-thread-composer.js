@@ -18,7 +18,12 @@ export default class ChatThreadComposer extends ChatComposerService {
   }
 
   @action
-  replyTo() {
+  replyTo(message) {
     this.chat.activeMessage = null;
+    message.thread.draft.inReplyTo = message;
+
+    if (this.site.desktopView) {
+      this.focus({ ensureAtEnd: true, refreshHeight: true });
+    }
   }
 }

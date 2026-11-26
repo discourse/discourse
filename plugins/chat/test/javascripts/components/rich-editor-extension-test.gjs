@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   registerRichEditorExtension,
@@ -60,6 +61,121 @@ haha **ok** _cool_
       assert.dom(".chat-transcript-group__channel img[title='tada']").exists();
 
       assert.strictEqual(value, singleMessageSingleUserMarkdown);
+    });
+
+    test("keeps only the text of pasted inline HTML chat can't show", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const [editor] = await setupRichEditor(assert, "", {
+        markdownOptions: {
+          featuresOverride: chat.limited_pretty_text_features,
+          markdownItRules: chat.limited_pretty_text_markdown_rules,
+        },
+      });
+
+      editor.view.pasteHTML("<p>H<sub>2</sub>O is <abbr>wet</abbr></p>");
+      await settled();
+
+      assert.strictEqual(editor.value, "H2O is wet");
+    });
+
+    test("keeps the text of a lone pasted inline HTML element", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+
+      const [editor] = await setupRichEditor(assert, "", { markdownOptions });
+      editor.view.pasteHTML("<p><sub>2</sub></p>");
+      await settled();
+
+      assert.strictEqual(editor.value, "2");
+    });
+
+    test("keeps pasted inline HTML chat can show", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+
+      const [editor] = await setupRichEditor(assert, "", { markdownOptions });
+      editor.view.pasteHTML(
+        "<p>press <kbd>Ctrl</kbd> to <mark>go</mark> now</p>"
+      );
+      await settled();
+      assert.strictEqual(
+        editor.value,
+        "press <kbd>Ctrl</kbd> to <mark>go</mark> now"
+      );
+    });
+
+    test("keeps inline HTML chat can show in pasted text", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const [editor] = await setupRichEditor(assert, "", {
+        markdownOptions: {
+          featuresOverride: chat.limited_pretty_text_features,
+          markdownItRules: chat.limited_pretty_text_markdown_rules,
+        },
+      });
+      editor.view.pasteText("press <kbd>Ctrl</kbd> to <mark>go</mark> now");
+      await settled();
+      assert.strictEqual(
+        editor.value,
+        "press <kbd>Ctrl</kbd> to <mark>go</mark> now"
+      );
+    });
+
+    test("keeps typed inline HTML as text in chat", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const [editor] = await setupRichEditor(assert, "", {
+        markdownOptions: {
+          featuresOverride: chat.limited_pretty_text_features,
+          markdownItRules: chat.limited_pretty_text_markdown_rules,
+        },
+      });
+      const { view } = editor;
+
+      view.dispatch(view.state.tr.insertText("x <sup"));
+      const { from, to } = view.state.selection;
+      const handled = view.someProp("handleTextInput", (f) =>
+        f(view, from, to, ">")
+      );
+      if (!handled) {
+        view.dispatch(view.state.tr.insertText(">"));
+      }
+      await settled();
+
+      assert.strictEqual(editor.value, "x <sup>");
+    });
+
+    test("loads chat's inline HTML and transcripts with chat's markdown limits", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+      const markdown = `press <kbd>Ctrl</kbd> to <mark>continue</mark> now
+
+[chat quote="hunter;29856;2025-03-20T07:13:04Z" channel="design gems" channelId=95]
+haha **ok**
+[/chat]
+`;
+
+      const [{ value }] = await setupRichEditor(assert, markdown, {
+        markdownOptions,
+      });
+
+      assert.dom(".ProseMirror kbd").hasText("Ctrl");
+      assert.dom(".ProseMirror mark").hasText("continue");
+      assert.dom(".ProseMirror .chat-transcript").exists();
+      assert.strictEqual(value, markdown);
     });
 
     test("escapes HTML in transcript usernames", async function (assert) {

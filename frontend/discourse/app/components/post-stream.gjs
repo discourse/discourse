@@ -31,8 +31,6 @@ export default class PostStream extends Component {
   @service search;
   @service siteSettings;
 
-  @tracked cloakAbove;
-  @tracked cloakBelow;
   @tracked keyboardSelection;
   @tracked suppressLoadAbove = false;
 
@@ -241,21 +239,6 @@ export default class PostStream extends Component {
   }
 
   @action
-  setCloakingBoundaries(above, below) {
-    // requesting an animation frame to update the cloaking boundaries prevents Chrome from logging
-    // [Violation] 'setTimeout' handler took <N>ms when scrolling fast
-    requestAnimationFrame(() => {
-      if (this.cloakAbove === above && this.cloakBelow === below) {
-        // prevent Ember from trying to rerender the cloaking logic if the boundaries did not change
-        return;
-      }
-
-      this.cloakAbove = above;
-      this.cloakBelow = below;
-    });
-  }
-
-  @action
   updateKeyboardSelectedPostNumber({ selectedArticle: element }) {
     next(() => {
       const postNumber = parseInt(element.dataset.postNumber, 10);
@@ -308,7 +291,6 @@ export default class PostStream extends Component {
         currentPostScrolled=@currentPostScrolled
         headerOffset=this.header.headerOffset
         screenTrack=this.screenTrack
-        setCloakingBoundaries=this.setCloakingBoundaries
         topicId=@topic.id
       }}
     >
@@ -354,9 +336,7 @@ export default class PostStream extends Component {
 
             {{#let
               (if post.isSmallAction PostSmallAction Post)
-              (this.viewportTracker.getCloakingData
-                post above=this.cloakAbove below=this.cloakBelow
-              )
+              (this.viewportTracker.getCloakingData post)
               (this.isPostKeyboardSelected post.post_number)
               (concat "post_" post.post_number)
               as |PostComponent cloakingData keyboardSelected postId|

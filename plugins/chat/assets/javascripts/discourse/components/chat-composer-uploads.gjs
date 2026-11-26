@@ -75,6 +75,7 @@ export default class ChatComposerUploads extends Component {
 
   #previews = new WeakMap();
   _pasteTarget = null;
+  _receivedUploads = null;
 
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
@@ -86,12 +87,39 @@ export default class ChatComposerUploads extends Component {
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
+    this._listenForPaste(this.composerInputEl);
+
+    // switching editors swaps the input element; only a new draft resets uploads
+    const existingUploads = this.existingUploads ?? null;
+    if (this.uploads && this._receivedUploads === existingUploads) {
+      return;
+    }
+    this._receivedUploads = existingUploads;
+
     if (this.inProgressUploads?.length > 0) {
       this.uppyUpload.cancelAllUploads();
     }
 
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
-    this._listenForPaste(this.composerInputEl);
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.onSetup?.(this.addFiles);
+  }
+
+  // Declines files the uploader would reject as too many, since it then
+  // cancels every upload in the batch.
+  @bind
+  addFiles(files, opts) {
+    const limit = this.siteSettings.simultaneous_uploads;
+    const queued =
+      this.uppyUpload.uppyWrapper.uppyInstance?.getFiles().length ?? 0;
+    if (limit > 0 && queued + files.length > limit) {
+      return false;
+    }
+
+    this.uppyUpload.addFiles(files, opts);
   }
 
   willDestroyElement() {

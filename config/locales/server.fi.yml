@@ -509,11 +509,6 @@ fi:
   too_many_mentions_newuser:
     one: "Uudet käyttäjät voivat mainita viestissä vain yhden muun käyttäjän."
     other: "Uudet käyttäjät voivat mainita viestissä vain %{count} käyttäjää."
-  no_embedded_media_allowed_group: "Et voi upottaa mediaobjekteja viesteihin."
-  no_embedded_media_allowed: "Uudet käyttäjät eivät voi upottaa mediaobjekteja viesteihin."
-  too_many_embedded_media:
-    one: "Uudet käyttäjät voivat upottaa vain yhden mediaobjektin viesteihin."
-    other: "Uudet käyttäjät voivat upottaa vain %{count} mediaobjektia viesteihin."
   no_attachments_allowed: "Uudet käyttäjät eivät voi liittää liitteitä viesteihin."
   too_many_attachments:
     one: "Uudet käyttäjät voivat liittää vain yhden liitteen viestiin."
@@ -2244,7 +2239,6 @@ fi:
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
-    short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "Lisää koodilohkoihin painike lohkon sisällön kopioimiseksi käyttäjän leikepöydälle."
     embed_any_origin: "Salli upotettava sisältö alkuperästä riippumatta. Tämä vaaditaan mobiilisovelluksille, joissa on staattista HTML:ää."
@@ -2358,9 +2352,7 @@ fi:
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     create_post_for_category_and_tag_changes: "Luo kuiskausviesti, kun ketjun alue tai tunnisteet muuttuvat. Edellyttää, että kuiskausviestit ovat käytössä."
     automatically_clean_unused_tags: "Poista automaattisesti tunnisteet, joita ei käytetä missään ketjuissa tai henkilökohtaisissa viesteissä päivittäin."
-    company_name: "Yrityksesi tai organisaatiosi nimi. Jos tyhjä, ei yleisiä palveluehtojen ja tietosuojailmoituksen pohjaa tarjota."
-    governing_law: "Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojaselostetta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa."
-    city_for_disputes: "Määritä kaupunki, jota käytetään lainkäyttöalueena tämän foorumin käyttöön liittyvien kiistojen ratkaisemiseen. Nämä tiedot sisältyvät yleensä oikeudellisiin asiakirjoihin, kuten foorumin käyttöehtoihin."
+    company_name: "Yrityksesi tai organisaatiosi nimi."
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
     shared_drafts_allowed_groups: "Salli näiden ryhmien käyttäjien nähdä ja muokata jaettuja luonnoksia."
     push_notifications_prompt: "Näytä käyttäjän suostumusbanneri push-ilmoituksia varten. Tämä asetus laukaisee kehotteen, joka pyytää käyttäjiltä lupaa lähettää heille push-ilmoituksia. Se näkyy vain, kun push-ilmoituksia ei ole otettu käyttöön, käyttäjän laite tukee niitä ja käyttäjä on joko kirjoittanut viestin tai käyttää progressiivista verkkosovellusta (PWA). Kehotetta ei näytetä uudelleen, jos käyttäjä on jo hylännyt sen tai myöntänyt tai evännyt luvan."
@@ -2373,9 +2365,6 @@ fi:
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
     enable_user_tips: "Käytä keskeisiä ominaisuuksia uusille käyttäjille kuvaavat vinkit"
-    dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
-    dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
-    dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
     gravatar_name: "Määritä Gravatar-palveluntarjoajan nimi. Tätä nimeä käytetään yleensä Gravatar-avatareita sivustolle tarjoavan lähteen tunnistamiseen."
     gravatar_base_url: "Määritä Gravatar-palveluntarjoajan APIn URL-osoite. Tämä asetus on ehdottoman tärkeä muunnettaessa sähköpostiosoitteita Gravatarin URL-osoitteiksi, joihin avatar-kuvat on tallennettu."
     share_quote_buttons: "Mitkä kohteet näytetään lainauksen jakamispienoisohjelmassa ja missä järjestyksessä."
@@ -2470,10 +2459,27 @@ fi:
       mediaconvert_role_arn_required: "AWS:n IAM-roolin ARN on pakollinen käytettäessä MediaConvertia videoiden muuntamiseen."
       s3_credentials_required_for_video_conversion: "Videomuunnokseen vaaditaan S3-tunnistetiedot. Määritä S3-käyttöoikeusavaimet tai ota IAM-profiili käyttöön."
     keywords:
+      about_banner_image: "bannerikuva"
+      about_page_extra_groups: "ryhmälistaus"
+      about_page_extra_groups_initial_members: "laajennetut jäsenet"
+      about_page_extra_groups_order: "järjestys"
+      about_page_extra_groups_show_description: "sisällytä kuvaus"
       clean_up_inactive_users_after_days: "poistettu käytöstä|inactive|aktivoimaton"
+      company_url: "verkkosivusto"
+      default_composition_mode: "rte|muotoiltu teksti|kirjoitustila|markdown|muotoilueditori"
+      extended_site_description: "yhteisön kuvaus"
+      large_icon: "neliökuvake"
+      logo: "ensisijainen logo"
+      logo_dark: "ensisijainen logo tumma"
+      logo_small: "pieni logo"
+      logo_small_dark: "pieni tumma logo"
       navigation_menu: "sivupalkki|yläpalkin avattava valikko"
       purge_unactivated_users_grace_period_days: "poistettu käytöstä|inactive|aktivoimaton"
-      default_composition_mode: "rte|muotoiltu teksti|kirjoitustila|markdown|muotoilueditori"
+      short_site_description: "yhteisön otsikko"
+      site_contact_group_name: "sivuston yhteysryhmä"
+      site_contact_username: "sivuston yhteyshenkilön nimi"
+      site_description: "yhteisön yhteenveto"
+      title: "yhteisön nimi"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2952,20 +2958,6 @@ fi:
     post_hidden:
       title: "Viesti piilotettu"
       subject_template: "Yhteisön piiloon merkitsemä viesti"
-      text_body_template: |
-        Hello,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että viestisi piilotettiin.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Viesti piilotettiin yhteisön liputusten vuoksi, joten harkitse miten voisit muokata viestiä palautteen pohjalta. **Voit muokata viestiä %{edit_delay} minuutin kuluttua, mikä palauttaa automaattisesti sen näkyville.**
-
-        Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
-
-        Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Palaute viestistäsi"
       subject_template: "Palaute viestiisi ketjussa %{topic_title}"
@@ -2975,31 +2967,9 @@ fi:
     post_hidden_again:
       title: "Viesti piilotettiin jälleen"
       subject_template: "Yhteisön merkinnät piilottivat viestin, henkilökunnalle ilmoitettiin"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että viestisi piilotettiin uudelleen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Yhteisö liputti viestin, ja se on nyt piilotettu. **Koska viestisi on piilotettu useammin kuin kerran, se pysyy piilotettuna, kunnes henkilökunnan jäsen selvittää tilanteen.**
-
-        Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     queued_by_staff:
       title: "Viesti odottaa hyväksyntää"
       subject_template: "Henkilökunnan piilottama viesti odottaa hyväksyntää"
-      text_body_template: |
-        Hei,
-
-        Tämä on automaattinen viesti sivustolta %{site_name}, joka ilmoittaa sinulle, että viestisi on piilotettu.
-
-        <%{base_url}%{url}>
-
-        Viestisi pysyy piilossa, kunnes henkilökunnan jäsen tarkistaa sen.
-
-        Lisätietoja on [yhteisön ohjeissa](%{base_url}/guidelines).
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -3807,12 +3777,6 @@ fi:
     account_suspended_forever:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
-    account_silenced:
-      title: "Tili hiljennetty"
-      subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
-    account_silenced_forever:
-      title: "Tili hiljennetty"
-      subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
     account_deleted:
       title: "Tili poistettu"
       subject_template: "[%{email_prefix}] Tilisi on poistettu"
@@ -3983,10 +3947,6 @@ fi:
     signup_after_reject:
       title: "Rekisteröityminen hylkäyksen jälkeen"
       subject_template: "Sinut on hylätty palveluta %{site_name}"
-      text_body_template: |
-        Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
-
-        %{reject_reason}
     signup:
       title: "Rekisteröityminen"
       subject_template: "[%{email_prefix}] Vahvista uusi tilisi"
@@ -4457,7 +4417,12 @@ fi:
   design_wizard:
     palette_pairs:
       default: "Oletus"
+      neutral: "Neutraali"
+      shades_of_blue: "Sinisen sävyt"
+      summer: "Kesäinen"
       dracula: "Dracula"
+      grey_amber: "Harmaa ambra"
+      latte: "Latte"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -4495,6 +4460,19 @@ fi:
     graph_title: "Hakujen määrä"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Joka päivä"
+        every_weekday: "Arkipäivisin"
+        ordinals:
+          last: "viimeisin"
+        weekdays:
+          sunday: "Sunnuntai"
+          monday: "Maanantaina"
+          tuesday: "Tiistai"
+          wednesday: "Keskiviikko"
+          thursday: "Torstai"
+          friday: "Perjantai"
+          saturday: "Lauantai"
       user_joined_community: "Liittynyt %{date}"
     google_meet:
       meeting_code: "Koodi:"
@@ -4502,6 +4480,8 @@ fi:
       truncated_file: "Tämä tiedosto on lyhennetty."
       show_original: "näytä alkuperäinen"
     github:
+      header:
+        success: "Onnistui"
       binary_file: "Tämä tiedosto on binaarinen."
       truncated_file: "Tämä tiedosto on lyhennetty."
       show_original: "näytä alkuperäinen"
@@ -4515,10 +4495,11 @@ fi:
       review_by: "Tarkistanut"
       pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
       no_description: "Auta tietovaraston %{repo} kehityksessä luomalla tili GitHubissa."
-      status_date:
-        open: "avattu"
-        approved: "hyväksytty"
-        closed: "suljettu"
+      pr_status:
+        draft: "Luonnos"
+        open: "Avoinna"
+        approved: "Hyväksytty"
+        closed: "Suljettu"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4600,6 +4581,10 @@ fi:
       no_context:
         watched_word: "Tässä viestissä oli tarkkailtu sana. Katso lisätietoja kohdasta %{link}."
     actions:
+      answer_yes:
+        title: "Kyllä"
+      answer_no:
+        title: "Ei"
       agree:
         title: "Kyllä"
       agree_and_keep:
@@ -4643,6 +4628,7 @@ fi:
       delete_and_agree_replies:
         title: "Poista viesti ja vastaukset"
         description: "Hyväksy liputus ja poista tämä viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju."
+        confirm_title: "Poista viesti ja vastaukset?"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       disagree_and_restore:
@@ -4673,6 +4659,8 @@ fi:
       approve_post:
         title: "Kyllä"
         complete: "Viesti hyväksytty."
+      deny_and_delete_post:
+        complete: "Viesti poistettu."
       approve_post_closed:
         title: "Kyllä"
         confirm: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"

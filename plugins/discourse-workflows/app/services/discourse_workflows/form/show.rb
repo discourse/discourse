@@ -55,19 +55,11 @@ module DiscourseWorkflows
           form_query_parameters: params.form_query_parameters,
         )
 
-      exec_context = {
-        "__execution" => {
-          "workflow_id" => workflow.id,
-          "workflow_name" => workflow_version.name,
-          "resume_url" => "",
-          "resumeFormUrl" => "",
-        },
-      }
-
       config =
-        ExpressionResolver.resolve_hash(
-          NodeData.parameters(form_node).deep_stringify_keys,
-          context: exec_context,
+        Schemas::FormFields.resolve_trigger_configuration(
+          NodeData.parameters(form_node),
+          workflow_id: workflow.id,
+          workflow_name: workflow_version.name,
           user: guardian.user,
         )
 

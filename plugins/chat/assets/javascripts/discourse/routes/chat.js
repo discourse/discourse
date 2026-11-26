@@ -19,6 +19,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service designWizard;
   @service siteSettings;
 
   titleToken() {
@@ -56,6 +57,7 @@ export default class ChatRoute extends DiscourseRoute {
       isDrawerPreferred &&
       canHandleInDrawer &&
       !isHomepageTransition(transition) &&
+      !(this.designWizard.active && this.designWizard.homepage === "chat") &&
       (!fullPageReload || requiresRefresh)
     ) {
       transition.abort();

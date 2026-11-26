@@ -25,14 +25,65 @@
         }
       }
 
-      .history-icon {
+      .history-icon,
+      .setting-link {
         opacity: 0;
         transition: opacity 0.3s;
         color: var(--primary-medium);
       }
 
-      &:hover .history-icon {
-        opacity: 1;
+      // Word joiner: wraps the icons with the name's last word.
+      .staff-action-log-link,
+      .setting-link {
+        white-space: nowrap;
+
+        &::before {
+          content: "\2060" / "";
+        }
+      }
+
+      .setting-link {
+        font-size: var(--font-0);
+      }
+
+      &:hover,
+      &:focus-within {
+        .history-icon,
+        .setting-link {
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .history-icon,
+        .setting-link {
+          transition: none;
+        }
+      }
+    }
+
+    &.linkable {
+      scroll-margin-top: calc(var(--header-offset) + var(--space-4));
+      transition: background-color 1s ease;
+
+      &.--highlighted {
+        background-color: var(--highlight-low);
+      }
+
+      .setting-label__heading {
+        margin-bottom: 0.5rem;
+
+        h3 {
+          display: inline;
+        }
+      }
+
+      .staff-action-log-link {
+        margin-left: var(--space-1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
       }
     }
 
@@ -48,6 +99,10 @@
 
       .category-selector {
         width: 95%;
+      }
+
+      .form-kit__errors-summary {
+        display: none;
       }
 
       @media (max-width: $mobile-breakpoint) {
@@ -101,49 +156,6 @@
 
     .setting-controls {
       float: left;
-    }
-
-    .input-setting-string,
-    .input-setting-integer,
-    .input-setting-textarea {
-      width: 100%;
-
-      @media (max-width: $mobile-breakpoint) {
-        width: 100%;
-      }
-    }
-
-    .input-setting-textarea {
-      height: 150px;
-    }
-
-    .input-setting-list {
-      padding: 1px;
-      background-color: var(--secondary);
-      border: 1px solid var(--input-border-color);
-      border-radius: 3px;
-      transition:
-        border linear 0.2s,
-        box-shadow linear 0.2s;
-
-      @media (max-width: $mobile-breakpoint) {
-        width: 100%;
-      }
-
-      li.sortable-placeholder {
-        @include unselectable;
-        padding: 3px 5px 3px 18px;
-        margin: 3px 0 3px 5px;
-        position: relative;
-        line-height: var(--line-height-small);
-        cursor: default;
-        border: 1px dashed var(--primary-low-mid);
-        border-radius: 3px;
-        background-clip: padding-box;
-        background-color: transparent;
-        width: 3em;
-        height: 1em;
-      }
     }
 
     .desc,

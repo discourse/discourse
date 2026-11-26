@@ -30,7 +30,10 @@ ro:
           one: "%{count} răspuns"
           few: "%{count} de răspunsuri"
           other: "%{count} răspunsuri"
-        created_by: "Creat de"
+        owners:
+          one: "Deținător"
+          few: "Proprietari"
+          other: "Proprietari"
       manage:
         name: "Nume"
         constraint_categories: "Categorii"
@@ -40,6 +43,8 @@ ro:
           column_title: "Titlu"
           icon: "Icon"
           color: "Culoare"
+          color_palette: "Paletă de culori"
+          icon_search_placeholder: "Caută…"
           tag: "Etichetă"
           move_to_status_open: "Deschide"
           move_to_status_closed: "Închis"

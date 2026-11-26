@@ -54,6 +54,52 @@ RSpec.describe PostAlerter do
     )
   end
 
+  describe "unread post visibility" do
+    it "excludes hidden replies from unread counts and first-unread selection" do
+      root = Fabricate(:post, user: user)
+      hidden =
+        Fabricate(:post, topic: root.topic, hidden: true, reply_to_post_number: root.post_number)
+      visible = Fabricate(:post, topic: root.topic, reply_to_post_number: root.post_number)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        last_read_post_number: root.post_number,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      alerter = PostAlerter.new
+
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(visible)
+      expect(alerter.unread_count(user, root.topic)).to eq(1)
+      expect(alerter.first_unread_post(user, root.topic)).to eq(visible)
+      expect(alerter.unread_posts_in_bucket(user, root.topic, root.post_number)).to contain_exactly(
+        visible,
+      )
+      expect(alerter.unread_count_in_bucket(user, root.topic, root.post_number)).to eq(1)
+
+      hidden.update!(user: user)
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(hidden, visible)
+    end
+  end
+
+  describe "recipient authorization reuse" do
+    it "builds one recipient permission snapshot for a collapsed notification" do
+      group.add(user)
+      root = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
+      reply = Fabricate(:post, topic: root.topic)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      queries =
+        track_sql_queries do
+          PostAlerter.new.create_notification(user, Notification.types[:replied], reply)
+        end
+      expect(user.notifications.where(topic_id: root.topic_id).count).to eq(1)
+      expect(queries.grep(/SELECT "categories"\."id" FROM "categories" WHERE/).size).to eq(1)
+    end
+  end
+
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)
@@ -1016,14 +1062,30 @@ RSpec.describe PostAlerter do
     context "with topic" do
       fab!(:topic) { Fabricate(:topic, user: alice) }
 
-      %i[watching tracking regular].each do |notification_level|
-        context "when notification level is '#{notification_level}'" do
-          before { set_topic_notification_level(alice, topic, notification_level) }
+      context "when notification level is 'watching'" do
+        before { set_topic_notification_level(alice, topic, :watching) }
 
-          it "notifies about @username mention" do
-            args = { user: bob, topic: topic, raw: "Hello @alice" }
-            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
-          end
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+        end
+      end
+
+      context "when notification level is 'tracking'" do
+        before { set_topic_notification_level(alice, topic, :tracking) }
+
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+        end
+      end
+
+      context "when notification level is 'regular'" do
+        before { set_topic_notification_level(alice, topic, :regular) }
+
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
         end
       end
 
@@ -1051,35 +1113,48 @@ RSpec.describe PostAlerter do
       end
 
       context "when user is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
+        shared_examples "private message username mention notifications" do |notification_level:|
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            let(:expected_notification) do
-              notification_level == :watching ? :private_message : :mentioned
-            end
-
-            it "notifies about @username mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
-
-            it "notifies about @username mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
-
-            it "notifies about @group mention when allowed user is part of group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          let(:expected_notification) do
+            notification_level == :watching ? :private_message : :mentioned
           end
+
+          it "notifies about @username mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
+
+          it "notifies about @username mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
+
+          it "notifies about @group mention when allowed user is part of group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
+        end
+
+        context "when the user is watching the private message" do
+          include_examples "private message username mention notifications",
+                           notification_level: :watching
+        end
+
+        context "when the user is tracking the private message" do
+          include_examples "private message username mention notifications",
+                           notification_level: :tracking
+        end
+
+        context "with regular private message notifications" do
+          include_examples "private message username mention notifications",
+                           notification_level: :regular
         end
 
         context "when notification level is 'muted'" do
@@ -1131,25 +1206,38 @@ RSpec.describe PostAlerter do
       before { some_group.bulk_add([alice.id, carol.id]) }
 
       context "when group is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
+        shared_examples "private message group mention notifications" do |notification_level:|
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            it "notifies about @group mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
-
-            it "notifies about @group mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
-
-            it "notifies about @username mention when user belongs to allowed group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
-            end
+          it "notifies about @group mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
           end
+
+          it "notifies about @group mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
+
+          it "notifies about @username mention when user belongs to allowed group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+          end
+        end
+
+        context "when the user is watching the private message" do
+          include_examples "private message group mention notifications",
+                           notification_level: :watching
+        end
+
+        context "when the user is tracking the private message" do
+          include_examples "private message group mention notifications",
+                           notification_level: :tracking
+        end
+
+        context "with regular private message notifications" do
+          include_examples "private message group mention notifications",
+                           notification_level: :regular
         end
 
         context "when notification level is 'muted'" do
@@ -1211,6 +1299,51 @@ RSpec.describe PostAlerter do
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
     end
 
+    context "when the original title of a PM is restricted" do
+      def revise_title(title, revised_at: Time.zone.now)
+        post.revise(admin, { title: title }, revised_at: revised_at)
+      end
+
+      it "uses the current title when the title revision is hidden" do
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when an earlier revision is hidden" do
+        post.revise(admin, { raw: "This is the revised post" }, revised_at: Time.zone.now)
+        revise_title("This is the revised title", revised_at: 1.day.from_now)
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when edit history is not visible to the public" do
+        SiteSetting.edit_history_visible_to_public = false
+        revise_title("This is the revised title")
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "keeps the original title for staff" do
+        original_title = topic.title
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+        topic.topic_allowed_users.create!(user: admin)
+
+        PostAlerter.new.create_notification(admin, type, post)
+
+        expect(admin.notifications.last.data_hash["topic_title"]).to eq(original_title)
+      end
+    end
+
     it "triggers :pre_notification_alert" do
       events = DiscourseEvent.track_events { PostAlerter.new.create_notification(user, type, post) }
 
@@ -1268,17 +1401,17 @@ RSpec.describe PostAlerter do
     end
 
     it "adds display name to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:display_name] = "Benji McCool"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:display_name] = "Benji McCool"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:display_name]).to eq("Benji McCool")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
 
     it "does not add a display name when names are disabled" do
@@ -1290,17 +1423,17 @@ RSpec.describe PostAlerter do
     end
 
     it "applies modifiers to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:silly_key] = "silly value"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:silly_key] = "silly value"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:silly_key]).to eq("silly value")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
   end
 
@@ -1503,7 +1636,7 @@ RSpec.describe PostAlerter do
 
     context "with push subscriptions" do
       before do
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
         SiteSetting.push_notification_time_window_mins = 10
       end
 
@@ -1620,7 +1753,7 @@ RSpec.describe PostAlerter do
 
       it "tells the push to keep an excerpt provided by the caller" do
         evil_trout.update_columns(last_seen_at: 1.hour.ago)
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
 
         expect_enqueued_with(
           job: :deliver_push_notification,
@@ -2953,7 +3086,9 @@ RSpec.describe PostAlerter do
       )
     end
 
-    def create_post_with_incoming
+    fab!(:incoming_email_post) do
+      SiteSetting.enable_smtp = true
+      SiteSetting.email_in = true
       raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
@@ -2968,7 +3103,7 @@ RSpec.describe PostAlerter do
       This is the first email.
       EMAIL
 
-      Email::Receiver.new(raw_mail, {}).process!
+      Jobs.with_immediate_jobs { Email::Receiver.new(raw_mail, {}).process! }
     end
 
     it "does not error if SMTP is enabled and the topic has no incoming email or allowed groups" do
@@ -2987,7 +3122,6 @@ RSpec.describe PostAlerter do
     end
 
     it "sends a group smtp email because SMTP is enabled for the site and the group" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
@@ -3003,7 +3137,6 @@ RSpec.describe PostAlerter do
     end
 
     it "sends a group smtp email when the original group has had SMTP disabled and there is an additional topic allowed group" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       other_allowed_group = Fabricate(:smtp_group)
       TopicAllowedGroup.create(group: other_allowed_group, topic: topic)
@@ -3025,7 +3158,6 @@ RSpec.describe PostAlerter do
 
     it "does not send a group smtp email if smtp is not enabled for the group" do
       group.update!(smtp_enabled: false)
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3035,7 +3167,6 @@ RSpec.describe PostAlerter do
 
     it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
       SiteSetting.enable_smtp = false
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3044,7 +3175,6 @@ RSpec.describe PostAlerter do
     end
 
     it "does not send group smtp emails for a whisper" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3054,11 +3184,10 @@ RSpec.describe PostAlerter do
 
     it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
       freeze_time
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
-      PostAlerter.new.after_save_post(post, true)
-      job_enqueued?(
+      Jobs.run_later!
+      expect_enqueued_with(
         job: :group_smtp_email,
         args: {
           group_id: group.id,
@@ -3067,11 +3196,25 @@ RSpec.describe PostAlerter do
           cc_emails: %w[bar@discourse.org jim@othersite.com],
         },
         at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds,
-      )
+      ) { PostAlerter.post_created(post) }
+    end
+
+    it "excludes an interactive bot from group SMTP even when it is the oldest recipient" do
+      topic = incoming_email_post.topic
+      bot = Fabricate(:bot, interactive_bot: true)
+      bot.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
+      oldest_recipient = topic.topic_allowed_users.order(:created_at).first
+      topic.topic_allowed_users.create!(user: bot, created_at: oldest_recipient.created_at - 1.day)
+      post = Fabricate(:post, topic: topic)
+
+      PostAlerter.post_created(post)
+
+      email = ActionMailer::Base.deliveries.last
+      expect(email.to).to eq([oldest_recipient.user.email])
+      expect(email.cc).not_to include(bot.email)
     end
 
     it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
@@ -3088,7 +3231,6 @@ RSpec.describe PostAlerter do
       SiteSetting.simple_email_subject = true
       SiteSetting.email_subject = "%{site_name}: %{topic_title}"
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       group_user1 = Fabricate(:group_user, group: group)
@@ -3126,7 +3268,6 @@ RSpec.describe PostAlerter do
     it "excludes users with email_messages_level set to never from group SMTP emails" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       # Get one of the topic allowed users and set their email preference to never
@@ -3149,7 +3290,6 @@ RSpec.describe PostAlerter do
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       post = Fabricate(:post, topic: topic.reload)
@@ -3201,7 +3341,6 @@ RSpec.describe PostAlerter do
     it "handles the OP of the topic replying by email and sends a group email to the other topic allowed users successfully" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic.reload)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
@@ -3267,8 +3406,8 @@ RSpec.describe PostAlerter do
       This is the first email.
       EMAIL
 
-      incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
-      topic = incoming_email_post.topic
+      original_post = Email::Receiver.new(raw_mail, {}).process!
+      topic = original_post.topic
       post = Fabricate(:post, topic: topic.reload)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
         ActionMailer::Base.deliveries.size

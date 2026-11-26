@@ -120,6 +120,24 @@ RSpec.describe Invite::RedeemWithEmailCode do
       end
     end
 
+    context "when a required number field gets a value that isn't a number" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "number") }
+
+      let(:params) do
+        {
+          invite_key: invite.invite_key,
+          email:,
+          code:,
+          username:,
+          user_fields: {
+            user_field.id.to_s => "abc",
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
+    end
+
     context "when required signup fields are provided" do
       fab!(:user_field)
 
@@ -139,6 +157,36 @@ RSpec.describe Invite::RedeemWithEmailCode do
 
       it "saves the field on the invited user" do
         expect(result[:user].custom_fields["user_field_#{user_field.id}"]).to eq("Engineer")
+      end
+    end
+
+    context "when a required dropdown field gets a value that isn't an option" do
+      fab!(:dropdown_field) do
+        Fabricate(:user_field, field_type: "dropdown").tap do |field|
+          field.user_field_options.create!(value: "Engineer")
+        end
+      end
+
+      let(:params) do
+        {
+          invite_key: invite.invite_key,
+          email:,
+          code:,
+          username:,
+          user_fields: {
+            dropdown_field.id.to_s => "Staff",
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
+
+      it "does not consume the code or redeem the invite" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+        expect(User.find_by_email(email)).to be_nil
+        expect(invite.reload.redemption_count).to eq(0)
       end
     end
 

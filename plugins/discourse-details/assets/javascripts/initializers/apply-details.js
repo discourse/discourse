@@ -18,6 +18,21 @@ function initializeDetails(api) {
     shortcut: "Shift+D",
   });
 
+  api.addComposerToolbarPopupMenuOption({
+    action({ insertBlock, selected }) {
+      const placeholder = i18n("composer.ai_content.placeholder");
+      const summary = placeholder.replace(/"/g, "“");
+      insertBlock(
+        `[details="${summary}" ai]\n${selected.value || placeholder}\n[/details]`
+      );
+    },
+    condition: (composer) => composer.siteSettings.details_enabled,
+    icon: "angle-right",
+    label: "composer.ai_content.details",
+    menu: "ai-content",
+    name: "ai-content-details",
+  });
+
   api.registerRichEditorExtension(richEditorExtension);
 }
 

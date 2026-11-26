@@ -16,9 +16,10 @@ class UserCreator
     end
   end
 
-  def self.assign_signup_fields(user)
+  def self.assign_signup_fields(user, signup_only: true)
     fields = user.custom_fields
-    UserField.all.each do |field|
+    user_fields = signup_only ? UserField.where(show_on_signup: true) : UserField.all
+    user_fields.each do |field|
       value = yield(field)
       value = nil if value == "false"
       if value.blank?
@@ -38,6 +39,7 @@ class UserCreator
   end
 
   def self.clean_custom_field_values(field, field_values)
+    return clean_number_field_value(field_values) if field.field_type == "number"
     return field_values if field_values.nil? || field_values.empty?
 
     if field.field_type == "dropdown"
@@ -50,6 +52,14 @@ class UserCreator
       field_values
     end
   end
+
+  # JSON API clients can send numbers rather than strings.
+  def self.clean_number_field_value(field_value)
+    value = field_value.is_a?(Numeric) ? field_value.to_s : field_value
+    value = value.strip if value.is_a?(String)
+    value if !UserField.cast_number(value).nil?
+  end
+  private_class_method :clean_number_field_value
 
   def initialize(guardian, attributes)
     @guardian = guardian
@@ -68,7 +78,7 @@ class UserCreator
     error =
       self
         .class
-        .assign_signup_fields(user) do |field|
+        .assign_signup_fields(user, signup_only: false) do |field|
           self.class.clean_custom_field_values(field, attributes.dig(:user_fields, field.id.to_s))
         end
     return user if error
@@ -99,7 +109,7 @@ class UserCreator
       else
         user.update!(approved: false, approved_by_id: nil, approved_at: nil)
       end
-      if attributes.fetch(:active, true)
+      if attributes.fetch(:active, true) && guardian.can_activate?(user)
         activate(user)
       else
         send_activation_email(user)

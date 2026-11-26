@@ -5,16 +5,6 @@
 # https://translate.discourse.org/
 
 ur:
-  discourse_automation:
-    scriptables:
-      llm_triage:
-        notify_author_pm:
-          body: |
-            آداب @%{username},
-
-            "%{topic_title}" میں آپ کے دھاگے کو عارضی طور پر ہٹا دیا گیا اور ایک نگران کے جائزہ کے لیے ہماری جائزہ کی قطار میں شامل کیا گیا ہے۔ اگر منظور ہوا تو یہ خود بخود بحال ہو جائے گا۔
-
-            حوالہ: %{post_url}
   reports:
     overall_sentiment:
       yaxis: "تاریخ"
@@ -28,6 +18,9 @@ ur:
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "سپیم کا پتہ لگانا"
       navigation:
         settings:
           title: "سائٹ کی ترتیبات"
@@ -67,6 +60,8 @@ ur:
           text_color: "متن کا رنگ"
         approve_label: "جی ہاں"
         reject_label: "نہیں "
+        category_access_levels:
+          readonly: "ملاحظہ کریں"
       tool_options:
         update_artifact:
           editor_llm:
@@ -77,6 +72,7 @@ ur:
       tool_summary:
         edit_tag: "ٹیگ ترمیم کریں"
         create_category: "زمرہ بنائیں"
+        delete_category: "زمرہ مٹائیں"
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
@@ -100,6 +96,12 @@ ur:
       edit_category:
         errors:
           not_found: "زُمرہ نہیں ملا."
+      set_category_permissions:
+        errors:
+          not_found: "زُمرہ نہیں ملا."
+      delete_category:
+        errors:
+          not_found: "زُمرہ نہیں ملا."
       change_topic_category:
         errors:
           not_found: "موضوع نہیں ملا."
@@ -116,6 +118,17 @@ ur:
       assign:
         errors:
           not_found: "موضوع نہیں ملا."
+    appearance_authoring:
+      default_theme: "ڈیفالٹ تھیم"
+      colors:
+        light:
+          header_background: "ہَیڈر"
+      fonts:
+        heading_font: "سرخی والا فونٹ"
+    mcp_theme_access:
+      none: "کوئی نہیں"
+    mcp_app_setup:
+      none: "کوئی نہیں"
     reviewables:
       ai_tool_action:
         approve:

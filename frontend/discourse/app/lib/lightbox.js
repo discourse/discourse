@@ -137,8 +137,9 @@ async function initLightbox(elem, additionalData = {}) {
           const captionAiDescription = aiDescription
             ? escapeExpression(aiDescription)
             : null;
-          const captionDetails =
-            element.querySelector(".informations")?.textContent;
+          const captionDetails = escapeExpression(
+            element.querySelector(".informations")?.textContent
+          );
           const titleEl = captionTitle
             ? `<div class='pswp__caption-title'>${captionTitle}</div>`
             : null;

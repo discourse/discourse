@@ -23,6 +23,44 @@
       }
     }
 
+    &.--empty-category {
+      padding-block: 3rem 2.5rem;
+
+      .empty-state__image svg {
+        width: 12rem;
+      }
+
+      .empty-state__title {
+        margin-top: 1.5rem;
+        font-family: var(--heading-font-family);
+        font-weight: 700;
+        font-size: var(--font-up-3);
+      }
+
+      .empty-state__body {
+        color: var(--primary-medium);
+      }
+
+      .empty-state__cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-4);
+        margin-top: var(--space-6);
+      }
+
+      .empty-state__links {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+
+        a + a {
+          border-inline-start: 1px solid var(--content-border-color);
+          padding-inline-start: var(--space-3);
+        }
+      }
+    }
+
     &.--empty-channels-list {
       display: flex;
       flex-direction: column;
@@ -48,6 +86,17 @@
 
     @include viewport.until(sm) {
       margin-top: 8vh;
+    }
+
+    // Sized as a glyph, overriding the illustration width above.
+    &.--icon svg {
+      width: 3rem;
+      height: 3rem;
+      color: var(--primary-low-mid);
+
+      @include viewport.until(sm) {
+        width: 3rem;
+      }
     }
   }
 

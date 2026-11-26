@@ -41,6 +41,9 @@ da:
           title: "Skrifttype"
         colors:
           title: "Farver"
+        design_variables:
+          type: "Type"
+          default: "Standard"
         icons:
           title: "Ikoner"
           full_list: "Se den fulde liste over Font Awesome Ikoner"

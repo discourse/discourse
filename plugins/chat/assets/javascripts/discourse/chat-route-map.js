@@ -28,6 +28,7 @@ export default function () {
       { path: "/c/:channelTitle/:channelId/info" },
       function () {
         this.route("members");
+        this.route("preferences");
         this.route("settings");
       }
     );

@@ -5,10 +5,15 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class RewindTab extends Component {
+  @service currentUser;
   @service rewind;
 
   get showNavTab() {
-    return this.rewind.active && this.rewind.enabled;
+    return (
+      this.currentUser &&
+      this.args.outletArgs.model.is_rewind_active &&
+      this.rewind.enabled
+    );
   }
 
   <template>

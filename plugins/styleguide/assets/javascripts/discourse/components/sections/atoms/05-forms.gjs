@@ -17,6 +17,8 @@ import ColorSwatchesExample from "../../examples/atoms/forms/color-swatches.gjs"
 import colorSwatchesSource from "../../examples/atoms/forms/color-swatches?source=file";
 import ComposerExample from "../../examples/atoms/forms/composer.gjs";
 import composerSource from "../../examples/atoms/forms/composer?source=file";
+import HorizontalExample from "../../examples/atoms/forms/horizontal.gjs";
+import horizontalSource from "../../examples/atoms/forms/horizontal?source=file";
 import IconExample from "../../examples/atoms/forms/icon.gjs";
 import iconSource from "../../examples/atoms/forms/icon?source=file";
 import ImageExample from "../../examples/atoms/forms/image.gjs";
@@ -129,6 +131,10 @@ export default <template>
 
   <StyleguideExample @code={{sectionSource}} @title="Section">
     <SectionExample />
+  </StyleguideExample>
+
+  <StyleguideExample @code={{horizontalSource}} @title="Horizontal layout">
+    <HorizontalExample />
   </StyleguideExample>
 
   <StyleguideExample @code={{alertSource}} @title="Alert">

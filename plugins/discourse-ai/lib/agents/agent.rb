@@ -43,7 +43,27 @@ module DiscourseAi
         end
 
         def supports_bot_user?
-          agents_supporting_bot_user.any? { |klass| self <= klass }
+          # Resolved from the top level: agent classes registered by other plugins outlive a
+          # development code reload, and their stale lexical scope cannot find the new agents.
+          ::DiscourseAi::Agents::Agent.agents_supporting_bot_user.any? { |klass| self <= klass }
+        end
+
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            AdminAssistant,
+          ].freeze
         end
 
         def allow_chat_channel_mentions
@@ -111,6 +131,7 @@ module DiscourseAi
         def all_available_tools
           tools = [
             Tools::ListCategories,
+            Tools::FindCategory,
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
@@ -127,6 +148,8 @@ module DiscourseAi
             Tools::EditPost,
             Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::SetCategoryPermissions,
+            Tools::DeleteCategory,
             Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
@@ -140,7 +163,17 @@ module DiscourseAi
             Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
+            Tools::ListUpcomingChanges,
+            Tools::LoadAdminTools,
             Tools::ChangeSiteSetting,
+            Tools::GenerateAppearanceChange,
+            Tools::SaveAppearanceChange,
+            Tools::ActivateAppearanceChange,
+            Tools::RevertAppearanceChange,
+            Tools::ListAppearanceChanges,
+            Tools::InstallPopularTheme,
+            Tools::ThemeAppHandoff,
+            Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,
             Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
@@ -250,24 +283,6 @@ module DiscourseAi
             end
         end
 
-        def agents_supporting_bot_user
-          @agents_supporting_bot_user ||= [
-            General,
-            SqlHelper,
-            Artist,
-            SettingsExplorer,
-            Researcher,
-            Creative,
-            DiscourseHelper,
-            GithubHelper,
-            WebArtifactCreator,
-            Designer,
-            ForumResearcher,
-            Discover,
-            DiscourseAdminAssistant,
-          ].freeze
-        end
-
         def builtin_system_agents
           @builtin_system_agents ||= {
             General => -1,
@@ -307,7 +322,7 @@ module DiscourseAi
             SentimentClassifier => -36,
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
-            DiscourseAdminAssistant => -39,
+            AdminAssistant => -39,
             AskAiQueryRewriter => -40,
             AskAiSynthesis => -41,
             AskAiReporter => -42,
@@ -413,9 +428,7 @@ module DiscourseAi
         return if context.subagent_depth.to_i >= SubagentRunner::MAX_SUBAGENT_DEPTH
 
         state = context.subagent_execution_state
-        if !state&.spawn_available? || !state.completion_available? || state.remaining_tokens <= 0
-          return
-        end
+        return if !state&.completion_available? || state.remaining_tokens <= 0
 
         records_by_id = AiAgent.where(id: self.class.subagent_ids, enabled: true).index_by(&:id)
         models_by_agent_id = SubagentRunner.resolve_models(records_by_id.values)
@@ -443,6 +456,9 @@ module DiscourseAi
 
       def defer_forced_tool_for_vision?
         false
+      end
+
+      def prepare_next_completion(prompt:, context:, llm:)
       end
 
       def craft_prompt(context, llm: nil)

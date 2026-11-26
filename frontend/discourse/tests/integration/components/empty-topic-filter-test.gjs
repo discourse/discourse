@@ -9,20 +9,20 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
 
   test("renders empty state with CTA when viewing topics with available replies", async function (assert) {
     this.currentUser.unified_new_enabled = true;
-    this.trackingCounts = { newReplies: 5, newTopics: 0 };
-    this.newListSubset = "topics";
-    this.actionCalled = false;
-    this.changeNewListSubset = () => {
-      this.set("actionCalled", true);
+    const trackingCounts = { newReplies: 5, newTopics: 0 };
+    const newListSubset = "topics";
+    let actionCalled = false;
+    const changeNewListSubset = () => {
+      actionCalled = true;
     };
 
     await render(
       <template>
         <EmptyTopicFilter
-          @changeNewListSubset={{this.changeNewListSubset}}
+          @changeNewListSubset={{changeNewListSubset}}
           @newFilter={{true}}
-          @newListSubset={{this.newListSubset}}
-          @trackingCounts={{this.trackingCounts}}
+          @newListSubset={{newListSubset}}
+          @trackingCounts={{trackingCounts}}
         />
       </template>
     );
@@ -33,25 +33,25 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
       .hasText(/replies/i, "CTA suggests browsing replies");
 
     await click(".empty-state__cta button");
-    assert.true(this.actionCalled, "action is called when button is clicked");
+    assert.true(actionCalled, "action is called when button is clicked");
   });
 
   test("renders empty state with CTA when viewing replies with available topics", async function (assert) {
     this.currentUser.unified_new_enabled = true;
-    this.trackingCounts = { newReplies: 0, newTopics: 5 };
-    this.newListSubset = "replies";
-    this.actionCalled = false;
-    this.changeNewListSubset = () => {
-      this.set("actionCalled", true);
+    const trackingCounts = { newReplies: 0, newTopics: 5 };
+    const newListSubset = "replies";
+    let actionCalled = false;
+    const changeNewListSubset = () => {
+      actionCalled = true;
     };
 
     await render(
       <template>
         <EmptyTopicFilter
-          @changeNewListSubset={{this.changeNewListSubset}}
+          @changeNewListSubset={{changeNewListSubset}}
           @newFilter={{true}}
-          @newListSubset={{this.newListSubset}}
-          @trackingCounts={{this.trackingCounts}}
+          @newListSubset={{newListSubset}}
+          @trackingCounts={{trackingCounts}}
         />
       </template>
     );
@@ -62,7 +62,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
       .hasText(/topics/i, "CTA suggests browsing topics");
 
     await click(".empty-state__cta button");
-    assert.true(this.actionCalled, "action is called when button is clicked");
+    assert.true(actionCalled, "action is called when button is clicked");
   });
 
   test("renders empty state with discovery.latest link when no alternative content available", async function (assert) {

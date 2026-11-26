@@ -135,4 +135,46 @@ module("Live | Unit | Lib | transcript-recorder", function (hooks) {
 
     assert.strictEqual(this.changes, 3);
   });
+
+  test("folds each user's reactions between utterances into one entry", function (assert) {
+    this.recorder.start(1);
+    this.recorder.recordReaction(1, 43, "bob", "clap", 1000);
+    this.recorder.recordReaction(1, 44, "carol", "heart", 1100);
+    this.recorder.recordReaction(1, 43, "bob", "clap", 1200);
+    this.recorder.recordReaction(1, 43, "bob", "heart", 1300);
+    this.recorder.record(1, 42, "alice", {
+      id: 7,
+      text: "thanks",
+      final: true,
+      startedAt: 2000,
+    });
+    this.recorder.recordReaction(1, 43, "bob", "clap", 3000);
+
+    assert.deepEqual(
+      this.recorder.entries.map((entry) => [
+        entry.username,
+        entry.text ?? entry.reactions,
+      ]),
+      [
+        [
+          "bob",
+          [
+            { emoji: "clap", count: 2 },
+            { emoji: "heart", count: 1 },
+          ],
+        ],
+        ["carol", [{ emoji: "heart", count: 1 }]],
+        ["alice", "thanks"],
+        ["bob", [{ emoji: "clap", count: 1 }]],
+      ]
+    );
+  });
+
+  test("ignores reactions from other rooms and while not recording", function (assert) {
+    this.recorder.recordReaction(1, 43, "bob", "clap");
+    this.recorder.start(1);
+    this.recorder.recordReaction(2, 43, "bob", "clap");
+
+    assert.deepEqual(this.recorder.entries, []);
+  });
 });

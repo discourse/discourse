@@ -26,7 +26,6 @@ ur:
       description_placeholder: "یہاں تفصیل درج کریں"
       ai:
         generate: "تخلیق کریں"
-        optional: "اختیاری"
       help:
         label: "مدد"
       schema:
@@ -47,7 +46,7 @@ ur:
       result_count:
         one: "%{count} نتیجہ۔"
         other: "%{count} نتائج۔"
-      query_name: "ڈیٹا کمانڈ"
+      name: "نام"
       query_groups: "گروپس"
       query_tags: "ٹیگز"
       report_name: "رپورٹ"

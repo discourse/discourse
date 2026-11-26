@@ -51,6 +51,8 @@ ko:
           color: "색상"
         approve_label: "예"
         reject_label: "아니오"
+        category_access_levels:
+          readonly: "보기"
       tool_summary:
         search: "검색"
         time: "시간"
@@ -72,6 +74,12 @@ ko:
       edit_category:
         errors:
           not_found: "카테고리를 찾을수 없습니다."
+      set_category_permissions:
+        errors:
+          not_found: "카테고리를 찾을수 없습니다."
+      delete_category:
+        errors:
+          not_found: "카테고리를 찾을수 없습니다."
       change_topic_category:
         errors:
           not_found: "글을 찾을 수 없음."
@@ -88,6 +96,21 @@ ko:
       assign:
         errors:
           not_found: "글을 찾을 수 없음."
+    appearance_authoring:
+      component_on: "켜기"
+      component_off: "끄기"
+      colors:
+        light:
+          header_background: "헤더"
+      fonts:
+        base_font: "본문 글꼴"
+        heading_font: "제목 글꼴"
+    mcp_theme_access:
+      "on": "켜기"
+      "off": "끄기"
+      none: "없음"
+    mcp_app_setup:
+      none: "없음"
     reviewables:
       ai_tool_action:
         approve:

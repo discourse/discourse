@@ -15,7 +15,8 @@ module DiscourseWorkflows
                :silenced,
                :suspended,
                :uploaded_avatar_id,
-               :avatar_template
+               :avatar_template,
+               :locale
 
     def trust_level_name
       TrustLevel.name(object.trust_level)
@@ -31,6 +32,10 @@ module DiscourseWorkflows
 
     def suspended
       object.suspended?
+    end
+
+    def locale
+      object.effective_locale
     end
   end
 end

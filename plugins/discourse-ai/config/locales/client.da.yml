@@ -46,14 +46,27 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      review_bulk:
+        refresh: "Genindlæs"
+        columns:
+          user: "Bruger"
+          reason: "Anmeldt som"
+          created: "Oprettet"
+          status: "Status"
       copied: "Kopieret"
       ai_decoded_transcript:
         type: "Type"
         error: "Fejl"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Anvend"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
+        ai_tool:
+          list_item: "Listepunkt"
+          add_list_item: "Tilføj element"
         classify:
           text: "Tekst"
           upload_ids: "Billeder"
@@ -71,22 +84,28 @@ da:
       llm_selector:
         none: "Ingen"
       features:
-        disabled: "(deaktiveret)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktiveret"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personlige beskeder"
+            none: "Ikke tilgængelig"
         no_agent: "Ikke indstillet"
         no_groups: "Ingen"
         edit: "Indstillinger"
-        expand_list:
-          one: "(%{count} mere)"
-          other: "(%{count} mere)"
-        collapse_list: "(vis mindre)"
         nav:
           enabled: "Aktiveret"
         filters:
-          all: "Alle"
           reset: "Nulstil"
+        sentiment:
+          enabled: "Aktiveret"
         search:
           name: "Søg"
+        review_queue:
+          setting_groups:
+            settings: "Indstillinger"
         image_caption:
           setting_groups:
             settings: "Indstillinger"
@@ -98,7 +117,20 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
-        category_scope: "Kategorier"
+        sections:
+          advanced: "Avanceret"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personlige beskeder"
+            choices:
+              none: "Ingen"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alle"
         model_progress:
           detail:
             columns:
@@ -113,6 +145,8 @@ da:
               title: "Kategorier"
             tag:
               title: "Mærker"
+        admin_actions:
+          enabled: "Aktiveret"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -129,6 +163,8 @@ da:
             other: "%{count} indlæg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Seneste 7 dage"
         enable: "Aktiver"
         save_button: "Gem ændringer"
@@ -229,6 +265,30 @@ da:
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      concepts:
+        edit: "Rediger"
+        seed:
+          refresh: "Genindlæs"
+        delete: "Slet"
+        columns:
+          status: "Status"
+          topics: "Emner"
+          posts: "Indlæg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Navn"
+          description: "Beskrivelse"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
+        tagged_topics: "Markerede emner"
+        topic_columns:
+          topic: "Emne"
+          primary: "Primær"
+          relevance: "Relevans"
+        primary_badge: "Primær"
       decision_models:
         no_preset: "Ingen"
         display_name: "Navn"
@@ -326,7 +386,6 @@ da:
         filter_all: "Alle"
         filter_standalone: "Enkeltstående"
       ai_bot:
-        llm: "Model:"
         debug_ai_modal:
           duration_label: "Varighed:"
           request: "Anmod om medlemskab"

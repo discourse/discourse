@@ -44,6 +44,8 @@ sq:
           color: "ngjyra"
         approve_label: "Po"
         reject_label: "Jo"
+        category_access_levels:
+          readonly: "Shiko"
       tool_summary:
         search: "Kërko"
         time: "Koha"
@@ -77,6 +79,14 @@ sq:
       assign:
         errors:
           not_found: "Tema nuk u gjet."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Ballina"
+    mcp_theme_access:
+      none: "asnjë"
+    mcp_app_setup:
+      none: "asnjë"
     reviewables:
       ai_tool_action:
         approve:

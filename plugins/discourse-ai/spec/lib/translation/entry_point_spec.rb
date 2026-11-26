@@ -15,6 +15,24 @@ describe DiscourseAi::Translation::EntryPoint do
       expect_job_enqueued(job: :detect_translate_post, args: { post_id: post.id })
     end
 
+    it "passes skip_workflows to the detection job" do
+      post =
+        PostCreator.create!(
+          Fabricate(:user),
+          raw: "post",
+          title: "topic",
+          skip_validations: true,
+          skip_workflows: true,
+        )
+      expect_job_enqueued(
+        job: :detect_translate_post,
+        args: {
+          post_id: post.id,
+          skip_workflows: true,
+        },
+      )
+    end
+
     it "does not enqueue if setting disabled" do
       SiteSetting.ai_translation_enabled = false
       post = Fabricate(:post)
@@ -165,6 +183,19 @@ describe DiscourseAi::Translation::EntryPoint do
       )
       expect(job_enqueued?(job: :detect_translate_topic)).to eq false
     end
+
+    it "passes skip_workflows to the detection job" do
+      post = Fabricate(:post, post_number: 2)
+      post.revise(post.user, { raw: "new raw" }, skip_workflows: true)
+
+      expect_job_enqueued(
+        job: :detect_translate_post,
+        args: {
+          post_id: post.id,
+          skip_workflows: true,
+        },
+      )
+    end
   end
 
   describe "upon category updated" do
@@ -261,7 +292,7 @@ describe DiscourseAi::Translation::EntryPoint do
       SiteSetting.content_localization_enabled = true
       SiteSetting.allow_user_locale = true
       SiteSetting.content_localization_supported_locales = "en|ja"
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
     end
 
     it "holds the push until the translation is stored" do

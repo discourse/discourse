@@ -48,6 +48,27 @@ module PageObjects
         find("#topic-title .fancy-title")
       end
 
+      def has_sidebar_navigation?
+        has_css?("body.has-sidebar-page .sidebar-wrapper")
+      end
+
+      def has_print_navigation_hidden?
+        has_css?(".sidebar-wrapper, .skip-links", count: 2, visible: :all) do |navigation|
+          navigation.evaluate_script("getComputedStyle(this).display === 'none'")
+        end
+      end
+
+      def has_full_width_main_content?
+        has_css?("#main-outlet-wrapper > #main-outlet") { |content| content.evaluate_script(<<~JS) }
+            (() => {
+              const wrapper = this.parentElement;
+              const { paddingLeft, paddingRight } = getComputedStyle(wrapper);
+              const availableWidth = wrapper.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);
+              return Math.abs(this.offsetWidth - availableWidth) <= 1;
+            })()
+          JS
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
@@ -115,6 +136,10 @@ module PageObjects
 
       def has_post_more_actions?(post)
         within_post(post) { has_css?(".show-more-actions") }
+      end
+
+      def has_post_flagged?(post:, type:)
+        within_post(post) { has_text?(I18n.t("js.post.actions.by_you.#{type}")) }
       end
 
       def has_post_bookmarked?(post, with_reminder: false)

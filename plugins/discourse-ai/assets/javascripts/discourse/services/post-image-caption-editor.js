@@ -1,137 +1,91 @@
-import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { ADD_TRANSLATION, EDIT } from "discourse/models/composer";
-import { i18n } from "discourse-i18n";
+import Composer, { ADD_TRANSLATION, EDIT } from "discourse/models/composer";
+import ImageDescriptionsModal from "../components/modal/image-descriptions.gjs";
+import { imageBase62Sha1 } from "../lib/post-image-caption-editor.js";
 
 export default class PostImageCaptionEditor extends Service {
-  @service a11y;
   @service composer;
+  @service modal;
+  @service site;
   @service siteSettings;
-  @service toasts;
 
-  @tracked captions = new Map();
-  @tracked loadedKey = null;
-  @tracked loadingKey = null;
-
-  get canEditCurrentComposer() {
-    const action = this.composer.model?.action;
-
+  get enabled() {
+    const model = this.composer.model;
     return Boolean(
+      this.siteSettings.discourse_ai_enabled &&
       this.siteSettings.ai_post_image_captions_enabled &&
-      this.currentPostId &&
-      (action === EDIT || (action === ADD_TRANSLATION && this.currentLocale))
+      model &&
+      !model.privateMessage &&
+      !model.post?.topic?.isPrivateMessage
     );
   }
 
-  get currentPostId() {
-    return this.composer.model?.post?.id;
-  }
-
-  get currentLocale() {
-    if (this.composer.model?.action === ADD_TRANSLATION) {
-      return this.composer.selectedTranslationLocale;
-    }
-
-    return this.composer.model?.locale;
-  }
-
-  get currentKey() {
-    if (!this.currentPostId) {
+  open({ alt, image, onSaveAlt }) {
+    if (!this.enabled) {
       return;
     }
 
-    return `${this.currentPostId}:${this.currentLocale || ""}`;
+    this.modal.show(ImageDescriptionsModal, {
+      model: {
+        alt: alt || "",
+        base62Sha1: imageBase62Sha1(image),
+        context: this.captureContext(),
+        onSaveAlt,
+      },
+    });
   }
 
-  captionFor(base62Sha1) {
-    if (!this.canEditCurrentComposer || this.loadedKey !== this.currentKey) {
-      return;
-    }
+  captureContext() {
+    const model = this.composer.model;
+    const { action, post, topic } = model;
+    const locale =
+      (action === ADD_TRANSLATION
+        ? this.composer.selectedTranslationLocale
+        : model.locale) || "";
 
-    return this.captions.get(base62Sha1);
+    const isEditingPost = action === EDIT || action === ADD_TRANSLATION;
+    const canEditCaption = Boolean(
+      isEditingPost &&
+      post?.id &&
+      (action !== ADD_TRANSLATION || locale) &&
+      !post.deleted_at &&
+      !topic?.deleted_at &&
+      !post.topic?.deleted_at &&
+      post.post_type === this.site.post_types.regular
+    );
+
+    return {
+      model,
+      action,
+      postId: post?.id,
+      locale,
+      isEditingPost,
+      canEditCaption,
+    };
   }
 
-  async ensureLoaded() {
-    if (!this.canEditCurrentComposer) {
-      this.#reset();
-      return;
+  isCurrent(context) {
+    if (!this.enabled || this.composer.model.composeState === Composer.CLOSED) {
+      return false;
     }
 
-    const key = this.currentKey;
-    if (this.loadedKey === key || this.loadingKey === key) {
-      return;
-    }
-
-    this.loadingKey = key;
-    this.loadedKey = null;
-    this.captions = new Map();
-
-    try {
-      const result = await ajax(
-        `/discourse-ai/post-image-captions/${this.currentPostId}`,
-        {
-          data: this.currentLocale ? { locale: this.currentLocale } : {},
-        }
-      );
-
-      if (this.currentKey === key) {
-        this.captions = new Map(
-          result.captions.map((caption) => [
-            caption.base62_sha1,
-            caption.description,
-          ])
-        );
-        this.loadedKey = key;
-      }
-    } catch {
-      if (this.currentKey === key) {
-        this.captions = new Map();
-        this.loadedKey = key;
-      }
-    } finally {
-      if (this.loadingKey === key) {
-        this.loadingKey = null;
-      }
-    }
+    const current = this.captureContext();
+    return ["model", "action", "postId", "locale", "canEditCaption"].every(
+      (key) => current[key] === context[key]
+    );
   }
 
-  async save(base62Sha1, description) {
-    try {
-      const result = await ajax(
-        `/discourse-ai/post-image-captions/${this.currentPostId}/${base62Sha1}`,
-        {
-          type: "PUT",
-          data: {
-            description,
-            ...(this.currentLocale ? { locale: this.currentLocale } : {}),
-          },
-        }
-      );
-
-      const captions = new Map(this.captions);
-      captions.set(result.base62_sha1, result.description);
-      this.captions = captions;
-      this.loadedKey = this.currentKey;
-
-      const message = i18n("discourse_ai.post_image_captions.saved");
-      this.toasts.success({
-        duration: "short",
-        data: { message },
-      });
-      this.a11y.announce(message, "polite");
-
-      return result;
-    } catch (error) {
-      popupAjaxError(error);
-      throw error;
-    }
+  load({ postId, locale }) {
+    return ajax(`/discourse-ai/post-image-captions/${postId}`, {
+      data: locale ? { locale } : {},
+    });
   }
 
-  #reset() {
-    this.captions = new Map();
-    this.loadedKey = null;
-    this.loadingKey = null;
+  save({ postId, locale }, base62Sha1, description) {
+    return ajax(`/discourse-ai/post-image-captions/${postId}/${base62Sha1}`, {
+      type: "PUT",
+      data: { description, ...(locale ? { locale } : {}) },
+    });
   }
 }

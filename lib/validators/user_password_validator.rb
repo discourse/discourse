@@ -18,7 +18,7 @@ class UserPasswordValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :same_as_name)
     elsif user.email.present? && value == user.email
       record.errors.add(attribute, :same_as_email)
-    elsif record.password_hash_changed? && record.confirm_password?(value)
+    elsif record.password_hash_changed? && record.matches_password?(value)
       record.errors.add(attribute, :same_as_current)
     elsif SiteSetting.block_common_passwords && CommonPasswords.common_password?(value)
       record.errors.add(attribute, :common)
@@ -30,7 +30,6 @@ class UserPasswordValidator < ActiveModel::EachValidator
   private
 
   def is_developer?(value)
-    Rails.configuration.respond_to?(:developer_emails) &&
-      Rails.configuration.developer_emails.include?(value)
+    Developer.configured_email?(value)
   end
 end

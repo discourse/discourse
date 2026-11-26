@@ -38,6 +38,12 @@ export default class RemoteStreamRegistry {
     return (this.#streams.get(roomId) || []).map((entry) => entry.stream);
   }
 
+  screenAudioStreamsFor(roomId) {
+    return (this.#streams.get(roomId) || [])
+      .map((entry) => entry.screenAudioStream)
+      .filter(Boolean);
+  }
+
   streamFor(roomId, userId) {
     return (this.#streams.get(roomId) || []).find(
       (entry) => Number(entry?.userId) === Number(userId)

@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -75,7 +75,7 @@ export default class IgnoreDurationModal extends Component {
 
   @action
   updateIgnoredUsername(selected) {
-    this.ignoredUsername = selected.firstObject;
+    this.ignoredUsername = selected[0];
   }
 
   <template>
@@ -95,7 +95,10 @@ export default class IgnoreDurationModal extends Component {
               }}</label>
             <EmailGroupUserChooser
               @onChange={{this.updateIgnoredUsername}}
-              @options={{hash excludeCurrentUser=true maximum=1}}
+              @options={{hash
+                excludedUsernames=(array @model.actingUser.username)
+                maximum=1
+              }}
               @value={{this.ignoredUsername}}
             />
           </div>

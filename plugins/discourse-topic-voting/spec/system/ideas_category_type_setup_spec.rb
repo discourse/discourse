@@ -6,7 +6,7 @@ RSpec.describe "Ideas Category Type Setup" do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
@@ -18,18 +18,12 @@ RSpec.describe "Ideas Category Type Setup" do
     expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
 
     expect(form.field("name").value).to eq("Ideas")
-    expect(
-      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-        "checked"
-      ],
-    ).to eq(true)
-    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq("bulb")
+    expect(category_page).to have_style_emoji("bulb")
 
     expect(banner).to be_visible
     banner.click_save
 
-    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-ideas")
+    expect(page).to have_current_path(%r{\A/c/ideas/\d+\z})
     expect(SiteSetting.topic_voting_enabled).to eq(true)
     category = Category.find_by(name: "Ideas")
     expect(Category.can_vote?(category.id)).to eq(true)
@@ -48,7 +42,7 @@ RSpec.describe "Ideas Category Type Setup" do
     category_type_selector.remove_selected_option("Ideas")
     banner.click_save
 
-    expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
+    expect(page).to have_current_path(%r{\A/c/no-longer-ideas/\d+\z})
     category = Category.find_by(name: "No longer ideas")
     expect(category.category_types.keys).to eq(%i[discussion])
     expect(Category.can_vote?(category.id)).to eq(false)
@@ -67,7 +61,7 @@ RSpec.describe "Ideas Category Type Setup" do
       )
 
       banner.click_save
-      expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
+      expect(page).to have_current_path(%r{\A/c/ideas/\d+\z})
 
       expect(SiteSetting.topic_voting_tl0_vote_limit).to eq(10)
       expect(
@@ -95,11 +89,7 @@ RSpec.describe "Ideas Category Type Setup" do
 
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
       expect(form.field("name").value).to eq("")
-      expect(
-        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-          "checked"
-        ],
-      ).to eq(nil)
+      expect(category_page).to have_no_style_emoji
     end
 
     it "can edit the settings of the ideas category in a tab" do

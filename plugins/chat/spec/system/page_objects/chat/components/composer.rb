@@ -85,6 +85,14 @@ module PageObjects
           false
         end
 
+        def has_heading?(text)
+          component.has_css?(".chat-composer__input h1", text: text)
+        end
+
+        def has_horizontal_rule?
+          component.has_css?(".chat-composer__input hr")
+        end
+
         def toggle_editor
           rich = rich_editor?
           click_dropdown_toggle("toggle-editor")

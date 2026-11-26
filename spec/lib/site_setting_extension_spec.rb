@@ -1891,6 +1891,16 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
     end
 
+    it "returns independent mutable copies from cached _map getters and updates when changed" do
+      SiteSetting.emoji_deny_list = "smile|frown"
+      first = SiteSetting.emoji_deny_list_map
+      first << "mutated"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
+
+      SiteSetting.emoji_deny_list = "wink"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[wink])
+    end
+
     it "handles splitting tag_list settings" do
       SiteSetting.digest_suppress_tags = "blah|blah2"
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
@@ -2245,6 +2255,36 @@ RSpec.describe SiteSettingExtension do
           "changed",
           { details: "Updated via Rails console via test plugin" },
         ).once
+      end
+    end
+  end
+
+  describe "linked upcoming change group setting registration" do
+    it "normalizes the group setting name when loading YAML metadata" do
+      Tempfile.create(%w[linked-upcoming-change .yml]) do |file|
+        file.write(<<~YAML)
+          test:
+            linked_feature:
+              default: false
+              client: true
+              hidden: true
+              upcoming_change:
+                status: experimental
+                impact: feature,all_members
+                group_setting: linked_feature_groups
+            linked_feature_groups:
+              default: "3|12"
+              type: group_list
+        YAML
+        file.flush
+
+        settings.load_settings(file.path)
+        settings.refresh!
+
+        expect(settings.upcoming_change_metadata[:linked_feature][:group_setting]).to eq(
+          :linked_feature_groups,
+        )
+        expect(settings.linked_feature_groups_map).to contain_exactly(3, 12)
       end
     end
   end

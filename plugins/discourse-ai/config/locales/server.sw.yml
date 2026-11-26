@@ -46,6 +46,8 @@ sw:
           color: "rangi"
         approve_label: "Ndio"
         reject_label: "Hapana"
+        category_access_levels:
+          readonly: "Angalia"
       tool_summary:
         search: "Tafuta"
         time: "Muda"
@@ -66,6 +68,12 @@ sw:
       edit_category:
         errors:
           not_found: "Kategoria haijapatikana."
+      set_category_permissions:
+        errors:
+          not_found: "Kategoria haijapatikana."
+      delete_category:
+        errors:
+          not_found: "Kategoria haijapatikana."
       change_topic_category:
         errors:
           not_found: "Mada haijapatikana."
@@ -82,6 +90,14 @@ sw:
       assign:
         errors:
           not_found: "Mada haijapatikana."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Kichwa"
+    mcp_theme_access:
+      none: "bila"
+    mcp_app_setup:
+      none: "bila"
     reviewables:
       ai_tool_action:
         approve:

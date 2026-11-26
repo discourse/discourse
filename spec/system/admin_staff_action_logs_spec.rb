@@ -91,7 +91,7 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(legacy)).to have_no_content("Scheduled duration:")
   end
 
-  it "shows details for an action" do
+  it "shows action details and displays HTML values as text" do
     visit "/admin/logs/staff_action_logs"
 
     expect(staff_action_logs_page.log_row(history_1)).to have_content(
@@ -103,10 +103,6 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(history_2)).to have_content(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
     ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
-  end
-
-  it "keeps staff action details as text" do
-    visit "/admin/logs/staff_action_logs"
 
     expect(staff_action_logs_page).to have_no_injected_detail_element(history_with_html_value)
     expect(staff_action_logs_page).to have_details_text(
@@ -151,7 +147,10 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(history)).to have_css(".context", text: payload)
   end
 
-  it "can filter by type of action" do
+  it "can filter by type of action and staff user" do
+    history_1.update!(acting_user: current_user)
+    other_history = Fabricate(:site_setting_change_history)
+
     visit "/admin/logs/staff_action_logs"
 
     expect(staff_action_logs_page).to have_log_row(history_1)
@@ -168,6 +167,25 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page).to have_log_row(history_1)
     expect(staff_action_logs_page).to have_no_log_row(history_2)
     expect(staff_action_logs_page).to have_no_log_row(history_3)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+
+    staff_action_logs_page.filter_by_staff_user(current_user)
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    page.refresh
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    staff_action_logs_page.clear_staff_user_filter(current_user)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
 
     staff_action_logs_page.clear_filter
 
@@ -225,7 +243,7 @@ describe "Admin staff action logs" do
       end
     end
 
-    it "can see filtered logs" do
+    it "can filter logs by date and export the results" do
       visit "/admin/logs/staff_action_logs"
 
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
@@ -235,13 +253,6 @@ describe "Admin staff action logs" do
         expect(staff_action_logs_page).to have_no_log_row(histories[i - 1])
       end
       [3, 4, 5, 6, 7].each { |i| expect(staff_action_logs_page).to have_log_row(histories[i - 1]) }
-    end
-
-    it "can export filtered logs" do
-      visit "/admin/logs/staff_action_logs"
-
-      staff_action_logs_page.fill_date_filter_from(7.days.ago)
-      staff_action_logs_page.fill_date_filter_to(2.days.ago)
 
       expect do
         staff_action_logs_page.click_export_button

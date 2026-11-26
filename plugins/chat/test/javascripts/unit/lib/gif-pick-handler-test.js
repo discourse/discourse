@@ -41,7 +41,7 @@ module("Unit | Lib | buildGifPickHandler", function () {
     ]);
   });
 
-  test("sends a thread message with threadId when in a thread", async function (assert) {
+  test("sends a thread message with threadId and inReplyToId when in a thread", async function (assert) {
     const api = { sendChatMessage: sinon.stub().resolves() };
     const { draft } = setupDraft();
 
@@ -56,7 +56,7 @@ module("Unit | Lib | buildGifPickHandler", function () {
 
     assert.deepEqual(api.sendChatMessage.firstCall.args, [
       7,
-      { message: "![g](u)", threadId: 13, inReplyToId: null },
+      { message: "![g](u)", threadId: 13, inReplyToId: 42 },
     ]);
   });
 

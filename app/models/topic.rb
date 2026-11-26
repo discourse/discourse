@@ -217,6 +217,8 @@ class Topic < ActiveRecord::Base
                   !SiteSetting.allow_uncategorized_topics && (t.archetype.nil? || t.regular?)
               }
 
+  validate :ensure_archetype_is_registered, if: :will_save_change_to_archetype?
+
   validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
     if featured_link_changed? && !Guardian.new(user).can_edit_featured_link?(category_id)
@@ -310,7 +312,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
-  after_update :clear_page_not_found_topics_cache, if: :moved_to_read_restricted_category?
+  after_update :clear_page_not_found_topics_cache, if: :access_became_restricted?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -365,6 +367,18 @@ class Topic < ActiveRecord::Base
       WHERE tg.topic_id = topics.id
     )
   SQL
+
+  scope :with_post_keywords,
+        ->(keywords, posts) do
+          matches =
+            posts
+              .joins(:post_search_data)
+              .where(hidden: false)
+              .where("post_search_data.search_data @@ #{Search.ts_query(term: keywords.to_s)}")
+          where(id: matches.select(:topic_id))
+        end do
+    include KeywordSearch
+  end
 
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
@@ -589,7 +603,7 @@ class Topic < ActiveRecord::Base
 
   def best_post
     posts
-      .where(post_type: Post.types[:regular], user_deleted: false)
+      .where(post_type: Post.types[:regular], user_deleted: false, hidden: false)
       .order("score desc nulls last")
       .limit(1)
       .first
@@ -914,7 +928,8 @@ class Topic < ActiveRecord::Base
         candidates:,
       )
 
-    blurb_sql = "LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb"
+    blurb_sql =
+      "CASE WHEN p.hidden THEN NULL ELSE LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) END AS blurb"
     select_fragment = ->(similarity_expr) do
       DB.sql_fragment(
         "topics.*, #{similarity_expr} AS similarity, #{blurb_sql}",
@@ -2058,7 +2073,12 @@ class Topic < ActiveRecord::Base
     TopicConverter.new(self, user).convert_to_private_message
   end
 
+  def first_post_hidden?
+    Post.where(topic_id: id, post_number: 1).pick(:hidden) == true
+  end
+
   def update_excerpt(excerpt)
+    excerpt = nil if excerpt.present? && first_post_hidden?
     update_column(:excerpt, excerpt)
     ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
@@ -2095,6 +2115,10 @@ class Topic < ActiveRecord::Base
     self.featured_link = UrlHelper.normalized_encode(featured_link)
   rescue ArgumentError, URI::Error, Addressable::URI::InvalidURIError
     errors.add(:featured_link, :invalid)
+  end
+
+  def ensure_archetype_is_registered
+    errors.add(:archetype, :inclusion) if !Archetype.exists?(archetype)
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
@@ -2267,9 +2291,8 @@ class Topic < ActiveRecord::Base
     target_audience = {}
 
     if private_message?
-      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
-      target_audience[:user_ids] |= allowed_users.pluck(:id)
-      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+      target_audience[:user_ids] = User.human_users.where(admin: true).pluck(:id)
+      target_audience[:user_ids] |= all_allowed_users.pluck(:id)
     else
       target_audience[:group_ids] = secure_group_ids
     end
@@ -2324,8 +2347,9 @@ class Topic < ActiveRecord::Base
 
   private
 
-  def moved_to_read_restricted_category?
-    saved_change_to_category_id? && category&.read_restricted?
+  def access_became_restricted?
+    (saved_change_to_category_id? && category&.read_restricted?) ||
+      (saved_change_to_archetype? && private_message?)
   end
 
   def invite_to_private_message(invited_by, target_user, guardian)

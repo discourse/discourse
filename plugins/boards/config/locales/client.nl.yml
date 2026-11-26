@@ -38,7 +38,9 @@ nl:
         unassign_from_topic: "Toewijzing van @%{username} aan topic opheffen"
         unassign_from_post: "Toewijzing van @%{username} aan %{post_number} opheffen"
         edit_assignments: "Toewijzingen bewerken..."
-        created_by: "Gemaakt door"
+        owners:
+          one: "Eigenaar"
+          other: "Eigenaren"
       manage:
         name: "Naam"
         slug: "Slug"
@@ -50,10 +52,10 @@ nl:
           column_title: "Titel"
           icon: "Pictogram"
           color: "Kleur"
+          color_palette: "Kleurenpalet"
+          icon_search_placeholder: "Zoeken…"
           default_sort_priority: "Prioriteit"
           tag: "Taggen"
           move_to_assigned_unassign: "Toewijzing opheffen"
           move_to_status_open: "Open"
           move_to_status_closed: "Gesloten"
-          show_advanced: "Geavanceerde opties weergeven"
-          hide_advanced: "Geavanceerde opties verbergen"

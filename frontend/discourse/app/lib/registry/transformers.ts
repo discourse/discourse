@@ -42,7 +42,10 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-dashboard-report-renderer",
-  "admin-onboarding-start-posting-options",
+  "admin-new-bot-options",
+  "admin-new-bot-params",
+  "admin-onboarding-banner-location",
+  "admin-onboarding-steps",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
   "admin-theme-card-show-full-controls",
@@ -66,8 +69,10 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
   "composer-force-editor-mode",
+  "composer-image-descriptions-opener",
   "composer-message-components",
   "composer-minimum-post-length",
+  "composer-minimum-title-length",
   "composer-reply-options-user-avatar-template",
   "composer-reply-options-user-link-name",
   "composer-save-button-label",

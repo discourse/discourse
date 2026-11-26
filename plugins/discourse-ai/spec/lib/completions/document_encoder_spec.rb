@@ -4,28 +4,73 @@ RSpec.describe DiscourseAi::Completions::DocumentEncoder do
   before { enable_current_plugin }
 
   describe ".attachment_type_for" do
-    {
-      "pdf" => "pdf",
-      "docx" => "docx",
-      "doc" => "doc",
-      "xlsx" => "xlsx",
-      "xls" => "xls",
-      "odt" => "odt",
-      "ods" => "ods",
-      "csv" => "csv",
-      "txt" => "txt",
-      "rtf" => "rtf",
-      "html" => "html",
-      "htm" => "html",
-      "md" => "md",
-      "markdown" => "md",
-    }.each do |extension, expected|
-      it "maps .#{extension} to #{expected}" do
+    shared_examples "recognizing a document extension" do |extension:, expected_type:|
+      it "recognizes normal and uppercase extensions" do
         mime = MiniMime.lookup_by_filename("sample.#{extension}")&.content_type.to_s
 
-        expect(described_class.attachment_type_for(extension, mime)).to eq(expected)
-        expect(described_class.attachment_type_for(".#{extension.upcase}", mime)).to eq(expected)
+        expect(described_class.attachment_type_for(extension, mime)).to eq(expected_type)
+        expect(described_class.attachment_type_for(".#{extension.upcase}", mime)).to eq(
+          expected_type,
+        )
       end
+    end
+
+    context "with the pdf extension" do
+      include_examples "recognizing a document extension", extension: "pdf", expected_type: "pdf"
+    end
+
+    context "with the docx extension" do
+      include_examples "recognizing a document extension", extension: "docx", expected_type: "docx"
+    end
+
+    context "with the doc extension" do
+      include_examples "recognizing a document extension", extension: "doc", expected_type: "doc"
+    end
+
+    context "with the xlsx extension" do
+      include_examples "recognizing a document extension", extension: "xlsx", expected_type: "xlsx"
+    end
+
+    context "with the xls extension" do
+      include_examples "recognizing a document extension", extension: "xls", expected_type: "xls"
+    end
+
+    context "with the odt extension" do
+      include_examples "recognizing a document extension", extension: "odt", expected_type: "odt"
+    end
+
+    context "with the ods extension" do
+      include_examples "recognizing a document extension", extension: "ods", expected_type: "ods"
+    end
+
+    context "with the csv extension" do
+      include_examples "recognizing a document extension", extension: "csv", expected_type: "csv"
+    end
+
+    context "with the txt extension" do
+      include_examples "recognizing a document extension", extension: "txt", expected_type: "txt"
+    end
+
+    context "with the rtf extension" do
+      include_examples "recognizing a document extension", extension: "rtf", expected_type: "rtf"
+    end
+
+    context "with the html extension" do
+      include_examples "recognizing a document extension", extension: "html", expected_type: "html"
+    end
+
+    context "with the htm extension" do
+      include_examples "recognizing a document extension", extension: "htm", expected_type: "html"
+    end
+
+    context "with the md extension" do
+      include_examples "recognizing a document extension", extension: "md", expected_type: "md"
+    end
+
+    context "with the markdown extension" do
+      include_examples "recognizing a document extension",
+                       extension: "markdown",
+                       expected_type: "md"
     end
 
     it "falls back to the mime type when the extension is unknown" do

@@ -247,6 +247,7 @@ module FileStore
       include_content_disposition:
     )
       key = path.sub(absolute_base_url + "/", "")
+      raise Discourse::NotFound if !current_site_key?(key)
 
       presigned_get_url(
         key,
@@ -272,9 +273,11 @@ module FileStore
     end
 
     def temporary_upload_path(file_name)
-      folder_prefix =
-        s3_bucket_folder_path.nil? ? upload_path : File.join(s3_bucket_folder_path, upload_path)
-      FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: folder_prefix)
+      FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: temporary_folder_prefix)
+    end
+
+    def temporary_folder_prefix
+      s3_bucket_folder_path.nil? ? upload_path : File.join(s3_bucket_folder_path, upload_path)
     end
 
     def object_from_path(path)
@@ -470,6 +473,14 @@ module FileStore
     end
 
     private
+
+    def current_site_key?(key)
+      return true if !Rails.configuration.multisite
+
+      key = key.delete_prefix(TEMPORARY_UPLOAD_PREFIX)
+      key = key.delete_prefix(File.join(s3_bucket_folder_path, "")) if s3_bucket_folder_path
+      key.start_with?(File.join(upload_path, ""))
+    end
 
     def presigned_get_url(
       url,

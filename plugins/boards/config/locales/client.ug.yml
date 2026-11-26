@@ -32,7 +32,9 @@ ug:
         topic_reply_count:
           one: "%{count} جاۋاب"
           other: "%{count} جاۋاب"
-        created_by: "قۇرغۇچى"
+        owners:
+          one: "ئىگىسى"
+          other: "ئىگىسى"
       manage:
         name: "ئىسمى"
         slug: "قىسقارتما"
@@ -43,6 +45,8 @@ ug:
           column_title: "ئاتاق"
           icon: "سىنبەلگە"
           color: "رەڭ"
+          color_palette: "رەڭ تاختا"
+          icon_search_placeholder: "ئىزدە…"
           tag: "بەلگە"
           move_to_status_open: "ئاچ"
           move_to_status_closed: "تاقالدى"

@@ -2,6 +2,7 @@
 
 class ReviewableUserSerializer < ReviewableSerializer
   attributes :link_admin, :user_fields, :reject_reason, :target_user
+  attribute :signup_approval?, key: :signup_approval
 
   payload_attributes(
     :username,
@@ -30,6 +31,7 @@ class ReviewableUserSerializer < ReviewableSerializer
   def attributes(*args)
     data = super
     data[:payload]&.delete("email") if !include_email?
+    data[:payload]&.delete("name") if !SiteSetting.enable_names? && !scope.is_admin?
     data
   end
 

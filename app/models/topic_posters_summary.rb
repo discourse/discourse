@@ -23,7 +23,7 @@ class TopicPostersSummary
   end
 
   def summary
-    sorted_top_posters.compact.map(&method(:new_topic_poster_for))
+    sorted_top_posters.compact.map { |user| new_topic_poster_for(user) }
   end
 
   private

@@ -119,6 +119,14 @@
     }
   }
 
+  .embedded-posts {
+    @include viewport.until(sm) {
+      .reply > .row {
+        display: flex;
+      }
+    }
+  }
+
   .post-menu-area {
     margin: var(--space-2) 0 var(--topic-body-width-padding);
 

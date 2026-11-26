@@ -54,6 +54,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_silenced_user
         system_messages.email_reject_site_archived
         system_messages.email_reject_strangers_not_allowed
+        system_messages.email_reject_suspended_user
         system_messages.email_reject_too_many_recipients
         system_messages.email_reject_topic_closed
         system_messages.email_reject_topic_not_found
@@ -64,6 +65,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.flags_agreed_and_post_deleted_for_responders
         system_messages.flags_disagreed
         system_messages.ignored_users_summary
+        system_messages.moderator_silence
         system_messages.new_user_of_the_month
         system_messages.pending_users_reminder
         system_messages.post_hidden
@@ -97,8 +99,6 @@ class Admin::EmailTemplatesController < Admin::AdminController
         user_notifications.account_deleted
         user_notifications.account_exists
         user_notifications.account_second_factor_disabled
-        user_notifications.account_silenced
-        user_notifications.account_silenced_forever
         user_notifications.account_suspended
         user_notifications.account_suspended_forever
         user_notifications.activation_reminder

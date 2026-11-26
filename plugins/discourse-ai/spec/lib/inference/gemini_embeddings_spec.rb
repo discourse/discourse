@@ -106,6 +106,39 @@ RSpec.describe DiscourseAi::Inference::GeminiEmbeddings do
         expect(WebMock).to have_requested(:post, url).with(body: payload)
       end
     end
+
+    context "when task is provided" do
+      it "sends taskType for each supported task" do
+        {
+          document: "RETRIEVAL_DOCUMENT",
+          query: "RETRIEVAL_QUERY",
+          clustering: "CLUSTERING",
+          classification: "CLASSIFICATION",
+        }.each do |task, expected_task_type|
+          payload = {
+            content: {
+              parts: [{ text: content }],
+            },
+            taskType: expected_task_type,
+          }.to_json
+
+          stub_request(:post, url).with(body: payload, headers: headers).to_return(
+            status: 200,
+            body: { embedding: { values: [0.1, 0.2, 0.3] } }.to_json,
+          )
+
+          expect(gemini_embeddings.perform!(content, task: task)).to eq([0.1, 0.2, 0.3])
+          expect(WebMock).to have_requested(:post, url).with(body: payload)
+        end
+      end
+
+      it "raises ArgumentError for an unknown task" do
+        expect { gemini_embeddings.perform!(content, task: :unknown) }.to raise_error(
+          ArgumentError,
+          /Unknown embedding task/,
+        )
+      end
+    end
   end
 
   describe "#initialize" do

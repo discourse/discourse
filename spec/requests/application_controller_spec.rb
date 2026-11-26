@@ -20,19 +20,72 @@ RSpec.describe ApplicationController do
   describe "shared session key" do
     before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
 
-    it "renders the meta tag for a logged-in user" do
-      sign_in(user)
-
+    def rendered_shared_key
       get "/latest"
+      expect(response.status).to eq(200)
+      Nokogiri::HTML5.parse(response.body).at_css("meta[name='shared_session_key']")["content"]
+    end
 
-      expect(response.body).to match(/<meta name="shared_session_key" content="[^"]+">/)
+    def poll_as(key)
+      poller = open_session
+      poller.get "/session/current.json", headers: { "HTTP_X_SHARED_SESSION_KEY" => key }
+      poller.response
+    end
+
+    it "invalidates each previous polling key when switching, and the last one on ordinary logout" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      SiteSetting.log_out_strict = false
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      other_device = open_session
+      other_device.sign_in(master)
+      sign_in(master)
+      original_key = rendered_shared_key
+      expect(poll_as(original_key).parsed_body.dig("current_user", "id")).to eq(master.id)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+      shadow_key = rendered_shared_key
+      shadow_id = master.reload.shadow_user.id
+      expect(poll_as(shadow_key).parsed_body.dig("current_user", "id")).to eq(shadow_id)
+      expect(poll_as(original_key).status).to eq(404)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+      master_key = rendered_shared_key
+      expect(master_key).not_to eq(shadow_key)
+      expect(poll_as(master_key).parsed_body.dig("current_user", "id")).to eq(master.id)
+      expect(poll_as(shadow_key).status).to eq(404)
+
+      delete "/session/#{master.username}.json"
+      expect(response.status).to eq(302)
+      expect(poll_as(master_key).status).to eq(404)
+      expect(UserAuthToken.where(user_id: [master.id, shadow_id]).count).to eq(1)
+      other_device.get "/session/current.json"
+      expect(other_device.response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "does not exchange polling identities when impersonation starts or stops" do
+      admin = Fabricate(:admin)
+      sign_in(admin)
+      admin_key = rendered_shared_key
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
+      expect(response.status).to eq(200)
+      impersonated_key = rendered_shared_key
+      expect(poll_as(admin_key).status).to eq(404)
+      expect(poll_as(impersonated_key).parsed_body.dig("current_user", "id")).to eq(user.id)
+
+      delete "/admin/impersonate.json"
+      expect(response.status).to eq(200)
+      expect(poll_as(rendered_shared_key).parsed_body.dig("current_user", "id")).to eq(admin.id)
+      expect(poll_as(impersonated_key).status).to eq(404)
     end
 
     it "authenticates a login-required route via the header" do
       SiteSetting.login_required = true
-      token = UserAuthToken.generate!(user_id: user.id)
-      key = SecureRandom.hex
-      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
+      sign_in(user)
+      key = rendered_shared_key
+      reset!
 
       get "/latest.json"
       expect(response.status).to eq(403)
@@ -169,6 +222,37 @@ RSpec.describe ApplicationController do
       enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with a sole authenticator" do
+      enable_auth_provider(:google_oauth2)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/latest"
+      expect(response).to redirect_to("/login")
+
+      get "/login"
+      expect(response.status).to eq(200)
+
+      invite = Fabricate(:invite, invited_by: admin)
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with Discourse ID" do
+      enable_auth_provider(:discourse_id)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/login"
       expect(response.status).to eq(200)
     end
 
@@ -665,6 +749,28 @@ RSpec.describe ApplicationController do
         end
       end
 
+      it "does not retain topics converted to private messages" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}/convert-topic/private.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_private_message
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(topic.title)
+      end
+
       it "does not retain topics after a category becomes restricted" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         category = Fabricate(:category)
@@ -715,6 +821,33 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(404)
         expect(response.body).to include(topic1.title)
         expect(response.body).to include(topic2.title)
+      end
+    end
+
+    describe "with invalid API credentials" do
+      fab!(:topic)
+      fab!(:category)
+
+      let(:headers) { { "Api-Key" => "invalid-api-key", "Api-Username" => "system" } }
+
+      it "returns 403 for topics#show" do
+        get "/t/#{topic.id}.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for categories#find_by_slug" do
+        get "/c/#{category.slug}/find_by_slug.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for a user API key without the required scope" do
+        user_api_key = Fabricate(:bookmarks_calendar_user_api_key)
+
+        get "/t/#{topic.id}.json", headers: { "User-Api-Key" => user_api_key.key }
+
+        expect(response.status).to eq(403)
       end
     end
   end
@@ -1024,6 +1157,15 @@ RSpec.describe ApplicationController do
     it "disallows invalid public_key param" do
       args[:auth_redirect] = "discourse://auth_redirect"
       get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
 
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
@@ -1759,16 +1901,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"

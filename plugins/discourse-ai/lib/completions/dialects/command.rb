@@ -96,7 +96,7 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          { role: "CHATBOT", message: msg[:content] }
+          { role: "CHATBOT", message: Prompt.text_only(msg) }
         end
 
         def tool_call_msg(msg)

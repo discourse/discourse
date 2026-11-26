@@ -142,9 +142,6 @@ loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
 loaderShim("pretty-text/oneboxer-cache", () =>
   importSync("pretty-text/oneboxer-cache")
 );
-loaderShim("pretty-text/pretty-text", () =>
-  importSync("pretty-text/pretty-text")
-);
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
 loaderShim("pretty-text/text-replace", () =>
   importSync("pretty-text/text-replace")

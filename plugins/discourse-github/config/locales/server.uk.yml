@@ -35,3 +35,8 @@ uk:
       Цю проблему згадували на **%{title}**. Там можуть бути відповідні деталі:
 
       %{post_url}
+  dashboard:
+    problem:
+      github_linkback_access_token_invalid: "GitHub відхилив {{setting:github_linkback_access_token}}. Згенеруйте новий токен та оновіть налаштування."
+      github_badges_repo_not_found: "Репозиторій GitHub <code>%{repo}</code> у {{setting:github_badges_repos}} не існує, або {{setting:github_linkback_access_token}} не має до нього доступу, тому його внески не враховуються для отримання значків."
+      github_badges_repo_moved: "Репозиторій GitHub <code>%{repo}</code> переміщено до <code>%{new_name}</code>. Оновіть {{setting:github_badges_repos}} , щоб використовувати нову назву."

@@ -63,6 +63,8 @@ export default <template>
         @changeNewListSubset={{@controller.changeNewListSubset}}
         @changePeriod={{@controller.changePeriod}}
         @changeSort={{@controller.changeSort}}
+        @createTopic={{@controller.createTopic}}
+        @createTopicDisabled={{@controller.createTopicDisabled}}
         @dismissRead={{@controller.dismissRead}}
         @model={{@controller.model.list}}
         @period={{@controller.model.list.for_period}}

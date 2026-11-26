@@ -10,6 +10,7 @@ module Live
                :public,
                :ephemeral,
                :room_type,
+               :speak_requests_enabled,
                :max_participants,
                :created_at,
                :updated_at,
@@ -18,6 +19,7 @@ module Live
                :active_participants,
                :creator_id,
                :can_manage,
+               :can_delete,
                :can_invite,
                :description_excerpt,
                :visit_count,
@@ -93,6 +95,10 @@ module Live
     def can_manage
       return @can_manage if defined?(@can_manage)
       @can_manage = scope.can_manage_live_room?(object)
+    end
+
+    def can_delete
+      scope.can_delete_live_room?(object)
     end
 
     def can_invite

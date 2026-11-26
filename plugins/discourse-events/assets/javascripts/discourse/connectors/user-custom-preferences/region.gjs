@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import AccessNotice from "discourse/components/access-notice";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import RegionInput from "../../components/region-input.js";
@@ -37,12 +38,15 @@ export default class Region extends Component {
         />
       </div>
 
-      <DButton
-        class="btn-default"
-        @action={{this.useCurrentRegion}}
-        @icon="globe"
-        @label="discourse_events.region.use_current_region"
-      />
+      <AccessNotice @kind="self" @user={{@outletArgs.model}} as |disabled|>
+        <DButton
+          class="btn-default"
+          @action={{this.useCurrentRegion}}
+          @disabled={{disabled}}
+          @icon="globe"
+          @label="discourse_events.region.use_current_region"
+        />
+      </AccessNotice>
     </div>
   </template>
 }

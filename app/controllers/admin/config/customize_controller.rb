@@ -48,6 +48,10 @@ class Admin::Config::CustomizeController < Admin::AdminController
     render json: { has_more:, components: serialize_data(components, ComponentIndexSerializer) }
   end
 
+  def popular_themes
+    render json: { popular_themes: PopularThemes.all }
+  end
+
   def theme_site_settings
     themes_with_site_setting_overrides = {}
 

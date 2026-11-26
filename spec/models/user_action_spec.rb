@@ -273,6 +273,16 @@ RSpec.describe UserAction do
           expect(liker.user_stat.reload.likes_given).to eq(0)
           expect(likee.user_stat.reload.likes_received).to eq(0)
         end
+
+        it "does not decrease user statistics when the message has been deleted" do
+          expect(liker_action).not_to eq(nil)
+          post.topic.trash!
+
+          PostDestroyer.new(Discourse.system_user, post.reload).destroy
+
+          expect(liker.user_stat.reload.likes_given).to eq(0)
+          expect(likee.user_stat.reload.likes_received).to eq(0)
+        end
       end
     end
 

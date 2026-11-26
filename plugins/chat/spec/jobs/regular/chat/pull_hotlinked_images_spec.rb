@@ -281,9 +281,9 @@ describe Jobs::Chat::PullHotlinkedImages do
         expect(WebMock).not_to have_requested(:get, /amazonaws\.com/)
       end
 
-      # the downloader signs our own S3 path for anything shaped like a secure
-      # upload URL, so a foreign host serving that path must be rejected too
-      it "does not rehost a secure upload path served by another host" do
+      # signing is scoped to our own origin, so a foreign host serving this path
+      # is an ordinary remote image, not one of our protected S3 objects
+      it "rehosts a secure upload path served by another host without signing our S3 objects" do
         global_setting :allow_unsecure_chat_uploads, true
         SiteSetting.chat_allow_uploads = true
         foreign_url =
@@ -294,14 +294,19 @@ describe Jobs::Chat::PullHotlinkedImages do
             "Content-Type" => "image/gif",
           },
         )
+        stub_request(:put, /s3-upload-bucket.*amazonaws\.com/).to_return(
+          status: 200,
+          headers: {
+            "ETag" => '"abc"',
+          },
+        )
         stub_image_size
         message = fabricate_chat_message("![](#{foreign_url})")
 
-        expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
+        expect { described_class.new.execute(chat_message_id: message.id) }.to change {
           Upload.count
-        }
-        expect(message.reload.hotlinked_media).to be_empty
-        expect(WebMock).not_to have_requested(:get, /amazonaws\.com/)
+        }.by(1)
+        expect(WebMock).not_to have_requested(:get, /amazonaws\.com.*X-Amz-Signature/)
       end
     end
 

@@ -52,6 +52,8 @@ sv:
           color: "färg"
         approve_label: "Ja"
         reject_label: "Nej"
+        category_access_levels:
+          readonly: "Se"
       tool_summary:
         suspend_user: "Stäng av användare"
         silence_user: "Tysta användare"
@@ -76,6 +78,12 @@ sv:
       edit_category:
         errors:
           not_found: "Kategorin hittades inte."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorin hittades inte."
+      delete_category:
+        errors:
+          not_found: "Kategorin hittades inte."
       change_topic_category:
         errors:
           not_found: "Ämnet hittades inte."
@@ -92,6 +100,17 @@ sv:
       assign:
         errors:
           not_found: "Ämnet hittades inte."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Sidhuvud"
+      fonts:
+        base_font: "Typsnitt för brödtext"
+        heading_font: "Typsnitt för rubrik"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
     reviewables:
       ai_tool_action:
         approve:

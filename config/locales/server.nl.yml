@@ -522,11 +522,6 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen slechts één andere gebruiker noemen in een bericht."
     other: "Sorry, nieuwe gebruikers kunnen maximaal %{count} gebruikers noemen in een bericht."
-  no_embedded_media_allowed_group: "Sorry, je kunt geen media-items insluiten in een bericht."
-  no_embedded_media_allowed: "Sorry, nieuwe gebruikers kunnen geen media-items insluiten in berichten."
-  too_many_embedded_media:
-    one: "Sorry, nieuwe gebruikers kunnen slechts één ingesloten media-item in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen slechts %{count} ingesloten media-items in een bericht plaatsen."
   no_attachments_allowed: "Sorry, nieuwe gebruikers kunnen geen bijlagen toevoegen aan berichten."
   too_many_attachments:
     one: "Sorry, nieuwe gebruikers kunnen slechts één bijlage toevoegen aan een bericht."
@@ -2329,7 +2324,6 @@ nl:
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
-    short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> voor een demo."
     show_copy_button_on_codeblocks: "Voeg een knop toe aan codeblokken om de inhoud van het blok naar het klembord van de gebruiker te kopiëren."
     embed_any_origin: "Inbedbare inhoud toestaan, ongeacht oorsprong. Dit is vereist voor mobiele apps met statische HTML."
@@ -2448,9 +2442,7 @@ nl:
     create_post_for_category_and_tag_changes: "Maak een fluisterbericht wanneer de categorie of tags van een topic veranderen. Dit vereist dat fluisterberichten ingeschakeld zijn."
     automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of persoonlijke berichten."
     default_watched_precedence_over_muted: "Informeer gebruikers over topics in categorieën of tags die ze observeren en die ook horen bij een topic dat ze hebben gedempt."
-    company_name: "Naam van je bedrijf of organisatie. Als je dit veld leeg laat, worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt."
-    governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
-    city_for_disputes: "Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum."
+    company_name: "Naam van je bedrijf of organisatie."
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor medewerkers."
     shared_drafts_allowed_groups: "Sta gebruikers in deze groepen toe gedeelde concepten te bekijken en te bewerken."
     push_notifications_prompt: "Geef een toestemmingsbanner voor pushmeldingen weer. Deze instelling zorgt ervoor dat gebruikers om toestemming worden gevraagd voor het sturen van pushmeldingen. Deze vraag wordt alleen weergegeven als pushmeldingen nog niet zijn ingeschakeld, worden ondersteund door het apparaat van de gebruiker en de gebruiker een bericht heeft geplaatst of een progressieve webapp (PWA) gebruikt. De vraag wordt niet meer weergegeven als de gebruiker deze al heeft gesloten of toestemming heeft gegeven/geweigerd."
@@ -2464,9 +2456,6 @@ nl:
     enable_user_status: "Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
     enable_user_tips: "Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven voor gebruikers"
     short_title: "De korte titel wordt gebruikt op het starscherm van de gebruiker, de launcher of andere plaatsen waar de ruimte beperkt is. De titel moet beperkt zijn tot 12 tekens. Bij het wijzigen van deze titel kunnen gebruikers van de PWA worden gevraagd om de app bij te werken of te verwijderen."
-    dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
-    dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
-    dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
     gravatar_enabled: "Gebruik de <a href='https://gravatar.com/'>Gravatar</a>-service voor gebruikersavatars. Door dit uit te schakelen voorkom je dat gebruikers overschakelen naar Gravatar voor hun avatars en heeft geen invloed op gebruikers die het al gebruiken."
     gravatar_name: "Geef de naam op van de Gravatar-provider. Deze naam wordt meestal gebruikt om de bron te identificeren die Gravatar-avatars aan de site levert."
     gravatar_base_url: "Geef de URL op voor toegang tot de API van de Gravatar-provider. Deze instelling is cruciaal voor het omzetten van e-mailadressen in Gravatar-URL's waar avatarafbeeldingen worden opgeslagen."
@@ -2591,10 +2580,29 @@ nl:
       mediaconvert_output_subdirectory_required: "De submap MediaConvert-uitvoer is vereist."
       s3_credentials_required_for_video_conversion: "S3-aanmeldgegevens zijn vereist voor videoconversie. Configureer S3-toegangssleutels of schakel het IAM-profiel in."
     keywords:
+      about_banner_image: "bannerafbeelding"
+      about_page_extra_groups: "groepsvermelding"
+      about_page_extra_groups_initial_members: "uitgevouwen leden"
+      about_page_extra_groups_order: "sorteervolgorde"
+      about_page_extra_groups_show_description: "inclusief beschrijving"
       clean_up_inactive_users_after_days: "gedeactiveerd|inactief|niet geactiveerd"
+      company_url: "website"
+      default_composition_mode: "rte|rich text|opstellen|markdown|rich editor"
+      embed_full_app: "volledige appmodus"
+      extended_site_description: "beschrijving van de community"
+      large_icon: "vierkant pictogram"
+      logo: "primair logo"
+      logo_dark: "primair logo donker"
+      logo_small: "klein logo"
+      logo_small_dark: "klein logo donker"
       navigation_menu: "vervolgkeuzelijst zijbalk|koptekst"
       purge_unactivated_users_grace_period_days: "gedeactiveerd|inactief|niet geactiveerd"
-      default_composition_mode: "rte|rich text|opstellen|markdown|rich editor"
+      short_site_description: "communitytitel"
+      site_contact_group_name: "contactgroep site"
+      site_contact_username: "contactnaam site"
+      site_description: "samenvatting van de community"
+      title: "communitynaam"
+      welcome_banner_image: "achtergrondafbeelding"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3131,20 +3139,6 @@ nl:
       title: "Bericht verborgen"
       preview: "Bericht verborgen vanwege markeringen door communityleden."
       subject_template: "Bericht verborgen door communitymarkeringen"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je bericht is verborgen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Dit bericht is verborgen vanwege communitymarkeringen, dus bedenk hoe je je bericht zou kunnen herzien om hun feedback te weerspiegelen. **Je kunt je bericht na %{edit_delay} minuten bewerken, waarna het automatisch zichtbaar wordt gemaakt.**
-
-        Als het bericht echter voor de tweede keer door de community wordt verborgen, blijft het verborgen totdat het door een medewerker is afgehandeld.
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
     reviewable_queued_post_revise_and_reject_edit_post: "Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen of dit bericht beantwoorden als je vragen hebt."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen."
     reviewable_queued_post_revise_and_reject_edit_topic: "Je kunt het oorspronkelijke bericht van je topic hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen of dit bericht beantwoorden als je vragen hebt."
@@ -3197,31 +3191,9 @@ nl:
       title: "Bericht opnieuw verborgen"
       preview: "Bericht opnieuw verborgen door communityleden."
       subject_template: "Bericht verborgen door communitymarkeringen, medewerkers geïnformeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je post opnieuw is verborgen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        De community heeft dit bericht gemarkeerd en nu is het verborgen. **Omdat dit bericht meer dan eens is verborgen, blijft je bericht nu verborgen totdat het wordt behandeld door een medewerker.**
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer informatie.
     queued_by_staff:
       title: "Bericht vereist goedkeuring"
       subject_template: "Bericht verborgen door medewerker, wacht op goedkeuring"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je bericht is verborgen.
-
-        <%{base_url}%{url}>
-
-        Je bericht blijft verborgen totdat een medewerker het heeft beoordeeld.
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
     flags_disagreed:
       title: "Gemarkeerd bericht teruggezet door medewerker"
       subject_template: "Gemarkeerd bericht teruggezet door medewerker"
@@ -3726,6 +3698,8 @@ nl:
         Als voorzorgsmaatregel is je nieuwe account gedempt en kun je geen nieuwe antwoorden of topics maken totdat een medewerker je account kan beoordelen. Onze excuses voor het ongemak.
 
         Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
+    moderator_silence:
+      subject_template: "Je account is gedempt"
     silenced_by_staff:
       title: "Gedempt door medewerker"
       preview: "Account tijdelijk geblokkeerd."
@@ -3752,16 +3726,6 @@ nl:
     user_automatically_silenced_with_reason:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt.
-
-        Reden - %{reason}
-
-        [Beoordeel de markeringen](%{base_url}/review). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de site-instellingen 'silence_new_user'.
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -4109,14 +4073,6 @@ nl:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Je account is geschorst"
       subject_template_improved: "Je account is geschorst"
-    account_silenced:
-      title: "Account gedempt"
-      subject_template: "[%{email_prefix}] Je account is gedempt"
-      subject_template_improved: "Je account is gedempt"
-    account_silenced_forever:
-      title: "Account gedempt"
-      subject_template: "[%{email_prefix}] Je account is gedempt"
-      subject_template_improved: "Je account is gedempt"
     account_deleted:
       title: "Account verwijderd"
       subject_template: "[%{email_prefix}] Je account is verwijderd"
@@ -4317,10 +4273,6 @@ nl:
     signup_after_reject:
       title: "Registratie na afwijzen"
       subject_template: "Je bent afgewezen op %{site_name}"
-      text_body_template: |
-        Een medewerker heeft je account op %{site_name} afgewezen.
-
-        %{reject_reason}
     signup:
       title: "Registratie"
       preview: "Bevestig je account."
@@ -4924,7 +4876,12 @@ nl:
   design_wizard:
     palette_pairs:
       default: "Standaard"
+      neutral: "Neutraal"
+      shades_of_blue: "Blauwtinten"
+      summer: "Zomer"
       dracula: "Dracula"
+      grey_amber: "Grijsgeel"
+      latte: "Latte"
   wizard:
     title: "Discourse instellen"
     step:
@@ -4964,6 +4921,19 @@ nl:
     graph_title: "Aantal zoekopdrachten"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Elke dag"
+        every_weekday: "Elke weekdag"
+        ordinals:
+          last: "afgelopen"
+        weekdays:
+          sunday: "Zondag"
+          monday: "Maandag"
+          tuesday: "Dinsdag"
+          wednesday: "Woensdag"
+          thursday: "Donderdag"
+          friday: "Vrijdag"
+          saturday: "Zaterdag"
       user_joined_community: "Lid sinds %{date}"
     google_meet:
       meeting_code: "Code:"
@@ -4971,6 +4941,9 @@ nl:
       truncated_file: "Dit bestand is afgekapt."
       show_original: "origineel weergeven"
     github:
+      header:
+        file: "Bestand"
+        success: "Succes"
       binary_file: "Dit bestand is binair."
       truncated_file: "Dit bestand is afgekapt."
       show_original: "origineel weergeven"
@@ -4984,21 +4957,12 @@ nl:
       review_by: "Review door"
       pr_summary: "%{commits} commits hebben %{changed_files} bestanden gewijzigd met %{additions} toevoegingen en %{deletions} verwijderingen"
       no_description: "Draag bij aan de ontwikkeling van %{repo} door een account te maken op GitHub."
-      pr_title:
-        default: "Pullverzoek"
-        draft: "Concept pullverzoek"
-        open: "Pullverzoek openen"
-        approved: "Goedgekeurd pullverzoek"
-        changes_requested: "Aangevraagde wijzigingen"
-        merged: "Samengevoegde pullverzoek"
-        closed: "Gesloten pullverzoek"
-      status_date:
-        open: "geopend"
-        draft: "concept"
-        approved: "goedgekeurd"
-        changes_requested: "wijzigingen aangevraagd"
-        merged: "samengevoegd"
-        closed: "gesloten"
+      pr_status:
+        draft: "Concept"
+        open: "Open"
+        approved: "Goedgekeurd"
+        merged: "Samengevoegd"
+        closed: "Gesloten"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'
@@ -5088,6 +5052,10 @@ nl:
       no_context:
         watched_word: "Dit bericht bevatte een geobserveerd woord. Zie de %{link} voor meer informatie."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nee"
       agree:
         title: "Ja"
       agree_and_keep:
@@ -5128,6 +5096,7 @@ nl:
       delete_and_ignore_replies:
         title: "Bericht en antwoorden verwijderen, markering negeren"
         description: "Verwijder het bericht en alle antwoorden, negeer vervolgens de markering door het uit de wachtrij te verwijderen Als het het eerste bericht is, verwijder dan ook het topic."
+        confirm_title: "Bericht en antwoorden verwijderen, markering negeren?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5137,6 +5106,7 @@ nl:
       delete_and_agree_replies:
         title: "Bericht en antwoorden verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht en alle antwoorden. Als dit het eerste bericht is, wordt ook het topic verwijderd."
+        confirm_title: "Bericht en antwoorden verwijderen?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:
@@ -5171,6 +5141,8 @@ nl:
       approve_post:
         title: "Ja"
         complete: "Bericht goedgekeurd."
+      deny_and_delete_post:
+        complete: "Bericht verwijderd."
       approve_post_closed:
         title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"

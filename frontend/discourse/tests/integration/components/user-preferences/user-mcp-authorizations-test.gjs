@@ -11,7 +11,11 @@ module("Integration | Component | UserMcpAuthorizations", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.mcp_server_enabled = true;
-    this.model = { username: "mcp-user", show_mcp_authorizations: true };
+    this.model = {
+      username: "mcp-user",
+      isCurrent: true,
+      show_mcp_authorizations: true,
+    };
   });
 
   hooks.afterEach(function () {

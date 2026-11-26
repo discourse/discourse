@@ -29,6 +29,14 @@ class WebHook < ActiveRecord::Base
     self.tags = Tag.where(id: ids).to_a
   end
 
+  def destination_fingerprint
+    key =
+      Rails.application.key_generator.generate_key(
+        "webhook destination fingerprint/#{RailsMultisite::ConnectionManagement.current_db}",
+      )
+    OpenSSL::HMAC.hexdigest("SHA256", key, payload_url)
+  end
+
   def self.content_types
     @content_types ||= Enum.new("application/json" => 1, "application/x-www-form-urlencoded" => 2)
   end
@@ -74,7 +82,7 @@ class WebHook < ActiveRecord::Base
 
     WebHook
       .where(active: true)
-      .joins(:web_hook_event_types)
+      .left_joins(:web_hook_event_types)
       .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, event_type)
       .distinct
   end

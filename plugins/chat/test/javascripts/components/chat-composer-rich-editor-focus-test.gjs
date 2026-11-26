@@ -1,0 +1,41 @@
+import { getOwner } from "@ember/owner";
+import { render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import loadRichEditor from "discourse/lib/load-rich-editor";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+
+module(
+  "Integration | Component | chat composer - rich editor focus requests",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("keys typed while the editor loads are added to the draft", async function (assert) {
+      const ProsemirrorEditor = await loadRichEditor();
+      const owner = getOwner(this);
+      const composer = owner.lookup("service:chat-channel-composer");
+      let value = "saved draft";
+
+      composer.awaitEditor(this);
+      composer.focus({ addText: "x" });
+      composer.focus({ addText: "y" });
+
+      const onChange = (event) => (value = event.target.value);
+      const onSetup = (textManipulation) => {
+        composer.registerEditor(textManipulation);
+        return () => composer.unregisterEditor(textManipulation);
+      };
+
+      await render(
+        <template>
+          <ProsemirrorEditor
+            @change={{onChange}}
+            @onSetup={{onSetup}}
+            @value="saved draft"
+          />
+        </template>
+      );
+
+      assert.strictEqual(value, "saved draftxy", "the keys follow the draft");
+    });
+  }
+);

@@ -351,6 +351,163 @@ RSpec.describe "JSON:API queries", type: :request do
   describe "GET /show" do
     let(:path) { "/api/data-explorer/queries/#{middle.id}" }
 
+    context "when the request includes a cached result" do
+      subject(:cached_result) { parsed_body.fetch("included").sole }
+
+      let!(:query) do
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :limit = 10\n\nSELECT :limit AS value",
+          user: admin,
+          hidden:,
+        )
+      end
+      let(:path) { "/api/data-explorer/queries/#{query.id}" }
+      let(:hidden) { false }
+      let(:cache_user) { admin }
+      let(:execution_params) { { "limit" => "5" } }
+      let(:filter_value) { execution_params.to_json }
+      let(:query_parameters) do
+        { include: "cachedResult", filter: { "cachedResult.params" => filter_value } }
+      end
+
+      before do
+        DiscourseDataExplorer::QueryRunner.run(query, { "limit" => "5" }, current_user: cache_user)
+        DiscourseDataExplorer::QueryRunner.run(query, { "limit" => "10" }, current_user: cache_user)
+        get(path, headers:, params: query_parameters)
+      end
+
+      after { DiscourseDataExplorer::QueryRunner.invalidate(query.id) }
+
+      it "includes the selected cached result", :aggregate_failures do
+        expect(response).to have_http_status(:ok)
+        expect(cached_result).to include(
+          "type" => "cachedResults",
+          "attributes" =>
+            a_hash_including("columns" => ["value"], "rows" => [[5]], "params" => execution_params),
+        )
+        expect(parsed_body.dig("data", "relationships", "cachedResult", "data")).to eq(
+          cached_result.slice("type", "id"),
+        )
+      end
+
+      it "serves the included result at its self link" do
+        get(cached_result.dig("links", "self"), headers:)
+
+        expect(JSON.parse(response.body).fetch("data")).to eq(cached_result)
+      end
+
+      it "serves the selected result at the related link" do
+        get(parsed_body.dig("data", "relationships", "cachedResult", "links", "related"), headers:)
+
+        expect(JSON.parse(response.body).fetch("data")).to eq(cached_result)
+      end
+
+      it "serves the selected identifier at the relationship link" do
+        get(parsed_body.dig("data", "relationships", "cachedResult", "links", "self"), headers:)
+
+        expect(JSON.parse(response.body).fetch("data")).to eq(cached_result.slice("type", "id"))
+      end
+
+      context "when execution parameters are omitted" do
+        let(:query_parameters) { super().except(:filter) }
+
+        it "includes the result for the default parameters" do
+          expect(cached_result.dig("attributes", "rows")).to eq([[10]])
+        end
+      end
+
+      context "when the query fieldset omits SQL" do
+        let(:query_parameters) { super().merge(fields: { queries: "name,cachedResult" }) }
+
+        it "includes the selected result without exposing SQL", :aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(parsed_body.dig("data", "attributes")).to eq("name" => query.name)
+          expect(cached_result.dig("attributes", "rows")).to eq([[5]])
+        end
+      end
+
+      context "when another user follows the cached result's self link" do
+        fab!(:visitor, :user)
+
+        before do
+          cached_result
+          sign_in(visitor)
+          get(cached_result.dig("links", "self"), headers:)
+        end
+
+        it { expect(response).to have_http_status(:forbidden) }
+      end
+
+      context "when the stored cache entry is invalid" do
+        let(:cache_key) do
+          DiscourseDataExplorer::QueryResultCache::Key.parse(cached_result.fetch("id"))
+        end
+
+        before do
+          Discourse.redis.set(cache_key.to_s, cached_json)
+          get(cached_result.dig("links", "self"), headers:)
+        end
+
+        context "when the JSON is malformed" do
+          let(:cached_json) { "not-json" }
+
+          it { expect(response).to have_http_status(:not_found) }
+        end
+
+        context "when the JSON contains null" do
+          let(:cached_json) { "null" }
+
+          it { expect(response).to have_http_status(:not_found) }
+        end
+      end
+
+      context "when the selected parameters have no cached result" do
+        let(:execution_params) { super().merge("limit" => "20") }
+
+        it "keeps the query without a cached result", :aggregate_failures do
+          expect(parsed_body.fetch("data")).to include(
+            "id" => query.id.to_s,
+            "relationships" => a_hash_including("cachedResult" => a_hash_including("data" => nil)),
+          )
+          expect(parsed_body.fetch("included")).to be_empty
+        end
+
+        it "returns null at the related link" do
+          get(
+            parsed_body.dig("data", "relationships", "cachedResult", "links", "related"),
+            headers:,
+          )
+
+          expect(JSON.parse(response.body).fetch("data")).to be_nil
+        end
+      end
+
+      context "when the execution parameters contain malformed JSON" do
+        let(:filter_value) { "not-json" }
+
+        it "returns empty cached-result linkage" do
+          expect(parsed_body.dig("data", "relationships", "cachedResult")).to include("data" => nil)
+        end
+      end
+
+      context "when the query is hidden" do
+        let(:hidden) { true }
+
+        it { expect(response).to have_http_status(:not_found) }
+      end
+
+      context "when the result belongs to another visibility scope" do
+        fab!(:reader, :user)
+
+        let(:cache_user) { reader }
+
+        it "returns empty cached-result linkage" do
+          expect(parsed_body.dig("data", "relationships", "cachedResult")).to include("data" => nil)
+        end
+      end
+    end
+
     context "when queries are custom" do
       before { get(path, headers:, params: query_parameters) }
 

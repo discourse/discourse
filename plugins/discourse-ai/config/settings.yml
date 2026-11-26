@@ -21,6 +21,11 @@ discourse_ai:
   ai_sentiment_enabled:
     default: false
     client: true
+    area: "ai-features/sentiment"
+  ai_sentiment_emotion_enabled:
+    default: false
+    client: true
+    area: "ai-features/sentiment"
   ai_sentiment_model_configs:
     default: ""
     secret: true
@@ -31,28 +36,79 @@ discourse_ai:
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+    depends_behavior: "hidden"
   ai_sentiment_sentiment_agent:
     default: "-36"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_sentiment_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_emotion_classification_strategy:
     default: "classification_model"
     type: enum
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+    depends_behavior: "hidden"
   ai_sentiment_emotion_agent:
     default: "-37"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_emotion_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_backfill_maximum_posts_per_hour:
-    default: 2500
+    default: 240
     min: 0
     max: 10000
-    hidden: true
+    area: "ai-features/sentiment"
   ai_sentiment_backfill_post_max_age_days:
     default: 60
-    hidden: true
+    min: 0
+    area: "ai-features/sentiment"
 
   ai_openai_embeddings_url:
     hidden: true
@@ -82,6 +138,8 @@ discourse_ai:
     secret: true
   ai_google_custom_search_cx:
     default: ""
+  ai_google_custom_search_url:
+    default: "https://www.googleapis.com/customsearch/v1"
   ai_cloudflare_workers_account_id:
     default: ""
     secret: true
@@ -545,6 +603,12 @@ discourse_ai:
     default: 0
     min: 0
     area: "ai-features/search"
+  ai_ask_ai_endorsed_reply_groups:
+    type: group_list
+    list_type: compact
+    default: "3" # 3: @staff
+    allow_any: false
+    area: "ai-features/search"
   ai_ask_ai_external_sources:
     type: list
     list_type: compact
@@ -622,6 +686,25 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_reviewable_action_suggestions_enabled:
+    default: false
+    client: true
+    area: "ai-features/review_queue"
+  ai_reviewable_action_decision_model:
+    area: "ai-features/review_queue"
+    type: enum
+    default: ""
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+  ai_reviewable_action_min_confidence:
+    area: "ai-features/review_queue"
+    default: 0.9
+    min: 0
+    max: 1
+  ai_dsa_classification_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
   ai_rag_images_enabled:
     default: false
     hidden: true
@@ -636,6 +719,11 @@ discourse_ai:
     default: "-27"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/translation"
+  ai_translation_locale_detector_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
     area: "ai-features/translation"
   ai_translation_post_raw_translator_agent:
     default: "-28"
@@ -708,43 +796,53 @@ discourse_ai:
   ai_translation_verbose_logs:
     default: false
     client: false
-    hidden: true
     area: "ai-features/translation"
 
   inferred_concepts_enabled:
     default: false
-    client: true
-    area: "ai-features/inference"
-  inferred_concepts_background_match:
-    default: false
     client: false
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_daily_topics_limit:
     default: 20
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_posts:
     default: 5
+    min: 1
+    max: 1000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_likes:
     default: 10
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_views:
     default: 100
+    min: 0
+    max: 1000000
     client: false
     area: "ai-features/inference"
   inferred_concepts_lookback_days:
     default: 30
+    min: 1
+    max: 3650
     client: false
     area: "ai-features/inference"
   inferred_concepts_daily_posts_limit:
-    default: 30
+    default: 0
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_post_min_likes:
     default: 5
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_generate_agent:
@@ -761,6 +859,31 @@ discourse_ai:
     default: "-17"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_match_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_backfill_maximum_topics_per_hour:
+    default: 240
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_backfill_max_age_days:
+    default: 365
+    min: 0
+    max: 36500
+    area: "ai-features/inference"
+  inferred_concepts_backfill_minimum_word_count:
+    default: 50
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_seed_topics_limit:
+    default: 200
+    min: 10
+    max: 20000
     area: "ai-features/inference"
   ai_artifact_kv_value_max_length:
     default: 5000

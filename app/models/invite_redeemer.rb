@@ -112,9 +112,10 @@ class InviteRedeemer
       available_username = UserNameSuggester.suggest(email)
     end
 
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-    user ||= User.new
+    signup_email = email.strip.downcase
+    user = User.where(staged: true).with_email(signup_email).first || User.new
+    authenticator = UserAuthenticator.new(user, session, require_password: false)
+    authenticator.unstage!(signup_email:) if user.staged?
 
     user.attributes = {
       email: email,
@@ -131,14 +132,14 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.all
+    user_fields = UserField.where(show_on_signup: true).includes(:user_field_options)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields
 
       user_fields.each do |f|
         field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
-        field_val = field_params[f.id.to_s]
+        field_val = UserCreator.clean_custom_field_values(f, field_params[f.id.to_s])
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length
         ] if field_val.present?
@@ -155,8 +156,6 @@ class InviteRedeemer
       user.password = password
       user.password_required!
     end
-
-    authenticator = UserAuthenticator.new(user, session, require_password: false)
 
     if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
       raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
@@ -272,8 +271,13 @@ class InviteRedeemer
   # existing users redeeming the invite.
   def grant_moderator_from_invite
     return if !invite.moderator? || !invite.invited_by&.staff?
+    # The API can set both admin and moderator on one invite. Those are granted
+    # and logged in create_admin_grant_confirmation, so skip them here to avoid
+    # logging the same grant twice.
+    return if InviteRedeemer.admin_invite_grantable?(invite)
 
     invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
   end
 
   # Admin invites grant moderator right away; full admin requires the inviter
@@ -315,6 +319,8 @@ class InviteRedeemer
       .where("topics.archetype = ?", Archetype.private_message)
       .where("invites.email = ?", email)
       .find_each do |topic_invite|
+        next if topic_invite.invite_id != invite.id && !topic_invite.invite.redeemable?
+
         topic = topic_invite.topic
         inviter = topic_invite.invite.invited_by
         next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)

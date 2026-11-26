@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe DiscourseAi::Agents::Tools::DiscourseMetaSearch do
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   fab!(:llm_model) { Fabricate(:llm_model, max_prompt_tokens: 8192) }
   fab!(:bot_user, :admin)

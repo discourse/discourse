@@ -53,14 +53,35 @@ export default class UpsertCategorySecurity extends Component {
       return false;
     }
 
-    return !parentPerms.some((p) => p.group_id === AUTO_GROUPS.everyone.id);
+    return !parentPerms.some((p) =>
+      [AUTO_GROUPS.everyone.id, AUTO_GROUPS.logged_in_users.id].includes(
+        p.group_id
+      )
+    );
   }
 
   get availableGroups() {
     const permissions = this.permissions || [];
     const permissionGroupIds = new Set(permissions.map((p) => p.group_id));
 
-    let groups = this.site.groups.filter((g) => !permissionGroupIds.has(g.id));
+    let groups = (
+      this.args.category.permission_groups ?? this.site.groups
+    ).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        !permissionGroupIds.has(group.id)
+    );
+
+    if (
+      this.parentPermissions?.some(
+        (permission) => permission.group_id === AUTO_GROUPS.logged_in_users.id
+      ) &&
+      !this.parentPermissions.some(
+        (permission) => permission.group_id === AUTO_GROUPS.everyone.id
+      )
+    ) {
+      groups = groups.filter((group) => group.id !== AUTO_GROUPS.everyone.id);
+    }
 
     if (this.isParentRestricted) {
       const parentGroupIds = new Set(
@@ -110,7 +131,8 @@ export default class UpsertCategorySecurity extends Component {
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: this.site.groupName(groupId),
+        group_name: this.availableGroups.find((group) => group.id === groupId)
+          ?.name,
         group_id: groupId,
         permission_type: this.minimumPermission,
       },

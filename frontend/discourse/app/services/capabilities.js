@@ -25,24 +25,16 @@ const finePointerQuery = new TrackedMediaQuery("(pointer: fine)");
  */
 const PHYSICAL_KEYBOARD_KEYS = new Set(["Meta", "Control", "Alt", "Tab"]);
 
-/**
- * Tracked state lives here rather than on the capabilities class, which mixes
- * private members with what would otherwise be a decorated field.
- */
-class KeyboardEvidence {
-  @tracked seen = false;
-}
-
-const keyboardEvidence = new KeyboardEvidence();
+const keyboardSeen = tracked(false);
 
 /** Forgets any keyboard use seen so far; for test isolation. */
 export function resetKeyboardEvidence() {
-  keyboardEvidence.seen = false;
+  keyboardSeen.value = false;
 }
 
 /** Records that a physical keyboard has been used. */
 export function noteKeyboardEvidence() {
-  keyboardEvidence.seen = true;
+  keyboardSeen.value = true;
 }
 
 let siteInitialized = false;
@@ -72,15 +64,8 @@ class _Capabilities {
   isOpera = !!window.opera || ua.includes(" OPR/");
   isFirefox = ua.includes("Firefox");
   isChrome = !!window.chrome && !this.isOpera;
-  // In iframes, Safari-specific objects aren't accessible, so fall back to UA detection
   isSafari =
-    window.self !== window.top
-      ? ua.includes("Safari") &&
-        !ua.includes("Chrome") &&
-        !ua.includes("Chromium")
-      : /Constructor/.test(window.HTMLElement) ||
-        window.safari?.pushNotification?.toString() ===
-          "[object SafariRemoteNotification]";
+    ua.includes("Safari") && !ua.includes("Chrome") && !ua.includes("Chromium");
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
@@ -161,7 +146,7 @@ class _Capabilities {
   #isMobileDevice =
     Mobile.mobileForced || (ua.includes("Mobile") && !ua.includes("iPad"));
   #noteKeyboardEvent = (event) => {
-    if (keyboardEvidence.seen || event.isComposing) {
+    if (keyboardSeen.value || event.isComposing) {
       return;
     }
 
@@ -209,12 +194,12 @@ class _Capabilities {
    * for the rest of the session.
    */
   get hasKeyboard() {
-    return finePointerQuery.matches || keyboardEvidence.seen;
+    return finePointerQuery.matches || keyboardSeen.value;
   }
 
   /** Whether a keydown only a physical keyboard sends has been seen. */
   get hasKeyboardEvidence() {
-    return keyboardEvidence.seen;
+    return keyboardSeen.value;
   }
 
   get userHasBeenActive() {

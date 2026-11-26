@@ -151,7 +151,7 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
       # If the user can't see the topic, clean up notifications for it.
-      Notification.remove_for(current_user.id, params[:topic_id]) if current_user
+      Notification.remove_for(current_user.id, ex.obj.id) if current_user && ex.obj
 
       deleted = deleted_for_permalink?(ex.obj)
 
@@ -197,7 +197,11 @@ class TopicsController < ApplicationController
         url = @topic_view.topic.relative_url
         url += ".json" if request.format.json?
         url += ".md" if request.format.md?
-        url += "?page=#{last_page}" if last_page > 1
+        locale = params[Discourse::LOCALE_PARAM]
+        query = {}
+        query[:page] = last_page if last_page > 1
+        query[Discourse::LOCALE_PARAM] = locale if locale.present?
+        url += "?#{query.to_query}" if query.present?
         return redirect_to url, status: :moved_permanently
       end
     end
@@ -220,7 +224,7 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
-    response.headers["X-Robots-Tag"] = "noindex" unless @topic_view.topic.visible
+    add_topic_noindex_header(@topic_view.topic)
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
     # The canonical can be an embedding page, which has no translated versions.
@@ -244,7 +248,9 @@ class TopicsController < ApplicationController
     category = Category.find(params[:destination_category_id])
 
     raise Discourse::InvalidParameters if category.id == SiteSetting.shared_drafts_category.to_i
+    raise Discourse::InvalidAccess if topic.shared_draft.blank?
 
+    guardian.ensure_can_edit!(topic)
     guardian.ensure_can_publish_topic!(topic, category)
     topic = TopicPublisher.new(topic, current_user, category.id).publish!
 
@@ -412,8 +418,14 @@ class TopicsController < ApplicationController
     category = Category.find_by(id: params[:category_id].to_i)
     guardian.ensure_can_publish_topic!(topic, category)
 
-    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
-    SharedDraft.create(topic_id: topic.id, category_id: category.id) if row_count == 0
+    # Creating the record turns the topic into a shared draft, which hides it and lets
+    # `publish` act on it, so only staff may do it, and only inside the drafts category.
+    if topic.shared_draft.blank? &&
+         (!guardian.is_staff? || topic.category_id != SiteSetting.shared_drafts_category.to_i)
+      raise Discourse::InvalidAccess
+    end
+
+    (topic.shared_draft || topic.build_shared_draft).update!(category: category)
 
     render json: success_json
   end
@@ -655,6 +667,7 @@ class TopicsController < ApplicationController
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      raise Discourse::InvalidAccess if !guardian.can_edit?(topic)
       if topic.private_message? && !guardian.can_convert_topic?(topic)
         raise Discourse::InvalidAccess
       end
@@ -1479,21 +1492,30 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id include_raw].concat(
-          additional_allowed_query_parameters,
-        ),
+        *%i[
+          page
+          print
+          filter_top_level_replies
+          preview_theme_id
+          preview_color_scheme_id
+          preview_dark_color_scheme_id
+          preview_base_font
+          preview_heading_font
+          preview_component_ids
+          preview_hide_component_ids
+          include_raw
+        ],
+        Discourse::LOCALE_PARAM,
+        *additional_allowed_query_parameters,
       )
-    opts.delete(:page) if params[:page] == 0
+    opts.delete(:page) if opts[:page].to_s.to_i.zero?
 
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
     url << ".md" if request.format.md?
 
-    opts.each do |k, v|
-      s = url.include?("?") ? "&" : "?"
-      url << "#{s}#{k}=#{v}"
-    end
+    url << "?#{Rack::Utils.build_nested_query(opts.to_unsafe_h)}" if opts.present?
 
     redirect_to url, status: :moved_permanently
   end
@@ -1586,7 +1608,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
+        @description_meta = @topic_view.first_post_excerpt || @topic_view.summary
         if set_layout == "application"
           store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         end

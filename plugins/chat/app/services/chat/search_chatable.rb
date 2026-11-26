@@ -79,8 +79,11 @@ module Chat
       end
 
       allowed_bot_user_ids =
-        DiscoursePluginRegistry.apply_modifier(:chat_allowed_bot_user_ids, [], guardian)
-
+        DiscoursePluginRegistry.apply_modifier(
+          :chat_allowed_bot_user_ids,
+          User.interactive_bots.pluck(:id),
+          guardian,
+        )
       user_search = user_search.real(allowed_bot_user_ids:)
       user_search = user_search.includes(:user_option)
 

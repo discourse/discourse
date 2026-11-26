@@ -14,6 +14,7 @@ import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
 import GlobalNotice from "discourse/components/global-notice";
 import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
+import MobileTabBar from "discourse/components/mobile-tab-bar";
 import ModalContainer from "discourse/components/modal-container";
 import NotificationConsentBanner from "discourse/components/notification-consent-banner";
 import OfflineIndicator from "discourse/components/offline-indicator";
@@ -104,7 +105,7 @@ export default <template>
           {{/unless}}
 
           {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner />
+            <AdminOnboardingBanner @location="above_main_container" />
           {{/if}}
 
           <WelcomeBanner @location="above_topic_content" />
@@ -183,6 +184,8 @@ export default <template>
       <PluginOutlet @name="footer-nav">
         <FooterNav />
       </PluginOutlet>
+    {{else}}
+      <MobileTabBar />
     {{/if}}
   </DiscourseRoot>
 

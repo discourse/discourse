@@ -61,10 +61,11 @@ class HashtagAutocompleteService
   end
 
   def self.ordered_types_for_context(context)
+    enabled_types = data_source_types
     find_priorities_for_context(context)
       .sort_by { |ctp| -ctp[:priority] }
       .map { |ctp| ctp[:type] }
-      .reject { |type| data_source_types.exclude?(type) }
+      .reject { |type| enabled_types.exclude?(type) }
   end
 
   def self.contexts_with_ordered_types

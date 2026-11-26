@@ -39,7 +39,9 @@ de:
         unassign_from_topic: "Zuordnung von @%{username} zu Thema aufheben"
         unassign_from_post: "Zuordnung von @%{username} zu #%{post_number} aufheben"
         edit_assignments: "Zuordnungen bearbeiten …"
-        created_by: "Erstellt von"
+        owners:
+          one: "Eigentümer"
+          other: "Eigentümer"
       manage:
         name: "Name"
         slug: "Sprechender Name für URL"
@@ -52,10 +54,10 @@ de:
           column_title: "Titel"
           icon: "Symbol"
           color: "Farbe"
+          color_palette: "Farbpalette"
+          icon_search_placeholder: "Suchen …"
           default_sort_priority: "Priorität"
           tag: "Schlagwort"
           move_to_assigned_unassign: "Zuordnung aufheben"
           move_to_status_open: "Offen"
           move_to_status_closed: "Geschlossen"
-          show_advanced: "Erweiterte Optionen anzeigen"
-          hide_advanced: "Erweiterte Optionen ausblenden"

@@ -48,28 +48,34 @@ module ReviewableActionBuilder
     actions,
     id,
     icon: nil,
+    label: nil,
+    translation_prefix: nil,
     button_class: nil,
     bundle: nil,
     client_action: nil,
     confirm: false,
     require_reject_reason: false,
     secondary: false,
+    dsa_classification_required: false,
     source: nil
   )
-    actions.add(id, bundle:, secondary:) do |action|
+    actions.add(id, bundle:, secondary:, dsa_classification_required:) do |action|
       source ||= type_source
-      if source == "core"
+      prefix = translation_prefix
+      unless prefix
         prefix = "reviewables.actions.#{id}"
-      else
-        prefix = "#{source.underscore}.reviewables.actions.#{id}"
+        prefix = "#{source.underscore}.#{prefix}" unless source == "core"
       end
 
       action.icon = icon if icon
       action.button_class = button_class if button_class
-      action.label = "#{prefix}.title"
+      action.label = label || "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action if client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
+      if confirm
+        action.confirm_message = "#{prefix}.confirm"
+        action.confirm_title = "#{prefix}.confirm_title"
+      end
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
       action.penalty_effect = penalty_effect_for(id)
@@ -80,15 +86,40 @@ module ReviewableActionBuilder
     nil
   end
 
-  def build_penalty_actions(actions, bundle:, silence:, suspend:, user: target_user)
+  def build_penalty_actions(
+    actions,
+    bundle:,
+    silence:,
+    suspend:,
+    silence_options: {},
+    suspend_options: {},
+    user: target_user,
+    dsa_classification_required: false
+  )
     return if user.blank? || !guardian.can_suspend?(user)
 
     if !user.silenced?
-      build_action(actions, silence, icon: "microphone-slash", bundle:, client_action: "silence")
+      build_action(
+        actions,
+        silence,
+        icon: "microphone-slash",
+        bundle:,
+        client_action: "silence",
+        dsa_classification_required:,
+        **silence_options,
+      )
     end
 
     if !user.suspended?
-      build_action(actions, suspend, icon: "ban", bundle:, client_action: "suspend")
+      build_action(
+        actions,
+        suspend,
+        icon: "ban",
+        bundle:,
+        client_action: "suspend",
+        dsa_classification_required:,
+        **suspend_options,
+      )
     end
   end
 

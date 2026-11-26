@@ -123,6 +123,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
       end
 
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
       Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
         it "supports specific '#{error}' messages" do
           get "/auth/failure", params: { message: error }
@@ -130,6 +131,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
         end
       end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
       it "falls back to generic error when the specific error doesn't exist" do
         get "/auth/failure", params: { message: "foo_bar" }
@@ -1262,6 +1264,54 @@ RSpec.describe Users::OmniauthCallbacksController do
       )
 
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+    end
+  end
+
+  describe "when the matched user is suspended" do
+    fab!(:user) { Fabricate(:user, username: "mallory", name: "Old Name", active: false) }
+
+    before do
+      Fabricate(
+        :user_associated_account,
+        user: user,
+        provider_name: "twitter",
+        provider_uid: "1234",
+      )
+      enable_auth_provider(:twitter)
+      user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
+
+      OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+        provider: "twitter",
+        uid: "1234",
+        info:
+          OmniAuth::AuthHash::InfoHash.new(
+            email: user.email,
+            nickname: "provider_username",
+            name: "Provider Name",
+          ),
+      )
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+    end
+
+    after do
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+    end
+
+    it "refuses the login without activating the user, applying overrides or logging on" do
+      SiteSetting.auth_overrides_name = true
+      SiteSetting.auth_overrides_username = true
+
+      expect { get "/auth/twitter/callback.json" }.not_to change { UserAuthToken.count }
+
+      data = JSON.parse(cookies[:authentication_data])
+      expect(data["suspended"]).to eq(true)
+      expect(data["authenticated"]).to be_falsey
+      expect(session[:current_user_id]).to be_nil
+
+      user.reload
+      expect(user.active).to eq(false)
+      expect(user.name).to eq("Old Name")
+      expect(user.username).to eq("mallory")
     end
   end
 

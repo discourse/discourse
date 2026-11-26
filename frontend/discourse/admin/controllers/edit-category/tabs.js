@@ -3,14 +3,18 @@ import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { categoryStyleErrors } from "discourse/admin/lib/category-style-validation";
+import {
+  completeOnboardingStep,
+  CREATE_CATEGORY_STEP,
+} from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
-import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const SIMPLIFIED_FIELD_LIST = [
@@ -69,7 +73,7 @@ const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
 /**
- * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
+ * @typedef {Record<string, unknown> & { name?: string, color?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
  */
 /**
  * @typedef {Object} CategoryFormApi
@@ -86,6 +90,8 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
+  @service appEvents;
+  @service currentUser;
   @service dialog;
   @service site;
   @service siteSettings;
@@ -125,6 +131,12 @@ export default class EditCategoryTabsController extends Controller {
 
   get availableLocales() {
     return this.siteSettings.available_locales;
+  }
+
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
   }
 
   get baseTitle() {
@@ -202,10 +214,10 @@ export default class EditCategoryTabsController extends Controller {
       ...(this.model.category_type_settings ?? {}),
     };
     data.site_texts = {};
-    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+    data.category_type_ids = Object.keys(this.model.categoryTypes ?? {});
 
-    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
-      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    if (!data.category_type_ids.includes(DISCUSSION_TYPE_ID)) {
+      data.category_type_ids.unshift(DISCUSSION_TYPE_ID);
     }
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
@@ -263,7 +275,7 @@ export default class EditCategoryTabsController extends Controller {
 
   /**
    * Runs all registered validators, then performs built-in validation for
-   * required fields (name, emoji, icon) when submitting from a non-general tab.
+   * the category name and style, including controls absent from the current tab.
    * Both `addError` and `removeError` are passed to validators so they can
    * manage errors bidirectionally.
    *
@@ -275,17 +287,17 @@ export default class EditCategoryTabsController extends Controller {
    */
   @action
   validateForm(data, { addError, removeError }) {
+    removeError("style_type");
     for (const validator of this.validators) {
       validator(data, { addError, removeError });
     }
 
-    if (this.selectedTab === "general") {
-      return;
-    }
-
     let hasGeneralTabErrors = false;
-
-    if (!data.name) {
+    if (
+      this.selectedTab !== "general" &&
+      !this.model.isUncategorizedCategory &&
+      !data.name
+    ) {
       hasGeneralTabErrors = true;
       addError("name", {
         title: i18n("category.name"),
@@ -293,20 +305,10 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    if (data.style_type === "emoji" && !data.emoji) {
+    // The popover's controls can be unmounted when the form is submitted.
+    for (const error of categoryStyleErrors(data)) {
       hasGeneralTabErrors = true;
-      addError("emoji", {
-        title: i18n("category.emoji"),
-        message: i18n("category.validations.emoji_required"),
-      });
-    }
-
-    if (data.style_type === "icon" && !data.icon) {
-      hasGeneralTabErrors = true;
-      addError("icon", {
-        title: i18n("category.icon"),
-        message: i18n("category.validations.icon_required"),
-      });
+      addError("style_type", error);
     }
 
     if (hasGeneralTabErrors) {
@@ -368,7 +370,7 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
     // Category serialization converts an empty permission list to staff-only access.
@@ -397,13 +399,22 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const isNew = !this.model.id;
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
-      const result = await this.model.save();
+      const result = await this.model.save(category_type_ids);
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
+
+      // awaited ahead of the reloads below, which would cancel the audit write
+      if (isNew && this.currentUser?.show_site_owner_onboarding) {
+        await completeOnboardingStep(
+          { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+          CREATE_CATEGORY_STEP
+        );
+      }
 
       if (lostAccess) {
         this.router.transitionTo(homepageNavigationDestination());
@@ -414,10 +425,10 @@ export default class EditCategoryTabsController extends Controller {
       const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
       // A reload is needed when site texts change
       if (typeWasAdded || siteTextsChanged) {
-        if (this.model.id) {
-          window.location.reload();
+        if (isNew) {
+          DiscourseURL.redirectAbsolute(updatedModel.url);
         } else {
-          DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
+          window.location.reload();
         }
 
         // Never resolves: keeps the form busy until the page unloads
@@ -432,11 +443,9 @@ export default class EditCategoryTabsController extends Controller {
         data: { message: i18n("saved") },
       });
 
-      if (!this.model.id) {
-        this.router.transitionTo(
-          "editCategory",
-          Category.slugFor(updatedModel)
-        );
+      if (isNew) {
+        this.router.transitionTo(updatedModel.path);
+        return;
       }
 
       // ensure breadcrumbs contain the updated category model
@@ -529,7 +538,10 @@ export default class EditCategoryTabsController extends Controller {
     const primaryTab = registeredEditCategoryTabs.find(
       (tab) => tab.id === this.selectedTab && tab.primary
     );
-    if (primaryTab) {
+    if (
+      primaryTab ||
+      this.dynamicCategoryTypeTabs.some((type) => type.id === this.selectedTab)
+    ) {
       return;
     }
 

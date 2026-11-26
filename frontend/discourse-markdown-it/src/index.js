@@ -58,6 +58,11 @@ export default class DiscourseMarkdownIt {
     return this.options.engine.linkify;
   }
 
+  /**
+   * Replaces the sanitizer with a pass-through, so `cook` renders whatever HTML
+   * it is given. Only for trusted input: it drops the allow-lister, and with it
+   * the normalization that lets `unhoistForCooked` tell a tag from text.
+   */
   disableSanitizer() {
     this.options.sanitizer = this.options.discourse.sanitizer = NOOP;
   }

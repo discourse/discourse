@@ -130,6 +130,21 @@ RSpec.describe Live::LivekitWebhooksController do
       expect(Live::ParticipantTracker.agent_user_ids(room.id)).to be_empty
     end
 
+    it "removes a participant who joins a room they can no longer access" do
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: user.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).not_to have_been_requested
+
+      room.update!(public: false)
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).to have_been_requested.once
+    end
+
     context "with an invalid delivery" do
       it "rejects a request with no Authorization token and records no delivery" do
         body = event_for.to_json
@@ -198,26 +213,31 @@ RSpec.describe Live::LivekitWebhooksController do
       expect(Live::Livekit.last_webhook_at).to be_within(5.seconds).of(Time.now)
     end
 
-    %w[participant_left participant_connection_aborted].each do |event_name|
-      context "with a #{event_name} event" do
-        it "expires the participant's presence, keeps their metadata, and broadcasts the change" do
-          Live::ParticipantTracker.pin_transport!(room.id, "livekit")
-          Live::ParticipantTracker.add(room.id, user.id)
-          Live::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
+    shared_examples "handling a participant disconnect webhook" do |event_name:|
+      it "expires presence while preserving metadata and broadcasting the change" do
+        Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+        Live::ParticipantTracker.add(room.id, user.id)
+        Live::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
 
-          messages =
-            MessageBus.track_publish(Live.room_channel(room.id)) do
-              post_webhook(event_for(event: event_name))
-            end
+        messages =
+          MessageBus.track_publish(Live.room_channel(room.id)) do
+            post_webhook(event_for(event: event_name))
+          end
 
-          expect(response.status).to eq(200)
-          expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
-          expect(Live::ParticipantTracker.get_metadata(room.id, user.id)[:role]).to eq(
-            "participant",
-          )
-          expect(messages.map { |message| message.data[:type] }).to include("participants")
-        end
+        expect(response.status).to eq(200)
+        expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
+        expect(Live::ParticipantTracker.get_metadata(room.id, user.id)[:role]).to eq("participant")
+        expect(messages.map { |message| message.data[:type] }).to include("participants")
       end
+    end
+
+    context "with a participant_left event and recorded presence" do
+      include_examples "handling a participant disconnect webhook", event_name: "participant_left"
+    end
+
+    context "with a participant_connection_aborted event" do
+      include_examples "handling a participant disconnect webhook",
+                       event_name: "participant_connection_aborted"
     end
 
     context "with a participant_left event" do
@@ -341,6 +361,30 @@ RSpec.describe Live::LivekitWebhooksController do
         expect(response.status).to eq(200)
         expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
         expect(Live::ParticipantTracker.user_ids(room.id)).to include(user.id)
+      end
+
+      context "with a session-only speaker in a stage room" do
+        before do
+          room.update!(room_type: Live::Room::ROOM_TYPE_STAGE)
+          Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+          Live::ParticipantTracker.add_session_speaker(room.id, user.id)
+        end
+
+        it "keeps the grant when the finish of a previous call arrives during a new one" do
+          Live::ParticipantTracker.add(room.id, user.id)
+
+          post_webhook(event_for(event: "room_finished"))
+
+          expect(response.status).to eq(200)
+          expect(Live::ParticipantTracker.session_speaker?(room.id, user.id)).to eq(true)
+        end
+
+        it "clears the grant once nobody is left in the room" do
+          post_webhook(event_for(event: "room_finished"))
+
+          expect(response.status).to eq(200)
+          expect(Live::ParticipantTracker.session_speaker?(room.id, user.id)).to eq(false)
+        end
       end
 
       it "keeps a mesh room's pin" do

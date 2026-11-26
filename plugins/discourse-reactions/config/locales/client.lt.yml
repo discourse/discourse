@@ -19,7 +19,7 @@ lt:
         "trigger:post_reaction_changed": "Įrašo reakcija pakeista"
       node_descriptions:
         "action:post_reaction": "Pridėti arba pašalinti reakciją prie įrašo"
-        "trigger:post_reaction_changed": "Suveikia, kai prie įrašo pridedama, pakeičiama arba pašalinama reakcija. Vartotojas yra tas asmuo, kuris sureagavo, o ne įrašo autorius."
+        "trigger:post_reaction_changed_v1": "Suveikia, kai prie įrašo pridedama, pakeičiama arba pašalinama reakcija. Vartotojas yra tas asmuo, kuris sureagavo, o ne įrašo autorius."
       post_reaction:
         operations:
           add: "Pridėti reakciją"

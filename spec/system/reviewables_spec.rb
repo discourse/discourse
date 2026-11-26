@@ -17,6 +17,23 @@ describe "Reviewables" do
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic: post.topic) }
 
+    it "lets moderators release an automatic claim and handle the review when manual claiming is disabled" do
+      SiteSetting.reviewable_claiming = "disabled"
+      Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator, automatic: true)
+
+      review_page.visit_reviewable(short_reviewable)
+
+      expect(review_page).to have_no_reviewable_action_dropdown
+
+      review_page.click_unclaim_reviewable
+
+      expect(review_page).to have_reviewable_action_dropdown
+
+      review_page.select_bundled_action(short_reviewable, "post-agree_and_hide", bundle_index: 1)
+
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(short_reviewable)
+    end
+
     describe "reviewable actions" do
       let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 
@@ -62,7 +79,7 @@ describe "Reviewables" do
 
         expect(composer).to be_closed
         expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
-        expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(short_reviewable)
         topic_page.visit_topic(post.topic)
         expect(topic_page).to have_topic_title("A topic title corrected by a moderator")
         expect(topic_page).to have_post_content(
@@ -115,7 +132,7 @@ describe "Reviewables" do
 
       expect(modal).to be_closed
       review_page.visit_reviewable(reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
       admin_user_page.visit(post.user)
       expect(admin_user_page).to have_unsuspend_button
     end
@@ -138,7 +155,7 @@ describe "Reviewables" do
 
       expect(modal).to be_closed
       review_page.visit_reviewable(reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
       admin_user_page.visit(post.user)
       expect(admin_user_page).to have_unsilence_button
     end
@@ -199,7 +216,7 @@ describe "Reviewables" do
       rejection_reason_modal.select_send_rejection_email_checkbox
       rejection_reason_modal.delete_user
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to eq([user_email])
@@ -219,7 +236,7 @@ describe "Reviewables" do
       suspend_user_modal.suspend("spam profile")
 
       expect(suspend_user_modal).to be_closed
-      expect(review_page).to have_reviewable_with_rejected_status(suspect_reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(suspect_reviewable)
       expect(review_page).to have_no_reviewable_actions(suspect_reviewable)
       expect(suspect_user.reload).to be_suspended
       expect(
@@ -259,10 +276,26 @@ describe "Reviewables" do
         dialog.click_danger
 
         expect(review_page).to have_no_error_dialog_visible
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
+      end
+
+      it "lets a moderator classify an author deletion and keeps the reviewable" do
+        enable_dsa_reporting
+        modal = PageObjects::Modals::DsaModeration.new
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+
+        expect(modal).to have_action_title(
+          "Delete @#{queued_post_reviewable.target_created_by.username}?",
+        )
+        expect(modal).to have_classification
+        modal.confirm("Delete user")
+
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload.target_created_by).to be_nil
       end
 
       it "delete_user can be cancelled from the confirmation dialog" do
@@ -290,7 +323,7 @@ describe "Reviewables" do
         suspend_user_modal.suspend("spam")
 
         expect(suspend_user_modal).to be_closed
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by.reload).to be_suspended
       end
@@ -313,7 +346,7 @@ describe "Reviewables" do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
         expect(queued_post_reviewable.reload).to be_rejected
 
         topic = Topic.where(archetype: Archetype.private_message).last
@@ -345,7 +378,7 @@ describe "Reviewables" do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
       end
 
       context "with reviewable claiming enabled" do

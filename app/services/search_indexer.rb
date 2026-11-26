@@ -277,6 +277,23 @@ class SearchIndexer
     SQL
   end
 
+  def self.hidden_tags
+    Tag.where.not(id: DiscourseTagging.visible_tags(Guardian.new).select(:id))
+  end
+
+  def self.queue_tags_posts_reindex(tag_ids)
+    return if @disabled
+
+    DB.exec(<<~SQL, tag_ids: tag_ids, version: REINDEX_VERSION)
+      UPDATE post_search_data
+      SET version = :version, search_data = ts_filter(search_data, '{A,B,D}')
+      FROM posts
+      INNER JOIN topic_tags ON topic_tags.topic_id = posts.topic_id
+      WHERE post_search_data.post_id = posts.id
+      AND topic_tags.tag_id IN (SELECT COALESCE(target_tag_id, id) FROM tags WHERE id IN (:tag_ids))
+    SQL
+  end
+
   def self.index(obj, force: false)
     return if @disabled
 
@@ -303,11 +320,12 @@ class SearchIndexer
     category_name = topic.category&.name if topic
 
     if topic
-      tags = topic.tags.select(:id, :name).to_a
+      hidden_tag_ids = hidden_tags.select(:id)
+      tags = topic.tags.where.not(id: hidden_tag_ids).select(:id, :name).to_a
 
       if tags.present?
-        tag_names =
-          (tags.map(&:name) + Tag.where(target_tag_id: tags.map(&:id)).pluck(:name)).join(" ")
+        synonyms = Tag.where(target_tag_id: tags.map(&:id)).where.not(id: hidden_tag_ids)
+        tag_names = (tags.map(&:name) + synonyms.pluck(:name)).join(" ")
       end
     end
 
@@ -393,63 +411,88 @@ class SearchIndexer
     def self.scrub(html)
       return +"" if html.blank?
 
-      begin
-        document = Nokogiri.HTML5("<div>#{html}</div>", encoding: Encoding::UTF_8)
-      rescue ArgumentError
-        return +""
-      end
+      has_lightbox = html.include?(CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS)
+      has_emoji = html.include?("emoji")
+      has_link = html.include?("<a") || html.include?("<A")
+      # The SAX parser splits text at entity references, so decode them via the DOM round trip
+      has_entity = html.include?("&")
+      needs_dom_round_trip = has_lightbox || has_emoji || has_link || has_entity
 
-      nodes = document.css("div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}")
+      if needs_dom_round_trip || html.count("<") >= Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH
+        begin
+          document = Nokogiri.HTML5("<div>#{html}</div>", encoding: Encoding::UTF_8)
+        rescue ArgumentError
+          return +""
+        end
 
-      if nodes.present?
-        nodes.each do |node|
-          node.traverse do |child_node|
-            next if child_node == node
+        if needs_dom_round_trip
+          if has_lightbox
+            document
+              .css("div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}")
+              .each do |node|
+                node.traverse do |child_node|
+                  next if child_node == node
 
-            if %w[a img].exclude?(child_node.name)
-              child_node.remove
-            elsif child_node.name == "a"
-              ATTRIBUTES.each { |attribute| child_node.remove_attribute(attribute) }
-            end
+                  if %w[a img].exclude?(child_node.name)
+                    child_node.remove
+                  elsif child_node.name == "a"
+                    ATTRIBUTES.each { |attribute| child_node.remove_attribute(attribute) }
+                  end
+                end
+              end
           end
+
+          document.css("img.emoji").each { |node| node.remove_attribute("alt") } if has_emoji
+
+          if has_link
+            document
+              .css("a[href]")
+              .each do |node|
+                if node["href"] == node.text || MENTION_CLASSES.include?(node["class"])
+                  node.remove_attribute("href")
+                end
+
+                if node["class"] == "anchor" && node["href"].starts_with?("#")
+                  node.remove_attribute("href")
+                end
+              end
+          end
+
+          html = document.to_html
         end
       end
-
-      document.css("img.emoji").each { |node| node.remove_attribute("alt") }
-
-      document
-        .css("a[href]")
-        .each do |node|
-          if node["href"] == node.text || MENTION_CLASSES.include?(node["class"])
-            node.remove_attribute("href")
-          end
-
-          if node["class"] == "anchor" && node["href"].starts_with?("#")
-            node.remove_attribute("href")
-          end
-        end
 
       html_scrubber = new
-      Nokogiri::HTML4::SAX::Parser.new(html_scrubber, Encoding::UTF_8).parse(document.to_html)
-      html_scrubber.scrubbed.squish
+      Nokogiri::HTML4::SAX::Parser.new(html_scrubber, Encoding::UTF_8).parse(html)
+      html_scrubber.scrubbed.squish!
+      html_scrubber.scrubbed
     end
 
     MENTION_CLASSES = %w[mention mention-group]
     ATTRIBUTES = %w[alt title href data-video-title]
 
     def start_element(_name, attributes = [])
-      attributes = Hash[*attributes.flatten]
+      return if attributes.empty?
 
+      len = attributes.length
       ATTRIBUTES.each do |attribute_name|
-        if attributes[attribute_name].present? &&
-             !(attribute_name == "href" && UrlHelper.is_local(attributes[attribute_name]))
-          characters(attributes[attribute_name])
+        i = 0
+        while i < len
+          pair = attributes[i]
+          if pair[0] == attribute_name
+            val = pair[1]
+            if val.present? && !(attribute_name == "href" && UrlHelper.is_local(val))
+              characters(val)
+            end
+            break
+          end
+          i += 1
         end
       end
     end
 
     def characters(str)
-      scrubbed << " #{str} "
+      @scrubbed << " " << str << " "
     end
   end
 

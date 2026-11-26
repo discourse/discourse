@@ -8,10 +8,13 @@ import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
 import { helperContext } from "discourse/lib/helpers";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
@@ -103,12 +106,10 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
         if (this.channel.chatable.group) {
           return this.channel.displayTitle;
         } else {
-          const username = this.channel.escapedTitle.replaceAll("@", "");
-          return trustHTML(
-            `${escapeExpression(username)}${decorateUsername(
-              escapeExpression(username)
-            )}`
+          const username = escapeExpression(
+            (this.channel.title ?? "").replaceAll("@", "")
           );
+          return trustHTML(`${username}${decorateUsername(username)}`);
         }
       } else {
         return trustHTML(emojiUnescape(this.channel.escapedTitle));
@@ -119,17 +120,18 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       if (this.isDM) {
         if (this.channel.chatable.group) {
           return i18n("chat.placeholder_channel", {
-            channelName: this.channel.escapedTitle,
+            channelName: this.channel.title,
           });
         } else {
           return i18n("chat.placeholder_users", {
-            commaSeparatedNames: this.channel.escapedTitle,
+            commaSeparatedNames: this.channel.title,
           });
         }
       } else {
-        return this.channel.escapedDescription
-          ? trustHTML(this.channel.escapedDescription)
-          : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
+        return (
+          this.channel.description?.trim() ||
+          `${this.channel.title} ${i18n("chat.title")}`
+        );
       }
     }
 
@@ -300,6 +302,7 @@ export default {
     }
 
     withPluginApi((api) => {
+      const chatService = this.chatService;
       const chatStateManager = container.lookup("service:chat-state-manager");
 
       api.addSidebarPanel(
@@ -312,6 +315,31 @@ export default {
 
             get switchButtonDefaultUrl() {
               return chatStateManager.lastKnownChatURL || "/chat";
+            }
+
+            get mobileTab() {
+              return {
+                label: this.switchButtonLabel,
+                icon: this.switchButtonIcon,
+                badgeComponent: ChatHeaderIconUnreadIndicator,
+                url: "/chat",
+                primary: true,
+                ownsRoute: (routeInfo) => routeWithin(routeInfo, "chat"),
+                isNestedRoute: (routeInfo) =>
+                  routeWithin(routeInfo, "chat.channel"),
+                createActions: chatService.userCanChat
+                  ? [
+                      {
+                        label: i18n("chat.new_chat"),
+                        icon: "d-chat",
+                        action: () =>
+                          container
+                            .lookup("service:modal")
+                            .show(ChatModalNewMessage),
+                      },
+                    ]
+                  : [],
+              };
             }
           }
       );
@@ -640,9 +668,10 @@ export default {
               }
 
               get title() {
-                return this.channel.escapedDescription
-                  ? trustHTML(this.channel.escapedDescription)
-                  : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
+                return (
+                  this.channel.description?.trim() ||
+                  `${this.channel.title} ${i18n("chat.title")}`
+                );
               }
 
               get prefixBadge() {
@@ -895,11 +924,11 @@ export default {
               get title() {
                 if (this.channel.chatable.group) {
                   return i18n("chat.placeholder_channel", {
-                    channelName: this.channel.escapedTitle,
+                    channelName: this.channel.title,
                   });
                 } else {
                   return i18n("chat.placeholder_users", {
-                    commaSeparatedNames: this.channel.escapedTitle,
+                    commaSeparatedNames: this.channel.title,
                   });
                 }
               }
@@ -908,15 +937,10 @@ export default {
                 if (this.channel.chatable.group) {
                   return this.channel.displayTitle;
                 } else {
-                  const username = this.channel.escapedTitle.replaceAll(
-                    "@",
-                    ""
+                  const username = escapeExpression(
+                    (this.channel.title ?? "").replaceAll("@", "")
                   );
-                  return trustHTML(
-                    `${escapeExpression(username)}${decorateUsername(
-                      escapeExpression(username)
-                    )}`
-                  );
+                  return trustHTML(`${username}${decorateUsername(username)}`);
                 }
               }
 

@@ -42,6 +42,8 @@ const TOOL_TOKEN_BAR_MAX = 6000;
 const TOOL_COUNT_WARNING_THRESHOLD = 5;
 const TOOL_COUNT_BAR_MAX = 7;
 
+import AiAutomaticImageTools from "./ai-automatic-image-tools.gjs";
+
 export default class AgentEditor extends Component {
   @service router;
   @service site;
@@ -72,12 +74,20 @@ export default class AgentEditor extends Component {
     return data;
   }
 
+  get cameFromBots() {
+    return this.router.currentRoute?.queryParams?.source === "bots";
+  }
+
   get chatPluginEnabled() {
     return this.siteSettings.chat_enabled;
   }
 
   get hasFloatingActions() {
     return this.args.model.isNew || this.formApi?.isDirty;
+  }
+
+  get hasAutomaticImageTools() {
+    return Array.isArray(this.args.model.automatic_image_tools);
   }
 
   get allTools() {
@@ -239,7 +249,8 @@ export default class AgentEditor extends Component {
         addUniqueValueToArray(this.args.agents.content, agentToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-agents.edit",
-          agentToSave
+          agentToSave,
+          { queryParams: { source: this.cameFromBots ? "bots" : null } }
         );
       }
       this.toasts.success({
@@ -700,10 +711,18 @@ export default class AgentEditor extends Component {
   }
 
   <template>
-    <BackButton
-      @label="discourse_ai.ai_agent.back"
-      @route="adminPlugins.show.discourse-ai-agents"
-    />
+    {{#if this.cameFromBots}}
+      <BackButton
+        @label="admin.users.bots.back"
+        @model="bots"
+        @route="adminUsersList.show"
+      />
+    {{else}}
+      <BackButton
+        @label="discourse_ai.ai_agent.back"
+        @route="adminPlugins.show.discourse-ai-agents"
+      />
+    {{/if}}
     <div
       class="ai-agent-editor"
       {{didInsert this.updateAllGroups @model.id}}
@@ -913,23 +932,27 @@ export default class AgentEditor extends Component {
         {{/if}}
 
         <form.Section @title={{i18n "discourse_ai.ai_agent.ai_tools"}}>
-          <form.Field
-            @format="large"
-            @name="tools"
-            @title={{i18n "discourse_ai.ai_agent.tools"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.native_tools_help"}}
-            @type="custom"
-            as |field|
-          >
-            <field.Control>
-              <AiToolSelector
-                @content={{this.availableTools data}}
-                @disabled={{data.system}}
-                @onChange={{fn this.updateToolNames form data}}
-                @value={{field.value}}
-              />
-            </field.Control>
-          </form.Field>
+          {{#if this.hasAutomaticImageTools}}
+            <AiAutomaticImageTools @tools={{@model.automatic_image_tools}} />
+          {{else}}
+            <form.Field
+              @format="large"
+              @name="tools"
+              @title={{i18n "discourse_ai.ai_agent.tools"}}
+              @tooltip={{i18n "discourse_ai.ai_agent.native_tools_help"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                <AiToolSelector
+                  @content={{this.availableTools data}}
+                  @disabled={{data.system}}
+                  @onChange={{fn this.updateToolNames form data}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            </form.Field>
+          {{/if}}
 
           <form.Field
             @format="large"

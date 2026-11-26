@@ -40,14 +40,26 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      review_bulk:
+        refresh: "Osvježi"
+        columns:
+          user: "Korisnik"
+          reason: "Označeno kao"
+          created: "Stvoreno"
+          status: "Statust"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
         response: "Odgovor"
+      post_image_captions:
+        image_descriptions:
+          apply: "Primijeni"
       discourse_workflows:
         ai_agent:
           mode: "Modus"
+        ai_tool:
+          list_item: "Predmet popisa"
         classify:
           text: "Tekst"
           upload_ids: "Slike"
@@ -65,23 +77,28 @@ hr:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(onemogućeno)"
-        groups: "Grupe:"
+        table:
+          status: "Statust"
+          enabled: "Omogućeno"
+          groups: "Grupe"
+        chatbot:
+          places:
+            personal_messages: "Osobne poruke"
+            none: "Nije dostupno"
         no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
-        expand_list:
-          one: "(%{count} još)"
-          few: "(%{count} još)"
-          other: "(%{count} još)"
-        collapse_list: "(prikaži manje)"
         nav:
           enabled: "Omogućeno"
         filters:
-          all: "Sve"
           reset: "Resetirati"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
+        review_queue:
+          setting_groups:
+            settings: "Postavke"
         image_caption:
           setting_groups:
             settings: "Postavke"
@@ -91,7 +108,20 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
-        category_scope: "Kategorije"
+        sections:
+          advanced: "Napredno"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            label: "Osobne poruke"
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Nitko"
+              all: "Svi"
         model_progress:
           detail:
             columns:
@@ -107,6 +137,8 @@ hr:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Omogućeno"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -127,6 +159,8 @@ hr:
             other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Zadnjih 7 dana"
         enable: "Omogućiti"
         test_modal:
@@ -220,6 +254,31 @@ hr:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      concepts:
+        edit: "Uredi"
+        seed:
+          refresh: "Osvježi"
+        delete: "Izbriši"
+        columns:
+          status: "Statust"
+          topics: "Tema"
+          posts: "Postovi"
+        statuses:
+          active: "Aktivno"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Statust"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} teme"
+        tagged_topics: "Tagirane teme"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Relevantnost"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime"

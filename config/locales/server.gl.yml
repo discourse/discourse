@@ -317,11 +317,6 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
-  no_embedded_media_allowed_group: "Non pode inserir elementos multimedia nunha publicación."
-  no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
-  too_many_embedded_media:
-    one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
-    other: "Os novos usuarios só poden inserir %{count} elementos multimedia nunha publicación."
   no_attachments_allowed: "Sentímolo, mais os novos usuarios non poden anexar ficheiros nas publicacións."
   too_many_attachments:
     one: "Sentímolo, mais os novos usuarios só poden anexar un ficheiro nunha publicación."
@@ -1676,7 +1671,6 @@ gl:
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
-    short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
@@ -1746,9 +1740,6 @@ gl:
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
-    dashboard_hidden_reports: "Permitir agochar os informes específicos do panel de control."
-    dashboard_visible_tabs: "Escolla que lapelas do panel son visíbeis."
-    dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
     errors:
@@ -1786,6 +1777,8 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
+    keywords:
+      company_url: "sitio web"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2116,48 +2109,12 @@ gl:
     post_hidden:
       title: "Publicación oculta"
       subject_template: "Publicación ocultada polas denuncias da comunidade"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} para comunicarlle que a súa publicación foi ocultada.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta publicación foi ocultada por mor das denuncias da comunidade. Daquela, considere a posibilidade de revisala tendo en conta esta reacción da comunidade. **Pode editar a súa publicación despois de %{edit_delay} minutos e automaticamente volverá estar visible.**
-
-        Porén, se a publicación volvese ser ocultada de segundas, permanecerá oculta ata que un membro do equipo a xestione.
-
-        Para máis información, visite as [directrices da nosa comunidade](%{base_url}/guidelines).
     post_hidden_again:
       title: "Publicación agochada de novo"
       subject_template: "Publicación agochada por alertas da comunidade, notificóuselle ao equipo"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} para informalo de que a súa publicación volveu ser agochada outra vez.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A comunidade alertou desta publicación e agora está agochada. **Debido a que esta publicación foi agochada máis dunha vez, seguirá así ata que sexa xestionada por un membro do equipo.**
-
-        Para obter máis axuda, consulte as [directrices da comunidade] (%{base_url}/guidelines).
     queued_by_staff:
       title: "A publicación necesita aprobación"
       subject_template: "Publicación agochada polo equipo, agarda aprobación"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} que lle permite saber que a súa publicación queda agochada.
-
-        <%{base_url}%{url}>
-
-        A publicación permanecerá agochada ata que un membro do equipo a revise.
-
-        Para indicacións a maiores, consulte as [directrices da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación sinalizada restaurada polo equipo"
       subject_template: "Publicación sinalizada restaurada polo equipo"
@@ -2855,12 +2812,6 @@ gl:
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"
@@ -3026,10 +2977,6 @@ gl:
     signup_after_reject:
       title: "Rexistro despois do rexeitamento"
       subject_template: "Resultou rexeitado en %{site_name}"
-      text_body_template: |
-        Un membro do grupo rexeitou a súa conta en %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Rexistrarse"
       subject_template: "[%{email_prefix}] Confirme a súa nova conta"
@@ -3428,6 +3375,11 @@ gl:
   design_wizard:
     palette_pairs:
       default: "Predeterminado"
+      neutral: "Neutro"
+      shades_of_blue: "Azulado"
+      summer: "Verán"
+      grey_amber: "Gris ámbar"
+      latte: "Latte"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3445,13 +3397,30 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Todos os días"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Luns"
+          tuesday: "Martes"
+          wednesday: "Mércores"
+          thursday: "Xoves"
+          friday: "Venres"
+          saturday: "Sábado"
     google_meet:
       meeting_code: "Código:"
     github:
+      header:
+        success: "Feito"
       closed: "pechado"
-      status_date:
-        approved: "aprobado"
-        closed: "pechado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abrir"
+        approved: "Aprobado"
+        closed: "Pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'
@@ -3499,6 +3468,10 @@ gl:
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
+      answer_yes:
+        title: "Si"
+      answer_no:
+        title: "Non"
       agree:
         title: "Si"
       agree_and_suspend:
@@ -3528,6 +3501,8 @@ gl:
         title: "Si"
       approve_post:
         title: "Si"
+      deny_and_delete_post:
+        complete: "Publicación eliminada."
       approve_post_closed:
         title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"

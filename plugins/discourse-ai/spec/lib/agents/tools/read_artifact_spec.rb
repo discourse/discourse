@@ -17,10 +17,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
     )
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#invoke" do
     it "successfully reads a local artifact" do
@@ -41,6 +38,67 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       expect(new_artifact.js).to eq(artifact.js)
       expect(new_artifact.metadata["cloned_from"]).to eq(artifact.id)
       expect(tool.custom_raw).to include(%([ai-artifact id="#{new_artifact.id}"]))
+    end
+
+    it "uses visibility permissions when the reply is attributed to another user" do
+      private_topic = Fabricate(:private_message_topic)
+      private_post = Fabricate(:post, topic: private_topic, user: private_topic.user)
+      private_artifact = Fabricate(:ai_artifact, post: private_post, user: private_topic.user)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          post: post,
+          user: Discourse.system_user,
+          guardian: post.user.guardian,
+        )
+      tool =
+        described_class.new(
+          { url: "#{Discourse.base_url}/discourse-ai/ai-bot/artifacts/#{private_artifact.id}" },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: context,
+        )
+
+      expect(tool.invoke {}).to eq(status: "error", error: "Access denied")
+    end
+
+    it "lets a non-participant clone an artifact from a shared conversation" do
+      sharing_bot = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
+      toggle_enabled_bots(bots: [llm_model])
+      SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
+      Group.user_trust_level_change!(post.user_id, post.user.trust_level)
+      private_topic = Fabricate(:private_message_topic, user: post.user, recipient: sharing_bot)
+      private_post = Fabricate(:post, topic: private_topic, user: post.user)
+      artifact.update!(post: private_post)
+      private_post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = SharedAiConversation.share_conversation(post.user, private_topic)
+      expect(conversation.publicly_visible?).to eq(true)
+      executor_post = Fabricate(:post)
+      expect(executor_post.user.guardian.can_see?(private_post)).to eq(false)
+      tool =
+        described_class.new(
+          { url: artifact.url },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: DiscourseAi::Agents::BotContext.new(post: executor_post),
+        )
+
+      expect(tool.invoke {}).to include(status: "success")
+      expect(AiArtifact.last.html).to eq(artifact.html)
+    end
+
+    it "does not clone a private artifact with a stale public flag" do
+      private_topic = Fabricate(:private_message_topic)
+      private_post = Fabricate(:post, topic: private_topic, user: private_topic.user)
+      private_artifact = Fabricate(:ai_artifact, post: private_post, metadata: { public: true })
+      tool =
+        described_class.new(
+          { url: private_artifact.url },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: DiscourseAi::Agents::BotContext.new(post: post),
+        )
+
+      expect(tool.invoke {}).to eq(status: "error", error: "Access denied")
     end
 
     it "handles invalid URLs" do

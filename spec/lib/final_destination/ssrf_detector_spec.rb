@@ -43,15 +43,57 @@ describe FinalDestination::SSRFDetector do
       expect(described_class.ip_allowed?("9001:82f3:8873::3")).to eq(false)
     end
 
-    %w[0.0.0.0 10.0.0.0 127.0.0.0 172.31.100.31 255.255.255.255 ::1 ::].each do |internal_ip|
-      it "returns false for '#{internal_ip}'" do
-        expect(described_class.ip_allowed?(internal_ip)).to eq(false)
-      end
+    it "returns false for '0.0.0.0'" do
+      expect(described_class.ip_allowed?("0.0.0.0")).to eq(false)
+    end
+
+    it "returns false for '10.0.0.0'" do
+      expect(described_class.ip_allowed?("10.0.0.0")).to eq(false)
+    end
+
+    it "returns false for '127.0.0.0'" do
+      expect(described_class.ip_allowed?("127.0.0.0")).to eq(false)
+    end
+
+    it "returns false for '172.31.100.31'" do
+      expect(described_class.ip_allowed?("172.31.100.31")).to eq(false)
+    end
+
+    it "returns false for '255.255.255.255'" do
+      expect(described_class.ip_allowed?("255.255.255.255")).to eq(false)
+    end
+
+    it "returns false for '::1'" do
+      expect(described_class.ip_allowed?("::1")).to eq(false)
+    end
+
+    it "returns false for '::'" do
+      expect(described_class.ip_allowed?("::")).to eq(false)
     end
 
     it "returns false for private IPv4-mapped IPv6 addresses" do
       expect(described_class.ip_allowed?("::ffff:172.31.100.31")).to eq(false)
       expect(described_class.ip_allowed?("::ffff:0.0.0.0")).to eq(false)
+    end
+
+    it "returns false for the '3fff::/20' documentation range" do
+      expect(described_class.ip_allowed?("3fff::1")).to eq(false)
+      expect(described_class.ip_allowed?("3fff:fff:ffff::1")).to eq(false)
+    end
+
+    it "returns false for the '5f00::/16' SRv6 SID range" do
+      expect(described_class.ip_allowed?("5f00::1")).to eq(false)
+      expect(described_class.ip_allowed?("5f00:ffff:ffff:ffff:ffff:ffff:ffff:ffff")).to eq(false)
+    end
+
+    it "returns false for the '100:0:0:1::/64' dummy range" do
+      expect(described_class.ip_allowed?("100:0:0:1::1")).to eq(false)
+      expect(described_class.ip_allowed?("100:0:0:1:ffff:ffff:ffff:ffff")).to eq(false)
+    end
+
+    it "returns true for an address outside those ranges" do
+      expect(described_class.ip_allowed?("3fff:1000::1")).to eq(true)
+      expect(described_class.ip_allowed?("2606:2800:220:1:248:1893:25c8:1946")).to eq(true)
     end
 
     it "returns true for public IPv4-mapped IPv6 addresses" do

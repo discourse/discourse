@@ -19,15 +19,30 @@ export function transcriptToMarkdown(
     .map((entry, index) => {
       const username =
         entry.username || i18n("live.transcript.unknown_speaker");
+      const text = entry.reactions ? reactionsText(entry) : entry.text;
       if (chatMarkup) {
         const timestamp = new Date(entry.startedAt).toISOString();
         const source =
           index === 0 && roomName
             ? `${serializeBBCodeAttr(roomName, "source")}${serializeBBCodeAttr(TRANSCRIPT_SOURCE_TYPE, "sourceType")}`
             : "";
-        return `[chat quote="${username};${entry.utteranceId};${timestamp}"${source} chained="true"]\n${entry.text}\n[/chat]`;
+        // Prefixed so it can't collide with a numeric utterance id.
+        const id = entry.reactions
+          ? `reaction-${entry.reactionId}`
+          : entry.utteranceId;
+        return `[chat quote="${username};${id};${timestamp}"${source} chained="true"]\n${text}\n[/chat]`;
       }
-      return `[quote="${username}"]\n${entry.text}\n[/quote]`;
+      return `[quote="${username}"]\n${text}\n[/quote]`;
     })
     .join("\n\n");
+}
+
+function reactionsText(entry) {
+  return entry.reactions
+    .map(({ emoji, count }) =>
+      count > 1
+        ? i18n("live.transcript.reaction_count", { emoji: `:${emoji}:`, count })
+        : `:${emoji}:`
+    )
+    .join(" ");
 }

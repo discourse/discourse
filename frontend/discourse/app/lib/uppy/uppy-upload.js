@@ -3,13 +3,12 @@ import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
 import {
   associateDestroyableChild,
-  isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
 import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
-import { next, run } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
@@ -39,8 +38,6 @@ const DEFAULT_CONFIG = {
   uploadDone: null,
   uploadError: null,
   autoStartUploads: true,
-  /** let uploads in progress finish after the parent is destroyed */
-  finishUploadsOnDestroy: false,
   uploadUrl: null,
   uploadRootPath: "/uploads",
   validateUploadedFilesOptions: {},
@@ -136,17 +133,7 @@ export default class UppyUpload {
     }
 
     associateDestroyableChild(parent, this);
-    registerDestructor(this, () => {
-      // With uploads in progress, #reset() tears down once they finish
-      if (
-        this.config.finishUploadsOnDestroy &&
-        (this.uploading || this.processing)
-      ) {
-        return;
-      }
-
-      this.teardown();
-    });
+    registerDestructor(this, () => this.teardown());
 
     this.uppyWrapper = new UppyWrapper(getOwner(this));
     this.config = lazyMergeConfig(config);
@@ -170,10 +157,7 @@ export default class UppyUpload {
   }
 
   teardown() {
-    this._fileInputEl?.removeEventListener(
-      "change",
-      this.#fileInputEventListener
-    );
+    this.#unbindFileInput();
     if (this.uppyWrapper.uppyInstance) {
       this.appEvents.off(
         `upload-mixin:${this.config.id}:add-files`,
@@ -193,9 +177,7 @@ export default class UppyUpload {
     this.teardown();
 
     if (fileInputEl) {
-      this._fileInputEl = fileInputEl;
-      this.allowMultipleFiles = this._fileInputEl.multiple;
-      this.#bindFileInputChange();
+      this.#bindFileInput(fileInputEl);
     }
 
     this.uppyWrapper.uppyInstance = new Uppy({
@@ -412,6 +394,37 @@ export default class UppyUpload {
     });
   }
 
+  /**
+   * Binds a file input that may re-render independently. While uploads are queued or running only
+   * the input is swapped, otherwise Uppy is recreated to pick up config changes.
+   *
+   * @param {HTMLInputElement} fileInputEl
+   */
+  @bind
+  attachFileInput(fileInputEl) {
+    if (
+      !this.uppyWrapper.uppyInstance ||
+      !(this.uploading || this.processing || this.filesAwaitingUpload)
+    ) {
+      this.setup(fileInputEl);
+    } else {
+      this.#bindFileInput(fileInputEl);
+    }
+  }
+
+  /**
+   * Unbinds a file input bound with `attachFileInput`, leaving uploads in progress running.
+   *
+   * @param {HTMLInputElement} fileInputEl
+   */
+  @bind
+  detachFileInput(fileInputEl) {
+    if (this._fileInputEl === fileInputEl) {
+      this.#unbindFileInput();
+      this._fileInputEl = null;
+    }
+  }
+
   @bind
   openPicker() {
     this._fileInputEl.click();
@@ -561,10 +574,20 @@ export default class UppyUpload {
     return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus.clientId;
   }
 
-  #bindFileInputChange() {
+  #bindFileInput(fileInputEl) {
+    this.#unbindFileInput();
+    this._fileInputEl = fileInputEl;
+    this.allowMultipleFiles = fileInputEl.multiple;
     this.#fileInputEventListener = bindFileInputChangeListener(
-      this._fileInputEl,
+      fileInputEl,
       this.addFiles
+    );
+  }
+
+  #unbindFileInput() {
+    this._fileInputEl?.removeEventListener(
+      "change",
+      this.#fileInputEventListener
     );
   }
 
@@ -603,11 +626,6 @@ export default class UppyUpload {
     this.#bufferedUploadErrors = [];
     if (this._fileInputEl) {
       this._fileInputEl.value = "";
-    }
-
-    if (this.config.finishUploadsOnDestroy && isDestroying(this)) {
-      // Deferred because this can run inside one of Uppy's own event handlers
-      next(this, this.teardown);
     }
   }
 

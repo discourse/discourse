@@ -71,6 +71,21 @@ RSpec.describe UserApiKeysController do
         expect(response.parsed_body["padding"]).to eq("oaep")
       end
 
+      it "shows the stored client name when authorizing an existing application" do
+        client =
+          Fabricate(
+            :user_api_key_client,
+            client_id: args[:client_id],
+            application_name: "Original app 猫",
+          )
+
+        get "/user-api-key/new.json", params: args.merge(application_name: "Different app")
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["state"]).to eq("ready")
+        expect(response.parsed_body["application_name"]).to eq(client.application_name)
+      end
+
       it "rejects invalid padding parameter" do
         get "/user-api-key/new", params: args.merge(padding: "invalid")
         expect(response.status).to eq(400)
@@ -239,6 +254,21 @@ RSpec.describe UserApiKeysController do
       )
     end
 
+    it "stores a repeated scope only once" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json", params: args.merge(scopes: "read,notifications,read,read")
+      expect(response.status).to eq(200)
+
+      expect(user.user_api_keys.first.scopes.map(&:name)).to contain_exactly(
+        "read",
+        "notifications",
+      )
+    end
+
     it "returns payload without redirect when auth_redirect not provided" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       user = Fabricate(:user, trust_level: TrustLevel[0])
@@ -250,6 +280,26 @@ RSpec.describe UserApiKeysController do
       encrypted = Base64.decode64(response.parsed_body["payload"])
       parsed = JSON.parse(decrypt_payload(encrypted))
       expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
+    end
+
+    it "preserves the shared client name when another user creates a key" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      first_user = Fabricate(:user, trust_level: TrustLevel[0])
+      second_user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(first_user)
+
+      post "/user-api-key.json", params: args.except(:auth_redirect)
+      expect(response.status).to eq(200)
+      first_key = first_user.user_api_keys.sole
+      expect(first_key.client.application_name).to eq(args[:application_name])
+
+      sign_in(second_user)
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(application_name: "Different app 猫")
+
+      expect(response.status).to eq(200)
+      expect(second_user.user_api_keys.sole.client).to eq(first_key.client)
+      expect(first_key.client.reload.application_name).to eq(args[:application_name])
     end
 
     it "creates keys with a requested expiry" do
@@ -414,6 +464,25 @@ RSpec.describe UserApiKeysController do
       approval_token = approval_token_for(body["user_code"], user)
       post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
       user
+    end
+
+    it "does not bind or authorize a pending device request as a shadow" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      body = create_pending_device_request
+      sign_in_and_switch_to_anonymous_mode(master)
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+      expect(response.parsed_body["no_trust_level"]).to eq(true)
+      expect(response.parsed_body["approval_token"]).to be_nil
+
+      post "/user-api-key/device/authorize.json", params: { code: body["user_code"] }
+      expect(response.status).to eq(403)
+      expect(UserApiKey.where(user_id: master.shadow_user.id)).to be_empty
+
+      post "/u/toggle-anon.json"
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+      expect(response.parsed_body["approval_token"]).to be_present
     end
 
     it "creates a pending request" do
@@ -978,6 +1047,53 @@ RSpec.describe UserApiKeysController do
     end
   end
 
+  describe "#undo_revoke" do
+    it "lets a user restore their own key" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      sign_in(key.user)
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).to be_nil
+    end
+
+    it "lets an admin restore an ordinary user's key" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).to be_nil
+    end
+
+    it "does not restore a key whose owner no longer exists" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      key.user.delete
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+
+    it "keeps an orphaned shadow's key revoked even when an admin requests restoration" do
+      master = Fabricate(:user)
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: master, active: false)
+      key = Fabricate(:readonly_user_api_key, user: shadow, revoked_at: 1.day.ago)
+      master.destroy!
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+  end
+
   describe "#otp" do
     it "includes padding parameter in the model only when provided" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
@@ -1030,6 +1146,18 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create_otp" do
+    it "denies an OTP to a shadow even when its group may request one" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      sign_in_and_switch_to_anonymous_mode(Fabricate(:user, trust_level: TrustLevel[1]))
+
+      post "/user-api-key/otp.json", params: otp_args
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body).not_to have_key("redirect_url")
+    end
+
     it "does not allow anon" do
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(403)

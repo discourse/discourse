@@ -47,6 +47,9 @@ lt:
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Šlamšto aptikimas"
       navigation:
         users:
           title: "Vartotojai"
@@ -147,6 +150,9 @@ lt:
         question: "Ar norite atlikti šį pakeitimą?"
         category_question: "Ar norite atlikti šį pakeitimą %{category}?"
         category_change: "Keičiamas `%{field}` iš %{before} į %{after}"
+        category_access_levels:
+          readonly: "Peržiūrėti"
+        category_group_access_change: "Keičiamas `%{group}` iš %{before} į %{after}"
         empty_value: "Tuščia"
       agents:
         custom_prompt:
@@ -169,6 +175,7 @@ lt:
         flag_post: "Vėliavų stulpas"
         suspend_user: "Sustabdyti naudotojo"
         silence_user: "Nutildyti vartotoją"
+        delete_category: "Ištrinti kategoriją"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"
@@ -204,6 +211,12 @@ lt:
       edit_category:
         errors:
           not_found: "Kategorijos nėra."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorija nerasta."
+      delete_category:
+        errors:
+          not_found: "Kategorija nerasta."
       change_topic_category:
         errors:
           not_found: "Tema nerasta."
@@ -220,6 +233,31 @@ lt:
       assign:
         errors:
           not_found: "Tema nerasta."
+    appearance_authoring:
+      component_on: "Įjungta"
+      component_off: "Išjungta"
+      colors:
+        light:
+          header_background: "Antraštė"
+      fonts:
+        heading_font: "Antraštės šriftas"
+    mcp_theme_access:
+      "on": "Įjungta"
+      "off": "Išjungta"
+      none: "nieko"
+      changes:
+        server: "MCP serveris"
+    mcp_app_setup:
+      none: "nieko"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Codex"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "DI įrankio veiksmas"

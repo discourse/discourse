@@ -93,10 +93,19 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Segarkan"
+        columns:
+          user: "Pengguna"
+          created: "Dibuat"
+          status: "Status"
       copied: "Disalin"
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      post_image_captions:
+        image_descriptions:
+          apply: "menerapkan"
       discourse_workflows:
         classify:
           name: "Nama"
@@ -113,21 +122,27 @@ id:
       llm_selector:
         none: "Tidak ada"
       features:
-        disabled: "(dinonaktifkan)"
-        groups: "Grup:"
+        table:
+          status: "Status"
+          enabled: "Diaktifkan"
+          groups: "Grup"
+        chatbot:
+          places:
+            none: "Tidak tersedia"
         no_groups: "Tidak ada"
         edit: "Pengaturan"
-        expand_list:
-          other: "(%{count} lainnya)"
-        collapse_list: "(tampilkan lebih sedikit)"
         nav:
           enabled: "Diaktifkan"
         filters:
-          all: "Semua"
           reset: "Reset"
+        sentiment:
+          enabled: "Diaktifkan"
         search:
           name: "Cari"
           ask_ai: "Tanya AI"
+        review_queue:
+          setting_groups:
+            settings: "Pengaturan"
         image_caption:
           setting_groups:
             settings: "Pengaturan"
@@ -136,7 +151,17 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
-        category_scope: "Kategori"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategori"
+          ai_translation_personal_messages:
+            choices:
+              none: "Tidak ada"
+              all: "Semua"
+          content_localization_language_switcher:
+            choices:
+              none: "Tak seorangpun"
+              all: "Semua orang"
         model_progress:
           detail:
             columns:
@@ -151,6 +176,8 @@ id:
               title: "Kategori"
             tag:
               title: "Label"
+        admin_actions:
+          enabled: "Diaktifkan"
         stats:
           eta_minutes:
             other: "%{count} menit"
@@ -163,6 +190,8 @@ id:
             other: "%{count} post"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Tidak ada"
+        no_decision_model_selected: "Tidak ada"
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
@@ -238,6 +267,28 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      concepts:
+        edit: "Ubah"
+        seed:
+          refresh: "Segarkan"
+        delete: "Hapus"
+        columns:
+          status: "Status"
+          topics: "Topik"
+          posts: "Pos"
+        statuses:
+          active: "Aktif"
+        form:
+          name: "Nama"
+          description: "Deskripsi"
+          status: "Status"
+        shared_topics_count:
+          other: "%{count} topik"
+        tagged_topics: "Topik yang diberi tag"
+        topic_columns:
+          topic: "Topik"
+          primary: "Utama"
+        primary_badge: "Utama"
       decision_models:
         no_preset: "Tidak ada"
         display_name: "Nama"
@@ -331,7 +382,6 @@ id:
           apply: "menerapkan"
         filter_all: "Semua"
       ai_bot:
-        llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
         cancel_streaming: "Berhenti membalas"
         default_pm_prefix: "[PM bot AI tanpa judul]"
@@ -360,6 +410,7 @@ id:
           claude-3-haiku: "Claude 3 Haiku"
           claude-2: "Claude 2"
         conversations:
+          tab_label: "AI"
           today: "Hari ini"
           last_7_days: "7 hari terakhir"
           last_30_days: "30 hari terakhir"

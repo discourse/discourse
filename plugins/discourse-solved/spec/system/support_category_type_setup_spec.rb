@@ -6,7 +6,7 @@ RSpec.describe "Support Category Type Setup" do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
@@ -23,20 +23,12 @@ RSpec.describe "Support Category Type Setup" do
 
     # Preload basic data for this category type
     expect(form.field("name").value).to eq("Support")
-    expect(
-      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-        "checked"
-      ],
-    ).to eq(true)
-    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq(
-      "red_question_mark",
-    )
+    expect(category_page).to have_style_emoji("red_question_mark")
 
     expect(banner).to be_visible
     banner.click_save
 
-    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    expect(page).to have_current_path(%r{\A/c/support/\d+\z})
     expect(SiteSetting.solved_enabled).to eq(true)
     expect(SiteSetting.show_filter_by_solved_status).to eq(true)
     category = Category.find_by(name: "Support")
@@ -62,7 +54,7 @@ RSpec.describe "Support Category Type Setup" do
     category_type_selector.option(".category-type-selector__result.--category-type-support").click
     banner.click_save
 
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    expect(page).to have_current_path(%r{\A/c/discussion-support/\d+\z})
     category = Category.find_by(name: "Discussion + Support")
     expect(category.category_types.keys).to include(:discussion, :support)
     expect(category.enable_accepted_answers?).to eq(true)
@@ -126,11 +118,7 @@ RSpec.describe "Support Category Type Setup" do
 
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
       expect(form.field("name").value).to eq("")
-      expect(
-        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-          "checked"
-        ],
-      ).to eq(nil)
+      expect(category_page).to have_no_style_emoji
     end
 
     it "can edit the settings of the support category in a tab" do

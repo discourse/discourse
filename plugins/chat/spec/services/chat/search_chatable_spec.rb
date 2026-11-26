@@ -69,6 +69,27 @@ RSpec.describe Chat::SearchChatable do
           expect(result.users).to include(current_user, sam, charlie, alain)
         end
 
+        it "lists a bot only while it is interactive" do
+          bot = Fabricate(:bot, interactive_bot: true)
+          params[:term] = bot.username
+
+          expect(result.users).to contain_exactly(bot)
+
+          bot.update!(interactive_bot: false)
+          expect(described_class.call(params: params, **dependencies).users).to be_empty
+        end
+
+        it "lets a modifier exclude interactive bots from the allowlist" do
+          bot = Fabricate(:bot, interactive_bot: true)
+          params[:term] = bot.username
+          modifier = proc { |user_ids| user_ids - [bot.id] }
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:chat_allowed_bot_user_ids, &modifier)
+          expect(result.users).to be_empty
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, :chat_allowed_bot_user_ids, &modifier)
+        end
+
         it "can filter usernames" do
           params[:term] = "sam"
 

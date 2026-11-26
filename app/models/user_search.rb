@@ -47,7 +47,13 @@ class UserSearch
 
     if @can_review
       if SiteSetting.enable_category_group_moderation?
-        category_moderator_group_ids = CategoryModerationGroup.distinct.pluck(:group_id)
+        category_moderator_group_ids =
+          Group
+            .where(id: CategoryModerationGroup.select(:group_id))
+            .visible_groups(@searching_user)
+            .members_visible_groups(@searching_user)
+            .unscope(:order)
+            .select(:id)
         users =
           users.left_joins(:group_users).where(
             "users.admin OR users.moderator OR group_users.group_id IN (?)",
@@ -65,6 +71,8 @@ class UserSearch
           .references(:categories)
           .includes(:secure_categories)
           .where("users.admin OR categories.id = ?", @topic.category_id)
+
+      users = with_observable_category_access(users)
     end
 
     DiscoursePluginRegistry.apply_modifier(
@@ -149,6 +157,8 @@ class UserSearch
         SQL
       end
 
+    category_users = nil
+
     if secure_category_id
       category_groups = Group.where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
         groups.id IN (
@@ -160,11 +170,10 @@ class UserSearch
         )
       SQL
 
-      if @searching_user.present?
-        category_groups = category_groups.members_visible_groups(@searching_user)
-      end
+      category_groups =
+        category_groups.visible_groups(@searching_user).members_visible_groups(@searching_user)
 
-      in_category = filtered_by_term_users.where(<<~SQL, category_groups.pluck(:id))
+      category_users = filtered_by_term_users.where(<<~SQL, category_groups.pluck(:id))
           users.id IN (
             SELECT gu.user_id
               FROM group_users gu
@@ -174,10 +183,10 @@ class UserSearch
           SQL
 
       if @searching_user.present?
-        in_category = in_category.where.not(users: { id: @searching_user.id })
+        category_users = category_users.where.not(users: { id: @searching_user.id })
       end
 
-      in_category
+      category_users
         .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
         .pluck(:id)
@@ -228,6 +237,38 @@ class UserSearch
   end
 
   private
+
+  # Access to a read-restricted category is granted through group membership,
+  # so disclosing everyone who can reach the topic's category would reveal the
+  # roster of access groups whose members are hidden. Admins and authors of
+  # posts the searching user can see are already observable, and group
+  # membership is only disclosed for access groups whose roster the searching
+  # user can see.
+  def with_observable_category_access(users)
+    visible_group_ids =
+      Group
+        .where(id: CategoryGroup.where(category_id: @topic.category_id).select(:group_id))
+        .visible_groups(@searching_user)
+        .members_visible_groups(@searching_user)
+        .select(:id)
+
+    observable_participant_ids =
+      @guardian
+        .filter_visible_posts(Post.where(topic_id: @topic.id), topic: @topic)
+        .where(post_type: Post.types[:regular])
+        .select(:user_id)
+        .to_sql
+
+    users.where(<<~SQL, visible_group_ids)
+      users.admin
+      OR users.id IN (
+        SELECT user_id
+          FROM group_users
+         WHERE group_id IN (?)
+      )
+      OR users.id IN (#{observable_participant_ids})
+    SQL
+  end
 
   # Filters `scoped_users` by matching `@term` against the `user_search_data`
   # tsvector (A = username, B = name, C = searchable custom fields). Pass

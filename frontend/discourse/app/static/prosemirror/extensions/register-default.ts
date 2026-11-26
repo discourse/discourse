@@ -12,7 +12,7 @@ import hardBreak from "./hard-break.ts";
 import hashtag from "./hashtag.js";
 import heading from "./heading.js";
 import htmlBlock from "./html-block.js";
-import htmlInline from "./html-inline.js";
+import htmlInline, { htmlInlineInput } from "./html-inline.js";
 import image from "./image.js";
 import link from "./link.ts";
 import linkToolbar from "./link-toolbar.js";
@@ -56,6 +56,7 @@ const defaultExtensions: RichEditorExtension[] = [
   strong,
   underline,
   htmlInline,
+  htmlInlineInput,
   htmlBlock,
   trailingParagraph,
   table,

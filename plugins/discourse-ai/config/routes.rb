@@ -102,6 +102,14 @@ DiscourseAi::Engine.routes.draw do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
   end
 
+  scope module: :ai_moderation,
+        path: "/ai-moderation/dsa-classifications",
+        defaults: {
+          format: :json,
+        } do
+    post ":reviewable_id/suggest" => "dsa_classifications#suggest"
+  end
+
   scope module: :translation, path: "/translate", defaults: { format: :json } do
     post "/posts/:post_id" => "translation#translate"
     post "/topics/:topic_id" => "translation#schedule_topic"
@@ -115,8 +123,7 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
-      :constraints => StaffConstraint.new
+  get "/review/bulk" => "discourse_ai/ai_moderation/reviewable_suggestions#index"
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
     get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
@@ -246,5 +253,16 @@ Discourse::Application.routes.draw do
               only: %i[index show new create edit update destroy],
               path: "ai-secrets",
               controller: "discourse_ai/admin/ai_secrets"
+
+    resources :ai_concepts,
+              only: %i[index show new create edit update destroy],
+              path: "ai-concepts",
+              controller: "discourse_ai/admin/ai_concepts" do
+      member { post :merge }
+      collection do
+        post :curate
+        post :seed
+      end
+    end
   end
 end

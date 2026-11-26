@@ -46,7 +46,20 @@ export default class LiveVideoTile extends Component {
   }
 
   get tileStyle() {
-    return trustHTML(`aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`);
+    let style = `aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`;
+
+    // View transition names must be unique on the page, so only the room
+    // page's tiles opt in.
+    if (this.args.animatesLayout) {
+      const name = CSS.escape(`live-tile-${this.participant.id}`);
+      style += ` view-transition-name: ${name};`;
+    }
+
+    return trustHTML(style);
+  }
+
+  get isPortrait() {
+    return this.aspect !== null && this.aspect < 1;
   }
 
   // The menu only offers audio controls for a call the user is in, so
@@ -102,6 +115,19 @@ export default class LiveVideoTile extends Component {
     return prioritizeNameInUx(this.participant.name)
       ? this.participant.name
       : this.participant.username;
+  }
+
+  get stageRoleBadge() {
+    if (this.args.room?.room_type !== "stage") {
+      return null;
+    }
+    if (this.participant.role === "moderator") {
+      return i18n("live.stage.role_moderator");
+    }
+    if (this.participant.role === "speaker") {
+      return i18n("live.stage.role_speaker");
+    }
+    return null;
   }
 
   @action
@@ -163,11 +189,13 @@ export default class LiveVideoTile extends Component {
         "live-video-tile"
         (if this.showVideo "--video" "--avatar")
         (if (eq this.publishingKind "screen") "--screen")
+        (if this.isPortrait "--portrait")
         (if @isSelf "--self")
         (if this.isSpeaking "--speaking")
       }}
       data-user-id={{this.participant.id}}
       style={{this.tileStyle}}
+      ...attributes
       {{this.trackFullscreen this.setFullscreen}}
       {{on "contextmenu" this.openContextMenu}}
     >
@@ -192,6 +220,11 @@ export default class LiveVideoTile extends Component {
 
       <div class="live-video-tile__info">
         <span class="live-video-tile__name">{{this.displayName}}</span>
+        {{#if this.stageRoleBadge}}
+          <span
+            class="live-video-tile__role --{{this.participant.role}}"
+          >{{this.stageRoleBadge}}</span>
+        {{/if}}
         {{#if this.participant.is_muted}}
           {{dIcon "microphone-slash"}}
         {{/if}}
@@ -223,7 +256,9 @@ export default class LiveVideoTile extends Component {
           type="button"
           {{on "click" this.toggleFullscreen}}
         >
-          {{dIcon (if this.isFullscreen "compress" "expand")}}
+          {{dIcon
+            (if this.isFullscreen "discourse-compress" "discourse-expand")
+          }}
         </button>
       {{/if}}
     </div>

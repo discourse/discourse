@@ -10,17 +10,16 @@ RSpec.describe PostVoting::CommentsController do
   fab!(:topic_post) { Fabricate(:post, topic: topic) }
   fab!(:answer) { Fabricate(:post, topic: topic) }
   let(:comment) { Fabricate(:post_voting_comment, post: answer) }
-  let(:comment_2) { Fabricate(:post_voting_comment, post: answer) }
-  let(:comment_3) { Fabricate(:post_voting_comment, post: answer) }
 
   before do
     SiteSetting.post_voting_enabled = true
     comment
-    comment_2
-    comment_3
   end
 
   describe "#load_comments" do
+    let!(:comment_2) { Fabricate(:post_voting_comment, post: answer) }
+    let!(:comment_3) { Fabricate(:post_voting_comment, post: answer) }
+
     it "returns the right response when user is not allowed to view post" do
       category.update!(read_restricted: true)
 
@@ -430,6 +429,7 @@ RSpec.describe PostVoting::CommentsController do
     end
 
     it "deletes the user's own comment and publishes the change" do
+      Fabricate.times(2, :post_voting_comment, post: answer)
       sign_in(comment.user)
 
       message =
@@ -458,6 +458,34 @@ RSpec.describe PostVoting::CommentsController do
     fab!(:flagger) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
 
     before { sign_in(flagger) }
+
+    it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
+      enable_dsa_reporting
+
+      expect do
+        put "/post_voting/comments/flag.json",
+            params: {
+              comment_id: comment.id,
+              flag_type_id: ReviewableScore.types[:illegal],
+            }
+      end.not_to change(ReviewableScore, :count)
+
+      expect(response).to be_forbidden
+      expect(Reviewable.exists?(target: comment)).to eq(false)
+
+      SiteSetting.dsa_reporting_enabled = false
+
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:illegal],
+          }
+
+      expect(response).to be_successful
+      expect(
+        Reviewable.find_by!(target: comment).reviewable_scores.pluck(:reviewable_score_type),
+      ).to eq([ReviewableScore.types[:illegal]])
+    end
 
     it "returns 403 when flagging a comment on an inaccessible post" do
       category.set_permissions(group => :full)

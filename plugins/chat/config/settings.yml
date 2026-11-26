@@ -7,9 +7,19 @@ chat:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397571"
+  chat_thread_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/417837"
+      allow_enabled_for:
+        - everyone
   enable_public_channels:
     default: true
     client: true
@@ -136,9 +146,6 @@ chat:
     allow_any: false
     refresh: true
     area: "group_permissions"
-    depends_on:
-      - "chat_pinned_messages"
-    depends_behavior: "hidden"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators

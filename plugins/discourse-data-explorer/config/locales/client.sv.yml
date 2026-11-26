@@ -23,7 +23,6 @@ sv:
       description_placeholder: "Ange en beskrivning här"
       ai:
         generate: "Generera"
-        optional: "valfritt"
       import:
         unparseable_json: "JSON-fil kan inte tolkas."
         wrong_json: "Fel JSON-fil. En JSON-fil bör innehålla ett 'query'-objekt, som åtminstone bör ha en 'sql'-egenskap."
@@ -53,7 +52,7 @@ sv:
       max_result_count:
         one: "Visar det %{count} översta resultatet."
         other: "Visar resultat nr %{count}, det översta."
-      query_name: "Sökning"
+      name: "Namn"
       query_groups: "Grupper"
       query_tags: "Taggar"
       link: "Länk för"

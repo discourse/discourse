@@ -1,9 +1,6 @@
 // We should try to reuse the user page HTML for groups when possible
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
-
-@use "sass:math";
-
 .container.group {
   background: var(--d-content-background);
 }
@@ -99,27 +96,9 @@
     color: var(--primary-high-or-secondary-low);
   }
 
-  $size: 50px;
-  $icon-size: math.div($size, 1.8);
-
-  .avatar-flair-image {
-    width: $size;
-  }
-
   .avatar-flair {
-    background-size: $size;
-    height: $size;
-    width: $size;
+    --avatar-flair-size: 50px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-repeat: no-repeat;
-
-    .d-icon {
-      height: $icon-size;
-      width: $icon-size;
-    }
   }
 
   .group-details-button {

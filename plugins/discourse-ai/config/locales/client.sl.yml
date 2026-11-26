@@ -38,11 +38,23 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Osveži"
+        columns:
+          user: "Uporabnik"
+          created: "Ustvarjeno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "napaka"
+      post_image_captions:
+        image_descriptions:
+          apply: "Uporabi"
       discourse_workflows:
+        ai_tool:
+          list_item: "Element seznama"
+          add_list_item: "Dodajte element"
         classify:
           text: "Besedilo"
           upload_ids: "Slike"
@@ -60,24 +72,29 @@ sl:
       llm_selector:
         none: "Brez"
       features:
-        disabled: "(onemogočeno)"
-        groups: "Skupine:"
+        table:
+          status: "Status"
+          enabled: "Vključeno"
+          groups: "Skupine"
+        chatbot:
+          places:
+            personal_messages: "Osebna sporočila"
+            chat_direct_messages: "Sporočila klepeta"
+            none: "Ni na voljo"
         no_agent: "Ni nastavljeno"
         no_groups: "Brez"
         edit: "Nastavitve"
-        expand_list:
-          one: "(%{count} več)"
-          two: "(%{count} več)"
-          few: "(%{count} več)"
-          other: "(%{count} več)"
-        collapse_list: "(manj)"
         nav:
           enabled: "Vključeno"
         filters:
-          all: "Vsi"
           reset: "Ponastavi"
+        sentiment:
+          enabled: "Vključeno"
         search:
           name: "Išči"
+        review_queue:
+          setting_groups:
+            settings: "Nastavitve"
         image_caption:
           setting_groups:
             settings: "Nastavitve"
@@ -88,7 +105,18 @@ sl:
       layout:
         table: "Tabela"
       translations:
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            label: "Osebna sporočila"
+            choices:
+              none: "Brez"
+              all: "Vsi"
+          content_localization_language_switcher:
+            choices:
+              none: "Nihče"
+              all: "Vsi"
         model_progress:
           detail:
             columns:
@@ -103,6 +131,8 @@ sl:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Vključeno"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -127,6 +157,8 @@ sl:
             other: "%{count} prispevkov"
       spam:
         short_title: "Neželeno"
+        no_llm_selected: "Brez"
+        no_decision_model_selected: "Brez"
         last_seven_days: "Zadnjih 7 dni"
         enable: "Omogoči"
         test_modal:
@@ -211,6 +243,31 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      concepts:
+        edit: "Uredi"
+        seed:
+          refresh: "Osveži"
+        delete: "Izbriši"
+        columns:
+          status: "Status"
+          topics: "Tem"
+          posts: "Prispevki"
+        statuses:
+          active: "Aktivni"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          two: "%{count} temi"
+          few: "%{count} teme"
+          other: "%{count} tem"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Pomembnosti"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Brez"
         display_name: "Ime"

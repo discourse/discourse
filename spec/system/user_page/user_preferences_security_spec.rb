@@ -201,5 +201,33 @@ describe "User preferences | Security" do
         )
       end
     end
+
+    it "logs the user's devices out without logging the admin out" do
+      UserAuthToken.generate!(user_id: user.id, user_agent: "Firefox", client_ip: "1.1.1.1")
+
+      user_preferences_security_page.visit(user)
+
+      expect(user_preferences_security_page).to have_auth_token("Firefox")
+
+      dropdown = user_preferences_security_page.auth_token_dropdown
+      dropdown.expand
+
+      expect(dropdown).to have_no_option_value("notYou")
+
+      dropdown.select_row_by_value("logOut")
+
+      expect(user_preferences_security_page).to have_no_auth_token("Firefox")
+      expect(user_preferences_security_page).to have_auth_token
+
+      user_preferences_security_page.log_out_all_devices
+
+      expect(user_preferences_security_page).to have_no_auth_token
+
+      page.refresh
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/security")
+      expect(user_preferences_security_page).to have_auth_tokens_section
+      expect(user_preferences_security_page).to have_no_auth_token
+    end
   end
 end

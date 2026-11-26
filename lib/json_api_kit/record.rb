@@ -4,6 +4,16 @@ module JsonApiKit
   class Record
     Identity = Data.define(:type, :id)
 
+    class ConflictingFilters < BadRequest
+      def initialize
+        super("Cannot apply different filters to the same relationship of the same resource.")
+      end
+
+      def title = "Conflicting relationship filters"
+
+      def source = { parameter: "filter" }
+    end
+
     delegate :record, :cursor, to: :row
 
     attr_reader :type, :namespace, :relationships
@@ -28,7 +38,7 @@ module JsonApiKit
         fields,
         type:,
         namespace:,
-        relationships: other.relationships.merge(relationships),
+        relationships: merge_relationships(other.relationships),
       )
     end
 
@@ -37,5 +47,12 @@ module JsonApiKit
     private
 
     attr_reader :row, :fields
+
+    def merge_relationships(other_relationships)
+      other_relationships.merge(relationships) do |_name, other_linkage, linkage|
+        raise ConflictingFilters unless linkage.filtered_like?(other_linkage)
+        linkage
+      end
+    end
   end
 end

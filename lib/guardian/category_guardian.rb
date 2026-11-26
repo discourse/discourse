@@ -67,7 +67,7 @@ module CategoryGuardian
   end
 
   def topic_featured_link_allowed_category_ids
-    @topic_featured_link_allowed_category_ids =
+    @topic_featured_link_allowed_category_ids ||=
       Category.where(topic_featured_link_allowed: true).pluck(:id)
   end
 

@@ -406,6 +406,72 @@ const extension = {
         const pendingUploads = new Set();
         const processingDataURIs = new Set();
 
+        const fileNameFor = (dataURI) => {
+          const mimeMatch = dataURI.match(/data:image\/([^;]+)/);
+          let fileExtension = "png";
+          if (mimeMatch) {
+            const remap = { jpeg: "jpg" };
+            const ext = mimeMatch[1].toLowerCase();
+            fileExtension = remap[ext] || ext;
+          }
+
+          return `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
+        };
+
+        // A host with its own uploader takes all of a paste's images in one
+        // batch, as attachments, or declines them, leaving the same text as a
+        // disallowed image. Its uploader enforces its own limits.
+        const uploadToHost = async (dataURIs, view, uploadFiles) => {
+          dataURIs.forEach((dataURI) => processingDataURIs.add(dataURI));
+
+          try {
+            const results = await Promise.allSettled(
+              dataURIs.map(async (dataURI) => {
+                const blob = await (await fetch(dataURI)).blob();
+                return new File([blob], fileNameFor(dataURI), {
+                  type: blob.type,
+                });
+              })
+            );
+            if (view.isDestroyed) {
+              return;
+            }
+
+            const files = results
+              .filter(({ status }) => status === "fulfilled")
+              .map(({ value }) => value);
+            const accepted = files.length > 0 && uploadFiles(files) !== false;
+
+            const dataURIMap = dataImageUploader.getState(view.state);
+            const tr = view.state.tr;
+            dataURIs
+              .flatMap((dataURI, index) =>
+                [...(dataURIMap.get(dataURI) ?? [])].map((pos) => ({
+                  pos,
+                  uploaded: accepted && results[index].status === "fulfilled",
+                }))
+              )
+              .sort((a, b) => b.pos - a.pos)
+              .forEach(({ pos, uploaded }) => {
+                const end = pos + view.state.doc.nodeAt(pos).nodeSize;
+                if (uploaded) {
+                  tr.delete(pos, end);
+                } else {
+                  tr.replaceWith(
+                    pos,
+                    end,
+                    view.state.schema.text(i18n("composer.image"))
+                  );
+                }
+              });
+            if (tr.docChanged) {
+              view.dispatch(tr);
+            }
+          } finally {
+            dataURIs.forEach((dataURI) => processingDataURIs.delete(dataURI));
+          }
+        };
+
         const uploadDataImage = async (dataURI, view) => {
           if (
             processingDataURIs.has(dataURI) ||
@@ -414,12 +480,15 @@ const extension = {
             return;
           }
 
-          const staff = getContext().currentUser?.staff;
+          const { currentUser, uploadFiles } = getContext();
           // stop earlier if image extensions aren't allowed, or nothing is
           // around to upload them
           if (
-            !authorizesOneOrMoreImageExtensions(staff, siteSettings) ||
-            !appEvents.has("composer:add-files")
+            !authorizesOneOrMoreImageExtensions(
+              currentUser?.staff,
+              siteSettings
+            ) ||
+            (!uploadFiles && !appEvents.has("composer:add-files"))
           ) {
             const tr = view.state.tr;
             const dataURIMap = dataImageUploader.getState(view.state);
@@ -444,15 +513,7 @@ const extension = {
 
           processingDataURIs.add(dataURI);
 
-          const mimeMatch = dataURI.match(/data:image\/([^;]+)/);
-          let fileExtension = "png";
-          if (mimeMatch) {
-            const remap = { jpeg: "jpg" };
-            const ext = mimeMatch[1].toLowerCase();
-            fileExtension = remap[ext] || ext;
-          }
-
-          const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
+          const fileName = fileNameFor(dataURI);
 
           pendingUploads.add(fileName);
 
@@ -542,6 +603,20 @@ const extension = {
 
         const processQueuedUploads = (view) => {
           const dataURIMap = dataImageUploader.getState(view.state);
+
+          const { currentUser, uploadFiles } = getContext();
+          if (
+            uploadFiles &&
+            authorizesOneOrMoreImageExtensions(currentUser?.staff, siteSettings)
+          ) {
+            const queued = [...dataURIMap.keys()].filter(
+              (dataURI) => !processingDataURIs.has(dataURI)
+            );
+            if (queued.length) {
+              uploadToHost(queued, view, uploadFiles);
+            }
+            return;
+          }
 
           for (const dataURI of dataURIMap.keys()) {
             if (!processingDataURIs.has(dataURI)) {

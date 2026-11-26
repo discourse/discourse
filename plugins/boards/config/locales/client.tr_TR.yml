@@ -38,7 +38,9 @@ tr_TR:
         unassign_from_topic: "@%{username} adlı kullanıcının konudan atamasını kaldır"
         unassign_from_post: "#%{post_number} numaralı gönderiden @%{username} atamasını kaldır"
         edit_assignments: "Atamaları düzenle..."
-        created_by: "Oluşturan:"
+        owners:
+          one: "Sahip"
+          other: "Sahipler"
       manage:
         name: "Ad"
         slug: "Kısa ad"
@@ -50,10 +52,10 @@ tr_TR:
           column_title: "Başlık"
           icon: "Simge"
           color: "Renk"
+          color_palette: "Renk paleti"
+          icon_search_placeholder: "Ara…"
           default_sort_priority: "Öncelik"
           tag: "Etiket"
           move_to_assigned_unassign: "Atamayı kaldır"
           move_to_status_open: "Aç"
           move_to_status_closed: "Kapalı"
-          show_advanced: "Gelişmiş seçenekleri göster"
-          hide_advanced: "Gelişmiş seçenekleri gizle"

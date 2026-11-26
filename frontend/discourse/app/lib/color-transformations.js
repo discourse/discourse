@@ -29,7 +29,8 @@ export function isValidHex(hex) {
   return hex && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex);
 }
 
-function colorBrightness(color) {
+/** Returns the weighted RGB brightness of a hex color, from 0 to 255. */
+export function colorBrightness(color) {
   const hex = normalizeHex(color);
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
