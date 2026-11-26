@@ -138,6 +138,26 @@
       "header_background": "1A1A1A",
       "header_primary": "ffffff",
       "hover": "584B3E"
+    },
+    "Tide": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "179688",
+      "tertiary-med-or-tertiary": "179688",
+      "selected": "B2E8E0",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "C4EFE9"
+    },
+    "Tide Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "179688",
+      "tertiary-med-or-tertiary": "179688",
+      "selected": "2A4D47",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "213D38"
     }
   },
   "screenshots": [
