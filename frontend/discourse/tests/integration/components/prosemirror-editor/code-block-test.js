@@ -62,6 +62,20 @@ module(
       });
     });
 
+    test("format code uses a block for a selection crossing a soft break", async function (assert) {
+      let manipulation;
+      const [editor] = await setupRichEditor(assert, "xfoo  \nbarx", {
+        onSetup: (value) => (manipulation = value),
+      });
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 2, 9))
+      );
+      manipulation.formatCode();
+      assert.strictEqual(view.state.doc.child(1).type.name, "code_block");
+      assert.strictEqual(view.state.doc.child(1).textContent, "foo\nbar");
+    });
+
     test("code block without a language is highlighted with default_code_lang", async function (assert) {
       this.siteSettings.default_code_lang = "javascript";
 

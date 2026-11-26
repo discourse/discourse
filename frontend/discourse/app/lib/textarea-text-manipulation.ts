@@ -1376,7 +1376,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder.trim(),
-      markdown
+      markdown,
+      { skipFocus: true }
     );
   }
 

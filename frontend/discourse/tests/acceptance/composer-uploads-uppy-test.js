@@ -123,6 +123,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         .hasValue(
           "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
         );
+      assert.dom("#reply-title").isFocused();
       assert.deepEqual(
         cancellations,
         [],
@@ -135,6 +136,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       assert
         .dom(".d-editor-input")
         .hasValue("The image:\n[Uploading: avatar.png…]()\n");
+      document.querySelector("#reply-title").focus();
     });
 
     const image = createFile("avatar.png");
