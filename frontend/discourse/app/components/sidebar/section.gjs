@@ -410,7 +410,7 @@ export default class SidebarSection extends Component {
                 @icon="ellipsis-vertical"
                 @identifier="sidebar-section-header-dropdown-menu"
                 @onRegisterApi={{this.onRegisterApi}}
-                @title={{i18n "sidebar.sections.more_options.title"}}
+                @title={{i18n "more_options"}}
               >
                 <:content>
                   <DDropdownMenu as |dropdown|>
