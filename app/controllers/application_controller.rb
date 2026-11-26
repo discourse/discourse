@@ -1005,7 +1005,7 @@ class ApplicationController < ActionController::Base
   end
 
   def error_page_title(status)
-    I18n.t(status == 403 ? "page_forbidden.page_title" : "page_not_found.page_title")
+    I18n.t(status == 403 ? "js.errors.reasons.forbidden" : "page_not_found.page_title")
   end
 
   def build_not_found_page(opts = {})

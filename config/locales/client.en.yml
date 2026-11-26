@@ -2969,7 +2969,7 @@ en:
       reasons:
         network: "Network Error"
         server: "Server Error"
-        forbidden: "Access Denied"
+        forbidden: "Access denied"
         unknown: "Error"
         not_found: "Page Not Found"
       desc:
