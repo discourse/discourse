@@ -4,9 +4,7 @@ RSpec.describe "Chat composer rich editor" do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
   fab!(:channel_1, :chat_channel)
-  fab!(:message_1) do
-    Fabricate(:chat_message, user: current_user, chat_channel: channel_1)
-  end
+  fab!(:message_1) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -16,9 +14,7 @@ RSpec.describe "Chat composer rich editor" do
     chat_system_bootstrap
     channel_1.add(current_user)
     channel_1.add(other_user)
-    current_user.user_option.update!(
-      composition_mode: UserOption.composition_mode_types[:rich]
-    )
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
     sign_in(current_user)
   end
 
@@ -52,9 +48,7 @@ RSpec.describe "Chat composer rich editor" do
     channel_page.open_action_menu
     expect(page).to have_css(".chat-composer-dropdown__item")
     expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-editor")
-    expect(page).to have_no_css(
-      ".chat-composer-dropdown__item.toggle-formatting"
-    )
+    expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-formatting")
   end
 
   it "uses the editor the user prefers" do
@@ -62,9 +56,7 @@ RSpec.describe "Chat composer rich editor" do
 
     expect(channel_page.composer).to have_rich_editor
 
-    current_user.user_option.update!(
-      composition_mode: UserOption.composition_mode_types[:markdown]
-    )
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
     chat_page.visit_channel(channel_1)
 
     expect(channel_page.composer).to have_markdown_editor
@@ -80,7 +72,7 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_value("draft text")
     try_until_success do
       expect(current_user.user_option.reload.composition_mode).to eq(
-        UserOption.composition_mode_types[:markdown]
+        UserOption.composition_mode_types[:markdown],
       )
     end
 
@@ -90,7 +82,7 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_value("draft text")
     try_until_success do
       expect(current_user.user_option.reload.composition_mode).to eq(
-        UserOption.composition_mode_types[:rich]
+        UserOption.composition_mode_types[:rich],
       )
     end
   end
@@ -107,15 +99,9 @@ RSpec.describe "Chat composer rich editor" do
   end
 
   it "switches every open composer when the preference changes in one" do
-    current_user.user_option.update!(
-      composition_mode: UserOption.composition_mode_types[:markdown]
-    )
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
     channel_1.update!(threading_enabled: true)
-    thread =
-      chat_thread_chain_bootstrap(
-        channel: channel_1,
-        users: [current_user, other_user]
-      )
+    thread = chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, other_user])
     thread_page = PageObjects::Pages::ChatThread.new
 
     chat_page.visit_thread(thread)
@@ -260,9 +246,7 @@ RSpec.describe "Chat composer rich editor" do
 
     channel_page.composer.input.send_keys(:escape)
 
-    expect(channel_page.composer.input).to have_no_css(
-      ".ProseMirror-selectednode"
-    )
+    expect(channel_page.composer.input).to have_no_css(".ProseMirror-selectednode")
   end
 
   it "applies formatting shortcuts as marks" do
@@ -279,9 +263,7 @@ RSpec.describe "Chat composer rich editor" do
     channel_page.composer.input.send_keys("@#{other_user.username}")
     find(".autocomplete.ac-user", text: other_user.username).click
 
-    expect(channel_page.composer).to have_value(
-      ":grimacing: @#{other_user.username} "
-    )
+    expect(channel_page.composer).to have_value(":grimacing: @#{other_user.username} ")
   end
 
   it "completes mentions before the online users are known" do
@@ -326,9 +308,7 @@ RSpec.describe "Chat composer rich editor" do
     expect(page).to have_no_css(".hashtag-autocomplete")
     place_caret_in.call(true)
     channel_page.composer.input.send_keys(" #giz")
-    expect(channel_page.composer).to have_value(
-      "see [docs #giz here](https://example.com)"
-    )
+    expect(channel_page.composer).to have_value("see [docs #giz here](https://example.com)")
 
     # a bounded wait, since absence alone passes before the search returns
     shown_in_link = page.evaluate_async_script(<<~JS)
