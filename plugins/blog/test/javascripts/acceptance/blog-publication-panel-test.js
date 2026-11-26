@@ -9,6 +9,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const TOPIC_URL = "/t/internationalization-localization/280";
 const PANEL = ".blog-publication-panel";
+const SETTINGS = ".blog-article-settings";
 
 acceptance("Blog publication panel", function (needs) {
   needs.user({ admin: true });
@@ -78,14 +79,8 @@ acceptance("Blog publication panel", function (needs) {
       .dom(`${PANEL}__badge`)
       .hasText("Draft", "a never-published draft is labelled");
     assert
-      .dom(`${PANEL}__future-url`)
-      .hasText(
-        "blog.example.com/an-unfinished-story",
-        "the future article address is shown"
-      );
-    assert
-      .dom(`${PANEL}__meta a`)
-      .doesNotExist("the future address is not linked before it exists");
+      .dom(`${PANEL}__meta`)
+      .includesText("Last updated", "the draft shows when it last changed");
     assert
       .dom(`${PANEL}__publish`)
       .hasText("Publish now", "publishing is the primary action");
@@ -421,6 +416,11 @@ acceptance("Blog publication panel", function (needs) {
     pretender.put("/blog-editor/publications/280.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
       assert.strictEqual(
+        data.get("publication[path]"),
+        "/a-finished-story",
+        "the path is saved with its leading slash"
+      );
+      assert.strictEqual(
         data.get("publication[excerpt]"),
         "A revised introduction",
         "the excerpt is saved"
@@ -463,34 +463,123 @@ acceptance("Blog publication panel", function (needs) {
       return response(publication);
     });
     await visit(TOPIC_URL);
+    assert.dom(SETTINGS).doesNotExist("settings stay out of the topic");
+    await click(`${PANEL}__settings`);
     assert
-      .dom(`${PANEL}__form`)
-      .isNotVisible("settings are collapsed by default");
-    await click(`${PANEL}__settings-toggle`);
-    assert
-      .dom(`${PANEL}__form [name="canonical_url"]`)
+      .dom(`${SETTINGS}__form [name="canonical_url"]`)
       .hasAttribute(
         "placeholder",
         "https://blog.example.com/an-unfinished-story",
         "a blank canonical URL shows the article's own address"
       );
-    await formKit(`${PANEL}__form`)
+    assert
+      .dom(`${SETTINGS}__form [name="path"]`)
+      .hasValue("an-unfinished-story", "the path is shown without its slash");
+    await formKit(`${SETTINGS}__form`).field("path").fillIn("a-finished-story");
+    await formKit(`${SETTINGS}__form`)
       .field("excerpt")
       .fillIn("A revised introduction");
-    await formKit(`${PANEL}__form`)
+    await formKit(`${SETTINGS}__form`)
       .field("cover_alt")
       .fillIn("A lighthouse at dusk");
-    await formKit(`${PANEL}__form`)
+    await formKit(`${SETTINGS}__form`)
       .field("meta_description")
       .fillIn("A summary for search engines");
-    await formKit(`${PANEL}__form`)
+    await formKit(`${SETTINGS}__form`)
       .field("canonical_url")
       .fillIn("https://example.com/original");
-    await formKit(`${PANEL}__form`).field("page").toggle();
-    await formKit(`${PANEL}__form`).submit();
+    assert
+      .dom(`${SETTINGS}__form [name="published_at"]`)
+      .exists("an article has a publication date");
+    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    assert
+      .dom(`${SETTINGS} .d-modal__title-text`)
+      .hasText("Page settings", "the title follows the type");
+    assert
+      .dom(`${SETTINGS}__form [name="published_at"]`)
+      .doesNotExist("a page hides the article-only settings");
+    await click(`${SETTINGS}__save`);
+    assert.dom(SETTINGS).doesNotExist("saving closes the settings");
     assert
       .dom(`${PANEL}__badge`)
       .hasText("Draft", "saving settings does not publish");
+  });
+
+  test("shows the path a draft would get as it changes type", async function (assert) {
+    publication = {
+      ...publication,
+      path: "/2026/an-unfinished-story",
+      generated_paths: {
+        article: "/2026/an-unfinished-story",
+        page: "/an-unfinished-story",
+      },
+    };
+    let savedPath;
+    pretender.put("/blog-editor/publications/280.json", (request) => {
+      savedPath = new URLSearchParams(request.requestBody).get(
+        "publication[path]"
+      );
+      return response(publication);
+    });
+
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings`);
+    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    assert
+      .dom(`${SETTINGS}__form [name="path"]`)
+      .hasValue("an-unfinished-story", "a page drops the date");
+
+    await click(`${SETTINGS}__form input[type="radio"][value="article"]`);
+    assert
+      .dom(`${SETTINGS}__form [name="path"]`)
+      .hasValue("2026/an-unfinished-story", "an article gets it back");
+
+    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+    await click(`${SETTINGS}__save`);
+    assert.strictEqual(
+      savedPath,
+      "/2026/an-unfinished-story",
+      "the saved path is sent, leaving the server to generate the new one"
+    );
+  });
+
+  test("keeps a path typed by hand when the type changes", async function (assert) {
+    publication = {
+      ...publication,
+      generated_paths: {
+        article: "/2026/an-unfinished-story",
+        page: "/an-unfinished-story",
+      },
+    };
+
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings`);
+    await formKit(`${SETTINGS}__form`).field("path").fillIn("my-own-path");
+    await click(`${SETTINGS}__form input[type="radio"][value="page"]`);
+
+    assert
+      .dom(`${SETTINGS}__form [name="path"]`)
+      .hasValue("my-own-path", "the typed path is left alone");
+  });
+
+  test("asks before discarding unsaved article settings", async function (assert) {
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings`);
+    await formKit(`${SETTINGS}__form`)
+      .field("excerpt")
+      .fillIn("An unsaved introduction");
+    await click(`${SETTINGS} .modal-close`);
+    assert
+      .dom(".dialog-body")
+      .includesText(
+        "Discard your unsaved changes",
+        "closing does not silently discard edits"
+      );
+    await click(".dialog-footer .btn-default");
+    assert.dom(SETTINGS).exists("declining keeps the settings open");
+    await click(`${SETTINGS} .modal-close`);
+    await click(".dialog-footer .btn-primary");
+    assert.dom(SETTINGS).doesNotExist("confirming closes the settings");
   });
 
   test("the public discussion topic explains where replies appear", async function (assert) {
@@ -644,9 +733,18 @@ acceptance("Blog publication panel with several blogs", function (needs) {
     });
 
     await visit(TOPIC_URL);
-    await click(`${PANEL}__settings-toggle`);
-    await formKit(`${PANEL}__form`).field("blog_id").select(2);
-    await formKit(`${PANEL}__form`).submit();
+    await click(`${PANEL}__settings`);
+    assert
+      .dom(`${SETTINGS}__form .form-kit__before-input`)
+      .hasText("blog.example.com/", "the path follows the blog's address");
+    await formKit(`${SETTINGS}__form`).field("blog_id").select(2);
+    assert
+      .dom(`${SETTINGS}__form .form-kit__before-input`)
+      .hasText(
+        "blog.example.com/blog/engineering/",
+        "choosing another blog shows that blog's address"
+      );
+    await click(`${SETTINGS}__save`);
 
     assert.strictEqual(savedBlogId, "2", "the chosen blog is saved");
   });
@@ -655,10 +753,10 @@ acceptance("Blog publication panel with several blogs", function (needs) {
     publication = { ...publication, can_change_blog: false };
 
     await visit(TOPIC_URL);
-    await click(`${PANEL}__settings-toggle`);
+    await click(`${PANEL}__settings`);
 
     assert
-      .dom(`${PANEL}__form [name="blog_id"]`)
+      .dom(`${SETTINGS}__form [name="blog_id"]`)
       .doesNotExist("a published article stays on its blog");
   });
 });

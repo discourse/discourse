@@ -216,6 +216,14 @@ module ::Blog
       values
     end
 
+    # The path each kind of draft would get, while the path still follows the title.
+    def generated_paths
+      return if published_revision_id || draft_metadata["custom_path"]
+      { article: false, page: true }.transform_values do |page|
+        generated_path(published_at, page:) || path
+      end
+    end
+
     # Names of the article pieces that differ between the working copy and the live revision.
     def pending_changes
       source = editorial_topic

@@ -83,15 +83,6 @@
     }
   }
 
-  &__future-url {
-    display: inline-block;
-    color: var(--primary);
-    max-width: 100%;
-    vertical-align: bottom;
-
-    @include ellipsis;
-  }
-
   &__sep {
     margin-inline: var(--space-1);
   }
@@ -106,8 +97,7 @@
 
   &__changes,
   &__reviews,
-  &__error,
-  &__settings {
+  &__error {
     grid-column: 1 / -1;
   }
 
@@ -132,8 +122,7 @@
 
   // Line the labels up with the box edge while keeping the hover background padded.
   &__toggle-feedback,
-  &__toggle-older-feedback,
-  &__settings-toggle {
+  &__toggle-older-feedback {
     margin-inline-start: calc(-1 * #{$hpad});
   }
 
@@ -234,38 +223,6 @@
     }
   }
 
-  &__settings {
-    padding-block-start: var(--space-3);
-    border-top: 1px solid var(--primary-low);
-  }
-
-  &__settings-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  &__last-updated {
-    color: var(--primary-high);
-    font-size: var(--font-down-1);
-  }
-
-  &__settings-toggle {
-    font-size: var(--font-down-1);
-  }
-
-  &__settings-hint {
-    margin-inline-start: var(--space-2);
-    color: var(--primary-high);
-    font-weight: normal;
-  }
-
-  &__form {
-    margin-block-start: var(--space-3);
-  }
-
   &__menu-hint {
     color: var(--primary-high);
     font-size: var(--font-down-1);
@@ -306,4 +263,9 @@
       color: var(--tertiary);
     }
   }
+}
+
+// Core caps the drop area at 400px, which leaves it short of the other fields.
+.blog-article-settings .file-uploader__preview {
+  max-width: none;
 }
