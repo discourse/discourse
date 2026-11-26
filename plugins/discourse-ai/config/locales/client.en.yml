@@ -57,6 +57,7 @@ en:
             coverage: "%{count} of %{total} questions analyzed"
           questions: "Questions asked"
           askers: "Users asking"
+          cache_hits: "Cached answers returned"
           latency: "Answer latency"
           latency_tooltip: "Average time from when the server accepts a query until it sends the first answer update, including queue time. This excludes network delivery time to the user."
           seconds: "%{seconds} s"
@@ -125,10 +126,14 @@ en:
         requires_ai_translation: "Requires AI translation to be configured"
       nodes:
         "action:ai_agent": "AI Agent"
+        "action:ai_tool": "AI Tool"
+        "action:mcp_tool": "MCP Tool"
         "action:classify": "Classify"
         "trigger:post_locale_detected": "Post language detected"
       node_descriptions:
         "action:ai_agent": "Run an AI agent to process data or generate content"
+        "action:ai_tool": "Run an AI tool once for each input item"
+        "action:mcp_tool": "Call a tool on a configured MCP server"
         "action:classify": "Ask a decision model questions about each item"
         "trigger:post_locale_detected": "Fires when the language of a new or edited post is detected"
     discourse_automation:
@@ -310,8 +315,46 @@ en:
 
     discourse_ai:
       title: "AI"
+      apply_review_suggestion: "Apply AI suggestion: %{action}"
+      review_bulk:
+        title: "AI Suggestions"
+        description: "These items have an action suggested by AI. Deselect any you disagree with, then apply the rest together."
+        more_pending:
+          one: "%{count} more suggestion will appear after these are handled."
+          other: "%{count} more suggestions will appear after these are handled."
+        apply:
+          one: "Apply %{count} suggestion"
+          other: "Apply %{count} suggestions"
+        refresh: "Refresh"
+        select_all: "Select all suggestions"
+        select_item: "Select review item %{id}"
+        untitled: "Review item %{id}"
+        confidence: "%{percent}% confident"
+        none: "There are no pending review items with an AI suggestion."
+        confirm:
+          one: "Apply the suggested action to %{count} review item?"
+          other: "Apply the suggested actions to %{count} review items?"
+        confirm_destructive:
+          one: "Apply the suggested action to %{count} review item? %{destructive} of the selected actions cannot be undone."
+          other: "Apply the suggested actions to %{count} review items? %{destructive} of the selected actions cannot be undone."
+        columns:
+          item: "Item"
+          user: "User"
+          reason: "Flagged as"
+          created: "Created"
+          action: "Suggested action"
+          status: "Status"
+        status:
+          applying: "Applying…"
+          applied: "Applied"
+          handled: "Already handled"
+        blocked:
+          needs_input: "Needs more input. Open the item to apply."
+          must_claim: "Unclaimed. Open the item to claim its topic and apply."
+          claimed_by_other: "Claimed by another user. Open the item for details."
       dsa_classification:
         suggest: "Suggest with AI"
+        suggested_by_ai: "Suggested by AI"
         updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
@@ -329,11 +372,19 @@ en:
         error: "Error"
         response: "Response"
       post_image_captions:
-        edit: "Edit AI image caption"
-        title: "Edit AI image caption"
-        description: "Caption"
-        save: "Save caption"
         saved: "AI image caption saved"
+        image_descriptions:
+          title: "Image descriptions"
+          alt: "Alt text"
+          alt_updated: "Alt text updated in the draft."
+          alt_read_only: "Alt text cannot be edited from this preview."
+          alt_not_updated: "Alt text was not updated because the image changed. Reopen Image descriptions to try again."
+          ai: "AI description"
+          loading: "Loading the AI description…"
+          load_failed: "Could not load the AI description."
+          not_supported: "No AI description is available for this image."
+          pending: "Not available yet. AI descriptions are generated after posting."
+          apply: "Apply"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -352,6 +403,29 @@ en:
           upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
+        ai_tool:
+          tool_ref: "Tool"
+          llm_model_id: "LLM model"
+          arguments: "Arguments"
+          loading_arguments: "Loading tool arguments…"
+          list_item: "List item"
+          add_list_item: "Add item"
+          remove_list_item: "Remove item"
+          invalid_json: "Fix or revert the JSON before executing this step."
+          revert_json: "Revert JSON edit"
+          json_arguments: "Arguments as JSON"
+          json_arguments_description: "Enter this tool’s arguments as a JSON object, using the exact keys listed below."
+          invalid_arguments: "The saved arguments are not an object. Clear them to edit individual arguments."
+          clear_arguments: "Clear arguments"
+          stale_argument: "Saved argument “%{name}” is not in the tool’s current signature."
+          remove_argument: "Remove argument"
+          true_value: "True"
+          false_value: "False"
+        mcp_tool:
+          mcp_server_id: "MCP server"
+          mcp_server_id_description: "Arguments are sent to this server using its configured credentials, if any."
+          tool_name: "Tool"
+          arguments: "Arguments"
         classify:
           decision_model_id: "Decision model"
           text: "Text"
@@ -561,6 +635,7 @@ en:
           deduplicate_concepts: "Concepts deduplication"
           setting_groups:
             settings: "Basic Settings"
+            seeding_and_backfill: "Seeding and backfill"
             topic_criteria: "Topic Criteria"
             post_criteria: "Post Criteria"
             agents: "Agents"
@@ -585,6 +660,15 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        review_queue:
+          name: "Review queue suggestions"
+          description: "Uses a decision model to suggest staff actions for new review items"
+          add_model: "Add a decision model"
+          no_models: "Add a decision model to start generating review queue suggestions."
+          reviewable_action: "Suggest a review action"
+          setting_groups:
+            settings: "Settings"
 
         image_caption:
           name: "Image Caption"
@@ -888,6 +972,8 @@ en:
         credits_remaining: "Credits remaining"
         models_breakdown: "Usage per model"
         users_breakdown: "Usage per user"
+        workflows_breakdown: "Usage per workflow"
+        workflow: "Workflow"
         all_features: "All features"
         all_models: "All models"
         username: "Username"
@@ -967,6 +1053,8 @@ en:
         topic_short: "Topic %{id}"
         post: "Post"
         post_short: "Post %{id}"
+        workflow: "Workflow"
+        workflow_link: "Workflow: %{name}"
         duration: "Duration"
         tokens_direction: "Tokens (in → out)"
         first_token: "First token"
@@ -1330,6 +1418,98 @@ en:
         decision_model: "Decision model"
         modal:
           title: "Create new credential"
+
+      concepts:
+        short_title: "Concepts"
+        description: "Inspect, curate, and organize inferred concepts discovered across the forum"
+        chooser_placeholder: "Search concepts..."
+        new: "New concept"
+        edit: "Edit"
+        edit_heading: "Edit concept"
+        back: "Back to concepts"
+        run_curation: "Run curation"
+        curation_enqueued: "Concept curation queued to run in the background."
+        disabled_notice: "Inferred concepts generation is currently disabled. Existing records remain editable below, or you can enable the feature in"
+        disabled_notice_link: "AI features"
+        filter_placeholder: "Filter by name, description, or alias..."
+        no_results: "No concepts match these filters."
+        clear_filters: "Clear filters"
+        empty: "No inferred concepts yet"
+        empty_description: "Inferred concepts automatically discover recurring themes from your community's discussions. Start an initial seed to analyze a sample of popular topics across categories and build your first taxonomy, or create concepts manually."
+        seed:
+          action: "Seed concepts"
+          enqueued: "Concept seeding queued to run in the background."
+          queued: "Concept seeding is queued to run in the background."
+          running_progress: "Seeding concepts in the background (%{processed} / %{total} topics processed)."
+          failed: "The previous concept seeding run failed. You can try again."
+          refresh: "Refresh"
+        load_more: "Load more"
+        saved: "Concept saved"
+        confirm_delete: "Delete \"%{name}\"? Its topic and post associations will be removed."
+        deleted: "Concept deleted"
+        promoted: "Concept promoted to active"
+        retired: "Concept retired"
+        reactivated: "Concept reactivated"
+        promote: "Promote to active"
+        retire: "Retire"
+        reactivate: "Reactivate"
+        delete: "Delete"
+        open_actions: "Concept actions"
+        parent_label: "Parent: %{name}"
+        columns:
+          name: "Concept"
+          status: "Status"
+          topics: "Topics"
+          posts: "Posts"
+        statuses:
+          all: "All statuses"
+          active: "Active"
+          candidate: "Candidate"
+          retired: "Retired"
+          active_count: "Active (%{count})"
+          candidate_count: "Candidate (%{count})"
+          retired_count: "Retired (%{count})"
+        sort:
+          usage: "Most used"
+          name: "Name (A–Z)"
+          created_at: "Newest"
+        form:
+          name: "Name"
+          description: "Description"
+          description_help: "Short summary of what belongs under this concept. Used when generating concept embeddings and prompting the classifier."
+          aliases: "Aliases"
+          aliases_help: "Comma-separated alternative names or acronyms (e.g. k8s, container orchestration)."
+          status: "Status"
+          parent: "Parent concept"
+          parent_none: "None (top-level)"
+        children: "Sub-concepts"
+        neighbor_concepts: "Neighbor concepts"
+        neighbor_concepts_description: "Closest concepts by embedding similarity."
+        no_neighbor_concepts: "No similar concepts found yet. Embeddings may still be generating."
+        co_occurring_concepts: "Co-occurring concepts"
+        co_occurring_concepts_description: "Concepts that share the most topics with this one."
+        no_co_occurring_concepts: "No other concepts share topics with this one yet."
+        shared_topics_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
+        tagged_topics: "Tagged topics"
+        tagged_topics_count: "Tagged topics (%{count})"
+        showing_top_topics: "Showing top %{shown} of %{total} visible topics."
+        no_tagged_topics: "No visible public topics are tagged with this concept yet."
+        topic_columns:
+          topic: "Topic"
+          primary: "Primary"
+          relevance: "Relevance"
+        primary_badge: "Primary"
+        secondary_badge: "Secondary"
+        merge:
+          action: "Merge into..."
+          title: "Merge \"%{name}\""
+          description: "Moves all topic and post associations, aliases, and sub-concepts onto the target concept, then retires this concept."
+          target_label: "Target canonical concept"
+          target_placeholder: "Select a concept..."
+          submit: "Merge concept"
+          success: "Merged into \"%{target}\"."
 
       decision_models:
         seeded_description: "Pre-configured model"
@@ -1840,6 +2020,7 @@ en:
           suffix: "in all topics and posts with AI"
 
       ai_artifact:
+        move_warning: "If you move a post with a live artifact, this conversation’s public share will no longer give access to that artifact. Share or update the destination conversation to give public access again. Separate shared snapshots are not affected."
         editor:
           title: "AI artifact"
           edit_options: "Edit options"
@@ -1912,8 +2093,9 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
+        model_menu_heading: "Language model"
+        manage_language_models: "Manage language models"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
@@ -1986,13 +2168,15 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
+          new_conversation: "New AI conversation"
           homepage_option: "AI bot conversations"
           preview:
             title: "Log in to ask a question"
             body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
-          disclaimer: "Generative AI can make mistakes. Verify important information."
+          disclaimer: "AI can make mistakes. Verify important information."
           placeholder: "Ask a question..."
           new: "New Question"
           min_input_length_message:
@@ -2066,6 +2250,8 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         answer_label: "AI answer"
+        cached_answer: "From your previous search (%{age})"
+        refresh_answer: "Generate fresh answer"
         follow_up_label: "Ask a follow-up question"
         follow_up_placeholder: "Ask a follow-up…"
         ask: "Ask"
@@ -2077,6 +2263,7 @@ en:
           topics: "Topics"
           this_topic: "This topic"
           messages: "Messages"
+          answer_ready: "Answer ready"
           no_answer: "No AI answer found"
         no_keyword_matches: "No keyword matches found."
         no_answer: "AI couldn’t find a clear answer. %{askLink}"
@@ -2152,3 +2339,4 @@ en:
           title: "AI-Flagged chat message"
         reviewable_ai_tool_action:
           title: "AI Tool Action"
+          approval_heading: "AI action approval"

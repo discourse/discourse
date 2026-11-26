@@ -1,6 +1,13 @@
 import { apiInitializer } from "discourse/lib/api";
 import AiToolApproval from "../components/ai-tool-approval.gjs";
 
+const AiToolApprovalTemplate = <template>
+  <AiToolApproval
+    @postId={{@data.postId}}
+    @reviewableId={{@data.reviewableId}}
+  />
+</template>;
+
 function initializeAiToolApproval(api) {
   api.decorateCookedElement(
     (element, helper) => {
@@ -25,15 +32,10 @@ function initializeAiToolApproval(api) {
           "data-ai-tool-approval-reviewable-id"
         );
 
-        helper.renderGlimmer(
-          cardElement,
-          <template>
-            <AiToolApproval
-              @postId={{post.id}}
-              @reviewableId={{reviewableId}}
-            />
-          </template>
-        );
+        helper.renderGlimmer(cardElement, AiToolApprovalTemplate, {
+          postId: post.id,
+          reviewableId,
+        });
       });
     },
     {

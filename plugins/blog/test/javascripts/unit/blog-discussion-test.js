@@ -17,7 +17,7 @@ module("Unit | Initializer | blog-discussion", function (hooks) {
     this.settings = this.owner.lookup("service:site-settings");
     this.settings.blog_enabled = true;
     this.site = this.owner.lookup("service:site");
-    this.site.blog_base_url = BLOG_ORIGIN;
+    this.site.blogs = [{ base_url: BLOG_ORIGIN }];
     for (const color of ["accent", "paper", "ink"]) {
       this.root.style.removeProperty(`--blog-${color}-color`);
     }
@@ -158,7 +158,7 @@ module("Unit | Initializer | blog-discussion", function (hooks) {
   test("ignores palette messages without a usable blog URL", function (assert) {
     EmbedMode.enabled = true;
     this.root.classList.add("discourse-blog-discussion");
-    this.site.blog_base_url = "";
+    this.site.blogs = [];
     initializer.initialize(this.owner);
     sendPalette();
     assert.strictEqual(

@@ -7,7 +7,7 @@ module("Component | ChatComposerDropdown", function (hooks) {
   setupRenderingTest(hooks);
 
   test("buttons", async function (assert) {
-    this.set("buttons", [{ id: "foo", icon: "xmark", action: () => {} }]);
+    this.buttons = [{ id: "foo", icon: "xmark", action: () => {} }];
 
     await render(
       <template><ChatComposerDropdown @buttons={{this.buttons}} /></template>

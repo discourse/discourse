@@ -47,16 +47,6 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
-  register_bot_creation_param(:chat_discoverable) do |bot, value|
-    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
-  end
-
-  add_to_serializer(
-    :admin_detailed_user,
-    :chat_discoverable,
-    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
-  ) { object.chat_discoverable_bot.present? }
-
   original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
   MessageBus.group_ids_lookup do |env|
     host = RailsMultisite::ConnectionManagement.host(env)
@@ -238,6 +228,10 @@ after_initialize do
       @can_chat = SiteSetting.chat_enabled && scope.can_chat?
     end,
   ) { true }
+
+  add_to_serializer(:user, :can_chat, include_condition: -> { include_can_edit? && can_edit }) do
+    object.guardian.can_chat?
+  end
 
   add_to_serializer(
     :current_user,
@@ -727,6 +721,11 @@ after_initialize do
 
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
+
+  register_first_admin_bootstrap do |user|
+    # Don't want to greet new admins with the ugly channel retention reminder
+    user.user_option.update!(dismissed_channel_retention_reminder: true)
   end
 end
 

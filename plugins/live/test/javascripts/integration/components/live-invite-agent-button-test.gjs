@@ -181,7 +181,7 @@ module("Integration | Component | LiveInviteAgentButton", function (hooks) {
       { active_participants: [] },
       { active_participants: [{ id: 42 }, { id: -2 }] },
     ]) {
-      this.set("testRoom", { ...this.room, ...changes });
+      this.testRoom = { ...this.room, ...changes };
       await render(
         <template>
           <DDropdownMenu as |dropdown|>

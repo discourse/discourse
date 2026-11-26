@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class TopicTitleLengthValidator < ActiveModel::EachValidator
+  def self.min_topic_title_length(topic)
+    DiscoursePluginRegistry.apply_modifier(
+      :min_topic_title_length,
+      SiteSetting.min_topic_title_length,
+      topic,
+    )
+  end
+
   def validate_each(record, attribute, value)
     title_validator(record).validate_each(record, attribute, value)
   end
@@ -14,7 +22,7 @@ class TopicTitleLengthValidator < ActiveModel::EachValidator
       elsif record.private_message?
         SiteSetting.private_message_title_length
       else
-        SiteSetting.topic_title_length
+        self.class.min_topic_title_length(record)..SiteSetting.max_topic_title_length
       end
 
     ActiveModel::Validations::LengthValidator.new(

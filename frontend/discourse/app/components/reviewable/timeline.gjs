@@ -106,12 +106,15 @@ export default class ReviewableTimeline extends Component {
           )}">${i18n("review.timeline.view_conversation")}</a>)</p>`;
         }
 
+        const needsApproval = score.score_type.type === "needs_approval";
         events.push({
-          type: "flagged",
+          type: needsApproval ? "queued" : "flagged",
           date: score.created_at,
           user: score.user,
-          icon: "flag",
-          titleKey: "review.timeline.flagged_as_by",
+          icon: needsApproval ? "clock" : "flag",
+          titleKey: needsApproval
+            ? "review.timeline.queued_for_approval_by"
+            : "review.timeline.flagged_as_by",
           description: trustHTML(sanitize(flaggedDescription)),
           score: {
             count: 0,

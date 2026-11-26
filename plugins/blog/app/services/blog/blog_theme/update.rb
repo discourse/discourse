@@ -16,6 +16,7 @@ class Blog::BlogTheme::Update
   options { attribute :source }
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
 
   transaction do
     model :theme

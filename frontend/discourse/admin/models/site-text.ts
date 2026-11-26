@@ -6,6 +6,8 @@ import RestModel from "discourse/models/rest";
 export interface SiteTextFields {
   id: string;
   value: string;
+  override_value: string | null;
+  preview_default?: string | null;
   status:
     | "unknown"
     | "up_to_date"
@@ -32,6 +34,8 @@ export default class SiteText extends RestModel {
     Pick<
       SiteText,
       | "value"
+      | "override_value"
+      | "preview_default"
       | "can_revert"
       | "overridden"
       | "status"
@@ -48,6 +52,8 @@ export default class SiteText extends RestModel {
       getProperties(
         result.site_text,
         "value",
+        "override_value",
+        "preview_default",
         "can_revert",
         "overridden",
         "status",

@@ -509,11 +509,6 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
-  no_embedded_media_allowed_group: "Spiacenti, non puoi incorporare elementi multimediali in un messaggio."
-  no_embedded_media_allowed: "Spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
-  too_many_embedded_media:
-    one: "Spiacenti, i nuovi utenti possono inserire solo un elemento multimediale incorporato in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} elementi multimediali incorporati in un messaggio."
   no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
   too_many_attachments:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
@@ -2354,8 +2349,6 @@ it:
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi personali."
     company_name: "Nome della tua azienda o organizzazione."
-    governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
-    city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
     shared_drafts_allowed_groups: "Consenti agli utenti in questi gruppi di visualizzare e modificare le bozze condivise."
     push_notifications_prompt: "Mostra all'utente un banner per il consenso alle notifiche push. Questa impostazione attiva un prompt che chiede all'utente il permesso per inviare le notifiche push. Il prompt appare solo se le notifiche push non sono già abilitate, se sono supportate dal dispositivo in uso e se l'utente ha creato un messaggio o ha usato una Progressive Web App (PWA). Una vota dato/negato il consenso o ignorato, il prompt non comparirà più."
@@ -2461,10 +2454,27 @@ it:
       mediaconvert_role_arn_required: "Quando si utilizza AWS MediaConvert per la conversione video, è necessario l'ARN del ruolo AWS IAM."
       s3_credentials_required_for_video_conversion: "Per la conversione video sono necessarie le credenziali S3. Configura le chiavi di accesso S3 o abilita il profilo IAM."
     keywords:
+      about_banner_image: "immagine banner"
+      about_page_extra_groups: "elenco gruppi"
+      about_page_extra_groups_initial_members: "membri ampliati"
+      about_page_extra_groups_order: "ordinamento"
+      about_page_extra_groups_show_description: "includi descrizione"
       clean_up_inactive_users_after_days: "disattivato|inattivo|non attivato"
+      company_url: "sito web"
+      default_composition_mode: "rte|rich text|compositore|markdown|rich editor"
+      extended_site_description: "descrizione della comunità"
+      large_icon: "icona quadrata"
+      logo: "logo principale"
+      logo_dark: "logo principale scuro"
+      logo_small: "logo piccolo"
+      logo_small_dark: "logo piccolo scuro"
       navigation_menu: "barra laterale|menu a discesa dell'intestazione"
       purge_unactivated_users_grace_period_days: "disattivato|inattivo|non attivato"
-      default_composition_mode: "rte|rich text|compositore|markdown|rich editor"
+      short_site_description: "titolo della community"
+      site_contact_group_name: "gruppo contatto del sito"
+      site_contact_username: "nome contatto del sito"
+      site_description: "riepilogo della comunità"
+      title: "nome community"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2929,20 +2939,6 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nascosto.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Questo messaggio è stato nascosto perché segnalato dalla comunità, quindi cerca di riscriverlo tenendo conto del loro feedback. **Puoi modificare il tuo messaggio dopo %{edit_delay} minuti e ritornerà visibile.**
-
-        Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
-
-        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Feedback sul tuo messaggio"
       subject_template: "Feedback sul tuo messaggio in %{topic_title}"
@@ -2952,31 +2948,9 @@ it:
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nuovamente nascosto.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà nascosto fino all'intervento dello staff.**
-
-        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     queued_by_staff:
       title: "Messaggio da approvare"
       subject_template: "Messaggio nascosto dallo staff, in attesa di approvazione"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico generato da %{site_name} per informarti che il tuo messaggio è stato nascosto.
-
-        <%{base_url}%{url}>
-
-        Il tuo messaggio rimarrà nascosto finché un membro dello staff non lo avrà esaminato.
-
-        Per ulteriori indicazioni, consulta le nostre [linee guida della comunità](%{base_url}/guidelines).
     flags_disagreed:
       title: "Messaggio segnalato ripristinato dallo saff"
       subject_template: "Messaggio segnalato ripristinato dallo saff"
@@ -3686,12 +3660,6 @@ it:
     account_suspended_forever:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-    account_silenced:
-      title: "Account Silenziato"
-      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-    account_silenced_forever:
-      title: "Account Silenziato"
-      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
     account_deleted:
       title: "Account eliminato"
       subject_template: "[%{email_prefix}] Il tuo account è stato eliminato"
@@ -3860,10 +3828,6 @@ it:
     signup_after_reject:
       title: "Registrazione dopo un rifiuto"
       subject_template: "Sei stato rifiutato su %{site_name}"
-      text_body_template: |
-        Un membro dello staff ha rifiutato il tuo account su %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Iscrizione"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"
@@ -4412,7 +4376,6 @@ it:
       dracula: "Dracula"
       grey_amber: "Ambra grigia"
       latte: "Color latte"
-      dark_rose: "Rosa scuro"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4618,6 +4581,7 @@ it:
       delete_and_agree_replies:
         title: "Elimina messaggio e risposte"
         description: "Accetta segnalazione ed elimina questo messaggio; se è i primo messaggio, elimina anche l'argomento."
+        confirm_title: "Elimina il messaggio e le risposte?"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       disagree_and_restore:
@@ -4648,6 +4612,8 @@ it:
       approve_post:
         title: "Sì"
         complete: "Messaggio approvato."
+      deny_and_delete_post:
+        complete: "Messaggio eliminato."
       approve_post_closed:
         title: "Sì"
         confirm: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"

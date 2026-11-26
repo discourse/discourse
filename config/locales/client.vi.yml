@@ -445,9 +445,6 @@ vi:
       fonts:
         base_font: "Thân"
         heading_font: "Tiêu đề"
-      logo:
-        description: "Xuất hiện trên thanh điều hướng chính của trang web, cũng như ở phần đầu của thông báo email."
-        help_text: "Kích thước đề xuất là 600x80 pixel."
       homepage:
         topics: "Các chủ đề"
         categories: "Danh mục"
@@ -2734,6 +2731,9 @@ vi:
         size_too_small: "%{provided_file_size} nhỏ hơn mức tối thiểu cho phép %{min_file_size}"
     emoji_picker:
       filter_placeholder: Tìm kiếm emoji
+      search_placeholder: "Tìm theo tên emoji và viết tắt..."
+      no_results: "Không có kết quả"
+      favorites: "Được sử dụng gần đây"
       smileys_&_emotion: Biểu tượng mặt cười và cảm xúc
       people_&_body: Con người và Cơ thể
       animals_&_nature: Động vật và thiên nhiên
@@ -2778,6 +2778,10 @@ vi:
       emoji: "Emoji :)"
       more_emoji: "thêm nữa…"
       options: "Lựa chọn"
+      ai_content:
+        code: "Mã"
+        quote: "Trích dẫn"
+        details: "Chi tiết"
       whisper: "nói chuyện"
       unlist: "không công khai"
       add_warning: "Đây là một cảnh báo chính thức"
@@ -3579,7 +3583,7 @@ vi:
         back_description: "Quay lại tút chưa đọc cuối cùng của bạn"
         replies_short: "%{current} / %{total}"
       progress:
-        title: tiến trình của chủ đề
+        title: "tiến trình của chủ đề"
         jump_prompt: "Nhảy đến…"
         jump_prompt_of:
           other: "trong %{count} tút"
@@ -3817,10 +3821,8 @@ vi:
           label: "đã chọn"
           title: "Nhấp để xóa tút khỏi lựa chọn"
         select_replies:
-          label: "chọn + trả lời"
           title: "Thêm tút và tất cả các câu trả lời của nó cho lựa chọn"
         select_below:
-          label: "chọn + bên dưới"
           title: "Thêm tút và tất cả sau đó để lựa chọn"
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
@@ -4192,7 +4194,7 @@ vi:
       validations:
         icon_required: "Chọn một biểu tượng."
       name: "Tên chuyên mục"
-      untitled: "Chuyên mục chưa đặt tên"
+      icon_search_placeholder: "Tìm kiếm…"
       description: "Mô tả"
       logo: "Logo của chuyên mục"
       logo_dark: "Logo Chế độ tối của chuyên mục"
@@ -4200,9 +4202,6 @@ vi:
       background_image: "Ảnh nền của chuyên mục"
       background_image_dark: "Ảnh nền Chế độ tối của chuyên mục"
       style: "Phong cách"
-      icon: "Biểu tượng"
-      emoji: "Emoji"
-      select_emoji: "Chọn biểu tượng cảm xúc"
       background_color: "Màu sắc"
       foreground_color: "Màu chữ"
       color_validations:
@@ -4210,18 +4209,11 @@ vi:
         incorrect_length: "Phải tuân thủ định dạng #RRGGBB hoặc #RGB"
         non_hexdecimal: "Chỉ được chứa các ký tự (0-9, A-F)"
       styles:
-        type: "Phong cách"
         icon: "Biểu tượng"
         emoji: "Emoji"
         square: "Vuông"
-        options:
-          square: "Vuông"
-          icon: "Biểu tượng"
-          emoji: "Emoji"
       color_used: "Màu đang được sử dụng"
-      predefined_colors: "Các tùy chọn màu sắc có sẵn"
       name_placeholder: "Một hoặc hai từ được đề xuất"
-      color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
       delete_error: "Có lỗi xảy ra khi xóa chuyên mục này"
       list: "Danh sách chuyên mục"
@@ -4853,9 +4845,16 @@ vi:
       forward: "Chuyển tiếp"
       share: "Chia sẻ"
       dismiss: "Hủy bỏ"
+    mobile_tab_bar:
+      new_topic: "Chủ đề mới"
+      create: "Tạo"
+      more: "Thêm"
+      back: "Quay lại"
+      topics: "Các chủ đề"
+      drafts:
+        other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
-    theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
     theme_preview_failed: "Không thể xem trước theme vì theme đó không tồn tại hoặc bạn không có quyền truy cập."
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:
@@ -6420,14 +6419,6 @@ vi:
           company_name: "Tên"
           company_url: "Trang web"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Luật áp dụng"
-          governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
-          governing_law_help: |
-            Xác định phạm vi pháp lý áp dụng cho các điều khoản của trang web, thông thường là nơi công ty đăng ký hoặc hoạt động.
-          city_for_disputes: "Thành phố giải quyết tranh chấp"
-          city_for_disputes_placeholder: "Thành phố"
-          city_for_disputes_help: |
-            Hãy nêu rõ thành phố nơi giải quyết các tranh chấp pháp lý liên quan đến diễn đàn này.
           extra_groups:
             heading: "Danh sách nhóm"
             description: "Thêm các nhóm bổ sung để hiển thị trên trang Giới thiệu."
@@ -6979,8 +6970,6 @@ vi:
           title: "Màu sắc"
           edit: "Sửa"
           view: "Xem"
-          set_default_light: "Đặt làm bảng màu sáng trên chủ đề mặc định (%{theme})"
-          set_default_dark: "Đặt bảng màu tối làm mặc định cho chủ đề (%{theme})"
           set_default_success: "%{schemeName} đặt làm bảng mặc định cho %{themeName}"
           saved_refreshing: "Đã lưu! Đang làm mới màu..."
           from_theme: "Từ theme: %{name}"
@@ -7617,7 +7606,6 @@ vi:
         silence_duration: "Thành viên sẽ bị hạn chế trong bao lâu?"
         silence_reason_title: "Lý do hạn chế"
         silence_reason_placeholder: "Lý do hạn chế"
-        silence_message: "Tin nhắn Email"
         suspended_until: "(đến %{until})"
         suspend_forever: "Đình chỉ vĩnh viễn"
         cant_suspend: "Thành viên này không thể bị đình chỉ."
@@ -7931,6 +7919,8 @@ vi:
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
         search_label: "Tìm"
+        preview:
+          default: "Mặc định"
         theme_disabled: "Vô hiệu hóa"
         filters: "Bộ lọc"
         title: "Văn bản trang web"
@@ -8089,7 +8079,7 @@ vi:
           modal_title: Nhóm huy hiệu
         granted_by: Trao bởi
         granted_at: Đã trao
-        reason_help: (Link của tút hoặc chủ đề)
+        reason_help: Link của tút hoặc chủ đề
         save: Lưu
         delete: Xóa
         delete_confirm: Bạn có chắc chắn muốn xóa huy hiệu này?

@@ -107,6 +107,13 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     ).to have_attributes(acting_user_id: other_admin.id)
   end
 
+  it "tells the administrator to refresh the page after making it live" do
+    result = approve_as(other_admin, build_reviewable(appearance_change))
+
+    expect(result[:status]).to eq("success")
+    expect(result[:message]).to include("refresh the page")
+  end
+
   it "makes a new theme the default once approved" do
     theme_change = save_change(service: AppearanceChange::DraftTheme)
     item = build_reviewable(theme_change)
@@ -117,6 +124,64 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     expect { item.perform(other_admin, :approve) }.to change { SiteSetting.default_theme_id }.to(
       theme_change.theme_id,
     )
+  end
+
+  context "with a styled theme" do
+    let(:theme_change) do
+      save_change(
+        service: AppearanceChange::DraftTheme,
+        styles: {
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+    end
+
+    it "makes it live while it holds only the checked styles" do
+      expect { build_reviewable(theme_change).perform(other_admin, :approve) }.to change {
+        SiteSetting.default_theme_id
+      }.to(theme_change.theme_id)
+    end
+
+    it "refuses once someone has changed the theme by hand" do
+      theme_change.theme.set_field(
+        target: :common,
+        name: :scss,
+        value: "#{theme_change.css}\nbody { display: none; }",
+      )
+      theme_change.theme.save!
+
+      expect(build_tool(theme_change).invoke[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.theme_changed"),
+      )
+    end
+
+    it "refuses styles that no longer pass the checks" do
+      theme_change.update_columns(styles: { "variables" => { "--d-border-radius" => "500px" } })
+
+      expect(build_tool(theme_change).invoke[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.theme_changed"),
+      )
+    end
+
+    it "refuses once a plugin turns styles off" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |decision, request|
+          decision.deny!("No styles here.") if request.feature == :style_authoring
+          decision
+        end
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(build_tool(theme_change).invoke[:error]).to eq("No styles here.")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
   end
 
   it "doesn't change anything without approval" do

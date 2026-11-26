@@ -1,3 +1,4 @@
+import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SecondFactorForm from "discourse/components/second-factor-form";
@@ -21,6 +22,9 @@ export default <template>
     <form class="change-password-form login-left-side">
       {{#if @controller.successMessage}}
         <p>{{@controller.successMessage}}</p>
+        {{#if @controller.loginError}}
+          <p class="alert alert-error">{{@controller.loginError}}</p>
+        {{/if}}
 
         {{#if @controller.requiresApproval}}
           <p>{{i18n "login.not_approved"}}</p>
@@ -116,6 +120,17 @@ export default <template>
               />
             </div>
           </div>
+
+          {{#if @controller.model.has_connected_apps}}
+            <label class="checkbox-label change-password-form__revoke-apps">
+              <Input
+                class="change-password-form__revoke-apps-checkbox"
+                @checked={{@controller.revokeConnectedApps}}
+                @type="checkbox"
+              />
+              {{i18n "user.change_password.revoke_apps"}}
+            </label>
+          {{/if}}
 
           <DButton
             class="btn-primary"

@@ -48,6 +48,18 @@ RSpec.describe BulkImport::DiscourseMerge::Merger do
     instance_double(PG::Connection, exec: rows)
   end
 
+  describe "#copy_user_stuff" do
+    it "excludes session-bound push subscriptions from the models copied for users" do
+      merger = build_merger(merged_user_ids: [], historical_bot_ids: [])
+      allow(merger).to receive(:copy_model)
+
+      merger.copy_user_stuff
+
+      expect(merger).to have_received(:copy_model).with(UserVisit, any_args)
+      expect(merger).not_to have_received(:copy_model).with(PushSubscription, any_args)
+    end
+  end
+
   it "maps an automatic plugin group by name when its ID differs across sites" do
     group = Fabricate(:group, name: "discourse_ai_users", automatic: true)
     canonical_bot = Fabricate(:user, id: -2)

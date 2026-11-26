@@ -38,11 +38,21 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      review_bulk:
+        refresh: "Rudisha Tena"
+        columns:
+          user: "Mtumiaji"
+          created: "Imetengenezwa"
       ai_decoded_transcript:
         type: "Aina"
         error: "Hitilafu"
         response: "Mwitikio"
+      post_image_captions:
+        image_descriptions:
+          apply: "Tumia"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listi kitu"
         classify:
           text: "Neno"
           upload_ids: "Picha"
@@ -75,6 +85,9 @@ sw:
           enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
+        review_queue:
+          setting_groups:
+            settings: "Mipangilio"
         image_caption:
           setting_groups:
             settings: "Mipangilio"
@@ -198,6 +211,26 @@ sw:
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      concepts:
+        edit: "Hariri"
+        seed:
+          refresh: "Rudisha Tena"
+        delete: "Futa"
+        columns:
+          topics: "Mada"
+          posts: "Machapisho"
+        statuses:
+          active: "Amilifu"
+        form:
+          name: "Jina"
+          description: "Maelezo"
+        shared_topics_count:
+          one: "%{count} topiki"
+          other: "%{count} Topiki"
+        tagged_topics: "Mada zilizotajwa"
+        topic_columns:
+          topic: "Mada"
+          relevance: "Umuhimu"
       decision_models:
         no_preset: "Hakuna"
         display_name: "Jina"

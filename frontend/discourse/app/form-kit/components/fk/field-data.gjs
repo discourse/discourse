@@ -112,6 +112,10 @@ export default class FKFieldData extends Component {
     return this.args.labelFormat;
   }
 
+  get isHorizontal() {
+    return this.args.layout === "horizontal";
+  }
+
   /**
    * Tooltip component of the field.
    * @type {string|Component}
@@ -157,6 +161,10 @@ export default class FKFieldData extends Component {
     return (this.args.errors ?? {})[this.name];
   }
 
+  get labelId() {
+    return `${this.id}-label`;
+  }
+
   get descriptionId() {
     return `${this.id}-description`;
   }
@@ -195,11 +203,12 @@ export default class FKFieldData extends Component {
 
   /**
    * Indicates whether a control that renders the field's title itself, inline
-   * in its own markup, should render it. Defaults to `true`.
+   * in its own markup, should render it. Defaults to `true`, or `false` in the
+   * horizontal layout when the container renders the title instead.
    * @type {boolean}
    */
   get showControlTitle() {
-    return this.args.showControlTitle ?? true;
+    return this.args.showControlTitle ?? !(this.isHorizontal && this.showTitle);
   }
 
   /**
@@ -314,6 +323,14 @@ export default class FKFieldData extends Component {
     }
 
     this.args.triggerRevalidationFor(this.name);
+  }
+
+  /**
+   * Removes the errors of the field.
+   */
+  @action
+  removeError() {
+    this.args.data.removeError(this.name);
   }
 
   /**

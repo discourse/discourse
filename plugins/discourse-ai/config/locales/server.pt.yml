@@ -10,6 +10,10 @@ pt:
       llm_model:
         name: "Id. do Modelo"
         max_prompt_tokens: "Janela de contexto"
+  site_settings:
+    keywords:
+      ai_discord_search_enabled: "integração do Discord"
+      ai_summarization_enabled: "resumos"
   reports:
     overall_sentiment:
       yaxis: "Data"
@@ -57,6 +61,8 @@ pt:
           text_color: "cor do texto"
         approve_label: "Sim"
         reject_label: "Não"
+        category_access_levels:
+          readonly: "Ver"
       agents:
         custom_prompt:
           name: "Janela personalizada"

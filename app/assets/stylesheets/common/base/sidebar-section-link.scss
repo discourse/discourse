@@ -7,6 +7,21 @@
   --d-sidebar-section-link-emoji-size: 1em;
 }
 
+@mixin sidebar-section-link-highlight {
+  background: var(--d-sidebar-highlight-background);
+  color: var(--d-sidebar-highlight-color);
+  outline: none;
+
+  .prefix-text {
+    background: var(--d-sidebar-highlight-prefix-background);
+    color: var(--d-sidebar-highlight-prefix-color);
+  }
+
+  .sidebar-section-link-suffix.icon.unread svg {
+    color: var(--d-sidebar-highlight-suffix-color);
+  }
+}
+
 .sidebar-section-link-wrapper {
   display: flex;
   align-items: center;
@@ -20,17 +35,7 @@
   }
 
   &.--hovering .sidebar-section-link {
-    background: var(--d-sidebar-highlight-background);
-    color: var(--d-sidebar-highlight-color);
-
-    .prefix-text {
-      background: var(--d-sidebar-highlight-prefix-background);
-      color: var(--d-sidebar-highlight-prefix-color);
-    }
-
-    .sidebar-section-link-suffix.icon.unread svg {
-      color: var(--d-sidebar-highlight-suffix-color);
-    }
+    @include sidebar-section-link-highlight;
   }
 
   .sidebar-section-link {
@@ -41,19 +46,14 @@
     border-radius: var(--token-radius-normal);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
 
-    &:focus-visible,
-    &:hover {
-      background: var(--d-sidebar-highlight-background);
-      color: var(--d-sidebar-highlight-color);
-      outline: none;
+    &:focus-visible {
+      @include sidebar-section-link-highlight;
+    }
 
-      .prefix-text {
-        background: var(--d-sidebar-highlight-prefix-background);
-        color: var(--d-sidebar-highlight-prefix-color);
-      }
-
-      .sidebar-section-link-suffix.icon.unread svg {
-        color: var(--d-sidebar-highlight-suffix-color);
+    // touch browsers leave :hover stuck on the link a scroll started on
+    @media (hover: hover) {
+      &:hover {
+        @include sidebar-section-link-highlight;
       }
     }
 

@@ -317,8 +317,9 @@
       margin-top: 18px;
       min-height: 35px;
 
-      .input-setting-textarea {
+      .form-kit__control-textarea {
         height: unset;
+        min-height: unset;
       }
     }
 
@@ -523,18 +524,10 @@
 
     td.hex {
       width: 160px;
-
-      .color-picker {
-        display: inline-flex;
-      }
     }
 
     td.actions {
       width: 200px;
-    }
-
-    .color-picker input {
-      margin-bottom: 0;
     }
 
     th.overridden {

@@ -730,6 +730,11 @@ export function applyDefaultHandlers() {
     response(fixturesByUrl["/c/11/show.json"])
   );
 
+  // Creating a category lands on its (empty) topic list.
+  pretender.get("/c/testing/11/l/latest.json", () =>
+    response({ users: [], topic_list: { topics: [], per_page: 30 } })
+  );
+
   pretender.get("/categories/types", () =>
     response({
       types: [
@@ -1143,6 +1148,38 @@ export function applyDefaultHandlers() {
         },
       ],
       extras: {},
+    });
+  });
+
+  pretender.get("/admin/config/customize/popular-themes.json", () => {
+    return response(200, {
+      popular_themes: [
+        {
+          id: "graceful",
+          name: "Graceful",
+          description: "A light and graceful theme for Discourse.",
+          remote_url: "https://github.com/discourse/graceful",
+          screenshot_url: "/images/graceful-light.png",
+          meta_url: "https://meta.discourse.org/t/graceful-theme/93040",
+          component: false,
+        },
+        {
+          id: "mint",
+          name: "Mint",
+          description: "A minty colored theme.",
+          remote_url: "https://github.com/discourse/discourse-mint-theme",
+          screenshot_url: "/images/mint-light.png",
+          meta_url: "https://meta.discourse.org/t/mint-theme/202822",
+          component: false,
+        },
+        {
+          id: "brand_header",
+          name: "Brand Header",
+          description: "Add an extra top header.",
+          remote_url: "https://github.com/discourse/discourse-brand-header",
+          component: true,
+        },
+      ],
     });
   });
 

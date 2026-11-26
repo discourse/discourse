@@ -45,6 +45,7 @@ en:
         archived: "Archived"
       topic_footer:
         add_to_board: "Add to board"
+        add_to_column: "Add to column"
         already_added: "Already added"
         no_boards: "No boards available"
       topic_pill:
@@ -190,6 +191,11 @@ en:
           column_title_required: "Column title or tag name is required"
           icon: "Icon"
           color: "Color"
+          color_palette: "Color palette"
+          name_and_style: "Column name and style"
+          choose_style: "Choose column icon and color"
+          choose_style_with_icon: "Choose column icon and color (currently the %{name} icon)"
+          icon_search_placeholder: "Search…"
           default_sort: "Default sort"
           default_sort_priority: "Priority"
           default_sort_recency: "Recency"
@@ -204,8 +210,6 @@ en:
           move_to_status_none: "Don't change"
           move_to_status_open: "Open"
           move_to_status_closed: "Closed"
-          show_advanced: "Show advanced options"
-          hide_advanced: "Hide advanced options"
     keyboard_shortcuts_help:
       boards:
         title: "Boards"

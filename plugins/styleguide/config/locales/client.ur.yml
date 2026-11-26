@@ -56,6 +56,9 @@ ur:
           title: "فونٹ سسٹم"
         colors:
           title: "رنگ"
+        design_variables:
+          type: "قِسم"
+          default: "ڈِیفالٹ"
         dialog:
           title: "ڈائیلاگ"
         drag_and_drop:

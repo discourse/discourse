@@ -50,7 +50,7 @@ class ContentSecurityPolicy
     end
 
     def frame_ancestors
-      ["'self'", *EmbeddableHost.pluck(:host).map { |host| "https://#{host}" }]
+      ["'self'", *EmbeddableHost.cached_frame_ancestor_urls]
     end
 
     def restrict_embed?

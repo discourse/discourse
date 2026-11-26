@@ -19,7 +19,6 @@ import {
 import { animateCardReorder, captureCardRects } from "../lib/boards-motion.js";
 import BoardsCard from "./boards-card.gjs";
 import BoardsAddTopicAsCardModal from "./modal/boards-add-topic-as-card.gjs";
-import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
 
 const RECENCY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -106,14 +105,12 @@ export default class BoardsColumn extends Component {
   @action
   async startAddCard(closeMenu) {
     await closeMenu();
-    this.modal.show(BoardsCardDetailModal, {
-      model: {
-        card: {},
-        isNew: true,
-        board: this.args.board,
-        onCreateCard: (data) =>
-          this.args.onAddCard({ ...data, columnId: this.args.column.id }),
-      },
+    this.args.onOpenCardDetail({
+      card: {},
+      isNew: true,
+      board: this.args.board,
+      onCreateCard: (data) =>
+        this.args.onAddCard({ ...data, columnId: this.args.column.id }),
     });
   }
 
@@ -468,6 +465,7 @@ export default class BoardsColumn extends Component {
               @onDeleteCard={{@onDeleteCard}}
               @onDragEnd={{@onDragEnd}}
               @onDragStart={{@onDragStart}}
+              @onOpenCardDetail={{@onOpenCardDetail}}
               @onPromoteToTopic={{fn @onPromoteToTopic card.id}}
               @onRefreshBoard={{@onRefreshBoard}}
               @onUpdateCard={{@onUpdateCard}}

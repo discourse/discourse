@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe DiscourseTopicVoting::VotesController do
-  let(:user) { Fabricate(:user) }
-  let(:category) { Fabricate(:category) }
-  let(:topic) { Fabricate(:topic, category_id: category.id) }
+  fab!(:user)
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, category_id: category.id) }
 
   before do
     DiscourseTopicVoting::CategorySetting.create!(category:)

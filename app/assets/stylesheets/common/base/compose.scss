@@ -10,6 +10,7 @@ html.composer-open:not(.has-full-page-chat) {
 :root {
   --composer-max-width--hide-preview: 740px;
   --composer-popup-background: var(--secondary);
+  --composer-collapsed-height: 45px;
 }
 
 .grippie {
@@ -40,6 +41,16 @@ html.composer-open:not(.has-full-page-chat) {
 .composer-toggles-menu-content,
 .composer-actions-dropdown {
   z-index: z("mobile-composer");
+}
+
+.composer-action-title,
+.composer-actions-btn[data-action-id="reply_to_post"],
+.composer-actions-btn[data-action-id="reply_to_topic"],
+[data-name="change-reply-to"],
+.draft-text {
+  .d-icon-reply {
+    transform: scaleX(-1);
+  }
 }
 
 #reply-control {
@@ -144,7 +155,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.draft,
   &.saving {
-    height: 45px !important;
+    height: var(--composer-collapsed-height) !important;
     align-items: center;
     background: var(--tertiary);
     color: var(--secondary);
@@ -644,6 +655,18 @@ html.composer-open:not(.has-full-page-chat) {
     &.user-chooser {
       // keeps user chooser a layer above AI autocomplete
       z-index: z("composer", "dropdown") + 2;
+    }
+  }
+
+  @include viewport.until(sm) {
+    &.private-message .with-tags {
+      .title-and-category {
+        flex-wrap: wrap;
+      }
+
+      .tags-input {
+        max-width: 100%;
+      }
     }
   }
 

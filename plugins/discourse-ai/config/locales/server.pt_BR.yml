@@ -35,12 +35,6 @@ pt_BR:
         description: "Postagens de triagem usando um modelo de linguagem grande"
         notify_author_pm:
           subject: "Sua postagem foi temporariamente removida para análise"
-          body: |
-            Olá @%{username},
-
-            Sua postagem em “%{topic_title}” foi temporariamente removida e colocada em nossa fila de revisão para ser analisada por um moderador. Se aprovada, ela será restaurada automaticamente.
-
-            Referência: %{post_url}
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"
@@ -119,6 +113,12 @@ pt_BR:
     ai_translation_include_bot_content: "Quando ativada, também enviará para tradução o conteúdo escrito por bots (IDs de usuário abaixo de 0)."
     ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
     ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
+    keywords:
+      ai_default_llm_model: "modelo de linguagem padrão"
+      ai_discord_search_enabled: "integração com o Discourse"
+      ai_helper_automatic_chat_thread_title: "títulos de threads de chat"
+      ai_summarization_enabled: "resumos"
+      ai_summary_gists_enabled: "resumos breves da lista de tópicos"
   reviewables:
     reasons:
       flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
@@ -323,6 +323,8 @@ pt_BR:
           text_color: "cor do texto"
         approve_label: "Sim"
         reject_label: "Não"
+        category_access_levels:
+          readonly: "Ver"
         empty_value: "Vazio"
         unexpected_error: "ocorreu um erro inesperado."
       agents:
@@ -489,6 +491,7 @@ pt_BR:
         edit_post: "Editar postagem"
         edit_tag: "Editar tag"
         create_category: "Criar categoria"
+        delete_category: "Excluir categoria"
         move_posts: "Mover postagens"
         search: "Pesquisar"
         tags: "Listar etiquetas"
@@ -605,6 +608,12 @@ pt_BR:
       edit_category:
         errors:
           not_found: "Categoria não encontrada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoria não encontrada."
+      delete_category:
+        errors:
+          not_found: "Categoria não encontrada."
       change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
@@ -622,6 +631,8 @@ pt_BR:
         errors:
           not_found: "Tópico não encontrado."
     appearance_authoring:
+      component_on: "Ligado"
+      component_off: "Desligado"
       default_theme: "Tema padrão"
       colors:
         light:

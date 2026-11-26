@@ -340,6 +340,56 @@ describe DiscourseMcp::OAuth do
     expect(authorization.scopes).to contain_exactly(*granted_scopes)
   end
 
+  it "rejects a new grant for an anonymous shadow" do
+    AnonymousUser.create!(user: user, master_user: Fabricate(:user), active: true)
+
+    expect { authorization }.to raise_error(Discourse::InvalidAccess)
+  end
+
+  it "rejects credentials from a legacy grant for a historical anonymous shadow" do
+    code =
+      McpOauthAuthorizationCode.issue!(
+        authorization:,
+        redirect_uri: client.redirect_uris.first,
+        resource: DiscourseMcp.resource_url,
+        code_challenge: challenge,
+      )
+    access_token = McpOauthAccessToken.issue!(authorization:)
+    refresh_token, = McpOauthRefreshToken.issue!(authorization:)
+    request = Struct.new(:authorization).new("Bearer #{access_token}")
+    AnonymousUser.create!(user: user, master_user: Fabricate(:user), active: false)
+
+    expect do
+      described_class::TokenIssuer.exchange_code!(
+        code:,
+        client_id: client.client_id,
+        redirect_uri: client.redirect_uris.first,
+        code_verifier: verifier,
+        resource: DiscourseMcp.resource_url,
+      )
+    end.to raise_error(Discourse::InvalidAccess)
+    expect do
+      described_class::TokenIssuer.refresh!(
+        refresh_token:,
+        client_id: client.client_id,
+        resource: DiscourseMcp.resource_url,
+      )
+    end.to raise_error(Discourse::InvalidAccess)
+    expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
+      DiscourseMcp::AuthenticationError,
+    )
+  end
+
+  it "rejects even an unscoped legacy bearer token for an anonymous shadow" do
+    access_token = McpOauthAccessToken.issue!(authorization:, scopes: [])
+    request = Struct.new(:authorization).new("Bearer #{access_token}")
+    AnonymousUser.create!(user: user, master_user: Fabricate(:user), active: false)
+
+    expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
+      DiscourseMcp::AuthenticationError,
+    )
+  end
+
   it "requires the initial scope when granting authorization" do
     expect do
       described_class::AuthorizationGrant.create!(

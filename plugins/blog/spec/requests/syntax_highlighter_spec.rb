@@ -34,7 +34,7 @@ RSpec.describe "Blog syntax highlighter", type: :request do
   end
 
   it "serves the immutable module under the blog path without setting cookies" do
-    SiteSetting.blog_url = ""
+    update_default_blog(url: "")
 
     get "/blog#{Blog::SyntaxHighlighter.path}", headers: { "Cookie" => "__profilin=p%3Dt" }
 

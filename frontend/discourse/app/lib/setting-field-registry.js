@@ -1,29 +1,36 @@
 import BoolControl from "discourse/components/setting-field/bool";
 import CategoryControl from "discourse/components/setting-field/category";
 import CategoryListControl from "discourse/components/setting-field/category-list";
+import ColorControl from "discourse/components/setting-field/color";
 import CompactListControl from "discourse/components/setting-field/compact-list";
+import DatetimeControl from "discourse/components/setting-field/datetime";
 import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
+import FontListControl from "discourse/components/setting-field/font-list";
 import GroupControl from "discourse/components/setting-field/group";
 import GroupListControl from "discourse/components/setting-field/group-list";
+import HostListControl from "discourse/components/setting-field/host-list";
 import IconControl from "discourse/components/setting-field/icon";
 import IntegerControl from "discourse/components/setting-field/integer";
 import LocaleEnumControl from "discourse/components/setting-field/locale-enum";
+import LocaleListControl from "discourse/components/setting-field/locale-list";
 import RadioGroupControl from "discourse/components/setting-field/radio-group";
 import TagGroupListControl from "discourse/components/setting-field/tag-group-list";
 import TagListControl from "discourse/components/setting-field/tag-list";
+import TopicControl from "discourse/components/setting-field/topic";
 
 const REGISTRY = {};
 
 const ROW = { format: "large", labelFormat: "full" };
 const INLINE = { format: "full" };
+export const CUSTOM_CONTROL = { ...ROW, type: "custom" };
 
 export function registerSettingFieldType(type, entry) {
   REGISTRY[type] = entry;
 }
 
 export function resolveSettingFieldType(definition) {
-  return REGISTRY[typeKeyFor(definition)] ?? REGISTRY.default;
+  return REGISTRY[typeKeyFor(definition)];
 }
 
 export function settingFieldValidation(definition) {
@@ -57,28 +64,19 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
-const TEXT_INPUT = { ...ROW, type: "input", adminReady: true };
-const CUSTOM_CONTROL = { ...ROW, type: "custom", adminReady: true };
-
 registerSettingFieldType("default", { ...ROW, type: "input" });
-registerSettingFieldType("string", TEXT_INPUT);
-registerSettingFieldType("float", TEXT_INPUT);
-registerSettingFieldType("username", TEXT_INPUT);
 registerSettingFieldType("textarea", {
   ...ROW,
   type: "textarea",
-  adminReady: true,
 });
 registerSettingFieldType("email", {
   ...ROW,
   type: "input-email",
-  adminReady: true,
 });
 registerSettingFieldType("date", { ...ROW, type: "input-date" });
 registerSettingFieldType("password", {
   ...ROW,
   type: "password",
-  adminReady: true,
 });
 registerSettingFieldType("radio-group", {
   ...ROW,
@@ -88,20 +86,22 @@ registerSettingFieldType("radio-group", {
 registerSettingFieldType("enum", {
   ...ROW,
   type: "select",
-  adminReady: true,
   renderer: EnumControl,
 });
 registerSettingFieldType("locale_enum", {
   ...ROW,
   type: "select",
-  adminReady: true,
   renderer: LocaleEnumControl,
 });
 registerSettingFieldType("icon", {
   ...ROW,
   type: "icon",
-  adminReady: true,
   renderer: IconControl,
+});
+registerSettingFieldType("color", {
+  ...ROW,
+  type: "color",
+  renderer: ColorControl,
 });
 registerSettingFieldType("category", {
   ...CUSTOM_CONTROL,
@@ -120,31 +120,46 @@ registerSettingFieldType("tag_group_list", {
   renderer: TagGroupListControl,
 });
 registerSettingFieldType("group_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: GroupListControl,
 });
 registerSettingFieldType("category_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: CategoryListControl,
 });
 registerSettingFieldType("compact_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: CompactListControl,
+});
+registerSettingFieldType("host_list", {
+  ...CUSTOM_CONTROL,
+  renderer: HostListControl,
+});
+registerSettingFieldType("font_list", {
+  ...CUSTOM_CONTROL,
+  renderer: FontListControl,
+});
+registerSettingFieldType("locale_list", {
+  ...CUSTOM_CONTROL,
+  renderer: LocaleListControl,
+});
+registerSettingFieldType("topic", {
+  ...CUSTOM_CONTROL,
+  renderer: TopicControl,
+});
+registerSettingFieldType("datetime", {
+  ...CUSTOM_CONTROL,
+  renderer: DatetimeControl,
 });
 registerSettingFieldType("bool", {
   ...INLINE,
   type: "checkbox",
   includeDescription: false,
-  adminReady: true,
   renderer: BoolControl,
 });
 registerSettingFieldType("integer", {
   ...INLINE,
   type: "input-number",
-  adminReady: true,
   renderer: IntegerControl,
 });
 registerSettingFieldType("duration", {

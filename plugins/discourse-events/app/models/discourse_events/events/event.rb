@@ -15,7 +15,6 @@ module DiscourseEvents
       MAX_LOCATION_LENGTH = 1000
       MAX_URL_LENGTH = 1000
       MAX_RAW_INVITEES = 10
-      MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
       # An event with no end has nothing to pause notifications until, and leaving
       # the webinar is what normally ends the pause, so this only bounds a tab
@@ -25,6 +24,8 @@ module DiscourseEvents
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
       REMINDER_TYPES = [NOTIFICATION_REMINDER, BUMP_TOPIC_REMINDER]
+      MAX_REMINDERS_PER_TYPE = { NOTIFICATION_REMINDER => 2, BUMP_TOPIC_REMINDER => 2 }.freeze
+      MAX_REMINDERS = MAX_REMINDERS_PER_TYPE.values.sum
 
       self.table_name = "discourse_post_event_events"
       self.ignored_columns = %w[starts_at ends_at]
@@ -74,7 +75,6 @@ module DiscourseEvents
                 numericality: {
                   only_integer: true,
                   greater_than: 0,
-                  less_than_or_equal_to: MAX_ATTENDEES_LIMIT,
                   allow_nil: true,
                 }
 
@@ -209,6 +209,8 @@ module DiscourseEvents
       end
 
       def parsed_reminders
+        counts_by_type = Hash.new(0)
+
         reminders
           .to_s
           .split(",")
@@ -218,6 +220,16 @@ module DiscourseEvents
 
             { type: type.presence || NOTIFICATION_REMINDER, value: value.to_i, unit: unit }
           end
+          .index_by { |reminder| [reminder[:type], Event.reminder_offset(reminder).to_i] }
+          .values
+          .select do |reminder|
+            type = reminder[:type]
+            (counts_by_type[type] += 1) <= MAX_REMINDERS_PER_TYPE.fetch(type, 0)
+          end
+      end
+
+      def self.reminder_type(reminder)
+        split_reminder(reminder)&.last.presence || NOTIFICATION_REMINDER
       end
 
       def self.split_reminder(reminder)
@@ -448,8 +460,8 @@ module DiscourseEvents
       end
 
       def at_capacity?
-        return false if max_attendees.blank?
-        going_count >= max_attendees
+        going_count >=
+          [max_attendees, SiteSetting.discourse_post_event_max_attendees_limit].compact.min
       end
 
       def self.statuses

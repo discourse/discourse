@@ -42,6 +42,7 @@ import {
 } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
@@ -79,6 +80,31 @@ export interface UserStatus {
   ends_at: string | null;
   message_bus_last_id?: number;
 }
+
+export type SecondFactorManagementResponse = { success: "OK" } & (
+  | { external_login_required: true; unconfirmed_session?: never }
+  | { external_login_required?: never; unconfirmed_session: true }
+  | {
+      external_login_required?: never;
+      unconfirmed_session?: never;
+      totps: {
+        id: number;
+        name: string | null;
+        method: number;
+        last_used: string | null;
+      }[];
+      security_keys: {
+        id: number;
+        user_id: number;
+        credential_id: string;
+        public_key: string;
+        factor_type: number;
+        enabled: boolean;
+        name: string;
+        last_used: string | null;
+      }[];
+    }
+);
 
 /** Options are partial: current-user and profile serializers expose different subsets. */
 export interface UserOption {
@@ -172,8 +198,8 @@ export interface UserApiKey {
 
 type WrappedUserApiKey = EmberObject &
   UserApiKey & {
-    revoke(): void;
-    undoRevoke(): void;
+    revoke(): globalThis.Promise<void>;
+    undoRevoke(): globalThis.Promise<void>;
   };
 
 /** Core serializer and client-assigned fields. Plugins augment this interface. */
@@ -220,6 +246,7 @@ export interface UserFields {
   can_edit_name?: boolean;
   can_edit_tags?: boolean;
   can_edit_username?: boolean;
+  can_embed_media?: boolean;
   can_ignore_user?: boolean;
   can_ignore_users?: boolean;
   can_invite_to_forum?: true;
@@ -347,6 +374,7 @@ export interface UserFields {
   sidebar_tags?: SiteSidebarTag[];
   silence_reason?: string | null;
   silenced_till?: string | null;
+  staff_only_settings?: string[];
   staged?: boolean;
   /** Legacy compatibility field; current serializers do not supply it. */
   stats?: UserActionStat[];
@@ -383,7 +411,7 @@ export interface UserFields {
     seen_at: string;
     is_active?: boolean;
   }[];
-  user_fields?: Record<string, string | string[] | boolean | null>;
+  user_fields?: Record<string, string | string[] | number | boolean | null>;
   user_notification_schedule?: Partial<
     Record<`day_${0 | 1 | 2 | 3 | 4 | 5 | 6}_${"start" | "end"}_time`, number>
   > & { id?: number; user_id?: number; enabled: boolean };
@@ -609,38 +637,6 @@ export function addSaveableUserOptionField(fieldName: string) {
   userOptionFields.push(fieldName);
 }
 
-function userOption(userOptionKey: keyof UserOption) {
-  return computed(`user_option.${userOptionKey}`, {
-    get(this: User, key: string) {
-      deprecated(
-        `Getting ${key} property of user object is deprecated. Use user_option object instead`,
-        {
-          id: "discourse.user.userOptions",
-          since: "2.9.0.beta12",
-        }
-      );
-
-      return this.get(`user_option.${key}`);
-    },
-
-    set(this: User, key: string, value: unknown) {
-      deprecated(
-        `Setting ${key} property of user object is deprecated. Use user_option object instead`,
-        {
-          id: "discourse.user.userOptions",
-          since: "2.9.0.beta12",
-        }
-      );
-
-      if (!this.user_option) {
-        this.set("user_option", {});
-      }
-
-      return this.set(`user_option.${key}`, value);
-    },
-  });
-}
-
 @singleton
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class User extends RestModel.extend(Evented) {
@@ -749,41 +745,6 @@ export default class User extends RestModel.extend(Evented) {
   @autoTrackedArray secondary_emails: string[] | undefined;
   @autoTrackedArray sidebar_sections: SiteSidebarSection[] | undefined;
   @autoTrackedArray unconfirmed_emails: string[] | undefined;
-  @userOption("mailing_list_mode")
-  mailing_list_mode: UserOption["mailing_list_mode"];
-  @userOption("external_links_in_new_tab")
-  external_links_in_new_tab: UserOption["external_links_in_new_tab"];
-  @userOption("enable_quoting") enable_quoting: UserOption["enable_quoting"];
-  @userOption("enable_smart_lists")
-  enable_smart_lists: UserOption["enable_smart_lists"];
-
-  @userOption("enable_markdown_monospace_font")
-  enable_markdown_monospace_font: UserOption["enable_markdown_monospace_font"];
-  @userOption("dynamic_favicon") dynamic_favicon: UserOption["dynamic_favicon"];
-  @userOption("automatically_unpin_topics")
-  automatically_unpin_topics: UserOption["automatically_unpin_topics"];
-  @userOption("likes_notifications_disabled")
-  likes_notifications_disabled: UserOption["likes_notifications_disabled"];
-  @userOption("hide_profile") hide_profile: UserOption["hide_profile"];
-  @userOption("hide_presence") hide_presence: UserOption["hide_presence"];
-  @userOption("title_count_mode")
-  title_count_mode: UserOption["title_count_mode"];
-  @userOption("timezone") timezone: UserOption["timezone"];
-  @userOption("skip_new_user_tips")
-  skip_new_user_tips: UserOption["skip_new_user_tips"];
-  @userOption("default_calendar")
-  default_calendar: UserOption["default_calendar"];
-  @userOption("bookmark_auto_delete_preference")
-  bookmark_auto_delete_preference: UserOption["bookmark_auto_delete_preference"];
-  @userOption("seen_popups") seen_popups: UserOption["seen_popups"];
-  @userOption("should_be_redirected_to_top")
-  should_be_redirected_to_top: UserOption["should_be_redirected_to_top"];
-  @userOption("redirected_to_top")
-  redirected_to_top: UserOption["redirected_to_top"];
-  @userOption("treat_as_new_topic_start_date")
-  treat_as_new_topic_start_date: UserOption["treat_as_new_topic_start_date"];
-  @userOption("composition_mode")
-  composition_mode: UserOption["composition_mode"];
   numGroupsToDisplay = 2;
   statusManager = new UserStatusManager(this);
   declare static _current: User | null | undefined;
@@ -1120,7 +1081,7 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  @computed()
+  @computed("user_api_keys")
   get userApiKeys(): WrappedUserApiKey[] | undefined {
     const keys = this.user_api_keys;
     if (keys) {
@@ -1130,13 +1091,9 @@ export default class User extends RestModel.extend(Evented) {
           raw as Partial<EmberObject>
         ) as WrappedUserApiKey;
 
-        obj.revoke = () => {
-          this.revokeApiKey(obj);
-        };
+        obj.revoke = () => this.revokeApiKey(obj);
 
-        obj.undoRevoke = () => {
-          this.undoRevokeApiKey(obj);
-        };
+        obj.undoRevoke = () => this.undoRevokeApiKey(obj);
 
         return obj;
       });
@@ -1349,13 +1306,15 @@ export default class User extends RestModel.extend(Evented) {
     return this.user_option?.text_size;
   }
 
-  @computed("second_factor_enabled", "staff")
-  get enforcedSecondFactor() {
+  @computed("siteSettings.enforce_second_factor", "staff")
+  get requiresSecondFactor(): boolean {
     const enforce = this.siteSettings.enforce_second_factor;
-    return (
-      !this.second_factor_enabled &&
-      (enforce === "all" || (enforce === "staff" && this.staff))
-    );
+    return enforce === "all" || (enforce === "staff" && !!this.staff);
+  }
+
+  @computed("second_factor_enabled", "requiresSecondFactor")
+  get enforcedSecondFactor(): boolean {
+    return this.requiresSecondFactor && !this.second_factor_enabled;
   }
 
   @computed("tracked_tags.[]", "watched_tags.[]", "watching_first_post_tags.[]")
@@ -1596,10 +1555,48 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  loadSecondFactorCodes(): globalThis.Promise<unknown> {
-    return ajax("/u/second_factors.json", {
+  async loadSecondFactorCodes(): globalThis.Promise<SecondFactorManagementResponse> {
+    const response = await ajax<
+      (SecondFactorManagementResponse & { error?: string }) | null
+    >("/u/second_factors.json", {
+      data: { webauthn_supported: isWebauthnSupported() },
       type: "POST",
     });
+
+    if (response?.error) {
+      throw new Error(response.error);
+    }
+
+    if (response?.success === "OK") {
+      const { external_login_required, unconfirmed_session } = response;
+      if (
+        external_login_required === true &&
+        unconfirmed_session === undefined
+      ) {
+        return { success: "OK", external_login_required };
+      }
+      if (
+        unconfirmed_session === true &&
+        external_login_required === undefined
+      ) {
+        return { success: "OK", unconfirmed_session };
+      }
+      if (
+        external_login_required === undefined &&
+        unconfirmed_session === undefined &&
+        "totps" in response &&
+        Array.isArray(response.totps) &&
+        response.totps.every((factor) => Number.isSafeInteger(factor?.id)) &&
+        Array.isArray(response.security_keys) &&
+        response.security_keys.every((factor) =>
+          Number.isSafeInteger(factor?.id)
+        )
+      ) {
+        return response;
+      }
+    }
+
+    throw new Error(i18n("generic_error"));
   }
 
   requestSecurityKeyChallenge(): globalThis.Promise<unknown> {
@@ -1744,7 +1741,9 @@ export default class User extends RestModel.extend(Evented) {
       return;
     }
 
-    ua.title = emojiUnescape(escapeExpression(ua.title));
+    // With emoji enabled, an empty title unescapes to `undefined`, which
+    // readers treat like `null`.
+    ua.title = emojiUnescape(escapeExpression(ua.title)) as string | null;
     const action = UserAction.collapseStream([UserAction.create(ua)]);
     this.stream.itemsLoaded += 1;
     this.stream.content.unshift(action[0]);

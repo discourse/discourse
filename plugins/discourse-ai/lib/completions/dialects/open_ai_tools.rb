@@ -12,12 +12,17 @@ module DiscourseAi
         def translated_tools
           if @responses_api
             raw_tools.map do |tool|
-              {
+              definition = {
                 type: "function",
                 name: tool.name,
                 description: tool.description,
                 parameters: tool.parameters_json_schema,
               }
+              if !tool.json_schema
+                definition[:strict] = true
+                definition[:parameters] = strict_parameters(definition[:parameters])
+              end
+              definition
             end
           else
             raw_tools.map do |tool|
@@ -85,6 +90,27 @@ module DiscourseAi
         private
 
         attr_reader :raw_tools
+
+        def strict_parameters(schema)
+          required = schema.fetch(:required)
+          properties =
+            schema
+              .fetch(:properties)
+              .to_h do |name, property|
+                if !required.include?(name)
+                  # Strict mode requires every key. Null represents an omitted optional argument.
+                  property = property.merge(type: [property.fetch(:type), :null])
+                  property[:enum] = property[:enum] + [nil] if property[:enum]
+                end
+                [name, property]
+              end
+
+          schema.merge(
+            properties: properties,
+            required: properties.keys,
+            additionalProperties: false,
+          )
+        end
       end
     end
   end

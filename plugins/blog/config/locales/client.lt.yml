@@ -15,6 +15,13 @@ lt:
         desktop: Darbalaukis
         mobile: Mobilus
         save: Saugoti
+        about_tab: Apie
+        blog_slug: URL adresas
+        settings_tab: Nustatymai
+        theme_tab: Tema
+        column_name: Vardas
+        column_category: Kategorija
+        column_status: Statusas
         path_formats:
           custom: Pasirinktinis
         themes: Temos
@@ -54,7 +61,10 @@ lt:
         edit: Redaguoti
         status: Statusas
         replies: Atsakymai
+        title: Antraštė
+      all: Visi
       drafts: Juodraščiai
+      pages: Puslapiai
       preview: Peržiūrėti
       unpublish: Atšaukti paskelbimą
       appearance_link: Išvaizda

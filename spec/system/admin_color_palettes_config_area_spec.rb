@@ -98,19 +98,23 @@ describe "Admin Color Palettes Config Area Page" do
   end
 
   describe "filtering" do
-    it "shows filters when there are more than 8 color schemes" do
+    it "shows filters, finds palettes by text and reports an empty search" do
       config_area.visit
 
       expect(page).to have_css(".d-filter-controls__input")
-    end
-
-    it "can filter by text search" do
-      config_area.visit
 
       find(".d-filter-controls__input").fill_in(with: user_selectable_palette.name)
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
       expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
+
+      find(".d-filter-controls__input").fill_in(with: "")
+      expect(page).to have_css("[data-palette-id='#{regular_palette.id}']")
+
+      find(".d-filter-controls__input").fill_in(with: "bananas")
+
+      expect(page).to have_css(".d-filter-controls__no-results")
+      expect(page).to have_css("button", text: I18n.t("js.filter_controls.reset"))
     end
 
     it "can filter by type" do
@@ -123,38 +127,27 @@ describe "Admin Color Palettes Config Area Page" do
       expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
       expect(page).to have_no_css(".color-palette:not([data-palette-id])")
     end
-
-    it "shows no results state" do
-      config_area.visit
-
-      find(".d-filter-controls__input").fill_in(with: "bananas")
-
-      expect(page).to have_css(".d-filter-controls__no-results")
-      expect(page).to have_css("button", text: I18n.t("js.filter_controls.reset"))
-    end
   end
 
   describe "color palette list items" do
-    it "shows palette details" do
+    it "shows palette details, badges, theme links and preview colors" do
       config_area.visit
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
       expect(page).to have_css("[data-palette-id='#{theme_palette.id}']")
       expect(page).to have_css("[data-palette-id='#{regular_palette.id}']")
-    end
-
-    it "shows user selectable badge" do
-      config_area.visit
 
       within("[data-palette-id='#{user_selectable_palette.id}']") do
         expect(page).to have_css(".theme-card__badge.--selectable")
       end
-    end
-
-    it "shows theme link for theme palettes" do
-      config_area.visit
 
       within("[data-palette-id='#{theme_palette.id}']") { expect(page).to have_link(theme.name) }
+
+      palette_item = find("[data-palette-id='#{regular_palette.id}'] .color-palette__preview")
+
+      expect(palette_item[:style]).to include("--primary--preview:")
+      expect(palette_item[:style]).to include("--secondary--preview:")
+      expect(palette_item[:style]).to include("--tertiary--preview:")
     end
 
     it "can toggle user selectable status" do
@@ -177,12 +170,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
@@ -195,12 +183,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_dark",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_dark"))
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
@@ -208,18 +191,6 @@ describe "Admin Color Palettes Config Area Page" do
           text: I18n.t("admin_js.admin.customize.colors.default_dark_badge.text"),
         )
       end
-    end
-  end
-
-  describe "CSS variables" do
-    it "generates CSS variables for color schemes" do
-      config_area.visit
-
-      palette_item = find("[data-palette-id='#{regular_palette.id}'] .color-palette__preview")
-
-      expect(palette_item[:style]).to include("--primary--preview:")
-      expect(palette_item[:style]).to include("--secondary--preview:")
-      expect(palette_item[:style]).to include("--tertiary--preview:")
     end
   end
 
@@ -237,12 +208,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       expect(page).to have_no_css(".fk-d-default-toast.-success")
     end
@@ -260,12 +226,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       expected_message =
         I18n.t(

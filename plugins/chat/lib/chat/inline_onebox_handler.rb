@@ -11,6 +11,8 @@ module Chat
         user = message.user
         return if !chat_channel || !user
 
+        thread = message.thread
+
         title =
           I18n.t(
             "chat.onebox.inline_to_message",
@@ -44,7 +46,9 @@ module Chat
         end
       end
 
-      return if !Guardian.new.can_preview_anonymous_public_chat_channel?(chat_channel)
+      guardian = Guardian.new
+      return if !guardian.can_preview_anonymous_public_chat_channel?(chat_channel)
+      return if thread.present? && !guardian.can_see_chat_thread?(thread)
 
       { url: url, title: title }
     end

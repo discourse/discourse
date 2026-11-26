@@ -11,7 +11,7 @@ module DiscourseAi
 
       attr_reader :endpoint, :api_token, :referer
 
-      def perform!(content)
+      def perform!(content, task: nil)
         headers = {
           "Referer" => Discourse.base_url,
           "Content-Type" => "application/json",

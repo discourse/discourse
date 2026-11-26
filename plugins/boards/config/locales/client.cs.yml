@@ -55,6 +55,8 @@ cs:
           column_title: "Název"
           icon: "Ikona"
           color: "Barva"
+          color_palette: "Barevná paleta"
+          icon_search_placeholder: "Vyhledat..."
           tag: "Štítek"
           move_to_assigned_unassign: "Odebrat přidělení"
           move_to_status_open: "Otevřeno"

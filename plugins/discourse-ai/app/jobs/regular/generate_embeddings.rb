@@ -8,13 +8,21 @@ module Jobs
       return unless DiscourseAi::Embeddings.enabled?
       return if args[:target_type].blank? || args[:target_id].blank?
       target = args[:target_type].constantize.find_by_id(args[:target_id])
-      return if target.nil? || target.deleted_at.present?
+      return if target.nil?
+      return if target.respond_to?(:deleted_at) && target.deleted_at.present?
 
-      topic = target.is_a?(Topic) ? target : target.topic
-      post = target.is_a?(Post) ? target : target.first_post
-      return if topic.blank? || post.blank?
-      return if topic.private_message? && !SiteSetting.ai_embeddings_generate_for_pms
-      return if post.raw.blank?
+      case target
+      when Topic, Post
+        topic = target.is_a?(Topic) ? target : target.topic
+        post = target.is_a?(Post) ? target : target.first_post
+        return if topic.blank? || post.blank?
+        return if topic.private_message? && !SiteSetting.ai_embeddings_generate_for_pms
+        return if post.raw.blank?
+      when InferredConcept
+        return if target.retired?
+      else
+        return
+      end
 
       definition = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
       return if DiscourseAi::Embeddings::ProviderHealth.paused?(definition)

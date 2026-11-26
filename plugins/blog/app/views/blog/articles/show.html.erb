@@ -1,5 +1,5 @@
-<%= blog_render_template("article") %>
-<% unless @preview %>
+<%= blog_render_template(@article_metadata.page? ? "page" : "article") %>
+<% unless @preview || @article_metadata.page? %>
   <% discussion_closed = @topic.closed? || @topic.archived? %>
   <section id="discussion" class="blog-discussion">
     <div class="blog-discussion__heading"><h2 id="comments"><%= t('blog.discussion') %></h2><a href="<%= @topic.url %>"><%= t('blog.open_discussion') %> ↗</a></div>

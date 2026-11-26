@@ -216,6 +216,7 @@ module BulkImport::DiscourseMerge
           user_security_keys
           user_auth_tokens
           user_auth_token_logs
+          push_subscriptions
           user_api_keys
           api_keys
           api_key_scopes

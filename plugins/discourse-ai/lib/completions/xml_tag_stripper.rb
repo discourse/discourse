@@ -5,122 +5,111 @@ module DiscourseAi
     class XmlTagStripper
       def initialize(tags_to_strip)
         @tags_to_strip = tags_to_strip
-        @longest_tag = tags_to_strip.map(&:length).max
-        @parsed = []
+        @tags_set = tags_to_strip.to_h { |tag| [tag, true] }.freeze
+        @longest_tag = tags_to_strip.map(&:length).max || 0
+        @open_tag = nil
+        @hidden_buffer = +""
+        @maybe_tag = nil
       end
 
       def <<(text)
-        if node = @parsed[-1]
-          if node[:type] == :maybe_tag
-            @parsed.pop
-            text = node[:content] + text
-          end
+        if @maybe_tag
+          text = @maybe_tag + text
+          @maybe_tag = nil
         end
-        @parsed.concat(parse_tags(text))
 
-        @parsed, result = process_parsed(@parsed)
-        result
+        output = +""
+        pos = 0
+        len = text.length
+
+        while pos < len
+          lt = text.index("<", pos)
+          if lt.nil?
+            chunk = pos == 0 ? text : text[pos, len - pos]
+            if @open_tag
+              @hidden_buffer << chunk
+            else
+              output << chunk
+            end
+            break
+          end
+
+          if lt > pos
+            before = text[pos, lt - pos]
+            if @open_tag
+              @hidden_buffer << before
+            else
+              output << before
+            end
+          end
+
+          if lt == len - 1
+            @maybe_tag = "<"
+            break
+          end
+
+          gt = text.index(">", lt + 1)
+          if gt.nil?
+            tag = text[lt + 1, len - lt - 1]
+            tag_name = tag.start_with?("/") ? (tag[1..] || "") : tag
+            if tag_name.length <= @longest_tag &&
+                 @tags_to_strip.any? { |tag_to_strip| tag_to_strip.start_with?(tag_name) }
+              @maybe_tag = text[lt, len - lt]
+            else
+              raw = text[lt, len - lt]
+              if @open_tag
+                @hidden_buffer << raw
+              else
+                output << raw
+              end
+            end
+            break
+          end
+
+          tag = text[lt + 1, gt - lt - 1]
+          raw_tag = text[lt, gt - lt + 1]
+          is_end_tag = tag.start_with?("/")
+          tag_name = is_end_tag ? (tag[1..] || "") : tag
+
+          if @tags_set[tag_name]
+            if is_end_tag
+              if @open_tag.nil?
+                output << raw_tag
+              elsif @open_tag == tag_name
+                @open_tag = nil
+                @hidden_buffer.clear
+              else
+                @hidden_buffer << raw_tag
+              end
+            else
+              @open_tag ||= tag_name
+              @hidden_buffer << raw_tag
+            end
+          else
+            if @open_tag
+              @hidden_buffer << raw_tag
+            else
+              output << raw_tag
+            end
+          end
+
+          pos = gt + 1
+        end
+
+        output.empty? ? nil : output
       end
 
       def finish
-        @parsed.map { |node| node[:content] }.join
+        result = +""
+        result << @hidden_buffer if !@hidden_buffer.empty?
+        result << @maybe_tag if @maybe_tag
+        result
       end
 
       def finish_visible
-        return "" if @parsed.any? { |node| node[:type] == :open_tag }
+        return "" if @open_tag
 
-        @parsed.filter_map { |node| node[:content] if node[:type] == :maybe_tag }.join
-      end
-
-      def process_parsed(parsed)
-        output = []
-        buffer = []
-        stack = []
-
-        parsed.each do |node|
-          case node[:type]
-          when :text
-            if stack.empty?
-              output << node[:content]
-            else
-              buffer << node
-            end
-          when :open_tag
-            stack << node[:name]
-            buffer << node
-          when :close_tag
-            if stack.empty?
-              output << node[:content]
-            else
-              if stack[0] == node[:name]
-                buffer = []
-                stack = []
-              else
-                buffer << node
-              end
-            end
-          when :maybe_tag
-            buffer << node
-          end
-        end
-
-        result = output.join
-        result = nil if result.empty?
-
-        [buffer, result]
-      end
-
-      def parse_tags(text)
-        parsed = []
-
-        while true
-          before, after = text.split("<", 2)
-
-          parsed << { type: :text, content: before } if before && !before.empty?
-
-          break if after.nil?
-
-          if before.empty? && after.empty?
-            parsed << { type: :maybe_tag, content: "<" }
-            break
-          end
-
-          tag, after = after.split(">", 2)
-
-          is_end_tag = tag[0] == "/"
-          tag_name = tag
-          tag_name = tag[1..-1] || "" if is_end_tag
-
-          if !after
-            found = false
-            if tag_name.length <= @longest_tag
-              @tags_to_strip.each do |tag_to_strip|
-                if tag_to_strip.start_with?(tag_name)
-                  parsed << { type: :maybe_tag, content: "<" + tag }
-                  found = true
-                  break
-                end
-              end
-            end
-            parsed << { type: :text, content: "<" + tag } if !found
-            break
-          end
-
-          raw_tag = "<" + tag + ">"
-
-          if @tags_to_strip.include?(tag_name)
-            parsed << {
-              type: is_end_tag ? :close_tag : :open_tag,
-              content: raw_tag,
-              name: tag_name,
-            }
-          else
-            parsed << { type: :text, content: raw_tag }
-          end
-          text = after
-        end
-
-        parsed
+        @maybe_tag || ""
       end
     end
   end

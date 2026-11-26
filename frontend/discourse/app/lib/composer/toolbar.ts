@@ -6,6 +6,7 @@ import type { CapabilitiesService } from "discourse/services/capabilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 import type {
+  InsertBlockOptions,
   SelectedText,
   SurroundOptions,
   ToolbarState,
@@ -40,6 +41,11 @@ export interface ToolbarEvent {
   formatCode(): boolean | void;
   /** Adds text at the captured selection. */
   addText(text: string): void;
+  /** Inserts a standalone block in place of the captured selection. */
+  insertBlock(
+    block: string,
+    options?: Omit<InsertBlockOptions, "selected">
+  ): void;
   /** Applies a link to the captured selection. */
   applyLink(url: string): void;
   /** Toggles the editor's text direction. */
@@ -77,8 +83,10 @@ export interface PopupMenuOption {
   showActiveIcon?: boolean;
   /** Reports whether the option matches the editor state. */
   active: (context: ToolbarStateContext) => boolean | undefined;
-  /** Invokes the option. */
-  action: (event: ToolbarEvent) => void;
+  /** Invokes a selectable option. */
+  action?: (event: ToolbarEvent) => void;
+  /** Choices displayed when the option opens a submenu. */
+  submenu?: PopupMenuOption[];
   /** Popup menu that owns the option. */
   menu?: string;
 }
@@ -312,7 +320,7 @@ export class ToolbarBase {
           "A popup menu needs a toolbar with a context",
           this.context.newToolbarEvent
         );
-        option.action(this.context.newToolbarEvent());
+        option.action?.(this.context.newToolbarEvent());
       };
 
       buttonAttrs.popupMenu.options()?.forEach((option) => {

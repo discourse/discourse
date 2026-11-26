@@ -4,6 +4,96 @@ RSpec.describe DiscourseAi::Mcp::ToolRegistry do
   before { enable_current_plugin }
 
   describe ".refresh!" do
+    it "refreshes cached agent capabilities when a server adds or removes tools" do
+      server = Fabricate(:ai_mcp_server, url: "https://mcp.example.com")
+      agent = Fabricate(:ai_agent)
+      agent.ai_mcp_servers << server
+      AiMcpServer.stubs(:validate_hostname_public!).returns(true)
+      names = ["search"]
+      stub_request(:post, server.url).to_return do |request|
+        result =
+          if JSON.parse(request.body)["method"] == "server/discover"
+            { supportedVersions: ["2026-07-28"], capabilities: { tools: {} } }
+          else
+            { tools: names.map { |name| { name: name, inputSchema: { type: "object" } } } }
+          end
+        { status: 200, body: { jsonrpc: "2.0", result: result }.to_json }
+      end
+
+      described_class.refresh!(server, raise_on_error: true)
+      cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+      expect(cached_agent.new.tools.map(&:name)).to include("search")
+
+      names = ["pin_topic"]
+      described_class.refresh!(server, raise_on_error: true)
+      refreshed_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+      expect(refreshed_agent.new.tools.map(&:name)).to include("pin_topic")
+      expect(refreshed_agent.new.tools.map(&:name)).not_to include("search")
+    end
+
+    context "with an agent using the server" do
+      fab!(:server) { Fabricate(:ai_mcp_server, url: "https://mcp.example.com") }
+      fab!(:agent) { Fabricate(:ai_agent).tap { |a| a.ai_mcp_servers << server } }
+
+      let(:tool_names) { %w[search pin_topic] }
+
+      before do
+        AiMcpServer.stubs(:validate_hostname_public!).returns(true)
+        stub_request(:post, server.url).to_return do |request|
+          result =
+            if JSON.parse(request.body)["method"] == "server/discover"
+              { supportedVersions: ["2026-07-28"], capabilities: { tools: {} } }
+            else
+              { tools: tool_names.map { |name| { name: name, inputSchema: { type: "object" } } } }
+            end
+          { status: 200, body: { jsonrpc: "2.0", result: result }.to_json }
+        end
+      end
+
+      def agent_cache_invalidations(&block)
+        MessageBus.track_publish(AiAgent.agent_cache.channel_name, &block)
+      end
+
+      it "invalidates cached agents when definitions change" do
+        described_class.refresh!(server, raise_on_error: true)
+        tool_names << "close_topic"
+
+        expect(
+          agent_cache_invalidations { described_class.refresh!(server, raise_on_error: true) },
+        ).to be_present
+      end
+
+      it "keeps cached agents when definitions are unchanged" do
+        described_class.refresh!(server, raise_on_error: true)
+
+        expect(
+          agent_cache_invalidations { described_class.refresh!(server, raise_on_error: true) },
+        ).to be_empty
+      end
+
+      it "keeps cached agents when only the tool order changes" do
+        described_class.refresh!(server, raise_on_error: true)
+        tool_names.reverse!
+
+        expect(
+          agent_cache_invalidations { described_class.refresh!(server, raise_on_error: true) },
+        ).to be_empty
+      end
+
+      it "keeps the agent cache populated after cold discovery during agent construction" do
+        described_class.invalidate!(server.id)
+        AiAgent.agent_cache.flush!
+
+        agent_class = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+        expect(agent_class.new.tools.map(&:name)).to include("search", "pin_topic")
+        expect(a_request(:post, server.url)).to have_been_made.at_least_once
+
+        WebMock.reset_executed_requests!
+        AiAgent.all_agents
+        expect(a_request(:post, server.url)).not_to have_been_made
+      end
+    end
+
     it "discovers and caches tools from a modern-only server" do
       server = Fabricate(:ai_mcp_server, url: "https://mcp.example.com")
       AiMcpServer.stubs(:validate_hostname_public!).returns(true)
@@ -17,11 +107,14 @@ RSpec.describe DiscourseAi::Mcp::ToolRegistry do
         { status: 200, body: { jsonrpc: "2.0", result: result }.to_json }
       end
 
+      server.record_health_error!("Reconnect required")
+
       definitions = described_class.refresh!(server, raise_on_error: true)
 
       expect(definitions.pluck("name")).to eq(["search"])
       expect(server.reload.protocol_version).to eq("2026-07-28")
       expect(server.last_health_status).to eq("healthy")
+      expect(server.last_health_error).to be_nil
       expect(
         a_request(:post, server.url).with do |request|
           JSON.parse(request.body)["method"] == "initialize"

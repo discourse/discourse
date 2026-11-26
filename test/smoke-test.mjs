@@ -11,10 +11,9 @@ const url = process.argv[2];
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
 const browser = await chromium.launch({
-  channel: "chrome",
+  channel: "chromium",
   // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
   headless: process.env.SHOW_BROWSER === undefined,
-  args: ["--no-sandbox"],
 });
 
 const contextOptions = {
@@ -126,8 +125,12 @@ await exec("go to categories page", () => {
   return page.goto(new URL("categories", url).href);
 });
 
-await exec("can see categories on the page", () => {
-  return page.waitForSelector(".category-list");
+await exec("can see category boxes on the page", () => {
+  return page.waitForSelector(".category-boxes");
+});
+
+await exec("go to latest page", () => {
+  return page.goto(new URL("latest", url).href);
 });
 
 await exec("navigate to 1st topic", () => {

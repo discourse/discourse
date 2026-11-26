@@ -9,6 +9,7 @@ module Live
                :public,
                :max_participants,
                :room_type,
+               :speak_requests_enabled,
                :video_enabled,
                :livekit_enabled,
                :chat_channel_id,

@@ -2,6 +2,15 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import PostCalendar from "../components/post-calendar.gjs";
 
+const PostCalendarTemplate = <template>
+  <PostCalendar
+    @height="650px"
+    @options={{@data.options}}
+    @post={{@data.post}}
+    @staticEvents={{@data.staticEvents}}
+  />
+</template>;
+
 function initializeDiscourseCalendar(api) {
   const postCalendar = api.container.lookup("service:post-calendar");
 
@@ -23,22 +32,11 @@ function initializeDiscourseCalendar(api) {
 
       calendar.innerHTML = "";
 
-      helper.renderGlimmer(
-        calendar,
-        <template>
-          <PostCalendar
-            @height="650px"
-            @options={{@data.options}}
-            @post={{@data.post}}
-            @staticEvents={{@data.staticEvents}}
-          />
-        </template>,
-        {
-          options,
-          post,
-          staticEvents,
-        }
-      );
+      helper.renderGlimmer(calendar, PostCalendarTemplate, {
+        options,
+        post,
+        staticEvents,
+      });
     },
     {
       onlyStream: true,

@@ -19,11 +19,15 @@ export default class DirectoryItemUserFieldValueComponent extends Component {
       return null;
     }
 
-    return fieldData.value
-      .toString()
-      .split(",")
-      .map((v) => v.replace(/-/g, " "))
-      .map((v) => v.trim());
+    return [fieldData.value].flat().flatMap((entry) =>
+      // Numbers can be negative, so they skip the dash-to-space formatting.
+      typeof entry === "number"
+        ? [entry.toString()]
+        : entry
+            .toString()
+            .split(",")
+            .map((v) => v.replace(/-/g, " ").trim())
+    );
   }
 
   get isSearchable() {

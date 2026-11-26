@@ -43,6 +43,7 @@ class Blog::BlogTheme::ImportRepository
   end
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
   policy :can_import_repository
   try(Blog::ThemeImporter::InvalidTheme, RemoteTheme::ImportError) { step :read_repository }
   step :create_theme

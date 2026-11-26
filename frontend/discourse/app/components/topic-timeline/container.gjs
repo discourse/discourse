@@ -4,8 +4,10 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
@@ -60,23 +62,25 @@ export default class TopicTimelineScrollArea extends Component {
   @service currentUser;
   @service composer;
 
-  @tracked current;
-  @tracked percentage = this._percentFor(
-    this.args.model,
-    this.args.enteredIndex
-  );
-  @tracked total;
-  @tracked date;
-
-  /** @type {number | null} */
-  @tracked lastReadPercentage = null;
-  @tracked lastRead;
-  @tracked before;
-  @tracked after;
-  @tracked scrollareaHeight;
-  @tracked timelineScrollareaStyle;
   @tracked dragging = false;
   @tracked excerpt = "";
+
+  percentage = this._percentFor(this.args.model, this.args.enteredIndex);
+
+  /**
+   * Written straight to the element: the scroller moves on every scroll
+   * event, and a tracked value would re-validate the whole page each time.
+   */
+  syncPadding = modifier((element, [edge]) => {
+    this.#paddingElements[edge] = element;
+    element.style.height = `${this.#paddingHeights[edge]}px`;
+
+    return () => {
+      if (this.#paddingElements[edge] === element) {
+        this.#paddingElements[edge] = null;
+      }
+    };
+  });
 
   /** @type {IntersectionObserver | null} */
   intersectionObserver = null;
@@ -89,6 +93,20 @@ export default class TopicTimelineScrollArea extends Component {
 
   /** @type {number | null} */
   dragOffset = null;
+
+  // Standalone cells only invalidate when their value changes, which most
+  // scroll events leave alone.
+  #current = tracked(undefined);
+  #total = tracked(undefined);
+  #daysAgo = tracked(undefined);
+  #lastRead = tracked(undefined);
+  #lastReadPercentage = tracked(null);
+  #scrollareaHeight = tracked(undefined);
+  #showLastRead = tracked(false);
+  #shortSinglePost = tracked(false);
+
+  #paddingElements = { before: null, after: null };
+  #paddingHeights = { before: 0, after: 0 };
 
   constructor() {
     super(...arguments);
@@ -113,18 +131,9 @@ export default class TopicTimelineScrollArea extends Component {
       }
     });
 
-    // The timeline is usually rendered on a topic page where both of these
-    // anchors exist. When it's rendered outside of that context (for example,
-    // a modal opened from a floating composer on a non-topic route), they
-    // may be absent — skip observing rather than crashing.
-    const elements = [
-      document.querySelector(".container.posts"),
-      document.querySelector("#topic-bottom"),
-    ].filter(Boolean);
-
-    for (const element of elements) {
-      this.intersectionObserver.observe(element);
-    }
+    // The timeline renders ahead of the posts in the same pass, so
+    // #topic-bottom only exists once rendering completes.
+    schedule("afterRender", this, this.#observeTopicBounds);
 
     this.calculatePosition();
     this.dockCheck();
@@ -154,18 +163,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get displayTimeLineScrollArea() {
-    if (this.site.mobileView) {
-      return true;
-    }
-
-    if (this.total === 1) {
-      const postsWrapper = document.querySelector(".posts-wrapper");
-      if (postsWrapper && postsWrapper.offsetHeight < 1000) {
-        return false;
-      }
-    }
-
-    return true;
+    return this.site.mobileView || !this.#shortSinglePost.value;
   }
 
   get canCreatePost() {
@@ -189,12 +187,35 @@ export default class TopicTimelineScrollArea extends Component {
     );
   }
 
-  get beforePadding() {
-    return trustHTML(`height: ${this.before}px`);
+  get current() {
+    return this.#current.value;
   }
 
-  get afterPadding() {
-    return trustHTML(`height: ${this.after}px`);
+  get total() {
+    return this.#total.value;
+  }
+
+  get date() {
+    const daysAgo = this.#daysAgo.value;
+    return daysAgo === undefined
+      ? null
+      : moment().subtract(daysAgo, "days").toDate();
+  }
+
+  get lastRead() {
+    return this.#lastRead.value;
+  }
+
+  get lastReadPercentage() {
+    return this.#lastReadPercentage.value;
+  }
+
+  get scrollareaHeight() {
+    return this.#scrollareaHeight.value;
+  }
+
+  get timelineScrollareaStyle() {
+    return trustHTML(`height: ${this.scrollareaHeight}px`);
   }
 
   get hasBackPosition() {
@@ -205,11 +226,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showLastRead() {
-    return (
-      this.hasBackPosition &&
-      (this.before + SCROLLER_HEIGHT - 5 < this.lastReadHeight ||
-        this.before > this.lastReadHeight + 25)
-    );
+    return this.#showLastRead.value;
   }
 
   get lastReadStyle() {
@@ -247,25 +264,21 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   calculatePosition() {
-    this.scrollareaHeight = this.#measureScrollareaHeight();
-    this.timelineScrollareaStyle = trustHTML(
-      `height: ${this.scrollareaHeight}px`
-    );
+    this.#scrollareaHeight.value = this.#measureScrollareaHeight();
 
     const topic = this.args.model;
     const postStream = topic.postStream;
-    this.total = postStream.filteredPostsCount;
+    this.#total.value = postStream.filteredPostsCount;
+
+    // The posts render after the timeline, so this is measured again on each
+    // update instead of once in a getter.
+    this.#shortSinglePost.value = this.#isShortSinglePost();
 
     this.scrollPosition =
       this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
 
-    this.current = this.clamp(this.scrollPosition, 1, this.total);
-    const daysAgo = postStream.closestDaysAgoFor(this.current);
-
-    this.date =
-      daysAgo === undefined
-        ? null
-        : moment().subtract(daysAgo, "days").toDate();
+    this.#current.value = this.clamp(this.scrollPosition, 1, this.total);
+    this.#daysAgo.value = postStream.closestDaysAgoFor(this.current);
 
     const lastReadNumber = topic.last_read_post_number;
     const lastReadId = topic.last_read_post_id;
@@ -275,8 +288,8 @@ export default class TopicTimelineScrollArea extends Component {
         id: lastReadId,
         post_number: lastReadNumber,
       });
-      this.lastRead = idx;
-      this.lastReadPercentage = this._percentFor(topic, idx);
+      this.#lastRead.value = idx;
+      this.#lastReadPercentage.value = this._percentFor(topic, idx);
     }
 
     if (this.position !== this.current) {
@@ -284,8 +297,17 @@ export default class TopicTimelineScrollArea extends Component {
       this.updateScrollPosition(this.current);
     }
 
-    this.before = (this.scrollareaHeight - SCROLLER_HEIGHT) * this.percentage;
-    this.after = this.scrollareaHeight - this.before - SCROLLER_HEIGHT;
+    const before = (this.scrollareaHeight - SCROLLER_HEIGHT) * this.percentage;
+    this.#setPaddingHeight("before", before);
+    this.#setPaddingHeight(
+      "after",
+      this.scrollareaHeight - before - SCROLLER_HEIGHT
+    );
+
+    this.#showLastRead.value =
+      this.hasBackPosition &&
+      (before + SCROLLER_HEIGHT - 5 < this.lastReadHeight ||
+        before > this.lastReadHeight + 25);
   }
 
   @debounce(50)
@@ -365,10 +387,12 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   postScrolled(e) {
-    this.current = e.postIndex;
     this.percentage = e.percent;
-    this.calculatePosition();
+
+    // Measures the timeline, so it runs ahead of the padding writes to avoid
+    // forcing a layout.
     this.dockCheck();
+    this.calculatePosition();
   }
 
   @action
@@ -438,6 +462,28 @@ export default class TopicTimelineScrollArea extends Component {
     this.scrollerElement = element;
   }
 
+  #setPaddingHeight(edge, height) {
+    if (this.#paddingHeights[edge] === height) {
+      return;
+    }
+
+    this.#paddingHeights[edge] = height;
+
+    const element = this.#paddingElements[edge];
+    if (element) {
+      element.style.height = `${height}px`;
+    }
+  }
+
+  #isShortSinglePost() {
+    if (this.total !== 1) {
+      return false;
+    }
+
+    const postsWrapper = document.querySelector(".posts-wrapper");
+    return !!postsWrapper && postsWrapper.offsetHeight < 1000;
+  }
+
   #measureScrollareaHeight() {
     const composerHeight = this.composer.isPreviewActive
       ? document.getElementById("reply-control")?.offsetHeight || 0
@@ -457,6 +503,23 @@ export default class TopicTimelineScrollArea extends Component {
       : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
+  }
+
+  #observeTopicBounds() {
+    if (this.isDestroying) {
+      return;
+    }
+
+    // Outside a topic page (e.g. a modal opened from a floating composer)
+    // these anchors may be absent.
+    const elements = [
+      document.querySelector(".container.posts"),
+      document.querySelector("#topic-bottom"),
+    ].filter(Boolean);
+
+    for (const element of elements) {
+      this.intersectionObserver.observe(element);
+    }
   }
 
   _percentFor(topic, postIndex) {
@@ -584,7 +647,7 @@ export default class TopicTimelineScrollArea extends Component {
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
             class="timeline-padding"
-            style={{this.beforePadding}}
+            {{this.syncPadding "before"}}
             {{on "click" this.updatePercentage}}
           ></div>
 
@@ -602,7 +665,7 @@ export default class TopicTimelineScrollArea extends Component {
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
             class="timeline-padding"
-            style={{this.afterPadding}}
+            {{this.syncPadding "after"}}
             {{on "click" this.updatePercentage}}
           ></div>
 

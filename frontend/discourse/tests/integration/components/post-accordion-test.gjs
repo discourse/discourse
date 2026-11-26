@@ -1,5 +1,7 @@
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import DPostAccordion from "discourse/ui-kit/d-post-accordion";
@@ -230,5 +232,49 @@ module("Integration | Component | DPostAccordion", function (hooks) {
     assert
       .dom(".d-post-accordion-item")
       .hasAttribute("data-overflowing", "false");
+  });
+
+  test("@defaultExpanded can expand every post or none", async function (assert) {
+    await render(
+      <template>
+        <div class="all">
+          <DPostAccordion @defaultExpanded="all" @posts={{posts}} />
+        </div>
+        <div class="none">
+          <DPostAccordion @defaultExpanded="none" @posts={{posts}} />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".all .d-post-accordion-item[data-expanded]")
+      .exists({ count: 2 }, "all expands every post");
+    assert
+      .dom(".none .d-post-accordion-item[data-expanded]")
+      .doesNotExist("none collapses every post");
+  });
+
+  test("clicking the header toggles the post", async function (assert) {
+    await render(<template><DPostAccordion @posts={{posts}} /></template>);
+
+    const secondItem = ":nth-child(2 of .d-post-accordion-item)";
+    await click(`${secondItem} .d-post-accordion-item__controls`);
+
+    assert.dom(secondItem).hasAttribute("data-expanded");
+  });
+
+  test("clicking the header of a post without content opens the post", async function (assert) {
+    const routeTo = sinon.stub(DiscourseURL, "routeTo");
+    const postsWithoutContent = [{ ...posts[0], cooked: null }];
+
+    await render(
+      <template><DPostAccordion @posts={{postsWithoutContent}} /></template>
+    );
+    await click(".d-post-accordion-item__metadata .dot-separator");
+
+    assert.true(
+      routeTo.calledOnceWith(posts[0].url),
+      "the header routes to the post"
+    );
   });
 });

@@ -21,6 +21,11 @@ export default class PreferencesRewindController extends Controller {
       .save(REWIND_ATTRS)
       .then(() => {
         this.set("saved", true);
+
+        if (!this.model.isCurrent) {
+          return;
+        }
+
         this.rewind.enabled = this.model.user_option.discourse_rewind_enabled;
       })
       .catch(popupAjaxError);

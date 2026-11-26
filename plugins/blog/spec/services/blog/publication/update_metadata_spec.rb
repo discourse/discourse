@@ -187,6 +187,38 @@ RSpec.describe Blog::Publication::UpdateMetadata do
       end
     end
 
+    context "with a standalone page" do
+      let(:metadata) { { page: true } }
+
+      before do
+        freeze_time Time.utc(2026, 11, 6)
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "gives a draft a path without the date, which it keeps when published" do
+        result
+        expect(publication.reload).to have_attributes(page: true, path: "/#{topic.slug}")
+
+        publish_blog_draft(publication, acting_user)
+
+        expect(publication).to have_attributes(page: true, path: "/#{topic.slug}")
+        expect(publication.published_revision.data["page"]).to eq(true)
+      end
+
+      it "turns a published article into a page at the next publish" do
+        publish_blog_draft(publication, acting_user)
+
+        result
+        expect(publication.reload.page).to eq(false)
+        expect(publication.pending_changes).to include("page")
+
+        publish_blog_draft(publication, acting_user)
+        expect(publication.page).to eq(true)
+      end
+    end
+
     context "with co-authors" do
       fab!(:ada) { Fabricate(:user, username: "ada", name: "Ada Lovelace") }
       fab!(:bob) { Fabricate(:user, username: "bob", name: "") }
@@ -250,7 +282,7 @@ RSpec.describe Blog::Publication::UpdateMetadata do
 
       before do
         freeze_time Time.utc(2026, 11, 6)
-        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
       end
 
       it "moves a draft's generated path to its publication date" do

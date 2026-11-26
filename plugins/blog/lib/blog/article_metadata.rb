@@ -16,6 +16,10 @@ module ::Blog
       @revision.data["cover_alt"].presence if @revision.cover?
     end
 
+    def page?
+      @revision.page?
+    end
+
     def twitter_card
       image_url ? "summary_large_image" : "summary"
     end
@@ -28,7 +32,9 @@ module ::Blog
       @publication.article_updated_at&.iso8601
     end
 
+    # Pages show no byline, so search engines don't get one either.
     def author
+      return if page?
       people =
         @revision
           .authors(@publication.discussion_topic&.user)
@@ -36,7 +42,7 @@ module ::Blog
             {
               "@type" => "Person",
               "name" => name,
-              "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
+              "url" => "#{Configuration.base_url(@publication.blog)}#{Revision.author_path(user)}",
             }
           end
       people.many? ? people : people.first
@@ -45,7 +51,7 @@ module ::Blog
     def schema
       {
         "@context" => "https://schema.org",
-        "@type" => "BlogPosting",
+        "@type" => page? ? "WebPage" : "BlogPosting",
         "headline" => @revision.title,
         "description" => @description,
         "url" => @publication.url,

@@ -127,6 +127,7 @@ zh_CN:
         requires_ai_translation: "需要配置 AI 翻译"
       nodes:
         "action:ai_agent": "AI 智能体"
+        "action:ai_tool": "AI 工具"
         "action:classify": "分类"
         "trigger:post_locale_detected": "检测到的帖子"
       node_descriptions:
@@ -309,8 +310,18 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "刷新"
+        columns:
+          user: "用户"
+          reason: "被标记为"
+          created: "创建时间"
+          status: "状态"
+        status:
+          applying: "应用…"
       dsa_classification:
         suggest: "通过 AI 提出建议"
+        suggested_by_ai: "由 AI 建议"
         updated: "分类已更新"
         no_suggestion: "人工智能无法给出分类建议。"
       copied: "已复制"
@@ -328,11 +339,9 @@ zh_CN:
         error: "错误"
         response: "回答"
       post_image_captions:
-        edit: "编辑 AI 图片说明"
-        title: "编辑 AI 图片说明"
-        description: "说明"
-        save: "保存说明"
         saved: "AI 图片说明已保存"
+        image_descriptions:
+          apply: "应用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -351,6 +360,16 @@ zh_CN:
           upload_ids_tooltip: "可选的上传 ID，可附加到提示信息中。所有上传内容都必须到达模型，否则节点将无法正常工作：图像需要在代理和 LLM 上都具有可视性，文档需要在 LLM 上启用其文件类型。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "选择智能体…"
+        ai_tool:
+          tool_ref: "工具"
+          llm_model_id: "LLM 模型"
+          arguments: "参数"
+          list_item: "列表条目"
+          add_list_item: "添加条目"
+        mcp_tool:
+          mcp_server_id: "MCP 服务器"
+          tool_name: "工具"
+          arguments: "参数"
         classify:
           decision_model_id: "决策模型"
           text: "文本"
@@ -550,6 +569,9 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        review_queue:
+          setting_groups:
+            settings: "设置"
         image_caption:
           name: "图片说明"
           description: "为帖子图片生成 AI 说明，将其提供给读者和辅助阅读技术。"
@@ -1178,6 +1200,34 @@ zh_CN:
         decision_model: "决策模型"
         modal:
           title: "创建新凭据"
+      concepts:
+        edit: "编辑"
+        seed:
+          refresh: "刷新"
+        load_more: "加载更多"
+        delete: "删除"
+        parent_label: "父级： %{name}"
+        columns:
+          status: "状态"
+          topics: "话题"
+          posts: "帖子"
+        statuses:
+          all: "所有状态"
+          active: "有效"
+        form:
+          name: "名称"
+          description: "描述"
+          aliases: "别名"
+          status: "状态"
+        shared_topics_count:
+          other: "%{count} 个话题"
+        tagged_topics: "带标签的话题"
+        topic_columns:
+          topic: "话题"
+          primary: "主要"
+          relevance: "相关性"
+        primary_badge: "主要"
+        secondary_badge: "次要"
       decision_models:
         seeded_description: "预配置模型"
         manage: "管理决策模型"
@@ -1733,8 +1783,7 @@ zh_CN:
         unavailable: "此对话链接已失效。您仍然可以撤销它。"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体："
-        llm: "模型："
+        agent_menu_heading: "智能体"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"
@@ -1801,13 +1850,13 @@ zh_CN:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           homepage_option: "AI 机器人对话"
           preview:
             title: "登录后提问"
             body: "从人工智能获取答案，并将您的对话保存在此处以便日后继续查看。"
           header: "我能帮上什么忙？"
           submit: "提交问题"
-          disclaimer: "生成式 AI 可能会犯错。请验证重要信息。"
           placeholder: "提问…"
           new: "新问题"
           min_input_length_message:

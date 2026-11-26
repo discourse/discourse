@@ -46,15 +46,31 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:suspend_user)).to eq(false)
     end
 
-    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+    it "offers Deny account before Approve account for a signup with consistent answers" do
       SiteSetting.review_queue_consistent_answers = true
 
       actions = reviewable.actions_for(Guardian.new(moderator))
 
-      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_account.title")
       expect(
         actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
-      ).to eq([%w[approve_user reviewables.actions.answer_no.title]])
+      ).to eq([%w[approve_user reviewables.actions.approve_user.action_title]])
+    end
+
+    it "offers Deny account and Approve account when a flag is added to a signup review" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable.add_score(
+        moderator,
+        ReviewableScore.types[:needs_approval],
+        reason: "account_flag",
+      )
+
+      actions = reviewable.actions_for(moderator.guardian)
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_account.title")
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.approve_user.action_title"],
+      )
     end
 
     context "when the user was flagged as a possible spammer" do
@@ -381,6 +397,44 @@ RSpec.describe ReviewableUser, type: :model do
     end
 
     context "when approving" do
+      it "lets staff close a review of an approved account without repeating signup approval" do
+        SiteSetting.review_queue_consistent_answers = true
+        SiteSetting.must_approve_users = true
+        reviewable.target.update!(approved: true, approved_by: admin, approved_at: 1.week.ago)
+        Jobs.run_later!
+
+        expect { reviewable.perform(user, :approve_account_review) }.to raise_error(
+          Reviewable::InvalidAction,
+        )
+        expect_not_enqueued_with(
+          job: :critical_user_email,
+          args: {
+            type: :signup_after_approval,
+          },
+        ) do
+          events =
+            DiscourseEvent.track_events { reviewable.perform(moderator, :approve_account_review) }
+          expect(events.map { |event| event[:event_name] }).not_to include(:user_approved)
+        end
+
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.target.approved_by_id).to eq(admin.id)
+        expect(
+          UserHistory.staff_action_records(moderator, action_name: :approve_account_review),
+        ).to contain_exactly(
+          have_attributes(
+            acting_user_id: moderator.id,
+            target_user_id: reviewable.target_id,
+            reviewable_id: reviewable.id,
+          ),
+        )
+        expect(
+          UserHistory.staff_action_records(moderator, action_name: :approve_user).where(
+            reviewable_id: reviewable.id,
+          ),
+        ).to be_empty
+      end
+
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)
         expect(result.success?).to eq(true)

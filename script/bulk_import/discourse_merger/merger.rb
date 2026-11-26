@@ -62,7 +62,6 @@ module BulkImport::DiscourseMerge
       PostRevision
       PostStat
       PostTiming
-      PushSubscription
       QuotedPost
       SingleSignOnRecord
       SiteSetting
@@ -380,14 +379,8 @@ module BulkImport::DiscourseMerge
     def copy_user_stuff
       copy_model(UserProfile, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
 
-      [
-        UserStat,
-        UserOption,
-        GivenDailyLike,
-        UserSecondFactor,
-        PushSubscription,
-        DoNotDisturbTiming,
-      ].each do |c|
+      # Push subscriptions belong to browser sessions, which are not merged.
+      [UserStat, UserOption, GivenDailyLike, UserSecondFactor, DoNotDisturbTiming].each do |c|
         copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
       end
 

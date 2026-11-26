@@ -390,6 +390,26 @@ RSpec.describe PostsController do
       expect(json[0]["user_custom_fields"]["hidden"]).to be_blank
     end
 
+    it "fills the reply page after filtering hidden replies, retaining author and moderator access" do
+      parent = Fabricate(:post)
+      hidden_replies = Fabricate.times(21, :post, topic: parent.topic, user: user, hidden: true)
+      visible_replies = Fabricate.times(20, :post, topic: parent.topic)
+      (hidden_replies + visible_replies).each do |reply|
+        PostReply.create!(post: parent, reply: reply)
+      end
+
+      get "/posts/#{parent.id}/replies.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.pluck("id")).to eq(visible_replies.map(&:id))
+
+      [user, Fabricate(:moderator)].each do |viewer|
+        sign_in(viewer)
+        get "/posts/#{parent.id}/replies.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to eq(hidden_replies.first(20).map(&:id))
+      end
+    end
+
     it "supports pagination" do
       parent = Fabricate(:post)
 
@@ -473,7 +493,8 @@ RSpec.describe PostsController do
       end
 
       context "with permanently destroy" do
-        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+        fab!(:topic)
+        fab!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
 
         before { SiteSetting.can_permanently_delete = true }
 
@@ -3520,6 +3541,80 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
     end
+
+    context "when notification emails include previous replies" do
+      fab!(:whisper_group, :group)
+      fab!(:whisper_author) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:whisperer_watcher) do
+        Fabricate(:user, last_seen_at: 1.day.ago, refresh_auto_groups: true)
+      end
+      fab!(:watching_moderator) do
+        Fabricate(:moderator, last_seen_at: 1.day.ago, refresh_auto_groups: true)
+      end
+      fab!(:watched_topic) { Fabricate(:post, user: user).topic }
+
+      before do
+        NotificationEmailer.enable
+        Jobs.run_immediately!
+        whisper_group.add(whisper_author)
+        whisper_group.add(whisperer_watcher)
+        SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+
+        [whisperer_watcher, watching_moderator].each do |watcher|
+          TopicUser.change(
+            watcher.id,
+            watched_topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+          watcher.user_option.update!(
+            email_previous_replies: UserOption.previous_replies_type[:always],
+          )
+        end
+      end
+
+      it "includes previous whispers only in email to allowed recipients" do
+        sign_in(whisper_author)
+        post "/posts.json",
+             params: {
+               raw: "this whisper must stay private",
+               topic_id: watched_topic.id,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+        whisper = Post.find(response.parsed_body["id"])
+
+        sign_out
+        sign_in(user)
+        post "/posts.json",
+             params: {
+               raw: "this is a regular reply",
+               topic_id: watched_topic.id,
+               reply_to_post_number: 1,
+             }
+        expect(response.status).to eq(200)
+
+        moderator_email =
+          ActionMailer::Base.deliveries.find do |mail|
+            mail.to == [watching_moderator.email] &&
+              mail.text_part.body.to_s.include?("this is a regular reply")
+          end
+        expect(moderator_email).to be_present
+        expect(moderator_email.text_part.body.to_s).not_to include(whisper.raw)
+        expect(moderator_email.html_part.body.to_s).not_to include(
+          whisper.raw,
+          whisper_author.username,
+        )
+
+        whisperer_email =
+          ActionMailer::Base.deliveries.find do |mail|
+            mail.to == [whisperer_watcher.email] &&
+              mail.text_part.body.to_s.include?("this is a regular reply")
+          end
+        expect(whisperer_email).to be_present
+        expect(whisperer_email.text_part.body.to_s).to include(whisper.raw)
+        expect(whisperer_email.html_part.body.to_s).to include(whisper.raw, whisper_author.username)
+      end
+    end
   end
 
   describe "#revisions" do
@@ -4615,6 +4710,19 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "excludes shared drafts from the deleted-post feed for moderators without draft access" do
+        shared_draft = Fabricate(:shared_draft)
+        denied_post = Fabricate(:post, user: user, topic: shared_draft.topic)
+        visible_post = Fabricate(:post, user: user)
+        denied_post.trash!(admin)
+        visible_post.trash!(admin)
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to contain_exactly(visible_post.id)
+      end
+
       it "doesn't return secured categories for moderators if they don't have access" do
         Fabricate(:moderator)
 
@@ -5151,6 +5259,30 @@ RSpec.describe PostsController do
 
         expect(post_ids).to include(regular_post.id)
         expect(post_ids).to_not include(whisper_post.id)
+      end
+
+      it "does not disclose another participant's hidden private post" do
+        other_user = Fabricate(:user)
+        pm = Fabricate(:private_message_topic, user: other_user, recipient: user)
+        visible_post = Fabricate(:post, topic: pm, user: other_user, raw: "visible private message")
+        hidden_post =
+          Fabricate(:post, topic: pm, user: other_user, hidden: true, raw: "hidden private message")
+
+        expect(user.guardian.can_see_post?(hidden_post)).to be_falsey
+
+        sign_in(user)
+
+        get "/private-posts.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(hidden_post.raw)
+
+        get "/private-posts.rss"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(hidden_post.raw)
       end
 
       it "returns private posts for json" do

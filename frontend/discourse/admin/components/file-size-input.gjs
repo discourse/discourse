@@ -9,6 +9,11 @@ import I18n, { i18n } from "discourse-i18n";
 const UNIT_KB = "kb";
 const UNIT_MB = "mb";
 const UNIT_GB = "gb";
+const KB_PER_UNIT = {
+  [UNIT_KB]: 1,
+  [UNIT_MB]: 1024,
+  [UNIT_GB]: 1024 * 1024,
+};
 
 export default class FileSizeInput extends Component {
   @tracked unit;
@@ -31,15 +36,8 @@ export default class FileSizeInput extends Component {
     if (!sizeInKB) {
       return;
     }
-    if (this.unit === UNIT_KB) {
-      return sizeInKB;
-    }
-    if (this.unit === UNIT_MB) {
-      return sizeInKB / 1024;
-    }
-    if (this.unit === UNIT_GB) {
-      return sizeInKB / 1024 / 1024;
-    }
+
+    return sizeInKB / KB_PER_UNIT[this.unit];
   }
 
   get dropdownOptions() {
@@ -64,43 +62,30 @@ export default class FileSizeInput extends Component {
       return;
     }
 
-    let sizeInKB;
-    switch (this.unit) {
-      case "kb":
-        sizeInKB = value;
-        break;
-      case "mb":
-        sizeInKB = value * 1024;
-        break;
-      case "gb":
-        sizeInKB = value * 1024 * 1024;
-        break;
-    }
+    const sizeInKB = value * KB_PER_UNIT[this.unit];
 
-    this.args.onChangeSize(sizeInKB);
-
-    if (sizeInKB > this.args.max) {
-      this.args.setValidationMessage(
-        i18n("file_size_input.error.size_too_large", {
-          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
-          max_file_size: I18n.toHumanSize(this.args.max * 1024),
-        })
-      );
-    } else if (sizeInKB < this.args.min) {
-      this.args.setValidationMessage(
-        i18n("file_size_input.error.size_too_small", {
-          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
-          min_file_size: I18n.toHumanSize(this.args.min * 1024),
-        })
-      );
-    } else {
-      this.args.setValidationMessage(null);
-    }
+    this.args.onChangeSize(sizeInKB, this.#validationMessage(sizeInKB));
   }
 
   @action
   onFileSizeUnitChange(newUnit) {
     this.unit = newUnit;
+  }
+
+  #validationMessage(sizeInKB) {
+    if (sizeInKB > this.args.max) {
+      return i18n("file_size_input.error.size_too_large", {
+        provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
+        max_file_size: I18n.toHumanSize(this.args.max * 1024),
+      });
+    }
+
+    if (sizeInKB < this.args.min) {
+      return i18n("file_size_input.error.size_too_small", {
+        provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
+        min_file_size: I18n.toHumanSize(this.args.min * 1024),
+      });
+    }
   }
 
   <template>

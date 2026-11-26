@@ -574,19 +574,6 @@ hu:
         notify_moderators: "Ez az üzenet a stáb figyelmét igényli a fentiekben fel nem sorolt egyéb okból."
       flagging:
         action: "Üzenet megjelölése"
-      emoji_picker:
-        favorites: "Gyakran használt"
-        smileys_&_emotion: "Mosolyok és érzelmek"
-        objects: "Tárgyak"
-        people_&_body: "Emberek és test"
-        travel_&_places: "Utazás és helyek"
-        animals_&_nature: "Állatok és természet"
-        food_&_drink: "Étel és ital"
-        activities: "Tevékenységek"
-        flags: "Zászlók"
-        symbols: "Szimbólumok"
-        search_placeholder: "Keresés emodzsinév és álnév alapján…"
-        no_results: "Nincs találat"
       thread:
         title: "Cím"
         view_thread: Szál megtekintése

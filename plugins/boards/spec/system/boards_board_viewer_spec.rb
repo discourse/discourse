@@ -528,6 +528,95 @@ describe "Boards Board Viewer" do
       )
     end
 
+    it "keeps an unsaved card open while adding and editing a link in its notes" do
+      result =
+        create_board(
+          {},
+          write_groups: [write_group],
+          with_columns: [{ title: "To Do", position: 0 }],
+        )
+      upsert_hyperlink_modal =
+        PageObjects::Modals::UpsertHyperlink.new(
+          modal_selector: ".upsert-hyperlink-modal",
+          body_selector: ".upsert-hyperlink-modal",
+        )
+
+      sign_in(user)
+      board_viewer.visit_board(result.board)
+
+      board_viewer.click_add_card("To Do")
+      board_viewer.fill_card_title("Card with a link")
+
+      find(".discourse-boards-card-detail-modal .d-editor-button-bar button.link").click
+      expect(upsert_hyperlink_modal).to be_open
+      expect(board_viewer).to have_card_detail_modal
+
+      upsert_hyperlink_modal.fill_in_link_text("Example")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(upsert_hyperlink_modal).to be_closed
+      expect(page).to have_css(
+        ".discourse-boards-card-detail-modal .ProseMirror a[href='https://example.com']",
+        text: "Example",
+      )
+
+      find(".discourse-boards-card-detail-modal .ProseMirror a", text: "Example").click
+      find("button.composer-link-toolbar__edit").click
+      expect(upsert_hyperlink_modal).to be_open
+      upsert_hyperlink_modal.close
+
+      expect(upsert_hyperlink_modal).to be_closed
+      expect(board_viewer).to have_card_detail_modal
+
+      board_viewer.submit_card
+
+      expect(board_viewer).to have_floater_card_in_column("To Do", "Card with a link")
+      expect(Boards::Card.find_by(title: "Card with a link").notes).to eq(
+        "[Example](https://example.com)",
+      )
+    end
+
+    it "applies headings and lists from the notes toolbar menus" do
+      result =
+        create_board(
+          {},
+          write_groups: [write_group],
+          with_columns: [{ title: "To Do", position: 0 }],
+        )
+
+      sign_in(user)
+      board_viewer.visit_board(result.board)
+
+      board_viewer.click_add_card("To Do")
+      board_viewer.fill_card_title("Formatted card")
+
+      editor = find(".discourse-boards-card-detail-modal .ProseMirror")
+      editor.click
+      editor.send_keys("hello")
+
+      heading_menu =
+        PageObjects::Components::DMenu.new(
+          find(".discourse-boards-card-detail-modal .d-editor-button-bar button.heading"),
+        )
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+
+      expect(page).to have_css(".discourse-boards-card-detail-modal .ProseMirror h2", text: "hello")
+
+      list_menu =
+        PageObjects::Components::DMenu.new(
+          find(".discourse-boards-card-detail-modal .d-editor-button-bar button.list"),
+        )
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
+
+      expect(page).to have_css(
+        ".discourse-boards-card-detail-modal .ProseMirror ul li",
+        text: "hello",
+      )
+    end
+
     it "does not show add card button for read-only users" do
       result = create_board(with_columns: [{ title: "To Do", position: 0 }])
 

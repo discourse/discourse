@@ -8,6 +8,23 @@ class EmbeddableHost < ActiveRecord::Base
   has_many :embeddable_host_tags
   has_many :tags, through: :embeddable_host_tags
   after_destroy :reset_embedding_settings
+  after_destroy :clear_host_cache
+  after_save :clear_host_cache
+
+  def self.host_cache
+    @host_cache ||= DistributedCache.new("embeddable_host_urls")
+  end
+  private_class_method :host_cache
+
+  def self.cached_frame_ancestor_urls
+    host_cache.defer_get_set("urls") do
+      EmbeddableHost.pluck(:host).map { |host| -"https://#{host}" }.freeze
+    end
+  end
+
+  def self.clear_cache!
+    host_cache.clear
+  end
 
   before_validation do
     host.sub!(%r{\Ahttps?://}, "")
@@ -60,6 +77,10 @@ class EmbeddableHost < ActiveRecord::Base
   end
 
   private
+
+  def clear_host_cache
+    self.class.clear_cache!
+  end
 
   def reset_embedding_settings
     unless EmbeddableHost.exists?

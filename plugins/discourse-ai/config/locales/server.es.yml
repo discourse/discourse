@@ -38,12 +38,6 @@ es:
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
         notify_author_pm:
           subject: "Tu publicación se ha eliminado temporalmente para revisarse"
-          body: |
-            Hola, @%{username}:
-
-            Tu publicación en «%{topic_title}» se ha eliminado temporalmente y se ha puesto en nuestra cola de revisión para que un moderador la revise. Si se aprueba, se restaurará automáticamente.
-
-            Referencia: %{post_url}
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -129,6 +123,12 @@ es:
     ai_translation_backfill_hourly_rate: "El número de publicaciones y temas para traducir por hora durante las operaciones de relleno. Déjalo en 0 para desactivar el relleno automático de las traducciones para el contenido existente."
     ai_translation_backfill_parallel_jobs: "El número de trabajos paralelos de postlocalización que se deben ejecutar por ciclo de relleno. Los valores más altos aumentan el rendimiento, pero consumen más recursos."
     ai_usage_rollup_after_days: "Número de días que se conservarán las estadísticas de uso de IA por solicitud antes de incluirlas en los agregados diarios. Deja el valor en 0 para desactivar la agregación."
+    keywords:
+      ai_default_llm_model: "modelo lingüístico por defecto"
+      ai_discord_search_enabled: "integración de Discord"
+      ai_helper_automatic_chat_thread_title: "títulos de los hilos de chat"
+      ai_summarization_enabled: "resúmenes"
+      ai_summary_gists_enabled: "resúmenes breves de la lista de temas"
   reviewables:
     reasons:
       flagged_by_toxicity: El plugin de IA lo denunció tras clasificarlo como tóxico.
@@ -363,6 +363,8 @@ es:
           text_color: "color del texto"
         approve_label: "Sí"
         reject_label: "No"
+        category_access_levels:
+          readonly: "Ver"
         empty_value: "Vacío"
         unexpected_error: "se ha producido un error inesperado"
       agents:
@@ -552,6 +554,7 @@ es:
         edit_tag: "Editar etiqueta"
         create_category: "Crear categoría"
         edit_category: "Editar categoría"
+        delete_category: "Eliminar categoría"
         set_topic_timer: "Editar temporizador de tema"
         set_slow_mode: "Establecer modo lento"
         move_posts: "Mover publicaciones"
@@ -747,6 +750,12 @@ es:
       edit_category:
         errors:
           not_found: "Categoría no encontrada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoría no encontrada."
+      delete_category:
+        errors:
+          not_found: "Categoría no encontrada."
       change_topic_category:
         errors:
           not_found: "Tema no encontrado."
@@ -824,6 +833,8 @@ es:
           not_allowed: "No tienes permiso para acceder a la cola de revisión"
           not_found: "No se ha encontrado el elemento en la cola de revisión"
     appearance_authoring:
+      component_on: "Activado"
+      component_off: "Desactivado"
       default_theme: "Tema predeterminado"
       colors:
         light:

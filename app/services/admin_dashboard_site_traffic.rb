@@ -249,16 +249,9 @@ class AdminDashboardSiteTraffic
 
     req_type_sql =
       if login_required?
-        "req_type IN (:logged_in_req_type, :logged_in_beacon_req_type)"
+        "req_type = :logged_in_req_type"
       else
-        <<~SQL.squish
-          req_type IN (
-            :logged_in_req_type,
-            :anonymous_req_type,
-            :logged_in_beacon_req_type,
-            :anonymous_beacon_req_type
-          )
-        SQL
+        "req_type IN (:logged_in_req_type, :anonymous_req_type)"
       end
 
     @prior_period_tracking_started =
@@ -273,8 +266,6 @@ class AdminDashboardSiteTraffic
         prior_start_date: prior_start_date,
         logged_in_req_type: selected_request_types[:logged_in],
         anonymous_req_type: selected_request_types[:anonymous],
-        logged_in_beacon_req_type: beacon_request_types[:logged_in],
-        anonymous_beacon_req_type: beacon_request_types[:anonymous],
       ).present?
   end
 
@@ -288,7 +279,9 @@ class AdminDashboardSiteTraffic
 
   def selected_request_types
     @selected_request_types ||=
-      selected_request_type_names.transform_values { |name| ApplicationRequest.req_types[name] }
+      selected_request_type_names.transform_values do |name|
+        ApplicationRequest.stored_req_type_id(name)
+      end
   end
 
   def selected_request_type_names
@@ -300,36 +293,20 @@ class AdminDashboardSiteTraffic
       end.merge(crawlers: "page_view_crawler", embedded: "page_view_embed")
   end
 
-  def beacon_request_types
-    @beacon_request_types ||= {
-      logged_in: ApplicationRequest.req_types["page_view_logged_in_browser_beacon"],
-      anonymous: ApplicationRequest.req_types["page_view_anon_browser_beacon"],
-    }
-  end
-
   def human_pageviews_sql(range_start_date, range_end_date)
     requests =
-      if SiteSetting.use_legacy_pageviews
-        ApplicationRequest.where(req_type: selected_request_types.values_at(:logged_in, :anonymous))
-      else
-        ApplicationRequest.browser_pageviews
-      end
+      ApplicationRequest.where(
+        req_type: selected_request_types.values_at(:logged_in, :anonymous),
+        date: range_start_date..range_end_date,
+      )
 
     <<~SQL
       SELECT date,
-        COALESCE(SUM(count) FILTER (WHERE req_type IN (#{logged_in_req_types.join(",")})), 0)::bigint AS logged_in,
-        COALESCE(SUM(count) FILTER (WHERE req_type IN (#{anonymous_req_types.join(",")})), 0)::bigint AS anonymous
-      FROM (#{requests.where(date: range_start_date..range_end_date).to_sql}) requests
+        COALESCE(SUM(count) FILTER (WHERE req_type = #{selected_request_types[:logged_in]}), 0)::bigint AS logged_in,
+        COALESCE(SUM(count) FILTER (WHERE req_type = #{selected_request_types[:anonymous]}), 0)::bigint AS anonymous
+      FROM (#{requests.to_sql}) requests
       GROUP BY date
     SQL
-  end
-
-  def logged_in_req_types
-    [selected_request_types[:logged_in], beacon_request_types[:logged_in]].compact
-  end
-
-  def anonymous_req_types
-    [selected_request_types[:anonymous], beacon_request_types[:anonymous]].compact
   end
 
   def traffic_rows(range_start_date, range_end_date)

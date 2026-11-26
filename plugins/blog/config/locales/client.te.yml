@@ -13,6 +13,13 @@ te:
         desktop: డెస్క్‌టాప్
         mobile: మొబైల్
         save: సేవ్ చేయండి
+        about_tab: మా సంఘం గురించి
+        blog_slug: స్లగ్
+        settings_tab: అమరికలు
+        theme_tab: థీమ్
+        column_name: పేరు
+        column_category: వర్గం
+        column_status: స్థితి
         path_formats:
           custom: అనురూప
         themes: థీమ్స్
@@ -46,6 +53,8 @@ te:
         edit: సవరించండి
         status: స్థితి
         replies: ప్రత్యుత్తరాలు
+        title: శీర్షిక
+      all: అన్నీ
       drafts: చిత్తుప్రతులు
       preview: ప్రివ్యూ
       unpublish: ప్రచురణ తీసివేయండి

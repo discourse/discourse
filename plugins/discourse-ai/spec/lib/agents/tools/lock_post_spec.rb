@@ -6,10 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::LockPost do
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(params = nil, **kwargs)
     params ||= kwargs

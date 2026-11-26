@@ -41,6 +41,54 @@ RSpec.describe "Navigation" do
       end
     end
 
+    context "when channel titles and descriptions contain HTML-escapable characters" do
+      fab!(:other_user) { Fabricate(:user, name: "Frodo's <b>friend</b>") }
+      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+      fab!(:group_dm_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [user, other_user, Fabricate(:user)],
+          name: "Frodo's <b>party</b>",
+        )
+      end
+
+      before do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_posts = true
+        SiteSetting.prioritize_username_in_ux = false
+      end
+
+      it "escapes titles and descriptions once" do
+        category_channel.update!(description: "Frodo's <b>notes</b>")
+        visit("/")
+
+        dm_link =
+          sidebar_page.dms_section.find(sidebar_page.channel_section_link_selector(dm_channel))
+        expect(dm_link).to have_text("Frodo's <b>friend</b>", exact: true)
+        expect(dm_link["title"]).to eq("Chat with Frodo's <b>friend</b>")
+
+        group_dm_link =
+          sidebar_page.dms_section.find(
+            sidebar_page.channel_section_link_selector(group_dm_channel),
+          )
+        expect(group_dm_link["title"]).to eq("Chat in Frodo's <b>party</b>")
+
+        channel_link =
+          sidebar_page.channels_section.find(
+            sidebar_page.channel_section_link_selector(category_channel),
+          )
+        expect(channel_link["title"]).to eq("Frodo's <b>notes</b>")
+
+        dm_channel.membership_for(user).update!(starred: true)
+        visit("/")
+
+        starred_link =
+          sidebar_page.starred_section.find(sidebar_page.channel_section_link_selector(dm_channel))
+        expect(starred_link).to have_text("Frodo's <b>friend</b>", exact: true)
+        expect(starred_link["title"]).to eq("Chat with Frodo's <b>friend</b>")
+      end
+    end
+
     context "when public channels are disabled" do
       before { SiteSetting.enable_public_channels = false }
 

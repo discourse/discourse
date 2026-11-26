@@ -143,7 +143,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     runtime_context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
 
     expect(
-      DiscourseAi::Agents::DiscourseAdminAssistant.new.runtime_tools(context: runtime_context),
+      DiscourseAi::Agents::AdminAssistant.new.runtime_tools(context: runtime_context),
     ).not_to include(described_class)
     expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateQuery")).to eq(described_class)
     expect(DiscourseAi::Agents::Agent.external_tool_by_name("GenerateQuery")).to eq(

@@ -17,6 +17,13 @@ ru:
         desktop: Настольная
         mobile: Мобильная
         save: Сохранить
+        about_tab: Информация
+        blog_slug: Slug (текстовый идентификатор)
+        settings_tab: Настроек
+        theme_tab: тема
+        column_name: Название
+        column_category: Категория
+        column_status: Статус
         path_formats:
           custom: Другое
         back_to_themes: Назад к темам
@@ -57,7 +64,11 @@ ru:
         edit: Изменить
         status: Статус
         replies: Ответы
+        title: Название
+        page: страница
+      all: Все
       drafts: Черновики
+      pages: страниц
       preview: Предпросмотр
       unpublish: Отменить публикацию
       appearance_link: Внешний вид

@@ -1,5 +1,5 @@
 import EmbedMode from "discourse/lib/embed-mode";
-import blogOrigin from "discourse/plugins/blog/discourse/lib/blog-origin";
+import { embeddingBlogOrigin } from "discourse/plugins/blog/discourse/lib/blog-origin";
 
 let observer;
 let frame;
@@ -9,7 +9,10 @@ export default {
 
   initialize(container) {
     const settings = container.lookup("service:site-settings");
-    const origin = blogOrigin(container.lookup("service:site").blog_base_url);
+    const origin = embeddingBlogOrigin(
+      container.lookup("service:site").blogs,
+      document.referrer
+    );
     if (
       !settings.blog_enabled ||
       !EmbedMode.enabled ||

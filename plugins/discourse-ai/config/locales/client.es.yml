@@ -62,6 +62,7 @@ es:
     discourse_workflows:
       nodes:
         "action:ai_agent": "Agente de IA"
+        "action:ai_tool": "Herramienta de IA"
     discourse_automation:
       scriptables:
         llm_report:
@@ -238,6 +239,13 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Volver a cargar"
+        columns:
+          user: "Usuario"
+          reason: "Marcado como"
+          created: "Creada"
+          status: "Estado"
       dsa_classification:
         suggest: "Sugerir con IA"
       ai_decoded_transcript:
@@ -247,10 +255,22 @@ es:
         type: "Tipo"
         error: "Error"
         response: "Respuesta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
           mode: "Modo"
+        ai_tool:
+          tool_ref: "Herramienta"
+          arguments: "Argumentos"
+          list_item: "Lista de elementos"
+          add_list_item: "Añadir elemento"
+        mcp_tool:
+          mcp_server_id: "Servidor MCP"
+          tool_name: "Herramienta"
+          arguments: "Argumentos"
         classify:
           text: "Texto"
           upload_ids: "Imágenes"
@@ -385,6 +405,9 @@ es:
             enabled_features: "Características activadas"
             automation: "Automatización"
             agents: "Agentes"
+        review_queue:
+          setting_groups:
+            settings: "Ajustes"
         image_caption:
           setting_groups:
             settings: "Ajustes"
@@ -854,6 +877,31 @@ es:
         mcp_server_oauth_client_secret: "Secreto del cliente OAuth del servidor MCP"
         modal:
           title: "Crear nueva credencial"
+      concepts:
+        edit: "Editar"
+        seed:
+          refresh: "Volver a cargar"
+        delete: "Eliminar"
+        columns:
+          status: "Estado"
+          topics: "Temas"
+          posts: "Publicaciones"
+        statuses:
+          all: "Todos los estados"
+          active: "Activo"
+        form:
+          name: "Nombre"
+          description: "Descripción"
+          status: "Estado"
+        shared_topics_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
+        tagged_topics: "Temas etiquetados"
+        topic_columns:
+          topic: "Tema"
+          primary: "Principal"
+          relevance: "Relevancia"
+        primary_badge: "Principal"
       decision_models:
         no_preset: "Ninguna"
         display_name: "Nombre"
@@ -1232,8 +1280,7 @@ es:
         filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
-        agent: "Agente:"
-        llm: "Modelo:"
+        agent_menu_heading: "Agente"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
         try_again: "Intentar de nuevo"
@@ -1290,9 +1337,9 @@ es:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "¿En qué puedo ayudar?"
           submit: "Enviar pregunta"
-          disclaimer: "La IA generativa puede cometer errores. Verifica la información importante."
           placeholder: "Haz una pregunta..."
           new: "Nueva pregunta"
           min_input_length_message:

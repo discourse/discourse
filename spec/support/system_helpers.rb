@@ -55,12 +55,20 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    response =
+      visit File.join(
+              GlobalSetting.relative_url_root || "",
+              "/session/#{user.encoded_username}/become.json?redirect=false",
+            )
+    message = "Signed in to #{user.username} successfully"
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    if response.is_a?(Playwright::Response)
+      # This endpoint serves plain text, so its body is the document's content.
+      expect(response.text.force_encoding(Encoding::UTF_8)).to eq(message)
+      expect(response.status).to eq(200)
+    else
+      expect(page).to have_content(message)
+    end
   end
 
   def setup_system_test

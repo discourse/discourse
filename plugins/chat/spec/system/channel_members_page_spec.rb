@@ -9,7 +9,7 @@ RSpec.describe "Channel - Info - Members page" do
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
-    chat_system_bootstrap
+    chat_system_bootstrap(current_user)
     sign_in(current_user)
   end
 
@@ -36,13 +36,12 @@ RSpec.describe "Channel - Info - Members page" do
       before do
         channel_1.add(current_user)
         channel_1.add(Fabricate(:user, username: "cat"))
-        98.times { channel_1.add(Fabricate(:user)) }
-        Jobs.run_immediately!
-        channel_1.update!(user_count_stale: true)
-        Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 
       it "loads more members on scroll" do
+        20.times { channel_1.add(Fabricate(:user)) }
+        Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
+
         chat_page.visit_channel_members(channel_1)
 
         expect(page).to have_css("li.c-channel-members__list-item", minimum: 20)
@@ -53,13 +52,13 @@ RSpec.describe "Channel - Info - Members page" do
         expect(page).to have_css("li.c-channel-members__list-item", minimum: initial_count + 1)
       end
 
-      context "with filter" do
-        it "filters members" do
-          chat_page.visit_channel_members(channel_1)
-          find(".c-channel-members__filter").fill_in(with: "cat")
+      it "filters members" do
+        chat_page.visit_channel_members(channel_1)
+        expect(page).to have_selector(".c-channel-members__list-item", count: 2)
+        find(".c-channel-members__filter").fill_in(with: "cat")
 
-          expect(page).to have_selector(".c-channel-members__list-item", count: 1, text: "cat")
-        end
+        expect(page).to have_selector(".c-channel-members__list-item", count: 1)
+        expect(page).to have_selector(".c-channel-members__list-item", text: "cat")
       end
 
       context "with user status" do

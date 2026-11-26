@@ -62,7 +62,7 @@ RSpec.describe UserStat do
   end
 
   describe "#update_view_counts" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:stat) { user.user_stat }
 
     context "with topics_entered" do

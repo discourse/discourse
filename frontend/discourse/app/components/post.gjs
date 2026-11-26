@@ -155,10 +155,14 @@ export default class Post extends Component {
           })
         : "";
 
-    return i18n("post.accessible_heading", {
-      username: this.args.post.username,
-      date,
-    });
+    const { username, reply_to_post_number: replyTo } = this.args.post;
+    if (
+      replyTo &&
+      (this.isReplyToTabDisplayed || this.isReplyingDirectlyToPostAbove)
+    ) {
+      return i18n("post.accessible_reply_heading", { username, date, replyTo });
+    }
+    return i18n("post.accessible_heading", { username, date });
   }
 
   get repliesShown() {

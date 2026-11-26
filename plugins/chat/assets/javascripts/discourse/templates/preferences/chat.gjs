@@ -83,6 +83,7 @@ export default class Chat extends Component {
 
     const { chat_quick_reactions_custom, ...userOptions } = data;
     const shouldReload =
+      this.args.model.isCurrent &&
       userOptions.chat_enabled !== this.args.model.user_option.chat_enabled;
 
     this.args.model.set(

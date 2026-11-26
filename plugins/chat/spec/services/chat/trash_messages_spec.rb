@@ -199,8 +199,21 @@ RSpec.describe Chat::TrashMessages do
 
           it "decrements the thread reply count" do
             thread.set_replies_count_cache(5)
-            result
+            publishes = MessageBus.track_publish { result }
             expect(thread.replies_count_cache).to eq(3)
+            updates =
+              publishes.select { |event| event.data["type"] == "update_thread_original_message" }
+            expect(updates.map { |event| event.data.dig("preview", "reply_count") }).to eq([3])
+          end
+
+          it "includes trashed broadcast replies in the channel bulk delete payload" do
+            message2.update!(broadcasted: true)
+
+            publishes = MessageBus.track_publish { result }
+            channel_publish = publishes.find { |p| p.channel == "/chat/#{chat_channel.id}" }
+
+            expect(channel_publish.data["type"]).to eq("bulk_delete")
+            expect(channel_publish.data["deleted_ids"]).to eq([message2.id])
           end
 
           it "updates the tracking to the last non-deleted thread message for users whose last_read_message_id was the trashed message" do

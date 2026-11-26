@@ -594,19 +594,6 @@ ug:
         notify_moderators: "ئۈستىدە تىزىلمىغان باشقا بىر سەۋەب تۈپەيلىدىن، بۇ ئۇچۇرغا باشقۇرغۇچىلار دىققەت قىلىشى كېرەك."
       flagging:
         action: "ئۇچۇر پاش قىل"
-      emoji_picker:
-        favorites: "دائىم ئىشلىتىدىغان"
-        smileys_&_emotion: "چىراي ئىپادە ۋە تۇيغۇ"
-        objects: "جىسىم"
-        people_&_body: "ئادەم ۋە بەدەن"
-        travel_&_places: "ساياھەت ۋە ئورۇن"
-        animals_&_nature: "ھايۋان ۋە تەبىئەت"
-        food_&_drink: "يېمەكلىك ۋە ئىچىملىك"
-        activities: "پائالىيەت"
-        flags: "بايراق"
-        symbols: "بەلگە"
-        search_placeholder: "چىراي ئىپادە ئىسمى ۋە لەقىمى بىلەن ئىزدەيدۇ…"
-        no_results: "نەتىجە يوق"
       thread:
         title: "ماۋزۇ"
         view_thread: تېما كۆرسەت

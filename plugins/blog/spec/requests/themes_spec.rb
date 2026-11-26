@@ -140,8 +140,8 @@ RSpec.describe "Blog themes", type: :request do
           path: "/reference-story",
         )
       Blog::Path.create!(publication: publication, path: publication.path)
-      active = Blog::BlogTheme.active
-      token = Blog::ThemePreview.token_for(reference_theme)
+      active = Blog::BlogTheme.active_for(Blog::Instance.default_blog)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
 
       {
         "/" => 200,
@@ -154,18 +154,20 @@ RSpec.describe "Blog themes", type: :request do
         expect(response.status).to eq(status)
         document = Nokogiri.HTML5(response.body)
         expect(document.css(".#{block} #main").size).to eq(1)
-        expect(document.at_css(".#{block}__brand").text).to include(SiteSetting.blog_title)
+        expect(document.at_css(".#{block}__brand").text).to include(
+          Blog::Instance.default_blog.name,
+        )
         expect(document.css("[data-template-diagnostic]")).to be_empty
         if path == publication.path
           expect(document.css("#discussion").size).to eq(1)
           expect(document.at_css(".blog-article__body").inner_html).to include(first_post.cooked)
         end
       end
-      expect(Blog::BlogTheme.active).to eq(active)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)).to eq(active)
     end
 
     it "renders an empty listing and carries the preview through archive searches" do
-      token = Blog::ThemePreview.token_for(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
       get "https://blog.example.com/archive",
           params: {
             blog_theme_preview: token,
@@ -224,13 +226,13 @@ RSpec.describe "Blog themes", type: :request do
 
       get "https://blog.example.com/blog-theme.css"
       expect(response.body).not_to include(preset["css"])
-      expect(Blog::BlogTheme.active["id"]).to eq("default")
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq("default")
     end
 
     it "falls back to the default when an active preset is no longer shipped" do
       PluginStore.set(Blog::BlogTheme::STORE, "active", { "id" => "retired", "preset" => true })
 
-      expect(Blog::BlogTheme.active["id"]).to eq("default")
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq("default")
     end
 
     it "does not edit or delete presets" do
@@ -292,6 +294,25 @@ RSpec.describe "Blog themes", type: :request do
       get "https://test.localhost/session/#{moderator.encoded_username}/become"
       get "https://test.localhost/admin/plugins/blog/themes/#{draft["id"]}.json"
       expect(response.status).to eq(403)
+    end
+
+    it "previews a theme on the blog the list is shown for" do
+      engineering =
+        Blog::Instance.create!(name: "Engineering", slug: "engineering", published: false)
+      get "https://test.localhost/session/#{admin.encoded_username}/become"
+
+      get "https://test.localhost/admin/plugins/blog/themes.json",
+          params: {
+            blog_id: engineering.id,
+          }
+      preview_url = response.parsed_body["themes"].first["preview_url"]
+
+      expect(preview_url).to start_with(
+        "#{Discourse.base_url}/blog/engineering/?blog_theme_preview=",
+      )
+      get preview_url
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Engineering")
     end
 
     it "saves multiple drafts without changing readers, then explicitly activates a snapshot" do
@@ -421,6 +442,91 @@ RSpec.describe "Blog themes", type: :request do
     end
   end
 
+  describe "when the site may not use custom themes" do
+    let!(:in_use) do
+      theme = create_blog_theme(attributes.stringify_keys, user: admin)
+      activate_blog_theme(theme, user: admin)
+      theme
+    end
+    let!(:spare) do
+      create_blog_theme(attributes.merge(name: "Spare draft").stringify_keys, user: admin)
+    end
+    let(:refusal) { [I18n.t("blog.themes.custom_unavailable")] }
+
+    before do
+      SiteSetting.blog_custom_themes_enabled = false
+      get "https://test.localhost/session/#{admin.encoded_username}/become"
+    end
+
+    it "refuses every way of making or changing a theme" do
+      requests = {
+        "/themes.json" => {
+          theme: attributes,
+        },
+        "/themes/import.json" => {
+          repository: "https://github.com/example/theme",
+        },
+        "/themes/#{spare["id"]}/pull.json" => {
+          revision: spare["revision"],
+        },
+        "/themes/#{spare["id"]}/activate.json" => {
+          revision: spare["revision"],
+        },
+        "/theme-authoring/preview.json" => {
+          theme: attributes,
+          page: "index",
+        },
+      }
+      requests.each do |path, params|
+        post "https://test.localhost/admin/plugins/blog#{path}", params: params
+        expect(response.status).to eq(403), path
+        expect(response.parsed_body["errors"]).to eq(refusal), path
+      end
+
+      put "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}.json",
+          params: {
+            theme: attributes.merge(css: ".blog { color: red; }"),
+            revision: spare["revision"],
+          }
+      expect(response.status).to eq(403)
+
+      get "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}/export"
+      Tempfile.create(%w[blog-theme .zip]) do |file|
+        file.binmode
+        file.write(response.body)
+        file.flush
+        post "https://test.localhost/admin/plugins/blog/themes/import.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(file.path, "application/zip"),
+             }
+      end
+      expect(response.status).to eq(403)
+      expect(Blog::BlogTheme.all.map { _1["id"] }).to contain_exactly(in_use["id"], spare["id"])
+    end
+
+    it "keeps the theme in use, the built-in designs, and exporting and deleting" do
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(in_use["id"])
+
+      get "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}/export"
+      expect(response.status).to eq(200)
+
+      delete "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}.json",
+             params: {
+               revision: spare["revision"],
+             }
+      expect(response.status).to eq(204)
+
+      post "https://test.localhost/admin/plugins/blog/themes/#{Blog::ThemePresets::DEFAULT_ID}/activate.json",
+           params: {
+             revision: 1,
+           }
+      expect(response.status).to eq(200)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+        Blog::ThemePresets::DEFAULT_ID,
+      )
+    end
+  end
+
   describe "ZIP endpoints" do
     it "exports the saved draft and imports the download as a new inactive draft" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
@@ -448,7 +554,9 @@ RSpec.describe "Blog themes", type: :request do
       expect(response.parsed_body["name"]).to eq(theme["name"])
       expect(response.parsed_body["id"]).not_to eq(theme["id"])
       expect(response.parsed_body["source"]).to be_nil
-      expect(Blog::BlogTheme.active["id"]).to eq(Blog::ThemePresets::DEFAULT_ID)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+        Blog::ThemePresets::DEFAULT_ID,
+      )
     end
 
     it "restricts imports and exports to admins on the discussion host" do

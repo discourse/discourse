@@ -10,6 +10,7 @@ import { MAIN_PANEL, USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
  */
 export default class UserNavSidebarStateManager extends Service {
   @service header;
+  @service mobileTabBar;
   @service routeHistory;
   @service sidebarState;
   @service siteSettings;
@@ -29,6 +30,14 @@ export default class UserNavSidebarStateManager extends Service {
 
   get enabled() {
     return this.siteSettings.sidebar_user_navigation;
+  }
+
+  /**
+   * With the mobile tab bar, the menu stays with the active tab, so profiles
+   * keep their navigation on the page.
+   */
+  get servesProfiles() {
+    return this.enabled && !this.mobileTabBar.enabled;
   }
 
   captureEntryPoint() {

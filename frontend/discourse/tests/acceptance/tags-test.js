@@ -207,7 +207,7 @@ acceptance("Tags listed by group", function (needs) {
       );
     assert.deepEqual(
       findAll(".tag-list h3").map((el) => el.innerText),
-      ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
+      ["Ford Cars", "Honda Cars", "Makes", "Other tags"],
       "shown in given order and with tags that are not in a group"
     );
     assert.deepEqual(

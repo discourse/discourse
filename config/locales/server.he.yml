@@ -545,12 +545,6 @@ he:
     one: "משתמשים חדשים יכולים להזכיר רק משתמש אחד בפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
-  no_embedded_media_allowed_group: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
-  no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
-  too_many_embedded_media:
-    one: "משתמשים חדשים יכולים להוסיף רק פריט מדיה אחד מוטמע לפוסט, עמך הסליחה."
-    two: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
-    other: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
   no_attachments_allowed: "משתמשים חדשים לא יכולים להוסיף קבצים לפוסטים, עמך הסליחה."
   too_many_attachments:
     one: "משתמשים חדשים יכולים לצרף רק קובץ אחד לפוסט, עמך הסליחה."
@@ -2477,8 +2471,6 @@ he:
     automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
     default_watched_precedence_over_muted: "להודיע למשתמשים על נושאים בקטגוריות או תגיות שהם עוקבים אחריהם שגם שייכים לכאלה שהשתיקו"
     company_name: "שם החברה או הארגון שלך."
-    governing_law: "ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות ומדיניות הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים."
-    city_for_disputes: "ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום."
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
     shared_drafts_allowed_groups: "לאפשר למשתמשים בקבוצות האלו לראות ולערוך טיוטות משותפות"
     push_notifications_prompt: "הצגת כרזת הסכמת משתמש להתראות בדחיפה („פושים”). הגדרה זו מפעילה חלונית המבקשת מהמשתמשים הרשאה לשלוח להם הודעות בדחיפה. הוא מופיע רק כאשר הודעות דחיפה אינן מופעלות כבר, נתמכות על ידי מכשיר המשתמש והמשתמש פרסם הודעה או משתמש ביישומון אינטרנט מתקדם (PWA). ההנחיה לא תוצג שוב אם המשתמש כבר ביטל אותה או העניק/דחה הרשאה."
@@ -2590,9 +2582,27 @@ he:
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
       s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
+      about_banner_image: "תמונת כרזה"
+      about_page_extra_groups: "רשימת קבוצות"
+      about_page_extra_groups_initial_members: "חברים בהרחבה"
+      about_page_extra_groups_order: "סדר מיון"
+      about_page_extra_groups_show_description: "כולל התיאור"
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      company_url: "אתר"
+      extended_site_description: "תיאור קהילה"
+      large_icon: "סמל מרובע"
+      logo: "לוגו עיקרי"
+      logo_dark: "לוגו עיקרי כהה"
+      logo_small: "לוגו קטן"
+      logo_small_dark: "לוגו קטן כהה"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
       purge_unactivated_users_grace_period_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      short_site_description: "כותרת הקהילה"
+      site_contact_group_name: "קבוצת הקשר באתר"
+      site_contact_username: "שם איש או אשת הקשר באתר"
+      site_description: "תקציר קהילה"
+      title: "שם הקהילה"
+      welcome_banner_image: "תמונת רקע"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3112,20 +3122,6 @@ he:
     post_hidden:
       title: "פוסט חבוי"
       subject_template: "פוסט הוסתר על ידי דגלים של הקהילה"
-      text_body_template: |
-        שלום,
-
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפוסט שלך הוסתר.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        הפרסום הזה הוסתר עקב סימונים רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הנוסח והתוכן כך שיענו על המשוב המבוקש. **ניתן לערוך את הפוסט שלך תוך %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
-
-        עם זאת, אם הפוסט יוסתר על ידי הקהילה פעם נוספת, הוא יישאר מוסתר עד שיטופל על ידי הסגל.
-
-        להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     reviewable_queued_post_revise_and_reject:
       title: "משוב על הפוסט שלך"
       subject_template: "משוב על הפוסט שלך תחת %{topic_title}"
@@ -3135,31 +3131,9 @@ he:
     post_hidden_again:
       title: "הפוסט הוסתר שוב"
       subject_template: "הפוסט הוסתר עקב סימוני דגל מהקהילה, הסגל קיבל הודעה"
-      text_body_template: |
-        שלום,
-
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפוסט שלך הוסתר שוב.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        הקהילה סימנה את הפוסט הזה בדגל והוא מוסתר כעת. **כיוון שהפוסט הזה הוסתר למעלה מפעם אחת, הפרסום שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
-
-        להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines).
     queued_by_staff:
       title: "הפוסט זקוק לאישור"
       subject_template: "הפוסט הוסתר על ידי הצוות, בהמתנה לאישור"
-      text_body_template: |
-        שלום,
-
-        זו הודעה אוטומטית מהאתר %{site_name} שנועדה לעדכן אותך שהפוסט שלך הוסתר.
-
-        <%{base_url}%{url}>
-
-        הפוסט שלך יישאר מוסתר על שמישהו מחברי הסגל יסקור אותו.
-
-        להנחיות נוספות ניתן לגשת אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     flags_disagreed:
       title: "פוסט שסומן בגדל שוחזר על ידי הסגל"
       subject_template: "פוסט שסומן בגדל שוחזר על ידי הסגל"
@@ -3656,6 +3630,8 @@ he:
         ליתר בטחון, החשבון החדש שלך הושתק ולא תהיה לך אפשרות להגיב או ליצור נושאים עד שחבר סגל יוכל לסקור את החשבון שלך. אנו מתנצלים על חוסר הנעימות.
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
+    moderator_silence:
+      subject_template: "חשבונך הושתק"
     silenced_by_staff:
       title: "השתקה מצד הסגל"
       subject_template: "חשבון בהשהיה זמנית"
@@ -4006,14 +3982,6 @@ he:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-    account_silenced:
-      title: "חשבון מושתק"
-      subject_template: "[%{email_prefix}] חשבונך הושתק"
-      subject_template_improved: "חשבונך הושתק"
-    account_silenced_forever:
-      title: "חשבון מושתק"
-      subject_template: "[%{email_prefix}] חשבונך הושתק"
-      subject_template_improved: "חשבונך הושתק"
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"
@@ -4209,10 +4177,6 @@ he:
     signup_after_reject:
       title: "הרשמה לאחר דחייה"
       subject_template: "נדחית מהאתר %{site_name}"
-      text_body_template: |
-        מישהו מחברי הסגל דחה את החשבון שלך באתר %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "הרשמה"
       subject_template: "[%{email_prefix}] אשרו את חשבונכם החדש"
@@ -4810,7 +4774,6 @@ he:
       dracula: "דרקולה"
       grey_amber: "ענבר אפור"
       latte: "לאטה"
-      dark_rose: "ורד כהה"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -5025,6 +4988,7 @@ he:
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
+        confirm_title: "מחיקת הפוסט והתגובות?"
         confirm: "למחוק גם את התגובות לפוסט?"
         complete: "הפוסט והתגובות נמחקו."
       disagree_and_restore:
@@ -5056,6 +5020,8 @@ he:
       approve_post:
         title: "כן"
         complete: "הפרסום אושר."
+      deny_and_delete_post:
+        complete: "פוסט נמחק."
       approve_post_closed:
         title: "כן"
         confirm: "נושא זה סגור. ליצור את הפוסט בכל אופן?"

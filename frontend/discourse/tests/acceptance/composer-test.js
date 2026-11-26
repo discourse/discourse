@@ -15,6 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -28,6 +29,8 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
+  paste,
+  selectText,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -2361,5 +2364,195 @@ acceptance("Composer - Typing paused", function (needs) {
       ["Hello world.\n", "Hey, hello world.\n"],
       "fires after the pause"
     );
+  });
+});
+
+async function insertAiContent(type) {
+  await click(".toolbar-menu__options-trigger");
+  await click("[data-name='ai-content']");
+  await click(`[data-name='ai-content-${type}']`);
+  await waitUntil(() => !find(".toolbar-menu__options-content"), {
+    timeoutMessage: "the composer + menu closes after selecting AI content",
+  });
+}
+
+acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked code block and quote", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "Introduction");
+
+    await insertAiContent("code");
+    await waitUntil(() => find(".d-editor-input").value.includes("``` ai"));
+    const textarea = find(".d-editor-input");
+    const codeStart = "Introduction\n\n``` ai\n".length;
+    assert.deepEqual(
+      [textarea.selectionStart, textarea.selectionEnd],
+      [codeStart, codeStart],
+      "the cursor is on the blank line inside the code fence"
+    );
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value.includes("> [!AI]"));
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "Introduction\n\n``` ai\n\n```\n\n> [!AI]\n> AI content\n",
+        "the standalone code fence is empty and both blocks retain their AI markers"
+      );
+    assert
+      .dom(".toolbar-menu__ai-content-content")
+      .doesNotExist("the submenu closes after insertion");
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("the + menu closes after insertion");
+  });
+
+  test("wraps selected multiline Markdown in an AI code block", async function (assert) {
+    const selected = "const first = 1;\n  const second = 2;";
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", selected);
+    find(".d-editor-input").setSelectionRange(0, selected.length);
+
+    await insertAiContent("code");
+    await waitUntil(() => find(".d-editor-input").value.includes("``` ai"));
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "``` ai\nconst first = 1;\n  const second = 2;\n```\n",
+        "the selected lines and indentation replace the code placeholder"
+      );
+  });
+
+  test("wraps only the selected Markdown in an AI quote", async function (assert) {
+    const before = "Introduction\n";
+    const selected = "First paragraph\n\nSecond paragraph";
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", `${before}${selected}\nConclusion`);
+    find(".d-editor-input").setSelectionRange(
+      before.length,
+      before.length + selected.length
+    );
+
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value.includes("> [!AI]"));
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "Introduction\n\n> [!AI]\n> First paragraph\n>\n> Second paragraph\n\nConclusion",
+        "the blank line stays inside the quote and outside text remains separate"
+      );
+  });
+});
+
+acceptance("Composer - Insert AI content | rich editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.rich,
+  });
+
+  test("inserts an empty editable code block with an AI badge", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await waitFor("#reply-control .ProseMirror");
+
+    await insertAiContent("code");
+    const code = await waitFor(".ProseMirror pre[data-code-ai='true'] code");
+    assert.dom(code).hasText("", "the AI-marked code block has no sample code");
+    assert.dom(".ProseMirror").isFocused("the editor is ready for typing");
+    document.execCommand("insertText", false, "echo hello");
+    await settled();
+    assert
+      .dom(".ProseMirror pre[data-code-ai='true'] code")
+      .hasText("echo hello", "typing lands inside the code block");
+  });
+
+  test("inserts a quote with an AI badge", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await waitFor("#reply-control .ProseMirror");
+
+    await insertAiContent("quote");
+    await waitFor(".ProseMirror blockquote");
+    assert
+      .dom(".ProseMirror blockquote[data-ai-generated='true'] p")
+      .hasText("AI content", "the AI-marked quote contains the placeholder");
+  });
+
+  async function selectRichText(text) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await waitFor("#reply-control .ProseMirror p");
+    await focus(".ProseMirror");
+    await selectText(".ProseMirror p");
+    await paste(".ProseMirror", text, {
+      types: ["text/plain"],
+      files: [],
+      getData: (type) => (type === "text/plain" ? text : ""),
+    });
+    await selectText(".ProseMirror p");
+  }
+
+  test("wraps selected rich text in an AI code block", async function (assert) {
+    await selectRichText("const selected = true;");
+
+    await insertAiContent("code");
+    await waitFor(".ProseMirror pre");
+
+    assert
+      .dom(".ProseMirror pre[data-code-ai='true'] code")
+      .hasText(
+        "const selected = true;",
+        "the marked code block uses the selection"
+      );
+  });
+
+  test("wraps selected rich text in an AI quote", async function (assert) {
+    await selectRichText("Selected for quoting");
+
+    await insertAiContent("quote");
+    await waitFor(".ProseMirror blockquote");
+
+    assert
+      .dom(".ProseMirror blockquote[data-ai-generated='true'] p")
+      .hasText("Selected for quoting", "the marked quote uses the selection");
+  });
+});
+
+acceptance("Composer - Insert AI content | mobile", function (needs) {
+  needs.mobileView();
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked quote from the submenu", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await fillIn(".d-editor-input", "");
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value, {
+      timeoutMessage: "the mobile composer receives the AI quote",
+    });
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "> [!AI]\n> AI content\n",
+        "the mobile submenu inserts the quote"
+      );
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("both menus close");
   });
 });

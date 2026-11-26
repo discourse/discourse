@@ -199,9 +199,6 @@ id:
       retention_reminders:
         short:
           other: "%{count} hari"
-      emoji_picker:
-        objects: "Objek"
-        flags: "Flags"
       thread:
         title: "Judul"
         replies:

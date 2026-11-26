@@ -459,9 +459,6 @@ fi:
       fonts:
         base_font: "Leipäteksti"
         heading_font: "Otsikot"
-      logo:
-        description: "Näkyy sivuston ylänavigoinnissa sekä sivuston sähköposti-ilmoitusten yläosassa."
-        help_text: "Suositeltava koko on 600 x 80 pikseliä."
       homepage:
         topics: "Aiheet"
         categories: "Kategoriat"
@@ -875,7 +872,6 @@ fi:
         is_this_post: "Onko tämä %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "tai"
         something_else_wrong: "Onko tämä %{reviewable_type} jollakin tavalla viallinen?"
-        something_wrong_with_post: "Onko tässä viestissä jotain vikaa?"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
@@ -2744,6 +2740,9 @@ fi:
         size_too_small: "%{provided_file_size} on pienempi kuin pienin sallittu %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hae emojia
+      search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
+      no_results: "Ei tuloksia"
+      favorites: "Usein käytetyt"
       smileys_&_emotion: Hymiöt ja tunteet
       people_&_body: Ihmiset ja kehot
       animals_&_nature: Eläimet ja luonto
@@ -2780,6 +2779,10 @@ fi:
       emoji: "Emoji :)"
       more_emoji: "lisää…"
       options: "Asetukset"
+      ai_content:
+        code: "Koodi"
+        quote: "Lainaa"
+        details: "Tiedot"
       whisper: "kuiskaus"
       unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
@@ -3573,7 +3576,7 @@ fi:
         back_description: "Siirry takaisin ensimmäiseen lukemattomaan viestiin"
         replies_short: "%{current} / %{total}"
       progress:
-        title: ketjun edistyminen
+        title: "ketjun edistyminen"
         jump_prompt: "siirry…"
         jump_prompt_of:
           one: "%{count} viestistä"
@@ -3821,10 +3824,8 @@ fi:
           label: "valittu"
           title: "Poista viesti valituista klikkaamalla"
         select_replies:
-          label: "valitse +vastaukset"
           title: "Lisää viesti ja kaikki sen vastaukset valittuihin"
         select_below:
-          label: "valitse +myöhemmät"
           title: "Lisää viesti ja kaikki sitä myöhemmät valittuihin"
         delete: poista valitut
         cancel: peruuta valinta
@@ -3842,6 +3843,7 @@ fi:
         clear_all: "Tyhjennä kaikki"
         actions: "Joukkotoiminnot"
     post:
+      ai_generated: "Tekoäly"
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"
       quote_reply_shortcut: "Lainaus (tai paina q)"
@@ -4179,27 +4181,19 @@ fi:
       save_error: Alueen tallennuksessa tapahtui virhe.
       validations:
         icon_required: "Valitse kuvake."
+      icon_search_placeholder: "Hae…"
       description: "Kuvaus"
       logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
       style: "Tyyli"
-      icon: "Kuvake"
-      emoji: "Emojit"
       background_color: "Väri"
       foreground_color: "Tekstin väri"
       color_validations:
         cant_be_empty: "ei voi olla tyhjä"
       styles:
-        type: "Tyyli"
         icon: "Kuvake"
         emoji: "Emojit"
         square: "Neliö"
-        options:
-          square: "Neliö"
-          icon: "Kuvake"
-          emoji: "Emojit"
       color_used: "Väri käytössä"
-      predefined_colors: "Ennalta määritetyt värivaihtoehdot"
-      color_placeholder: "Mikä tahansa verkkoväri"
       delete_confirm: "Oletko varma, että haluat poistaa tämän alueen?"
       delete_error: "Alueen poistossa tapahtui virhe."
       list: "Listaa alueet"
@@ -4816,9 +4810,17 @@ fi:
       forward: "Seuraava"
       share: "Jaa"
       dismiss: "Sulje"
+    mobile_tab_bar:
+      new_topic: "Uusi ketju"
+      create: "Luo"
+      more: "Lisää"
+      back: "Takaisin"
+      topics: "Aiheet"
+      drafts:
+        one: "Luonnokset (%{count})"
+        other: "Luonnokset (%{count})"
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
-    theme_preview_notice: "Esikatselet parhaillaan teemaa, sulje tämä selaimen välilehti tai ikkuna palataksesi normaaliin sivuston määritykseen."
     image_removed: "(kuva poistettu)"
     pause_notifications:
       title: "Keskeytä ilmoitukset…"
@@ -6271,14 +6273,6 @@ fi:
           company_name: "Nimi"
           company_url: "Verkkosivusto"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Sovellettava lainsäädäntö"
-          governing_law_placeholder: "Maakunta, osavaltio tai maa"
-          governing_law_help: |
-            Määritä sivuston laillisten ehtojen lainkäyttöalue, yleensä missä yritys on rekisteröity tai missä se toimii.
-          city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-          city_for_disputes_placeholder: "Kaupunki"
-          city_for_disputes_help: |
-            Määritä kaupunki tähän foorumiin liittyvien oikeudellisten riitojen ratkaisemiseksi.
           extra_groups:
             heading: "Ryhmälistaus"
             description: "Lisäryhmät, jotka näytetään Tietoja-sivulla."
@@ -6813,8 +6807,6 @@ fi:
           dark: "tumma"
           title: "Värit"
           edit: "Muokkaa"
-          set_default_light: "Aseta vaaleaksi paletiksi oletusteemaan (%{theme})"
-          set_default_dark: "Aseta tummaksi paletiksi oletusteemaan (%{theme})"
           set_default_success: "%{schemeName} asetettiin oletuspaletiksi teemalle %{themeName}"
           saved_refreshing: "Tallennettu! Päivitetään värejä..."
           from_theme: "Teemasta: %{name}"
@@ -7439,7 +7431,6 @@ fi:
         silence_duration: "Kuinka pitkäksi aikaa käyttäjä hiljennetään?"
         silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
-        silence_message: "Sähköpostiviesti"
         suspended_until: "(%{until} asti)"
         suspend_forever: "Hyllytä ikuisesti"
         cant_suspend: "Käyttäjää ei voi hyllyttää."
@@ -7727,6 +7718,8 @@ fi:
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
         search_label: "Haku"
+        preview:
+          default: "Oletus"
         theme_disabled: "Pois käytöstä"
         filters: "Suodattimet"
         status:
@@ -7876,7 +7869,7 @@ fi:
           modal_title: Kunniamerkkien ryhmittely
         granted_by: Myöntäjä
         granted_at: Myönnetty
-        reason_help: (Linkki viestiin tai ketjuun)
+        reason_help: Linkki viestiin tai ketjuun
         save: Tallenna
         delete: Poista
         delete_confirm: Oletko varma, että haluat poistaa tämän kunniamerkin?

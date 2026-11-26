@@ -29,10 +29,13 @@ class UserPassword < ActiveRecord::Base
     @raw_password.present?
   end
 
+  def matches_password?(pw)
+    persisted? && password_hash == hash_password(pw, password_salt, password_algorithm)
+  end
+
   def confirm_password?(pw)
-    # nothing to confirm if this record has not been persisted yet
-    return false if !persisted?
-    return false if password_hash != hash_password(pw, password_salt, password_algorithm)
+    return false unless matches_password?(pw)
+
     regen_password!(pw) if password_algorithm != TARGET_PASSWORD_ALGORITHM
 
     true

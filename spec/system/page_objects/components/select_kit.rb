@@ -99,7 +99,7 @@ module PageObjects
       end
 
       def collapse_with_escape
-        expanded_component.press("Escape")
+        expanded_component.locator(".select-kit-filter .filter-input").press("Escape")
         collapsed_component
       end
 

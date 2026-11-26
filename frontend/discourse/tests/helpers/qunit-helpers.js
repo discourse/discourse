@@ -128,9 +128,10 @@ import { setupNotificationsTrackingAssertions } from "./notifications-tracking-a
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
 
 export function currentUser() {
-  return User.create(
-    cloneJSON(sessionFixtures["/session/current.json"].current_user)
-  );
+  return User.create({
+    ...cloneJSON(sessionFixtures["/session/current.json"].current_user),
+    isCurrent: true,
+  });
 }
 
 let _initialized = new Set();

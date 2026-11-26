@@ -62,7 +62,11 @@ module DiscourseAi
         end
         logs =
           logs
-            .select(*LIST_COLUMNS, Arel.sql("request_attempts IS NOT NULL AS has_retries"))
+            .select(
+              *LIST_COLUMNS,
+              Arel.sql("feature_context ->> 'workflow_id' AS workflow_id"),
+              Arel.sql("request_attempts IS NOT NULL AS has_retries"),
+            )
             .order(id: :desc)
             .limit(limit + 1)
             .preload(:user, :llm_model)
@@ -76,6 +80,7 @@ module DiscourseAi
             ActiveModel::ArraySerializer.new(
               logs,
               each_serializer: DiscourseAi::Admin::AiLogListSerializer,
+              workflows_by_id: DiscourseAi::WorkflowUsage.workflows_for(logs),
               root: false,
             ).as_json,
           meta: {

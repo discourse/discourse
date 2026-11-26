@@ -32,8 +32,14 @@ module ::Blog
     # A Blog-category topic whose article has gone live at least once.
     def blog_published_discussion?
       return false if !UpcomingChanges.enabled?(:blog_enabled)
-      return false if category_id != SiteSetting.blog_category.to_i
+      return false if Blog::Instance.category_ids.exclude?(category_id)
       Blog::Publication.where(discussion_topic_id: id).where.not(published_revision_id: nil).exists?
+    end
+
+    def blog_article_topic?
+      return false if !UpcomingChanges.enabled?(:blog_enabled)
+      category_id.present? &&
+        [*Blog::Instance.category_ids, SiteSetting.blog_drafts_category.to_i].include?(category_id)
     end
 
     def blog_editorial_draft?
@@ -48,7 +54,7 @@ module ::Blog
 
     def blog_live_publication
       return unless Blog::Configuration.public_enabled?
-      return if category_id != SiteSetting.blog_category.to_i
+      return if Blog::Instance.category_ids.exclude?(category_id)
       Blog::Publication.publicly_visible.find_by(discussion_topic_id: id)
     end
 

@@ -64,6 +64,7 @@ ar:
         requires_ai: "يتطلَّب تفعيل المكوِّن الإضافي للذكاء الاصطناعي"
       nodes:
         "action:ai_agent": "وكيل الذكاء الاصطناعي"
+        "action:ai_tool": "أداة الذكاء الاصطناعي"
       node_descriptions:
         "action:ai_agent": "تشغيل وكيل ذكاء اصطناعي لمعالجة البيانات أو توليد المحتوى"
     discourse_automation:
@@ -242,6 +243,13 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      review_bulk:
+        refresh: "تحديث"
+        columns:
+          user: "المستخدم"
+          reason: "صفة الإبلاغ"
+          created: "تاريخ الإنشاء"
+          status: "الحالة"
       dsa_classification:
         suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
       copied: "تم النسخ"
@@ -253,11 +261,9 @@ ar:
         error: "خطأ"
         response: "الرد"
       post_image_captions:
-        edit: "تعديل تعليق الذكاء الاصطناعي على الصورة"
-        title: "تعديل تعليق الذكاء الاصطناعي على الصورة"
-        description: "التعليق"
-        save: "حفظ التعليق"
         saved: "تم حفظ تعليق الذكاء الاصطناعي على الصورة"
+        image_descriptions:
+          apply: "تطبيق"
       discourse_workflows:
         ai_agent:
           agent_id: "الوكيل"
@@ -272,6 +278,16 @@ ar:
           upload_ids: "معرِّفات التحميل"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "حدِّد وكيلًا..."
+        ai_tool:
+          tool_ref: "أداة"
+          llm_model_id: "نموذج اللغة الكبير (LLM)"
+          arguments: "الوسيطات"
+          list_item: "إدراج عنصر"
+          add_list_item: "إضافة عنصر"
+        mcp_tool:
+          mcp_server_id: "خادم MCP"
+          tool_name: "أداة"
+          arguments: "الوسيطات"
         classify:
           text: "النص"
           upload_ids: "الصور"
@@ -413,6 +429,9 @@ ar:
             enabled_features: "الميزات المُفعّلة"
             automation: "الأتمتة"
             agents: "الوكلاء"
+        review_queue:
+          setting_groups:
+            settings: "الإعدادان"
         image_caption:
           name: "التعليق على الصور"
           description: "إنشاء تعليقات بالذكاء الاصطناعي لصور المنشورات وجعلها متاحة لقارئات الشاشة والتكنولوجيا المساعدة"
@@ -1074,6 +1093,36 @@ ar:
         mcp_server_oauth_client_secret: "سر عميل OAuth لخادم MCP"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      concepts:
+        edit: "تعديل"
+        seed:
+          refresh: "تحديث"
+        delete: "حذف"
+        columns:
+          status: "الحالة"
+          topics: "الموضوعات"
+          posts: "المنشورات"
+        statuses:
+          all: "جميع الحالات"
+          active: "نشطة"
+        form:
+          name: "الاسم"
+          description: "الوصف"
+          aliases: "الأسماء المستعارة"
+          status: "الحالة"
+        shared_topics_count:
+          zero: "%{count} موضوع"
+          one: "موضوع واحد"
+          two: "%{count} موضوع"
+          few: "%{count} موضوع"
+          many: "%{count} موضوع"
+          other: "%{count} موضوعًا"
+        tagged_topics: "الموضوعات الموسومة"
+        topic_columns:
+          topic: "الموضوع"
+          primary: "أساسي"
+          relevance: "مدى الصلة بالموضوع"
+        primary_badge: "أساسي"
       decision_models:
         no_preset: "لا يوجد"
         display_name: "الاسم"
@@ -1500,8 +1549,7 @@ ar:
         filter_conversation: "المحادثة"
       ai_bot:
         title: "روبوت الذكاء الاصطناعي"
-        agent: "الوكيل:"
-        llm: "النموذج:"
+        agent_menu_heading: "الوكيل"
         pm_warning: "تتم مراقبة رسائل روبوت دردشة الذكاء الاصطناعي بانتظام من قِبل المشرفين."
         cancel_streaming: "إيقاف الرد"
         try_again: "إعادة المحاولة"
@@ -1564,9 +1612,9 @@ ar:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "الذكاء الاصطناعي"
           header: "بماذا يمكنني المساعدة؟"
           submit: "إرسال السؤال"
-          disclaimer: "يمكن للذكاء الاصطناعي التوليدي ارتكاب أخطاء. تحقق من المعلومات المهمة."
           placeholder: "اطرح سؤالًا..."
           new: "سؤال جديد"
           min_input_length_message:

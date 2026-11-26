@@ -325,11 +325,6 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_embedded_media_allowed_group: "Desculpe, você não pode incorporar itens de media num post."
-  no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
-  too_many_embedded_media:
-    one: "Sinto muito, novos usuários só podem colocar um item de mídia embutida por post."
-    other: "Sinto muito, novos usuários só podem colocar até %{count} ítens de mídia embutida por post."
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexo numa mensagem."
@@ -1346,6 +1341,11 @@ pt:
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
+    keywords:
+      company_url: "site"
+      large_icon: "ícone quadrado"
+      logo: "logótipo principal"
+      logo_small: "logótipo pequeno"
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1500,16 +1500,6 @@ pt:
     queued_by_staff:
       title: "A Publicação Necessita de Aprovação"
       subject_template: "Publicação ocultada pelo pessoal, aguardando aprovação"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} a dar-lhe conta de que a sua publicação foi ocultada.
-
-        <%{base_url}%{url}>
-
-        A sua publicação permanecerá oculta até que um membro do pessoal a reveja.
-
-        Para orientações adicionais, por favor consulte as nossas [regras da comunidade](%{base_url}/guidelines).
     welcome_user:
       title: "Bem-vindo Utilizador"
       preview: "Bem-vindo a %{site_name}!"
@@ -2215,6 +2205,8 @@ pt:
         title: "Sim"
       approve_post:
         title: "Sim"
+      deny_and_delete_post:
+        complete: "Publicação eliminada."
       approve_post_closed:
         title: "Sim"
         complete: "Mensagem aprovada."

@@ -1,38 +1,45 @@
 # frozen_string_literal: true
 
 module ColorMath
+  SRGB_LINEAR_LUMINANCE =
+    Array
+      .new(256) do |channel|
+        value = channel / 255.0
+        value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055)**2.4
+      end
+      .freeze
+  private_constant :SRGB_LINEAR_LUMINANCE
+
   # Equivalent to dc-color-brightness() in variables.scss
   def self.brightness(color)
-    rgb = Converters.hex_to_rgb(color)
-    (rgb[0].to_i * 299 + rgb[1].to_i * 587 + rgb[2].to_i * 114) / 1000.0
+    r, g, b = Converters.hex_to_rgb(color)
+    (r * 299 + g * 587 + b * 114) / 1000.0
   end
 
   # Equivalent to dark-light-diff() in variables.scss
   def self.dark_light_diff(adjusted_color, comparison_color, lightness, darkness)
-    if brightness(adjusted_color) < brightness(comparison_color)
-      scale_color_lightness(adjusted_color, lightness)
-    else
-      scale_color_lightness(adjusted_color, darkness)
-    end
+    r1, g1, b1 = Converters.hex_to_rgb(adjusted_color)
+    r2, g2, b2 = Converters.hex_to_rgb(comparison_color)
+    adjustment =
+      (r1 * 299 + g1 * 587 + b1 * 114) < (r2 * 299 + g2 * 587 + b2 * 114) ? lightness : darkness
+
+    h, s, l = Converters.rgb_to_hsl(r1, g1, b1)
+    l = adjustment > 0 ? l + (100 - l) * adjustment : l + l * adjustment
+    Converters.rgb_to_hex(Converters.hsl_to_rgb(h, s, l))
   end
 
   # WCAG 2 relative luminance, from 0 for black to 1 for white
   def self.relative_luminance(color)
-    red, green, blue =
-      Converters
-        .hex_to_rgb(color)
-        .map do |channel|
-          value = channel / 255.0
-          value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055)**2.4
-        end
-
-    (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
+    r, g, b = Converters.hex_to_rgb(color)
+    (0.2126 * SRGB_LINEAR_LUMINANCE[r]) + (0.7152 * SRGB_LINEAR_LUMINANCE[g]) +
+      (0.0722 * SRGB_LINEAR_LUMINANCE[b])
   end
 
   # WCAG 2 contrast ratio between two colors, from 1 to 21
   def self.contrast_ratio(color, other_color)
-    darker, lighter = [relative_luminance(color), relative_luminance(other_color)].minmax
-    (lighter + 0.05) / (darker + 0.05)
+    lum1 = relative_luminance(color)
+    lum2 = relative_luminance(other_color)
+    lum1 < lum2 ? (lum2 + 0.05) / (lum1 + 0.05) : (lum1 + 0.05) / (lum2 + 0.05)
   end
 
   # Equivalent to scale_color(color, lightness: ) in sass
@@ -76,13 +83,53 @@ module ColorMath
     # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     # SOFTWARE.
 
+    HEX_NIBBLE =
+      begin
+        table = Array.new(256, -1)
+        (0..9).each { |d| table[48 + d] = d }
+        (0..5).each do |d|
+          table[65 + d] = 10 + d
+          table[97 + d] = 10 + d
+        end
+        table.freeze
+      end
+
+    BYTE_HEX = Array.new(256) { |i| i.to_s(16).rjust(2, "0").freeze }.freeze
+
+    private_constant :HEX_NIBBLE, :BYTE_HEX
+
     def self.hex_to_rgb(color)
+      if color.ascii_only?
+        case color.bytesize
+        when 6
+          n0 = HEX_NIBBLE[color.getbyte(0)]
+          n1 = HEX_NIBBLE[color.getbyte(1)]
+          n2 = HEX_NIBBLE[color.getbyte(2)]
+          n3 = HEX_NIBBLE[color.getbyte(3)]
+          n4 = HEX_NIBBLE[color.getbyte(4)]
+          n5 = HEX_NIBBLE[color.getbyte(5)]
+          if (n0 | n1 | n2 | n3 | n4 | n5) >= 0
+            return (n0 << 4) | n1, (n2 << 4) | n3, (n4 << 4) | n5
+          end
+        when 3
+          n0 = HEX_NIBBLE[color.getbyte(0)]
+          n1 = HEX_NIBBLE[color.getbyte(1)]
+          n2 = HEX_NIBBLE[color.getbyte(2)]
+          return (n0 << 4) | n0, (n1 << 4) | n1, (n2 << 4) | n2 if (n0 | n1 | n2) >= 0
+        end
+      end
+
       color = color.gsub(/(.)/, '\1\1') if color.length == 3
       raise "Hex color must be 6 characters" if color.length != 6
       color.scan(/../).map { |c| c.to_i(16) }
     end
 
     def self.rgb_to_hex(rgb)
+      h0 = BYTE_HEX[rgb[0]]
+      h1 = BYTE_HEX[rgb[1]]
+      h2 = BYTE_HEX[rgb[2]]
+      return "#{h0}#{h1}#{h2}" if h0 && h1 && h2
+
       rgb.map { |c| c.to_s(16).rjust(2, "0") }.join("")
     end
 
@@ -90,13 +137,11 @@ module ColorMath
       r /= 255.0
       g /= 255.0
       b /= 255.0
-      max = [r, g, b].max
-      min = [r, g, b].min
-      h = (max + min) / 2.0
-      s = (max + min) / 2.0
+      max = r > g ? (r > b ? r : b) : (g > b ? g : b)
+      min = r < g ? (r < b ? r : b) : (g < b ? g : b)
       l = (max + min) / 2.0
 
-      if (max == min)
+      if max == min
         h = 0
         s = 0 # achromatic
       else
@@ -120,14 +165,10 @@ module ColorMath
       s = s / 100.0
       l = l / 100.0
 
-      r = 0.0
-      g = 0.0
-      b = 0.0
-
-      if (s == 0.0)
+      if s == 0.0
         r = l.to_f
         g = l.to_f
-        b = l.to_f #achromatic
+        b = l.to_f # achromatic
       else
         q = l < 0.5 ? l * (1 + s) : l + s - l * s
         p = 2 * l - q
@@ -140,11 +181,11 @@ module ColorMath
     end
 
     def self.hue_to_rgb(p, q, t)
-      t += 1 if (t < 0)
-      t -= 1 if (t > 1)
-      return(p + (q - p) * 6 * t) if (t < 1 / 6.0)
-      return q if (t < 1 / 2.0)
-      return(p + (q - p) * (2 / 3.0 - t) * 6) if (t < 2 / 3.0)
+      t += 1 if t < 0
+      t -= 1 if t > 1
+      return p + (q - p) * 6 * t if t < 1 / 6.0
+      return q if t < 1 / 2.0
+      return p + (q - p) * (2 / 3.0 - t) * 6 if t < 2 / 3.0
       p
     end
   end

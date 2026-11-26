@@ -11,13 +11,13 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("with value", async function (assert) {
       const category = Category.findById(1001);
       const subcategory = Category.findById(1002);
-      this.set("value", [category, subcategory]);
+      this.value = [category, subcategory];
 
       await render(
         <template><CategorySelector @categories={{this.value}} /></template>
@@ -31,7 +31,7 @@ module(
     });
 
     test("has +subcategories row", async function (assert) {
-      this.set("value", []);
+      this.value = [];
 
       await render(
         <template><CategorySelector @categories={{this.value}} /></template>

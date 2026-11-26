@@ -14,6 +14,7 @@ ca:
     about: Quant a
     community: Comunitat
     preview: Previsualitza
+    author: Autor
     search: Cerca
     replies:
       one: "%{count} resposta"

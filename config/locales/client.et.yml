@@ -1523,6 +1523,10 @@ et:
       emoji: "Emodži :)"
       more_emoji: "rohkem…"
       options: "Suvandid"
+      ai_content:
+        code: "Kood"
+        quote: "Tsitaat"
+        details: "Üksikasjad"
       whisper: "sosista"
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
@@ -1898,7 +1902,7 @@ et:
         back_description: "Mine tagasi oma viimase lugemata postituse juurde"
         replies_short: "%{current} / %{total}"
       progress:
-        title: teema edenemine
+        title: "teema edenemine"
         jump_prompt_or: "või"
       notifications:
         title: muuda, kui tihti sind sellest teemast teavitatakse
@@ -2088,10 +2092,8 @@ et:
           label: "valitud"
           title: "Klõpsa postituse valikust eemaldamiseks"
         select_replies:
-          label: "vali +vastused"
           title: "Lisa postitus ja kõik selle vastused valikusse"
         select_below:
-          label: "vali +allpool"
           title: "Lisa postitus ja kõik sellest allpool olev valikusse"
         delete: kustuta valitud
         cancel: tühista valimine
@@ -2279,19 +2281,14 @@ et:
       save_error: Kategooria salvestamisel tekkis viga.
       validations:
         icon_required: "Vali ikoon."
+      icon_search_placeholder: "Otsi..."
       description: "Kirjeldus"
-      icon: "Ikoon"
-      emoji: "Emotikon"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"
-        options:
-          icon: "Ikoon"
-          emoji: "Emotikon"
-      color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
       no_description: "Palun lisa sellele kategooriale kirjeldus."
@@ -2674,6 +2671,12 @@ et:
       back: "Tagasi"
       share: "Jaga"
       dismiss: "Ignoreeri"
+    mobile_tab_bar:
+      new_topic: "Uus teema"
+      create: "Loo"
+      more: "Veel"
+      back: "Tagasi"
+      topics: "Teemasid"
     safe_mode:
       enabled: "Kaitstud režiim on aktiivne, väljumiseks sulge see brauseri aken."
     pause_notifications:
@@ -3919,6 +3922,8 @@ et:
           dropdown: "Rippmenüü"
       site_text:
         search_label: "Otsi"
+        preview:
+          default: "Vaikimisi"
         theme_disabled: "Välja lülitatud"
         filters: "Filtrid"
         edit: "Muuda"
@@ -3991,7 +3996,7 @@ et:
           modal_title: Märgiste rühmitamised
         granted_by: Märgistaja
         granted_at: Märgistuse aeg
-        reason_help: (Viide postitusele või teemale)
+        reason_help: Viide postitusele või teemale
         save: Salvesta
         delete: Kustuta
         delete_confirm: Kas oled kindel, et soovid selle märgise kustutada?

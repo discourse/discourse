@@ -57,28 +57,8 @@ RSpec.describe Admin::Config::DesignWizardController do
           DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["light"]).to be_nil
-      end
-
-      it "excludes installed Concord from the choices when disabled" do
-        SiteSetting.concord_in_wizard = false
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-        concord.set_default!
-
-        get "/admin/config/design-wizard.json"
-
-        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
-          *Theme::CORE_THEMES.values,
-        )
-        expect(response.parsed_body["current_theme"]).to include("id" => concord.id)
+        expect(dracula["light"]["name"]).to eq("Dracula Light")
+        expect(dracula["dark"]["name"]).to eq("Dracula")
       end
 
       it "offers Concord for installation by default without creating a theme" do
@@ -355,7 +335,7 @@ RSpec.describe Admin::Config::DesignWizardController do
               base_font: "lato",
               heading_font: "merriweather",
               homepage: "categories",
-              category_page_style: "categories_boxes",
+              category_page_style: "categories_and_latest_topics",
             }
 
         expect(response.status).to eq(200)
@@ -365,7 +345,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.base_font).to eq("lato")
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
-        expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
+        expect(SiteSetting.desktop_category_page_style).to eq("categories_and_latest_topics")
         expect(light.reload.user_selectable).to eq(true)
       end
 
@@ -384,25 +364,6 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(200)
         expect(SiteSetting.default_theme_id).to eq(concord.id)
-      end
-
-      it "rejects installed Concord when disabled" do
-        SiteSetting.concord_in_wizard = false
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-
-        expect do
-          put "/admin/config/design-wizard.json", params: { theme_id: concord.id }
-        end.not_to change { SiteSetting.default_theme_id }
-
-        expect(response.status).to eq(400)
       end
 
       it "rejects unsupported themes without changing the default" do

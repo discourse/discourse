@@ -71,7 +71,8 @@ after_initialize do
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map) &&
+         !post.system_message?
       policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
       if policy
         post_policy = post.post_policy || post.build_post_policy
@@ -103,8 +104,6 @@ after_initialize do
         missing.each do |id|
           new_relations << PostPolicyGroup.new(post_policy_id: post_policy.id, group_id: id)
         end
-
-        post_policy.post_policy_groups = new_relations
 
         renew_days = policy["data-renew"]
         if renew_days.to_i > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
@@ -170,7 +169,10 @@ after_initialize do
             post.custom_fields[DiscoursePolicy::HAS_POLICY] = true
             post.save_custom_fields
           end
-          post_policy.save!
+          PostPolicy.transaction do
+            post_policy.post_policy_groups = new_relations
+            post_policy.save!
+          end
         end
       end
     end

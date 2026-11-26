@@ -120,6 +120,15 @@ export default class AskAiDashboard extends Component {
               </div>
               <div
                 class="db-section__metric ask-ai-dashboard__metric"
+                data-metric="cache-hits"
+              >
+                <dt class="db-section__metric-label">{{copy "cache_hits"}}</dt>
+                <dd class="db-section__metric-number">{{count
+                    (or @data.cache_hits 0)
+                  }}</dd>
+              </div>
+              <div
+                class="db-section__metric ask-ai-dashboard__metric"
                 data-metric="latency"
               >
                 <dt class="db-section__metric-label">

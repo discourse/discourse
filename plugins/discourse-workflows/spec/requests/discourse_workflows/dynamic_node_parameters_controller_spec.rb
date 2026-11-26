@@ -25,7 +25,11 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
            as: :json
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("id" => badge.id, "name" => badge.name)
+      expect(response.parsed_body).to include(
+        "id" => badge.id,
+        "name" => badge.name,
+        "hide_reason" => false,
+      )
     end
 
     it "returns groups for the group node" do

@@ -134,6 +134,10 @@ module Live
       public? ? Live.public_room_message_bus_targets : { user_ids: member_ids }
     end
 
+    def direct_call_chat?
+      ephemeral? && chat_channel&.direct_message_channel?
+    end
+
     def chat_linked?
       chat_channel_id.present?
     end
@@ -204,7 +208,7 @@ module Live
       channel = chat_channel
       if channel.nil?
         errors.add(:chat_channel_id, "must reference an existing chat channel")
-      elsif !channel.threading_enabled?
+      elsif !direct_call_chat? && !channel.threading_enabled?
         errors.add(:chat_channel_id, "must have threading enabled")
       end
     end
@@ -215,24 +219,25 @@ end
 #
 # Table name: live_rooms
 #
-#  id                  :bigint           not null, primary key
-#  chat_idle_minutes   :integer          default(15), not null
-#  cooked_description  :text
-#  description         :text
-#  ephemeral           :boolean          default(FALSE), not null
-#  last_occupied_at    :datetime
-#  livekit_enabled     :boolean          default(FALSE), not null
-#  max_participants    :integer
-#  max_quality_profile :integer
-#  name                :string           not null
-#  public              :boolean          default(FALSE), not null
-#  room_type           :integer          default(0), not null
-#  slug                :string           not null
-#  video_enabled       :boolean          default(TRUE), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  chat_channel_id     :bigint
-#  creator_id          :bigint           not null
+#  id                     :bigint           not null, primary key
+#  chat_idle_minutes      :integer          default(15), not null
+#  cooked_description     :text
+#  description            :text
+#  ephemeral              :boolean          default(FALSE), not null
+#  last_occupied_at       :datetime
+#  livekit_enabled        :boolean          default(FALSE), not null
+#  max_participants       :integer
+#  max_quality_profile    :integer
+#  name                   :string           not null
+#  public                 :boolean          default(FALSE), not null
+#  room_type              :integer          default(0), not null
+#  slug                   :string           not null
+#  speak_requests_enabled :boolean          default(TRUE), not null
+#  video_enabled          :boolean          default(TRUE), not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  chat_channel_id        :bigint
+#  creator_id             :bigint           not null
 #
 # Indexes
 #

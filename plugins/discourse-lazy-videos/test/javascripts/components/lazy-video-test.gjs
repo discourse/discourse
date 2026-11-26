@@ -1,6 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
 
 module("Component | LazyVideo", function (hooks) {
@@ -86,20 +88,55 @@ module("Component | LazyVideo", function (hooks) {
   });
 
   test("accepts an optional onLoadedVideo callback function", async function (assert) {
-    this.set("foo", 1);
-    this.set("onLoadedVideo", () => this.set("foo", 2));
+    let foo = 1;
+    const onLoadedVideo = () => (foo = 2);
 
     await render(
       <template>
         <LazyVideo
-          @onLoadedVideo={{this.onLoadedVideo}}
+          @onLoadedVideo={{onLoadedVideo}}
           @videoAttributes={{this.attributes}}
         />
       </template>
     );
-    assert.strictEqual(this.foo, 1);
+    assert.strictEqual(foo, 1);
 
     await click(".video-thumbnail.youtube");
-    assert.strictEqual(this.foo, 2);
+    assert.strictEqual(foo, 2);
+  });
+
+  test("reuses a module-level component reference across decorateCookedElement calls", function (assert) {
+    this.siteSettings.lazy_youtube_enabled = true;
+
+    const makeCooked = (videoId) => {
+      const cooked = document.createElement("div");
+      cooked.className = "cooked";
+      cooked.innerHTML = `<div class="youtube-onebox lazy-video-container" data-video-id="${videoId}" data-video-title="Video ${videoId}" data-provider-name="youtube"><a href="https://www.youtube.com/watch?v=${videoId}"><img src="thumb.jpg" /></a></div>`;
+      return cooked;
+    };
+
+    const renderedComponents = [];
+    const helper = {
+      getModel: () => null,
+      renderGlimmer(_el, component, data) {
+        renderedComponents.push({ component, data });
+      },
+    };
+
+    applyHtmlDecorators(makeCooked("abc123"), helper, STREAM_HTML_DECORATOR);
+    applyHtmlDecorators(makeCooked("def456"), helper, STREAM_HTML_DECORATOR);
+
+    assert.strictEqual(
+      renderedComponents.length,
+      2,
+      "each lazy video container invokes renderGlimmer"
+    );
+    assert.strictEqual(
+      renderedComponents[0].component,
+      renderedComponents[1].component,
+      "reuses the same module-level component reference instead of creating an inline template per post"
+    );
+    assert.strictEqual(renderedComponents[0].data.param.id, "abc123");
+    assert.strictEqual(renderedComponents[1].data.param.id, "def456");
   });
 });

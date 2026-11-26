@@ -93,6 +93,7 @@ pl_PL:
       undo: "Odrzuć zmiany"
       delete: "Usuń"
       delete_confirm: "Czy na pewno chcesz usunąć to zapytanie?"
+      delete_success: "Zapytanie usunięte"
       recover: "Cofnij usunięcie zapytania"
       dashboard:
         add: "Dodaj do pulpitu nawigacyjnego"

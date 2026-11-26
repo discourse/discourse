@@ -15,8 +15,11 @@ module CurrentUser
   end
 
   def log_on_user(user, opts = {}, replay_anonymous_action: false)
+    # The anonymous exchange is the only login path for a shadow, regardless of provider.
+    raise Discourse::InvalidAccess if !opts[:anonymous_mode_exchange] && user.anonymous_shadow?
+
     current_user_provider.log_on_user(user, session, cookies, opts)
-    user.logged_in
+    DB.after_commit { user.logged_in }
     AnonymousAction.consume(user, cookies) if replay_anonymous_action
   end
 
@@ -56,6 +59,43 @@ module CurrentUser
   end
 
   private
+
+  # Serialize issuing a credential (app key, MCP grant, login token) with password
+  # change revocation, re-reading the credential that authenticated the request
+  # under the lock so a request already in flight cannot outlive the reset.
+  def with_revalidated_credential
+    source = current_user
+    raise Discourse::InvalidAccess unless source
+
+    source.with_credential_lock do |identity|
+      raise Discourse::InvalidAccess unless identity == source
+      provider = current_user_provider
+      if provider.respond_to?(:authenticated_credential_user) &&
+           provider.authenticated_credential_user != source
+        raise Discourse::InvalidAccess
+      end
+      yield identity
+    end
+  end
+
+  # Serialize operations that derive a new credential from the incoming browser
+  # session with revocation, and never rely on authentication cached before the lock.
+  def with_authenticated_session
+    source = current_user
+    raise Discourse::InvalidAccess unless source
+
+    source.with_credential_lock do |identity|
+      unless identity&.active? && !identity.suspended? && !identity.anonymous_shadow?
+        raise Discourse::InvalidAccess
+      end
+      provider = current_user_provider
+      unless provider.respond_to?(:authenticated_session_user) &&
+               provider.authenticated_session_user == source
+        raise Discourse::InvalidAccess
+      end
+      yield identity
+    end
+  end
 
   def current_user_provider
     @current_user_provider ||= Discourse.current_user_provider.new(request.env)

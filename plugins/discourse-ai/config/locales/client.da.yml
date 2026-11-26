@@ -46,14 +46,27 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      review_bulk:
+        refresh: "Genindlæs"
+        columns:
+          user: "Bruger"
+          reason: "Anmeldt som"
+          created: "Oprettet"
+          status: "Status"
       copied: "Kopieret"
       ai_decoded_transcript:
         type: "Type"
         error: "Fejl"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Anvend"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
+        ai_tool:
+          list_item: "Listepunkt"
+          add_list_item: "Tilføj element"
         classify:
           text: "Tekst"
           upload_ids: "Billeder"
@@ -90,6 +103,9 @@ da:
           enabled: "Aktiveret"
         search:
           name: "Søg"
+        review_queue:
+          setting_groups:
+            settings: "Indstillinger"
         image_caption:
           setting_groups:
             settings: "Indstillinger"
@@ -249,6 +265,30 @@ da:
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      concepts:
+        edit: "Rediger"
+        seed:
+          refresh: "Genindlæs"
+        delete: "Slet"
+        columns:
+          status: "Status"
+          topics: "Emner"
+          posts: "Indlæg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Navn"
+          description: "Beskrivelse"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
+        tagged_topics: "Markerede emner"
+        topic_columns:
+          topic: "Emne"
+          primary: "Primær"
+          relevance: "Relevans"
+        primary_badge: "Primær"
       decision_models:
         no_preset: "Ingen"
         display_name: "Navn"
@@ -346,7 +386,6 @@ da:
         filter_all: "Alle"
         filter_standalone: "Enkeltstående"
       ai_bot:
-        llm: "Model:"
         debug_ai_modal:
           duration_label: "Varighed:"
           request: "Anmod om medlemskab"

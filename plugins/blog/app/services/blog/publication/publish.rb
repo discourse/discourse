@@ -14,11 +14,14 @@ class Blog::Publication::Publish
   model :publication
   policy :can_publish_article
   policy :blog_ready, class_name: Blog::Policy::Ready
+  policy :blog_published, class_name: Blog::Publication::Policy::BlogPublished
 
   only_if(:releasing_current_draft) do
     step :submit_current_draft
     step :approve_current_draft
   end
+
+  step :ensure_public_category
 
   transaction do
     model :publication, :lock_publication
@@ -76,6 +79,16 @@ class Blog::Publication::Publish
       on_success { |publication:| context[:revision] = publication.approved_revision }
       on_failed_policy(:revision_is_latest_submission) { fail!(I18n.t("blog.editorial.stale")) }
       on_failure { fail!(I18n.t("invalid_access")) }
+    end
+  end
+
+  def ensure_public_category(publication:)
+    Blog::EnsurePublicCategory.call(params: { blog_id: publication.blog_id }) do
+      on_failure do
+        fail!(
+          Blog::Readiness.new(publication.blog).error || I18n.t("blog.errors.category_unavailable"),
+        )
+      end
     end
   end
 

@@ -1,0 +1,90 @@
+.ai-review-bulk {
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+  }
+
+  &__controls {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__table {
+    font-size: var(--font-down-1);
+
+    .d-table__cell,
+    .d-table__header-cell {
+      padding: var(--space-1) var(--space-2);
+      vertical-align: middle;
+    }
+  }
+
+  &__select {
+    width: 1%;
+  }
+
+  &__item {
+    max-width: 0;
+    width: 45%;
+  }
+
+  &__title,
+  &__excerpt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__type {
+    margin-right: var(--space-1);
+    color: var(--primary-medium);
+  }
+
+  &__excerpt,
+  &__confidence,
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__action-label {
+    display: block;
+    font-weight: bold;
+
+    &.--destructive {
+      color: var(--danger);
+    }
+  }
+
+  &__created,
+  &__action {
+    white-space: nowrap;
+  }
+
+  &__row {
+    &.--handled,
+    &.--blocked td:not(.ai-review-bulk__status) {
+      opacity: 0.6;
+    }
+
+    &.--applied .ai-review-bulk__status {
+      color: var(--success);
+    }
+
+    &.--failed .ai-review-bulk__status {
+      color: var(--danger);
+    }
+  }
+
+  &__empty .d-icon {
+    margin-right: var(--space-1);
+  }
+}

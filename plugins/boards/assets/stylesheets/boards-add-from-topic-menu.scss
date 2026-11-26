@@ -1,3 +1,17 @@
+#topic-footer-buttons .boards-add-from-topic-button {
+  .d-icon {
+    color: var(--d-button-default-icon-color);
+  }
+
+  &:where(:hover, :focus-visible) .d-icon {
+    color: inherit;
+  }
+
+  &.is-on-board .d-icon {
+    color: var(--tertiary);
+  }
+}
+
 .discourse-boards-add-from-topic-menu {
   max-height: 50vh;
 
@@ -67,6 +81,11 @@
 }
 
 .discourse-boards-add-from-topic-column-menu {
+  &__title {
+    margin: 0 var(--space-4) var(--space-2);
+    overflow-wrap: anywhere;
+  }
+
   .dropdown-menu__subheader {
     text-transform: uppercase;
     font-size: var(--font-down-2);

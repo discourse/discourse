@@ -13,6 +13,7 @@ import LiveCreateRoomModal from "discourse/plugins/live/discourse/components/mod
 import buildAnonRoomsSection from "../lib/live/anon-rooms-section.js";
 import { humanKeyName } from "../lib/live/ptt-utils.js";
 import roomIcon, { roomBadge } from "../lib/live/room-icon.js";
+import { sortStageAudience } from "../lib/live/stage-roles.js";
 
 const LINK_NAME_PREFIX = "live-room-";
 const CHAT_PANEL = "chat";
@@ -530,10 +531,12 @@ export default {
                     const role = p.role;
                     return role === "moderator" || role === "speaker";
                   });
-                  const listeners = participants.filter((p) => {
-                    const role = p.role;
-                    return role !== "moderator" && role !== "speaker";
-                  });
+                  const listeners = sortStageAudience(
+                    participants.filter((p) => {
+                      const role = p.role;
+                      return role !== "moderator" && role !== "speaker";
+                    })
+                  );
 
                   for (const participant of speakers) {
                     result.push(

@@ -95,6 +95,35 @@ module PageObjects
         self
       end
 
+      def visit_preferences(user)
+        page.visit("/u/#{user.username}/preferences/rewind")
+        self
+      end
+
+      def visit_user_preferences(user)
+        page.visit("/u/#{user.username}/preferences")
+        self
+      end
+
+      def visit_user_activity(user)
+        page.visit("/u/#{user.username}/activity")
+        self
+      end
+
+      def disable_rewind_preference
+        find("#user_discourse_rewind_enabled").uncheck
+        find(".save-changes").click
+        self
+      end
+
+      def has_saved_preferences?
+        has_css?(".save-button .saved")
+      end
+
+      def has_rewind_preference_disabled?
+        has_css?("#user_discourse_rewind_enabled:not(:checked)")
+      end
+
       def has_rewind_preferences_nav?
         has_css?(".user-nav__preferences-rewind")
       end

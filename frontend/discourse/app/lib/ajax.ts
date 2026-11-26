@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import $ from "jquery";
-import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -67,38 +66,11 @@ type AjaxRequestArgs = Omit<AjaxOptions, "headers"> & {
   ) => void;
 };
 
-let _trackView = false;
-let _topicId: number | null = null;
-let _trackingSessionId: string | null = null;
-let _trackingUrl: string | null = null;
-let _trackingReferrer: string | null = null;
 let _transientHeader: { key: string; value: string } | null = null;
 let _logoffCallback: (() => void) | undefined;
 
 export function setTransientHeader(key: string, value: string) {
   _transientHeader = { key, value };
-}
-
-export function trackNextAjaxAsTopicView(topicId: number) {
-  _topicId = topicId;
-}
-
-export function trackNextAjaxAsPageview(
-  trackingSessionId: string | null,
-  trackingUrl: string | null,
-  trackingReferrer: string | null
-) {
-  _trackView = true;
-  _trackingSessionId = trackingSessionId;
-  _trackingUrl = trackingUrl;
-  _trackingReferrer = trackingReferrer;
-}
-
-export function resetAjax() {
-  _trackView = false;
-  _trackingSessionId = null;
-  _trackingUrl = null;
-  _trackingReferrer = null;
 }
 
 export function setLogoffCallback(cb: () => void) {
@@ -196,35 +168,6 @@ export function ajax(
     if (_transientHeader) {
       args.headers[_transientHeader.key] = _transientHeader.value;
       _transientHeader = null;
-    }
-
-    if (_trackView && (!args.type || args.type === "GET")) {
-      _trackView = false;
-      args.headers["Discourse-Track-View"] = "true";
-
-      if (EmbedMode.enabled) {
-        args.headers["Discourse-Track-View-Embed"] = "true";
-      }
-
-      if (_trackingSessionId) {
-        args.headers["Discourse-Track-View-Session-Id"] = _trackingSessionId;
-        _trackingSessionId = null;
-      }
-
-      if (_trackingUrl) {
-        args.headers["Discourse-Track-View-Url"] = _trackingUrl;
-        _trackingUrl = null;
-      }
-
-      if (_trackingReferrer) {
-        args.headers["Discourse-Track-View-Referrer"] = _trackingReferrer;
-        _trackingReferrer = null;
-      }
-
-      if (_topicId) {
-        args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
-        _topicId = null;
-      }
     }
 
     if (userPresent()) {

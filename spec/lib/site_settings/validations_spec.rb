@@ -138,17 +138,10 @@ RSpec.describe SiteSettings::Validations do
   describe "enforce second factor & local/auth provider login interplay" do
     describe "#validate_enforce_second_factor" do
       context "when local logins are disabled" do
-        let(:error_message) do
-          I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_disabled_local_login")
-        end
-
         before { SiteSetting.enable_local_logins = false }
 
-        it "rejects enforcement when local logins are disabled" do
-          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
-            Discourse::InvalidParameters,
-            error_message,
-          )
+        it "allows enforcement when local logins are disabled" do
+          expect { validations.validate_enforce_second_factor("all") }.not_to raise_error
         end
       end
 
@@ -182,36 +175,13 @@ RSpec.describe SiteSettings::Validations do
       end
     end
 
-    describe "#validate_enable_local_logins" do
-      let(:error_message) do
-        I18n.t("errors.site_settings.local_login_cannot_be_disabled_if_second_factor_enforced")
-      end
+    describe "second factor enrollment with disabled local logins" do
+      it "can require enrollment before or after disabling local login" do
+        SiteSetting.enforce_second_factor = "staff"
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enforce_second_factor = "all"
 
-      context "when the new value is false" do
-        context "when enforce second factor is enabled" do
-          before { SiteSetting.enforce_second_factor = "all" }
-
-          it "rejects disabling local logins" do
-            expect { validations.validate_enable_local_logins("f") }.to raise_error(
-              Discourse::InvalidParameters,
-              error_message,
-            )
-          end
-        end
-
-        context "when enforce second factor is disabled" do
-          before { SiteSetting.enforce_second_factor = "no" }
-
-          it "allows disabling local logins" do
-            expect { validations.validate_enable_local_logins("f") }.not_to raise_error
-          end
-        end
-      end
-
-      context "when the new value is true" do
-        it "allows enabling local logins" do
-          expect { validations.validate_enable_local_logins("t") }.not_to raise_error
-        end
+        expect(SiteSetting.enforce_second_factor).to eq("all")
       end
     end
 

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -156,7 +157,7 @@ module(
     });
 
     test("updates tooltips and columns when the target changes", async function (assert) {
-      this.set("data", {
+      const data = tracked({
         target_type: "post",
         locales: [
           {
@@ -170,7 +171,7 @@ module(
 
       await render(
         <template>
-          <AiTranslationModelProgressDetailCard @data={{this.data}} />
+          <AiTranslationModelProgressDetailCard @data={{data.value}} />
         </template>
       );
 
@@ -179,7 +180,7 @@ module(
         .includesText("Eligible");
       assert.dom(".fk-d-tooltip__trigger").exists({ count: 2 });
 
-      this.set("data", {
+      data.value = {
         target_type: "tag",
         locales: [
           {
@@ -189,7 +190,7 @@ module(
             total_count: 15,
           },
         ],
-      });
+      };
       await settled();
 
       assert

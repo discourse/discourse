@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import ThemeCardPreview from "discourse/components/theme-card-preview";
 import DMenu from "discourse/float-kit/components/d-menu";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -16,14 +17,69 @@ import BlogThemeThumbnail from "./blog-theme-thumbnail.gjs";
 export default class BlogThemeCard extends Component {
   @service blogThemeActions;
   @service router;
+  @service siteSettings;
+
+  /** The names of the blogs showing this theme, on the plugin-wide themes list. */
+  get activeOnLabel() {
+    if (!this.args.activeOn?.length) {
+      return null;
+    }
+    return i18n("blog.admin.active_on", {
+      blogs: this.args.activeOn.join(", "),
+    });
+  }
+
+  get customLocked() {
+    return !this.siteSettings.blog_custom_themes_enabled;
+  }
+
+  get activationLocked() {
+    return this.customLocked && !this.args.theme.preset;
+  }
+
+  get activateDisabled() {
+    return this.isActive || this.activationLocked;
+  }
+
+  get titleIsPlain() {
+    return this.args.blog || this.customLocked;
+  }
+
+  get exportUrl() {
+    return getURL(`/admin/plugins/blog/themes/${this.args.theme.id}/export`);
+  }
 
   get isActive() {
     return this.args.theme.id === this.args.activeThemeId;
   }
 
+  // The blog already shows its active theme, unless a newer revision awaits.
+  get canPreviewOnBlog() {
+    return !this.isActive || this.isOutdated;
+  }
+
+  // On a blog's tab, its up-to-date active theme has nothing to do.
+  get hasControls() {
+    return !this.args.blog || this.canPreviewOnBlog;
+  }
+
+  get isInUse() {
+    return this.isActive || this.args.activeOn?.length > 0;
+  }
+
+  // A blog keeps the snapshot it activated, so later edits need re-activating.
+  get isOutdated() {
+    return (
+      this.isActive &&
+      !this.args.theme.preset &&
+      this.args.activeRevision < this.args.theme.revision
+    );
+  }
+
   @action
   activate() {
     this.blogThemeActions.activate(this.args.theme, {
+      blog: this.args.blog,
       onActivated: () => this.router.refresh(),
     });
   }
@@ -66,6 +122,10 @@ export default class BlogThemeCard extends Component {
                     "blog.admin.preset_description"
                   }}</p>
               {{/unless}}
+            {{else if this.titleIsPlain}}
+              <span class="theme-card__title">{{@theme.name}}</span>
+              <p class="theme-card__description">{{i18n "blog.admin.revision"}}
+                {{@theme.revision}}</p>
             {{else}}
               <LinkTo
                 class="theme-card__title"
@@ -80,7 +140,12 @@ export default class BlogThemeCard extends Component {
           <:footer>
             <div class="theme-card__footer">
               <div class="theme-card__badges">
-                {{#if this.isActive}}
+                {{#if this.activeOnLabel}}
+                  <span class="theme-card__badge --active">{{dIcon
+                      "circle-check"
+                    }}
+                    {{this.activeOnLabel}}</span>
+                {{else if this.isActive}}
                   <span class="theme-card__badge --active">{{dIcon
                       "circle-check"
                     }}
@@ -92,85 +157,142 @@ export default class BlogThemeCard extends Component {
                 {{/if}}
               </div>
 
-              <div class="theme-card__controls">
-                {{#if @theme.preset}}
-                  <LinkTo
-                    class="btn btn-default btn-text theme-card__button customize"
-                    @query={{hash from=@theme.id}}
-                    @route="adminPlugins.show.discourse-blog-themes.new"
-                  >{{i18n "blog.admin.customize"}}</LinkTo>
-                {{else}}
-                  <DButton
-                    class="btn-default theme-card__button edit"
-                    @preventFocus={{true}}
-                    @route="adminPlugins.show.discourse-blog-themes.edit"
-                    @routeModels={{array @theme.id}}
-                    @translatedLabel={{i18n "blog.admin.edit"}}
-                  />
-                {{/if}}
+              {{#if this.hasControls}}
+                <div class="theme-card__controls">
+                  {{#if this.isOutdated}}
+                    <DButton
+                      class="btn-primary blog-theme-card__button update"
+                      @action={{this.activate}}
+                      @disabled={{this.activationLocked}}
+                      @translatedLabel={{i18n
+                        "blog.admin.update_to_revision"
+                        revision=@theme.revision
+                      }}
+                    />
+                  {{/if}}
+                  {{#if @blog}}
+                    {{! A blog only picks a theme; the library is edited on the Themes tab. }}
+                    {{#unless this.isActive}}
+                      <DButton
+                        class="btn-default blog-theme-card__button activate"
+                        @action={{this.activate}}
+                        @disabled={{this.activationLocked}}
+                        @translatedLabel={{i18n "blog.admin.select_theme"}}
+                      />
+                    {{/unless}}
+                    {{#if this.canPreviewOnBlog}}
+                      <a
+                        class="btn btn-transparent blog-theme-card__button preview"
+                        href={{@theme.preview_url}}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >{{dIcon "eye"}}
+                        {{i18n "blog.admin.preview"}}</a>
+                    {{/if}}
+                  {{else if @theme.preset}}
+                    {{#if this.customLocked}}
+                      <DButton
+                        class="btn-default blog-theme-card__button customize"
+                        @disabled={{true}}
+                        @translatedLabel={{i18n "blog.admin.customize"}}
+                      />
+                    {{else}}
+                      <LinkTo
+                        class="btn btn-default btn-text blog-theme-card__button customize"
+                        @query={{hash from=@theme.id}}
+                        @route="adminPlugins.show.discourse-blog-themes.new"
+                      >{{i18n "blog.admin.customize"}}</LinkTo>
+                    {{/if}}
+                  {{else}}
+                    <DButton
+                      class="btn-default blog-theme-card__button edit"
+                      @disabled={{this.customLocked}}
+                      @preventFocus={{true}}
+                      @route="adminPlugins.show.discourse-blog-themes.edit"
+                      @routeModels={{array @theme.id}}
+                      @translatedLabel={{i18n "blog.admin.edit"}}
+                    />
+                  {{/if}}
 
-                <div class="theme-card__footer-actions">
-                  <DMenu
-                    @icon="ellipsis"
-                    @identifier={{concat "blog-theme-actions-" @theme.id}}
-                    @modalForMobile={{true}}
-                    @title={{i18n "blog.admin.theme_actions"}}
-                    @triggerClass="theme-card__footer-menu btn-flat"
-                  >
-                    <:content>
-                      <DDropdownMenu as |dropdown|>
-                        <dropdown.item>
-                          <DButton
-                            class="theme-card__button btn-transparent activate"
-                            @action={{this.activate}}
-                            @disabled={{this.isActive}}
-                            @icon="play"
-                            @preventFocus={{true}}
-                            @translatedLabel={{i18n "blog.admin.activate"}}
-                          />
-                        </dropdown.item>
+                  {{#unless @blog}}
+                    <div class="theme-card__footer-actions">
+                      <DMenu
+                        @icon="ellipsis"
+                        @identifier={{concat "blog-theme-actions-" @theme.id}}
+                        @modalForMobile={{true}}
+                        @title={{i18n "blog.admin.theme_actions"}}
+                        @triggerClass="theme-card__footer-menu btn-flat"
+                      >
+                        <:content>
+                          <DDropdownMenu as |dropdown|>
+                            {{#unless @hideActivate}}
+                              <dropdown.item>
+                                <DButton
+                                  class="blog-theme-card__button btn-transparent activate"
+                                  @action={{this.activate}}
+                                  @disabled={{this.activateDisabled}}
+                                  @icon="play"
+                                  @preventFocus={{true}}
+                                  @translatedLabel={{i18n
+                                    "blog.admin.activate"
+                                  }}
+                                />
+                              </dropdown.item>
+                            {{/unless}}
 
-                        {{#if @theme.source}}
-                          <dropdown.item>
-                            <DButton
-                              class="theme-card__button btn-transparent"
-                              @action={{this.pull}}
-                              @icon="cloud-arrow-down"
-                              @preventFocus={{true}}
-                              @translatedLabel={{i18n "blog.admin.pull_git"}}
-                            />
-                          </dropdown.item>
-                        {{/if}}
+                            {{#if @theme.source}}
+                              <dropdown.item>
+                                <DButton
+                                  class="blog-theme-card__button btn-transparent pull"
+                                  @action={{this.pull}}
+                                  @disabled={{this.customLocked}}
+                                  @icon="cloud-arrow-down"
+                                  @preventFocus={{true}}
+                                  @translatedLabel={{i18n
+                                    "blog.admin.pull_git"
+                                  }}
+                                />
+                              </dropdown.item>
+                            {{/if}}
 
-                        <dropdown.item>
-                          <a
-                            class="btn btn-transparent theme-card__button preview"
-                            href={{@theme.preview_url}}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >{{dIcon "eye"}}
-                            {{i18n "blog.admin.preview"}}</a>
-                        </dropdown.item>
+                            <dropdown.item>
+                              <a
+                                class="btn btn-transparent blog-theme-card__button preview"
+                                href={{@theme.preview_url}}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                              >{{dIcon "eye"}}
+                                {{i18n "blog.admin.preview"}}</a>
+                            </dropdown.item>
 
-                        {{#unless @theme.preset}}
-                          <dropdown.item>
-                            <DButton
-                              class="theme-card__button btn-transparent --danger"
-                              @action={{this.remove}}
-                              @disabled={{this.isActive}}
-                              @icon="trash-can"
-                              @preventFocus={{true}}
-                              @translatedLabel={{i18n
-                                "blog.admin.delete_theme"
-                              }}
-                            />
-                          </dropdown.item>
-                        {{/unless}}
-                      </DDropdownMenu>
-                    </:content>
-                  </DMenu>
+                            {{#unless @theme.preset}}
+                              <dropdown.item>
+                                <a
+                                  class="btn btn-transparent blog-theme-card__button export"
+                                  href={{this.exportUrl}}
+                                >{{dIcon "download"}}
+                                  {{i18n "blog.admin.export"}}</a>
+                              </dropdown.item>
+                              <dropdown.item>
+                                <DButton
+                                  class="blog-theme-card__button btn-transparent --danger"
+                                  @action={{this.remove}}
+                                  @disabled={{this.isInUse}}
+                                  @icon="trash-can"
+                                  @preventFocus={{true}}
+                                  @translatedLabel={{i18n
+                                    "blog.admin.delete_theme"
+                                  }}
+                                />
+                              </dropdown.item>
+                            {{/unless}}
+                          </DDropdownMenu>
+                        </:content>
+                      </DMenu>
+                    </div>
+                  {{/unless}}
                 </div>
-              </div>
+              {{/if}}
             </div>
           </:footer>
         </ThemeCardPreview>

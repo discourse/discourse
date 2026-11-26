@@ -27,7 +27,7 @@ RSpec.describe EmailUpdater do
   end
 
   context "when an admin is changing the email of another user" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let(:updater) { EmailUpdater.new(guardian: admin.guardian, user: user) }
 
     def expect_old_email_job

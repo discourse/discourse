@@ -140,8 +140,16 @@ export default class AiLogRow extends Component {
     return this.args.log.post_id ? getURL(`/p/${this.args.log.post_id}`) : null;
   }
 
+  get workflowUrl() {
+    return this.args.log.workflow?.id
+      ? getURL(
+          `/admin/plugins/discourse-workflows/workflows/${this.args.log.workflow.id}`
+        )
+      : null;
+  }
+
   get hasContext() {
-    return Boolean(this.topicUrl || this.postUrl);
+    return Boolean(this.topicUrl || this.postUrl || this.workflowUrl);
   }
 
   <template>
@@ -222,6 +230,12 @@ export default class AiLogRow extends Component {
             <a href={{this.postUrl}}>
               {{i18n "discourse_ai.logs.post_short" id=@log.post_id}}
             </a>
+          {{/if}}
+          {{#if this.workflowUrl}}
+            <a href={{this.workflowUrl}}>{{i18n
+                "discourse_ai.logs.workflow_link"
+                name=@log.workflow.name
+              }}</a>
           {{/if}}
           {{#unless this.hasContext}}
             <span class="ai-logs__empty-value">—</span>

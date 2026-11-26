@@ -28,6 +28,7 @@ module DiscourseGamification
           #{category_filter(leaderboard:)}
         WHERE
           p.deleted_at IS NULL AND
+          pa.deleted_at IS NULL AND
           t.archetype <> 'private_message' AND
           p.wiki IS FALSE AND
           post_action_type_id = 2 AND

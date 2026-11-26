@@ -2,6 +2,7 @@
 
 class Blog::Publication::UpdateMetadata
   include Service::Base
+  include Blog::DraftsCategoryStep
 
   params do
     attribute :topic_id, :integer
@@ -13,6 +14,7 @@ class Blog::Publication::UpdateMetadata
   model :topic
   policy :blog_ready, class_name: Blog::Policy::Ready
   policy :can_use_cover_upload
+  step :ensure_drafts_category
 
   transaction do
     model :publication, :stage_metadata

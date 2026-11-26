@@ -64,6 +64,29 @@ RSpec.describe UserSerializer do
     end
   end
 
+  context "with retained custom and gravatar avatars" do
+    fab!(:custom_upload) { Fabricate(:upload, user: user) }
+    fab!(:gravatar_upload) { Fabricate(:upload, user: user) }
+
+    before do
+      user.create_user_avatar!(
+        custom_upload_id: custom_upload.id,
+        gravatar_upload_id: gravatar_upload.id,
+      )
+    end
+
+    it "keeps the retained pictures private from anonymous and other viewers" do
+      [Guardian.new, Fabricate(:user).guardian].each do |scope|
+        json = described_class.new(user, scope: scope, root: false).as_json
+
+        expect(json).not_to have_key(:custom_avatar_upload_id)
+        expect(json).not_to have_key(:custom_avatar_template)
+        expect(json).not_to have_key(:gravatar_avatar_upload_id)
+        expect(json).not_to have_key(:gravatar_avatar_template)
+      end
+    end
+  end
+
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
@@ -97,6 +120,78 @@ RSpec.describe UserSerializer do
 
       expect(json[:group_users]).to eq(nil)
       expect(json[:second_factor_enabled]).to eq(nil)
+    end
+  end
+
+  describe "#staff_only_settings" do
+    fab!(:admin)
+
+    before do
+      SiteSetting.username_change_period = 0
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+    end
+
+    it "lists the settings staff can change for a user who cannot change them" do
+      json = described_class.new(user, scope: admin.guardian, root: false).as_json
+
+      expect(json[:staff_only_settings]).to contain_exactly(
+        :username,
+        :profile_header,
+        :ignored_users,
+        :muted_users,
+        :private_messages,
+      )
+    end
+
+    it "hides the settings the site restricts to staff" do
+      SiteSetting.personal_message_enabled_groups =
+        Group::AUTO_GROUPS.values_at(:admins, :moderators).join("|")
+
+      json = described_class.new(user, scope: admin.guardian, root: false).as_json
+
+      expect(json[:staff_only_settings]).not_to include(:private_messages)
+      expect(json[:can_send_private_messages]).to eq(false)
+      expect(json[:can_ignore_users]).to eq(true)
+    end
+
+    it "keeps the settings the site restricts to staff when the user has data there" do
+      SiteSetting.personal_message_enabled_groups =
+        Group::AUTO_GROUPS.values_at(:admins, :moderators).join("|")
+      SiteSetting.ignore_allowed_groups = Group::AUTO_GROUPS[:staff]
+      user.user_option.update!(allow_private_messages: false)
+      Fabricate(:ignored_user, user: user, ignored_user: Fabricate(:user))
+
+      json = described_class.new(user, scope: admin.guardian, root: false).as_json
+
+      expect(json[:staff_only_settings]).to include(:private_messages, :ignored_users)
+      expect(json[:can_send_private_messages]).to eq(true)
+      expect(json[:can_ignore_users]).to eq(true)
+    end
+
+    it "lists the user fields only staff can edit" do
+      locked_field = Fabricate(:user_field, editable: false)
+      editable_field = Fabricate(:user_field, editable: true)
+
+      json = described_class.new(user, scope: admin.guardian, root: false).as_json
+
+      expect(json[:staff_only_settings]).to include(:"user_field_#{locked_field.id}")
+      expect(json[:staff_only_settings]).not_to include(:"user_field_#{editable_field.id}")
+    end
+
+    it "is only sent to staff" do
+      json = described_class.new(user, scope: user.guardian, root: false).as_json
+
+      expect(json).not_to have_key(:staff_only_settings)
+    end
+  end
+
+  describe "#can_send_private_messages" do
+    it "is the viewer's ability for users who cannot edit the viewed user" do
+      viewer = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+
+      json = described_class.new(user, scope: viewer.guardian, root: false).as_json
+
+      expect(json[:can_send_private_messages]).to eq(true)
     end
   end
 

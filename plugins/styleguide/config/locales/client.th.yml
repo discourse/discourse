@@ -17,6 +17,9 @@ th:
           table_type: "ชนิด"
         colors:
           title: "สี"
+        design_variables:
+          type: "ชนิด"
+          default: "ค่าเริ่มต้น"
         categories:
           title: "หมวดหมู่"
         navigation:

@@ -411,10 +411,12 @@ module Email
 
       DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
 
-      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
-      else
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
+      if scoreable_bounce?
+        if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
+          Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
+        else
+          Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
+        end
       end
 
       if SiteSetting.whispers_allowed_groups.present? && @from_user&.staged?
@@ -437,6 +439,13 @@ module Email
       end
 
       raise BouncedEmailError
+    end
+
+    def scoreable_bounce?
+      return false if email_log.blank? || email_log.user_id.blank?
+      return false if email_log.cc_addresses.present? || email_log.bcc_addresses.present?
+
+      User.find_by_email(@from_email)&.id == email_log.user_id
     end
 
     def is_from_reply_by_email_address?
@@ -829,13 +838,11 @@ module Email
       # For forwarded emails, where the from address matches a group incoming
       # email, we want to use the from address of the original email sender,
       # which we can extract from embedded_email_raw.
-      if process_forwarded_emails && has_been_forwarded?
-        if mail[:from].to_s =~ group_incoming_emails_regex
-          if embedded_email && embedded_email[:from].errors.blank?
-            from_address, from_display_name =
-              Email::Receiver.extract_email_address_and_name(embedded_email[:from])
-            return from_address, from_display_name, true if from_address
-          end
+      if process_forwarded_emails && has_been_forwarded? && sent_by_group_mailbox?(mail)
+        if embedded_email && embedded_email[:from].errors.blank?
+          from_address, from_display_name =
+            Email::Receiver.extract_email_address_and_name(embedded_email[:from])
+          return from_address, from_display_name, true if from_address
         end
       end
 
@@ -1380,13 +1387,25 @@ module Email
       end
     end
 
-    def group_incoming_emails_regex
-      @group_incoming_emails_regex =
-        Regexp.union(DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact_blank.uniq)
-          SELECT CONCAT(incoming_email, '|', email_username)
-          FROM groups
-          WHERE incoming_email IS NOT NULL OR email_username IS NOT NULL
-        SQL
+    def group_incoming_emails
+      @group_incoming_emails ||=
+        Group
+          .where("incoming_email IS NOT NULL OR email_username IS NOT NULL")
+          .pluck(:incoming_email, :email_username)
+          .flatten
+          .compact
+          .flat_map { |emails| emails.split("|") }
+          .map { |email| email.strip.downcase }
+          .compact_blank
+          .to_set
+    end
+
+    # A From header with more than one address can name the group mailbox
+    # without being sent by it.
+    def sent_by_group_mailbox?(mail)
+      return false unless mail.from in [sender_address]
+
+      group_incoming_emails.include?(sender_address.downcase)
     end
 
     def category_email_in_regex
@@ -1829,8 +1848,9 @@ module Email
     end
 
     def should_invite?(email)
-      email !~ Email::Receiver.reply_by_email_address_regex &&
-        email !~ group_incoming_emails_regex && email !~ category_email_in_regex
+      !email.casecmp?(SiteSetting.notification_email) &&
+        email !~ Email::Receiver.reply_by_email_address_regex &&
+        group_incoming_emails.exclude?(email) && email !~ category_email_in_regex
     end
 
     def can_invite?(topic, user)

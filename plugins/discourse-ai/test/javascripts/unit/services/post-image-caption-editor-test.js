@@ -1,4 +1,3 @@
-import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { ADD_TRANSLATION, EDIT } from "discourse/models/composer";
@@ -8,109 +7,92 @@ module("Unit | Service | post-image-caption-editor", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const owner = getOwner(this);
-    const composer = owner.lookup("service:composer");
-    composer.model = {
+    this.composer = this.owner.lookup("service:composer");
+    const site = this.owner.lookup("service:site");
+    this.composer.model = {
       action: EDIT,
       locale: "ja",
-      post: { id: 42 },
+      post: { id: 42, post_type: site.post_types.regular },
     };
-    composer.selectedTranslationLocale = null;
 
-    owner.lookup("service:site-settings").ai_post_image_captions_enabled = true;
-
-    const service = owner.lookup("service:post-image-caption-editor");
-    service.captions = new Map();
-    service.loadedKey = null;
-    service.loadingKey = null;
+    this.settings = this.owner.lookup("service:site-settings");
+    this.settings.discourse_ai_enabled = true;
+    this.settings.ai_post_image_captions_enabled = true;
+    this.editor = this.owner.lookup("service:post-image-caption-editor");
   });
 
-  test("ensureLoaded fetches captions for the edited post", async function (assert) {
-    pretender.get("/discourse-ai/post-image-captions/:post_id", (request) => {
-      assert.strictEqual(request.params.post_id, "42");
-      assert.strictEqual(request.queryParams.locale, "ja");
-
-      return response({
-        captions: [
-          { base62_sha1: "abc123", description: "A stored description" },
-        ],
-      });
-    });
-
-    const service = getOwner(this).lookup("service:post-image-caption-editor");
-
-    await service.ensureLoaded();
-
-    assert.strictEqual(service.captionFor("abc123"), "A stored description");
-  });
-
-  test("ensureLoaded fetches captions for the selected translation locale", async function (assert) {
-    const composer = getOwner(this).lookup("service:composer");
-    composer.model.action = ADD_TRANSLATION;
-    composer.selectedTranslationLocale = "fr";
-
-    pretender.get("/discourse-ai/post-image-captions/:post_id", (request) => {
-      assert.strictEqual(request.params.post_id, "42");
-      assert.strictEqual(request.queryParams.locale, "fr");
-
-      return response({
-        captions: [
-          {
-            base62_sha1: "abc123",
-            description: "Une description enregistrée",
-          },
-        ],
-      });
-    });
-
-    const service = getOwner(this).lookup("service:post-image-caption-editor");
-
-    await service.ensureLoaded();
-
-    assert.strictEqual(
-      service.captionFor("abc123"),
-      "Une description enregistrée"
-    );
-  });
-
-  test("ensureLoaded skips non-edit composers", async function (assert) {
-    let requestCount = 0;
-    pretender.get("/discourse-ai/post-image-captions/:post_id", () => {
-      requestCount += 1;
+  test("load uses the edited post's locale", async function (assert) {
+    pretender.get("/discourse-ai/post-image-captions/42", (request) => {
+      assert.strictEqual(
+        request.queryParams.locale,
+        "ja",
+        "uses the edited locale"
+      );
       return response({ captions: [] });
     });
 
-    const composer = getOwner(this).lookup("service:composer");
-    composer.model.action = "reply";
-
-    const service = getOwner(this).lookup("service:post-image-caption-editor");
-
-    await service.ensureLoaded();
-
-    assert.strictEqual(requestCount, 0);
+    await this.editor.load(this.editor.captureContext());
   });
 
-  test("save updates the local caption", async function (assert) {
-    pretender.put(
-      "/discourse-ai/post-image-captions/:post_id/:base62_sha1",
-      (request) => {
-        assert.strictEqual(request.params.post_id, "42");
-        assert.strictEqual(request.params.base62_sha1, "abc123");
+  test("load and save use the selected translation locale", async function (assert) {
+    this.composer.model.action = ADD_TRANSLATION;
+    this.composer.selectedTranslationLocale = "fr";
+    pretender.get("/discourse-ai/post-image-captions/42", (request) => {
+      assert.strictEqual(
+        request.queryParams.locale,
+        "fr",
+        "loads the French caption"
+      );
+      return response({ captions: [] });
+    });
+    pretender.put("/discourse-ai/post-image-captions/42/abc123", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      assert.strictEqual(
+        params.get("locale"),
+        "fr",
+        "saves the French caption"
+      );
+      assert.strictEqual(
+        params.get("description"),
+        "La description",
+        "sends the edited description"
+      );
+      return response({ base62_sha1: "abc123", description: "La description" });
+    });
 
-        const params = new URLSearchParams(request.requestBody);
-        assert.strictEqual(params.get("locale"), "ja");
+    const context = this.editor.captureContext();
+    await this.editor.load(context);
+    await this.editor.save(context, "abc123", "La description");
+  });
 
-        return response({
-          base62_sha1: "abc123",
-          description: "An edited description",
-        });
-      }
+  test("both settings are required for the plugin control", function (assert) {
+    assert.true(this.editor.enabled, "both settings enable the control");
+    this.settings.discourse_ai_enabled = false;
+    assert.false(
+      this.editor.enabled,
+      "the global setting overrides the caption setting"
+    );
+    this.settings.discourse_ai_enabled = true;
+    this.settings.ai_post_image_captions_enabled = false;
+    assert.false(this.editor.enabled, "the caption setting is also required");
+  });
+
+  test("private messages and ineligible posts cannot edit captions", function (assert) {
+    this.composer.model.privateMessage = true;
+    assert.false(this.editor.enabled, "private messages use the core control");
+
+    this.composer.model.privateMessage = false;
+    this.composer.model.post.deleted_at = "2026-01-01";
+    assert.false(
+      this.editor.captureContext().canEditCaption,
+      "deleted posts cannot edit captions"
     );
 
-    const service = getOwner(this).lookup("service:post-image-caption-editor");
-
-    await service.save("abc123", "An edited description");
-
-    assert.strictEqual(service.captionFor("abc123"), "An edited description");
+    this.composer.model.post.deleted_at = null;
+    this.composer.model.action = "reply";
+    assert.false(
+      this.editor.captureContext().canEditCaption,
+      "new replies cannot edit captions"
+    );
   });
 });

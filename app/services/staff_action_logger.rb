@@ -45,7 +45,21 @@ class StaffActionLogger
         action: UserHistory.actions[:create_bot],
         target_user_id: user.id,
         subject: user.username,
-        details: "trust_level: #{user.trust_level}",
+        details: "trust_level: #{user.trust_level}\ninteractive_bot: #{user.interactive_bot}",
+      ),
+    )
+  end
+
+  def log_bot_interactivity_change(user)
+    previous_value, new_value = user.saved_change_to_interactive_bot
+
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:change_bot_interactivity],
+        target_user_id: user.id,
+        subject: user.username,
+        previous_value: previous_value.to_s,
+        new_value: new_value.to_s,
       ),
     )
   end
@@ -949,6 +963,15 @@ class StaffActionLogger
     )
   end
 
+  def log_account_review_approved(user, reviewable_id:)
+    UserHistory.create!(
+      params(reviewable_id:).merge(
+        action: UserHistory.actions[:approve_account_review],
+        target_user_id: user.id,
+      ),
+    )
+  end
+
   def log_removed_avatar(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(
@@ -1051,6 +1074,31 @@ class StaffActionLogger
         context: details.join(", "),
         previous_value: old_values&.join(", "),
         new_value: new_values&.join(", "),
+      ),
+    )
+  end
+
+  def log_web_hook_operation(
+    web_hook,
+    action:,
+    destination_origin:,
+    destination_fingerprint:,
+    changed_fields: [],
+    event_id: nil
+  )
+    # Destinations and changed values can contain credentials.
+    details = [
+      "destination_origin: #{destination_origin}",
+      "destination_fingerprint: #{destination_fingerprint}",
+    ]
+    details << "changed_fields: #{changed_fields.join(", ")}" if changed_fields.present?
+    details << "event_id: #{event_id}" if event_id
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[action],
+        admin_only: true,
+        context: "webhook_id: #{web_hook.id}",
+        details: details.join("\n"),
       ),
     )
   end

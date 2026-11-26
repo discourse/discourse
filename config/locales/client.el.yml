@@ -535,8 +535,6 @@ el:
       fonts:
         base_font: "Κύριο μέρος"
         heading_font: "Επικεφαλίδες"
-      logo:
-        help_text: "Το συνιστώμενο μέγεθος είναι 600 x 80 pixel."
       homepage:
         topics: "Θέματα"
         categories: "Κατηγορίες"
@@ -2914,6 +2912,8 @@ el:
         size_too_small: "%{provided_file_size} είναι μικρότερο από το ελάχιστο επιτρεπόμενο %{min_file_size}"
     emoji_picker:
       filter_placeholder: Αναζήτησε για emoji
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      favorites: "Συχνά χρησιμοποιούμενα"
       smileys_&_emotion: Χαμόγελα και συγκίνηση
       people_&_body: Άνθρωποι και Σώμα
       animals_&_nature: Ζώα και Φύση
@@ -2971,6 +2971,10 @@ el:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα…"
       options: "Επιλογές"
+      ai_content:
+        code: "Κωδικός"
+        quote: "Παράθεση"
+        details: "Λεπτομέρειες"
       whisper: "ψιθύρισμα"
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
@@ -3973,7 +3977,7 @@ el:
         back_description: "Πήγαινε πίσω στην τελευταία αδιάβαστη ανάρτηση"
         replies_short: "%{current} / %{total}"
       progress:
-        title: πρόοδος θέματος
+        title: "πρόοδος θέματος"
         jump_prompt: "μετάβαση σε…"
         jump_prompt_of:
           one: "από %{count} ανάρτηση"
@@ -4230,10 +4234,8 @@ el:
           label: "επιλεγμένη"
           title: "Κάντε κλικ για να αφαιρέσετε την ανάρτηση από την επιλογή"
         select_replies:
-          label: "επίλεξε +απαντήσεις"
           title: "Προσθέστε την ανάρτηση και όλες τις απαντήσεις της στην επιλογή"
         select_below:
-          label: "επιλέξτε + παρακάτω"
           title: "Προσθέστε την ανάρτηση και όλες μετά από αυτήν στην επιλογή"
         delete: διαγραφή επιλεγμένων
         cancel: ακύρωση επιλογής
@@ -4608,6 +4610,8 @@ el:
         tag_group: "Ομάδα ετικετών"
       topic_featured_link_allowed: "Να επιτρέπονται αναδεδειγμένοι συνδέσμοι σε αυτήν την κατηγορία"
       delete: "Διαγραφή κατηγορίας"
+      empty_state:
+        edit_category: "Επεξεργασία κατηγορίας"
       create: "Νέα κατηγορία"
       create_with_type: "Νέα %{typeName} κατηγορία"
       create_long: "Δημιουργία νέας κατηγορίας"
@@ -4628,7 +4632,7 @@ el:
         emoji_required: "Επιλέξτε ένα emoji."
         icon_required: "Επιλέξτε ένα εικονίδιο."
       name: "Όνομα κατηγορίας"
-      untitled: "Κατηγορία χωρίς τίτλο"
+      icon_search_placeholder: "Αναζήτησε…"
       description: "Περιγραφή"
       logo: "Εικόνα λογότυπου κατηγορίας"
       logo_dark: "Εικόνα λογότυπου κατηγορίας σκοτεινής λειτουργίας"
@@ -4636,10 +4640,6 @@ el:
       background_image: "Εικόνα φόντου κατηγορίας"
       background_image_dark: "Σκοτεινή εικόνα φόντου κατηγορίας"
       style: "Στυλ"
-      icon: "Σύμβολο"
-      emoji: "Emoji"
-      select_emoji: "Επιλέξτε emoji"
-      select_icon: "Επιλογή εικονιδίου"
       background_color: "Χρώμα"
       foreground_color: "Χρώμα κειμένου"
       color_validations:
@@ -4647,22 +4647,15 @@ el:
         incorrect_length: "πρέπει να ταιριάζει με τη μορφή #RRGGBB ή #RGB"
         non_hexdecimal: "πρέπει να περιέχει μόνο δεκαεξαδικούς χαρακτήρες (0-9, AF)"
       styles:
-        type: "Στυλ"
         icon: "Σύμβολο"
         emoji: "Emoji"
         square: "Τετράγωνο"
-        options:
-          square: "Τετράγωνο"
-          icon: "Σύμβολο"
-          emoji: "Emoji"
       color_used: "Χρώμα σε χρήση"
-      predefined_colors: "Προκαθορισμένες επιλογές χρωμάτων"
       name_placeholder: "Συνιστάται μία ή δύο λέξεις"
       category_types: "Τύποι κατηγοριών"
       unknown_category_type: "Άγνωστος τύπος κατηγορίας"
       unknown_category_type_description: "Ο τύπος κατηγορίας '%{categoryType}' δεν υποστηρίζεται ή δεν είναι ενεργοποιημένος σε αυτήν την κατηγορία."
       category_types_no_results: "Δεν βρέθηκαν άλλοι τύποι κατηγοριών"
-      color_placeholder: "Οποιοδήποτε χρώμα"
       delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή την κατηγορία;"
       delete_error: "Παρουσιάστηκε κάποιο σφάλμα κατά τη διαγραφή της κατηγορίας."
       list: "Λίστα κατηγοριών"
@@ -5379,6 +5372,15 @@ el:
       forward: "Μπροστά"
       share: "Κοινοποίηση"
       dismiss: "Παράβλεψη"
+    mobile_tab_bar:
+      new_topic: "Νέο θέμα"
+      create: "Δημιουργία"
+      more: "Περισσότερα"
+      back: "Πίσω"
+      topics: "Θέματα"
+      drafts:
+        one: "Πρόχειρα (%{count})"
+        other: "Πρόχειρα (%{count})"
     safe_mode:
       enabled: "Η ασφαλής λειτουργία είναι ενεργοποιημένη, για να εξέλθετε από την ασφαλή λειτουργία κλείστε αυτό το παράθυρο περίηγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
@@ -6931,14 +6933,6 @@ el:
           company_name: "Όνομα"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Εφαρμοστέο δίκαιο"
-          governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
-          governing_law_help: |
-            Προσδιορίστε τη δικαιοδοσία για τους νομικούς όρους του ιστότοπου, συνήθως εκεί όπου είναι εγγεγραμμένη ή λειτουργεί η εταιρεία.
-          city_for_disputes: "Πόλη για διαφορές"
-          city_for_disputes_placeholder: "Πόλη"
-          city_for_disputes_help: |
-            Ορίστε την πόλη για την επίλυση νομικών διαφορών που σχετίζονται με αυτό το φόρουμ.
           extra_groups:
             heading: "Κατάλογος ομάδων"
             description: "Επιπλέον ομάδες που θα εμφανίζονται στη σελίδα Σχετικά."
@@ -7434,8 +7428,6 @@ el:
           title: "Χρώματα"
           edit: "Επεξεργασία"
           view: "Προβολή"
-          set_default_light: "Ορισμός ως φωτεινή παλέτα στο προεπιλεγμένο θέμα (%{theme})"
-          set_default_dark: "Ορισμός ως σκοτεινή παλέτα στο προεπιλεγμένο θέμα (%{theme})"
           set_default_success: "Το %{schemeName} ορίστηκε ως προεπιλεγμένη παλέτα για %{themeName}"
           saved_refreshing: "Αποθηκεύτηκε! Γίνεται ανανέωση των χρωμάτων..."
           from_theme: "Από θέμα: %{name}"
@@ -7999,7 +7991,6 @@ el:
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
         silence_reason_placeholder: "Αιτία σιώπησης"
-        silence_message: "Μήνυμα email"
         suspended_until: "(έως %{until})"
         suspend_forever: "Αναστολή για πάντα"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
@@ -8308,6 +8299,8 @@ el:
       site_text:
         description: "Μπορείτε να προσαρμόσετε οποιοδήποτε κείμενο στο φόρουμ σας."
         search_label: "Αναζήτηση"
+        preview:
+          default: "Προεπιλογή"
         theme_disabled: "Απενεργοποιημένος"
         filters: "Φίλτρα"
         title: "Κείμενα ιστότοπου"
@@ -8458,7 +8451,7 @@ el:
           modal_title: Ομαδοποίηση Παράσημων
         granted_by: Απονεμήθηκε από
         granted_at: Απονεμήθηκε στις
-        reason_help: (Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα)
+        reason_help: Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα
         save: Αποθήκευση
         delete: Διαγραφή
         delete_confirm: Σίγουρα θέλετε να διαγράψετε αυτό το παράσημο;

@@ -9,21 +9,18 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("mandatory values", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        description: "Choose setting",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "foo_bar",
-        type: "compact_list",
-        default: "admin",
-        mandatory_values: "admin",
-        value: "admin|moderator",
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      description: "Choose setting",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "foo_bar",
+      type: "compact_list",
+      default: "admin",
+      mandatory_values: "admin",
+      value: "admin|moderator",
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>
@@ -37,25 +34,22 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
   });
 
   test("with valid_values from enum class", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        description: "Choose LLMs",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "test_llm_list",
-        type: "compact_list",
-        default: "",
-        value: "1|2",
-        valid_values: [
-          { name: "Model One", value: 1 },
-          { name: "Model Two", value: 2 },
-          { name: "Model Three", value: 3 },
-        ],
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      description: "Choose LLMs",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "test_llm_list",
+      type: "compact_list",
+      default: "",
+      value: "1|2",
+      valid_values: [
+        { name: "Model One", value: 1 },
+        { name: "Model Two", value: 2 },
+        { name: "Model Three", value: 3 },
+      ],
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>
@@ -70,22 +64,19 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
   });
 
   test("empty valid_values falls back to standard choices", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        description: "Choose items",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "test_list",
-        type: "compact_list",
-        default: "",
-        value: "a|b",
-        valid_values: [],
-        choices: ["a", "b", "c"],
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      description: "Choose items",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "test_list",
+      type: "compact_list",
+      default: "",
+      value: "a|b",
+      valid_values: [],
+      choices: ["a", "b", "c"],
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>
@@ -100,24 +91,21 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
   });
 
   test("valid_values converts integer values to strings for comparison", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        description: "Choose items",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "test_list",
-        type: "compact_list",
-        default: "",
-        value: "42",
-        valid_values: [
-          { name: "Item Forty-Two", value: 42 },
-          { name: "Item Forty-Three", value: 43 },
-        ],
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      description: "Choose items",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "test_list",
+      type: "compact_list",
+      default: "",
+      value: "42",
+      valid_values: [
+        { name: "Item Forty-Two", value: 42 },
+        { name: "Item Forty-Three", value: 43 },
+      ],
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>

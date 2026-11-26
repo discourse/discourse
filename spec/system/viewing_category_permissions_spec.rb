@@ -17,7 +17,10 @@ RSpec.describe "Viewing categories with group permissions" do
   let(:not_found_page) { PageObjects::Pages::NotFound.new }
 
   shared_examples "category visibility" do |enabled:, viewer:|
-    before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled }
+    before do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+    end
 
     it "lets a #{viewer} browse permitted categories and see a not-found page for denied categories" do
       sign_in(viewer == :member ? member : user) unless viewer == :anonymous

@@ -940,16 +940,14 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
 }
 
 .discourse-boards-board-settings-modal {
-  .show-advanced {
-    margin-left: auto;
-    margin-right: 0;
+  .form-kit__actions .advanced-mode-btn {
+    margin-inline-start: auto;
   }
 }
 
 .discourse-boards-column-settings-modal {
-  .show-advanced {
-    margin-left: auto;
-    margin-right: 0;
+  .form-kit__actions .advanced-mode-btn {
+    margin-inline-start: auto;
   }
 
   .discourse-boards-column-settings__help {

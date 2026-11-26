@@ -69,9 +69,12 @@ en:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
+      authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
       category_create_failed: "Category could not be created"
       category_delete_confirmation_required: "Category deletion must be confirmed"
       category_delete_name_mismatch: "Category name does not match"
+      category_emoji_required: "Emoji must contain a shortcode name, such as dog or paw_prints."
       category_not_found: "Category not found"
       category_update_failed: "Category could not be updated"
       category_update_required: "At least one category field must be provided"
@@ -96,7 +99,12 @@ en:
       invalid_date: "Invalid date"
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"
+      moderation_confirmation_required: "Set confirm to true to attest that this specific moderation action was requested."
+      moderation_invalid_duration_reason: "Provide a nonblank reason of at most 300 characters and duration_days from 1 to %{max}."
+      moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
+      moderation_user_not_found: "User not found. Use an exact existing username."
       post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
       filter_required: "A nonblank filter is required for the filtered view"
@@ -139,8 +147,24 @@ en:
       site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
       site_setting_value_required: "Provide a value when setting a site setting"
       site_setting_verification_failed: "The site setting update could not be verified"
+      source_path_unavailable: "Choose a tracked source file under the documented source directories. Absolute paths, private configuration, and symlink escapes are unavailable."
+      source_too_large: "Source output is too large. Use a narrower query, fewer lines, or a file of at most 2 MiB."
+      source_unavailable: "Source checkout or reported commit is unavailable. No latest-version fallback was fetched."
+      theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
+      theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
+      theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
+      theme_code_required: "Provide css or javascript. Omit unchanged inputs; explicitly use an empty string to remove a managed file."
+      theme_code_stale: "Theme code changed since your read. Call discourse_get_theme and use its current code_revision before editing."
+      theme_code_too_large: "Theme code must be text of at most 65,536 characters per file."
       theme_create_failed: "The theme could not be created"
+      theme_field_location_invalid: "That field has no supported theme file path and will not load. For page CSS use target common, name scss; JavaScript modules use target extra_js with a .js filename. Prefer discourse_set_theme_code for inline code."
+      theme_field_source_conflict: "Provide either inline value or an upload_id, not both."
+      theme_field_type_invalid: "Unknown theme field type '%{type}'."
+      theme_field_upload_not_found: "Upload not found. Use an existing upload ID returned by the upload tool."
+      theme_field_value_required: "Field '%{name}' requires a string value for inline source or upload_id for an upload variable. To remove an existing field, explicitly set value to an empty string."
+      theme_inline_field_upload: "Field '%{name}' is an inline source field. Put its code in value and omit upload_id; upload IDs are only supported for theme upload variables. For CSS/JavaScript prefer discourse_set_theme_code."
       theme_not_found: "Theme not found"
+      theme_parents_must_be_themes: "Only components can be attached to parent themes, and every parent_theme_id must identify an existing standalone theme. Use component:true to convert first, or in the same update."
       theme_update_failed: "The theme could not be updated"
       theme_update_required: "Provide at least one theme field to update"
       theme_confirmation_required: "Confirm this theme operation before proceeding"
@@ -166,6 +190,16 @@ en:
       topic_not_found: "Topic not found"
       topic_update_required: "Provide at least one topic field to update"
       top_period_only_for_top_view: "Top period is only supported by the top view"
+      webhook_confirmation: "Confirm this operation with %{field}=true before proceeding"
+      webhook_changed: "The webhook destination, active state, or event status has changed. Read it again before proceeding."
+      webhook_destination_unreachable: "The destination host could not be resolved. Check the hostname and try again."
+      webhook_event_not_deliverable: "This event cannot be redelivered. Use the ping tool for ping events."
+      webhook_event_not_found: "The event does not belong to this webhook or is no longer available"
+      webhook_invalid_destination: "Provide an HTTP or HTTPS destination without URL credentials or a fragment"
+      webhook_no_change: "Provide at least one webhook field with a different value"
+      webhook_not_found: "Webhook not found"
+      webhook_unknown_selection: "One or more IDs in %{field} are unknown or unavailable"
+      webhook_wildcard_events: "Wildcard webhooks cannot also select individual event types"
       upload_not_found: "Upload not found"
       upload_too_large: "The upload is too large"
       user_create_failed: "The user could not be created"
@@ -369,6 +403,7 @@ en:
         no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
         wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
         runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        invalid_translation_key: "Migration '%{name}' cannot move a setting to translation key '%{key}' because it is not declared as text in the theme's English locale file"
         unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
@@ -636,9 +671,7 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
@@ -745,6 +778,9 @@ en:
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
+  remove_password_too_soon:
+    one: "You can remove your password %{count} minute after setting it."
+    other: "You can remove your password %{count} minutes after setting it."
   scoped_api_key_html_not_allowed: "API keys with scopes cannot be used to request HTML pages. Request the JSON format instead."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -815,11 +851,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_embedded_media_allowed_group: "Sorry, you can't embed media items in a post."
-  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  no_embedded_media_allowed_group: "Sorry, you can't include images, videos, or audio in posts. You can link to them within a sentence instead."
+  no_embedded_media_allowed: "Sorry, new users can't include images, videos, or audio in posts. You can link to them within a sentence instead."
   too_many_embedded_media:
-    one: "Sorry, new users can only put one embedded media item in a post."
-    other: "Sorry, new users can only put %{count} embedded media items in a post."
+    one: "Sorry, new users can only include one image, video, or audio file in a post."
+    other: "Sorry, new users can only include %{count} images, videos, or audio files in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -1424,6 +1460,7 @@ en:
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
     email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
+    email_change_not_allowed_after_invite: "This account has accepted an invitation, so it can only be activated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
@@ -2304,8 +2341,8 @@ en:
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
     simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If {{setting:enforce_second_factor_on_external_auth}} is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
-    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the {{setting:enforce_second_factor}} setting."
+    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. When {{setting:enforce_second_factor_on_external_auth}} is enabled, users who set up 2FA will also be prompted for it when logging in with external authentication providers."
+    enforce_second_factor_on_external_auth: "Require users to confirm two-factor authentication (2FA) when logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the {{setting:enforce_second_factor}} setting."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -3194,8 +3231,6 @@ en:
 
     company_name: "Name of your company or organization."
     company_url: "Website URL for your company or organization. Optional."
-    governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
-    city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
@@ -3234,7 +3269,6 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
-    concord_in_wizard: "Offer Concord and the General chat homepage in the design wizard."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
@@ -3256,7 +3290,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
-    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
+    review_queue_consistent_answers: 'Use “Approve” and “Deny” for signups, queued posts, and reviews of published posts. Flags and review history show whether a problem was found.'
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -3308,7 +3342,7 @@ en:
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
-    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is clicked if the user has permission to view that category."
+    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is hovered if the user has permission to view that category."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -3318,8 +3352,10 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons: "We are updating the defaults for the {{setting:hide_suspension_reasons}} and {{setting:hide_silencing_reasons}} settings to hide these reasons from public view. If you have previously changed either setting, this change will have no effect on that setting."
     update_whispers_allowed_groups_default: "We are updating the default for the {{setting:whispers_allowed_groups}} setting to allow staff to post whispers by default. If you have previously changed this setting, your configuration will not change unless you reset the setting."
     sidebar_user_navigation: "Moves the navigation for user pages — profile, activity, notifications, messages, invites and preferences — out of the horizontal tab bars and into a dedicated sidebar panel, the way the admin area works. On mobile the panel is served from the hamburger menu."
+    mobile_footer_navigation: "Replaces the mobile header's menu button with a tab bar at the bottom of the screen. The footer navigation has a tab for each area of the site, a global menu button, and a button for writing new content. Plugins can add their own menu items and secondary menus using a new API."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
     enable_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and requests with an Accept: text/markdown header. Normal visibility and profile privacy rules always apply."
 
@@ -3417,10 +3453,36 @@ en:
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:
+      about_banner_image: "banner image"
+      about_page_extra_groups: "group listing"
+      about_page_extra_groups_initial_members: "expanded members"
+      about_page_extra_groups_order: "sort order"
+      about_page_extra_groups_show_description: "include description"
+      allow_user_locale: "let users choose their language"
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
+      company_url: "website"
+      content_localization_crawler_param: "let search engines index translations"
+      content_localization_enabled: "show translations to readers"
+      content_localization_supported_locales: "translate into"
+      content_localization_use_default_locale_when_unsupported: "fall back to the default language"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      embed_full_app: "full app mode"
+      extended_site_description: "community description"
+      large_icon: "square icon"
+      logo: "primary logo"
+      logo_dark: "primary logo dark"
+      logo_small: "small logo"
+      logo_small_dark: "small logo dark"
       navigation_menu: "sidebar|header dropdown"
       purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      set_locale_from_param: "language links"
+      short_site_description: "community title"
+      site_archived: "enable archive mode|disable archive mode"
+      site_contact_group_name: "site contact group"
+      site_contact_username: "site contact name"
+      site_description: "community summary"
+      title: "community name"
+      welcome_banner_image: "background image"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3429,6 +3491,7 @@ en:
 
   search:
     extreme_load_error: "Site is under extreme load, search is disabled, try again later"
+    keyword_search_timeout: "The search took too long. Try more specific keywords."
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"
@@ -3698,6 +3761,7 @@ en:
     auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
+    second_factor_external_login_required: "To confirm your identity before managing two-factor authentication, please log out and log in again with your external account."
     invalid_second_factor_method: "The selected two-factor method is invalid."
     not_enabled_second_factor_method: "The selected two-factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
@@ -4076,6 +4140,8 @@ en:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
     moderation_appeal_instructions: "To appeal this decision, contact %{email}"
+    moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
+    moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
 
     post_hidden:
       title: "Post Hidden"
@@ -4084,9 +4150,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         %{flag_reason}
 
@@ -4153,9 +4217,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden again.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden again.
 
         %{flag_reason}
 
@@ -4169,9 +4231,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         Your post will remain hidden until a staff member reviews it.
 
@@ -4768,6 +4828,23 @@ en:
         As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Moderator silence"
+      subject_template: "Your account has been silenced"
+      timed: "This is an automated message from %{site_name} to let you know that a moderator silenced your account until %{silenced_till}."
+      indefinite: "This is an automated message from %{site_name} to let you know that a moderator silenced your account indefinitely."
+      text_body_template: |
+        Hello,
+
+        %{decision}
+
+        Reason: %{reason}
+
+        You can still read discussions, but you can’t participate in them while your account is silenced.
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     silenced_by_staff:
       title: "Silenced by Staff"
       preview: "Account temporarily placed on hold."
@@ -4800,7 +4877,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5199,7 +5276,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5212,34 +5289,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
 
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
-
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced_forever:
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced.
-
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5494,10 +5544,13 @@ en:
     signup_after_reject:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"
+      reason_line: "\n\nReason: %{reason}"
       text_body_template: |
-        A staff member rejected your account on %{site_name}.
+        Hello,
 
-        %{reject_reason}
+        This is an automated message from %{site_name} to let you know that a staff member declined your registration.%{reason_line}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     signup:
       title: "Signup"
@@ -5553,6 +5606,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
+    page_title: "Access Denied"
     title: "Oops! That page is private."
 
   site_setting_missing: "`%{name}` site setting has to be set."
@@ -5578,6 +5632,9 @@ en:
 
   upload:
     edit_reason: "downloaded local copies of images"
+    too_many_short_urls:
+      one: "Can't look up more than %{count} URL in a single request."
+      other: "Can't look up more than %{count} URLs in a single request."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
@@ -5646,21 +5703,31 @@ en:
 
   appearance_changes:
     dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
     dark: "Dark"
     neutral: "Neutral"
+    neutral_dark: "Neutral Dark"
     grey_amber: "Grey Amber"
+    grey_amber_light: "Grey Amber Light"
     shades_of_blue: "Shades of Blue"
+    shades_of_blue_dark: "Shades of Blue Dark"
     latte: "Latte"
+    latte_light: "Latte Light"
     summer: "Summer"
+    summer_dark: "Summer Dark"
     dark_rose: "Dark Rose"
+    rose: "Rose"
     wcag: "WCAG Light"
     wcag_theme_name: "WCAG Light"
     dracula: "Dracula"
     dracula_theme_name: "Dracula"
+    dracula_light: "Dracula Light"
+    dracula_light_theme_name: "Dracula Light"
     solarized_light: "Solarized Light"
     solarized_light_theme_name: "Solarized Light"
     solarized_dark: "Solarized Dark"
@@ -5670,11 +5737,17 @@ en:
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
+    neutral_dark_theme_name: "Neutral Dark"
     grey_amber_theme_name: "Grey Amber"
+    grey_amber_light_theme_name: "Grey Amber Light"
     shades_of_blue_theme_name: "Shades of Blue"
+    shades_of_blue_dark_theme_name: "Shades of Blue Dark"
     latte_theme_name: "Latte"
+    latte_light_theme_name: "Latte Light"
     summer_theme_name: "Summer"
+    summer_dark_theme_name: "Summer Dark"
     dark_rose_theme_name: "Dark Rose"
+    rose_theme_name: "Rose"
     errors:
       cannot_edit_remote_copies: "Edits to remote copies of color palettes are not allowed."
 
@@ -5786,268 +5859,9 @@ en:
 
   tos_topic:
     title: "Terms of Service"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
-
-      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
-
-      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
-
-      The company may offer other products and services, under different terms. These terms apply only to use of the forum.
-
-      Skip to:
-
-      - [Important Terms](#heading--important-terms)
-      - [Your Permission to Use the Forum](#heading--permission)
-      - [Conditions for Use of the Forum](#heading--conditions)
-      - [Acceptable Use](#heading--acceptable-use)
-      - [Content Standards](#heading--content-standards)
-      - [Enforcement](#heading--enforcement)
-      - [Your Account](#heading--your-account)
-      - [Your Content](#heading--your-content)
-      - [Your Responsibility](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Limits on Liability](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Termination](#heading--termination)
-      - [Disputes](#heading--disputes)
-      - [General Terms](#heading--general)
-      - [Contact](#heading--contact)
-      - [Changes](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Important Terms</a></h2>
-
-      ***These terms include a number of important provisions that affect your rights and responsibilities, such as the disclaimers in [Disclaimers](#heading--disclaimers), limits on the company's liability to you in [Limits on Liability](#heading--liability), your agreement to cover the company for damages caused by your misuse of the forum in [Responsibility for Your Use](#heading--responsibility), and an agreement to arbitrate disputes in [Disputes](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
-
-      Subject to these terms, the company gives you permission to use the forum. Everyone needs to agree to these terms to use the forum.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
-
-      Your permission to use the forum is subject to the following conditions:
-
-      1. You must be at least eighteen years old.
-
-      2. You may no longer use the forum if the company contacts you directly to say that you may not.
-
-      3. You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
-
-      1. You may not break the law using the forum.
-
-      2. You may not use or try to use another's account on the forum without their specific permission.
-
-      3. You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
-
-      4. You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
-
-      5. You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser. You may crawl the forum to index it for a publicly available search engine, if you run one.
-
-      6. You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
-
-      7. You may not falsely imply that you're affiliated with or endorsed by the company.
-
-      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
-
-      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
-
-      10. You may not show any part of the forum on other websites with `<iframe>`.
-
-      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
-
-      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
-
-      13. You may not impersonate others through the forum.
-
-      14. You may not encourage or help anyone in violation of these terms.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
-
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, abusive, or hateful conduct.
-
-      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
-
-      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
-
-      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
-
-      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
-
-      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
-
-      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
-
-      You must create and log into an account to use some features of the forum.
-
-      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
-
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
-
-      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
-
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
-
-      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
-
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
-
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
-
-      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
-
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
-
-      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
-
-      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
-
-      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
-
-      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
-
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
-
-      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
-
-      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
-
-      %{governing_law} will govern any dispute related to these terms or your use of the forum.
-
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
-
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
-
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
-
-      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
-
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
-
-      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
-
-      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
-
-      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
-
-      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
-
-      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
-
-      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
-
-      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
-    body: |
-      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
-
-      <a name="collect"></a>
-
-      ## [What information do we collect?](#collect)
-
-      We collect information from you when you register on our site and gather data when you participate in the forum by reading, writing, and evaluating the content shared here.
-
-      When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
-
-      When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
-
-      <a name="use"></a>
-
-      ## [What do we use your information for?](#use)
-
-      Any of the information we collect from you may be used in one of the following ways:
-
-      * To personalize your experience &mdash; your information helps us to better respond to your individual needs.
-      * To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
-      * To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
-      * To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
-
-      <a name="protect"></a>
-
-      ## [How do we protect your information?](#protect)
-
-      We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
-
-      <a name="data-retention"></a>
-
-      ## [What is your data retention policy?](#data-retention)
-
-      We will make a good faith effort to:
-
-      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
-
-      <a name="cookies"></a>
-
-      ## [Do we use cookies?](#cookies)
-
-      Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
-
-      We use cookies to understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.
-
-      <a name="disclose"></a>
-
-      ## [Do we disclose any information to outside parties?](#disclose)
-
-      We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
-
-      <a name="third-party"></a>
-
-      ## [Third party links](#third-party)
-
-      Occasionally, at our discretion, we may include or offer third party products or services on our site. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
-
-      <a name="coppa"></a>
-
-      ## [Children's Online Privacy Protection Act Compliance](#coppa)
-
-      Our site, products and services are all directed to people who are at least 18 years old or older. If this server is in the USA, and you are under the age of 18, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
-
-      <a name="online"></a>
-
-      ## [Online Privacy Policy Only](#online)
-
-      This online privacy policy applies only to information collected through our site and not to information collected offline.
-
-      <a name="consent"></a>
-
-      ## [Your Consent](#consent)
-
-      By using our site, you consent to our web site privacy policy.
-
-      <a name="changes"></a>
-
-      ## [Changes to our Privacy Policy](#changes)
-
-      If we decide to change our privacy policy, we will post those changes on this page.
-
-      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     errors:
@@ -6414,6 +6228,32 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  popular_themes:
+    graceful:
+      description: "A light and graceful theme for Discourse."
+    material_design:
+      description: "Inspired by Material Design, this theme comes with several color palettes."
+    mint:
+      description: "A minty colored theme with featured homepage categories and a search banner."
+    simple:
+      description: "Simplified front page design with classic colors and typography."
+    brand_header:
+      description: "Add an extra top header with your logo, navigation links and social icons."
+    custom_header_links:
+      description: "Easily add custom text-based links to the header."
+    category_banners:
+      description: "Show banners on category pages using your existing category details."
+    tag_banners:
+      description: "Show banners on tag pages using your existing tag details."
+    sidebar_theme_toggle:
+      description: "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme."
+    header_submenus:
+      description: "Lets you build a header menu with submenus (dropdowns)."
+    table_of_contents:
+      description: "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer."
+    easy_footer:
+      description: "Add a fully responsive footer without writing any HTML."
+
   design_wizard:
     themes:
       concord:
@@ -6431,7 +6271,7 @@ en:
       dracula: "Dracula"
       grey_amber: "Grey Amber"
       latte: "Latte"
-      dark_rose: "Dark Rose"
+      dark_rose: "Rose"
   wizard:
     title: "Discourse Setup"
     step:
@@ -6644,8 +6484,6 @@ en:
     actions:
       answer_yes:
         title: "Yes"
-        delete_post_title: "Yes, delete post"
-        keep_post_deleted_title: "Yes, keep post deleted"
       answer_no:
         title: "No"
       agree:
@@ -6692,6 +6530,7 @@ en:
       delete_and_ignore_replies:
         title: "Delete post and replies, ignore flag"
         description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
+        confirm_title: "Delete post and replies, ignore flag?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -6701,6 +6540,7 @@ en:
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
+        confirm_title: "Delete post and replies?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
@@ -6746,6 +6586,21 @@ en:
         title: "Yes"
         action_title: "Approve post"
         complete: "Post approved."
+      approve_topic:
+        title: "Approve topic"
+      deny_topic:
+        title: "Deny topic"
+      deny_post:
+        title: "Deny post"
+      deny_and_delete_post:
+        title: "Deny and delete post"
+        complete: "Post deleted."
+      deny_and_delete_topic:
+        title: "Deny and delete topic"
+        complete: "Topic deleted."
+      deny_and_keep_deleted:
+        title: "Deny and keep post deleted"
+        complete: "Post kept deleted."
       approve_post_closed:
         title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
@@ -6761,17 +6616,24 @@ en:
         complete: "Avatar removed."
       approve_user:
         title: "Yes"
+        action_title: "Approve account"
         complete: "User approved."
+      deny_account:
+        title: "Deny account"
+      approve_account_review:
+        complete: "Account review approved."
       reject_user:
         title: "No"
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm_title: "Delete @%{username}?"
           confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm_title: "Delete and block @%{username}?"
           confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
@@ -6804,9 +6666,14 @@ en:
         title: Scrub record
       approve_and_restore:
         title: "Yes"
+        action_title: "Approve and restore post"
         complete: "Post approved and restored."
+      approve_and_restore_topic:
+        action_title: "Approve and restore topic"
+        complete: "Topic approved and restored."
       approve_and_unhide:
         title: "Yes"
+        action_title: "Approve and unhide post"
         complete: "Post approved and unhidden"
       silence_user:
         title: "Silence user"

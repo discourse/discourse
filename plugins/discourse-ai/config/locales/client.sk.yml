@@ -163,6 +163,13 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Obnoviť"
+        columns:
+          user: "Používateľ"
+          reason: "Označené ako"
+          created: "Vytvorené"
+          status: "Stav"
       dsa_classification:
         suggest: "Navrhnúť s AI"
       copied: "Skopírované"
@@ -171,7 +178,16 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      post_image_captions:
+        image_descriptions:
+          apply: "Použi"
       discourse_workflows:
+        ai_tool:
+          tool_ref: "Nástroj"
+          list_item: "Položka zoznamu"
+          add_list_item: "Pridať položku"
+        mcp_tool:
+          tool_name: "Nástroj"
         classify:
           text: "Text"
           upload_ids: "Obrázky"
@@ -263,6 +279,9 @@ sk:
           post_illustrator: "Ilustrátor príspevkov"
           setting_groups:
             automation: "Automatizácia"
+        review_queue:
+          setting_groups:
+            settings: "Nastavení"
         image_caption:
           setting_groups:
             settings: "Nastavení"
@@ -609,6 +628,32 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      concepts:
+        edit: "Upraviť"
+        seed:
+          refresh: "Obnoviť"
+        delete: "Odstrániť"
+        columns:
+          status: "Stav"
+          topics: "Témy"
+          posts: "Príspevky"
+        statuses:
+          active: "Aktívny"
+        form:
+          name: "Meno"
+          description: "Popis"
+          status: "Stav"
+        shared_topics_count:
+          one: "%{count} téma"
+          few: "%{count} témy"
+          many: "%{count} tém"
+          other: "%{count} tém"
+        tagged_topics: "Oštítkované témy"
+        topic_columns:
+          topic: "Téma"
+          primary: "Primárne"
+          relevance: "Relevancia"
+        primary_badge: "Primárne"
       decision_models:
         no_preset: "Žiadny"
         display_name: "Meno"
@@ -880,7 +925,6 @@ sk:
         filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
-        llm: "Model:"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
         try_again: "Skúste to znova"
@@ -936,9 +980,9 @@ sk:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "S čím môžem pomôcť?"
           submit: "Odoslať otázku"
-          disclaimer: "Generatívna AI môže robiť chyby. Overte si dôležité informácie."
           placeholder: "Položte otázku..."
           new: "Nová otázka"
           min_input_length_message:

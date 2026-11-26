@@ -45,6 +45,7 @@ sv:
           column_title: "Rubrik"
           icon: "Ikon"
           color: "Färg"
+          icon_search_placeholder: "Sök…"
           tag: "Tagg"
           move_to_assigned_unassign: "Otilldela"
           move_to_status_open: "Öppen"
