@@ -24,7 +24,7 @@ module DiscourseEvents
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
       REMINDER_TYPES = [NOTIFICATION_REMINDER, BUMP_TOPIC_REMINDER]
-      MAX_REMINDERS_PER_TYPE = { NOTIFICATION_REMINDER => 2, BUMP_TOPIC_REMINDER => 1 }.freeze
+      MAX_REMINDERS_PER_TYPE = { NOTIFICATION_REMINDER => 2, BUMP_TOPIC_REMINDER => 2 }.freeze
       MAX_REMINDERS = MAX_REMINDERS_PER_TYPE.values.sum
 
       self.table_name = "discourse_post_event_events"

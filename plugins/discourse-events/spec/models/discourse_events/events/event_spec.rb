@@ -1251,7 +1251,7 @@ RSpec.describe DiscourseEvents::Events::Event do
       event =
         event_with_reminders(
           "notification.1.minutes,notification.2.minutes,notification.3.minutes," \
-            "bumpTopic.1.hours,bumpTopic.2.hours",
+            "bumpTopic.1.hours,bumpTopic.2.hours,bumpTopic.3.hours",
         )
 
       expect(event.parsed_reminders).to eq(
@@ -1259,6 +1259,7 @@ RSpec.describe DiscourseEvents::Events::Event do
           { type: "notification", value: 1, unit: "minutes" },
           { type: "notification", value: 2, unit: "minutes" },
           { type: "bumpTopic", value: 1, unit: "hours" },
+          { type: "bumpTopic", value: 2, unit: "hours" },
         ],
       )
     end
