@@ -25,6 +25,7 @@ export interface AdminPluginPayload {
   version: string | null;
   url?: string;
   admin_route?: AdminPluginRoute | null;
+  use_horizontal_settings_form: boolean;
   enabled: boolean;
   enabled_setting?: string;
   has_settings: boolean;
@@ -49,6 +50,7 @@ export interface AdminPluginFields {
   version?: string | null;
   url?: string;
   adminRoute?: AdminPluginRoute | null;
+  useHorizontalSettingsForm?: boolean;
   enabledSetting?: string;
   hasSettings?: boolean;
   hasOnlyEnabledSetting?: boolean;

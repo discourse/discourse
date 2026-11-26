@@ -155,6 +155,16 @@ class Plugin::Instance
       end
   end
 
+  # NOTE (martin): This is only temporary for us to roll out this settings
+  # form one plugin at a time, we can remove it soonish
+  def use_horizontal_settings_form(enabled)
+    @use_horizontal_settings_form = enabled
+  end
+
+  def use_horizontal_settings_form?
+    @use_horizontal_settings_form == true
+  end
+
   def any_settings?
     configurable? && plugin_settings.values.length.positive?
   end

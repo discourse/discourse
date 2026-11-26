@@ -127,6 +127,7 @@ AdminPlugin.create({
   },
   enabled: false,
   enabled_setting: "discourse_adplugin_enabled",
+  use_horizontal_settings_form: true,
   has_settings: true,
   has_only_enabled_setting: false,
   humanized_name: "Ad Plugin",
@@ -181,6 +182,12 @@ expectTypeOf(plugin.adminRoute).toEqualTypeOf<
   | undefined
 >();
 expectTypeOf(plugin.useNewShowRoute).toEqualTypeOf<boolean | undefined>();
+expectTypeOf(plugin.useHorizontalSettingsForm).toEqualTypeOf<
+  boolean | undefined
+>();
+expectTypeOf<
+  AdminPluginPayload["use_horizontal_settings_form"]
+>().toEqualTypeOf<boolean>();
 expectTypeOf(plugin.snakeCaseName).toEqualTypeOf<string>();
 expectTypeOf(plugin.dasherizedName).toEqualTypeOf<string>();
 expectTypeOf(plugin.translatedCategoryName).toEqualTypeOf<string | undefined>();
@@ -209,6 +216,7 @@ const localDates = {
   },
   enabled: true,
   enabled_setting: "discourse_local_dates_enabled",
+  use_horizontal_settings_form: false,
   has_settings: true,
   has_only_enabled_setting: false,
   humanized_name: "Local dates",
@@ -232,6 +240,7 @@ const checklist = {
   url: "https://github.com/discourse/discourse/tree/main/plugins/checklist",
   enabled: true,
   enabled_setting: "checklist_enabled",
+  use_horizontal_settings_form: false,
   has_settings: true,
   has_only_enabled_setting: true,
   humanized_name: "Checklist",
@@ -253,6 +262,7 @@ const thirdParty = {
   about: null,
   version: null,
   enabled: true,
+  use_horizontal_settings_form: false,
   has_settings: false,
   has_only_enabled_setting: false,
   humanized_name: "My plugin",
