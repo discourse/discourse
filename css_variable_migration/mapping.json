@@ -298,7 +298,8 @@
     },
     "--d-hover": {
       "to": "--d-sys-color-background-default-hovered",
-      "note": "Keeps its value, so themes and the design wizard that set it keep working. --token-color-surface-hovered merges into it."
+      "note": "Keeps its value, so themes and the design wizard that set it keep working. --token-color-surface-hovered merges into it.",
+      "open": "Should --d-hover keep its value under the new name, with the hovered surface merging into it?"
     }
   },
   "merge": {
@@ -364,11 +365,13 @@
     },
     "--shadow-composer": {
       "to": "--d-sys-shadow-dialog",
-      "note": "0 -1px 40px vs modal's 0 8px 60px."
+      "note": "0 -1px 40px vs modal's 0 8px 60px.",
+      "open": "Should the composer use the dialog shadow?"
     },
     "--shadow-docked-composer": {
       "to": "--d-sys-shadow-overflow",
-      "note": "Defined in core, used only by the AI plugin."
+      "note": "Defined in core, used only by the AI plugin.",
+      "open": "Should the docked composer use the overflow shadow?"
     },
     "--token-color-surface-hovered": {
       "to": "--d-sys-color-background-default-hovered",
@@ -376,11 +379,13 @@
     },
     "--token-font-weight-bold": {
       "to": "--d-sys-font-weight-bold",
-      "note": "Weight words are CSS weights, so bold is 700, not 650. Keeps the 182 literal font-weight: bold/700 declarations unchanged when they migrate; the 4 sidebar uses get slightly bolder unless the sidebar keeps 650 (see Open questions). The name was already renamed in step A; the value changes in step B."
+      "note": "Weight words are CSS weights, so bold is 700, not 650. Keeps the 182 literal font-weight: bold/700 declarations unchanged when they migrate; the 4 sidebar uses get slightly bolder unless the sidebar keeps 650 (see Open questions). The name was already renamed in step A; the value changes in step B.",
+      "open": "Is bold 700? The 4 sidebar uses get slightly bolder unless the sidebar keeps 650."
     },
     "--shadow-footer-nav": {
       "to": "--d-sys-shadow-overflow",
-      "note": "Loses its 2px blur; open question."
+      "note": "Loses its 2px blur.",
+      "open": "Can the footer navigation shadow become the hairline shadow?"
     }
   },
   "rgb": {

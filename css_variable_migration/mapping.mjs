@@ -81,7 +81,9 @@ export function loadMapping() {
     for (const [oldName, entry] of Object.entries(entries)) {
       if (type === "split") {
         const roles = Object.fromEntries(
-          Object.entries(entry ?? {}).filter(([key]) => key !== "note")
+          Object.entries(entry ?? {}).filter(
+            ([key]) => key !== "note" && key !== "open"
+          )
         );
         for (const [role, target] of Object.entries(roles)) {
           if (!ROLE.test(role) || !(target === "keep" || NAME.test(target))) {

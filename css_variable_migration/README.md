@@ -8,6 +8,12 @@ The naming scheme, its word lists and the full draft mapping are in the [CSS var
 
 ## Files
 
+The JSON files are the source of truth. For review, [`review/`](review/README.md) holds generated Markdown tables. There is one table each for system, component, plugin and base palette tokens, plus open items, names that still break the naming scheme, the mapping by kind, and the definitions. Never edit `review/` by hand. After editing a JSON file, or after running the codemod, regenerate the tables from the repository root:
+
+```sh
+node css_variable_migration/render-review-tables.mjs
+```
+
 | File                        | Purpose                                                                                        |
 | --------------------------- | ---------------------------------------------------------------------------------------------- |
 | `mapping.json`              | Each old variable and its new name, grouped by type                                            |
@@ -16,6 +22,7 @@ The naming scheme, its word lists and the full draft mapping are in the [CSS var
 | `check.mjs`                 | Confirms that the working tree matches the mapping                                             |
 | `compile.rb`, `compare.mjs` | Compile the stylesheets on `main` and on the branch, and list the computed values that differ |
 | `mapping.mjs`               | Code that the scripts share                                                                    |
+| `render-review-tables.mjs`  | Writes the review tables in `review/`                                                          |
 
 ### `mapping.json`
 
@@ -40,7 +47,7 @@ The naming scheme, its word lists and the full draft mapping are in the [CSS var
 }
 ```
 
-An entry is the new name, or an object with the new name in `to` and a `note` for reviewers.
+An entry is the new name, or an object with the new name in `to` and a `note` for reviewers. Add `open` with a question when the entry needs a decision. The review tables list it in `review/todo.md` until someone removes it.
 
 - `rename`: the new name keeps the old value, so nothing looks different.
 - `merge`: the old variable takes the value of its new name. The codemod removes the old definition from `:root` in core, so another entry must give the new name its value: a `rename` into the same name, or an entry in `definitions.json`.
@@ -61,7 +68,7 @@ An entry is the new name, or an object with the new name in `to` and a `note` fo
 
   The roles are `text`, `icon`, `background`, `border`, `outline` and `shadow`, and the states are `hovered`, `pressed`, `focused` and `disabled`. A use gets its role from the CSS property, or `icon` when its selectors include `.d-icon`, `.fa`, `.svg-icon` or `svg`, and its state from pseudo-classes in its selectors. A component token, such as `--d-comp-DButton-color-icon-default`, gets its role and state from its own name. `"keep"` leaves a role on the base variable. A rule that sets a split variable inside a selector keeps that value, and also sets the variable's targets from it, because the targets are computed on `:root`.
 
-The draft mapping also has `open`, which the codemod does not support.
+The draft mapping also has an `open` kind, which the codemod does not support. It is not the `open` key of an entry.
 
 ### `overrides.json`
 
