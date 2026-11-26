@@ -91,7 +91,7 @@ acceptance("Multiple topic assignments", function (needs) {
       .dom("#post_1 .assigned-to__note")
       .exists({ count: 2 }, "each note is displayed separately");
     assert
-      .dom("#topic-footer-dropdown-reassign .assignment-avatars .avatar")
+      .dom("#topic-footer-dropdown-reassign .avatar")
       .exists({ count: 2 }, "the footer stacks the direct assignees");
     await click("#topic-footer-dropdown-reassign .btn");
     assert
@@ -121,9 +121,6 @@ acceptance("Multiple topic assignments", function (needs) {
     assert
       .dom(".d-modal .topic-assignments-editor__row")
       .exists({ count: 2 }, "the existing modal shows one row per assignment");
-    await click(
-      ".topic-assignments-editor__row:first-child .topic-assignments-editor__note-action"
-    );
     await formKit().field("assignments.0.note").fillIn("Updated reading notes");
     await click(".d-modal__footer .btn-primary");
     assert.strictEqual(

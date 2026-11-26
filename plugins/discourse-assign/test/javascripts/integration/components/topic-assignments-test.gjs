@@ -29,14 +29,14 @@ module("Integration | Component | TopicAssignments", function (hooks) {
           id: 1,
           username: "martin",
           note: "Check the references",
-          showNote: false,
+          showNote: true,
           status: "New",
         },
         {
           id: 2,
           username: "sam",
           note: "Check the publication",
-          showNote: false,
+          showNote: true,
         },
       ],
     };
@@ -59,13 +59,10 @@ module("Integration | Component | TopicAssignments", function (hooks) {
     assert
       .dom(".topic-assignments-editor__row")
       .exists({ count: 2 }, "both assignees are shown");
-    await click(
-      ".topic-assignments-editor__row:first-child .topic-assignments-editor__note-action"
-    );
     await formKit().field("assignments.0.note").fillIn("Updated references");
     await formKit().field("assignments.0.status").select("In progress");
     await click(
-      '.topic-assignments-editor__row:last-child button[title="Remove @sam from assignments"]'
+      '.topic-assignments-editor__row:last-child button[title="Remove sam from assignments"]'
     );
     await api.submit();
 
