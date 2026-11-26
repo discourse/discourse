@@ -43,7 +43,8 @@ class UserSuspender
     by_user:,
     message: nil,
     post_id: nil,
-    reviewable_id: nil
+    reviewable_id: nil,
+    community_rule: nil
   )
     @user = user
     @suspended_till = suspended_till
@@ -52,6 +53,7 @@ class UserSuspender
     @message = message
     @post_id = post_id
     @reviewable_id = reviewable_id
+    @community_rule = community_rule
   end
 
   def suspend
@@ -83,12 +85,13 @@ class UserSuspender
     )
 
     if @message.present? || SiteSetting.dsa_reporting_enabled
-      Jobs.enqueue(
-        Jobs::CriticalUserEmail,
+      email_options = {
         type: "account_suspended",
         user_id: @user.id,
         user_history_id: @user_history.id,
-      )
+      }
+      email_options[:community_rule] = @community_rule if @community_rule
+      Jobs.enqueue(Jobs::CriticalUserEmail, email_options)
     end
 
     DiscourseEvent.trigger(

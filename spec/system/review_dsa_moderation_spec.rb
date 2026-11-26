@@ -124,6 +124,30 @@ describe "Classifying reviewable moderation" do
     expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
   end
 
+  it "lets the author expand the selected rule in a hidden post notice" do
+    Jobs.run_immediately!
+    post = Fabricate(:post, topic:)
+    flagger = Fabricate(:user, trust_level: TrustLevel[3])
+    reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
+
+    review_page.visit_reviewable(reviewable)
+    review_page.select_bundled_action(reviewable, "post-agree_and_hide", bundle_index: 1)
+    modal.confirm("Save classification")
+
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+
+    sign_in(post.user)
+    visit("/")
+    click_link("My messages")
+    click_link("Post hidden by community flags")
+
+    topic_page = PageObjects::Pages::Topic.new
+    expect(topic_page).to have_post_content(post_number: 1, content: "flagged as inappropriate")
+    expect(topic_page).to have_collapsed_details(rule[:ground])
+    topic_page.expand_details(rule[:ground])
+    expect(topic_page).to have_post_content(post_number: 1, content: rule[:explanation])
+  end
+
   it "classifies before editing, handling the review only after the edit is saved" do
     SiteSetting.dsa_community_rules = [
       rule,

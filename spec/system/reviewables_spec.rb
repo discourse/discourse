@@ -328,7 +328,8 @@ describe "Reviewables" do
         expect(queued_post_reviewable.target_created_by.reload).to be_suspended
       end
 
-      it "allows revising and rejecting to send a PM to the user" do
+      it "allows requesting revisions without classifying the decision" do
+        enable_dsa_reporting
         revise_modal = PageObjects::Modals::Base.new
 
         review_page.visit_reviewable(queued_post_reviewable)

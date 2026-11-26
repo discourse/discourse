@@ -79,7 +79,7 @@ module UserNotificationsHelper
   def format_for_email(post, use_excerpt, localization: nil)
     cooked = localization&.cooked.presence || post.cooked
     html = use_excerpt ? Post.excerpt(cooked, nil, post: post) : cooked
-    PrettyText.format_for_email(html, post).html_safe
+    PrettyText.format_for_email(Dsa::ModerationGuideline.email_html(html, post:), post).html_safe
   end
 
   def digest_topic_title(topic)

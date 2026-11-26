@@ -526,14 +526,6 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  def moderation_action(performed_by:, args:)
-    ReviewableModerationActions.new(
-      reviewable: self,
-      performed_by:,
-      classification: args[:dsa_classification],
-    )
-  end
-
   def notify_poster(performed_by)
     return unless performed_by.human? && performed_by.staff?
 

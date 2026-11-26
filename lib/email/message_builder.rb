@@ -220,6 +220,13 @@ module Email
         body = @opts[:body].dup
       end
 
+      body =
+        Dsa::ModerationGuideline.append_to(
+          body,
+          rule: @opts[:community_rule],
+          locale: @opts[:locale] || I18n.locale,
+        )
+
       if key = @template_args[:body_suffix_key]
         paragraph = I18n.t(key, @template_args)
         body = "#{body.rstrip}\n\n#{paragraph}"
@@ -255,6 +262,10 @@ module Email
 
     def header_args
       result = {}
+
+      if @opts[:community_rule] || @opts[:has_moderation_guideline]
+        result[Dsa::ModerationGuideline::EMAIL_HEADER] = "yes"
+      end
 
       if @template_args[:email_preview].present?
         result["X-Discourse-Email-Preview"] = @template_args[:email_preview]

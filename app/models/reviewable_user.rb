@@ -214,9 +214,11 @@ class ReviewableUser < Reviewable
 
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
-          Jobs::CriticalUserEmail.new.execute(
-            { type: :signup_after_reject, user_id: target.id, reject_reason: reject_reason },
-          )
+          community_rule =
+            Dsa::ModerationGuideline.selected_rule(args[:dsa_classification]) if is_a_suspect_user?
+          email_options = { type: :signup_after_reject, user_id: target.id, reject_reason: }
+          email_options[:community_rule] = community_rule if community_rule
+          Jobs::CriticalUserEmail.new.execute(email_options)
         end
 
         delete_args = {}

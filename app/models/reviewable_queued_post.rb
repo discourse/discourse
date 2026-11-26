@@ -60,13 +60,7 @@ class ReviewableQueuedPost < Reviewable
         dsa_classification_required: true,
       )
       if target_created_by.present?
-        build_action(
-          actions,
-          :revise_and_reject_post,
-          bundle: reject_bundle,
-          icon: "envelope",
-          dsa_classification_required: true,
-        )
+        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
       end
 
       build_penalty_actions(

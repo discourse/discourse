@@ -78,6 +78,7 @@ class UserNotifications < ActionMailer::Base
       locale:,
       reason_line:,
       reject_reason: reason,
+      community_rule: opts[:community_rule],
       recipient_user: user,
     )
   end
@@ -176,7 +177,7 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def account_deleted(email, reviewable)
+  def account_deleted(email, reviewable, community_rule: nil)
     post_action_type_view = PostActionTypeView.new
     post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
 
@@ -195,6 +196,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
       flag_reason: flag_reason,
+      community_rule:,
     )
   end
 
@@ -212,6 +214,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        community_rule: opts[:community_rule],
         recipient_user: user,
       )
     else
@@ -225,6 +228,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        community_rule: opts[:community_rule],
         suspended_till:
           I18n.t(
             "user_notifications.account_suspended.date_with_timezone",
@@ -918,6 +922,10 @@ class UserNotifications < ActionMailer::Base
     }
 
     email_opts[:body_topic_title] = body_topic_title if body_topic_title
+    if !SiteSetting.private_email? &&
+         [post, *context_posts].any? { |item| Dsa::ModerationGuideline.email_disclosure?(item) }
+      email_opts[:has_moderation_guideline] = true
+    end
     email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 

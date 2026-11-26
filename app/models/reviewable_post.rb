@@ -115,8 +115,8 @@ class ReviewablePost < Reviewable
     create_result(:success, :approved, [created_by_id], false)
   end
 
-  def perform_reject_and_delete(performed_by, _args)
-    PostDestroyer.new(performed_by, post, reviewable_id: id).destroy
+  def perform_reject_and_delete(performed_by, args)
+    moderation_action(performed_by:, args:).delete
 
     create_result(:success, :rejected, [created_by_id], false)
   end

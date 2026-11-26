@@ -4,23 +4,15 @@ class ModerationNotice
   def self.enqueue(user:, message_type:, message_options:, post_action_type_id:, delay: 0)
     options = message_options.dup
     for_responders = message_type.to_s == "flags_agreed_and_post_deleted_for_responders"
-    reason = flag_reason_for(post_action_type_id:, for_responders:)
-
-    key = options.delete(:flag_reason_suffix_key)
-    responder_key = options.delete(:responder_flag_reason_suffix_key)
-    key = responder_key || key if for_responders
-
-    if key
-      paragraph = I18n.t(key, **options, locale: user.effective_locale)
-      reason = "#{reason}\n\n#{paragraph}"
-    end
+    options[:flag_reason] = flag_reason_for(post_action_type_id:, for_responders:)
+    options[:community_rule_for_responders] = true if options[:community_rule] && for_responders
 
     Jobs.enqueue_in(
       delay,
       :send_system_message,
       user_id: user.id,
       message_type:,
-      message_options: options.merge(flag_reason: reason),
+      message_options: options,
     )
   end
 
