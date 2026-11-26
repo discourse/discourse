@@ -172,6 +172,11 @@
       max-width: 100%;
     }
 
+    &.is-placed-above .select-kit-body {
+      top: auto !important;
+      bottom: 0;
+    }
+
     &-filter.is-expanded {
       border: 1px solid var(--tertiary);
     }

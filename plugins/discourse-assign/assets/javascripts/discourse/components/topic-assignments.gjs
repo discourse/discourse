@@ -206,12 +206,17 @@ export default class TopicAssignments extends Component {
                 @id={{field.id}}
                 @onChange={{this.addAssignee}}
                 @options={{hash
+                  mobilePlacementStrategy="absolute"
                   maximum=1
                   searchUrl=this.searchUrl
                   customSearchOptions=(hash
                     defaultSearchResults=this.suggestions
                   )
+                  expandedOnInsert=(not data.assignments.length)
+                  caretUpIcon="magnifying-glass"
+                  caretDownIcon="magnifying-glass"
                 }}
+                @showUserStatus={{true}}
                 @value={{null}}
               />
             </field.Control>
