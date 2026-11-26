@@ -79,39 +79,55 @@
 
 .topic-assignments-editor {
   &__row {
-    padding-block: 0.75em;
+    &:not(:first-child) {
+      padding-block-start: var(--space-3);
+    }
+    padding-block-end: var(--space-3);
     border-block-end: 1px solid var(--primary-low);
-    min-width: 0;
   }
 
   &__person {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--space-2);
     flex-wrap: wrap;
     overflow-wrap: anywhere;
+
+    // to make group icons the same size as avatars for alignment
+    > .d-icon {
+      height: 24px;
+      width: 24px;
+    }
   }
 
-  &__note-action {
-    margin-inline-start: auto;
+  &__name {
+    margin-inline-end: auto;
   }
 
   &__note {
-    display: block;
-    margin-block-start: 0.5em;
-    color: var(--primary-high);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+    position: relative;
+    padding-inline-start: calc(24px + var(--space-2));
+
+    textarea.form-kit__control-textarea {
+      padding-inline-end: var(--space-8) !important;
+    }
   }
-}
 
-.assignment-avatars {
-  display: inline-flex;
-  align-items: center;
+  &__note-delete {
+    position: absolute;
+    inset-block-start: var(--space-1);
+    inset-inline-end: var(--space-1);
+  }
 
-  .avatar + .avatar {
-    margin-inline-start: -0.4em;
-    outline: 2px solid var(--secondary);
+  .form-kit__collection {
+    gap: 0;
+  }
+
+  textarea.form-kit__control-textarea {
+    max-width: 100%;
+    min-height: var(--space-9);
+    font-size: var(--font-down-1-rem);
+    font-style: italic;
   }
 }
 
@@ -246,6 +262,16 @@
 }
 
 #topic-footer-dropdown-reassign {
+  &-header {
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      .assignment-avatars .avatar {
+        border-color: var(--d-button-default-bg-color--hover);
+      }
+    }
+  }
+
   .name {
     font-weight: normal;
     display: flex;
@@ -253,14 +279,16 @@
     gap: 0.25em;
   }
 
-  .avatar {
-    width: 1.19em;
-    height: 1.19em;
-  }
+  .assignment-avatars {
+    display: flex;
 
-  .avatar.overlap {
-    z-index: 1;
-    margin-right: -0.4em;
+    .avatar {
+      border: 2px solid var(--d-button-default-bg-color);
+
+      &:not(:first-child) {
+        margin-inline-start: -8px;
+      }
+    }
   }
 
   .d-icon,
