@@ -12,7 +12,7 @@ enabled_site_setting :assign_enabled
 register_asset "stylesheets/assigns.scss"
 register_asset "stylesheets/mobile/assigns.scss", :mobile
 
-%w[user-plus user-xmark group-plus group-times].each { |i| register_svg_icon(i) }
+%w[user-plus user-xmark group-plus group-times far-note-sticky].each { |i| register_svg_icon(i) }
 
 module ::DiscourseAssign
   PLUGIN_NAME = "discourse-assign"

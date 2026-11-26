@@ -98,9 +98,17 @@ export default class TopicAssignments extends Component {
   }
 
   @action
-  toggleNote(index) {
-    const name = `assignments.${index}.showNote`;
-    this.#formApi.set(name, !this.#formApi.get(name));
+  addNote(index) {
+    this.#formApi.set(`assignments.${index}.showNote`, true);
+  }
+
+  @action
+  deleteNote(index, event) {
+    const textarea = event.target
+      .closest(".topic-assignments-editor__note")
+      .querySelector("textarea");
+    this.#formApi.set(`assignments.${index}.note`, "");
+    textarea.focus();
   }
 
   @action
@@ -134,24 +142,30 @@ export default class TopicAssignments extends Component {
             <div class="topic-assignments-editor__person">
               {{#if assignment.username}}
                 {{dAvatar assignment imageSize="small"}}
-                <span>@{{assignment.username}}</span>
+                <span
+                  class="topic-assignments-editor__name"
+                >{{assignment.username}}</span>
               {{else}}
                 {{dIcon "group-plus"}}
-                <span>@{{assignment.group_name}}</span>
+                <span
+                  class="topic-assignments-editor__name"
+                >{{assignment.group_name}}</span>
               {{/if}}
+              {{#unless assignment.showNote}}
+                <DButton
+                  class="btn-transparent"
+                  @action={{fn this.addNote index}}
+                  @icon="far-note-sticky"
+                  @translatedTitle={{i18n
+                    "discourse_assign.add_note"
+                    username=(or assignment.username assignment.group_name)
+                  }}
+                />
+              {{/unless}}
               <DButton
-                class="btn-transparent topic-assignments-editor__note-action"
-                @action={{fn this.toggleNote index}}
-                @label={{if
-                  assignment.note
-                  "discourse_assign.edit_note"
-                  "discourse_assign.add_note"
-                }}
-              />
-              <DButton
-                class="btn-transparent"
+                class="btn-transparent topic-assignments-editor__remove"
                 @action={{fn collection.remove index}}
-                @icon="xmark"
+                @icon={{if assignment.username "user-xmark" "group-times"}}
                 @translatedTitle={{i18n
                   "discourse_assign.remove_assignee"
                   username=(or assignment.username assignment.group_name)
@@ -175,19 +189,40 @@ export default class TopicAssignments extends Component {
               </collection.Field>
             {{/if}}
             {{#if assignment.showNote}}
-              <collection.Field
-                @format="full"
-                @name="note"
-                @title={{i18n "discourse_assign.assign_modal.note_label"}}
-                @type="textarea"
-                as |field|
-              >
-                <field.Control rows="3" />
-              </collection.Field>
-            {{else if assignment.note}}
-              <span
-                class="topic-assignments-editor__note"
-              >{{assignment.note}}</span>
+              <div class="topic-assignments-editor__note">
+                <collection.Field
+                  @format="full"
+                  @name="note"
+                  @showOptional={{false}}
+                  @showTitle={{false}}
+                  @title={{i18n "discourse_assign.assign_modal.note_label"}}
+                  @type="textarea"
+                  as |field|
+                >
+                  <field.Control
+                    aria-label={{i18n
+                      "discourse_assign.note_for"
+                      username=(or assignment.username assignment.group_name)
+                    }}
+                    placeholder={{i18n "discourse_assign.note_placeholder"}}
+                    rows="1"
+                    @autoResize={{true}}
+                  />
+                </collection.Field>
+                {{#if assignment.note}}
+                  <DButton
+                    class="btn-small btn-transparent topic-assignments-editor__note-delete"
+                    @action={{this.deleteNote}}
+                    @actionParam={{index}}
+                    @forwardEvent={{true}}
+                    @icon="xmark"
+                    @translatedTitle={{i18n
+                      "discourse_assign.delete_note"
+                      username=(or assignment.username assignment.group_name)
+                    }}
+                  />
+                {{/if}}
+              </div>
             {{/if}}
           </div>
         </form.Collection>
@@ -197,6 +232,7 @@ export default class TopicAssignments extends Component {
           <form.Field
             @format="full"
             @name="assignee"
+            @showOptional={{false}}
             @title={{i18n "discourse_assign.add_assignee"}}
             @type="custom"
             as |field|

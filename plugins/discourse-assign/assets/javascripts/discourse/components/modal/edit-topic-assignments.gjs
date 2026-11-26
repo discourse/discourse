@@ -100,7 +100,7 @@ export default class EditTopicAssignments extends Component {
             avatar_template: assignment.assigned_to.avatar_template,
             note: assignment.note || "",
             status: assignment.status,
-            showNote: false,
+            showNote: Boolean(assignment.note),
           })),
         };
       }
