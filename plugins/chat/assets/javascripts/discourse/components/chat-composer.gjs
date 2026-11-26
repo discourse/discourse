@@ -199,6 +199,9 @@ export default class ChatComposer extends Component {
       },
       ArrowUp: () => skip() || !this.#editOrReplyToLastMessage(false),
       "Shift+ArrowUp": () => skip() || !this.#editOrReplyToLastMessage(true),
+      // onRichEditorKeyDown handles it; this stops the editor's default of
+      // selecting the parent node
+      Escape: skip,
     };
   }
 

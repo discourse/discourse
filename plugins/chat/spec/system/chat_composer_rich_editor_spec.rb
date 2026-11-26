@@ -215,6 +215,17 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to be_editing_no_message
   end
 
+  it "doesn't select the parent node on Escape inside a list" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.fill_in(with: "- item")
+
+    expect(channel_page.composer.input).to have_css("li")
+
+    channel_page.composer.input.send_keys(:escape)
+
+    expect(channel_page.composer.input).to have_no_css(".ProseMirror-selectednode")
+  end
+
   it "applies formatting shortcuts as marks" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.bold_text_shortcut
