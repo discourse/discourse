@@ -57,7 +57,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     - ☐ Messages inbox (`components/user-nav/messages-dropdown.gjs`). Its rows navigate.
     - ☐ Mobile navigation dropdown (`components/navigation-bar.gjs`). Its rows navigate, and
       the `extra-nav-item` outlet renders after them.
-    - ☐ Filter controls sort (`ui-kit/d-filter-controls.gjs`).
+    - ☑ Filter controls sort (`ui-kit/d-filter-controls.gts`). A static `DSelect` named "Sort by",
+      with the sort icon, and only the icon below `sm`. Only the admin Upcoming changes page passes
+      sort options today. An icon-only static trigger now says its value, and `@resettableTracked`
+      no longer writes on read, which crashed a select whose value a modifier had read.
     - ☐ Composer toolbar popup menus (`components/toolbar-popup-menu-options.gjs`): the post
       language selector (`instance-initializers/post-language-selector.js`, ending with a
       "None" value), and the heading and list menus (`lib/composer/toolbar.ts`), which mark the

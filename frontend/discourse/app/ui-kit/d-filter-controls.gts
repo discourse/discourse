@@ -24,7 +24,13 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
+
+/** The site settings this component reads. */
+type SiteSettings = {
+  enable_new_select_controls: boolean;
+};
 
 /** An option of a filter dropdown. */
 export interface DFilterControlsDropdownOption<T = unknown> {
@@ -273,6 +279,7 @@ export default class DFilterControls<T = unknown> extends Component<
 > {
   @service declare capabilities: CapabilitiesService;
   @service declare router: RouterService;
+  @service declare siteSettings: SiteSettings;
 
   @tracked dropdownFilter = "all";
   @tracked
@@ -683,17 +690,24 @@ export default class DFilterControls<T = unknown> extends Component<
     this.args.onDropdownChange?.(key, value);
   }
 
+  /** Takes the value as DSelect reports it; sort options' values are strings. */
   @action
-  onSortChange(close: () => void, value: string) {
-    this.sort = value;
+  changeSort(value: unknown) {
+    const sort = value as string;
+    this.sort = sort;
 
     if (this.args.sortQueryParam) {
       this.updateQueryParams({
-        [this.args.sortQueryParam]: value === this.defaultSort ? null : value,
+        [this.args.sortQueryParam]: sort === this.defaultSort ? null : sort,
       });
     }
 
-    this.args.onSortChange?.(value);
+    this.args.onSortChange?.(sort);
+  }
+
+  @action
+  onSortChange(close: () => void, value: string) {
+    this.changeSort(value);
     close();
   }
 
@@ -826,13 +840,38 @@ export default class DFilterControls<T = unknown> extends Component<
             {{yield to="inlineFilters"}}
 
             {{#if this.showSort}}
-              <SortMenu
-                @label={{this.sortLabel}}
-                @onChange={{this.onSortChange}}
-                @options={{this.sortOptions}}
-                @showLabel={{this.capabilities.viewport.sm}}
-                @value={{this.sort}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="d-filter-controls__sort"
+                  @icon="arrow-down-wide-short"
+                  @iconOnly={{not this.capabilities.viewport.sm}}
+                  @labelField="label"
+                  @onChange={{this.changeSort}}
+                  @options={{this.sortOptions}}
+                  @placement="bottom-end"
+                  @required={{true}}
+                  @selectedIcon="check"
+                  @texts={{hash ariaLabel=(i18n "filter_controls.sort_label")}}
+                  @value={{this.sort}}
+                  @valueField="value"
+                  @variant="static"
+                >
+                  <:listHeader>
+                    <div class="d-filter-controls__sort-heading">
+                      {{~i18n "filter_controls.sort_label"~}}
+                    </div>
+                  </:listHeader>
+                </DSelect>
+              {{else}}
+                <SortMenu
+                  @label={{this.sortLabel}}
+                  @onChange={{this.onSortChange}}
+                  @options={{this.sortOptions}}
+                  @showLabel={{this.capabilities.viewport.sm}}
+                  @value={{this.sort}}
+                />
+              {{/if}}
             {{/if}}
 
             {{#if this.showDropdownFilterToggle}}

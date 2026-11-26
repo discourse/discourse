@@ -6,15 +6,18 @@ import {
   click,
   fillIn,
   find,
+  focus,
   render,
   rerender,
   select,
   settled,
+  triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
@@ -1488,6 +1491,165 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       router.changeURL("/admin/example?sort=constructor");
       await settled();
       assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+    });
+
+    module("with new select controls", function (flagHooks) {
+      flagHooks.beforeEach(function () {
+        this.siteSettings.enable_new_select_controls = true;
+      });
+
+      const SORT = ".d-filter-controls__sort";
+
+      test("shows the current sort and is named Sort by", async function (assert) {
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+
+        assert.dom(".d-filter-controls__sort-trigger").doesNotExist();
+        assert.dSelect(SORT).hasValue("newest");
+        assert.dSelect(SORT).hasLabel("Newest");
+        assert
+          .dom(SORT)
+          .hasAria("label", i18n("filter_controls.sort_label"))
+          .hasAttribute("role", "combobox");
+        assert.dom(`${SORT} .d-icon-arrow-down-wide-short`).exists();
+        assert.deepEqual(itemOrder(), [3, 2, 1]);
+      });
+
+      test("changes the sort from the list", async function (assert) {
+        const changes = [];
+        this.onSortChange = (value) => changes.push(value);
+
+        await render(
+          <template>
+            <Example
+              @data={{this.data}}
+              @onSortChange={{this.onSortChange}}
+              @sortOptions={{this.sortOptions}}
+            />
+          </template>
+        );
+        await dSelect(SORT).select("name");
+
+        assert.deepEqual(changes, ["name"]);
+        assert.dSelect(SORT).hasValue("name");
+        assert.dSelect(SORT).hasLabel("Name");
+        assert.deepEqual(itemOrder(), [1, 2, 3]);
+
+        await dSelect(SORT).open();
+
+        assert.dSelect(SORT).hasOptions(["newest", "name", "server"]);
+        assert.dSelect(SORT).hasSelectedOption("name");
+        assert
+          .dom(".d-filter-controls__sort-heading")
+          .hasText(i18n("filter_controls.sort_label"));
+      });
+
+      test("keeps the given order for an option without compareFn", async function (assert) {
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+        await dSelect(SORT).select("server");
+
+        assert.deepEqual(itemOrder(), [1, 2, 3]);
+      });
+
+      test("keeps the sort when Backspace is pressed on it", async function (assert) {
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+        await focus(SORT);
+        await triggerKeyEvent(SORT, "keydown", "Backspace");
+
+        assert.dSelect(SORT).hasValue("newest");
+      });
+
+      test("doesn't show for a single option", async function (assert) {
+        this.sortOptions = SORT_OPTIONS.slice(0, 1);
+
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+
+        assert.dom(SORT).doesNotExist();
+      });
+
+      test("keeps the sort when filters are reset", async function (assert) {
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+        await dSelect(SORT).select("name");
+        await select(".d-filter-controls__dropdown", "feature");
+        await click(".d-filter-controls__reset");
+
+        assert.dSelect(SORT).hasValue("name");
+        assert.deepEqual(itemOrder(), [1, 2, 3]);
+      });
+
+      test("follows the URL", async function (assert) {
+        this.owner.unregister("service:router");
+        this.owner.register("service:router", RouterStub);
+        const router = this.owner.lookup("service:router");
+        router.currentURL = "/admin/example?sort=name";
+
+        await render(
+          <template>
+            <Example
+              @data={{this.data}}
+              @sortOptions={{this.sortOptions}}
+              @sortQueryParam="sort"
+            />
+          </template>
+        );
+
+        assert.dSelect(SORT).hasValue("name");
+
+        router.changeURL("/admin/example?sort=bogus");
+        await settled();
+
+        assert.dSelect(SORT).hasValue("newest");
+      });
+
+      test("shows only its icon on a narrow screen, still naming the sort", async function (assert) {
+        const wide = tracked(true);
+        const capabilities = this.owner.lookup("service:capabilities");
+        sinon.stub(capabilities, "viewport").value({
+          get sm() {
+            return wide.value;
+          },
+        });
+
+        await render(
+          <template>
+            <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+          </template>
+        );
+
+        assert.dom(SORT).doesNotHaveClass("--icon-only");
+
+        wide.value = false;
+        await settled();
+
+        assert.dom(SORT).hasClass("--icon-only");
+        assert.dom(`${SORT} .d-select__value`).doesNotExist();
+        assert
+          .dom(SORT)
+          .hasAria(
+            "label",
+            `${i18n("filter_controls.sort_label")}, Newest`,
+            "the name carries the sort the trigger no longer shows"
+          );
+      });
     });
   });
 });

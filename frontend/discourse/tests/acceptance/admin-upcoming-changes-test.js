@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function buildChange(
@@ -108,45 +109,50 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
   });
 });
 
+/** Changes whose status dates and names sort differently. */
+function sortingChanges() {
+  return [
+    buildChange(
+      "beta_old",
+      "beta",
+      "feature",
+      "all_members",
+      "no_one",
+      "2026-01-01T00:00:00Z"
+    ),
+    buildChange(
+      "alpha_recent",
+      "alpha",
+      "feature",
+      "all_members",
+      "no_one",
+      "2026-06-01T00:00:00Z"
+    ),
+    buildChange(
+      "experimental_untracked",
+      "experimental",
+      "feature",
+      "all_members",
+      "no_one"
+    ),
+    buildChange(
+      "stable_middle",
+      "stable",
+      "feature",
+      "all_members",
+      "everyone",
+      "2026-03-01T00:00:00Z"
+    ),
+  ];
+}
+
 acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
     server.get("/admin/config/upcoming-changes", () =>
       helper.response({
-        upcoming_changes: [
-          buildChange(
-            "beta_old",
-            "beta",
-            "feature",
-            "all_members",
-            "no_one",
-            "2026-01-01T00:00:00Z"
-          ),
-          buildChange(
-            "alpha_recent",
-            "alpha",
-            "feature",
-            "all_members",
-            "no_one",
-            "2026-06-01T00:00:00Z"
-          ),
-          buildChange(
-            "experimental_untracked",
-            "experimental",
-            "feature",
-            "all_members",
-            "no_one"
-          ),
-          buildChange(
-            "stable_middle",
-            "stable",
-            "feature",
-            "all_members",
-            "everyone",
-            "2026-03-01T00:00:00Z"
-          ),
-        ],
+        upcoming_changes: sortingChanges(),
       })
     );
   });
@@ -257,3 +263,64 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
     assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
   });
 });
+
+acceptance(
+  "Admin - Upcoming Changes - Sorting with new select controls",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_new_select_controls: true });
+
+    needs.pretender((server, helper) => {
+      server.get("/admin/config/upcoming-changes", () =>
+        helper.response({ upcoming_changes: sortingChanges() })
+      );
+    });
+
+    const SORT = ".d-filter-controls__sort";
+
+    function rowOrder() {
+      return [...document.querySelectorAll(".upcoming-change-row")].map(
+        (row) => row.dataset.upcomingChange
+      );
+    }
+
+    test("sorts by status, keeping the choice in the URL", async function (assert) {
+      await visit("/admin/config/upcoming-changes");
+
+      assert.dSelect(SORT).hasValue("recently_updated");
+
+      await dSelect(SORT).select("status");
+
+      assert.dSelect(SORT).hasLabel("Status");
+      assert.strictEqual(
+        currentURL(),
+        "/admin/config/upcoming-changes?sort=status"
+      );
+      assert.deepEqual(rowOrder(), [
+        "stable_middle",
+        "beta_old",
+        "alpha_recent",
+        "experimental_untracked",
+      ]);
+
+      await dSelect(SORT).select("recently_updated");
+
+      assert.strictEqual(currentURL(), "/admin/config/upcoming-changes");
+    });
+
+    test("takes the sort from the URL and keeps it when filters are reset", async function (assert) {
+      await visit("/admin/config/upcoming-changes?sort=status&status=beta");
+
+      assert.dSelect(SORT).hasValue("status");
+
+      await click(".d-filter-controls__reset");
+
+      assert.strictEqual(
+        currentURL(),
+        "/admin/config/upcoming-changes?sort=status"
+      );
+      assert.dSelect(SORT).hasValue("status");
+      assert.strictEqual(rowOrder()[0], "stable_middle");
+    });
+  }
+);

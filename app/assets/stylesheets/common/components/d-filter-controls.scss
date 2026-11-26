@@ -55,6 +55,18 @@
     flex: none;
   }
 
+  &__sort.d-select {
+    flex: none;
+    width: auto;
+  }
+
+  &__sort-heading {
+    padding: var(--space-2) var(--d-select-option-padding-inline) var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    font-weight: bold;
+  }
+
   &__sort-option {
     width: 100%;
     justify-content: space-between;
