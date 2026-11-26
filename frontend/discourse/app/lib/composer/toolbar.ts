@@ -244,7 +244,7 @@ export function shortcutKeymap(
           button.shortcutAction(event);
         }
       } else {
-        button.action(event);
+        button.action?.(event);
       }
 
       return false;
