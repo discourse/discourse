@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import IpLookup from "discourse/components/reviewable/ip-lookup";
+import escape from "discourse/lib/escape";
 import { shortDate } from "discourse/lib/formatter";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -79,7 +80,8 @@ export default class ReviewableInsights extends Component {
     }
 
     if (user?.email) {
-      activities.push(user.email);
+      // staged users skip email validation, so the address can contain markup
+      activities.push(escape(user.email));
     }
 
     insights.push({
