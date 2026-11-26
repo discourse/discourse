@@ -8,11 +8,13 @@ The naming scheme, its word lists and the full draft mapping are in the [CSS var
 
 ## Files
 
-The JSON files are the source of truth. For review, [`review/`](review/README.md) holds generated Markdown tables. There is one table each for system, component, plugin and base palette tokens, plus open items, names that still break the naming scheme, the mapping by kind, and the definitions. Never edit `review/` by hand. After editing a JSON file, or after running the codemod, regenerate the tables from the repository root:
+The JSON files are the source of truth. For review, [`review/`](review/README.md) holds generated Markdown tables. There is one table each for system, component, plugin and base palette tokens, plus open items, names that still break the naming scheme, the mapping by kind, and the definitions. Never edit `review/` by hand. Regenerate the tables from the repository root after you run the codemod:
 
 ```sh
 node css_variable_migration/render-review-tables.mjs
 ```
+
+The tables read the stylesheets in the working tree, and `review/todo.md` reads the undecided uses that the codemod writes to `tmp/`. Run the codemod first, or the tables describe an older state.
 
 | File                        | Purpose                                                                                        |
 | --------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -119,9 +121,11 @@ The `discourse/css-variable-names` lint rule checks every custom property agains
 - `"--x" does not follow the CSS variable naming scheme` means a stylesheet sets a variable that the mapping does not cover yet. Give it an entry in `mapping.json`. The message says which slot breaks the scheme.
 - `"--x" is a base variable with several jobs` means a use of a split variable is still undecided. Add a role to the split, or an override.
 
-Base variables, split variables and `-rgb` twins may be set, and only split variables are checked where they are read. The codemod writes their names to `app/assets/stylesheets/variable-base-layer.json`. To see the whole list, run `pnpm lint:css`.
+Base variables, split variables and `-rgb` twins may be set, and only split variables are checked where they are read. The codemod writes their names to `app/assets/stylesheets/variable-base-layer.json`. The whole list is in [review/unmapped.md](review/unmapped.md) and [review/todo.md](review/todo.md). The first uses the same grammar as the lint rule, and the second comes from the codemod.
 
-[TODO.md](TODO.md) sums up this list and the other work before the migration can merge. Update it when you rebase or finish an item.
+`pnpm lint:css` shows the same errors, but it misses some plugin stylesheets. The command passes the plugin patterns to the shell without quotes, and the shell expands `**` as one folder level. Stylesheets at the top of a plugin's stylesheet folder, or more than one folder down, are not linted. On 2026-11-26 this left out 50 of the 602 names.
+
+[TODO.md](TODO.md) holds the decisions and the other work before the migration can merge. Update it when you finish an item.
 
 ## Branch layout
 
@@ -129,6 +133,8 @@ The branch has two kinds of commits:
 
 - **Written commits**: framework changes, tools, mapping entries and hand edits.
 - **Generated commits**: `DEV: Apply the CSS variable mapping`. These hold only the output of `apply.mjs`. Never change them by hand.
+
+The review tables in `review/` are generated too, but they get their own commit after the generated one. If that commit conflicts during a rebase, take either side and regenerate the tables.
 
 Never rebase or merge a generated commit. Drop it, rebase the written commits, and generate the output again.
 
@@ -178,7 +184,15 @@ Make every change in `mapping.json`, `definitions.json` or the tools, never in t
    ```
 
 5. Read the compare report. Every difference must be one the mapping intends. If not, fix the mapping or the tools, and go back to step 1.
-6. Push with `git push --force-with-lease`.
+6. Regenerate the review tables and commit them on their own:
+
+   ```sh
+   node css_variable_migration/render-review-tables.mjs
+   git add css_variable_migration/review
+   git commit -m "DEV: Update the CSS variable migration review tables"
+   ```
+
+7. Push with `git push --force-with-lease`.
 
 For a quick look between steps, you can run the codemod on its own output and commit that as another generated commit. The result is the same as a fresh run, and step 2 drops these commits again.
 

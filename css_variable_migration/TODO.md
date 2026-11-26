@@ -1,8 +1,6 @@
 # CSS variable migration: what is left
 
-The generated [open items](review/todo.md) and [names without a mapping entry](review/unmapped.md) list the current state of the naming todo list below.
-
-The counts come from the run on 2026-11-25, on `main` at `bce3afde1ff`. They change with each rebase. To get the current list, run the codemod and then `pnpm lint:css`. The [README](README.md) explains how to read the output.
+The counts in "Before the first merge" come from the run on 2026-11-25, on `main` at `bce3afde1ff`. They change with each rebase. The naming todo list has no counts of its own. Its current state is in the generated tables in [`review/`](review/README.md), which the [README](README.md) explains.
 
 ## Before the first merge
 
@@ -12,12 +10,9 @@ The counts come from the run on 2026-11-25, on `main` at `bce3afde1ff`. They cha
   - Icons: `#646464` to `#a7a7a7` (123)
   - Accent borders: `#0088cc` to `#afe4ff` (108)
 - [ ] **Decisions for Manuel.** The mapping has a choice for each of these, and each one needs his confirmation:
-  - Bold is 700.
-  - The footer navigation shadow becomes the hairline shadow.
-  - The composer shadows.
-  - The semantic text colors.
+  - The entries with an `open` question in `mapping.json`. [review/todo.md](review/todo.md) lists them under "Open decisions". Remove the `open` key when the question is answered.
+  - The semantic text colors. No single entry holds this question.
   - Names for the nine light/dark choosers, such as `--primary-med-or-secondary-med`. They stay as base variables for now.
-  - `--d-hover` keeps its value under its new name, and the hovered surface merges into it.
 - [ ] **Hand edits that the codemod cannot make:**
   - `app/assets/stylesheets/common/foundation/mixins.scss`: two reads of `--primary-rgb` and `--secondary-rgb` with a Sass `$amt` alpha
   - `plugins/discourse-data-explorer/assets/javascripts/discourse/components/data-explorer-chart.gjs`: reads `--tertiary-rgb` at runtime
@@ -32,47 +27,19 @@ The counts come from the run on 2026-11-25, on `main` at `bce3afde1ff`. They cha
 
 ## The naming todo list
 
-489 names do not follow the naming scheme (749 lint errors), and 427 reads of split variables are undecided.
+Two generated tables hold the list. Regenerate them to see the current state:
+
+- [review/unmapped.md](review/unmapped.md): the names that do not follow the naming scheme. Each needs an entry in `mapping.json`. The table groups them by owner and shows how many files use each name.
+- [review/todo.md](review/todo.md): the reads of split variables that are undecided. Each needs a role in its split entry, or an override in `overrides.json`.
+
+On 2026-11-26 the tables listed 602 names and 554 undecided reads.
 
 ### Decisions that make the list shorter
 
-- [ ] **Internal variables.** Under Manuel's `D-scope-internal` decision, variables used only inside their own file are out of scope. 409 of the 489 names are set in only one file. If the naming rule skips internal variables, most of the list goes away.
+- [ ] **Internal variables.** Under Manuel's `D-scope-internal` decision, variables used only inside their own file are out of scope. 298 of the 602 names are used in only one file: 55 in core components, 106 in bundled plugins, 132 in core's other stylesheets and 5 in Horizon. If the naming rule skips internal variables, about half of the list goes away. The other option is to drop the decision for core components and bundled plugins and migrate all of their variables, which covers 258 names.
+- [ ] **Scope for core's other stylesheets.** 332 names are declared outside `common/components` and `common/ui-kit`, such as the `--d-sidebar-*`, `--d-post-*` and `--d-topic-*` families. Decide which of them a component owns.
+- [ ] **The spacing scale.** The `--space-*` names need words in the vocabulary.
 - [ ] **Third-party names.** Give names that come from libraries an allowlist.
-
-### Names without a mapping entry
-
-Each name needs an entry in `mapping.json`.
-
-- [ ] Core (377 names). The largest families:
-  - `--d-sidebar-*`: 37
-  - `--d-post-*`: 22
-  - `--d-topic-*`: 17
-  - `--space-*`: 14. The spacing scale needs names in the vocabulary.
-  - `--d-nav-*`: 9
-  - `--d-welcome-*`: 8
-  - `--d-skeleton-*` and `--d-input-*`: 7 each
-- [ ] Horizon (45 names)
-- [ ] Plugins:
-  - discourse-events: 33
-  - discourse-ai: 27
-  - discourse-workflows and chat: 16 each
-  - blog: 13
-  - discourse-solved and boards: 9 each
-  - live: 5
-  - 8 other plugins: 2 or fewer each
-
-### Undecided split reads
-
-Each read needs a role in its split entry, or an override in `overrides.json`. The codemod writes the full list to `tmp/css_variable_migration/undecided.json`.
-
-- [ ] `--tertiary`: 99
-- [ ] `--primary-low-mid`: 79
-- [ ] `--primary-medium`: 67
-- [ ] `--primary`: 58
-- [ ] `--secondary`: 55
-- [ ] `--primary-med-or-secondary-med`: 43
-- [ ] `--primary-low`: 30
-- [ ] 21 other variables: 16 or fewer each
 
 ## Exploration notes
 
