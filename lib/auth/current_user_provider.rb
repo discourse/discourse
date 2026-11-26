@@ -14,6 +14,15 @@ class Auth::CurrentUserProvider
     raise NotImplementedError
   end
 
+  # Optional: under the credential lock, re-read whichever credential
+  # authenticated this request and return its user, so a credential issued for
+  # the request cannot outlive a password change that revoked it. Providers
+  # whose sessions are not the core tokens a password change revokes have
+  # nothing to re-read, so the default keeps them working.
+  def authenticated_credential_user
+    current_user
+  end
+
   # log on a user and set cookies and session etc.
   def log_on_user(user, session, cookie_jar, opts = {})
     raise NotImplementedError

@@ -871,6 +871,7 @@ class UsersController < ApplicationController
         security_key_required: @user.security_keys_enabled?,
         backup_enabled: @user.backup_codes_enabled?,
         multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+        has_connected_apps: @user.has_connected_apps?,
       }
     end
 
@@ -960,6 +961,8 @@ class UsersController < ApplicationController
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
+        @user.revoke_connected_apps_on_password_change =
+          ActiveModel::Type::Boolean.new.cast(params[:revoke_connected_apps])
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -970,10 +973,19 @@ class UsersController < ApplicationController
             @user.user_associated_accounts.destroy_all
           end
 
+          history_details =
+            @user
+              .revoked_connected_apps
+              &.select { |_, count| count > 0 }
+              &.map { |type, count| "revoked_#{type}: #{count}" }
+              &.join("\n")
+              .presence
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
             action: UserHistory.actions[:change_password],
+            details: history_details,
           )
 
           reset_csrf_token(request)
@@ -995,6 +1007,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+          has_connected_apps: @user.has_connected_apps?,
         }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))

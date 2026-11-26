@@ -51,6 +51,10 @@ body.invite-page {
     .tip {
       display: block;
     }
+
+    &__revoke-apps {
+      margin-bottom: 1em;
+    }
   }
 }
 
