@@ -9,8 +9,8 @@ module Jobs
 
     def execute(args)
       @user_id = args[:user_id]
-      @user = User.find_by(id: @user_id)
-      return unless @user
+      user = User.find_by(id: @user_id)
+      return unless user
 
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
@@ -41,11 +41,11 @@ module Jobs
 
       update_posts
       update_revisions
-      update_notifications
+      update_notifications(user.name.presence)
       update_post_custom_fields
 
       DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
-      DiscourseEvent.trigger(:user_updated, @user, %w[username])
+      DiscourseEvent.trigger(:user_updated, user, %w[username])
     end
 
     def update_posts
@@ -104,12 +104,12 @@ module Jobs
         .find_each { |revision| update_revision(revision) }
     end
 
-    def update_notifications
+    def update_notifications(new_name)
       params = {
         user_id: @user_id,
         old_username: @old_username,
         new_username: @new_username,
-        new_name: (@user ? @user.name : User.where(id: @user_id).pick(:name)).presence,
+        new_name: new_name,
         collapsed_types: PostAlerter::COLLAPSED_NOTIFICATION_TYPES,
         unpaired_types: Notification.types.values_at(:edited, :mentioned, :group_mentioned),
       }
@@ -164,8 +164,7 @@ module Jobs
           AND p.user_id = :user_id
           AND notifications.data::JSONB ? 'display_name'
           AND (
-            (notifications.notification_type IN (:collapsed_types)
-              AND (:new_name IS NULL OR notifications.data::JSONB ->> 'display_name' IS DISTINCT FROM :new_name))
+            notifications.notification_type IN (:collapsed_types)
             OR (notifications.notification_type IN (:unpaired_types)
               AND notifications.data::JSONB ->> 'display_username' IS DISTINCT FROM :new_username)
           )

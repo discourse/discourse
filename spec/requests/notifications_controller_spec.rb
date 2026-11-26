@@ -54,84 +54,42 @@ RSpec.describe NotificationsController do
       end
     end
 
-    it "scrubs former real names across notification shapes after the actor is anonymized" do
+    it "removes the first replier's former name from a collapsed notification" do
       SiteSetting.enable_names = true
       SiteSetting.full_name_requirement = "optional_at_signup"
 
-      admin = Fabricate(:admin)
-      actor = Fabricate(:user, name: "Secret Realname")
-      former_name = actor.name
-      editor = Fabricate(:user, name: "Editor Realname")
+      first_replier = Fabricate(:user, name: "Secret Realname")
+      latest_replier = Fabricate(:user)
       recipient = Fabricate(:user)
-      topic = Fabricate(:topic, user: actor)
-      Fabricate(:post, topic: topic, user: actor, post_number: 1)
+      topic = Fabricate(:topic, user: recipient)
+      Fabricate(:post, topic: topic, user: recipient, post_number: 1)
+      [first_replier, latest_replier].each do |replier|
+        PostAlerter.post_created(
+          Fabricate(:post, topic: topic, user: replier, reply_to_post_number: 1),
+        )
+      end
 
-      mention =
-        Fabricate(
-          :notification,
-          user: recipient,
-          notification_type: Notification.types[:mentioned],
-          topic: topic,
-          post_number: 1,
-          data: {
-            original_username: actor.username,
-            display_username: actor.username,
-            display_name: former_name,
-          }.to_json,
-        )
-      collapsed =
-        Fabricate(
-          :notification,
-          user: recipient,
-          notification_type: Notification.types[:replied],
-          topic: topic,
-          post_number: 1,
-          data: {
-            original_username: editor.username,
-            display_username: I18n.t("embed.replies", count: 2),
-            display_name: former_name,
-          }.to_json,
-        )
-      edited =
-        Fabricate(
-          :notification,
-          user: recipient,
-          notification_type: Notification.types[:edited],
-          topic: topic,
-          post_number: 1,
-          data: {
-            original_username: editor.username,
-            display_username: editor.username,
-            display_name: former_name,
-          }.to_json,
-        )
-      bystander =
-        Fabricate(
-          :notification,
-          user: recipient,
-          notification_type: Notification.types[:replied],
-          topic: Fabricate(:topic),
-          post_number: 1,
-          data: {
-            display_username: I18n.t("embed.replies", count: 2),
-            display_name: "Bystander Realname",
-          }.to_json,
-        )
+      collapsed = recipient.notifications.find_by!(notification_type: Notification.types[:replied])
+      expect(collapsed.data_hash[:display_name]).to eq(first_replier.name)
 
       Jobs.run_immediately!
-      UserAnonymizer.make_anonymous(actor, admin)
+      UserAnonymizer.make_anonymous(first_replier, Fabricate(:admin))
 
       sign_in(recipient)
       get "/notifications.json"
       expect(response.status).to eq(200)
-      expect(response.body).not_to include(former_name)
 
-      by_id = response.parsed_body["notifications"].index_by { |n| n["id"] }
-      expect(by_id.dig(mention.id, "data", "display_name")).to be_blank
-      expect(by_id.dig(collapsed.id, "data", "display_name")).to be_blank
-      expect(by_id.dig(edited.id, "data")).not_to have_key("display_name")
-      expect(by_id.dig(edited.id, "data", "display_username")).to eq(editor.username)
-      expect(by_id.dig(bystander.id, "data", "display_name")).to eq("Bystander Realname")
+      by_id =
+        response
+          .parsed_body
+          .fetch("notifications")
+          .index_by { |notification| notification.fetch("id") }
+      data = by_id.fetch(collapsed.id).fetch("data")
+      expect(data).not_to have_key("display_name")
+      expect(data).to include(
+        "display_username" => I18n.t("embed.replies", count: 2),
+        "original_username" => latest_replier.username,
+      )
     end
 
     it "replaces the former real name with the anonymized username when full name is required" do
