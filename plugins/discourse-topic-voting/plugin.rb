@@ -289,5 +289,6 @@ after_initialize do
     },
     risk: :write,
     availability: -> { SiteSetting.topic_voting_enabled },
+    default_enabled: true,
   )
 end

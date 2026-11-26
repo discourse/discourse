@@ -92,6 +92,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::SourceSupport.available? },
+        default_enabled: true,
       )
       mode = {
         type: "string",
@@ -130,6 +131,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::SourceSupport.available? },
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -158,6 +160,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::SourceSupport.available? },
+        default_enabled: true,
       )
     end
 
@@ -172,6 +175,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::AuthoringGuideSupport.available? },
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -203,6 +207,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::AuthoringGuideSupport.available? },
+        default_enabled: true,
       )
     end
 
@@ -217,6 +222,7 @@ module DiscourseMcp
         input_schema: object_schema,
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
 
       scalar_filter = {
@@ -281,6 +287,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
     end
 
@@ -348,7 +355,6 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -361,7 +367,6 @@ module DiscourseMcp
           object_schema({ webhook_id: id, include_catalog: boolean }, required: %w[webhook_id]),
         annotations: READ_ONLY,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -391,7 +396,6 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -408,7 +412,6 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -436,7 +439,6 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -453,7 +455,6 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -469,7 +470,6 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -500,7 +500,6 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
-        default_exposed: false,
       )
     end
 
@@ -575,6 +574,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         availability: -> { SiteSetting.tagging_enabled },
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -600,6 +600,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -611,6 +612,7 @@ module DiscourseMcp
         input_schema: object_schema({ tag_group_id: id }, required: %w[tag_group_id]),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -623,6 +625,7 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :administration,
         availability: -> { SiteSetting.tagging_enabled },
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -635,6 +638,7 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :administration,
         availability: -> { SiteSetting.tagging_enabled },
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -651,6 +655,7 @@ module DiscourseMcp
         annotations: DESTRUCTIVE,
         risk: :administration,
         availability: -> { SiteSetting.tagging_enabled },
+        default_enabled: true,
       )
     end
 
@@ -668,6 +673,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -716,6 +722,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -773,6 +780,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -800,6 +808,7 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :destructive,
+        default_enabled: true,
       )
     end
 
@@ -812,6 +821,7 @@ module DiscourseMcp
           "Returns the authenticated Discourse user, granted scopes, and MCP server URI.",
         implementation: Tools::CurrentUser,
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -838,6 +848,7 @@ module DiscourseMcp
             required: %w[query],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -878,6 +889,7 @@ module DiscourseMcp
             },
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -906,6 +918,7 @@ module DiscourseMcp
             required: %w[query],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -962,6 +975,7 @@ module DiscourseMcp
             required: %w[topic_id selection_mode],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -992,6 +1006,7 @@ module DiscourseMcp
             required: %w[post_id],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1006,6 +1021,7 @@ module DiscourseMcp
             { before_post_id: { type: "integer", minimum: 1 }, replies_only: { type: "boolean" } },
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1034,6 +1050,7 @@ module DiscourseMcp
             required: %w[topic_id],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1099,6 +1116,7 @@ module DiscourseMcp
             required: %w[period],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1127,6 +1145,7 @@ module DiscourseMcp
             required: %w[topic_id],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1137,6 +1156,7 @@ module DiscourseMcp
         input_schema:
           object_schema({ post_id: { type: "integer", minimum: 1 } }, required: %w[post_id]),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1146,6 +1166,7 @@ module DiscourseMcp
         implementation: Tools::ListTopics,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 50 } }),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1154,6 +1175,7 @@ module DiscourseMcp
         description: "Lists the visible category hierarchy.",
         implementation: Tools::ListCategories,
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1163,6 +1185,7 @@ module DiscourseMcp
         implementation: Tools::ListTags,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 200 } }),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1176,6 +1199,7 @@ module DiscourseMcp
             required: %w[username],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1204,6 +1228,7 @@ module DiscourseMcp
             required: %w[username],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1217,6 +1242,7 @@ module DiscourseMcp
             required: %w[username],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1259,6 +1285,7 @@ module DiscourseMcp
             required: %w[username],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1282,6 +1309,7 @@ module DiscourseMcp
             required: %w[draft_key],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1291,6 +1319,7 @@ module DiscourseMcp
         implementation: Tools::ListBookmarks,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1300,6 +1329,7 @@ module DiscourseMcp
         implementation: Tools::ListNotifications,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1339,7 +1369,6 @@ module DiscourseMcp
             },
           ),
         annotations: READ_ONLY,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -1368,7 +1397,6 @@ module DiscourseMcp
             required: %w[topic_id],
           ),
         annotations: READ_ONLY,
-        default_exposed: false,
       )
     end
 
@@ -1413,6 +1441,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1447,6 +1476,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1475,6 +1505,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1530,6 +1561,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1590,7 +1622,6 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -1628,7 +1659,7 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
-        default_exposed: true,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1718,7 +1749,6 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -1780,7 +1810,6 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :destructive,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -1833,6 +1862,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1857,6 +1887,7 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :destructive,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -1892,6 +1923,7 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
         availability: -> { SiteSetting.enable_user_status },
+        default_enabled: true,
       )
     end
 
@@ -1919,7 +1951,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :moderation,
-        default_exposed: true,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2279,6 +2311,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       setting_value_schema = {
         oneOf: [
@@ -2331,6 +2364,7 @@ module DiscourseMcp
           openWorldHint: true,
         },
         risk: :administration,
+        default_enabled: true,
       )
     end
 
@@ -2365,6 +2399,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2376,6 +2411,7 @@ module DiscourseMcp
         input_schema: object_schema({ theme_id: { type: "integer" } }, required: %w[theme_id]),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
 
       theme_field_schema = {
@@ -2457,6 +2493,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2526,6 +2563,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
     end
 
@@ -2562,6 +2600,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2577,6 +2616,7 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2612,7 +2652,7 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
         risk: :administration,
-        default_exposed: false,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2642,7 +2682,7 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
         risk: :administration,
-        default_exposed: false,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2656,6 +2696,7 @@ module DiscourseMcp
           object_schema({ filename:, file_data: encoded_file }, required: %w[filename file_data]),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2689,6 +2730,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2726,6 +2768,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
     end
 
@@ -2780,6 +2823,7 @@ module DiscourseMcp
             },
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2789,6 +2833,7 @@ module DiscourseMcp
         implementation: Tools::GetGroup,
         input_schema: object_schema({ id: { type: "integer", minimum: 1 }, name: group_name }),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2817,6 +2862,7 @@ module DiscourseMcp
             required: %w[name],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -2841,6 +2887,7 @@ module DiscourseMcp
             required: %w[name],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       group_id = { type: "integer", minimum: 1 }
       user_selectors = {
@@ -3008,6 +3055,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3036,6 +3084,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3062,6 +3111,7 @@ module DiscourseMcp
           ),
         annotations: DESTRUCTIVE,
         risk: :destructive,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3089,6 +3139,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3147,6 +3198,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3174,6 +3226,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :write,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3201,6 +3254,7 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3233,6 +3287,7 @@ module DiscourseMcp
             required: %w[name],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
     end
 
@@ -3283,6 +3338,7 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
         risk: :administration,
+        default_enabled: true,
       )
       register_tool(
         registry,
@@ -3347,7 +3403,6 @@ module DiscourseMcp
           ),
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
-        default_exposed: false,
       )
       register_tool(
         registry,
@@ -3381,7 +3436,6 @@ module DiscourseMcp
           openWorldHint: true,
         },
         risk: :administration,
-        default_exposed: false,
       )
     end
 
@@ -3398,6 +3452,7 @@ module DiscourseMcp
             required: %w[uri],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_resource_template(
         registry,
@@ -3411,6 +3466,7 @@ module DiscourseMcp
             required: %w[uri],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
     end
 
@@ -3427,6 +3483,7 @@ module DiscourseMcp
             required: %w[question],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
       register_prompt(
         registry,
@@ -3449,6 +3506,7 @@ module DiscourseMcp
             required: %w[topic_id],
           ),
         annotations: READ_ONLY,
+        default_enabled: true,
       )
     end
   end

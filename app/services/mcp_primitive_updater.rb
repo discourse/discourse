@@ -9,12 +9,12 @@ class McpPrimitiveUpdater
     new(actor:).set_emergency_block!(primitive_id:, blocked:)
   end
 
-  def self.expose_defaults!(actor: Discourse.system_user)
+  def self.enable_defaults!(actor: Discourse.system_user)
     primitive_ids =
       DiscourseMcp
         .registry
         .all
-        .select(&:default_exposed?)
+        .select(&:default_enabled?)
         .map { |primitive| "#{primitive.kind}:#{primitive.identifier}" }
 
     update!(actor:, primitive_ids:)

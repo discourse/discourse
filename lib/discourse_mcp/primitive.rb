@@ -4,7 +4,6 @@ module DiscourseMcp
   class Primitive
     KINDS = %i[tool resource resource_template prompt].freeze
     RISKS = %i[read write destructive moderation administration external_side_effect].freeze
-    DEFAULT_EXPOSED_RISKS = %i[read write destructive administration].freeze
 
     attr_reader :identifier,
                 :kind,
@@ -33,7 +32,7 @@ module DiscourseMcp
       provider: :core,
       availability: nil,
       defer: false,
-      default_exposed: nil
+      default_enabled: false
     )
       @identifier = identifier.to_s
       @kind = kind.to_sym
@@ -48,7 +47,7 @@ module DiscourseMcp
       @provider = provider.to_s
       @availability = availability
       @defer = defer
-      @default_exposed = default_exposed
+      @default_enabled = default_enabled
       validate!
       freeze
     end
@@ -61,12 +60,10 @@ module DiscourseMcp
       @defer
     end
 
-    # Whether a new site exposes this primitive before an admin has chosen. Moderation and
-    # anything with effects outside the site stay off unless the primitive opts in.
-    def default_exposed?
-      return @default_exposed if !@default_exposed.nil?
-
-      DEFAULT_EXPOSED_RISKS.include?(risk)
+    # Whether new sites enable this primitive before an admin has chosen. Primitives
+    # stay off unless they opt in, so nothing is enabled by default by accident.
+    def default_enabled?
+      @default_enabled
     end
 
     def consent_relevant?
@@ -78,8 +75,8 @@ module DiscourseMcp
     def validate!
       raise ArgumentError, "invalid MCP primitive kind" if !KINDS.include?(kind)
       raise ArgumentError, "invalid MCP primitive risk" if !RISKS.include?(risk)
-      if ![nil, true, false].include?(@default_exposed)
-        raise ArgumentError, "invalid MCP primitive default exposure"
+      if ![true, false].include?(@default_enabled)
+        raise ArgumentError, "invalid MCP primitive default_enabled"
       end
       if !identifier.match?(/\A[A-Za-z0-9_.-]{1,128}\z/)
         raise ArgumentError, "invalid MCP primitive identifier"

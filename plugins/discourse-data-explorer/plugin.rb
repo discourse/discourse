@@ -65,7 +65,6 @@ after_initialize do
     },
     risk: :administration,
     availability: -> { SiteSetting.data_explorer_enabled },
-    default_exposed: false,
   )
 
   register_mcp_tool(
@@ -105,7 +104,6 @@ after_initialize do
       openWorldHint: false,
     },
     availability: -> { SiteSetting.data_explorer_enabled },
-    default_exposed: false,
   )
 
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)

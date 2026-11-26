@@ -25,15 +25,17 @@ describe DiscourseMcp::Primitive do
       end.to raise_error(RegexpError)
     end
 
-    it "rejects a default exposure that isn't a boolean" do
-      expect { described_class.new(**attributes, default_exposed: "yes") }.to raise_error(
-        ArgumentError,
-        "invalid MCP primitive default exposure",
-      )
+    it "rejects a default_enabled that isn't a boolean" do
+      [nil, "yes"].each do |default_enabled|
+        expect { described_class.new(**attributes, default_enabled:) }.to raise_error(
+          ArgumentError,
+          "invalid MCP primitive default_enabled",
+        )
+      end
     end
   end
 
-  describe "#default_exposed?" do
+  describe "#default_enabled?" do
     let(:attributes) do
       {
         identifier: "test_tool",
@@ -44,23 +46,13 @@ describe DiscourseMcp::Primitive do
       }
     end
 
-    it "exposes primitives that only act inside the site" do
-      %i[read write administration destructive].each do |risk|
-        expect(described_class.new(**attributes, risk:)).to be_default_exposed
+    it "is off whatever the risk, unless the primitive opts in" do
+      described_class::RISKS.each do |risk|
+        expect(described_class.new(**attributes, risk:)).not_to be_default_enabled
+        expect(
+          described_class.new(**attributes, risk:, default_enabled: true),
+        ).to be_default_enabled
       end
-    end
-
-    it "keeps moderation and outside effects unexposed" do
-      %i[moderation external_side_effect].each do |risk|
-        expect(described_class.new(**attributes, risk:)).not_to be_default_exposed
-      end
-    end
-
-    it "lets a primitive choose its own default" do
-      expect(
-        described_class.new(**attributes, risk: :moderation, default_exposed: true),
-      ).to be_default_exposed
-      expect(described_class.new(**attributes, default_exposed: false)).not_to be_default_exposed
     end
   end
 end

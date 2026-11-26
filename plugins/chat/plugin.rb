@@ -745,7 +745,6 @@ after_initialize do
       destructiveHint: false,
     },
     availability: -> { SiteSetting.chat_enabled },
-    default_exposed: false,
   )
   register_mcp_tool(
     "discourse_get_chat_messages",
@@ -788,7 +787,6 @@ after_initialize do
       destructiveHint: false,
     },
     availability: -> { SiteSetting.chat_enabled },
-    default_exposed: false,
   )
   register_mcp_tool(
     "chat_message_create",
@@ -824,6 +822,5 @@ after_initialize do
     },
     risk: :write,
     availability: -> { SiteSetting.chat_enabled },
-    default_exposed: false,
   )
 end
