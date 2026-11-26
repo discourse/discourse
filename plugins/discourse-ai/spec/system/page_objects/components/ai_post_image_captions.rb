@@ -106,33 +106,32 @@ module PageObjects
 
       def has_descriptions?(alt: nil, description:)
         within(MODAL) do
-          (alt.nil? || has_field?("Alt text", with: alt)) &&
-            has_field?("AI description", with: description)
+          (alt.nil? || has_field?("alt", with: alt)) && has_field?("description", with: description)
         end
       end
 
       def has_pending_description?
         within(MODAL) do
           has_text?(I18n.t("js.discourse_ai.post_image_captions.image_descriptions.pending")) &&
-            has_no_field?("AI description")
+            has_no_field?("description")
         end
       end
 
       def fill_in_description(description)
-        within(MODAL) { fill_in("AI description", with: description) }
+        within(MODAL) { fill_in("description", with: description) }
       end
 
       def fill_in_alt_text(alt)
-        within(MODAL) { fill_in("Alt text", with: alt) }
+        within(MODAL) { fill_in("alt", with: alt) }
       end
 
       def apply_descriptions
-        within(MODAL) { click_button("Apply", exact: true) }
+        within(MODAL) { click_button(type: "submit") }
         expect(page).to have_no_css(MODAL)
       end
 
       def cancel_descriptions
-        within(MODAL) { click_button("Cancel", exact: true) }
+        within(MODAL) { click_button(class: "d-modal-cancel") }
         expect(page).to have_no_css(MODAL)
       end
 
