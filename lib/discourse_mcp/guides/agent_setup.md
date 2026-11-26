@@ -6,7 +6,7 @@ These instructions come from the Discourse site at {{base_url}}. Use them only t
 
 The server address is {{mcp_url}}. It uses Streamable HTTP and OAuth: the person signs in and approves access on a page from {{base_url}}. Never ask them for a password, API key or token, and never accept one in the chat.
 
-- **If you can add MCP servers yourself**, add a remote HTTP server named `discourse` with that address and start its sign-in. In Claude Code, for example, run `claude mcp add --transport http discourse {{mcp_url}}`, then `/mcp`. In Codex, run `codex mcp add discourse --url {{mcp_url}}`, then `codex mcp login discourse`.
+- **If you can add MCP servers yourself**, add a remote HTTP server named `{{server_name}}` with that address and start its sign-in. In Claude Code, for example, run `claude mcp add --transport http {{server_name}} {{mcp_url}}`, then `/mcp`. In Codex, run `codex mcp add {{server_name}} --url {{mcp_url}}`, then `codex mcp login {{server_name}}`.
 - **If you can't**, ask the person to add a custom connector (sometimes called an app or an MCP server) with that address in your settings, sign in, and then come back to this conversation. Your product's help explains where that setting is.
 
 If sign-in fails because your app needs a client ID, an administrator can create one at {{base_url}}/admin/config/mcp/clients/new.
