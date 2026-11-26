@@ -22,6 +22,15 @@ class Auth::CurrentUserProvider
     nil
   end
 
+  # Optional: under the credential lock, re-read whichever credential
+  # authenticated this request and return its user, so a credential issued for
+  # the request cannot outlive a password change that revoked it. Providers
+  # whose sessions are not the core tokens a password change revokes have
+  # nothing to re-read, so the default keeps them working.
+  def authenticated_credential_user
+    current_user
+  end
+
   # anonymous_mode_exchange is the locked master of the validated browser session.
   # Replace its current token atomically, keeping one revocation target without
   # letting a retired cookie authenticate.
