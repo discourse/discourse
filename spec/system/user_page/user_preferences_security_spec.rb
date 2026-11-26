@@ -69,6 +69,9 @@ describe "User preferences | Security" do
     before { SiteSetting.enable_passkeys = true }
 
     it "adds a passkey, removes user password, logs in with passkey" do
+      # A password can only be removed once it is older than a login token
+      user.user_password.update_columns(created_at: 1.hour.ago)
+
       with_virtual_authenticator(
         hasUserVerification: true,
         hasResidentKey: true,

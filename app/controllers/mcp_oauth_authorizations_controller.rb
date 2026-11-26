@@ -29,20 +29,22 @@ class McpOauthAuthorizationsController < ApplicationController
     validate_redirect!(client)
     return redirect_with(error: "access_denied") if params[:decision] != "approve"
 
-    authorization =
-      DiscourseMcp::OAuth::AuthorizationGrant.create!(
-        user: current_user,
-        client: client,
-        redirect_uri: params[:redirect_uri],
-        requested_scopes: requested_scopes,
-      )
     code =
-      McpOauthAuthorizationCode.issue!(
-        authorization: authorization,
-        redirect_uri: params[:redirect_uri],
-        resource: params[:resource],
-        code_challenge: params[:code_challenge],
-      )
+      with_revalidated_credential do
+        authorization =
+          DiscourseMcp::OAuth::AuthorizationGrant.create!(
+            user: current_user,
+            client: client,
+            redirect_uri: params[:redirect_uri],
+            requested_scopes: requested_scopes,
+          )
+        McpOauthAuthorizationCode.issue!(
+          authorization: authorization,
+          redirect_uri: params[:redirect_uri],
+          resource: params[:resource],
+          code_challenge: params[:code_challenge],
+        )
+      end
     redirect_with(code: code)
   end
 
