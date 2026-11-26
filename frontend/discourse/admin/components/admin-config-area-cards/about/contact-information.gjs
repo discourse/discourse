@@ -166,7 +166,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectUser
-                @clearable={{true}}
+                @clearMode="button"
                 @describedBy={{field.describedBy}}
                 @disabled={{field.disabled}}
                 @id={{field.id}}
@@ -201,7 +201,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectGroup
-                @clearable={{true}}
+                @clearMode="button"
                 @describedBy={{field.describedBy}}
                 @disabled={{field.disabled}}
                 @id={{field.id}}

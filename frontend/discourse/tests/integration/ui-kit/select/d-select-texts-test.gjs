@@ -120,7 +120,7 @@ async function mount(configuration = {}) {
       <Select
         @allowCreate={{state.value.allowCreate}}
         @ariaLabelledBy={{state.value.labelledBy}}
-        @clearable={{state.value.clearable}}
+        @clearMode={{state.value.clearMode}}
         @createOption={{state.value.createOption}}
         @debounce={{false}}
         @describedBy={{state.value.describedBy}}
@@ -270,8 +270,8 @@ const SCENARIOS = {
   minChars: { minChars: 3 },
   maximum: { multiple: true, value: [1, 2], maximum: 2 },
   minimum: { multiple: true, value: [1], minimum: 3 },
-  clear: { value: 1, clearable: true },
-  clearAll: { multiple: true, value: [1, 2], clearable: true },
+  clear: { value: 1, clearMode: "button" },
+  clearAll: { multiple: true, value: [1, 2], clearMode: "button" },
   locked: { multiple: true, value: [1, 2], lockedValues: [1] },
   lockedCompact: {
     multiple: true,
@@ -283,7 +283,7 @@ const SCENARIOS = {
     multiple: true,
     value: [1, 2, 3],
     lockedValues: [1],
-    clearable: true,
+    clearMode: "button",
   },
   unresolvedInput: { options: [], value: 404, resolveValue: () => undefined },
   unresolvedChip: {

@@ -39,14 +39,14 @@ interface DSelectColorPaletteSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "ariaRequired"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "icon"
     | "id"
     | "invalid"
     | "noneOption"
-    | "required"
     | "texts"
     | "variant"
   > &
@@ -219,7 +219,8 @@ export default class DSelectColorPalette extends Component<DSelectColorPaletteSi
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @ariaRequired={{@ariaRequired}}
+      @clearMode={{@clearMode}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @groupBy={{this.groupBy}}
@@ -235,7 +236,6 @@ export default class DSelectColorPalette extends Component<DSelectColorPaletteSi
       @noneOption={{@noneOption}}
       @onChange={{this.onChange}}
       @options={{this.options}}
-      @required={{@required}}
       @texts={{@texts}}
       @value={{@value}}
       @variant={{@variant}}

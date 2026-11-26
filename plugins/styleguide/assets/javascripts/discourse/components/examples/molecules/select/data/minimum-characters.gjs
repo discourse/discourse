@@ -16,7 +16,7 @@ export default class MinimumCharactersSelectExample extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @identifier="sg-min-chars"
       @load={{timezoneApi.search}}
       @minChars={{3}}

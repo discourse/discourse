@@ -12,7 +12,7 @@ interface TriggerFrameSignature {
     caret: string;
     /** Whether to render the caret (the parent defaults this to `true`). */
     showCaret?: boolean;
-    /** Whether to render the clear control (parent gates this on value + clearable + not locked). */
+    /** Whether to render the clear control (parent gates this on value + `clearMode` "button" + not locked). */
     showClear?: boolean;
     /** The clear control's accessible name (`"Clear selection"` / `"Clear all"`). */
     clearLabel?: string;

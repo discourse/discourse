@@ -102,7 +102,7 @@ interface DSelectUserSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "icon"
@@ -443,7 +443,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @createUnresolvedRecord={{this.createUnresolvedRecord}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}

@@ -66,7 +66,7 @@ export default class Topic extends Component {
     {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectTopic
-        @clearable={{true}}
+        @clearMode="button"
         @onChange={{@changeValueCallback}}
         @texts={{hash ariaLabel=@label}}
         @value={{this.heldTopicId}}

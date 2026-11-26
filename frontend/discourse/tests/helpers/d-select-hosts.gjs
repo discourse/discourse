@@ -82,7 +82,7 @@ export class MultiLimitsHost extends Component {
   <template>
     <DSelect
       @allowCreate={{@allowCreate}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @createOption={{@createOption}}
       @identifier="test-multi-limits"
       @kind="test-multi-limits"

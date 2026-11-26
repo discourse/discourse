@@ -898,7 +898,7 @@ export default class CreateInviteWithRoles extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectTopic
                           @additionalFilters="status:public"
-                          @clearable={{true}}
+                          @clearMode="button"
                           @describedBy={{field.describedBy}}
                           @disabled={{field.disabled}}
                           @id={{field.id}}

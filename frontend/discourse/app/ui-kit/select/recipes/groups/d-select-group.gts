@@ -36,7 +36,7 @@ interface DSelectGroupSignature {
     DSelectSignature["Args"],
     | "ariaLabelledBy"
     | "caretIcon"
-    | "clearable"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "extraOptions"
@@ -156,7 +156,7 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
       @caretIcon={{@caretIcon}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @extraOptions={{@extraOptions}}

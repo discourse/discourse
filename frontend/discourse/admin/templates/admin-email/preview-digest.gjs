@@ -28,7 +28,7 @@ export default <template>
           {{! TODO (select-kit-replacement-cleanup) }}
           {{#if @controller.siteSettings.enable_new_select_controls}}
             <DSelectUser
-              @clearable={{true}}
+              @clearMode="button"
               @onChange={{legacyPickOne @controller.updateUsername}}
               @texts={{hash ariaLabel=(i18n "admin.email.user")}}
               @value={{@controller.username}}

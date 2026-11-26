@@ -112,7 +112,7 @@ module(
       await render(
         <template>
           <DSelectGroup
-            @clearable={{true}}
+            @clearMode="button"
             @multiple={{multiple.value}}
             @onChange={{change}}
             @value={{held.value}}

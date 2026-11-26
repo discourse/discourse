@@ -207,7 +207,7 @@ export default class DFutureDateInput extends Component {
             <DSelect
               class="future-date-input__select"
               @ariaLabelledBy={{if this.displayLabel this.labelId}}
-              @clearable={{this.clearable}}
+              @clearMode={{if this.clearable "button"}}
               @descriptionField="timeFormatted"
               @filterBy={{this.filterShortcut}}
               @iconField="icon"

@@ -389,7 +389,7 @@ module(
       await render(
         <template>
           <DSelectUser
-            @clearable={{true}}
+            @clearMode="button"
             @includeGroups="visible"
             @multiple={{multiple.value}}
             @onChange={{change}}

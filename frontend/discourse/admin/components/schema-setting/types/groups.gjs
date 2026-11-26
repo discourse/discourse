@@ -39,7 +39,7 @@ export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
     {{! TODO (select-kit-replacement-cleanup) }}
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectGroup
-        @clearable={{not this.required}}
+        @clearMode={{unless this.required "button"}}
         @exclude={{this.disallowedGroupIds}}
         @maximum={{this.max}}
         @multiple={{true}}

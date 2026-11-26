@@ -38,7 +38,7 @@ interface DSelectTopicSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "id"
@@ -142,7 +142,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @createUnresolvedRecord={{unresolvedTopic}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}

@@ -99,7 +99,7 @@ export default class IgnoreDurationModal extends Component {
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectUser
-                @clearable={{true}}
+                @clearMode="button"
                 @excludeCurrentUser={{true}}
                 @onChange={{legacyPickOne this.updateIgnoredUsername}}
                 @value={{this.ignoredUsername}}

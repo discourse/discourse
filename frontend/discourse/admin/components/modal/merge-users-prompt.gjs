@@ -47,7 +47,7 @@ export default class MergeUsersPrompt extends Component {
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectUser
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne this.updateTargetUsername}}
             @texts={{hash
               placeholder=(i18n

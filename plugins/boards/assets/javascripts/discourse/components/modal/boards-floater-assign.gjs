@@ -39,7 +39,7 @@ export default class BoardsFloaterAssign extends Component {
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectUser
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne this.onAssigneeChanged}}
             @texts={{hash ariaLabel=(i18n "boards.board.assigned_to")}}
             @value={{this.assignee}}

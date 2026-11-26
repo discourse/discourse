@@ -908,7 +908,7 @@ export default class UpsertCategoryGeneral extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectCategory
                 class="category-chooser"
-                @clearable={{true}}
+                @clearMode="button"
                 @describedBy={{field.describedBy}}
                 @descriptions={{false}}
                 @disabled={{field.disabled}}

@@ -21,11 +21,12 @@ interface DSelectFormTemplateSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
+    | "ariaRequired"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "id"
     | "invalid"
-    | "required"
     | "texts"
     | "variant"
   > &
@@ -106,6 +107,8 @@ export default class DSelectFormTemplate extends Component<DSelectFormTemplateSi
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
+      @ariaRequired={{@ariaRequired}}
+      @clearMode={{@clearMode}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @id={{@id}}
@@ -118,7 +121,6 @@ export default class DSelectFormTemplate extends Component<DSelectFormTemplateSi
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @options={{this.options}}
-      @required={{@required}}
       @texts={{@texts}}
       @value={{@value}}
       @variant={{@variant}}

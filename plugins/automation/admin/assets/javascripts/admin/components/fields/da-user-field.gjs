@@ -54,7 +54,7 @@ export default class UserField extends BaseField {
           {{! TODO (select-kit-replacement-cleanup) }}
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectUser
-              @clearable={{true}}
+              @clearMode="button"
               @disabled={{@field.isDisabled}}
               @extraOptions={{this.contextOptions}}
               @onChange={{legacyPickOne this.onChangeUsername}}

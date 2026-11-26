@@ -8,6 +8,8 @@ import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
+  SELECT_CLEAR_MODES,
+  type SelectClearMode,
   type SelectConfig,
   type SelectOptionAttributes,
   type SelectPresentationArgs,
@@ -67,6 +69,9 @@ export {
 
 /** The frozen config snapshot recipes receive in their callbacks and blocks. */
 export type { SelectConfig };
+
+/** How a select's value can be emptied, as `@clearMode` takes it. */
+export type { SelectClearMode };
 
 /** An option as the select resolved it from every source: what its blocks receive. */
 export type { SelectResolvedOption };
@@ -1071,10 +1076,16 @@ export default class SelectEngine {
     const args = this.#args.presentationArgs;
     const noneOption = args.noneOption ?? this.#args.noneOptionDefault;
     assert(
-      `DSelect: \`@required\` keeps a value, so it can't also take ${
-        args.clearable ? "`@clearable`" : "`@noneOption`"
-      }, which would empty it.`,
-      !args.required || this.multiple || !(args.clearable || noneOption)
+      `DSelect: \`@clearMode\` must be ${SELECT_CLEAR_MODES.map(
+        (mode) => `"${mode}"`
+      ).join(", ")}, not ${String(args.clearMode)}.`,
+      args.clearMode === undefined ||
+        SELECT_CLEAR_MODES.includes(args.clearMode)
+    );
+    assert(
+      'DSelect: `@clearMode="never"` keeps a value, so it can\'t also take `@noneOption`, ' +
+        "which would empty it.",
+      args.clearMode !== "never" || this.multiple || !noneOption
     );
     return this.#customizations.resolveOptions(
       {
@@ -1083,9 +1094,9 @@ export default class SelectEngine {
         searchIcon: args.searchIcon,
         icon: args.icon,
         showCaret: args.showCaret,
-        clearable: args.clearable,
+        clearMode: args.clearMode,
         noneOption,
-        required: args.required,
+        ariaRequired: args.ariaRequired,
         loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
@@ -1196,14 +1207,19 @@ export default class SelectEngine {
     return this.#selectionActions.remaining;
   }
 
-  /** Whether a held value can be removed: one that isn't locked, and not a required single value. */
+  /** Whether a held value can be removed: one that isn't locked, in a select that may be emptied. */
   get hasRemovableValue(): boolean {
-    return !this.required && this.#selectionActions.hasRemovableValue;
+    return !this.keepsValue && this.#selectionActions.hasRemovableValue;
   }
 
-  /** Whether the field must always hold its single value; never true for multi-select. */
-  get required(): boolean {
-    return !!this.config.required;
+  /** Whether the field must always hold its single value (`"never"`); never true for multi-select. */
+  get keepsValue(): boolean {
+    return this.config.clearMode === "never" && !this.multiple;
+  }
+
+  /** Whether the field says it is required; an announcement only. */
+  get ariaRequired(): boolean {
+    return !!this.config.ariaRequired;
   }
 
   /** Whether this is a multi-select. */

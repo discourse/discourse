@@ -39,7 +39,7 @@ export default class AssignedAdvancedSearch extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectUser
               @ariaLabelledBy="search-assigned-to-label"
-              @clearable={{true}}
+              @clearMode="button"
               @id="search-assigned-to"
               @includeGroups="visible"
               @onChange={{legacyPickOne this.onChangeAssigned}}

@@ -22,14 +22,14 @@ interface DSelectTimezoneSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "ariaRequired"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "icon"
     | "id"
     | "invalid"
     | "noneOption"
-    | "required"
     | "texts"
     | "variant"
   > &
@@ -355,7 +355,8 @@ export default class DSelectTimezone extends Component<DSelectTimezoneSignature>
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @ariaRequired={{@ariaRequired}}
+      @clearMode={{@clearMode}}
       @describedBy={{@describedBy}}
       @descriptionField="description"
       @disabled={{@disabled}}
@@ -374,7 +375,6 @@ export default class DSelectTimezone extends Component<DSelectTimezoneSignature>
       @onChange={{this.onChange}}
       @onShow={{this.refreshTimes}}
       @options={{this.options}}
-      @required={{@required}}
       @resolveValues={{this.resolveValues}}
       @texts={{@texts}}
       @value={{@value}}

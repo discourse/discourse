@@ -95,10 +95,10 @@ export default class SidebarEditNavigationMenuModal extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelect
                 class="sidebar__edit-navigation-menu__filter-dropdown"
+                @clearMode="never"
                 @disabled={{@loading}}
                 @onChange={{this.onFilterDropdownChange}}
                 @options={{this.filterDropdownContent}}
-                @required={{true}}
                 @texts={{hash
                   ariaLabel=(i18n
                     "sidebar.edit_navigation_modal_form.filter_dropdown.label"

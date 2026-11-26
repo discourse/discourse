@@ -65,10 +65,10 @@ export default class PollOptionsDropdownComponent extends Component {
       <DSelect
         class="ranked-choice-poll-option__rank"
         @ariaLabelledBy={{@labelId}}
+        @clearMode="never"
         @contentClass="ranked-choice-poll-option__rank-content"
         @onChange={{this.changeRank}}
         @options={{this.rankOptions}}
-        @required={{true}}
         @selectedIcon="check"
         @value={{@rank}}
         @variant="static"

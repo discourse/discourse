@@ -16,7 +16,7 @@ export default class ClearableMultipleSelectExample extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @identifier="sg-clearable-multi"
       @labelField="label"
       @multiple={{true}}

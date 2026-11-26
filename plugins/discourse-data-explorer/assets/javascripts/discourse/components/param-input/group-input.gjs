@@ -32,7 +32,7 @@ export default class GroupInput extends Component {
         {{#if this.single}}
           <DSelectGroup
             name={{@info.identifier}}
-            @clearable={{true}}
+            @clearMode="button"
             @describedBy={{@field.describedBy}}
             @emit="names"
             @invalid={{if @field.error true false}}

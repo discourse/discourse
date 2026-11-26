@@ -24,7 +24,7 @@ export default class GroupField extends BaseField {
           {{! TODO (select-kit-replacement-cleanup) }}
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectGroup
-              @clearable={{true}}
+              @clearMode="button"
               @disabled={{@field.isDisabled}}
               @onChange={{legacyPickOne this.setGroupField}}
               @options={{this.allGroups}}

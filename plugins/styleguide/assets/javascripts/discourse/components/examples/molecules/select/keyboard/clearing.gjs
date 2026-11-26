@@ -16,7 +16,7 @@ export default class KeyboardClearingSelectExample extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @identifier="sg-keyboard-clearing"
       @labelField="label"
       @onChange={{this.onChange}}

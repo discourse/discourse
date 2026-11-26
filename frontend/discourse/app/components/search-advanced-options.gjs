@@ -864,7 +864,7 @@ export default class SearchAdvancedOptions extends Component {
                   <DSelectCategory
                     class="search-advanced-category-chooser category-chooser"
                     @ariaLabelledBy="search-in-category-label"
-                    @clearable={{true}}
+                    @clearMode="button"
                     @descriptions={{false}}
                     @emit="ids"
                     @id="search-in-category"
@@ -988,7 +988,7 @@ export default class SearchAdvancedOptions extends Component {
                 {{! TODO (select-kit-replacement-cleanup) }}
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectUser
-                    @clearable={{true}}
+                    @clearMode="button"
                     @id="search-posted-by"
                     @onChange={{legacyPickOne
                       this.onChangeSearchTermForUsername

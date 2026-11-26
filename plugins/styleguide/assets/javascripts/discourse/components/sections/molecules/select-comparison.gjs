@@ -734,7 +734,7 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectTopic
-              @clearable={{true}}
+              @clearMode="button"
               @onChange={{this.newTopic.update}}
               @value={{this.newTopic.value}}
             />

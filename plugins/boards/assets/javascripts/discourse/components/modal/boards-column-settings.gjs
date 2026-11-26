@@ -263,7 +263,7 @@ export default class BoardsColumnSettings extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectCategory
                           class="category-chooser"
-                          @clearable={{true}}
+                          @clearMode="button"
                           @emit="ids"
                           @onChange={{fn this.onCategoryChange field}}
                           @permission="create"
@@ -302,7 +302,7 @@ export default class BoardsColumnSettings extends Component {
                       {{! TODO (select-kit-replacement-cleanup) }}
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectUser
-                          @clearable={{true}}
+                          @clearMode="button"
                           @onChange={{legacyPickOne
                             (fn this.onAssignedUserChange field)
                           }}

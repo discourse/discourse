@@ -19,7 +19,7 @@ export default class LockedValuesSelectExample extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @identifier="sg-locked-values"
       @labelField="fullName"
       @lockedValues={{LOCKED}}

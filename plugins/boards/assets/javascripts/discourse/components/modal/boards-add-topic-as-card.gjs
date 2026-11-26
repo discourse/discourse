@@ -234,7 +234,7 @@ export default class BoardsAddTopicAsCard extends Component {
           </label>
           <DSelectTopic
             @archetype={{null}}
-            @clearable={{true}}
+            @clearMode="button"
             @id="boards-add-topic-as-card-topic"
             @onChange={{this.pickTopic}}
             @texts={{hash

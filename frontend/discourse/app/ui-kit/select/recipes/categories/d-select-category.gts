@@ -43,7 +43,7 @@ interface DSelectCategorySignature {
     DSelectSignature["Args"],
     | "maximum"
     | "maxVisibleChips"
-    | "clearable"
+    | "clearMode"
     | "disabled"
     | "ariaLabelledBy"
     | "id"
@@ -412,7 +412,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @extraOptions={{this.extraOptions}}

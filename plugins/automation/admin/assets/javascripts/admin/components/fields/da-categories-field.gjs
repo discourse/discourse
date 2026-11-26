@@ -27,7 +27,7 @@ export default class CategoriesField extends BaseField {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-selector"
-              @clearable={{true}}
+              @clearMode="button"
               @disabled={{@field.isDisabled}}
               @multiple={{true}}
               @onChange={{this.onChangeCategories}}

@@ -97,7 +97,7 @@ export default class ChangeOwnerModal extends Component {
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectUser
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne this.updateNewOwner}}
             @texts={{hash
               placeholder=(i18n "topic.change_owner.placeholder")

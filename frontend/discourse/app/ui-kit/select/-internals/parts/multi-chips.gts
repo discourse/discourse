@@ -216,6 +216,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   }
 
   /** Display-only chips describe the panel instead of advertising trigger-chip removal. */
+  /** Says the field is required when this input is the combobox, not a panel filter. */
+  get ariaRequired(): "true" | undefined {
+    return this.args.roleMode !== "search" && this.args.engine.ariaRequired
+      ? "true"
+      : undefined;
+  }
+
   get chipHint(): string | undefined {
     if (!this.args.engine.hasValue) {
       return undefined;
@@ -545,6 +552,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             "true"
           }}
           aria-invalid={{if @invalid "true"}}
+          aria-required={{this.ariaRequired}}
           class={{if (eq @roleMode "search") "d-select__filter"}}
           id={{@id}}
           @ariaOwns={{@ariaOwns}}

@@ -1498,7 +1498,7 @@ module(
           await render(
             <template>
               <DSelect
-                @clearable={{false}}
+                @clearMode="keyboard"
                 @multiple={{multiple}}
                 @onChange={{onChange}}
                 @options={{ITEMS}}
@@ -4379,7 +4379,7 @@ module(
         await render(
           <template>
             <DSelect
-              @clearable={{true}}
+              @clearMode="button"
               @onChange={{onChange}}
               @options={{ITEMS}}
               @value={{2}}
@@ -4538,7 +4538,7 @@ module(
             </div>
             <div class="clearable">
               <DSelect
-                @clearable={{true}}
+                @clearMode="button"
                 @options={{ITEMS}}
                 @value={{1}}
                 @variant="static"
@@ -5113,87 +5113,84 @@ module(
   }
 );
 
-module("Integration | ui-kit | select | DSelect @required", function (hooks) {
-  setupRenderingTest(hooks);
+module(
+  "Integration | ui-kit | select | DSelect @clearMode and @ariaRequired",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  /** Where a closed select takes keys: the typeahead's field, or the focusable root. */
-  function keyTarget(variant) {
-    return variant === "typeahead"
-      ? ".d-select [role='combobox']"
-      : ".d-select";
-  }
-
-  for (const variant of ["typeahead", "static", "button"]) {
-    for (const key of ["Backspace", "Delete"]) {
-      test(`@required: ${key} keeps a ${variant} single value`, async function (assert) {
-        const value = tracked(2);
-        const changes = [];
-        const onChange = (next) => {
-          changes.push(next);
-          value.value = next;
-        };
-
-        await render(
-          <template>
-            <DSelect
-              @onChange={{onChange}}
-              @options={{ITEMS}}
-              @required={{true}}
-              @value={{value.value}}
-              @variant={{variant}}
-            />
-          </template>
-        );
-
-        const target = keyTarget(variant);
-        await focus(target);
-        if (variant === "typeahead") {
-          await fillIn(target, "");
-        }
-        await triggerKeyEvent(target, "keydown", key);
-
-        assert.deepEqual(changes, [], "nothing is emitted");
-        assert.strictEqual(value.value, 2, "the value stays");
-      });
+    /** Where a closed select takes keys: the typeahead's field, or the focusable root. */
+    function keyTarget(variant) {
+      return variant === "typeahead"
+        ? ".d-select [role='combobox']"
+        : ".d-select";
     }
-  }
 
-  test("@required: an empty panel search keeps the value", async function (assert) {
-    const value = tracked(2);
-    const changes = [];
-    const onChange = (next) => changes.push(next);
+    for (const variant of ["typeahead", "static", "button"]) {
+      for (const key of ["Backspace", "Delete"]) {
+        test(`@clearMode="never": ${key} keeps a ${variant} single value`, async function (assert) {
+          const value = tracked(2);
+          const changes = [];
+          const onChange = (next) => {
+            changes.push(next);
+            value.value = next;
+          };
 
-    await render(
-      <template>
-        <DSelect
-          @onChange={{onChange}}
-          @options={{ITEMS}}
-          @required={{true}}
-          @value={{value.value}}
-          @variant="button"
-        />
-      </template>
-    );
-    await dSelect().open();
-    await triggerKeyEvent(".d-select__filter", "keydown", "Backspace");
+          await render(
+            <template>
+              <DSelect
+                @clearMode="never"
+                @onChange={{onChange}}
+                @options={{ITEMS}}
+                @value={{value.value}}
+                @variant={{variant}}
+              />
+            </template>
+          );
 
-    assert.deepEqual(changes, [], "nothing is emitted");
-  });
+          const target = keyTarget(variant);
+          await focus(target);
+          if (variant === "typeahead") {
+            await fillIn(target, "");
+          }
+          await triggerKeyEvent(target, "keydown", key);
 
-  for (const conflict of ["clearable", "noneOption"]) {
-    test(`@required: also asking for @${conflict} asserts`, async function (assert) {
-      const messages = [];
-      setupOnerror((error) => messages.push(error.message));
-      const clearable = conflict === "clearable";
-      const noneOption = conflict === "noneOption";
+          assert.deepEqual(changes, [], "nothing is emitted");
+          assert.strictEqual(value.value, 2, "the value stays");
+        });
+      }
+    }
+
+    test(`@clearMode="never": an empty panel search keeps the value`, async function (assert) {
+      const changes = [];
+      const onChange = (next) => changes.push(next);
 
       await render(
         <template>
           <DSelect
-            @clearable={{clearable}}
-            @noneOption={{noneOption}}
+            @clearMode="never"
+            @onChange={{onChange}}
             @options={{ITEMS}}
-            @required={{true}}
+            @value={{2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await triggerKeyEvent(".d-select__filter", "keydown", "Backspace");
+
+      assert.deepEqual(changes, [], "nothing is emitted");
+    });
+
+    test(`@clearMode="never": also asking for @noneOption asserts`, async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+
+      await render(
+        <template>
+          <DSelect
+            @clearMode="never"
+            @noneOption={{true}}
+            @options={{ITEMS}}
             @value={{2}}
           />
         </template>
@@ -5202,88 +5199,213 @@ module("Integration | ui-kit | select | DSelect @required", function (hooks) {
       assert.true(
         messages.some(
           (message) =>
-            message.includes("@required") && message.includes(`@${conflict}`)
+            message.includes(`@clearMode="never"`) &&
+            message.includes("@noneOption")
         ),
         `the assertion names both arguments: ${messages}`
       );
     });
+
+    test(`@clearMode="never": doesn't say the field is required`, async function (assert) {
+      await render(
+        <template>
+          <div class="typeahead">
+            <DSelect @clearMode="never" @options={{ITEMS}} @value={{2}} />
+          </div>
+          <div class="static">
+            <DSelect
+              @clearMode="never"
+              @options={{ITEMS}}
+              @value={{2}}
+              @variant="static"
+            />
+          </div>
+        </template>
+      );
+
+      assert.dom(".typeahead [role='combobox']").doesNotHaveAria("required");
+      assert.dom(".static [role='combobox']").doesNotHaveAria("required");
+    });
+
+    test(`@clearMode="never": a multi-select still removes chips, with no clear-all control`, async function (assert) {
+      const value = tracked([1, 2]);
+      const onChange = (next) => (value.value = next);
+
+      await render(
+        <template>
+          <DSelect
+            @clearMode="never"
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{ITEMS}}
+            @value={{value.value}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__clear").doesNotExist();
+
+      const input = ".d-select [role='combobox']";
+      await focus(input);
+      await triggerKeyEvent(input, "keydown", "Backspace");
+      await triggerKeyEvent(input, "keydown", "Backspace");
+
+      assert.deepEqual(value.value, [], "chip removal is unaffected");
+    });
+
+    test(`@clearMode="never": a static multi-select's root still empties with Backspace`, async function (assert) {
+      const value = tracked([1, 2]);
+      const onChange = (next) => (value.value = next);
+
+      await render(
+        <template>
+          <DSelect
+            @clearMode="never"
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{ITEMS}}
+            @value={{value.value}}
+            @variant="static"
+          />
+        </template>
+      );
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Backspace");
+
+      assert.deepEqual(value.value, [], "the multi-select is emptied");
+    });
+
+    test(`@clearMode="keyboard" (the default): Backspace empties it, with no clear control`, async function (assert) {
+      const value = tracked(2);
+      const onChange = (next) => (value.value = next);
+
+      await render(
+        <template>
+          <DSelect
+            @clearMode="keyboard"
+            @onChange={{onChange}}
+            @options={{ITEMS}}
+            @value={{value.value}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__clear").doesNotExist();
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Backspace");
+
+      assert.strictEqual(value.value, null, "the value is emptied");
+    });
+
+    test(`@clearMode="button": shows the clear control, and Backspace still empties it`, async function (assert) {
+      const value = tracked(2);
+      const onChange = (next) => (value.value = next);
+
+      await render(
+        <template>
+          <DSelect
+            @clearMode="button"
+            @onChange={{onChange}}
+            @options={{ITEMS}}
+            @value={{value.value}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__clear").exists();
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Backspace");
+
+      assert.strictEqual(value.value, null, "the value is emptied");
+    });
+
+    test("@clearMode: an unknown value asserts", async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+
+      await render(
+        <template>
+          <DSelect @clearMode={{true}} @options={{ITEMS}} @value={{2}} />
+        </template>
+      );
+
+      assert.true(
+        messages.some((message) => message.includes("@clearMode")),
+        `the assertion names the argument: ${messages}`
+      );
+    });
+
+    test("@ariaRequired: says the field is required, on whichever element takes focus", async function (assert) {
+      await render(
+        <template>
+          <div class="typeahead">
+            <DSelect @ariaRequired={{true}} @options={{ITEMS}} />
+          </div>
+          <div class="static">
+            <DSelect
+              @ariaRequired={{true}}
+              @options={{ITEMS}}
+              @variant="static"
+            />
+          </div>
+          <div class="multi">
+            <DSelect
+              @ariaRequired={{true}}
+              @multiple={{true}}
+              @options={{ITEMS}}
+            />
+          </div>
+          <div class="optional">
+            <DSelect @options={{ITEMS}} />
+          </div>
+        </template>
+      );
+
+      assert
+        .dom(".typeahead [role='combobox']")
+        .hasAria("required", "true", "on the typeahead's field");
+      assert
+        .dom(".typeahead .d-select")
+        .doesNotHaveAria("required", "and not on its root as well");
+      assert
+        .dom(".static [role='combobox']")
+        .hasAria("required", "true", "on the static trigger");
+      assert
+        .dom(".multi [role='combobox']")
+        .hasAria("required", "true", "on a multi-select's field");
+      assert
+        .dom(".optional [role='combobox']")
+        .doesNotHaveAria("required", "not on an optional field");
+    });
+
+    test("@ariaRequired: only announces, so the value can still be emptied", async function (assert) {
+      const value = tracked(2);
+      const onChange = (next) => (value.value = next);
+
+      await render(
+        <template>
+          <DSelect
+            @ariaRequired={{true}}
+            @noneOption={{true}}
+            @onChange={{onChange}}
+            @options={{ITEMS}}
+            @value={{value.value}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Backspace");
+
+      assert.strictEqual(value.value, null, "the value is emptied");
+    });
   }
-
-  test("@required: no clear button or none option on a multi-select is fine", async function (assert) {
-    const messages = [];
-    setupOnerror((error) => messages.push(error.message));
-
-    await render(
-      <template>
-        <DSelect
-          @clearable={{true}}
-          @multiple={{true}}
-          @options={{ITEMS}}
-          @required={{true}}
-          @value={{array 1}}
-        />
-      </template>
-    );
-
-    assert.deepEqual(
-      messages,
-      [],
-      "@required is ignored there, so nothing conflicts"
-    );
-  });
-
-  test("@required: the field says it is required", async function (assert) {
-    await render(
-      <template>
-        <div class="typeahead">
-          <DSelect @options={{ITEMS}} @required={{true}} />
-        </div>
-        <div class="static">
-          <DSelect @options={{ITEMS}} @required={{true}} @variant="static" />
-        </div>
-        <div class="optional">
-          <DSelect @options={{ITEMS}} />
-        </div>
-      </template>
-    );
-
-    assert
-      .dom(".typeahead [role='combobox']")
-      .hasAria("required", "true", "on the typeahead's field");
-    assert
-      .dom(".static [role='combobox']")
-      .hasAria("required", "true", "on the static trigger");
-    assert
-      .dom(".optional [role='combobox']")
-      .doesNotHaveAria("required", "not on an optional field");
-  });
-
-  test("@required: a multi-select still empties", async function (assert) {
-    const value = tracked([1, 2]);
-    const onChange = (next) => (value.value = next);
-
-    await render(
-      <template>
-        <DSelect
-          @multiple={{true}}
-          @onChange={{onChange}}
-          @options={{ITEMS}}
-          @required={{true}}
-          @value={{value.value}}
-        />
-      </template>
-    );
-    const input = ".d-select [role='combobox']";
-    await focus(input);
-    await triggerKeyEvent(input, "keydown", "Backspace");
-    await triggerKeyEvent(input, "keydown", "Backspace");
-
-    assert.deepEqual(value.value, [], "@required applies to one value only");
-    assert
-      .dom(input)
-      .doesNotHaveAria("required", "and a multi-select is not marked");
-  });
-});
+);
 
 module(
   "Integration | ui-kit | select | DSelect (value that resets on read)",

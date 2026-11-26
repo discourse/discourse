@@ -109,11 +109,12 @@ export default class WorkflowSettings extends Component {
           {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectTimezone
+              @ariaRequired={{true}}
+              @clearMode="never"
               @describedBy={{field.describedBy}}
               @id={{field.id}}
               @identifier="workflow-timezone"
               @onChange={{field.set}}
-              @required={{true}}
               @value={{field.value}}
             />
           {{else}}

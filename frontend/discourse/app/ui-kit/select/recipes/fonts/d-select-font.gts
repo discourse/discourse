@@ -25,13 +25,13 @@ interface DSelectFontSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "ariaRequired"
+    | "clearMode"
     | "contentClass"
     | "describedBy"
     | "disabled"
     | "id"
     | "invalid"
-    | "required"
     | "texts"
     | "valueField"
     | "variant"
@@ -95,7 +95,8 @@ export default class DSelectFont extends Component<DSelectFontSignature> {
       class={{concat "d-select-font " (fontClass @value)}}
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @clearable={{@clearable}}
+      @ariaRequired={{@ariaRequired}}
+      @clearMode={{@clearMode}}
       @contentClass={{@contentClass}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
@@ -108,7 +109,6 @@ export default class DSelectFont extends Component<DSelectFontSignature> {
       @legacyKind={{this.legacyKind}}
       @onChange={{this.onChange}}
       @options={{this.options}}
-      @required={{@required}}
       @texts={{@texts}}
       @value={{@value}}
       @valueField={{if @valueField @valueField "value"}}

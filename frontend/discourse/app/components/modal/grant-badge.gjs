@@ -122,7 +122,7 @@ export default class GrantBadgeModal extends Component {
               {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelectBadge
-                  @clearable={{true}}
+                  @clearMode="button"
                   @descriptions={{true}}
                   @identifier="grant-badge"
                   @onChange={{fn (mut this.selectedBadgeId)}}

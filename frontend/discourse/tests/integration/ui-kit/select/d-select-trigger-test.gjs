@@ -46,7 +46,7 @@ class FrameHost extends Component {
   <template>
     <DSelect
       @caretIcon={{@caretIcon}}
-      @clearable={{@clearable}}
+      @clearMode={{@clearMode}}
       @disabled={{@disabled}}
       @icon={{@icon}}
       @identifier="test-select"
@@ -213,7 +213,7 @@ module(
         <template>
           <label class="field-label">
             <span class="field-text">Choice</span>
-            <FrameHost @clearable={{true}} @value={{1}} @variant="button" />
+            <FrameHost @clearMode="button" @value={{1}} @variant="button" />
           </label>
         </template>
       );
@@ -357,9 +357,9 @@ module(
       );
     });
 
-    test("@clearable shows a clear control only when there is a value, and clearing it does not open the menu", async function (assert) {
+    test(`@clearMode="button" shows a clear control only when there is a value, and clearing it does not open the menu`, async function (assert) {
       await render(
-        <template><FrameHost @clearable={{true}} @value={{1}} /></template>
+        <template><FrameHost @clearMode="button" @value={{1}} /></template>
       );
 
       assert
@@ -381,18 +381,18 @@ module(
         .doesNotExist("the clear click does not bubble up to open the overlay");
     });
 
-    test("@clearable is absent when nothing is selected", async function (assert) {
-      await render(<template><FrameHost @clearable={{true}} /></template>);
+    test(`@clearMode="button" shows no control when nothing is selected`, async function (assert) {
+      await render(<template><FrameHost @clearMode="button" /></template>);
 
       assert
         .dom(".d-select__clear")
         .doesNotExist("no clear control while the selection is empty");
     });
 
-    test("@clearable stays out of the tab order and restores trigger focus after pointer clearing", async function (assert) {
+    test(`@clearMode="button" stays out of the tab order and restores trigger focus after pointer clearing`, async function (assert) {
       await render(
         <template>
-          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
+          <FrameHost @clearMode="button" @value={{1}} @variant="static" />
         </template>
       );
 
@@ -411,11 +411,11 @@ module(
         .isFocused("focus returns to the static combobox controller");
     });
 
-    test("@clearable on multi clears every chip and names itself 'Clear all'", async function (assert) {
+    test(`@clearMode="button" on multi clears every chip and names itself 'Clear all'`, async function (assert) {
       await render(
         <template>
           <FrameHost
-            @clearable={{true}}
+            @clearMode="button"
             @multiple={{true}}
             @value={{array 1 2}}
           />
@@ -432,10 +432,10 @@ module(
       assert.dom(".d-select__chip").doesNotExist("clearing removes every chip");
     });
 
-    test("@clearable clears a static control from the keyboard (Delete)", async function (assert) {
+    test(`@clearMode="button" clears a static control from the keyboard (Delete)`, async function (assert) {
       await render(
         <template>
-          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
+          <FrameHost @clearMode="button" @value={{1}} @variant="static" />
         </template>
       );
 
@@ -451,9 +451,9 @@ module(
         .doesNotExist("the keyboard clear does not open the overlay");
     });
 
-    test("@clearable clears a single typeahead from the keyboard once the query is empty", async function (assert) {
+    test(`@clearMode="button" clears a single typeahead from the keyboard once the query is empty`, async function (assert) {
       await render(
-        <template><FrameHost @clearable={{true}} @value={{1}} /></template>
+        <template><FrameHost @clearMode="button" @value={{1}} /></template>
       );
 
       const input = find("[role='combobox']");
@@ -572,11 +572,11 @@ module(
     test("the caret remains the last trigger child when a clear control is present", async function (assert) {
       await render(
         <template>
-          <FrameHost @clearable={{true}} @value={{1}} />
-          <FrameHost @clearable={{true}} @value={{1}} @variant="button" />
-          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
+          <FrameHost @clearMode="button" @value={{1}} />
+          <FrameHost @clearMode="button" @value={{1}} @variant="button" />
+          <FrameHost @clearMode="button" @value={{1}} @variant="static" />
           <FrameHost
-            @clearable={{true}}
+            @clearMode="button"
             @multiple={{true}}
             @value={{array 1 2}}
           />
@@ -602,7 +602,7 @@ module(
       await render(
         <template>
           <div style="width: 400px">
-            <FrameHost @clearable={{true}} @value={{1}} />
+            <FrameHost @clearMode="button" @value={{1}} />
           </div>
         </template>
       );
@@ -650,7 +650,7 @@ module(
         <template>
           <div style="width: 240px">
             <DSelect
-              @clearable={{true}}
+              @clearMode="button"
               @identifier="test-select"
               @options={{items}}
               @value={{1}}
@@ -712,7 +712,7 @@ module(
       await render(
         <template>
           <FrameHost
-            @clearable={{true}}
+            @clearMode="button"
             @disabled={{true}}
             @value={{1}}
             @variant="static"
@@ -1313,8 +1313,8 @@ module(
 
     // select-kit clears on Backspace-with-an-empty-filter unconditionally
     // (select-kit-filter.gjs), and DSelect's own multi path already matches it. Gating only the
-    // single path behind @clearable left a picker a reader could reach a value in but not leave.
-    test("Backspace on an empty query clears a single selection without @clearable", async function (assert) {
+    // single path behind the clear control left a picker a reader could reach a value in but not leave.
+    test("Backspace on an empty query clears a single selection in the default clear mode", async function (assert) {
       await render(<template><Host @value={{2}} /></template>);
 
       await click("[role='combobox']");
@@ -1375,9 +1375,9 @@ module(
     setupRenderingTest(hooks);
 
     // The control variants have no text input, so the closed trigger IS the empty-query state.
-    // Gating their Backspace behind @clearable left a static select with no way out at all —
+    // Gating their Backspace behind the clear control left a static select with no way out at all —
     // not even the two-step gesture the typeahead offers.
-    test("Backspace on a closed static trigger clears the value without @clearable", async function (assert) {
+    test("Backspace on a closed static trigger clears the value in the default clear mode", async function (assert) {
       await render(
         <template><Host @value={{2}} @variant="static" /></template>
       );
@@ -1390,7 +1390,7 @@ module(
         .exists("the trigger falls back to its placeholder once cleared");
     });
 
-    test("Delete on a closed button trigger clears the value without @clearable", async function (assert) {
+    test("Delete on a closed button trigger clears the value in the default clear mode", async function (assert) {
       await render(
         <template><Host @value={{2}} @variant="button" /></template>
       );
@@ -1439,7 +1439,7 @@ class SupplementalStripHost extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @maximum={{@maximum}}
       @multiple={{true}}
       @onChange={{this.onChange}}

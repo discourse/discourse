@@ -114,18 +114,29 @@ export interface SelectPresentationConfig {
   icon?: string;
   /** Whether the trigger shows its caret. */
   showCaret?: boolean;
-  /** Whether a selection can offer a clear control. */
-  clearable?: boolean;
+  /**
+   * How the value can be emptied. `"keyboard"` (the default) lets Backspace and Delete empty it;
+   * `"button"` also shows a clear control; `"never"` keeps a single value, which then can't take
+   * a none option. A multi-select removes chips in every mode.
+   */
+  clearMode?: SelectClearMode;
   /** Adds a single-select "none" row that clears the value; off by default. */
   noneOption?: boolean;
-  /**
-   * A single value the field must always hold: nothing empties it, and the field says it is
-   * required. Ignored on multi-select.
-   */
-  required?: boolean;
+  /** Says the field is required. It only announces: nothing stops the value being emptied. */
+  ariaRequired?: boolean;
   /** An additive lock: a later customization cannot remove it. */
   disabled?: boolean;
 }
+
+/** How a select's value can be emptied; see {@link SelectPresentationConfig.clearMode}. */
+export type SelectClearMode = "never" | "keyboard" | "button";
+
+/** Every {@link SelectClearMode}, for validating a value from a template. */
+export const SELECT_CLEAR_MODES: readonly SelectClearMode[] = [
+  "never",
+  "keyboard",
+  "button",
+];
 
 /** The call site's presentation arguments, read before customizations. */
 export interface SelectPresentationArgs extends SelectPresentationConfig {
@@ -153,9 +164,9 @@ const CORE_CONFIG_KEYS = new Set<keyof SelectPresentationConfig>([
   "loadingStatus",
   "icon",
   "showCaret",
-  "clearable",
+  "clearMode",
   "noneOption",
-  "required",
+  "ariaRequired",
   "disabled",
 ]);
 
@@ -548,6 +559,14 @@ export default class SelectCustomizations {
           }
           continue;
         }
+        assert(
+          `DSelect: an extension set \`clearMode\` on a \`@clearMode="never"\` select, which ` +
+            'must keep its value. Return nothing for it when `current.clearMode` is "never".',
+          key !== "clearMode" ||
+            current.clearMode !== "never" ||
+            partial.clearMode === "never" ||
+            textInputs.multiple
+        );
         Object.assign(next, {
           [key]:
             key === "disabled"
@@ -564,18 +583,23 @@ export default class SelectCustomizations {
       );
       current = this.#configSnapshot(next, layers, wrappers, textInputs);
     });
-    const required = !!current.required && !textInputs.multiple;
+    assert(
+      `DSelect: an extension set \`clearMode\` to ${String(current.clearMode)}; it must be ` +
+        SELECT_CLEAR_MODES.map((mode) => `"${mode}"`).join(", ") +
+        ".",
+      current.clearMode === undefined ||
+        SELECT_CLEAR_MODES.includes(current.clearMode)
+    );
+    const clearMode = current.clearMode ?? "keyboard";
+    const keepsValue = clearMode === "never" && !textInputs.multiple;
     // The call site's own arguments are checked before customizations run, so a conflict
     // here comes from an extension.
     assert(
-      `DSelect: an extension set ${
-        current.clearable ? "`clearable`" : "`noneOption`"
-      } on a \`@required\` select, which must keep its value. Return nothing for it when ` +
-        "`current.required` is true.",
-      !required || !(current.clearable || current.noneOption)
+      'DSelect: an extension set `noneOption` on a `@clearMode="never"` select, which must ' +
+        'keep its value. Return nothing for it when `current.clearMode` is "never".',
+      !keepsValue || !current.noneOption
     );
-    const clearable = required ? false : current.clearable;
-    const noneOption = !required && !!current.noneOption;
+    const noneOption = !keepsValue && !!current.noneOption;
     const loadingStatus = !!current.loadingStatus;
     let iconOnly = current.iconOnly;
     if (iconOnly && !selectTextResolver(current)!.explicit("ariaLabel")) {
@@ -603,8 +627,7 @@ export default class SelectCustomizations {
       iconOnly = false;
     }
     if (
-      required !== current.required ||
-      clearable !== current.clearable ||
+      clearMode !== current.clearMode ||
       noneOption !== current.noneOption ||
       loadingStatus !== current.loadingStatus ||
       iconOnly !== current.iconOnly
@@ -612,8 +635,7 @@ export default class SelectCustomizations {
       current = this.#configSnapshot(
         {
           ...current,
-          required,
-          clearable,
+          clearMode,
           noneOption,
           loadingStatus,
           iconOnly,

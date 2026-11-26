@@ -189,7 +189,7 @@ export default class PostEventBulkInvite extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectUser
                           class="bulk-invite-identifier"
-                          @clearable={{true}}
+                          @clearMode="button"
                           @describedBy={{field.describedBy}}
                           @disabled={{field.disabled}}
                           @id={{field.id}}

@@ -529,7 +529,7 @@ export default class InvitePanel extends Component {
               }}
                 <DSelectUser
                   class="invite-user-input"
-                  @clearable={{true}}
+                  @clearMode="button"
                   @emails={{this.canInviteViaEmail}}
                   @excludeCurrentUser={{true}}
                   @includeGroups={{if this.isPM "messageable"}}

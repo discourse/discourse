@@ -329,7 +329,7 @@ export default class RssPollingFeedForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectUser
                       class="rss-polling-feed-form__author"
-                      @clearable={{true}}
+                      @clearMode="button"
                       @describedBy={{field.describedBy}}
                       @disabled={{field.disabled}}
                       @id={{field.id}}

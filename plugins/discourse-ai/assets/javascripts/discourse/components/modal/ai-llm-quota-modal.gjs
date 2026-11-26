@@ -105,7 +105,7 @@ export default class AiLlmQuotaModal extends Component {
               {{! TODO (select-kit-replacement-cleanup) }}
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelectGroup
-                  @clearable={{true}}
+                  @clearMode="button"
                   @describedBy={{field.describedBy}}
                   @disabled={{field.disabled}}
                   @id={{field.id}}

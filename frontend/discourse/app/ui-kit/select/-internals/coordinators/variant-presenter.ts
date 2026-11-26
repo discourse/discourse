@@ -275,7 +275,7 @@ export default class VariantPresenter
   /** Whether the clear control renders: opted in, something selected, and not locked. */
   get showClear(): boolean {
     return (
-      !!this.#engine.config.clearable &&
+      this.#engine.config.clearMode === "button" &&
       this.#engine.hasRemovableValue &&
       !this.isLocked
     );

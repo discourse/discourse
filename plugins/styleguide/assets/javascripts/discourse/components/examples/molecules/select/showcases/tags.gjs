@@ -60,7 +60,7 @@ export default class TagsSelectExample extends Component {
   <template>
     <DSelect
       @allowCreate={{this.allowCreate}}
-      @clearable={{true}}
+      @clearMode="button"
       @createOption={{this.createOption}}
       @identifier="sg-tags"
       @labelField="label"

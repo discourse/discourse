@@ -57,7 +57,7 @@ export default class SelectEnum extends Component {
   <template>
     <DSelect
       class="select-enum"
-      @clearable={{@clearable}}
+      @clearMode={{if @clearable "button"}}
       @disabled={{@disabled}}
       @noneOption={{@offersNone}}
       @onChange={{this.onChange}}

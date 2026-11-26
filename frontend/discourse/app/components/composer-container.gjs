@@ -374,13 +374,13 @@ export default class ComposerContainer extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelect
                       class="translation-selector-dropdown"
+                      @clearMode="never"
                       @disabled={{this.composer.loading}}
                       @icon="language"
                       @labelField="name"
                       @onChange={{this.updateSelectedTranslationLocale}}
                       @options={{this.availableContentLocalizationLocales}}
                       @placement="bottom-start"
-                      @required={{true}}
                       @texts={{hash
                         ariaLabel=(i18n "composer.translations.language")
                         placeholder=(i18n "composer.translations.select")

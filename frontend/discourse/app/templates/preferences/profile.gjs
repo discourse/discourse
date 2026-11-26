@@ -181,7 +181,7 @@ export default <template>
           <div class="controls">
             <DSelectTopic
               @additionalFilters="status:public"
-              @clearable={{true}}
+              @clearMode="button"
               @describedBy="user-featured-topic-instructions"
               @id="user-featured-topic"
               @onChange={{@controller.changeFeaturedTopic}}

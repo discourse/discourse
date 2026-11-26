@@ -16,7 +16,7 @@ export default class ClearableSelectExample extends Component {
 
   <template>
     <DSelect
-      @clearable={{true}}
+      @clearMode="button"
       @identifier="sg-clearable"
       @onChange={{this.onChange}}
       @options={{PEOPLE}}

@@ -52,7 +52,7 @@ export default class UserControl extends Component {
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectUser
-          @clearable={{not this.multiple}}
+          @clearMode={{unless this.multiple "button"}}
           @describedBy={{@field.describedBy}}
           @disabled={{@field.disabled}}
           @id={{@field.id}}

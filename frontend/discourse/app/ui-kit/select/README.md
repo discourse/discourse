@@ -905,15 +905,15 @@ restrictions). It has no `control`. An option rebuilt with equal settings does n
 again.
 
 **`config`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneOption`,
-`required`, `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
+`{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearMode`, `noneOption`,
+`ariaRequired`, `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
 (see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
 arguments. Every key is last-wins except `disabled`, which can add a lock but never lift one, and
 `texts`, which merges per entry. `iconOnly` needs an `icon` and an `ariaLabel` text above the
-engine's default: without either it is ignored with a warning. A `clearable` or `noneOption`
-that lands on a `required` single select asserts in development, because either would empty a
-value that must stay; a `forAll` step that turns them on leaves those selects alone by returning
-nothing when `current.required` is true. A key that is neither core nor declared
+engine's default: without either it is ignored with a warning. A `clearMode` that loosens
+`"never"`, or a `noneOption`, on a single select whose `clearMode` is `"never"` asserts in
+development, because either would empty a value that must stay; a `forAll` step that sets them
+leaves those selects alone by returning nothing when `current.clearMode` is `"never"`. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per option. The context has `value` and `control`, and no
 `config`, because config cannot depend on itself.
@@ -1169,12 +1169,15 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
   and choosing nothing are the same value, so while nothing is chosen the field shows that label as
   its value instead of the `placeholder` text. A search finds it by that label, ignoring case;
   a matcher given in `@filterBy` reads records only, so it never decides. A field that should prompt for a choice leaves the
-  none option out, and uses `@clearable` if the value can be cleared. `@maximum` and `@minimum` cap the selection
+  none option out, and uses `@clearMode="button"` to show a clear control. `@maximum` and `@minimum` cap the selection
   and announce the limit.
-- `@required` is for a single value the field must always hold, such as a choice with no empty
-  state. Backspace and Delete, which otherwise empty a single selection from an empty query,
-  leave it alone, and the field carries `aria-required`. Combining it with `@clearable` or
-  `@noneOption` asserts in development. Multi-selects ignore it.
+- `@clearMode` says how the value can be emptied. `"keyboard"`, the default, lets Backspace and
+  Delete empty a single selection from an empty query, and Backspace remove the last chip.
+  `"button"` adds a clear control. `"never"` is for a single value the field must always hold,
+  such as a sort or a choice with no empty state: the keyboard leaves it alone, and combining it
+  with `@noneOption` asserts in development. Multi-selects remove chips in every mode.
+- `@ariaRequired` says the field is required, for a real form field. It only announces, so a form
+  can still let the value be emptied, then validate it. `@clearMode="never"` never implies it.
 - Held options stay listed and marked as selected, which keeps the selection reachable for
   assistive technology. `@hideSelected` exists, but is not a default to copy from the old
   component.
@@ -1626,7 +1629,7 @@ by mechanism.
   not set, hidden while a typed term shows; caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
   search field that is not the trigger (the `button` panel's field, the mobile modal's, and
-  DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /
+  DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearMode`; `@disabled` /
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
 - Custom option and selection markup (`:option` / `:selection` blocks; on the typeahead variant the
   `:selection` block is the resting/closed display: once the menu opens the built-in input shows

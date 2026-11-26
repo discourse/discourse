@@ -973,10 +973,11 @@ export default class ComposerEditor extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectFormTemplate
                 class="composer-select-form-template"
+                @ariaRequired={{true}}
+                @clearMode="never"
                 @formTemplateIds={{this.composer.formTemplateIds}}
                 @identifier="composer-form-template"
                 @onChange={{this.updateSelectedFormTemplateId}}
-                @required={{true}}
                 @value={{this.selectedFormTemplateId}}
               />
             {{else}}

@@ -128,7 +128,7 @@ export default class CategoryControl extends Component {
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-chooser"
-            @clearable={{this.clearable}}
+            @clearMode={{if this.clearable "button"}}
             @describedBy={{@field.describedBy}}
             @disabled={{@field.disabled}}
             @emit="ids"

@@ -632,7 +632,7 @@ module(
 
       <template>
         <DSelect
-          @clearable={{true}}
+          @clearMode="button"
           @identifier="test-select"
           @multiple={{true}}
           @onChange={{this.onChange}}
@@ -2346,7 +2346,7 @@ module(
         <template>
           <A11yLiveRegions />
           <DSelect
-            @clearable={{clearable}}
+            @clearMode={{if clearable "button"}}
             @lockedValues={{locks.value}}
             @multiple={{true}}
             @onChange={{onChange}}

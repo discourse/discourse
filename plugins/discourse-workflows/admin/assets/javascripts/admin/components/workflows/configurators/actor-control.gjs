@@ -91,7 +91,7 @@ export default class ActorControl extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectUser
               class="workflows-actor-control__user"
-              @clearable={{true}}
+              @clearMode="button"
               @describedBy={{@field.describedBy}}
               @disabled={{@field.disabled}}
               @id={{@field.id}}

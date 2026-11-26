@@ -60,7 +60,7 @@ export default class SettingFieldTopic extends Component {
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectTopic
-          @clearable={{true}}
+          @clearMode="button"
           @disabled={{@field.disabled}}
           @onChange={{this.onPickTopic}}
           @texts={{hash ariaLabel=@field.title}}

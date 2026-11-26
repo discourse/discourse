@@ -844,13 +844,13 @@ export default class DFilterControls<T = unknown> extends Component<
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelect
                   class="d-filter-controls__sort"
+                  @clearMode="never"
                   @icon="arrow-down-wide-short"
                   @iconOnly={{not this.capabilities.viewport.sm}}
                   @labelField="label"
                   @onChange={{this.changeSort}}
                   @options={{this.sortOptions}}
                   @placement="bottom-end"
-                  @required={{true}}
                   @selectedIcon="check"
                   @texts={{hash ariaLabel=(i18n "filter_controls.sort_label")}}
                   @value={{this.sort}}

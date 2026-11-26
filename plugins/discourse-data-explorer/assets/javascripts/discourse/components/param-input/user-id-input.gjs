@@ -14,7 +14,7 @@ export default class UserIdInput extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectUser
           name={{@info.identifier}}
-          @clearable={{true}}
+          @clearMode="button"
           @describedBy={{@field.describedBy}}
           @invalid={{if @field.error true false}}
           @onChange={{legacyPickOne @field.set}}

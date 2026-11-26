@@ -43,6 +43,7 @@ import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/singl
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
+  SelectClearMode,
   SelectCoreTexts,
   SelectEngineInit,
   SelectGroupInfo,
@@ -229,23 +230,25 @@ export interface DSelectSignature {
      */
     contentClass?: string;
     /**
-     * Show a clear control that empties the whole selection (all variants, whenever there is a
-     * value). Purely a pointer affordance (`tabindex="-1"`).
+     * How the value can be emptied:
      *
-     * It does NOT gate clearing by keyboard, which is always available from an empty query:
-     * Backspace removes the last chip in multi-select (repeat to empty it), and Backspace or
-     * Delete clears a single selection unless it is `@required`. That matches the family this replaces, which clears on
-     * Backspace-with-an-empty-filter with no opt-in — so a picker is never a place a reader can
-     * reach a value but not leave.
+     * - `"keyboard"` (default): Backspace or Delete empties a single value from an empty query,
+     *   and Backspace removes the last chip in multi-select. That matches the family this
+     *   replaces, so a picker is never a place a reader can reach a value but not leave.
+     * - `"button"`: the keyboard, plus a clear control that empties the whole selection. The
+     *   control is a pointer affordance only (`tabindex="-1"`).
+     * - `"never"`: a single value that must always be held, such as a choice with no empty state.
+     *   Backspace and Delete don't empty it, and `@noneOption` asserts in development. A
+     *   multi-select still removes chips.
+     *
+     * It never says the field is required; that is `@ariaRequired`.
      */
-    clearable?: boolean;
+    clearMode?: SelectClearMode;
     /**
-     * A single value the field must always hold, such as a choice with no empty state. Backspace
-     * and Delete don't empty it, it shows no clear control or none option (asking for either
-     * warns in development), and the field carries `aria-required`. Ignored on multi-select,
-     * where removing chips is unchanged.
+     * Says the field is required, on the element that takes focus. It only announces: a form can
+     * still let the value be emptied, then validate it and show an error.
      */
-    required?: boolean;
+    ariaRequired?: boolean;
     /** Fully disables the control: not focusable, cannot open, cannot mutate. */
     disabled?: boolean;
     /** Locks the value: focusable and readable, but cannot open, edit, or mutate. */
@@ -714,7 +717,7 @@ export default class DSelect extends Component<DSelectSignature> {
       aria-readonly={{this.presenter.triggerRootReadonly}}
       aria-required={{unless
         this.presenter.isDesktopTypeahead
-        (if this.engine.required "true")
+        (if this.engine.ariaRequired "true")
       }}
       {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
       class={{dConcatClass "d-select" this.engine.legacyKinds}}

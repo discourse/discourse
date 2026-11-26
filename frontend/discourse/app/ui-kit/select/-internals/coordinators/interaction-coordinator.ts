@@ -408,7 +408,7 @@ export default class InteractionCoordinator {
     }
     // Keyboard clear for a focusable root: it has no text input, so the closed trigger
     // IS their empty-query state and Backspace/Delete empties the selection. Not gated on
-    // `@clearable` — that governs the visible × control only — for the same reason the typeahead
+    // `@clearMode="button"`, which only adds the visible × control, for the same reason the typeahead
     // path is not: the family this replaces clears from an empty filter unconditionally, and
     // gating it here left a static select with no way out at all.
     if (

@@ -542,7 +542,7 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @clearable={{true}}
+            @clearMode="button"
             @maximum={{2}}
             @onChange={{onChange}}
             @value={{array 1 2}}
@@ -669,7 +669,7 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @clearable={{true}}
+            @clearMode="button"
             @minimum={{3}}
             @onChange={{onChange}}
             @value={{array 1 2}}

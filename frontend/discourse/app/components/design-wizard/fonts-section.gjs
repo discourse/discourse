@@ -54,10 +54,11 @@ export default class DesignWizardFontsSection extends Component {
           <DSelectFont
             class="design-wizard__font-picker"
             @ariaLabelledBy={{labelId}}
+            @ariaRequired={{true}}
+            @clearMode="never"
             @contentClass="design-wizard__font-select-content"
             @fonts={{ALL_FONTS}}
             @onChange={{@onSelectBodyFont}}
-            @required={{true}}
             @sortByName={{false}}
             @value={{@bodyFont}}
             @valueField="key"
@@ -109,10 +110,11 @@ export default class DesignWizardFontsSection extends Component {
           <DSelectFont
             class="design-wizard__font-picker"
             @ariaLabelledBy={{labelId}}
+            @ariaRequired={{true}}
+            @clearMode="never"
             @contentClass="design-wizard__font-select-content"
             @fonts={{ALL_FONTS}}
             @onChange={{@onSelectHeadingFont}}
-            @required={{true}}
             @sortByName={{false}}
             @value={{@headingFont}}
             @valueField="key"

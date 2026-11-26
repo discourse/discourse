@@ -19,11 +19,13 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     stylesheets restyle `.select-kit.combo-box.group-dropdown`, and one customer plugin records
     analytics on clicks on its `.select-kit-row`, which needs a customer port.
   - ☑ Composer translation selector (`components/composer-container.gjs`). A plain `DSelect`
-    at the call site, with no recipe. It is required, because emptying it blanked the typed
-    translation; the old control's "Select translation" row did the same. The system specs
+    at the call site, with no recipe. It can't be emptied (`@clearMode="never"`), because
+    emptying it blanked the typed translation; the old control's "Select translation" row did
+    the same. The system specs
     still drive the old control, since they run with the new controls off.
   - ☑ Sidebar edit filter (`components/sidebar/edit-navigation-menu/modal.gjs`). A static
-    `DSelect` at the call site, required because "All" is its empty state, and named "Show".
+    `DSelect` at the call site that can't be emptied, because "All" is its empty state, and
+    named "Show".
     The system specs still drive the old control through the modal's page object.
 - ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
   category and tag admin dropdowns, bulk-select bookmarks, and the admin "New bot" button
@@ -49,11 +51,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       by the visible "Sort by" label and styled as the flat button it replaces. The system
       specs still drive the old menu through the nested view's page object.
     - ☐ Emoji skin tone (`components/emoji-picker/diversity-menu.gjs`).
-    - ☑ Design wizard body and heading fonts (`components/design-wizard/fonts-section.gjs`).
-      Two required `DSelectFont` typeaheads named by their captions. The wizard's fonts are
-      keyed by `key` and listed popular first, so the recipe gained `@valueField` and
-      `@sortByName`. The panel renders outside the wizard, so `DSelect` gained `@contentClass`
-      to give it the wizard's colors and stacking.
+    - ☑ Design wizard body and heading fonts (`components/design-wizard/fonts-section.gjs`). Two
+      required `DSelectFont` typeaheads (`@clearMode="never"` and `@ariaRequired`) named by their
+      captions. The wizard's fonts are keyed by `key` and listed popular first, so the recipe gained
+      `@valueField` and `@sortByName`. The panel renders outside the wizard, so `DSelect` gained
+      `@contentClass` to give it the wizard's colors and stacking.
     - ☐ Messages inbox (`components/user-nav/messages-dropdown.gjs`). Its rows navigate.
     - ☐ Mobile navigation dropdown (`components/navigation-bar.gjs`). Its rows navigate, and
       the `extra-nav-item` outlet renders after them.
@@ -80,11 +82,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       (`ai-agent-list-editor.gjs`).
     - ☐ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). It ends with
       "Leave event" after a divider while the user is going.
-    - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static,
-      required `DSelect` named by its option's text, styled as the flat button it replaces. The
-      trigger shows the number; the list marks both ends with the existing priority strings. Rows
-      are list items without a tab stop of their own. Rows are now keyed by option id (#46941), so
-      focus stays on the option just ranked.
+    - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static
+      `DSelect` that can't be emptied, named by its option's text, styled as the flat button it
+      replaces. The trigger shows the number; the list marks both ends with the existing priority
+      strings. Rows are list items without a tab stop of their own. Rows are now keyed by option id
+      (#46941), so focus stays on the option just ranked.
     - ☐ live: the call submenus for devices, noise suppression, camera and layout
       (`live/call-submenu.gjs`).
     - ☐ discourse-workflows: the reference picker (`variable/reference-property-picker.gjs`), a

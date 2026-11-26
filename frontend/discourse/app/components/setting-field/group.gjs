@@ -53,7 +53,7 @@ export default class SettingFieldGroup extends Component {
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectGroup
-          @clearable={{true}}
+          @clearMode="button"
           @disabled={{@field.disabled}}
           @onChange={{this.onPickGroup}}
           @options={{this.groupRecords}}

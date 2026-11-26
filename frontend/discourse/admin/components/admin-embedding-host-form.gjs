@@ -177,7 +177,7 @@ export default class AdminEmbeddingHostForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectUser
                       class="admin-embedding-host-form__post_author"
-                      @clearable={{true}}
+                      @clearMode="button"
                       @describedBy={{field.describedBy}}
                       @disabled={{field.disabled}}
                       @id={{field.id}}

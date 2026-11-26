@@ -64,9 +64,9 @@ export default class NestedSortSelector extends Component {
           <DSelect
             class="nested-sort-selector__select"
             @ariaLabelledBy={{labelId}}
+            @clearMode="never"
             @onChange={{@onChange}}
             @options={{this.sortChoices}}
-            @required={{true}}
             @value={{@current}}
             @valueField="value"
             @variant="static"

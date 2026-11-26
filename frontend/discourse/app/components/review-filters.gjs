@@ -59,7 +59,7 @@ export default <template>
           {{#if @controller.siteSettings.enable_new_select_controls}}
             <DSelectUser
               @ariaLabelledBy="review-filter-claimed-by-label"
-              @clearable={{true}}
+              @clearMode="button"
               @onChange={{legacyPickOne @controller.updateFilterClaimedBy}}
               @searchParams={{hash canReview=true}}
               @value={{@controller.filterClaimedBy}}
@@ -112,7 +112,7 @@ export default <template>
           <DSelectCategory
             class="category-chooser"
             @ariaLabelledBy="review-filter-category-label"
-            @clearable={{true}}
+            @clearMode="button"
             @emit="ids"
             @onChange={{fn (mut @controller.filterCategoryId)}}
             @permission="create"
@@ -139,7 +139,7 @@ export default <template>
         {{#if @controller.siteSettings.enable_new_select_controls}}
           <DSelectUser
             @ariaLabelledBy="review-filter-flagged-by-label"
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne @controller.updateFilterFlaggedBy}}
             @value={{@controller.filterFlaggedBy}}
           />
@@ -165,7 +165,7 @@ export default <template>
         {{#if @controller.siteSettings.enable_new_select_controls}}
           <DSelectUser
             @ariaLabelledBy="review-filter-reviewed-by-label"
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne @controller.updateFilterReviewedBy}}
             @value={{@controller.filterReviewedBy}}
           />
@@ -192,7 +192,7 @@ export default <template>
           <DSelectUser
             class="user-selector"
             @ariaLabelledBy="review-filter-user-label"
-            @clearable={{true}}
+            @clearMode="button"
             @onChange={{legacyPickOne @controller.updateFilterUsername}}
             @value={{@controller.filterUsername}}
           />

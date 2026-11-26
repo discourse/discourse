@@ -16,7 +16,7 @@ interface DSelectBadgeSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
-    | "clearable"
+    | "clearMode"
     | "describedBy"
     | "disabled"
     | "id"
@@ -108,7 +108,7 @@ const DSelectBadge: TemplateOnlyComponent<DSelectBadgeSignature> = <template>
   <DSelect
     ...attributes
     @ariaLabelledBy={{@ariaLabelledBy}}
-    @clearable={{@clearable}}
+    @clearMode={{@clearMode}}
     @describedBy={{@describedBy}}
     @disabled={{@disabled}}
     @id={{@id}}

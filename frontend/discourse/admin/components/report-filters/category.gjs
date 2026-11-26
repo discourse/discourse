@@ -24,7 +24,7 @@ export default class Category extends FilterComponent {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="search-advanced-category-chooser category-chooser"
-          @clearable={{true}}
+          @clearMode="button"
           @descriptions={{false}}
           @disabled={{@filter.disabled}}
           @emit="ids"

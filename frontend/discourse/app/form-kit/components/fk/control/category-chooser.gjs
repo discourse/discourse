@@ -51,7 +51,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
       <DSelectCategory
         class="form-kit__control-category-chooser"
         ...attributes
-        @clearable={{true}}
+        @clearMode="button"
         @describedBy={{@field.describedBy}}
         @disabled={{@field.disabled}}
         @emit="ids"
