@@ -76,6 +76,26 @@ module(
       assert.strictEqual(view.state.doc.child(1).textContent, "foo\nbar");
     });
 
+    test("format code stays inline when the selection contains an emoji", async function (assert) {
+      let manipulation;
+      const [editor] = await setupRichEditor(assert, "xfoo :smile: barx", {
+        onSetup: (value) => (manipulation = value),
+      });
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 2, 11))
+      );
+      manipulation.formatCode();
+      const paragraph = view.state.doc.firstChild;
+      assert.strictEqual(paragraph.type.name, "paragraph");
+      assert.true(
+        paragraph.content.content.some((node) => node.type.name === "emoji")
+      );
+      assert.true(
+        view.state.doc.rangeHasMark(2, 11, view.state.schema.marks.code)
+      );
+    });
+
     test("code block without a language is highlighted with default_code_lang", async function (assert) {
       this.siteSettings.default_code_lang = "javascript";
 

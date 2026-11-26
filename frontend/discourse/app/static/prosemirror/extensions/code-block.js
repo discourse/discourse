@@ -377,7 +377,9 @@ const extension = {
         if (
           isBlockLevelSelection(selection) ||
           state.doc
-            .textBetween(selection.from, selection.to, "\n", "\n")
+            .textBetween(selection.from, selection.to, "\n", (node) =>
+              node.type === schema.nodes.hard_break ? "\n" : ""
+            )
             .includes("\n")
         ) {
           return convertSelectionToCodeBlock(schema)(state, dispatch);
