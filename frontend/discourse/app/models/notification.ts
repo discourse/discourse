@@ -4,6 +4,7 @@ import RestModel, { type RestModelAttrs } from "discourse/models/rest";
 
 /** Known core packet keys are optional; other producers can add arbitrary data. */
 export interface NotificationData {
+  display_user_id?: number;
   display_username?: string;
   display_name?: string | null;
   topic_title?: string;
@@ -18,6 +19,8 @@ export interface NotificationData {
   reply_to_post_number?: number;
   consolidated_count?: number;
   previous_notification_id?: number;
+  acting_user_id?: number;
+  user2_id?: number;
   username?: string;
   username2?: string;
   name?: string | null;

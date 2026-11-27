@@ -210,7 +210,7 @@ RSpec.describe PostAction do
       notification = Notification.find_by(post_number: 1, topic_id: post.topic_id)
 
       expect(notification.data_hash["count"].to_i).to eq(2)
-      expect(notification.data_hash["username2"]).to eq(eviltrout.username)
+      expect(notification.data_hash["user2_id"]).to eq(eviltrout.id)
 
       # this is a tricky thing ... removing a like should fix up the notifications
       PostActionDestroyer.destroy(eviltrout, post, :like)
@@ -221,8 +221,8 @@ RSpec.describe PostAction do
       notification = Notification.find_by(post_number: 1, topic_id: post.topic_id)
 
       expect(notification.data_hash["count"]).to eq(2)
-      expect(notification.data_hash["username"]).to eq(admin2.username)
-      expect(notification.data_hash["username2"]).to eq(admin.username)
+      expect(notification.data_hash["acting_user_id"]).to eq(admin2.id)
+      expect(notification.data_hash["user2_id"]).to eq(admin.id)
 
       post.user.user_option.update!(
         like_notification_frequency:
@@ -282,8 +282,8 @@ RSpec.describe PostAction do
 
           data = JSON.parse(notification.data)
 
-          expect(data["username"]).to eq(liker.username)
-          expect(data["display_username"]).to eq(liker.username)
+          expect(data["acting_user_id"]).to eq(liker.id)
+          expect(data["display_user_id"]).to eq(liker.id)
           expect(data["count"]).to eq(3)
 
           notification.update!(read: true)
@@ -337,8 +337,8 @@ RSpec.describe PostAction do
           notification = likee.notifications.last
           data_hash = notification.data_hash
 
-          expect(data_hash["original_username"]).to eq(liker.username)
-          expect(data_hash["username2"]).to eq(liker2.username)
+          expect(data_hash["original_user_id"]).to eq(liker.id)
+          expect(data_hash["user2_id"]).to eq(liker2.id)
           expect(data_hash["count"].to_i).to eq(2)
 
           expect do
@@ -358,7 +358,7 @@ RSpec.describe PostAction do
           expect(notification.notification_type).to eq(Notification.types[:liked_consolidated])
 
           expect(notification.data_hash["count"].to_i).to eq(3)
-          expect(notification.data_hash["username"]).to eq(liker.username)
+          expect(notification.data_hash["acting_user_id"]).to eq(liker.id)
         end
       end
     end

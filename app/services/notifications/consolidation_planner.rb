@@ -34,24 +34,27 @@ module Notifications
           consolidation_window: SiteSetting.likes_notification_consolidation_window_mins.minutes,
           unconsolidated_query_blk:
             Proc.new do |notifications, data|
-              key = "display_username"
+              key = "display_user_id"
               value = data[key.to_sym]
-              filtered = notifications.where("data::json ->> 'username2' IS NULL")
+              filtered = notifications.where("data::json ->> 'user2_id' IS NULL")
 
-              filtered = filtered.where("data::json ->> '#{key}' = ?", value) if value
+              filtered = filtered.where("data::json ->> '#{key}' = ?", value.to_s) if value
 
               filtered
             end,
-          consolidated_query_blk: filtered_by_data_attribute("display_username"),
+          consolidated_query_blk: filtered_by_data_attribute("display_user_id"),
         )
         .set_mutations(
           set_data_blk:
             Proc.new do |notification|
               data = notification.data_hash
-              data.merge(username: data[:display_username])
+              data.merge(acting_user_id: data[:display_user_id])
             end,
         )
-        .set_precondition(precondition_blk: Proc.new { |data| data[:username2].blank? })
+        .set_precondition(
+          precondition_blk:
+            Proc.new { |data| data[:user2_id].blank? && data[:display_user_id].present? },
+        )
     end
 
     def liked_by_two_users
@@ -78,9 +81,18 @@ module Notifications
               data = notification.data_hash
               if existing_notification_of_same_type
                 same_type_data = existing_notification_of_same_type.data_hash
+                previous_user_id =
+                  same_type_data[:display_user_id] ||
+                    (
+                      if same_type_data[:display_username].present?
+                        User.where(username_lower: same_type_data[:display_username].downcase).pick(
+                          :id,
+                        )
+                      end
+                    )
                 data.merge(
                   previous_notification_id: existing_notification_of_same_type.id,
-                  username2: same_type_data[:display_username],
+                  user2_id: previous_user_id,
                   count: (same_type_data[:count] || 1).to_i + 1,
                 )
               else
@@ -106,17 +118,20 @@ module Notifications
           to: Notification.types[:linked_consolidated],
           threshold: -> { SiteSetting.notification_consolidation_threshold },
           consolidation_window: SiteSetting.linked_notification_consolidation_window_mins.minutes,
-          unconsolidated_query_blk: filtered_by_data_attribute("display_username"),
-          consolidated_query_blk: filtered_by_data_attribute("display_username"),
+          unconsolidated_query_blk: filtered_by_data_attribute("display_user_id"),
+          consolidated_query_blk: filtered_by_data_attribute("display_user_id"),
         )
         .set_mutations(
           set_data_blk:
             Proc.new do |notification|
               data = notification.data_hash
-              data.merge(username: data[:display_username])
+              data.merge(acting_user_id: data[:display_user_id])
             end,
         )
-        .set_precondition(precondition_blk: Proc.new { |data| data[:username2].blank? })
+        .set_precondition(
+          precondition_blk:
+            Proc.new { |data| data[:user2_id].blank? && data[:display_user_id].present? },
+        )
     end
 
     def group_membership

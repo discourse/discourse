@@ -17,8 +17,8 @@ module DiscourseAssign
         "discourse_assign.assign_notification"
       end
 
-      def display_username
-        assignment.assigned_by_user.username
+      def notification_data_attributes
+        { display_user_id: assignment.assigned_by_user_id }
       end
     end
 
@@ -31,8 +31,8 @@ module DiscourseAssign
         "discourse_assign.assign_group_notification"
       end
 
-      def display_username
-        assignment.assigned_to.name
+      def notification_data_attributes
+        { display_label: assignment.assigned_to.name }
       end
     end
 
@@ -55,7 +55,7 @@ module DiscourseAssign
              private: true
     delegate :excerpt_key,
              :notification_message,
-             :display_username,
+             :notification_data_attributes,
              to: :assignment_type,
              private: true
 
@@ -92,12 +92,9 @@ module DiscourseAssign
         post_number: post.post_number,
         high_priority: true,
         read: mark_as_read?,
-        data: {
-          message: notification_message,
-          display_username: display_username,
-          topic_title: topic.title,
-          assignment_id: id,
-        }.to_json,
+        data: { message: notification_message, topic_title: topic.title, assignment_id: id }.merge(
+          notification_data_attributes,
+        ).to_json,
       )
     end
   end

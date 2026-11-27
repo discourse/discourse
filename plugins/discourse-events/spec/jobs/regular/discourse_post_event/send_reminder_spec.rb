@@ -242,7 +242,7 @@ describe Jobs::DiscoursePostEventSendReminder do
             read: true,
             data: {
               topic_title: event_1.name || post_1.topic.title,
-              display_username: going_user.username,
+              display_user_id: going_user.id,
               message: "discourse_post_event.notifications.before_event_reminder",
             }.to_json,
           )

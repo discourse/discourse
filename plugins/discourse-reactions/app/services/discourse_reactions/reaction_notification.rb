@@ -18,7 +18,7 @@ module DiscourseReactions
         return
       end
 
-      opts = { user_id: @user.id, display_username: @user.username, display_name: @user.name }
+      opts = { user_id: @user.id, display_user_id: @user.id }
 
       if @reaction.reaction_value == HEART_ICON_NAME
         opts[:custom_data] = { reaction_icon: @reaction.reaction_value }
@@ -52,7 +52,7 @@ module DiscourseReactions
         .joins(:users)
         .order("discourse_reactions_reactions.created_at DESC")
         .where("discourse_reactions_reactions.created_at > ?", 1.day.ago)
-        .pluck(:username, :name, :reaction_value)
+        .pluck("users.id", :reaction_value)
     end
 
     def refresh_notification(read)
@@ -64,15 +64,13 @@ module DiscourseReactions
       data = {
         topic_title: @post.topic.title,
         count: remaining_data.length,
-        username: remaining_data[0][0],
-        display_username: remaining_data[0][0],
-        display_name: remaining_data[0][1],
+        acting_user_id: remaining_data[0][0],
+        display_user_id: remaining_data[0][0],
       }
 
-      data[:username2] = remaining_data[1][0] if remaining_data[1]
-      data[:name2] = remaining_data[1][1] if remaining_data[1]
+      data[:user2_id] = remaining_data[1][0] if remaining_data[1]
 
-      if remaining_data.all? { |element| element[2] == HEART_ICON_NAME }
+      if remaining_data.all? { |element| element[1] == HEART_ICON_NAME }
         data[:reaction_icon] = HEART_ICON_NAME
       end
 

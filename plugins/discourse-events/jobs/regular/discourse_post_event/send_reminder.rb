@@ -81,7 +81,7 @@ module Jobs
           post_number: event.post.post_number,
           data: {
             topic_title: event_title(event),
-            display_username: invitee.user.username,
+            display_user_id: invitee.user_id,
             message: "discourse_post_event.notifications.#{prefix}_event_reminder",
           }.to_json,
         }

@@ -156,7 +156,7 @@ RSpec.describe PostVoting::CommentsController do
       expect(notification.topic_id).to eq(answer.topic_id)
 
       expect(notification.data).to eq(
-        { post_voting_comment_id: comment.id, display_username: user.username }.to_json,
+        { post_voting_comment_id: comment.id, display_user_id: user.id }.to_json,
       )
 
       expect(message.data[:notification_type]).to eq(

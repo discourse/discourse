@@ -353,7 +353,7 @@ class InviteRedeemer
     return if invite.invited_by.blank?
     invite.invited_by.notifications.create!(
       notification_type: Notification.types[:invitee_accepted],
-      data: { display_username: invited_user.username }.to_json,
+      data: { display_user_id: invited_user.id }.to_json,
     )
   end
 

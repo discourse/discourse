@@ -42,7 +42,7 @@ RSpec.describe Live::CallsController do
       data = JSON.parse(notification.data)
       expect(data["call"]).to eq(true)
       expect(data["room_slug"]).to eq(room.slug)
-      expect(data["display_username"]).to eq(caller.username)
+      expect(data["display_user_id"]).to eq(caller.id)
 
       expect(alert_messages.size).to eq(1)
       expect(alert_messages.first.data[:translated_title]).to eq(

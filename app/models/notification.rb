@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
-  attr_accessor :acting_user
-  attr_accessor :acting_username
+  USER_REFERENCE_FIELDS = [
+    %i[acting_user_id username name],
+    %i[display_user_id display_username display_name],
+    [:mentioned_by_user_id, :mentioned_by_username, nil],
+    [:invited_by_user_id, :invited_by_username, nil],
+    %i[original_user_id original_username original_name],
+    %i[user2_id username2 name2],
+  ].freeze
+
+  ACTING_USER_FIELDS = USER_REFERENCE_FIELDS.reject { |id_key, _, _| id_key == :user2_id }.freeze
+  LEGACY_USERNAME_KEYS = USER_REFERENCE_FIELDS.map { |_, u_key, _| u_key.to_s }.freeze
+  STRIPPED_NAME_KEYS = USER_REFERENCE_FIELDS.filter_map { |_, _, name_key| name_key&.to_s }.freeze
+  SERIALIZER_EXCLUDED_DATA_KEYS = [:display_label, *STRIPPED_NAME_KEYS.map(&:to_sym)].freeze
+  HYDRATED_USER_COLUMNS = %i[id username username_lower name uploaded_avatar_id].freeze
+
+  attr_accessor :acting_user, :acting_username
+  attr_reader :users_by_id, :users_by_username
 
   belongs_to :user
   belongs_to :topic
@@ -18,6 +33,8 @@ class Notification < ActiveRecord::Base
 
   validates :data, presence: true
   validates :notification_type, presence: true
+
+  before_validation :normalize_user_data, if: :will_save_change_to_data?
 
   scope :unread, lambda { where(read: false) }
   scope :recent,
@@ -79,6 +96,7 @@ class Notification < ActiveRecord::Base
 
   def self.consolidate_or_create!(notification_params)
     notification = new(notification_params)
+    notification.normalize_user_data
     consolidation_planner = Notifications::ConsolidationPlanner.new
 
     consolidated_notification = consolidation_planner.consolidate_or_save!(notification)
@@ -299,6 +317,21 @@ class Notification < ActiveRecord::Base
     end
   end
 
+  def data=(value)
+    reset_parsed_data_cache
+    super
+  end
+
+  def reload(*)
+    reset_parsed_data_cache
+    super
+  end
+
+  def cache_hydrated_users(by_id, by_username)
+    @users_by_id = by_id
+    @users_by_username = by_username
+  end
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||=
@@ -425,27 +458,123 @@ class Notification < ActiveRecord::Base
     end
   end
 
-  def self.populate_acting_user(notifications)
-    if !(SiteSetting.show_user_menu_avatars || SiteSetting.prioritize_full_name_in_ux)
-      return notifications
-    end
-    usernames =
-      notifications.map do |notification|
-        notification.acting_username =
-          (
-            notification.data_hash[:username] || notification.data_hash[:display_username] ||
-              notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username] ||
-              notification.data_hash[:original_username]
-          )&.downcase
+  def self.normalize_data_hashes!(hashes)
+    dirty = false
+    usernames = []
+
+    hashes.each do |hash|
+      next unless hash.is_a?(Hash)
+
+      STRIPPED_NAME_KEYS.each do |key|
+        if hash.key?(key)
+          dirty = true
+          break
+        end
       end
 
-    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
+      LEGACY_USERNAME_KEYS.each do |key|
+        next unless hash.key?(key)
+        dirty = true
+        val = hash[key]
+        usernames << val.downcase if val.is_a?(String) && val.present?
+      end
+    end
+
+    return false unless dirty
+
+    ids_by_username =
+      if usernames.present?
+        User.where(username_lower: usernames.uniq).pluck(:username_lower, :id).to_h
+      else
+        {}
+      end
+
+    hashes.each do |hash|
+      next unless hash.is_a?(Hash)
+
+      STRIPPED_NAME_KEYS.each { |key| hash.delete(key) }
+
+      USER_REFERENCE_FIELDS.each do |id_key, username_key, _|
+        u_key = username_key.to_s
+        next unless hash.key?(u_key)
+
+        raw_val = hash.delete(u_key)
+        next if raw_val.blank?
+
+        if (uid = ids_by_username[raw_val.to_s.downcase])
+          hash[id_key.to_s] ||= uid
+        elsif username_key == :display_username
+          hash["display_label"] ||= raw_val
+        end
+      end
+    end
+
+    true
+  end
+
+  def normalize_user_data
+    return if data.blank? || @normalized_data_source.equal?(data)
+
+    parsed = JSON.parse(data)
+    return unless parsed.is_a?(Hash)
+
+    self.data = parsed.to_json if self.class.normalize_data_hashes!([parsed])
+    @data_hash = parsed.with_indifferent_access
+    @normalized_data_source = data
+  rescue JSON::ParserError
+    nil
+  end
+
+  def self.populate_acting_user(notifications)
+    return notifications if notifications.blank?
+
+    ids = []
+    legacy_names = []
+
     notifications.each do |notification|
-      notification.acting_user = users[notification.acting_username]
-      notification.data_hash[
-        :original_name
-      ] = notification.acting_user&.name if SiteSetting.enable_names
+      hash = notification.data_hash
+      USER_REFERENCE_FIELDS.each do |id_key, username_key, _|
+        if (uid = hash[id_key]).present?
+          ids << uid.to_i
+        elsif (uname = hash[username_key]).present?
+          legacy_names << uname.to_s.downcase
+        end
+      end
+    end
+
+    by_id =
+      ids.present? ? User.where(id: ids.uniq).select(HYDRATED_USER_COLUMNS).index_by(&:id) : {}
+    by_username =
+      if legacy_names.present?
+        User
+          .where(username_lower: legacy_names.uniq)
+          .select(HYDRATED_USER_COLUMNS)
+          .index_by(&:username_lower)
+      else
+        {}
+      end
+
+    resolve_actor = SiteSetting.show_user_menu_avatars || SiteSetting.prioritize_full_name_in_ux
+
+    notifications.each do |notification|
+      notification.cache_hydrated_users(by_id, by_username)
+      next unless resolve_actor
+
+      hash = notification.data_hash
+      actor =
+        ACTING_USER_FIELDS
+          .lazy
+          .filter_map do |id_key, u_key, _|
+            if (uid = hash[id_key]).present?
+              by_id[uid.to_i]
+            elsif (uname = hash[u_key]).present?
+              by_username[uname.to_s.downcase]
+            end
+          end
+          .first
+
+      notification.acting_user = actor
+      notification.acting_username = actor&.username_lower
     end
 
     notifications
@@ -489,6 +618,17 @@ class Notification < ActiveRecord::Base
       NotificationEmailer.process_notification(self)
     end
   end
+
+  private
+
+  def reset_parsed_data_cache
+    @data_hash = nil
+    @normalized_data_source = nil
+    @users_by_id = nil
+    @users_by_username = nil
+    @acting_user = nil
+    @acting_username = nil
+  end
 end
 
 # == Schema Information
@@ -510,10 +650,12 @@ end
 # Indexes
 #
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
-#  index_notifications_on_data_display_username                 ((((data)::jsonb ->> 'display_username'::text))) WHERE (((data)::jsonb ->> 'display_username'::text) IS NOT NULL)
-#  index_notifications_on_data_original_username                ((((data)::jsonb ->> 'original_username'::text))) WHERE (((data)::jsonb ->> 'original_username'::text) IS NOT NULL)
-#  index_notifications_on_data_username                         ((((data)::jsonb ->> 'username'::text))) WHERE (((data)::jsonb ->> 'username'::text) IS NOT NULL)
-#  index_notifications_on_data_username2                        ((((data)::jsonb ->> 'username2'::text))) WHERE (((data)::jsonb ->> 'username2'::text) IS NOT NULL)
+#  index_notifications_on_data_acting_user_id                   ((((data)::jsonb ->> 'acting_user_id'::text))) WHERE (((data)::jsonb ->> 'acting_user_id'::text) IS NOT NULL)
+#  index_notifications_on_data_display_user_id                  ((((data)::jsonb ->> 'display_user_id'::text))) WHERE (((data)::jsonb ->> 'display_user_id'::text) IS NOT NULL)
+#  index_notifications_on_data_invited_by_user_id               ((((data)::jsonb ->> 'invited_by_user_id'::text))) WHERE (((data)::jsonb ->> 'invited_by_user_id'::text) IS NOT NULL)
+#  index_notifications_on_data_mentioned_by_user_id             ((((data)::jsonb ->> 'mentioned_by_user_id'::text))) WHERE (((data)::jsonb ->> 'mentioned_by_user_id'::text) IS NOT NULL)
+#  index_notifications_on_data_original_user_id                 ((((data)::jsonb ->> 'original_user_id'::text))) WHERE (((data)::jsonb ->> 'original_user_id'::text) IS NOT NULL)
+#  index_notifications_on_data_user2_id                         ((((data)::jsonb ->> 'user2_id'::text))) WHERE (((data)::jsonb ->> 'user2_id'::text) IS NOT NULL)
 #  index_notifications_on_post_action_id                        (post_action_id)
 #  index_notifications_on_topic_id_and_post_number              (topic_id,post_number)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)

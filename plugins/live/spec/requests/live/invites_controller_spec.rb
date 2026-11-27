@@ -38,7 +38,7 @@ RSpec.describe Live::InvitesController do
       data = JSON.parse(notification.data)
       expect(data["room_slug"]).to eq(room.slug)
       expect(data["room_name"]).to eq(room.name)
-      expect(data["display_username"]).to eq(user.username)
+      expect(data["display_user_id"]).to eq(user.id)
 
       expect(messages.size).to eq(1)
       expect(messages.first.data[:post_url]).to eq(

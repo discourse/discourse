@@ -121,7 +121,7 @@ module Jobs
         description = thread.title.presence || thread.original_message.message
 
         data = {
-          username: @creator.username,
+          acting_user_id: @creator.id,
           chat_message_id: @chat_message.id,
           chat_channel_id: @chat_channel.id,
           chat_thread_id: @chat_message.thread_id,

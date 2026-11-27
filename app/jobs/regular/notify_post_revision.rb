@@ -18,7 +18,7 @@ module Jobs
               user,
               Notification.types[:edited],
               post_revision.post,
-              display_username: post_revision.user.username,
+              display_user_id: post_revision.user_id,
               acting_user_id: post_revision&.user_id,
               revision_number: post_revision.number,
             )

@@ -311,7 +311,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       expect(data_hash[:chat_message_id]).to eq(message.id)
       expect(data_hash[:chat_channel_id]).to eq(public_channel.id)
-      expect(data_hash[:mentioned_by_username]).to eq(user_1.username)
+      expect(data_hash[:mentioned_by_user_id]).to eq(user_1.id)
       expect(data_hash[:is_direct_message_channel]).to eq(false)
       expect(data_hash[:chat_channel_title]).to eq(expected_channel_title)
       expect(data_hash[:chat_channel_slug]).to eq(public_channel.slug)

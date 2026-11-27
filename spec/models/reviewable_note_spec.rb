@@ -105,7 +105,7 @@ RSpec.describe ReviewableNote do
         "reviewable_id" => reviewable.id,
         "reviewable_note_id" => note.id,
         "topic_title" => reviewable.topic.title,
-        "display_username" => admin.username,
+        "display_user_id" => admin.id,
       )
       expect(notifications.first.topic_id).to be_nil
       expect(notifications.first.post_number).to be_nil

@@ -37,7 +37,7 @@ module Jobs
                   notification_type: Notification.types[:topic_reminder],
                   topic_id: post.topic_id,
                   post_number: post.post_number,
-                  data: { topic_title: post.topic.title, display_username: user.username }.to_json,
+                  data: { topic_title: post.topic.title, display_user_id: user.id }.to_json,
                   high_priority: true,
                 )
               end

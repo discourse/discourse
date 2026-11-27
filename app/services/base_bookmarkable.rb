@@ -126,13 +126,16 @@ class BaseBookmarkable
             )
     end
 
-    notification_data[:data] = notification_data[:data].merge(
-      display_username: bookmark.user.username,
-      bookmark_name: bookmark.name,
-      bookmark_id: bookmark.id,
-      bookmarkable_type: bookmark.bookmarkable_type,
-      bookmarkable_id: bookmark.bookmarkable_id,
-    ).to_json
+    notification_data[:data] = notification_data[:data]
+      .except(:display_username)
+      .merge(
+        display_user_id: bookmark.user_id,
+        bookmark_name: bookmark.name,
+        bookmark_id: bookmark.id,
+        bookmarkable_type: bookmark.bookmarkable_type,
+        bookmarkable_id: bookmark.bookmarkable_id,
+      )
+      .to_json
     notification_data[:notification_type] = Notification.types[:bookmark_reminder]
     bookmark.user.notifications.create!(notification_data)
   end

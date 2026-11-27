@@ -37,7 +37,7 @@ module Jobs
         data = {
           chat_message_id: @chat_message.id,
           chat_channel_id: @chat_channel.id,
-          mentioned_by_username: @creator.username,
+          mentioned_by_user_id: @creator.id,
           is_direct_message_channel: @is_direct_message_channel,
         }
 

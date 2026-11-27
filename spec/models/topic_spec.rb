@@ -1259,7 +1259,7 @@ RSpec.describe Topic do
         notification_data = JSON.parse(notification.data)
 
         expect(notification_data["topic_title"]).to eq(topic.title)
-        expect(notification_data["display_username"]).to eq(inviter.username)
+        expect(notification_data["display_user_id"]).to eq(inviter.id)
       end
 
       describe "by username" do

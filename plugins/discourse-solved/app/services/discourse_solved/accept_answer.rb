@@ -90,7 +90,7 @@ class DiscourseSolved::AcceptAnswer
       post_number: post.post_number,
       data: {
         message: "solved.accepted_notification",
-        display_username: guardian.user.username,
+        display_user_id: guardian.user.id,
         topic_title: topic.title,
         title: "solved.notification.title",
       }.to_json,
@@ -114,7 +114,7 @@ class DiscourseSolved::AcceptAnswer
       post_number: post.post_number,
       data: {
         message: "solved.accepted_notification",
-        display_username: guardian.user.username,
+        display_user_id: guardian.user.id,
         topic_title: topic.title,
         title: "solved.notification.title",
       }.to_json,
@@ -144,7 +144,7 @@ class DiscourseSolved::AcceptAnswer
   def notify_tracking_and_watching_users(post:, topic:, guardian:, topic_user_ids:, screener:)
     notification_data = {
       message: "solved.topic_solved_notification",
-      display_username: guardian.user.username,
+      display_user_id: guardian.user.id,
       topic_title: topic.title,
       title: "solved.notification.topic_solved_title",
     }.to_json

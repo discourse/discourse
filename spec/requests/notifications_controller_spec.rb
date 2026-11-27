@@ -876,4 +876,96 @@ RSpec.describe NotificationsController do
       expect(response.status).to eq(200)
     end
   end
+
+  context "when acting users rename or are anonymized" do
+    fab!(:actor) { Fabricate(:user, username: "alice_orig", name: "Alice Secret") }
+    fab!(:co_actor) { Fabricate(:user, username: "carol_co", name: "Carol Co") }
+    fab!(:recipient, :user)
+    fab!(:admin)
+
+    it "reflects renames and anonymization in serialized notifications without N+1 user queries" do
+      Jobs.run_immediately!
+      SiteSetting.enable_names = true
+      SiteSetting.prioritize_full_name_in_ux = true
+      SiteSetting.full_name_requirement = "optional_at_signup"
+      recipient.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always],
+      )
+
+      topic_for_replies = Fabricate(:topic, user: recipient)
+      Fabricate(:post, topic: topic_for_replies, user: recipient, post_number: 1)
+      PostAlerter.post_created(
+        Fabricate(:post, topic: topic_for_replies, user: actor, reply_to_post_number: 1),
+      )
+      PostAlerter.post_created(
+        Fabricate(:post, topic: topic_for_replies, user: co_actor, reply_to_post_number: 1),
+      )
+
+      mention_post = Fabricate(:post, user: actor, raw: "Hi @#{recipient.username}")
+      PostAlerter.post_created(mention_post)
+
+      edited_post = Fabricate(:post, user: co_actor, raw: "No mention yet")
+      edited_post.revise(actor, raw: "Paging @#{recipient.username}")
+
+      liked_post = Fabricate(:post, user: recipient)
+      PostActionNotifier.enable
+      PostActionCreator.like(actor, liked_post)
+
+      raw_payloads = recipient.notifications.pluck(:data).join("\n")
+      expect(raw_payloads).not_to include("alice_orig")
+      expect(raw_payloads).not_to include("Alice Secret")
+
+      sign_in(recipient)
+      queries =
+        track_sql_queries do
+          get "/notifications.json"
+          expect(response.status).to eq(200)
+        end
+
+      expect(queries.grep(/FROM "users"/).size).to be <= 3
+
+      notifications = response.parsed_body["notifications"]
+      by_type = notifications.group_by { |n| n["notification_type"] }
+
+      expect(by_type[Notification.types[:replied]].first["data"]).to include(
+        "original_username" => "carol_co",
+        "original_name" => "Carol Co",
+        "display_username" => I18n.t("embed.replies", count: 2),
+      )
+      expect(by_type[Notification.types[:replied]].first["acting_user_name"]).to eq("Carol Co")
+      expect(
+        by_type[Notification.types[:mentioned]].map { |n| n.dig("data", "display_username") },
+      ).to contain_exactly("alice_orig", "alice_orig")
+      expect(by_type[Notification.types[:liked]].first["data"]).to include(
+        "display_username" => "alice_orig",
+        "display_name" => "Alice Secret",
+      )
+      expect(by_type[Notification.types[:liked]].first["acting_user_name"]).to eq("Alice Secret")
+
+      UsernameChanger.change(actor, "alice_renamed")
+
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("alice_orig")
+      expect(
+        response.parsed_body["notifications"]
+          .select { |n| n["notification_type"] == Notification.types[:mentioned] }
+          .map { |n| n.dig("data", "display_username") },
+      ).to contain_exactly("alice_renamed", "alice_renamed")
+
+      UserAnonymizer.make_anonymous(actor.reload, admin)
+
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("alice_renamed")
+      expect(response.body).not_to include("Alice Secret")
+      liked_notif =
+        response.parsed_body["notifications"].find do |n|
+          n["notification_type"] == Notification.types[:liked]
+        end
+      expect(liked_notif["acting_user_name"]).to be_blank
+      expect(liked_notif["data"]["display_username"]).to eq(actor.reload.username)
+      expect(liked_notif["data"]).not_to have_key("display_name")
+    end
+  end
 end

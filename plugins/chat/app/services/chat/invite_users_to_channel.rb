@@ -66,7 +66,7 @@ module Chat
           chat_channel_id: channel.id,
           chat_channel_title: channel.title(invited_user),
           chat_channel_slug: channel.slug,
-          invited_by_username: guardian.user.username,
+          invited_by_user_id: guardian.user.id,
           chat_message_id: params.message_id,
         }.compact
 

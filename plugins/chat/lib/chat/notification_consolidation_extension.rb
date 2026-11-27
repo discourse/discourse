@@ -39,21 +39,34 @@ module Chat
             return data if !last_watched_thread_notification
 
             consolidated_data = last_watched_thread_notification.data_hash
+            prev_acting_id =
+              consolidated_data[:acting_user_id] ||
+                (
+                  if consolidated_data[:username].present?
+                    User.where(username_lower: consolidated_data[:username].downcase).pick(:id)
+                  end
+                )
+            prev_user2_id =
+              consolidated_data[:user2_id] ||
+                (
+                  if consolidated_data[:username2].present?
+                    User.where(username_lower: consolidated_data[:username2].downcase).pick(:id)
+                  end
+                )
 
             if data[:last_read_message_id].to_i <= consolidated_data[:chat_message_id].to_i
               data[:chat_message_id] = consolidated_data[:chat_message_id]
             end
 
-            if !consolidated_data[:username2] && data[:username] != consolidated_data[:username]
-              data.merge(
-                username2: consolidated_data[:username],
-                user_ids: consolidated_data[:user_ids].concat(data[:user_ids]),
-              )
+            merged_user_ids = (Array(consolidated_data[:user_ids]) + Array(data[:user_ids])).uniq
+
+            if !prev_user2_id && data[:acting_user_id].to_i != prev_acting_id.to_i
+              data.merge(user2_id: prev_acting_id, user_ids: merged_user_ids)
             else
               data.merge(
-                username: consolidated_data[:username],
-                username2: consolidated_data[:username2],
-                user_ids: consolidated_data[:user_ids].concat(data[:user_ids]).uniq,
+                acting_user_id: prev_acting_id,
+                user2_id: prev_user2_id,
+                user_ids: merged_user_ids,
               )
             end
           end,
