@@ -1,4 +1,6 @@
-import DiscourseURL from "discourse/lib/url";
+import EmbedMode from "discourse/lib/embed-mode";
+import { withoutPrefix } from "discourse/lib/get-url";
+import DiscourseURL, { rewritePath } from "discourse/lib/url";
 
 const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
 
@@ -12,6 +14,25 @@ export function wantsNewWindow(e, link = e.currentTarget) {
     (e.button && e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID) ||
     link?.getAttribute?.("target") === "_blank"
   );
+}
+
+function needsDocumentNavigation(link) {
+  if (EmbedMode.enabled || link.origin !== window.location.origin) {
+    return false;
+  }
+
+  const path = link.pathname.replaceAll(/\/\/+/g, "/") + link.search;
+  try {
+    const route = DiscourseURL.routerService.recognize(path);
+    if (route && route.name !== "unknown") {
+      return false;
+    }
+  } catch {
+    return true;
+  }
+
+  const routerPath = withoutPrefix(path);
+  return rewritePath(routerPath) === routerPath;
 }
 
 /**
@@ -52,6 +73,10 @@ export default function interceptClick(e) {
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))
   ) {
+    return;
+  }
+
+  if (needsDocumentNavigation(target)) {
     return;
   }
 
