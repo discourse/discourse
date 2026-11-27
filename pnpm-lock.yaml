@@ -711,8 +711,8 @@ importers:
         specifier: ^0.1.7
         version: 0.1.7
       '@rolldown/pluginutils':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.1.0
+        version: 1.1.0
       '@rollup/plugin-babel':
         specifier: ^7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
@@ -2894,8 +2894,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rolldown/pluginutils@1.0.1':
-    resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+  '@rolldown/pluginutils@1.1.0':
+    resolution: {integrity: sha512-K+NU2HDCEem4sClgHH4ZZXwdJeNFkJo+hRk479DIwdIviAPN2hFJH1KHHwg8CxHQXvi0M5XY4deTXINfIiSG6w==}
 
   '@rollup/browser@4.68.7':
     resolution: {integrity: sha512-dU7f2exmx5AmZpHy8vltDV2JOU2ztPwHP6qtQgHpXUxjhyDYZblmvf3BKOnlJHsNTJsrHL5M/oVTKKMMuOylhg==}
@@ -10533,7 +10533,7 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.2.7':
     optional: true
 
-  '@rolldown/pluginutils@1.0.1': {}
+  '@rolldown/pluginutils@1.1.0': {}
 
   '@rollup/browser@4.68.7':
     dependencies:
@@ -15546,7 +15546,7 @@ snapshots:
   rolldown@1.2.7:
     dependencies:
       '@oxc-project/types': 0.148.0
-      '@rolldown/pluginutils': 1.0.1
+      '@rolldown/pluginutils': 1.1.0
     optionalDependencies:
       '@rolldown/binding-android-arm-eabi': 1.2.7
       '@rolldown/binding-android-arm64': 1.2.7
