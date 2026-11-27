@@ -14,13 +14,7 @@ module Dsa
 
         before_validation do
           @valid_shape =
-            raw_attributes.all? do |field, value|
-              if field == "declaration"
-                [nil, true, false, "true", "false", "1", "0", 1, 0].include?(value)
-              else
-                value.nil? || value.is_a?(String)
-              end
-            end
+            raw_attributes.except("declaration").values.all? { it.nil? || it.is_a?(String) }
           self.content_url = content_url.to_s.strip
           self.explanation = explanation.to_s.strip
           self.name = name.to_s.strip

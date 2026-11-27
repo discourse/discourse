@@ -2,5 +2,6 @@
 
 Rails.application.config.to_prepare do
   ActiveModel::Type.register(:array, ActiveSupportTypeExtensions::Array)
+  ActiveModel::Type.register(:boolean, ActiveSupportTypeExtensions::Boolean)
   ActiveModel::Type.register(:symbol, ActiveSupportTypeExtensions::Symbol)
 end

@@ -76,19 +76,22 @@ class Admin::UsersController < Admin::StaffController
 
   def create_bot
     plugin_param_names = DiscoursePluginRegistry.bot_creation_params.keys
-    bot = params.expect(bot: %i[name username trust_level interactive_bot] + plugin_param_names)
-    # Strong parameters drop non-scalar values; treat them as invalid rather than omitted.
-    if params[:bot].key?(:interactive_bot) && !bot.key?(:interactive_bot)
-      bot[:interactive_bot] = nil
-    end
-    plugin_params = bot.extract!(*plugin_param_names).to_h
+    bot = params.require(:bot)
+    raise Discourse::InvalidParameters.new(:bot) if !bot.is_a?(ActionController::Parameters)
+    plugin_params = bot.permit(*plugin_param_names).to_h
 
     # Request uses `key`, as `api_key` would be read as an authentication credential.
     key = params[:key]
     raise Discourse::InvalidParameters.new(:key) if key && !key.is_a?(ActionController::Parameters)
 
     User::CreateBot.call(
-      service_params.merge(params: bot.to_h.merge(api_key: key&.to_unsafe_h, plugin_params:)),
+      service_params.merge(
+        params:
+          bot
+            .to_unsafe_h
+            .except(*plugin_param_names)
+            .merge(api_key: key&.to_unsafe_h, plugin_params:),
+      ),
     ) do
       on_success do |user:, api_key: nil|
         render json: {
