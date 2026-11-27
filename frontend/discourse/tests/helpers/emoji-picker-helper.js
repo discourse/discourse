@@ -1,4 +1,5 @@
 import { click, fillIn } from "@ember/test-helpers";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class EmojiPicker {
@@ -21,7 +22,15 @@ class EmojiPicker {
   }
 
   async tone(level) {
-    await click(query(".emoji-picker__diversity-trigger", this.element));
+    const trigger = query(".emoji-picker__diversity-trigger", this.element);
+
+    // TODO (select-kit-replacement-cleanup): Keep only this branch after rollout.
+    if (trigger.getAttribute("role") === "combobox") {
+      await dSelect(trigger).select(level);
+      return;
+    }
+
+    await click(trigger);
 
     if (level === 1) {
       await click(

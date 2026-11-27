@@ -56,7 +56,16 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     - ☑ Nested replies sort (`components/nested/sort-selector.gjs`). A static `DSelect` named
       by the visible "Sort by" label and styled as the flat button it replaces. The system
       specs still drive the old menu through the nested view's page object.
-    - ☐ Emoji skin tone (`components/emoji-picker/diversity-menu.gjs`).
+    - ☑ Emoji skin tone (`components/emoji-picker/diversity-menu.gjs`). A static `DSelect` that
+      can't be emptied, named "Skin tone", showing the clap in the current tone. The rows show
+      each tone's clap and its name, from the tone strings translated since 2017 but unused until
+      now; the old control read "clap:t3". "No skin tone" is stored as 1, the store's default,
+      rather than `null`. On a phone the list opens as a sheet over the picker's own modal.
+      Escape inside it used to close the emoji picker too, because every open float closed on
+      the same Escape; float-kit now closes only the newest one, which also makes the chat
+      sidebar's filter and sort submenus close one level at a time. The old rows' classes
+      (`.emoji-picker__diversity-menu`, `.emoji-picker__diversity-item`, `data-level`) are gone,
+      which matters to themes and to tests that click them.
     - ☑ Design wizard body and heading fonts (`components/design-wizard/fonts-section.gjs`). Two
       required `DSelectFont` typeaheads (`@clearMode="never"` and `@ariaRequired`) named by their
       captions. The wizard's fonts are keyed by `key` and listed popular first, so the recipe gained

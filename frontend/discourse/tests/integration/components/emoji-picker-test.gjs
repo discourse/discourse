@@ -1,11 +1,42 @@
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  findAll,
+  focus,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import EmojiPicker from "discourse/components/emoji-picker";
 import Content from "discourse/components/emoji-picker/content";
+import { SKIN_TONE_STORE_KEY } from "discourse/services/emoji-store";
 import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
+import { i18n } from "discourse-i18n";
+
+const TONE = ".emoji-picker__diversity-trigger";
+const TONE_NAMES = {
+  1: "default_tone",
+  2: "light_tone",
+  3: "medium_light_tone",
+  4: "medium_tone",
+  5: "medium_dark_tone",
+  6: "dark_tone",
+};
+
+function toneName(scale) {
+  return i18n(`emoji_picker.${TONE_NAMES[scale]}`);
+}
+
+function clapUrl(scale) {
+  const path = scale === 1 ? "clap" : `clap/${scale}`;
+  return `/images/emoji/twitter/${path}.png?v=${v}`;
+}
 
 module("Integration | Component | EmojiPickerContent", function (hooks) {
   setupRenderingTest(hooks);
@@ -262,5 +293,114 @@ module("Integration | Component | EmojiPickerContent", function (hooks) {
         ":raised_hands:t2:",
         "it has a title with the scale"
       );
+  });
+
+  module("skin tone with new select controls", function (flagHooks) {
+    flagHooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("shows the current tone's clap, and says which tone it is", async function (assert) {
+      await render(<template><Content /></template>);
+
+      assert.dSelect(TONE).hasValue(1);
+      assert
+        .dom(TONE)
+        .hasAttribute("role", "combobox")
+        .hasAria("label", i18n("emoji_picker.skin_tone"))
+        .hasText(toneName(1));
+      assert
+        .dom(`${TONE} img.emoji`)
+        .hasAttribute("src", clapUrl(1))
+        .hasAttribute("alt", "");
+      assert.dom(`${TONE} .d-select__caret`).doesNotExist();
+    });
+
+    test("lists the six tones by name with their claps, and checks the current one", async function (assert) {
+      await render(<template><Content /></template>);
+      await dSelect(TONE).open();
+
+      assert.dSelect(TONE).hasOptions([1, 2, 3, 4, 5, 6]);
+      assert.deepEqual(
+        findAll("[role='option']").map((row) => row.textContent.trim()),
+        [1, 2, 3, 4, 5, 6].map(toneName)
+      );
+      assert.deepEqual(
+        findAll("[role='option'] img.emoji").map((img) => [
+          img.getAttribute("src"),
+          img.getAttribute("alt"),
+        ]),
+        [1, 2, 3, 4, 5, 6].map((scale) => [clapUrl(scale), ""])
+      );
+      assert.dSelect(TONE).hasSelectedOption(1);
+    });
+
+    test("applies and stores the picked tone", async function (assert) {
+      await render(<template><Content /></template>);
+      await dSelect(TONE).select(6);
+
+      assert.strictEqual(this.emojiStore.diversity, 6);
+      assert.strictEqual(
+        this.emojiStore.store.getObject(SKIN_TONE_STORE_KEY),
+        6,
+        "it remembers the tone"
+      );
+      assert
+        .dom(`img[src="/images/emoji/twitter/raised_hands/6.png?v=${v}"]`)
+        .exists("it applies the tone to emojis");
+      assert.dSelect(TONE).hasValue(6);
+      assert.dom(TONE).hasText(toneName(6));
+      assert.dom(`${TONE} img.emoji`).hasAttribute("src", clapUrl(6));
+
+      await dSelect(TONE).select(1);
+
+      assert.strictEqual(this.emojiStore.diversity, 1);
+      assert
+        .dom(`img[src="/images/emoji/twitter/raised_hands.png?v=${v}"]`)
+        .exists("it removes the tone from emojis");
+      assert.dSelect(TONE).hasValue(1);
+    });
+
+    test("starts at the stored tone", async function (assert) {
+      this.emojiStore.diversity = 4;
+      await render(<template><Content /></template>);
+
+      assert.dSelect(TONE).hasValue(4);
+      assert.dom(TONE).hasText(toneName(4));
+      assert.dom(`${TONE} img.emoji`).hasAttribute("src", clapUrl(4));
+    });
+
+    test("keeps the tone when Backspace is pressed on it, and doesn't say it was cleared", async function (assert) {
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      await render(<template><Content /></template>);
+      await dSelect(TONE).select(3);
+      await focus(TONE);
+      await triggerKeyEvent(TONE, "keydown", "Backspace");
+
+      assert.dSelect(TONE).hasValue(3);
+      assert.strictEqual(this.emojiStore.diversity, 3);
+      assert.false(
+        announce.calledWith(i18n("d_select.selection_cleared")),
+        "nothing was cleared"
+      );
+    });
+
+    test("Escape closes only the tone list, and returns to its trigger", async function (assert) {
+      await render(<template><EmojiPicker /></template>);
+      await click(".emoji-picker-trigger");
+      await dSelect(TONE).open();
+      await triggerKeyEvent(TONE, "keydown", "Escape");
+
+      assert.dom("[role='listbox']").doesNotExist("the tone list is closed");
+      assert.dom(".emoji-picker").exists("the emoji picker stays open");
+      assert.dom(TONE).isFocused();
+    });
+
+    test("the emoji picker helper picks a tone", async function (assert) {
+      await render(<template><Content /></template>);
+      await emojiPicker(".emoji-picker").tone(2);
+
+      assert.strictEqual(this.emojiStore.diversity, 2);
+    });
   });
 });

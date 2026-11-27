@@ -50,6 +50,13 @@
     }
   }
 
+  &__diversity-trigger.d-select__trigger {
+    flex: 0 0 auto;
+    width: auto;
+    background: transparent;
+    border-color: transparent;
+  }
+
   .emoji {
     padding: 6px;
     width: 24px;
@@ -317,4 +324,8 @@
       padding-left: 0.75em;
     }
   }
+}
+
+.d-select__content.emoji-picker-diversity-content {
+  --d-select-menu-min-width: 16em;
 }
