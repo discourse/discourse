@@ -67,7 +67,11 @@ module DiscourseAi
         end
 
         def processor
-          @processor ||= OpenAiMessageProcessor.new(partial_tool_calls: partial_tool_calls)
+          @processor ||=
+            OpenAiMessageProcessor.new(
+              partial_tool_calls: partial_tool_calls,
+              output_thinking: output_thinking,
+            )
         end
       end
     end
