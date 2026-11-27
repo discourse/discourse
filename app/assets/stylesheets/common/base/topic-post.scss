@@ -2392,3 +2392,8 @@ span.post-count {
     }
   }
 }
+
+.topic-meta-data .names a:focus-visible {
+  outline: 2px solid var(--d-input-focused-color);
+  outline-offset: -2px;
+}
