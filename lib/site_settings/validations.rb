@@ -260,6 +260,13 @@ module SiteSettings::Validations
     validate_error :dsa_community_rules_required
   end
 
+  def validate_builtin_badge_thresholds(new_val)
+    return if new_val.blank?
+
+    badges = JSON.parse(new_val).pluck("badge")
+    validate_error :duplicate_builtin_badge_thresholds if badges.uniq.size != badges.size
+  end
+
   def validate_dsa_community_rules(new_val)
     return if !SiteSetting.dsa_reporting_enabled || JSON.parse(new_val).present?
 

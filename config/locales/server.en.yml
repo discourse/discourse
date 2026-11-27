@@ -688,6 +688,7 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      duplicate_builtin_badge_thresholds: "Set only one threshold per badge."
       dsa_community_rules_required: "Add at least one community rule before enabling DSA reporting."
       dsa_community_rules_in_use: "Disable DSA reporting before removing all community rules."
       site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
@@ -2507,6 +2508,7 @@ en:
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
+    builtin_badge_thresholds: "Change the required counts for selected built-in badges. Remove an entry to restore the original threshold. Existing grants follow each badge's revocation rules."
     enable_badges: "Enable the badge system, which is a form of gamification to reinforce positive user actions. See <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>What are Badges?</a> on Discourse Meta for more information."
     show_badges_in_post_header: "When a user earns a badge for a particular post, display the badge in the post header."
     max_favorite_badges: "Maximum number of badges that user can select"
@@ -5900,6 +5902,31 @@ en:
     title: "Privacy Policy"
 
   badges:
+    builtin_thresholds:
+      reply_likes:
+        one: "Received %{count} like on a reply"
+        other: "Received %{count} likes on a reply"
+      topic_likes:
+        one: "Received %{count} like on a topic"
+        other: "Received %{count} likes on a topic"
+      share_visitors:
+        one: "Shared a post with %{count} unique visitor"
+        other: "Shared a post with %{count} unique visitors"
+      link_clicks:
+        one: "Posted an external link with %{count} click"
+        other: "Posted an external link with %{count} clicks"
+      single_like_posts:
+        one: "Received at least one like on %{count} post"
+        other: "Received at least one like on %{count} posts"
+      liked_posts:
+        one: "Received at least %{minimum_likes} likes on %{count} post"
+        other: "Received at least %{minimum_likes} likes on %{count} posts"
+      like_limit_days:
+        one: "Reached the daily like limit on %{count} day"
+        other: "Reached the daily like limit on %{count} days"
+      consecutive_visits:
+        one: "Visited on %{count} day"
+        other: "Visited on %{count} consecutive days"
     errors:
       cant_delete_system_badge: System badges cannot be deleted.
     mass_award:

@@ -1,6 +1,41 @@
 # frozen_string_literal: true
 
 RSpec.describe Badge do
+  describe "configured thresholds" do
+    it "uses the stock query and descriptions when there is no configured value" do
+      badge = described_class.find(Badge::NicePost)
+      expect(badge.query).to eq(badge[:query])
+      expect(badge.description).to eq(I18n.t("badges.nice_post.description"))
+
+      SiteSetting.builtin_badge_thresholds = [{ badge: "Nice Reply", threshold: 3 }]
+      expect(badge.query).to eq(BadgeQueries.like_badge(3, false))
+      expect(badge.description).to eq("Received 3 likes on a reply")
+      expect(badge.long_description).to eq("Received 3 likes on a reply")
+      expect(badge.reload[:query]).to eq(BadgeQueries.like_badge(10, false))
+
+      SiteSetting.builtin_badge_thresholds = []
+      expect(badge.query).to eq(BadgeQueries.like_badge(10, false))
+      expect(badge.description).to eq(I18n.t("badges.nice_post.description"))
+    end
+
+    it "uses the existing query builders for the other supported counts" do
+      overrides = {
+        Badge::GreatTopic => ["Great Topic", BadgeQueries.like_badge(5, true)],
+        Badge::GoodShare => ["Good Share", BadgeQueries.sharing_badge(5)],
+        Badge::HotLink => ["Hot Link", BadgeQueries.linking_badge(5)],
+        Badge::Admired => ["Admired", BadgeQueries.liked_posts(4, 5)],
+        Badge::HigherLove => ["Higher Love", BadgeQueries.like_rate_limit(5)],
+        Badge::Devotee => ["Devotee", BadgeQueries.consecutive_visits(5)],
+      }
+      SiteSetting.builtin_badge_thresholds =
+        overrides.values.map { |badge_name, _| { badge: badge_name, threshold: 5 } }
+
+      overrides.each do |badge_id, (_, sql)|
+        expect(described_class.find(badge_id).query).to eq(sql)
+      end
+    end
+  end
+
   describe "Validations" do
     subject(:badge) { Fabricate.build(:badge) }
 
