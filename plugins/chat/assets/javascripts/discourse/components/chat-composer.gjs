@@ -17,15 +17,21 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
+import {
+  SEND_SHORTCUT_META_ENTER,
+  USER_OPTION_COMPOSITION_MODES,
+} from "discourse/lib/constants";
+import discourseDebounce from "discourse/lib/debounce";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
+import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
@@ -51,6 +57,7 @@ import ChatComposerUploads from "discourse/plugins/chat/discourse/components/cha
 import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/chat-replying-indicator";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import RichEditorInteractor from "discourse/plugins/chat/discourse/lib/rich-editor-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create" with {
   discourseImport: "optional",
@@ -75,6 +82,33 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
+  @tracked richEditorComponent;
+  @tracked contextualToolbar;
+
+  #textareaInteractor;
+  #addUploads;
+  #richEditorLoading;
+
+  constructor() {
+    super(...arguments);
+
+    if (this.useRichEditor) {
+      this.composer.awaitEditor(this);
+      this.#loadRichEditor();
+    }
+  }
+
+  get canUseRichEditor() {
+    return this.siteSettings.enable_composer_picker_and_rich_chat;
+  }
+
+  get useRichEditor() {
+    return this.canUseRichEditor && !!this.currentUser?.useRichEditor;
+  }
+
+  get editor() {
+    return this.composer.editor;
+  }
 
   get shouldRenderMessageDetails() {
     return (
@@ -128,6 +162,49 @@ export default class ChatComposer extends Component {
     return !this.currentUser || this.args.disabled;
   }
 
+  // A handler returning false consumes the key; true lets the editor apply
+  // its own binding.
+  get richEditorKeymap() {
+    const skip = () =>
+      this.capabilities.isMobileDevice || this.#isAutocompleteDisplayed();
+    const send = () => {
+      if (skip()) {
+        return true;
+      }
+      this.onSend();
+      return false;
+    };
+
+    return {
+      // Inside lists, code blocks and the like Enter keeps its structural
+      // meaning (new item, new line); only a plain paragraph sends.
+      Enter: () => {
+        if (this.#isAutocompleteDisplayed() || !this.#inPlainParagraph()) {
+          return true;
+        }
+
+        if (!this.capabilities.isMobileDevice && this.#sendsOnEnter(false)) {
+          this.onSend();
+          return false;
+        }
+
+        this.#insertLineBreak();
+        return false;
+      },
+      "Mod+Enter": send,
+      "Ctrl+Enter": send,
+      "Ctrl+m": () => {
+        this.toggleEditor();
+        return false;
+      },
+      ArrowUp: () => skip() || !this.#editOrReplyToLastMessage(false),
+      "Shift+ArrowUp": () => skip() || !this.#editOrReplyToLastMessage(true),
+      // onRichEditorKeyDown handles it; this stops the editor's default of
+      // selecting the parent node
+      Escape: skip,
+    };
+  }
+
   get showBroadcastOption() {
     return false;
   }
@@ -148,34 +225,129 @@ export default class ChatComposer extends Component {
 
   @action
   setupAutocomplete(textarea) {
-    this.#applyUserAutocomplete(textarea);
-    this.#applyEmojiAutocomplete(textarea);
-    this.#applyCategoryHashtagAutocomplete(textarea);
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    const apply = (options) =>
+      dAutocomplete.setupAutocomplete(
+        getOwner(this),
+        textarea,
+        autocompleteHandler,
+        {
+          ...options,
+          treatAsTextarea: true,
+          afterComplete: (text, event) => {
+            event.preventDefault();
+            this.editor.syncValue(text);
+            options.afterComplete?.();
+          },
+        }
+      );
+
+    this.#applyAutocompletes(apply);
   }
 
   @action
   setupTextareaInteractor(textarea) {
-    this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
-
-    if (this.site.desktopView && this.args.autofocus) {
-      this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
-    }
+    this.#textareaInteractor = new TextareaInteractor(getOwner(this), textarea);
+    this.composer.registerEditor(this.#textareaInteractor);
+    this.#autofocus();
   }
 
-  applyAutocomplete(textarea, options) {
-    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    return dAutocomplete.setupAutocomplete(
+  @action
+  teardownTextareaInteractor() {
+    this.composer.unregisterEditor(this.#textareaInteractor);
+    this.#textareaInteractor.destroy();
+    this.#textareaInteractor = null;
+  }
+
+  @action
+  setupRichEditor(textManipulation) {
+    const interactor = new RichEditorInteractor(
       getOwner(this),
-      textarea,
-      autocompleteHandler,
-      options
+      textManipulation
     );
+    // chat's keyboard shortcuts route by this attribute, as on the textarea
+    interactor.element.dataset.chatComposerContext = this.context;
+    interactor.element.addEventListener("keydown", this.onRichEditorKeyDown);
+    this.composer.registerEditor(interactor);
+
+    this.#applyAutocompletes((options) =>
+      textManipulation.autocomplete({
+        triggerRule: async () => !(await textManipulation.inCodeBlock()),
+        ...options,
+      })
+    );
+
+    this.#autofocus();
+
+    return () => {
+      textManipulation.autocomplete("destroy");
+      interactor.element.removeEventListener(
+        "keydown",
+        this.onRichEditorKeyDown
+      );
+      this.composer.unregisterEditor(interactor);
+    };
+  }
+
+  @action
+  async toggleEditor() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
+    const preference = this.useRichEditor
+      ? USER_OPTION_COMPOSITION_MODES.markdown
+      : USER_OPTION_COMPOSITION_MODES.rich;
+
+    if (!this.useRichEditor) {
+      this.composer.awaitEditor(this);
+      await this.#loadRichEditor();
+    }
+
+    // Removing a focused editor mid-render would flip isFocused during the
+    // same render that reads it.
+    this.editor?.element.blur();
+    this.contextualToolbar = null;
+
+    this.currentUser.set("user_option.composition_mode", preference);
+    discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
+
+    next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  replaceToolbar(toolbar, owner) {
+    if (toolbar === null && owner && this.contextualToolbar !== owner) {
+      return;
+    }
+    this.contextualToolbar = toolbar;
+  }
+
+  @action
+  setupUploads(addUploads) {
+    this.#addUploads = addUploads;
+  }
+
+  @action
+  uploadFiles(files) {
+    if (!this.canAttachUploads || !this.#addUploads) {
+      return false;
+    }
+    return this.#addUploads(files, { pasted: true });
+  }
+
+  // the mode is a user preference shared with other open composers
+  @action
+  didUpdateEditorMode() {
+    if (this.useRichEditor) {
+      this.#loadRichEditor();
+    }
   }
 
   @action
   didUpdateMessage() {
     this.cancelPersistDraft();
-    this.composer.textarea.value = this.draft.message;
+    this.editor?.syncValue(this.draft.message);
     this.persistDraft();
     this.captureMentions({ skipDebounce: true });
   }
@@ -199,9 +371,15 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  focusOrPromptLogin() {
+  focusOrPromptLogin(event) {
     if (!this.currentUser) {
       this.showLogin();
+      return;
+    }
+
+    // clicks inside the editor focus it on their own, and stealing focus
+    // from its controls closes them
+    if (event.target.closest(".chat-composer__input")) {
       return;
     }
 
@@ -225,6 +403,7 @@ export default class ChatComposer extends Component {
 
   @action
   teardown() {
+    this.composer.stopAwaitingEditor(this);
     this.appEvents.off("chat:modify-selection", this, "modifySelection");
     this.appEvents.off(
       "chat:open-insert-link-modal",
@@ -239,10 +418,7 @@ export default class ChatComposer extends Component {
     this.modal.show(LocalDatesCreateModal, {
       model: {
         insertDate: (markup) => {
-          this.composer.textarea.addText(
-            this.composer.textarea.getSelected(),
-            markup
-          );
+          this.editor.addText(this.editor.getSelected(), markup);
           this.composer.focus();
         },
       },
@@ -265,7 +441,7 @@ export default class ChatComposer extends Component {
   onInput(event) {
     this.draft.draftSaved = false;
     this.draft.message = event.target.value;
-    this.composer.textarea.refreshHeight();
+    this.editor.refreshHeight();
     this.reportReplyingPresence();
     this.persistDraft();
     this.captureMentions();
@@ -277,7 +453,7 @@ export default class ChatComposer extends Component {
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
-    this.composer.textarea?.focus();
+    this.editor?.focus();
     this.reportReplyingPresence();
 
     // Only persist once uploads settle.
@@ -325,7 +501,7 @@ export default class ChatComposer extends Component {
 
     await this.args.onSendMessage(this.draft);
     if (!this.isDestroying) {
-      this.composer.textarea?.refreshHeight();
+      this.editor?.refreshHeight();
     }
   }
 
@@ -382,13 +558,13 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    const sel = this.composer.textarea.getSelected("", { lineVal: true });
+    const sel = this.editor.getSelected("", { lineVal: true });
     if (options.type === "bold") {
-      this.composer.textarea.applySurround(sel, "**", "**", "bold_text");
+      this.editor.applySurround(sel, "**", "**", "bold_text");
     } else if (options.type === "italic") {
-      this.composer.textarea.applySurround(sel, "_", "_", "italic_text");
+      this.editor.applySurround(sel, "_", "_", "italic_text");
     } else if (options.type === "code") {
-      this.composer.textarea.applySurround(sel, "`", "`", "code_text");
+      this.editor.applySurround(sel, "`", "`", "code_text");
     }
   }
 
@@ -422,6 +598,20 @@ export default class ChatComposer extends Component {
     this.isFocused = true;
   }
 
+  // Escape needs the DOM event: subclasses stop it from reaching the global
+  // shortcut that closes the drawer or thread.
+  @action
+  onRichEditorKeyDown(event) {
+    if (
+      event.key === "Escape" &&
+      !event.shiftKey &&
+      !this.capabilities.isMobileDevice &&
+      !this.#isAutocompleteDisplayed()
+    ) {
+      this.handleEscape(event);
+    }
+  }
+
   @action
   onKeyDown(event) {
     if (
@@ -437,12 +627,15 @@ export default class ChatComposer extends Component {
       return this.handleEscape(event);
     }
 
+    if (event.key === "m" && event.ctrlKey && this.canUseRichEditor) {
+      event.preventDefault();
+      this.toggleEditor();
+      return;
+    }
+
     if (event.key === "Enter") {
-      const shortcutPreference = this.currentUser.user_option.send_shortcut;
       const send =
-        (shortcutPreference !== SEND_SHORTCUT_META_ENTER && !event.shiftKey) ||
-        event.ctrlKey ||
-        event.metaKey;
+        this.#sendsOnEnter(event.shiftKey) || event.ctrlKey || event.metaKey;
 
       if (!send) {
         // insert newline
@@ -454,16 +647,8 @@ export default class ChatComposer extends Component {
       return false;
     }
 
-    if (event.key === "ArrowUp" && !this.hasContent && !this.draft.editing) {
-      if (event.shiftKey && this.lastMessage?.replyable) {
-        this.composer.replyTo(this.lastMessage);
-      } else {
-        const editableMessage = this.lastUserMessage(this.currentUser);
-        if (editableMessage?.editable) {
-          this.composer.edit(editableMessage);
-          this.args.channel.draft = editableMessage;
-        }
-      }
+    if (event.key === "ArrowUp") {
+      this.#editOrReplyToLastMessage(event.shiftKey);
     }
   }
 
@@ -473,36 +658,23 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    const selected = this.composer.textarea.getSelected("", { lineVal: true });
+    const selected = this.editor.getSelected("", { lineVal: true });
     const hasSelection = !!selected && selected.start !== selected.end;
     this.modal.show(UpsertHyperlink, {
       model: {
         hasSelection,
         toolbarEvent: {
           selected,
-          addText: (text) => this.composer.textarea.addText(selected, text),
-          applyLink: (url) => this.composer.textarea.applyLink(url),
+          addText: (text) => this.editor.addText(selected, text),
+          applyLink: (url) => this.editor.applyLink(url),
         },
       },
     });
   }
 
   @action
-  onSelectEmoji(emoji, context = {}) {
-    const textareaInteractor = this.composer.textarea;
-
-    if (context?.emojiTermStart != null) {
-      const value = textareaInteractor.textarea.value;
-      const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
-      const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
-      textareaInteractor.value = `${valueUpToCursor}${valueAfterCursor}`;
-      textareaInteractor.textarea.setSelectionRange(
-        valueUpToCursor.length,
-        valueUpToCursor.length
-      );
-    } else {
-      textareaInteractor.emojiSelected(emoji);
-    }
+  onSelectEmoji(emoji, context = null) {
+    this.editor.insertEmoji(emoji, context);
 
     if (this.site.desktopView) {
       this.composer.focus();
@@ -521,21 +693,102 @@ export default class ChatComposer extends Component {
     }
   }
 
+  async #loadRichEditor() {
+    this.#richEditorLoading ??= loadRichEditor();
+    this.richEditorComponent ??= await this.#richEditorLoading;
+  }
+
+  #saveEditorPreference(preference) {
+    this.currentUser.set("user_option.composition_mode", preference);
+    return this.currentUser.save(["composition_mode"]);
+  }
+
+  #autofocus() {
+    if (this.site.desktopView && this.args.autofocus) {
+      next(() =>
+        this.composer.focus({ ensureAtEnd: true, refreshHeight: true })
+      );
+    }
+  }
+
+  #inPlainParagraph() {
+    const { view } = this.editor.textManipulation;
+    const { $from } = view.state.selection;
+
+    return (
+      $from.depth === 1 &&
+      $from.parent.type === view.state.schema.nodes.paragraph
+    );
+  }
+
+  // Matches the markdown editor's newline rather than starting a paragraph.
+  #insertLineBreak() {
+    const { view } = this.editor.textManipulation;
+
+    view.dispatch(
+      view.state.tr
+        .replaceSelectionWith(view.state.schema.nodes.hard_break.create())
+        .scrollIntoView()
+    );
+  }
+
+  #sendsOnEnter(shiftKey) {
+    return (
+      this.currentUser.user_option.send_shortcut !== SEND_SHORTCUT_META_ENTER &&
+      !shiftKey
+    );
+  }
+
+  #editOrReplyToLastMessage(reply) {
+    if (this.hasContent || this.draft.editing) {
+      return false;
+    }
+
+    if (reply && this.lastMessage?.replyable) {
+      this.composer.replyTo(this.lastMessage);
+      return true;
+    }
+
+    const editableMessage = this.lastUserMessage(this.currentUser);
+    if (!editableMessage?.editable) {
+      return false;
+    }
+
+    this.composer.edit(editableMessage);
+    this.args.channel.draft = editableMessage;
+    return true;
+  }
+
   #addMentionedUser(userData) {
     const user = this.store.createRecord("user", userData);
     this.draft.mentionedUsers.set(user.id, user);
   }
 
-  #applyUserAutocomplete(textarea) {
-    if (!this.siteSettings.enable_mentions) {
-      return;
+  #applyAutocompletes(apply) {
+    if (this.siteSettings.enable_mentions) {
+      apply(this.#userAutocompleteOptions());
     }
 
-    this.applyAutocomplete(textarea, {
+    if (this.siteSettings.enable_emoji) {
+      apply(this.#emojiAutocompleteOptions());
+    }
+
+    apply(
+      hashtagAutocompleteOptions(
+        this.site.hashtag_configurations["chat-composer"],
+        {
+          fixedTextareaPosition: true,
+          afterComplete: () => this.composer.focus(),
+        }
+      )
+    );
+  }
+
+  #userAutocompleteOptions() {
+    return {
       component: UserAutocompleteResults,
       key: UserAutocompleteResults.TRIGGER_KEY,
       width: "100%",
-      treatAsTextarea: true,
       fixedTextareaPosition: true,
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
@@ -549,9 +802,10 @@ export default class ChatComposer extends Component {
         destroyUserStatuses();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
-            const presentUserNames = this.chat.presenceChannel.users?.map(
-              (item) => item.username
-            );
+            // users is unset until the presence channel has synced
+            const presentUserNames =
+              this.chat.presenceChannel.users?.map((item) => item.username) ??
+              [];
             result.users.forEach((user) => {
               if (presentUserNames.includes(user.username)) {
                 user.cssClasses = "is-online";
@@ -565,48 +819,19 @@ export default class ChatComposer extends Component {
       onRender: (options) => {
         renderUserStatusHtml(options);
       },
-      afterComplete: (text, event) => {
-        event.preventDefault();
-        this.composer.textarea.value = text;
+      afterComplete: () => {
         this.composer.focus();
         this.captureMentions();
       },
       onClose: destroyUserStatuses,
-    });
+    };
   }
 
-  #applyCategoryHashtagAutocomplete(textarea) {
-    this.applyAutocomplete(
-      textarea,
-      hashtagAutocompleteOptions(
-        this.site.hashtag_configurations["chat-composer"],
-        {
-          fixedTextareaPosition: true,
-          treatAsTextarea: true,
-          afterComplete: (text, event) => {
-            event.preventDefault();
-            this.composer.textarea.value = text;
-            this.composer.focus();
-          },
-        }
-      )
-    );
-  }
-
-  #applyEmojiAutocomplete(textarea) {
-    if (!this.siteSettings.enable_emoji) {
-      return;
-    }
-
-    this.applyAutocomplete(textarea, {
+  #emojiAutocompleteOptions() {
+    return {
       component: EmojiAutocompleteResults,
       key: EmojiAutocompleteResults.TRIGGER_KEY,
-      afterComplete: (text, event) => {
-        event.preventDefault();
-        this.composer.textarea.value = text;
-        this.composer.focus();
-      },
-      treatAsTextarea: true,
+      afterComplete: () => this.composer.focus(),
       fixedTextareaPosition: true,
       onKeyUp: (text, cp) => {
         const matches =
@@ -622,25 +847,7 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          // Capture emoji term positioning before opening the emoji picker which resets the textarea state
-          const textareaInteractor = this.composer.textarea;
-          const currentValue = textareaInteractor.textarea.value;
-          const currentCaretPos = textareaInteractor.textarea.selectionStart;
-
-          let emojiContext = null;
-
-          if (currentValue && currentCaretPos !== undefined) {
-            const textBeforeCursor = currentValue.substring(0, currentCaretPos);
-            const incompleteMatch =
-              textBeforeCursor.match(/(:[\p{L}\p{N}_-]+)$/u);
-
-            if (incompleteMatch) {
-              emojiContext = {
-                emojiTermStart: currentCaretPos - incompleteMatch[1].length,
-                emojiTermEnd: currentCaretPos - 1,
-              };
-            }
-          }
+          const emojiContext = this.editor.emojiTermContext();
 
           const menuOptions = {
             identifier: "emoji-picker",
@@ -757,7 +964,7 @@ export default class ChatComposer extends Component {
             return list;
           });
       },
-    });
+    };
   }
 
   #isAutocompleteDisplayed() {
@@ -802,6 +1009,18 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
+        {{#if
+          (and this.useRichEditor this.contextualToolbar (not this.disabled))
+        }}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__contextual-toolbar"
+            role="toolbar"
+          >
+            <ToolbarButtons @data={{this.contextualToolbar}} />
+          </div>
+        {{/if}}
+
         <div class="chat-composer__outer-container">
           {{#if this.site.mobileView}}
             <ChatComposerDropdown
@@ -821,27 +1040,49 @@ export default class ChatComposer extends Component {
             <div
               class="chat-composer__input-container"
               {{on "click" this.focusOrPromptLogin}}
+              {{didUpdate this.didUpdateEditorMode this.useRichEditor}}
             >
-              <DTextarea
-                autocapitalize="sentences"
-                autocorrect="on"
-                class="chat-composer__input"
-                data-chat-composer-context={{this.context}}
-                disabled={{this.disabled}}
-                id={{this.composerId}}
-                placeholder={{this.placeholder}}
-                rows={{1}}
-                type="text"
-                value={{readonly this.draft.message}}
-                {{preventScrollOnFocus}}
-                {{forceScrollingElementPosition}}
-                {{didInsert this.setupTextareaInteractor}}
-                {{on "input" this.onInput}}
-                {{on "keydown" this.onKeyDown}}
-                {{on "focusin" this.onTextareaFocusIn}}
-                {{on "focusout" this.onTextareaFocusOut}}
-                {{didInsert this.setupAutocomplete}}
-              />
+              {{#if this.useRichEditor}}
+                {{#if this.richEditorComponent}}
+                  <this.richEditorComponent
+                    @change={{this.onInput}}
+                    @class="chat-composer__input"
+                    @disabled={{this.disabled}}
+                    @focusIn={{this.onTextareaFocusIn}}
+                    @focusOut={{this.onTextareaFocusOut}}
+                    @keymap={{this.richEditorKeymap}}
+                    @onSetup={{this.setupRichEditor}}
+                    @placeholder={{this.placeholder}}
+                    @replaceToolbar={{this.replaceToolbar}}
+                    @toggleRichEditor={{this.toggleEditor}}
+                    @trailingParagraph={{false}}
+                    @uploadFiles={{this.uploadFiles}}
+                    @value={{this.draft.message}}
+                  />
+                {{/if}}
+              {{else}}
+                <DTextarea
+                  autocapitalize="sentences"
+                  autocorrect="on"
+                  class="chat-composer__input"
+                  data-chat-composer-context={{this.context}}
+                  disabled={{this.disabled}}
+                  id={{this.composerId}}
+                  placeholder={{this.placeholder}}
+                  rows={{1}}
+                  type="text"
+                  value={{readonly this.draft.message}}
+                  {{preventScrollOnFocus}}
+                  {{forceScrollingElementPosition}}
+                  {{didInsert this.setupTextareaInteractor}}
+                  {{willDestroy this.teardownTextareaInteractor}}
+                  {{on "input" this.onInput}}
+                  {{on "keydown" this.onKeyDown}}
+                  {{on "focusin" this.onTextareaFocusIn}}
+                  {{on "focusout" this.onTextareaFocusOut}}
+                  {{didInsert this.setupAutocomplete}}
+                />
+              {{/if}}
             </div>
 
             {{#each this.inlineButtons as |button|}}
@@ -904,9 +1145,10 @@ export default class ChatComposer extends Component {
 
       {{#if this.canAttachUploads}}
         <ChatComposerUploads
-          @composerInputEl={{this.composer.textarea.element}}
+          @composerInputEl={{this.editor.element}}
           @existingUploads={{this.draft.uploads}}
           @fileUploadElementId={{this.fileUploadElementId}}
+          @onSetup={{this.setupUploads}}
           @onUploadChanged={{this.onUploadChanged}}
           @uploadDropZone={{@uploadDropZone}}
         />

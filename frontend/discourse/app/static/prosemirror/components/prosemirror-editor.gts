@@ -109,6 +109,10 @@ interface ProsemirrorEditorSignature {
     toggleRichEditor?: () => void;
     /** Markdown cook options from the host editor, exposed to extensions. */
     markdownOptions?: MarkdownOptions;
+    /** Set to false to stop padding the document with a trailing empty paragraph. */
+    trailingParagraph?: boolean;
+    /** Uploads files as attachments, for hosts that don't upload inline; returns false when it can't take them. */
+    uploadFiles?: (files: File[]) => boolean | void;
   };
 }
 
@@ -200,6 +204,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
         markdownOptions: this.args.markdownOptions,
+        trailingParagraph: this.args.trailingParagraph,
+        uploadFiles: this.args.uploadFiles,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>
@@ -469,6 +475,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       );
 
       this.view.updateState(this.view.state.apply(tr));
+      this.#lastSerialized = value;
     } catch (e) {
       if (e instanceof UnsupportedTokenError) {
         this.dialog.alert({

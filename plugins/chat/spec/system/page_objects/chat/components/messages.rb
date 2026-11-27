@@ -17,6 +17,14 @@ module PageObjects
           page.find(context)
         end
 
+        def has_heading?(text)
+          component.has_css?(".chat-cooked h1", text: text)
+        end
+
+        def has_horizontal_rule?
+          component.has_css?(".chat-cooked hr")
+        end
+
         def copy_link(message)
           find(message).secondary_action("copyLink")
         end

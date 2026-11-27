@@ -102,7 +102,7 @@ export default class ChatComposerThread extends ChatComposer {
 
   handleEscape(event) {
     if (this.draft.editing) {
-      event.stopPropagation();
+      event?.stopPropagation();
       this.resetDraft();
       return;
     }

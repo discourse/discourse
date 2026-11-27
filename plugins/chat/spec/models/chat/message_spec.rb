@@ -472,11 +472,11 @@ describe Chat::Message do
       end
     end
 
-    it "doesn't support headings" do
+    it "supports headings for regular users" do
       cooked = described_class.cook("# test")
 
       expect(cooked).to match_html <<~HTML
-      <p># test</p>
+      <h1><a name="test-1" class="anchor" href="#test-1" aria-label="Heading link"></a>test</h1>
       HTML
     end
 
@@ -488,10 +488,10 @@ describe Chat::Message do
       HTML
     end
 
-    it "supports horizontal replacement" do
+    it "supports horizontal rules" do
       cooked = described_class.cook("---")
 
-      expect(cooked).to eq("<p>—</p>")
+      expect(cooked).to match_html("<hr>")
     end
 
     it "supports escape sequence" do

@@ -12,6 +12,7 @@ const PLAIN_TEXT_LANGS = ["auto", "text", "pre", "plain"];
 
 // cached hljs instance with custom plugins/languages
 let hljs;
+let hljsLoading;
 
 function isAiGenerated(params) {
   return getCodeFenceInfo(params)?.attributes.ai === "true";
@@ -115,7 +116,18 @@ class CodeBlockWithLangSelectorNodeView {
     this.contentDOM = code;
 
     this.#renderAiLabel();
-    this.#appendSelect();
+
+    // a block created before the highlighter arrives would otherwise only
+    // get its select on a later edit
+    if (hljs) {
+      this.#appendSelect();
+    } else {
+      // a failed load is reported by the highlight plugin
+      hljsLoading?.then(
+        () => this.#appendSelect(),
+        () => {}
+      );
+    }
   }
 
   update(node) {
@@ -402,6 +414,10 @@ const extension = {
       }),
     async ({ getContext }) => {
       const { session, siteSettings } = getContext();
+      hljsLoading ??= ensureHighlightJs(session.highlightJsPath).catch((e) => {
+        hljsLoading = null;
+        throw e;
+      });
 
       // Autodetection can hang the browser (https://github.com/b-kelly/prosemirror-highlightjs/issues/21)
       const { default_code_lang } = siteSettings;
@@ -411,7 +427,7 @@ const extension = {
           : default_code_lang;
 
       return highlightPlugin(
-        (hljs = await ensureHighlightJs(session.highlightJsPath)),
+        (hljs = await hljsLoading),
         ["code_block", "html_block", "preview_source"],
         (node) =>
           node.type.name === "code_block"

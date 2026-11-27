@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   render,
+  rerender,
   triggerKeyEvent,
   waitFor,
   waitUntil,
@@ -212,6 +214,114 @@ module("Component | ChatComposerUploads", function (hooks) {
     await waitFor(".chat-composer-upload");
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
+  });
+
+  test("an in-progress upload survives the input element changing", async function (assert) {
+    setupUploadPretender();
+    const onUploadChanged = () => {};
+    const inputEl = tracked(document.createElement("textarea"));
+
+    await render(
+      <template>
+        <ChatComposerUploads
+          @composerInputEl={{inputEl.value}}
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{onUploadChanged}}
+        />
+      </template>
+    );
+
+    const done = assert.async();
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("upload-mixin:chat-composer-uploader:upload-success", () => {
+      assert.dom(".chat-composer-upload").exists({ count: 1 });
+      done();
+    });
+    appEvents.trigger(
+      "upload-mixin:chat-composer-uploader:add-files",
+      createFile("avatar.png")
+    );
+
+    await waitFor(".chat-composer-upload");
+    inputEl.value = document.createElement("div");
+    await rerender();
+
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
+  });
+
+  test("declines added files the uploader would reject as too many", async function (assert) {
+    this.siteSettings.simultaneous_uploads = 2;
+    let pending;
+    pretender.post(
+      "/uploads.json",
+      (request) => {
+        if (pending) {
+          setTimeout(() => pretender.resolve(request));
+        } else {
+          pending = request;
+        }
+        return [
+          200,
+          { "Content-Type": "application/json" },
+          mockUploadResponse,
+        ];
+      },
+      true
+    );
+
+    let addFiles;
+    const onSetup = (fn) => (addFiles = fn);
+    const onUploadChanged = () => {};
+    await render(
+      <template>
+        <ChatComposerUploads
+          @fileUploadElementId="chat-widget-uploader"
+          @onSetup={{onSetup}}
+          @onUploadChanged={{onUploadChanged}}
+        />
+      </template>
+    );
+
+    addFiles([createFile("first.png"), createFile("second.png")]);
+    await waitUntil(
+      () =>
+        pending &&
+        document.querySelectorAll(
+          ".chat-composer-upload:not(.chat-composer-upload--in-progress)"
+        ).length === 1
+    );
+
+    assert.false(
+      addFiles([createFile("third.png")]),
+      "the finished file still counts until the batch ends"
+    );
+    assert
+      .dom(".chat-composer-upload--in-progress")
+      .exists({ count: 1 }, "keeps the unfinished upload");
+    assert.dom(".dialog-body").doesNotExist();
+
+    pretender.resolve(pending);
+  });
+
+  test("accepts any number of added files without an upload limit", async function (assert) {
+    this.siteSettings.simultaneous_uploads = 0;
+    setupUploadPretender();
+
+    let addFiles;
+    const onSetup = (fn) => (addFiles = fn);
+    const onUploadChanged = () => {};
+    await render(
+      <template>
+        <ChatComposerUploads
+          @fileUploadElementId="chat-widget-uploader"
+          @onSetup={{onSetup}}
+          @onUploadChanged={{onUploadChanged}}
+        />
+      </template>
+    );
+
+    assert.notStrictEqual(addFiles([createFile("avatar.png")]), false);
+    await waitFor(".chat-composer-upload");
   });
 
   test("removing a completed upload", async function (assert) {
