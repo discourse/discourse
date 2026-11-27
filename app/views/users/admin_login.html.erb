@@ -1,15 +1,28 @@
-<% if @message %>
-  <%= @message %>
-  <% if @error %><p><%= @error %></p><% end %>
-<% else %>
-  <%=form_tag(u_admin_login_path, method: :put) do %>
-    <%= label_tag(:email, t('admin_login.email_input')) %>
-    <%= text_field_tag(:email, nil, autofocus: true) %><br><br>
-    <label for="use_safe_mode">
-      <%= check_box_tag 'use_safe_mode' %>
-      <%= t 'admin_login.safe_mode' %>
-    </label>
-    <br/>
-    <%= button_tag t('admin_login.submit_button'), class: "btn btn-primary", type: "submit" %>
-  <% end %>
-<% end %>
+<div class="simple-page admin-login">
+  <h1><%= t "admin_login.title" %></h1>
+
+  <%- if @message %>
+    <p><%= @message %></p>
+    <%- if @error %>
+      <div class="alert alert-error"><%= @error %></div>
+    <%- end %>
+  <%- else %>
+    <p><%= t "admin_login.description" %></p>
+
+    <%= form_tag(u_admin_login_path, method: :put) do %>
+      <p>
+        <%= label_tag(:email, t("admin_login.email_input")) %>
+        <%= email_field_tag(:email, nil, autofocus: true, autocomplete: "email") %>
+      </p>
+
+      <label class="simple-page__checkbox checkbox-label">
+        <%= check_box_tag "use_safe_mode" %>
+        <span><%= t "admin_login.safe_mode" %></span>
+      </label>
+
+      <div class="simple-page__actions">
+        <%= button_tag t("admin_login.submit_button"), class: "btn btn-primary", type: "submit" %>
+      </div>
+    <% end %>
+  <%- end %>
+</div>

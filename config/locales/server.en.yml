@@ -1497,9 +1497,10 @@ en:
     email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
     email_change_not_allowed_after_invite: "This account has accepted an invitation, so it can only be activated using its current email address."
     admin_confirm:
-      title: "Confirm Admin Account"
+      title: "Confirm admin account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
-      grant: "Grant Admin Access"
+      grant: "Grant admin access"
+      cancel: "Cancel"
       complete: "<b>%{target_username}</b> is now an administrator."
       back_to: "Return to %{title}"
   reviewable_score_types:
@@ -1651,7 +1652,7 @@ en:
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
     not_found_description: "Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
     user_not_found_description: "Sorry, we couldn't find a user for this subscription. You are probably attempting to unsubscribe an account that no longer exists."
-    log_out: "Log Out"
+    log_out: "Log out"
     submit: "Save preferences"
     digest_frequency:
       title: "You are receiving summary emails %{frequency}"
@@ -1688,7 +1689,7 @@ en:
     otp_confirmation:
       confirm_title: Continue to %{site_name}
       logging_in_as: Logging in as %{username}
-      confirm_button: Finish Login
+      confirm_button: "Finish logging in"
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -3682,7 +3683,7 @@ en:
       exclude_locale: "Exclude topics originally written in a specific language"
 
   discourse_connect:
-    login_error: "Login Error"
+    login_error: "Login error"
     not_found: "Your account couldn't be found. Please contact the site's administrator."
     account_not_approved: "Your account is pending approval. You will receive an email notification when you are approved."
     unknown_error: "There is a problem with your account. Please contact the site's administrator."
@@ -6153,10 +6154,12 @@ en:
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
+    title: "Admin login"
+    description: "Enter the email address of your admin account, and we'll email you a link to log in."
     acknowledgement: "If an admin account with the email address %{email} exists, you will receive an email with a link to log in."
-    email_input: "Admin Email"
-    submit_button: "Send Email"
-    safe_mode: "Safe Mode: disable all themes/plugins when logging in"
+    email_input: "Admin email"
+    submit_button: "Send email"
+    safe_mode: "Safe mode: disable all themes and plugins when logging in"
 
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
@@ -6258,7 +6261,7 @@ en:
     no_plugins: "Disable all client-side plugin customizations"
     deprecation_error_description: "To check for compatibility with upcoming Discourse updates, you can make Javascript deprecations raise an error:"
     deprecation_error_label: Make Javascript deprecations raise an error
-    enter: "Enter Safe Mode"
+    enter: "Enter safe mode"
     must_select: "You must select at least one option to enter safe mode."
   dev_mode:
     title: "Developer Mode"

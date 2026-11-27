@@ -1,20 +1,19 @@
-<div id='simple-container'>
-  <h2><%= t 'activation.admin_confirm.title' %></h2>
-  <br/>
+<div id="simple-container" class="simple-page confirm-admin">
+  <h1><%= t "activation.admin_confirm.title" %></h1>
 
   <%- if @confirmed %>
-    <%=raw t('activation.admin_confirm.complete', target_username: @confirmation.target_user.username) %>
-    <br/>
-    <br/>
-    <%= link_to t("activation.admin_confirm.back_to", title: SiteSetting.title), Discourse.base_url, class: 'btn btn-primary' %>
-  <% else %>
-    <%=raw t('activation.admin_confirm.description', target_email: @confirmation.target_user.email, target_username: @confirmation.target_user.username) %>
-    <br/>
-    <br/>
+    <p><%= raw t("activation.admin_confirm.complete", target_username: @confirmation.target_user.username) %></p>
+    <div class="simple-page__actions">
+      <%= link_to t("activation.admin_confirm.back_to", title: SiteSetting.title), Discourse.base_url, class: "btn btn-primary" %>
+    </div>
+  <%- else %>
+    <p><%= raw t("activation.admin_confirm.description", target_email: @confirmation.target_user.email, target_username: @confirmation.target_user.username) %></p>
 
     <%= form_tag do %>
-      <%= submit_tag t('activation.admin_confirm.grant'), class: 'btn btn-primary' %>
+      <div class="simple-page__actions">
+        <%= submit_tag t("activation.admin_confirm.grant"), class: "btn btn-primary" %>
+        <%= link_to t("activation.admin_confirm.cancel"), Discourse.base_url, class: "btn btn-default" %>
+      </div>
     <% end %>
-  <% end %>
-
+  <%- end %>
 </div>

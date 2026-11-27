@@ -1,7 +1,6 @@
-<div class='container unsubscribe'>
+<div class="container unsubscribe simple-page">
   <%- if !@found || !@key_owner_found || @different_user %>
-
-    <%if !@found %>
+    <%- if !@found %>
       <p><%= t "unsubscribe.not_found_description" %></p>
     <%- elsif !@key_owner_found %>
       <p><%= t "unsubscribe.user_not_found_description" %></p>
@@ -9,94 +8,81 @@
       <p><%= t("unsubscribe.different_user_description").html_safe %></p>
       <%= form_tag(session_path(id: current_user.username_lower), method: :delete) do %>
         <%= hidden_field_tag(:return_url, @return_url) %>
-        <%= submit_tag t('unsubscribe.log_out'), class: 'btn btn-danger' %>
+        <div class="simple-page__actions">
+          <%= submit_tag t("unsubscribe.log_out"), class: "btn btn-primary" %>
+        </div>
       <%- end %>
     <%- end %>
   <%- else %>
-    <br/>
-    <h2><%= t 'unsubscribe.title', email: @user.email %></h2>
-    <br/>
+    <h1><%= t "unsubscribe.title", email: @user.email %></h1>
+
     <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
-      <%if @topic %>
-        <% if @watching_topic %>
-          <p>
-          <label>
-            <%= check_box_tag 'unwatch_topic', 1, true %>
-            <%= t('unsubscribe.stop_watching_topic', link: render_topic_title(@topic)).html_safe %>
-          </label>
-          </p>
-        <% else %>
-          <p>
-          <label>
-            <%= check_box_tag 'mute_topic', 1, true %>
-            <%= t('unsubscribe.mute_topic', link: render_topic_title(@topic)).html_safe %>
-          </label>
-          </p>
-        <% end %>
+      <%- if @topic || (@user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode) %>
+        <div class="simple-page__options">
+          <%- if @topic %>
+            <%- if @watching_topic %>
+              <label class="simple-page__checkbox checkbox-label">
+                <%= check_box_tag "unwatch_topic", 1, true %>
+                <span><%= t("unsubscribe.stop_watching_topic", link: render_topic_title(@topic)).html_safe %></span>
+              </label>
+            <%- else %>
+              <label class="simple-page__checkbox checkbox-label">
+                <%= check_box_tag "mute_topic", 1, true %>
+                <span><%= t("unsubscribe.mute_topic", link: render_topic_title(@topic)).html_safe %></span>
+              </label>
+            <%- end %>
 
+            <%- if @watched_count %>
+              <label class="simple-page__checkbox checkbox-label">
+                <%= check_box_tag "unwatch_category" %>
+                <span><%= t("unsubscribe.unwatch_category", category: category_badge(@topic.category, show_uncategorized: true)).html_safe %></span>
+              </label>
+            <%- end %>
+          <%- end %>
 
-        <% if @watched_count %>
-          <p>
-          <label>
-            <%= check_box_tag 'unwatch_category' %>
-            <%= t('unsubscribe.unwatch_category', category: category_badge(@topic.category, show_uncategorized: true)).html_safe %>
-          </label>
-          </p>
-        <% end %>
-      <% end %>
+          <%- if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>
+            <label class="simple-page__checkbox checkbox-label">
+              <%= check_box_tag "disable_mailing_list" %>
+              <span><%= t "unsubscribe.mailing_list_mode" %></span>
+            </label>
+          <%- end %>
+        </div>
+      <%- end %>
 
-      <% if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>
+      <%- if @digest_unsubscribe %>
+        <%- if @digest_frequencies[:current] %>
+          <h2>
+            <%- if @digest_frequencies[:current] == "never" %>
+              <%= t("unsubscribe.digest_frequency.never_title") %>
+            <%- else %>
+              <%= t(
+                "unsubscribe.digest_frequency.title",
+                frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
+              ) %>
+            <%- end %>
+          </h2>
+        <%- end %>
+
         <p>
-        <label>
-        <%= check_box_tag 'disable_mailing_list' %>
-        <%= t 'unsubscribe.mailing_list_mode' %>
-        </label>
-        </p>
-      <% end %>
-
-      <% if @digest_unsubscribe %>
-          <p>
-
-          <% if @digest_frequencies[:current] %>
-            <h3>
-              <% if @digest_frequencies[:current] == 'never' %>
-                <%= t('unsubscribe.digest_frequency.never_title') %> 
-              <% else %>
-                <%= t(
-                  'unsubscribe.digest_frequency.title',
-                  frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
-                ) %>
-            <% end %>
-            </h3>
-            <br/>
-          <% end %>
-
-          <label><%= t 'unsubscribe.digest_frequency.select_title' %></label>
-          <%=
-            select_tag :digest_after_minutes,
+          <%= label_tag :digest_after_minutes, t("unsubscribe.digest_frequency.select_title") %>
+          <%= select_tag :digest_after_minutes,
             options_for_select(@digest_frequencies[:frequencies], @digest_frequencies[:selected]),
-            class: 'combobox'
-          %>
-          </p>
-      <% end %>
+            class: "combobox" %>
+        </p>
+      <%- end %>
 
       <%= server_plugin_outlet "unsubscribe_options" %>
 
-      <% unless @unsubscribed_from_all %>
-        <p>
-        <label>
-          <%= check_box_tag 'unsubscribe_all', 1, @type=="all" %>
-          <%= t 'unsubscribe.all', sitename: SiteSetting.title %>
+      <%- unless @unsubscribed_from_all %>
+        <label class="simple-page__checkbox checkbox-label">
+          <%= check_box_tag "unsubscribe_all", 1, @type == "all" %>
+          <span><%= t "unsubscribe.all", sitename: SiteSetting.title %></span>
         </label>
-        </p>
-      <% end %>
+      <%- end %>
 
-      <br/>
-      <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.unsubscribe') %>
-      <%= submit_tag text, class: 'btn btn-danger' %>
+      <div class="simple-page__actions">
+        <%= submit_tag(@type == "digest" ? t("unsubscribe.submit") : t("unsubscribe.unsubscribe"), class: "btn btn-primary") %>
+      </div>
     <%- end %>
-
-
   <%- end %>
-
 </div>
