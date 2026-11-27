@@ -12,7 +12,61 @@ RSpec.describe RemoteTheme do
       .returns([1024, 768])
   end
 
-  describe "#import_theme" do
+  describe ".import_theme" do
+    fab!(:repo_template) do
+      template = File.join(concurrency_safe_tmp_dir, "remote-theme-#{SecureRandom.hex}")
+      FileUtils.mv(setup_git_repo(theme_files), template)
+      template
+    end
+
+    let(:initial_repo) do
+      Dir
+        .mktmpdir("theme-", concurrency_safe_tmp_dir)
+        .tap { |repo| FileUtils.cp_r("#{repo_template}/.", repo) }
+    end
+    let(:initial_repo_url) do
+      MockGitImporter.register("https://example.com/initial_repo.git", initial_repo)
+    end
+
+    around { |example| MockGitImporter.with_mock { example.run } }
+
+    def scss_data
+      "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
+    end
+
+    def theme_files
+      settings = <<~YAML
+        boolean_setting: true
+        list_setting:
+          type: list
+          default: ""
+      YAML
+      migration_js = <<~JS
+        export default function migrate(settings) {
+          return settings;
+        }
+      JS
+      {
+        "about.json" => about_json,
+        "desktop/desktop.scss" => scss_data,
+        "scss/oldpath.scss" => ".class2{color:blue}",
+        "stylesheets/file.scss" => ".class1{color:red}",
+        "stylesheets/empty.scss" => "",
+        "javascripts/discourse/controllers/test.js.es6" => "console.log('test');",
+        "test/acceptance/theme-test.js" => "assert.ok(true);",
+        "common/header.html" => "I AM HEADER",
+        "common/random.html" => "I AM SILLY",
+        "common/embedded.scss" => "EMBED",
+        "common/color_definitions.scss" => ":root{--color-var: red}",
+        "assets/font.woff2" => "FAKE FONT",
+        "settings.yaml" => settings,
+        "locales/en.yml" => "sometranslations",
+        "migrations/settings/0001-some-migration.js" => migration_js,
+        "screenshots/light.jpeg" => file_from_fixtures("logo.jpg", "images"),
+        "screenshots/dark.jpeg" => file_from_fixtures("logo.jpg", "images"),
+      }
+    end
+
     def about_json(
       love_color: "FAFAFA",
       tertiary_low_color: "FFFFFF",
@@ -61,52 +115,6 @@ RSpec.describe RemoteTheme do
       system("git -C #{repo} checkout -q -", exception: true)
       [branch, sha]
     end
-
-    let :scss_data do
-      "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
-    end
-
-    let(:migration_js) { <<~JS }
-        export default function migrate(settings) {
-          return settings;
-        }
-      JS
-
-    let :initial_repo do
-      settings = <<~YAML
-        boolean_setting: true
-        list_setting:
-          type: list
-          default: ""
-      YAML
-      setup_git_repo(
-        "about.json" => about_json,
-        "desktop/desktop.scss" => scss_data,
-        "scss/oldpath.scss" => ".class2{color:blue}",
-        "stylesheets/file.scss" => ".class1{color:red}",
-        "stylesheets/empty.scss" => "",
-        "javascripts/discourse/controllers/test.js.es6" => "console.log('test');",
-        "test/acceptance/theme-test.js" => "assert.ok(true);",
-        "common/header.html" => "I AM HEADER",
-        "common/random.html" => "I AM SILLY",
-        "common/embedded.scss" => "EMBED",
-        "common/color_definitions.scss" => ":root{--color-var: red}",
-        "assets/font.woff2" => "FAKE FONT",
-        "settings.yaml" => settings,
-        "locales/en.yml" => "sometranslations",
-        "migrations/settings/0001-some-migration.js" => migration_js,
-        "screenshots/light.jpeg" => file_from_fixtures("logo.jpg", "images"),
-        "screenshots/dark.jpeg" => file_from_fixtures("logo.jpg", "images"),
-      )
-    end
-
-    let :initial_repo_url do
-      MockGitImporter.register("https://example.com/initial_repo.git", initial_repo)
-    end
-
-    after { `rm -fr #{initial_repo}` }
-
-    around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
     context "when replacing a text setting with a translation" do
       let(:theme) do
