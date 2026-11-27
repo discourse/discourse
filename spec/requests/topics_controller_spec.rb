@@ -290,6 +290,127 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "when the destination category requires posting review" do
+      fab!(:mover) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+      fab!(:source_topic, :topic)
+      fab!(:source_op) { Fabricate(:post, topic: source_topic, post_number: 1) }
+      fab!(:source_reply) { Fabricate(:post, topic: source_topic, post_number: 2) }
+      fab!(:review_category, :category)
+
+      before { sign_in(mover) }
+
+      it "does not let a TL4 user publish an unreviewed topic by splitting into a review-required category" do
+        review_category.category_setting.update!(topic_posting_review_mode: "everyone")
+
+        expect do
+          post "/t/#{source_topic.id}/move-posts.json",
+               params: {
+                 title: "Unreviewed split topic",
+                 post_ids: [source_reply.id],
+                 category_id: review_category.id,
+               }
+        end.not_to change { Topic.count }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("category.errors.move_posts_review_required"),
+        )
+        expect(source_reply.reload.topic_id).to eq(source_topic.id)
+      end
+
+      it "does not let a TL4 user publish an unreviewed topic by splitting without a category when the default category requires review" do
+        Category
+          .find(SiteSetting.uncategorized_category_id)
+          .category_setting
+          .update!(topic_posting_review_mode: "everyone")
+
+        expect do
+          post "/t/#{source_topic.id}/move-posts.json",
+               params: {
+                 title: "Unreviewed split topic",
+                 post_ids: [source_reply.id],
+               }
+        end.not_to change { Topic.count }
+
+        expect(response).to be_forbidden
+        expect(source_reply.reload.topic_id).to eq(source_topic.id)
+      end
+
+      it "still allows moving private message posts to a new message when the default category requires review" do
+        Category
+          .find(SiteSetting.uncategorized_category_id)
+          .category_setting
+          .update!(topic_posting_review_mode: "everyone")
+        message = Fabricate(:private_message_topic, user: mover)
+        Fabricate(:post, topic: message, user: mover, post_number: 1)
+        pm_reply = Fabricate(:post, topic: message, user: mover, post_number: 2)
+        sign_in(admin)
+
+        expect do
+          post "/t/#{message.id}/move-posts.json",
+               params: {
+                 title: "Moved private message posts",
+                 post_ids: [pm_reply.id],
+                 archetype: "private_message",
+               }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+      end
+
+      it "does not let a TL4 user publish an unreviewed reply by merging into a review-required topic" do
+        review_category.category_setting.update!(reply_posting_review_mode: "everyone")
+        dest = Fabricate(:topic, category: review_category)
+        Fabricate(:post, topic: dest, post_number: 1)
+
+        post "/t/#{source_topic.id}/move-posts.json",
+             params: {
+               post_ids: [source_reply.id],
+               destination_topic_id: dest.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(source_reply.reload.topic_id).to eq(source_topic.id)
+      end
+
+      it "still allows staff to split into a review-required category" do
+        review_category.category_setting.update!(topic_posting_review_mode: "everyone")
+        sign_in(moderator)
+
+        expect do
+          post "/t/#{source_topic.id}/move-posts.json",
+               params: {
+                 title: "Reviewed split topic",
+                 post_ids: [source_reply.id],
+                 category_id: review_category.id,
+               }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(source_reply.reload.topic_id).to eq(Topic.last.id)
+      end
+
+      it "still allows a category group moderator of the destination to merge into a reply review-required topic" do
+        SiteSetting.enable_category_group_moderation = true
+        review_category.category_setting.update!(reply_posting_review_mode: "everyone")
+        group = Fabricate(:group)
+        Fabricate(:category_moderation_group, category: review_category, group:)
+        group.add(mover)
+        dest = Fabricate(:topic, category: review_category)
+        Fabricate(:post, topic: dest, post_number: 1)
+
+        post "/t/#{source_topic.id}/move-posts.json",
+             params: {
+               post_ids: [source_reply.id],
+               destination_topic_id: dest.id,
+             }
+
+        expect(response.status).to eq(200)
+        expect(source_reply.reload.topic_id).to eq(dest.id)
+      end
+    end
+
     describe "moving posts as a group moderator" do
       fab!(:category_moderation_group) do
         Fabricate(:category_moderation_group, category:, group: group_user.group)
