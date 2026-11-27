@@ -620,6 +620,33 @@ RSpec.describe TopicGuardian do
   end
 
   describe "#can_move_topic_to_category?" do
+    it "lets category group moderators move topics into read-only categories when enabled" do
+      private_category.set_permissions(group.name => :readonly)
+      private_category.save!
+      group.add(user)
+      Fabricate(:category_moderation_group, category: private_category, group:)
+      SiteSetting.enable_category_group_moderation = true
+
+      expect(user.reload.guardian.can_move_topic_to_category?(private_category)).to eq(false)
+
+      SiteSetting.category_group_moderators_can_move_topics = true
+      expect(user.guardian.can_move_topic_to_category?(private_category)).to eq(true)
+      expect(user.guardian.can_create_topic_on_category?(private_category)).to eq(false)
+
+      private_category.update!(require_topic_approval: true)
+      expect(user.guardian.can_move_topic_to_category?(private_category)).to eq(false)
+    end
+
+    it "requires visibility of a moderated destination" do
+      moderation_group = Fabricate(:group)
+      moderation_group.add(user)
+      Fabricate(:category_moderation_group, category: private_category, group: moderation_group)
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.category_group_moderators_can_move_topics = true
+
+      expect(user.reload.guardian.can_move_topic_to_category?(private_category)).to eq(false)
+    end
+
     it "allows a moderator to move a topic to a category they can see" do
       expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
     end

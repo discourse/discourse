@@ -81,9 +81,21 @@ module TopicGuardian
 
     return true if is_admin?
     return false if !can_see_category?(category)
+    return true if is_staff?
 
-    is_staff? ||
-      (can_create_topic_on_category?(category) && !topic_posting_review_required?(category))
+    can_move =
+      can_create_topic_on_category?(category) || can_move_as_category_group_moderator?(category)
+    can_move && !topic_posting_review_required?(category)
+  end
+
+  def category_group_moderator_topic_move_ids
+    return [] unless category_group_moderator_topic_moves_enabled? && can_create_topic?(nil)
+
+    Category
+      .secured(self)
+      .where(id: moderated_category_ids)
+      .preload(:category_setting)
+      .filter_map { |category| category.id unless topic_posting_review_required?(category) }
   end
 
   def can_create_post_on_topic?(topic)
@@ -399,6 +411,16 @@ module TopicGuardian
   end
 
   private
+
+  def category_group_moderator_topic_moves_enabled?
+    SiteSetting.category_group_moderators_can_move_topics && category_group_moderation_allowed? &&
+      !is_staff? && !is_silenced?
+  end
+
+  def can_move_as_category_group_moderator?(category)
+    category_group_moderator_topic_moves_enabled? && is_category_group_moderator?(category) &&
+      can_create_topic?(nil)
+  end
 
   def can_delete_own_topic?(topic)
     topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago

@@ -15,6 +15,7 @@ export default <template>
         <CategoryChooser
           class="small"
           @onChange={{@topicCategoryChanged}}
+          @options={{hash includeTopicMoveDestinations=true}}
           @value={{@buffered.category_id}}
         />
       </PluginOutlet>

@@ -458,6 +458,7 @@ export default class ComposerContainer extends Component {
                             @onChange={{this.composer.updateCategory}}
                             @options={{hash
                               disabled=this.composer.disableCategoryChooser
+                              includeTopicMoveDestinations=this.composer.model.editingFirstPost
                               scopedCategoryId=this.composer.scopedCategoryId
                               prioritizedCategoryId=this.composer.prioritizedCategoryId
                               readOnlyCategoryId=this.composer.readOnlyCategoryId

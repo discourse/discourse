@@ -1,6 +1,32 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteController do
+  it "includes the additional topic move destinations only for eligible moderators" do
+    moderator = Fabricate(:user, refresh_auto_groups: true)
+    group = Fabricate(:group)
+    group.add(moderator)
+    category =
+      Fabricate(
+        :private_category,
+        group:,
+        permission_type: CategoryGroup.permission_types[:readonly],
+      )
+    Fabricate(:category_moderation_group, category:, group:)
+    SiteSetting.enable_category_group_moderation = true
+    sign_in(moderator)
+
+    get "/site.json"
+    expect(response.parsed_body).not_to have_key("category_group_moderator_topic_move_ids")
+
+    SiteSetting.category_group_moderators_can_move_topics = true
+    get "/site.json"
+    expect(response.parsed_body["category_group_moderator_topic_move_ids"]).to eq([category.id])
+
+    sign_in(Fabricate(:user))
+    get "/site.json"
+    expect(response.parsed_body).not_to have_key("category_group_moderator_topic_move_ids")
+  end
+
   describe "#site" do
     fab!(:staff_group) { Group[:staff] }
     fab!(:private_category) { Fabricate(:private_category, group: staff_group) }

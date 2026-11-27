@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -517,6 +518,7 @@ export default class BulkTopicActions extends Component {
               <p>
                 <CategoryChooser
                   @onChange={{this.onCategoryChange}}
+                  @options={{hash includeTopicMoveDestinations=true}}
                   @value={{this.categoryId}}
                 />
               </p>
