@@ -35,6 +35,9 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :dsa_statement_of_records
+  # Declared on the base class: an association added only to a subclass gives it its own copy of
+  # the reflections, hiding associations that plugins add to Reviewable after it has loaded.
+  has_many :upload_references, as: :target, dependent: :delete_all
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 

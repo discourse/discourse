@@ -3,8 +3,6 @@
 class ReviewableFlaggedProfile < Reviewable
   include ReviewableActionBuilder
 
-  has_many :upload_references, as: :target, dependent: :destroy
-
   def self.additional_args(params)
     ReviewableActionBuilder.penalty_args(params)
   end
