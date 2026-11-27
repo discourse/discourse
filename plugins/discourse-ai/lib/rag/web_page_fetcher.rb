@@ -53,7 +53,8 @@ module DiscourseAi
 
       def parse_uri(url)
         uri = URI.parse(UrlHelper.normalized_encode(url))
-        if !uri.scheme.in?(%w[http https]) || uri.host.blank? || uri.userinfo.present?
+        if !uri.scheme.in?(%w[http https]) || uri.host.blank? || uri.userinfo.present? ||
+             !FinalDestination.new(uri.to_s).validate_uri
           raise FetchError, "The page URL is invalid"
         end
 

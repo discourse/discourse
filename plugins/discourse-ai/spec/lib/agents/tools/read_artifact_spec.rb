@@ -130,6 +130,30 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       expect(new_artifact.metadata["imported_from"]).to eq("https://example.com")
     end
 
+    it "skips stylesheets on URLs FinalDestination rejects" do
+      css_url = "https://example.com:8443/style.css"
+      css_request = stub_request(:get, css_url)
+      stub_request(:get, "https://example.com").to_return(status: 200, body: <<~HTML)
+        <html>
+          <head><link rel="stylesheet" href="#{css_url}"></head>
+          <body><div>External Content</div></body>
+        </html>
+      HTML
+      tool =
+        described_class.new(
+          { url: "https://example.com" },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: DiscourseAi::Agents::BotContext.new(post: post),
+        )
+
+      result = tool.invoke {}
+
+      expect(result[:status]).to eq("success")
+      expect(AiArtifact.last.html).to include("<div>External Content</div>")
+      expect(css_request).not_to have_been_requested
+    end
+
     it "respects MAX_HTML_SIZE limit" do
       large_content = "x" * (described_class::MAX_HTML_SIZE + 1000)
 
