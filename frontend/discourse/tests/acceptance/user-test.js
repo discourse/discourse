@@ -6,6 +6,7 @@ import {
   settled,
   visit,
 } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -19,6 +20,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -43,6 +45,26 @@ acceptance("User Routes", function (needs) {
     server.get("/u/eviltrout%2F..%2F..%2F.json", () =>
       helper.response(400, {})
     );
+  });
+
+  test("Empty profile control connectors do not take up space", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/user-profile-controls/conditional-control",
+      hbs`{{#if @outletArgs.model.staged}}<span>Staged user</span>{{/if}}`
+    );
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/user-profile-controls/visible-control",
+      hbs`<span>Profile control</span>`
+    );
+
+    await visit("/u/eviltrout/summary");
+
+    assert
+      .dom(".controls li.user-profile-controls-outlet.conditional-control")
+      .hasStyle({ display: "none" });
+    assert
+      .dom(".controls li.user-profile-controls-outlet.visible-control")
+      .isVisible();
   });
 
   test("Invalid usernames", async function (assert) {
