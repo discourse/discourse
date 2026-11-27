@@ -2967,11 +2967,11 @@ en:
     errors:
       prev_page: "while trying to load"
       reasons:
-        network: "Network Error"
-        server: "Server Error"
+        network: "Network error"
+        server: "Server error"
         forbidden: "Access denied"
         unknown: "Error"
-        not_found: "Page Not Found"
+        not_found: "Page not found"
       desc:
         network: "Please check your connection."
         network_fixed: "Looks like it's back."
