@@ -23,6 +23,7 @@ const HORIZON_PALETTES = [
   "Lily",
   "Clover",
   "Royal",
+  "Tide",
 ];
 
 export default class UserColorPaletteSelector extends Component {
