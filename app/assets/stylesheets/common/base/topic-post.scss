@@ -541,7 +541,6 @@ nav.post-controls {
     button {
       .discourse-no-touch & {
         &:hover,
-        &:focus-visible,
         &:active {
           outline: none;
           background: var(--d-post-control-background--hover);
@@ -549,8 +548,7 @@ nav.post-controls {
         }
 
         &.delete:hover,
-        &.delete:active,
-        &.delete:focus {
+        &.delete:active {
           background: var(--danger);
           color: var(--secondary);
 
@@ -558,6 +556,11 @@ nav.post-controls {
             color: var(--secondary);
           }
         }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--d-input-focused-color);
+        outline-offset: -2px;
       }
 
       &.hidden {
