@@ -8,6 +8,6 @@ discourse_rewind:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/418257"
       allow_enabled_for:
-        - "everyone"
+        - "logged_in_users"
       requires_plugin_enabled: false
       permanent_warning: false

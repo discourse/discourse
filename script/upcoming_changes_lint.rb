@@ -49,7 +49,7 @@ class UpcomingChangesFileValidator
   BOOLEAN_KEYS = %i[body_class permanent_warning requires_plugin_enabled]
   IMPACT_TYPES = %w[feature other site_setting_default]
   IMPACT_ROLES = UpcomingChanges::ROLE_GROUP_KEYS.keys.map(&:to_s)
-  ALLOW_ENABLED_FOR_VALUES = %w[everyone staff specific_groups]
+  ALLOW_ENABLED_FOR_VALUES = %w[everyone logged_in_users staff specific_groups]
   LEARN_MORE_URL_FORMAT = %r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}
 
   attr_reader :errors
@@ -201,8 +201,12 @@ class UpcomingChangesFileValidator
       ]
     end
 
-    if allow_strings.include?("everyone") && allow_strings != ["everyone"]
-      error["`upcoming_change.allow_enabled_for` may not combine `everyone` with other values"]
+    %w[everyone logged_in_users].each do |fixed_audience|
+      if allow_strings.include?(fixed_audience) && allow_strings != [fixed_audience]
+        error[
+          "`upcoming_change.allow_enabled_for` may not combine `#{fixed_audience}` with other values"
+        ]
+      end
     end
   end
 

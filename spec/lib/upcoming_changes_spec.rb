@@ -941,6 +941,43 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".enabled_for_user? with a fixed logged-in audience" do
+    fab!(:user)
+
+    before do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :stable,
+          allow_enabled_for: [:logged_in_users],
+        },
+      )
+      Fabricate(
+        :site_setting_group,
+        name: setting_name,
+        group_ids: Group::AUTO_GROUPS[:anonymous_users].to_s,
+      )
+    end
+
+    it "applies the fixed audience when the change is auto-promoted" do
+      SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+
+    it "applies the fixed audience when the change becomes permanent" do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :permanent,
+          allow_enabled_for: [:logged_in_users],
+        },
+      )
+
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+  end
+
   describe ".group_ids_for" do
     it "ignores stored groups only while the change is permanent" do
       group = Fabricate(:group)

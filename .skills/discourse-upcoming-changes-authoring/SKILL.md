@@ -409,15 +409,16 @@ my_upcoming_change_setting:
 
 Valid value sets:
 
-| `allow_enabled_for` | Dropdown options shown |
+| `allow_enabled_for` | Audience in the admin UI |
 |---|---|
 | *(omitted)* | No one, Everyone, Staff, Specific group(s) |
 | `[everyone]` | No one, Everyone |
+| `[logged_in_users]` | No one, Logged-in users |
 | `[staff]` | No one, Staff |
 | `[specific_groups]` | No one, Specific group(s) |
 | `[staff, specific_groups]` | No one, Staff, Specific group(s) |
 
-`everyone` cannot be combined with `staff` or `specific_groups` — when present, it must be the only value. `No one` is always available. The integrity spec rejects invalid combinations.
+`everyone` and `logged_in_users` each must be the only value when present. A change with `[logged_in_users]` shows the logged-in users group as its locked audience. The framework derives that audience from metadata, so it applies to existing enabled sites, after auto-promotion, and when the change becomes permanent. `No one` is always available. The metadata linter rejects invalid combinations.
 
 ### Adding a Conditional Display Rule
 
