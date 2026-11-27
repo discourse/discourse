@@ -175,7 +175,7 @@ class CategoriesController < ApplicationController
   MAX_DESCRIPTION_PARAM_LENGTH = CategoryCreator::MAX_DESCRIPTION_LENGTH
 
   def create
-    guardian.ensure_can_create!(Category)
+    return create_subcategory_as_group_moderator unless guardian.can_create?(Category)
     position = category_params.delete(:position)
     category_type = params[:category_type]
     category_attributes = required_create_params
@@ -579,6 +579,30 @@ class CategoriesController < ApplicationController
   end
 
   private
+
+  def create_subcategory_as_group_moderator
+    if !SiteSetting.category_group_moderators_can_create_subcategories
+      raise Discourse::InvalidAccess
+    end
+
+    parent = Category.find_by(id: params[:parent_category_id])
+    raise Discourse::InvalidAccess if !parent
+
+    parent.with_lock do
+      @category =
+        CategoryCreator.create_subcategory_as_group_moderator(
+          guardian,
+          parent,
+          params.permit(:name),
+        )
+    end
+
+    if @category.persisted?
+      render_serialized(@category, CategorySerializer, status: :created)
+    else
+      render_json_error(@category)
+    end
+  end
 
   def merge_pending_custom_fields!(category, pending_custom_fields)
     pending_custom_fields&.each do |key, value|

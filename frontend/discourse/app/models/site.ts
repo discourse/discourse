@@ -232,6 +232,8 @@ export interface SiteFields {
   can_associate_groups?: boolean;
   wizard_required?: true;
   topic_featured_link_allowed_category_ids?: number[];
+  /** Categories where the viewer can create subcategories as a group moderator. */
+  category_group_moderator_subcategory_parent_ids?: number[];
   user_themes?: SiteUserTheme[];
   user_color_schemes?: SiteSelectableColorScheme[];
   default_light_color_scheme?: SiteColorScheme | null;

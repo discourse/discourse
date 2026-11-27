@@ -664,6 +664,78 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(403)
     end
 
+    context "when signed in as a category group moderator" do
+      fab!(:moderation_group, :group)
+      fab!(:review_group, :group)
+      fab!(:parent_category) { Fabricate(:private_category, group: moderation_group) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        moderation_group.add(user)
+        Fabricate(:category_moderation_group, category: parent_category, group: moderation_group)
+        sign_in(user)
+      end
+
+      it "requires the option to create subcategories" do
+        post "/categories.json",
+             params: {
+               name: "Subcategory",
+               parent_category_id: parent_category.id,
+             }
+        expect(response).to be_forbidden
+      end
+
+      it "inherits access, moderation and review settings from the parent" do
+        SiteSetting.category_group_moderators_can_create_subcategories = true
+        parent_category.category_setting.update!(topic_posting_review_mode: :everyone_except)
+        parent_category.category_posting_review_groups.create!(
+          group: review_group,
+          post_type: :topic,
+        )
+
+        get "/site.json"
+        expect(response.parsed_body["category_group_moderator_subcategory_parent_ids"]).to eq(
+          [parent_category.id],
+        )
+
+        post "/categories.json",
+             params: {
+               name: "Moderated subcategory",
+               parent_category_id: parent_category.id,
+               permissions: {
+                 "everyone" => 1,
+               },
+               moderating_group_ids: [review_group.id],
+               category_setting_attributes: {
+                 topic_posting_review_mode: "no_one",
+               },
+             }
+
+        expect(response).to have_http_status(:created)
+        child = Category.find(response.parsed_body.dig("category", "id"))
+        expect(child).to have_attributes(
+          parent_category: parent_category,
+          read_restricted: true,
+          permissions_params: parent_category.permissions_params,
+          moderating_group_ids: [moderation_group.id],
+        )
+        expect(child.category_setting.topic_posting_review_mode).to eq("everyone_except")
+        expect(child.category_posting_review_groups.pluck(:group_id, :post_type)).to eq(
+          [[review_group.id, "topic"]],
+        )
+      end
+
+      it "requires an eligible parent category" do
+        SiteSetting.category_group_moderators_can_create_subcategories = true
+
+        post "/categories.json", params: { name: "Top-level category" }
+        expect(response).to be_forbidden
+
+        post "/categories.json", params: { name: "Category", parent_category_id: category.id }
+        expect(response).to be_forbidden
+      end
+    end
+
     describe "logged in" do
       before do
         Jobs.run_immediately!

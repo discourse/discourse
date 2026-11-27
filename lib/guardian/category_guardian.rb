@@ -7,6 +7,17 @@ module CategoryGuardian
     is_admin? || (SiteSetting.moderators_manage_categories && is_moderator?)
   end
 
+  def can_create_subcategory_as_group_moderator?(parent)
+    category_group_moderator_subcategory_creation_enabled? &&
+      is_category_group_moderator?(parent) && can_see_category?(parent)
+  end
+
+  def category_group_moderator_subcategory_parent_ids
+    return [] unless category_group_moderator_subcategory_creation_enabled?
+
+    Category.secured(self).where(id: moderated_category_ids).pluck(:id)
+  end
+
   # Editing Method
   def can_edit_category?(category)
     is_admin? ||
@@ -80,6 +91,11 @@ module CategoryGuardian
   end
 
   private
+
+  def category_group_moderator_subcategory_creation_enabled?
+    SiteSetting.category_group_moderators_can_create_subcategories &&
+      category_group_moderation_allowed? && !is_staff? && !is_silenced?
+  end
 
   def secure_category_ids_set
     @secure_category_ids_set ||= secure_category_ids.to_set

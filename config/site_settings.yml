@@ -1329,6 +1329,9 @@ groups:
     client: true
     default: false
     area: "group_permissions|categories"
+  category_group_moderators_can_create_subcategories:
+    default: false
+    area: "group_permissions|categories"
   max_automatic_membership_email_domains:
     default: 50
     hidden: true
