@@ -31,6 +31,11 @@ individually. Give a conversion its own PR if it needs a data-flow or plugin-API
 substantial test changes, or edits to a call site another member of the batch also changes.
 A hierarchy goes in one PR. Group ui-kit conversions when they can share a TypeScript review.
 
+Before opening or updating a batch PR, re-run the external sweep for every member on the
+final diff and lead the reply with the batch's breakages outside core, one per file with
+its fix (see the [report](SKILL.md#report)). Offer to make those fixes in the external
+repos. A fix that works on both the classic and the Glimmer base needs no compatibility pin.
+
 When asked to ship, branch from `origin/main` to keep unrelated commits out. If carrying over
 changes from another branch, first compare the target files with `origin/main` using
 `git diff origin/main HEAD -- <paths>`. Stage only the conversion and its related edits.
@@ -84,4 +89,5 @@ rest. Commit the log with the skill, separately from the conversion.
 3. Handle blocked targets individually. Start with the `getTopicFooterButtons` receiver
    contract. Revisit `discourse-root` once the cause of the earlier revert is understood
    (`27408c7e14b` → `9408ea44617`).
-4. Follow up with external consumers identified in the conversion reports once the PRs land.
+4. Ship the external fixes from the conversion reports. One that works on both the classic
+   and the Glimmer base can land before the conversion.

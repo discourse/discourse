@@ -109,7 +109,10 @@ report against the classic behavior and describe any fix separately.
 
 ## Report
 
-Summarize interface and call-site changes, any pre-existing bug found and its disposition,
-and any behavior difference. Name external consumers that need an edit and specify the
-edit. Explain a `.gjs` exception in a TypeScript neighborhood. List verification results
-and any coverage gaps.
+Start with **Breakages outside core**: each file in the external checkouts that the
+conversion breaks (a subclass, prototype patch, template override, or read of classic
+state), what breaks, and the exact edit, noting whether the edit also works on older core.
+Write "None" only after a full sweep. Never fold breakages into other notes. Then
+summarize interface and call-site changes, any pre-existing bug found and its disposition,
+and any behavior difference. Explain a `.gjs` exception in a TypeScript neighborhood. List
+verification results and any coverage gaps.
