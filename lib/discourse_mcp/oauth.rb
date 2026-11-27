@@ -142,7 +142,7 @@ module DiscourseMcp
         status = nil
         content_type = nil
         FinalDestination
-          .new(uri.to_s, validate_uri: true, max_redirects: 3, timeout: 5)
+          .new(uri.to_s, validate_uri: true, max_redirects: 0, timeout: 5)
           .get do |response, chunk, _resolved_uri|
             status = response.code.to_i
             content_type = response["Content-Type"]
