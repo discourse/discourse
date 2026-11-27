@@ -37,6 +37,7 @@ export default class LiveVoiceCanvas extends Component {
       {{#each this.remoteStreams key="id" as |stream|}}
         <audio
           autoplay
+          class="live-voice-canvas__voice"
           playsinline
           {{didInsert (fn this.liveWebrtc.attachStream stream)}}
           {{didUpdate (fn this.liveWebrtc.attachStream stream) stream}}
@@ -46,6 +47,7 @@ export default class LiveVoiceCanvas extends Component {
       {{#each this.remoteScreenAudioStreams key="id" as |stream|}}
         <audio
           autoplay
+          class="live-voice-canvas__screen-audio"
           playsinline
           {{didInsert (fn this.liveWebrtc.attachStream stream)}}
           {{didUpdate (fn this.liveWebrtc.attachStream stream) stream}}

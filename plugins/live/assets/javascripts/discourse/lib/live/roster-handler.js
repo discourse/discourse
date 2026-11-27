@@ -369,11 +369,61 @@ export default class RosterHandler {
     });
   }
 
-  // Captures and publishes the microphone that a room type change left
-  // unacquired. Resolves to whether the microphone is now available.
+  // Captures and publishes a microphone that was not acquired on join, after
+  // a room type change, or on a stage promotion. Leaves existing connections
+  // untouched when capture fails. Resolves to whether the microphone is now
+  // available.
   async acquireDeferredMicrophone(roomId) {
-    await this.#reconfigureLocalMediaForRole(roomId, true);
-    return !!this.#getLocalStream();
+    if (!this.#getLocalStream() && !(await this.#acquireMicrophone())) {
+      return false;
+    }
+
+    const room = this.#getRoom(roomId);
+    const stillAllowed =
+      this.#isActiveRoom(roomId) &&
+      (!room || participantCanSpeak(room, this.#getCurrentUserId()));
+
+    if (!stillAllowed) {
+      this.#stopLocalAudio();
+      this.#setMicEnabled(false);
+      return false;
+    }
+
+    if (this.#isMeshRoom(roomId)) {
+      this.#setMicEnabled(!this.#getPttEnabled());
+
+      // Rebuilding the connections would also drop their data channels, so
+      // it is only the fallback for a connection with no idle sender.
+      const track = this.#getLocalStream().getAudioTracks()[0];
+      if (!(await this.#peerManager.attachMicTrack(roomId, track))) {
+        this.#reconnectAllPeers(roomId, { initiateImmediately: true });
+      }
+    } else if (!(await this.#publishMicrophone(roomId))) {
+      // The capture is kept, so the next unmute only retries the publish.
+      this.#setMicEnabled(false);
+      this.#toasts.error({
+        duration: 5000,
+        data: { message: i18n("live.room.mic_publish_failed") },
+      });
+      return false;
+    } else {
+      this.#setMicEnabled(!this.#getPttEnabled());
+    }
+
+    this.#ensureLocalAudioMonitor(roomId);
+    return true;
+  }
+
+  async #publishMicrophone(roomId) {
+    const session = this.#livekit.sessionFor(roomId);
+    try {
+      await session?.refreshPublications();
+    } catch {
+      liveLog.warn(
+        `[live-livekit] failed to refresh publications after deferred microphone acquisition in room ${roomId}`
+      );
+    }
+    return !!session?.microphonePublished;
   }
 
   #syncRemoteMediaTracks(roomId, participants) {
@@ -482,28 +532,23 @@ export default class RosterHandler {
     // before the mic is ready.
     this.#roleChangeInProgress.add(roomId);
 
-    // Destroy all existing peers immediately. Mesh-only: on other transports
-    // the media session survives a role change untouched, so wiping the
-    // remote registry would silence everyone until they republished.
-    if (this.#isMeshRoom(roomId)) {
-      this.#peerManager.destroyRoom(roomId);
-      this.#removeAllRemoteStreams(roomId);
-      this.#signaling.clearForRoom(roomId);
-      this.#signaling.clearHttpQueue(roomId);
-    }
-
     if (canSpeak) {
       if (!this.#getLocalStream()) {
         if (acquireMicrophone) {
           // The acquisition callback owns the user-facing failure feedback
-          // (permission help modal or toast).
+          // (permission help modal or toast). A missing or blocked mic must
+          // not leave the user stranded without peers — stay connected muted
+          // so they can keep listening or share video/screen.
           const acquired = await this.#acquireMicrophone();
-          if (!acquired) {
+          if (!this.#isActiveRoom(roomId)) {
+            if (acquired) {
+              this.#stopLocalAudio();
+            }
             this.#roleChangeInProgress.delete(roomId);
             return;
           }
 
-          this.#setMicEnabled(!this.#getPttEnabled());
+          this.#setMicEnabled(acquired ? !this.#getPttEnabled() : false);
         } else {
           this.#setMicEnabled(false);
         }
@@ -520,6 +565,17 @@ export default class RosterHandler {
         });
       }
     } else {
+      // Destroy all existing peers immediately on demotion. Mesh-only: on
+      // other transports the media session survives a role change untouched,
+      // so wiping the remote registry would silence everyone until they
+      // republished.
+      if (this.#isMeshRoom(roomId)) {
+        this.#peerManager.destroyRoom(roomId);
+        this.#removeAllRemoteStreams(roomId);
+        this.#signaling.clearForRoom(roomId);
+        this.#signaling.clearHttpQueue(roomId);
+      }
+
       if (this.#getLocalVideoKind()) {
         await this.#stopLocalVideo();
       }
@@ -561,16 +617,23 @@ export default class RosterHandler {
     }
   }
 
-  async #createAndOfferPeer(roomId, remoteUserId, { awaitOffer = false } = {}) {
+  async #createAndOfferPeer(
+    roomId,
+    remoteUserId,
+    { awaitOffer = false, initiateImmediately = false } = {}
+  ) {
     await this.#peerManager.create(roomId, remoteUserId);
-    if (!awaitOffer && this.#getCurrentUserId() <= remoteUserId) {
+    if (
+      !awaitOffer &&
+      (initiateImmediately || this.#getCurrentUserId() <= remoteUserId)
+    ) {
       await this.#peerManager.initiateOffer(roomId, remoteUserId);
     } else {
       this.#peerManager.scheduleOfferRetry(roomId, remoteUserId);
     }
   }
 
-  #reconnectAllPeers(roomId) {
+  #reconnectAllPeers(roomId, { initiateImmediately = false } = {}) {
     this.#peerManager.destroyRoom(roomId);
     this.#removeAllRemoteStreams(roomId);
     this.#signaling.clearForRoom(roomId);
@@ -586,7 +649,11 @@ export default class RosterHandler {
 
     for (const participant of participants) {
       const participantId = Number(participant?.id);
-      if (participantId === this.#getCurrentUserId()) {
+      if (
+        !participantId ||
+        participantId <= 0 ||
+        participantId === this.#getCurrentUserId()
+      ) {
         continue;
       }
 
@@ -594,7 +661,9 @@ export default class RosterHandler {
       const shouldConnect = iCanSpeak || theyCanSpeak;
 
       if (shouldConnect) {
-        this.#createAndOfferPeer(roomId, participantId);
+        this.#createAndOfferPeer(roomId, participantId, {
+          initiateImmediately,
+        });
       }
     }
   }

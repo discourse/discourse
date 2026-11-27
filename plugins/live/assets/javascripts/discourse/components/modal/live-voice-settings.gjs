@@ -140,6 +140,7 @@ export default class LiveVoiceSettingsModal extends Component {
       if (!this.isDestroying) {
         this.micError = true;
         this.level = 0;
+        await this.refreshDevices();
       }
       return;
     }
