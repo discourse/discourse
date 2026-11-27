@@ -106,11 +106,10 @@ module DiscourseDataExplorer
             query = nil
             DiscourseDataExplorer::Query.transaction do
               query =
-                DiscourseDataExplorer::QueryCreator.create(
-                  query_params: draft.slice(:name, :description, :sql),
-                  group_ids: [],
-                  user: context.user,
-                )
+                DiscourseDataExplorer::CreateQuery.call!(
+                  params: draft.slice(:name, :description, :sql),
+                  guardian: context.user.guardian,
+                ).query
               QueryDraft.complete_after_transaction(
                 parameters[:draft_token],
                 reviewable_id: reviewable.id,
@@ -123,7 +122,7 @@ module DiscourseDataExplorer
             raise error
           end
         end
-      rescue ActiveRecord::ActiveRecordError, Discourse::InvalidParameters
+      rescue ActiveRecord::ActiveRecordError, Service::Base::Failure
         error_response(I18n.t("discourse_data_explorer.admin_assistant.creation_failed"))
       end
 

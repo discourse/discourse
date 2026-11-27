@@ -6,13 +6,13 @@ module DiscourseDataExplorer
 
     scope { Query.where(hidden: false).includes(:tags) }
 
-    attribute :name
-    attribute :description
+    attribute :name, :string, writable: true
+    attribute :description, :string, writable: true
     attribute :created_at
     attribute :last_run_at
-    attribute(:tags) { it.tag_names }
+    attribute(:tags, :array, writable: true) { it.tag_names }
     attribute(:automatic_tags) { Query.automatic_tag_names(it.id) }
-    attribute :sql, readable: :is_admin?.to_proc
+    attribute :sql, :string, writable: true, readable: :is_admin?.to_proc
     attribute(:param_info) { it.params.uniq(&:identifier).map(&:to_hash) }
     attribute(:is_default) { it.id.negative? }
 
@@ -27,7 +27,7 @@ module DiscourseDataExplorer
     has_one :user
     has_one :cached_result
 
-    has_many :groups
+    has_many :groups, writable: true
 
     sort :name
     sort :last_run_at

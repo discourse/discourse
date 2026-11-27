@@ -29,6 +29,10 @@ module JsonApiKit
 
       def set_json_format = request.format = :json
 
+      def handle_unverified_request
+        raise UnverifiedRequest unless is_api? || is_user_api?
+      end
+
       def render_document(document, **options)
         options = { status: document.status, content_type: Pagination::Profile::MEDIA_TYPE }.merge(
           options,
