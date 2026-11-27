@@ -2373,6 +2373,7 @@ pl_PL:
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
         verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
+        revoke_apps: "Wyloguj się także ze wszystkich podłączonych aplikacji (zalecane, jeśli uważasz, że ktoś inny uzyskał dostęp do Twojego konta)"
         title: "Reset hasła"
         remove: "Usuń hasło"
         remove_disabled: "Aby usunąć hasło, konto musi się logować co najmniej za pomocą innej metody (np. klucza dostępu lub powiązanego konta zewnętrznego)."

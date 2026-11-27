@@ -806,6 +806,11 @@ pl_PL:
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
   authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
+  remove_password_too_soon:
+    one: "Możesz usunąć swoje hasło %{count} minutę po jego ustawieniu."
+    few: "Możesz usunąć swoje hasło %{count} minuty po jego ustawieniu."
+    many: "Możesz usunąć swoje hasło %{count} minut po jego ustawieniu."
+    other: "Możesz usunąć swoje hasło %{count} minut po jego ustawieniu."
   scoped_api_key_html_not_allowed: "Kluczy API wraz z zakresami nie można używać do żądania stron HTML. Zamiast tego należy zażądać formatu JSON."
   provider_not_enabled: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie został upoważniony w systemie."
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
