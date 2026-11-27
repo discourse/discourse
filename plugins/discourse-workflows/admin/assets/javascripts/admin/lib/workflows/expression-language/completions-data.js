@@ -1,39 +1,5 @@
 import { i18n } from "discourse-i18n";
 
-function sectionHeader(name) {
-  return () => {
-    const header = document.createElement("div");
-    header.className = "cm-expr-section-header";
-    header.textContent = name;
-    return header;
-  };
-}
-
-export function section(name, rank) {
-  return { name, rank, header: sectionHeader(name) };
-}
-
-export const SECTION_RECOMMENDED = section(
-  i18n("codemirror.expression.sections.recommended"),
-  0
-);
-export const SECTION_PROPERTIES = section(
-  i18n("codemirror.expression.sections.properties"),
-  2
-);
-export const SECTION_METHODS = section(
-  i18n("codemirror.expression.sections.methods"),
-  3
-);
-export const SECTION_METADATA = section(
-  i18n("codemirror.expression.sections.metadata"),
-  4
-);
-export const SECTION_GLOBALS = section(
-  i18n("codemirror.expression.sections.globals"),
-  5
-);
-
 export function info(signature, description, example) {
   return () => {
     const div = document.createElement("div");
@@ -63,7 +29,7 @@ export function info(signature, description, example) {
 }
 
 // Builds method completions, deriving each description from the type and
-// label by convention: `codemirror.expression.methods.<type>.<label>`.
+// label by convention: `discourse_workflows.expression_language.methods.<type>.<label>`.
 // Signatures and examples stay literal — they are code, not translatable prose.
 function buildMethods(type, entries) {
   return entries.map((entry) => ({
@@ -72,20 +38,24 @@ function buildMethods(type, entries) {
     detail: entry.detail,
     info: info(
       entry.signature,
-      i18n(`codemirror.expression.methods.${type}.${entry.label}`),
+      i18n(
+        `discourse_workflows.expression_language.methods.${type}.${entry.label}`
+      ),
       entry.example
     ),
   }));
 }
 
 // Builds global completions, deriving each description by convention:
-// `codemirror.expression.globals.<label>`.
+// `discourse_workflows.expression_language.globals.<label>`.
 function buildGlobals(entries) {
   return entries.map((entry) => ({
     label: entry.label,
     type: entry.type,
     detail: entry.detail,
-    info: i18n(`codemirror.expression.globals.${entry.label}`),
+    info: i18n(
+      `discourse_workflows.expression_language.globals.${entry.label}`
+    ),
   }));
 }
 

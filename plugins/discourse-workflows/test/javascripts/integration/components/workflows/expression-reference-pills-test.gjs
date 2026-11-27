@@ -6,6 +6,7 @@ import VariableInput from "discourse/plugins/discourse-workflows/admin/component
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 import { buildFocusEmptyArea } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-extensions/focus-empty-area";
 import { buildReferencePills } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-extensions/reference-pills";
+import { expressionUtils } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-language/index";
 
 // A scope where `$json` resolves, so simple references classify as valid.
 const SCOPE = { $json: { title: "Hello", value: 1.2345 } };
@@ -15,7 +16,7 @@ const SCOPE = { $json: { title: "Hello", value: 1.2345 } };
 // network-backed builders (completions, evaluation) that the full bundle adds.
 function pillExtensions(cmParams) {
   return [
-    cmParams.utils.expressionLanguage(),
+    expressionUtils(cmParams).expressionLanguage(),
     buildReferencePills(cmParams, { scope: SCOPE, onOpenReferencePicker() {} }),
   ];
 }
