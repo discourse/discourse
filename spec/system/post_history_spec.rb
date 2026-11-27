@@ -140,6 +140,15 @@ describe "Post history with an unlisted revision" do
     resize_window(width: 320) { expect(post_history_modal).to have_revision_arrows_inside_controls }
   end
 
+  it "keeps all revision arrows inside the footer on a narrow screen", mobile: true do
+    page.current_window.resize_to(320, 740)
+    sign_in(admin)
+    topic_page.visit_topic(topic)
+    topic_page.open_post_history(post)
+
+    expect(post_history_modal).to have_revision_arrows_inside_controls
+  end
+
   it "skips the unlisted revision for users until they show all edits" do
     post.revisions.find_by(number: 3).unlist!
 
