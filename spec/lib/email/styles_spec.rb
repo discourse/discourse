@@ -239,6 +239,46 @@ RSpec.describe Email::Styles do
     end
   end
 
+  describe "HTML at Nokogiri's parser limits" do
+    it "styles an element at the attribute limit" do
+      attributes = (1..Nokogiri::Gumbo::DEFAULT_MAX_ATTRIBUTES).map { |i| "data-a#{i}" }.join(" ")
+
+      styler = Email::Styles.new("<ul><li #{attributes}>hello</li></ul>")
+      styler.format_basic
+      styler.format_html
+      styled = styler.to_html
+
+      # Email::Sender parses the styled email one more time before sending it
+      expect(Email::Styles.new(styled).to_html).to include("padding-bottom")
+    end
+
+    it "styles content at the tree depth limit" do
+      styler = Email::Styles.new("<div>" * 400 + "hello" + "</div>" * 400)
+      styler.format_basic
+      styler.format_html
+
+      expect(styler.to_html.scan("<div").size).to eq(400)
+    end
+
+    it "converts a quote whose contents are at the attribute limit" do
+      attributes = (1..Nokogiri::Gumbo::DEFAULT_MAX_ATTRIBUTES).map { |i| "data-a#{i}" }.join(" ")
+      html = <<~HTML
+        <aside class="quote">
+          <div class="title">someone:</div>
+          <blockquote><ul><li #{attributes}>hello</li></ul></blockquote>
+        </aside>
+      HTML
+
+      styler = Email::Styles.new(html)
+      styler.format_basic
+      styler.format_html
+      styled = styler.to_html
+
+      expect(styled).to include("blockquote")
+      expect(styled.scan(/data-a\d+/).size).to eq(Nokogiri::Gumbo::DEFAULT_MAX_ATTRIBUTES)
+    end
+  end
+
   describe "dark mode emails" do
     it "adds dark_mode_styles when site setting active" do
       frag = html_fragment('<div class="body">test</div>')

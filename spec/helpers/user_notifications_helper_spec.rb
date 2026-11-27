@@ -118,6 +118,18 @@ RSpec.describe UserNotificationsHelper do
     it "handles when there's only a lightboxed image" do
       expect(helper.email_excerpt("#{lightbox_image}")).to eq(expected_lightbox_image)
     end
+
+    it "returns an empty excerpt when the HTML exceeds Nokogiri's tree depth limit" do
+      cooked = "<div>" * 399 + "This is too deep to excerpt." + "</div>" * 399
+
+      expect(helper.email_excerpt(cooked)).to eq("")
+    end
+
+    it "excerpts HTML that is deep but within Nokogiri's tree depth limit" do
+      cooked = "<div>" * 390 + "This is deep but still excerptable." + "</div>" * 390
+
+      expect(helper.email_excerpt(cooked)).to include("This is deep but still excerptable.")
+    end
   end
 
   describe "#logo_url" do
