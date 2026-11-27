@@ -2,7 +2,7 @@
 
 # The design wizard renders theme screenshots into a narrow rail, where the
 # full-size images a theme ships are an order of magnitude larger than the slot
-# needs. Producing a resized copy is a synchronous ImageMagick convert behind a
+# needs. Producing a resized copy is a synchronous resize behind a
 # host-wide mutex, so generation always happens in a job and callers serve the
 # full-size screenshot until the resized one lands.
 class ThemeScreenshotThumbnails

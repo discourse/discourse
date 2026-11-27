@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 Fabricator(:upload) do
   user
   sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest("#{n}#{Process.pid}") } }
@@ -45,11 +47,11 @@ end
 
 Fabricator(:image_upload, from: :upload) do
   transient color: "white"
-  transient color_depth: 8
 
   after_create do |upload, transients|
     file = Tempfile.new(%w[fabricated .png])
-    `magick -size #{upload.width}x#{upload.height} -depth #{transients[:color_depth]} xc:#{transients[:color]} "#{file.path}"`
+    color = ChunkyPNG::Color.parse(transients[:color])
+    ChunkyPNG::Image.new(upload.width, upload.height, color).save(file.path)
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)
@@ -101,7 +103,7 @@ end
 Fabricator(:s3_image_upload, from: :upload_s3) do
   after_create do |upload|
     file = Tempfile.new(%w[fabricated .png])
-    `magick -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+    ChunkyPNG::Image.new(upload.width, upload.height, ChunkyPNG::Color::WHITE).save(file.path)
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)

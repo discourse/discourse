@@ -194,7 +194,12 @@ class FileHelper
               write: [temporary.path],
               execute: Discourse::SafeExec.default_execute_paths,
               timeout: 15,
-              rlimits: ImageMagick::RLIMITS,
+              rlimits: {
+                cpu_seconds: 300,
+                memory_bytes: 4 * 1024 * 1024 * 1024,
+                file_size_bytes: 10 * 1024 * 1024 * 1024,
+                open_files: 1024,
+              },
               seccomp_deny_network: true,
               seccomp_deny_child_processes: true,
             )

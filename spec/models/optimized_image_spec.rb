@@ -15,49 +15,35 @@ RSpec.describe OptimizedImage do
 
     after { FileUtils.remove_entry(directory) }
 
-    shared_examples "crop processing" do
-      it "crops an image in place" do
-        result = described_class.crop(input_path, input_path, 100, 50)
+    it "crops an image in place" do
+      result = described_class.crop(input_path, input_path, 100, 50)
 
-        expect(result).to eq(true)
-        expect(FastImage.size(input_path)).to eq([100, 50])
-      end
+      expect(result).to eq(true)
+      expect(FastImage.size(input_path)).to eq([100, 50])
+    end
 
-      it "crops vertical content from the top edge" do
-        FileHelper.stubs(:optimize_image!).returns(true)
+    it "crops vertical content from the top edge" do
+      FileHelper.stubs(:optimize_image!).returns(true)
 
-        Dir.mktmpdir do |directory|
-          output_path = File.join(directory, "cropped.png")
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "cropped.png")
 
-          described_class.crop(
-            Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
-            output_path,
-            3,
-            2,
-          )
-          output_image = ChunkyPNG::Image.from_file(output_path)
+        described_class.crop(
+          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
+          output_path,
+          3,
+          2,
+        )
+        output_image = ChunkyPNG::Image.from_file(output_path)
 
-          expect([output_image.width, output_image.height]).to eq([3, 2])
-          expect(output_image.pixels).to all(
-            satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
-          )
-        end
+        expect([output_image.width, output_image.height]).to eq([3, 2])
+        expect(output_image.pixels).to all(
+          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+        )
       end
     end
 
-    context "with libvips disabled" do
-      before { global_setting :enable_vips_image_processing, false }
-
-      include_examples "crop processing"
-    end
-
-    context "with libvips enabled" do
-      before { global_setting :enable_vips_image_processing, true }
-
-      include_examples "crop processing"
-    end
-
-    it "produces cropped images with ImageMagick 7" do
+    it "produces cropped images" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
       desired_height = 5
@@ -103,20 +89,6 @@ RSpec.describe OptimizedImage do
         File.delete(tmp_path) if File.exist?(tmp_path)
       end
     end
-
-    describe ".resize_instructions" do
-      let(:image) { "#{Rails.root.join("spec/fixtures/images/logo.png")}" }
-
-      it "doesn't return any color options by default" do
-        instructions = described_class.resize_instructions(image, image, "50x50")
-        expect(instructions).to_not include("-colors")
-      end
-
-      it "supports an optional color option" do
-        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
-        expect(instructions).to include("-colors")
-      end
-    end
   end
 
   describe ".resize" do
@@ -127,89 +99,26 @@ RSpec.describe OptimizedImage do
 
     after { FileUtils.remove_entry(directory) }
 
-    shared_examples "resize processing" do
-      it "resizes an image in place" do
-        result = described_class.resize(input_path, input_path, 100, 50)
+    it "resizes an image in place" do
+      result = described_class.resize(input_path, input_path, 100, 50)
 
-        expect(result).to eq(true)
-        expect(FastImage.size(input_path)).to eq([100, 50])
-      end
+      expect(result).to eq(true)
+      expect(FastImage.size(input_path)).to eq([100, 50])
     end
 
-    context "with libvips disabled" do
-      before { global_setting :enable_vips_image_processing, false }
+    it "uses the configured quality for JPEG output" do
+      low_quality_path = File.join(directory, "low-quality.jpg")
+      high_quality_path = File.join(directory, "high-quality.jpg")
+      FileUtils.cp(file_from_fixtures("logo.jpg").path, low_quality_path)
+      FileUtils.cp(file_from_fixtures("logo.jpg").path, high_quality_path)
 
-      include_examples "resize processing"
+      SiteSetting.image_preview_jpg_quality = 50
+      described_class.resize(low_quality_path, low_quality_path, 100, 100)
 
-      it "optimizes the image" do
-        file = File.open("#{Rails.root.join("spec/fixtures/images/resized.png")}")
-        upload = UploadCreator.new(file, "test.bin").create_for(-1)
+      SiteSetting.image_preview_jpg_quality = 90
+      described_class.resize(high_quality_path, high_quality_path, 100, 100)
 
-        expect(upload.filesize).to eq(199)
-
-        expect(upload.width).to eq(5)
-        expect(upload.height).to eq(5)
-
-        upload.create_thumbnail!(10, 10)
-        thumb = upload.thumbnail(10, 10)
-
-        expect(thumb.width).to eq(10)
-        expect(thumb.height).to eq(10)
-
-        # very image magic specific so fudge here
-        expect(thumb.filesize).to be > 200
-
-        # this size is based off original upload
-        # it is the size we render, by default, in the post
-        expect(upload.thumbnail_width).to eq(5)
-        expect(upload.thumbnail_height).to eq(5)
-
-        # lets ensure we can rebuild the filesize
-        thumb.update_columns(filesize: nil)
-        thumb = OptimizedImage.find(thumb.id)
-
-        # attempts to auto correct
-        expect(thumb.filesize).to be > 200
-      end
-
-      it "rejects an SVG disguised as a PNG" do
-        tmp_path = "/tmp/resized.png"
-
-        begin
-          expect do
-            OptimizedImage.resize(
-              "#{Rails.root.join("spec/fixtures/images/svg.png")}",
-              tmp_path,
-              5,
-              5,
-              raise_on_error: true,
-            )
-          end.to raise_error(Discourse::Utils::CommandError)
-        ensure
-          File.delete(tmp_path) if File.exist?(tmp_path)
-        end
-      end
-    end
-
-    context "with libvips enabled" do
-      before { global_setting :enable_vips_image_processing, true }
-
-      include_examples "resize processing"
-
-      it "uses the configured quality for JPEG output" do
-        low_quality_path = File.join(directory, "low-quality.jpg")
-        high_quality_path = File.join(directory, "high-quality.jpg")
-        FileUtils.cp(file_from_fixtures("logo.jpg").path, low_quality_path)
-        FileUtils.cp(file_from_fixtures("logo.jpg").path, high_quality_path)
-
-        SiteSetting.image_preview_jpg_quality = 50
-        described_class.resize(low_quality_path, low_quality_path, 100, 100)
-
-        SiteSetting.image_preview_jpg_quality = 90
-        described_class.resize(high_quality_path, high_quality_path, 100, 100)
-
-        expect(File.size(low_quality_path)).to be < File.size(high_quality_path)
-      end
+      expect(File.size(low_quality_path)).to be < File.size(high_quality_path)
     end
   end
 
@@ -222,32 +131,15 @@ RSpec.describe OptimizedImage do
 
     after { FileUtils.remove_entry(directory) }
 
-    shared_examples "downsizing" do
-      it "downsizes an image in place" do
-        result = described_class.downsize(from: input_path, to: input_path, scale: 0.5)
+    it "downsizes an image in place" do
+      result = described_class.downsize(from: input_path, to: input_path, scale: 0.5)
 
-        expect(result).to eq(true)
-        expect(FastImage.size(input_path)).to eq([122, 33])
-      end
-    end
-
-    context "with libvips disabled" do
-      before { global_setting :enable_vips_image_processing, false }
-
-      include_examples "downsizing"
-    end
-
-    context "with libvips enabled" do
-      before { global_setting :enable_vips_image_processing, true }
-
-      include_examples "downsizing"
+      expect(result).to eq(true)
+      expect(FastImage.size(input_path)).to eq([122, 33])
     end
 
     context "when libvips processing fails" do
-      before do
-        global_setting :enable_vips_image_processing, true
-        File.binwrite(input_path, "invalid image")
-      end
+      before { File.binwrite(input_path, "invalid image") }
 
       it "logs the libvips error and returns false by default" do
         logger =
@@ -384,25 +276,21 @@ RSpec.describe OptimizedImage do
       )
     end
 
-    context "with libvips enabled" do
-      before { global_setting :enable_vips_image_processing, true }
+    it "creates JPEG previews at the configured quality" do
+      jpeg_upload =
+        UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
+          Discourse.system_user.id,
+        )
 
-      it "creates JPEG previews at the configured quality" do
-        jpeg_upload =
-          UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
-            Discourse.system_user.id,
-          )
+      SiteSetting.image_preview_jpg_quality = 50
+      low_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
+      low_quality_filesize = low_quality_preview.filesize
+      low_quality_preview.destroy
 
-        SiteSetting.image_preview_jpg_quality = 50
-        low_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
-        low_quality_filesize = low_quality_preview.filesize
-        low_quality_preview.destroy
+      SiteSetting.image_preview_jpg_quality = 90
+      high_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
 
-        SiteSetting.image_preview_jpg_quality = 90
-        high_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
-
-        expect(low_quality_filesize).to be < high_quality_preview.filesize
-      end
+      expect(low_quality_filesize).to be < high_quality_preview.filesize
     end
 
     context "when using an internal store" do
