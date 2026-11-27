@@ -22,7 +22,7 @@ class FakeRTCPeerConnection {
     return sender;
   }
 
-  addTransceiver(kind) {
+  addTransceiver(kind, options = {}) {
     const sender = {
       track: null,
       async replaceTrack(newTrack) {
@@ -31,7 +31,7 @@ class FakeRTCPeerConnection {
     };
     const transceiver = {
       mid: null,
-      direction: "sendrecv",
+      direction: options.direction ?? "sendrecv",
       sender,
       receiver: { track: { kind } },
     };
@@ -326,6 +326,45 @@ module("Live | Unit | Lib | peer-manager", function (hooks) {
       manager.diagnosticsFor(1, 3).iceCandidateErrors,
       [],
       "a peer without a connection has no errors"
+    );
+  });
+
+  test("reserves a recvonly mic slot before video and screen audio when no local stream exists", async function (assert) {
+    const manager = (this.manager = new PeerManager({
+      getIceServers: () => [],
+      getLocalStream: () => null,
+      canPublishMedia: () => true,
+      sendSignal: () => Promise.resolve(),
+      flushQueuedSignals: () => Promise.resolve(),
+      onTrack: () => {},
+      clearSignalQueue: () => {},
+      onPeerDestroyed: () => {},
+    }));
+
+    const pc = await manager.create(1, 2);
+    const transceivers = pc.getTransceivers();
+
+    assert.deepEqual(
+      transceivers.map((t) => ({
+        kind: t.receiver.track.kind,
+        direction: t.direction,
+      })),
+      [
+        { kind: "audio", direction: "recvonly" },
+        { kind: "video", direction: "sendrecv" },
+        { kind: "audio", direction: "sendrecv" },
+      ],
+      "reserves mic audio first (recvonly), followed by video and screen audio"
+    );
+    assert.strictEqual(
+      PeerManager.screenAudioTransceiverFor(pc),
+      transceivers[2],
+      "keeps screen audio on the second audio transceiver, not the mic slot"
+    );
+    assert.strictEqual(
+      PeerManager.micSenderFor(pc),
+      null,
+      "reports no active mic sender when no local track is attached"
     );
   });
 });

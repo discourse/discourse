@@ -331,10 +331,18 @@ export default class PeerManager {
     }
 
     const localStream = this.#getLocalStream();
-    if (localStream) {
-      for (const track of localStream.getTracks()) {
+    const localTracks = localStream?.getTracks?.() || [];
+    if (localTracks.length) {
+      for (const track of localTracks) {
         pc.addTrack(track, localStream);
       }
+    } else {
+      // Reserve the microphone m-line in slot 0 even without a local mic so
+      // offers always carry both audio m-lines (mic first, screen audio last)
+      // and a remote peer's microphone never lands on the screen-audio slot.
+      pc.addTransceiver("audio", {
+        direction: "recvonly",
+      });
     }
 
     // The video m-line is negotiated up-front so that turning a camera or
