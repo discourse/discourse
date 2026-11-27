@@ -255,14 +255,21 @@
   }
 
   .sidebar-section-link-hover {
+    display: flex;
+    justify-content: flex-end;
     margin-left: auto;
 
     .sidebar-section-hover-button {
+      flex-shrink: 0;
       opacity: 0;
       color: var(--d-sidebar-highlight-color);
       border: none;
       height: 100%;
       padding-inline: var(--space-1);
+
+      &:focus-visible {
+        opacity: 1;
+      }
 
       &:focus,
       .discourse-no-touch & {
@@ -292,6 +299,17 @@
   @media (hover: hover) {
     &:hover .sidebar-section-hover-button {
       opacity: 1;
+    }
+
+    // the hidden button overlaps the end of the text instead of taking its
+    // space, without moving or catching clicks meant for the link
+    &:not(.--hovering, :hover)
+      .sidebar-section-link-hover:not(:has(:focus-visible)) {
+      width: 0;
+
+      .sidebar-section-hover-button {
+        pointer-events: none;
+      }
     }
   }
 
