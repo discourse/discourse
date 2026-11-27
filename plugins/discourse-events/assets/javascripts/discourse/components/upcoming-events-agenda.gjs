@@ -5,8 +5,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
-import { i18n } from "discourse-i18n";
 import formatEventForCalendar from "../lib/format-event-for-calendar.js";
 import DiscoursePostEventEvent from "../models/discourse-post-event-event.js";
 import FullCalendar from "./full-calendar.gjs";
@@ -16,7 +16,7 @@ export default class UpcomingEventsAgenda extends Component {
   @service siteSettings;
 
   @tracked events = [];
-  @tracked error = false;
+  @tracked error = null;
   @tracked hasEarlier = false;
   @tracked hasLater = false;
   @tracked loading = null;
@@ -100,7 +100,7 @@ export default class UpcomingEventsAgenda extends Component {
     const previousTop = firstDay?.getBoundingClientRect().top;
     this.loading = direction;
     this.#retryDirection = direction;
-    this.error = false;
+    this.error = null;
     try {
       const result = await ajax("/discourse-post-event/events/agenda", {
         data: {
@@ -160,9 +160,9 @@ export default class UpcomingEventsAgenda extends Component {
           }
         });
       }
-    } catch {
+    } catch (error) {
       if (generation === this.#generation) {
-        this.error = true;
+        this.error = extractError(error);
       }
     } finally {
       if (generation === this.#generation) {
@@ -179,9 +179,7 @@ export default class UpcomingEventsAgenda extends Component {
       {{didUpdate this.reset @categoryId @includeSubcategories @mine}}
     >
       {{#if this.error}}
-        <p role="alert">{{i18n
-            "discourse_post_event.upcoming_events_list.error"
-          }}</p>
+        <p role="alert">{{this.error}}</p>
         <DButton
           @action={{this.retry}}
           @label="discourse_post_event.upcoming_events_list.try_again"

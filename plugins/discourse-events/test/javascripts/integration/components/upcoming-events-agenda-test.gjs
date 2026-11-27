@@ -301,6 +301,42 @@ module("Integration | Component | UpcomingEventsAgenda", function (hooks) {
       .exists({ count: 1 }, "deduplicates overlapping occurrences");
   });
 
+  test("shows the server's rate-limit message and allows retry", async function (assert) {
+    const message = "Please wait 42 seconds before trying again.";
+    let requests = 0;
+    pretender.get("/discourse-post-event/events/agenda", () => {
+      requests++;
+      return requests === 1
+        ? response(429, {
+            errors: [message],
+            error_type: "rate_limit",
+            extras: { wait_seconds: 42 },
+          })
+        : response({ events: [], has_earlier: false, has_later: false });
+    });
+
+    await render(
+      <template>
+        <UpcomingEventsCalendar
+          @initialView="year"
+          @updateRouteOnDatesChange={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("[role=alert]")
+      .includesText(message, "preserves the server's wait instruction");
+    assert.strictEqual(requests, 1, "waits for the user to retry");
+
+    await click("[role=alert] + .btn");
+
+    assert.strictEqual(requests, 2, "retries the failed page");
+    assert
+      .dom("[role=alert]")
+      .doesNotExist("clears the message after a successful retry");
+  });
+
   for (const view of ["day", "week", "month"]) {
     test(`${view} retains its existing single request`, async function (assert) {
       const requests = [];
