@@ -3,14 +3,9 @@
 module DiscourseAssign
   module Visibility
     class << self
-      # Mirrors the visibility used by assign reminders: `Topic.secured` only
-      # covers categories, private messages additionally require participation.
+      # Use Guardian's complete topic visibility, including shared drafts and PMs.
       def visible_topic_ids(guardian)
-        return Topic.secured(guardian).select(:id) if guardian.is_admin?
-
-        scope = Topic.listable_topics.secured(guardian)
-        scope = scope.or(Topic.private_messages_for_user(guardian.user)) if guardian.user
-        scope.select(:id)
+        guardian.visible_topic_scope(Topic.all).select(:id)
       end
 
       def visible_post_ids(guardian)

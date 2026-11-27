@@ -22,6 +22,7 @@ require_relative "lib/discourse_assign/engine"
 require_relative "lib/discourse_assign/assignee_resolver"
 require_relative "lib/discourse_assign/assignment_permissions"
 require_relative "lib/discourse_assign/visibility"
+require_relative "lib/discourse_assign/tracking_post_visibility"
 require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
 
@@ -915,6 +916,12 @@ after_initialize do
         { reload_topic: true, refresh_stream: true },
         topic.secure_audience_publish_messages,
       )
+    end
+  end
+
+  add_model_callback(Post, :after_update) do
+    if saved_change_to_hidden? || saved_change_to_post_type? || saved_change_to_topic_id?
+      DiscourseAssign::TrackingPostVisibility.reconcile_for(self)
     end
   end
 

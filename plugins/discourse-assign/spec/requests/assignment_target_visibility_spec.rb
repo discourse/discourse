@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Assignment target visibility" do
+RSpec.describe "Assignment target visibility", type: :request do
   fab!(:assign_group, :group)
   fab!(:participant) { Fabricate(:user, groups: [assign_group]) }
   fab!(:outsider) { Fabricate(:user, groups: [assign_group]) }
@@ -503,6 +503,43 @@ RSpec.describe "Assignment target visibility" do
 
       get "/g/#{counted_group.name}.json"
       expect(response.parsed_body.dig("group", "assignment_count")).to eq(2)
+    end
+
+    context "with a shared draft in a readable category" do
+      fab!(:draft_group, :group)
+      fab!(:draft_category, :category)
+      fab!(:draft) do
+        Fabricate(:shared_draft, topic: Fabricate(:topic_with_op, category: draft_category))
+      end
+
+      before do
+        SiteSetting.shared_drafts_category = draft_category.id
+        SiteSetting.shared_drafts_allowed_groups = draft_group.id.to_s
+        Fabricate(
+          :topic_assignment,
+          topic: draft.topic,
+          assigned_to: counted_member,
+          assigned_by_user: admin,
+        )
+      end
+
+      it "excludes the draft from both counts unless the viewer can see shared drafts" do
+        sign_in(outsider)
+        expect(outsider.guardian.can_see_topic?(draft.topic)).to eq(false)
+        get "/assign/members/#{counted_group.name}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["assignment_count"]).to eq(1)
+        get "/g/#{counted_group.name}.json"
+        expect(response.parsed_body.dig("group", "assignment_count")).to eq(1)
+
+        draft_group.add(outsider)
+        sign_in(outsider)
+        expect(Guardian.new(outsider.reload).can_see_topic?(draft.topic)).to eq(true)
+        get "/assign/members/#{counted_group.name}.json"
+        expect(response.parsed_body["assignment_count"]).to eq(2)
+        get "/g/#{counted_group.name}.json"
+        expect(response.parsed_body.dig("group", "assignment_count")).to eq(2)
+      end
     end
 
     context "with assignments to posts the assigner cannot see" do
