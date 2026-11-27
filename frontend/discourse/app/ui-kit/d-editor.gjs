@@ -240,6 +240,7 @@ export default class DEditor extends Component {
    * @property {function} toggleDirection - Toggles text direction
    * @property {function} getText - Gets the text
    * @property {function} addText - Adds text
+   * @property {function} insertBlock - Inserts a standalone block
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
    * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
@@ -276,6 +277,8 @@ export default class DEditor extends Component {
         this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
+      insertBlock: (block, options) =>
+        this.textManipulation.insertBlock(block, { ...options, selected }),
       applyLink: (url) => this.textManipulation.applyLink(url),
       getText: () => this.value,
       toggleDirection: () => this.textManipulation.toggleDirection(),
@@ -505,13 +508,17 @@ export default class DEditor extends Component {
       return;
     }
 
-    const cooked = await this.cachedCookAsync(this.value, this.markdownOptions);
+    const rawText = this.value;
+    const cooked = await this.cachedCookAsync(rawText, this.markdownOptions);
 
-    if (this.preview === cooked || this.isDestroying) {
+    if (
+      (this.preview?.html === cooked && this.preview?.rawText === rawText) ||
+      this.isDestroying
+    ) {
       return;
     }
 
-    this.preview = cooked;
+    this.preview = { html: cooked, rawText };
   }
 
   @observes("ready", "value", "processPreview")
@@ -840,6 +847,7 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @change={{this.onChange}}
             @class="d-editor-input"
+            @composerImageDescriptions={{@composerImageDescriptions}}
             @disabled={{this.disabled}}
             @focusIn={{this.handleFocusIn}}
             @focusOut={{this.handleFocusOut}}
@@ -864,14 +872,18 @@ export default class DEditor extends Component {
 
       {{#if @hijackPreview}}
         <div class="d-editor-preview-wrapper">
-          <@hijackPreview.component @model={{@hijackPreview.model}} />
+          <@hijackPreview.component
+            @decoratePreviewImageControls={{@decoratePreviewImageControls}}
+            @model={{@hijackPreview.model}}
+          />
         </div>
       {{else}}
         <DEditorPreview
           @forcePreview={{this.forcePreview}}
           @onPreviewUpdated={{this.previewUpdated}}
           @outletArgs={{this.outletArgs}}
-          @preview={{this.preview}}
+          @preview={{this.preview.html}}
+          @rawText={{this.preview.rawText}}
         />
       {{/if}}
     </div>

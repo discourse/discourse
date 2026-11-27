@@ -35,12 +35,6 @@ pt_BR:
         description: "Postagens de triagem usando um modelo de linguagem grande"
         notify_author_pm:
           subject: "Sua postagem foi temporariamente removida para análise"
-          body: |
-            Olá @%{username},
-
-            Sua postagem em “%{topic_title}” foi temporariamente removida e colocada em nossa fila de revisão para ser analisada por um moderador. Se aprovada, ela será restaurada automaticamente.
-
-            Referência: %{post_url}
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"
@@ -329,6 +323,8 @@ pt_BR:
           text_color: "cor do texto"
         approve_label: "Sim"
         reject_label: "Não"
+        category_access_levels:
+          readonly: "Ver"
         empty_value: "Vazio"
         unexpected_error: "ocorreu um erro inesperado."
       agents:
@@ -495,6 +491,7 @@ pt_BR:
         edit_post: "Editar postagem"
         edit_tag: "Editar tag"
         create_category: "Criar categoria"
+        delete_category: "Excluir categoria"
         move_posts: "Mover postagens"
         search: "Pesquisar"
         tags: "Listar etiquetas"
@@ -611,6 +608,12 @@ pt_BR:
       edit_category:
         errors:
           not_found: "Categoria não encontrada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoria não encontrada."
+      delete_category:
+        errors:
+          not_found: "Categoria não encontrada."
       change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
@@ -628,6 +631,8 @@ pt_BR:
         errors:
           not_found: "Tópico não encontrado."
     appearance_authoring:
+      component_on: "Ligado"
+      component_off: "Desligado"
       default_theme: "Tema padrão"
       colors:
         light:

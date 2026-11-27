@@ -27,15 +27,16 @@ namespace :blog do
     abort "Demo content is only available in development" unless Rails.env.development?
     admin = Blog::DemoUsers.admin
     drafts = Blog::EnsureDraftsCategory.call![:category]
-    public_category = Blog::EnsurePublicCategory.call
+    public_category =
+      Blog::EnsurePublicCategory.call(params: { blog_id: Blog::Instance.default_blog.id })
     if public_category.failure?
       abort(Blog::Readiness.new.error || "The blog category could not be created")
     end
     blog = public_category[:category]
-    SiteSetting.blog_title = "Fieldnotes"
-    SiteSetting.blog_description =
-      "Ideas in progress, things we’ve learned, and conversations worth having."
-    SiteSetting.blog_about = <<~MD
+    Blog::Instance.find_by!(is_default: true).update!(
+      name: "Fieldnotes",
+      description: "Ideas in progress, things we’ve learned, and conversations worth having.",
+      about: <<~MD,
       A little space for longer thoughts, built right into our community.
 
       **Fieldnotes** is a working demonstration of Discourse Blog. Every article starts as a topic, and every conversation stays connected to the story that started it.
@@ -45,7 +46,8 @@ namespace :blog do
       We believe the interesting part often happens after you press publish. Ask a question, share an experience, or offer a different perspective in the discussion beneath each article.
 
       These sample articles are demo content. Replace them with your own when you are ready.
-    MD
+      MD
+    )
     SiteSetting.blog_enabled = true
     Blog::Readiness.ensure!
     SiteSetting.embed_full_app = true

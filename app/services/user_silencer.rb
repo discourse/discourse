@@ -93,7 +93,8 @@ class UserSilencer
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
     unless topic_ids.empty?
-      Topic.where(id: topic_ids).update_all(visible: false)
+      Topic.where(id: topic_ids).update_all(visible: false, excerpt: nil)
+      TopicLocalization.where(topic_id: topic_ids).update_all(excerpt: nil)
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
     end
   end
@@ -104,7 +105,7 @@ class UserSilencer
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
-      SystemMessage.create(@user, :unsilenced, Dsa::AppealInstructions.message_options)
+      SystemMessage.create(@user, :unsilenced)
       if @by_user
         StaffActionLogger.new(@by_user).log_unsilence_user(
           @user,

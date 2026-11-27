@@ -22,7 +22,6 @@ en:
         view_blog: View blog
         open_blog: Open blog
         safe_mode: Open without custom code
-        identity: Blog identity
         blog_title: Blog name
         tagline: Tagline
         accent: Accent color
@@ -77,11 +76,52 @@ en:
           another script by appending a script element (document.createElement("script")).
         save: Save
         saved: Blog settings saved. Reload the blog to see your changes.
-        identity_tab: Identity
-        identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
-        article_urls: Article URLs
+        about_tab: About
+        about_tab_description: Set the name and tagline that introduce this blog to its readers
+        back_to_blogs: Back to blogs
+        blogs_tab: Blogs
+        blogs_tab_description: Edit a blog to change its name, theme and settings
+        themes_tab_description: Browse and manage the themes available to your blog
+        add_blog: Add blog
+        setup_title: "Hey %{name}, let's set up your blog"
+        setup_description: Give it a name and tagline, pick a theme, then write your first article
+        setup_button: Create my blog
+        new_blog: New blog
+        new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
+        create_blog: Create blog
+        blog_slug: Slug
+        blog_slug_description: "Used in its address on the community: /blog/<slug>."
+        blog_slug_locked: This blog has published articles, so its slug is fixed to keep their addresses working.
+        blog_url: Custom domain
+        blog_url_description: Serve the blog from its own domain. The domain must already point to this site.
+        blog_category: Discussion category
+        blog_category_description: Each published article gets a discussion topic here.
+        blog_category_locked: This blog has published articles, so its discussion category cannot be changed.
+        posts_per_page: Articles per page
+        settings_tab: Settings
+        settings_tab_description: Choose where this blog lives and how its articles are addressed
+        theme_tab: Theme
+        theme_tab_description: Select a suitable theme for your blog
+        add_or_edit_themes: Add or edit themes
+        published_status: Published
+        unpublished_status: Not published
+        publish_blog: Publish blog
+        unpublish_blog: Unpublish blog
+        publish_blog_confirm: Publish “%{name}”? Its pages, feed, and sitemap become public.
+        unpublish_blog_confirm: Unpublish “%{name}”? Readers lose access to its pages, but its articles are kept.
+        delete_blog: Delete blog
+        delete_blog_confirm: Delete “%{name}”? Its discussion category is kept.
+        blog_deleted: Blog deleted.
+        column_name: Name
+        column_address: Address
+        column_category: Category
+        column_status: Status
+        needs_attention: Needs attention
+        select_theme: Select theme
+        update_to_revision: Update to revision %{revision}
+        active_on: Active on %{blogs}
         path_format: Address format
-        path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.
+        path_format_description: Applies to new articles. Published articles keep their addresses.
         path_format_sample_slug: my-article
         path_formats:
           slug: Article name
@@ -91,7 +131,6 @@ en:
         custom_path_format: Custom format
         custom_path_format_description: "Use {year}, {month}, {day}, {slug} and {id}, and include {slug} or {id} so every address is unique."
         custom_path_format_invalid: "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
-        themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
           headline: Stay curious.
@@ -289,6 +328,7 @@ en:
       editor_title: Blog editor
       editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
+        blog: Blog
         edit: Edit
         status: Status
         published: Published
@@ -303,6 +343,7 @@ en:
       new_draft: New draft
       settings: Configure blog settings
       all: All
+      all_blogs: All blogs
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
@@ -315,6 +356,8 @@ en:
         Remove this article from the blog? The topic and its replies
         will remain public in the community. Existing copies in feeds and search engines
         cannot be recalled.
+      blog_field: Blog
+      blog_field_hint: Until it is first published, an article can move to another blog.
       path: Article path
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional

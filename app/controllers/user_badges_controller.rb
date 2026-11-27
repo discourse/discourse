@@ -63,7 +63,8 @@ class UserBadgesController < ApplicationController
       UserBadgesSerializer,
       root: :user_badge_info,
       include_long_description: true,
-      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
+      allowed_user_badge_topic_ids:
+        guardian.can_discover_topic_ids(topic_ids: user_badges_topic_ids),
     )
   end
 
@@ -91,7 +92,8 @@ class UserBadgesController < ApplicationController
     render_serialized(
       user_badges,
       DetailedUserBadgeSerializer,
-      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
+      allowed_user_badge_topic_ids:
+        guardian.can_discover_topic_ids(topic_ids: user_badges_topic_ids),
       root: :user_badges,
     )
   end
@@ -116,22 +118,8 @@ class UserBadgesController < ApplicationController
 
       guardian.ensure_can_see!(post)
       post_id = post.id
-    elsif params[:reason].present?
-      unless is_badge_reason_valid? params[:reason]
-        return(
-          render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")),
-                 status: :bad_request
-        )
-      end
-
-      if route = Discourse.route_for(params[:reason])
-        if (route[:controller] == "topics" && route[:action] == "show") ||
-             route[:controller] == "nested_topics"
-          topic_id = (route[:id] || route[:topic_id]).to_i
-          post_number = route[:post_number] || 1
-          post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
-        end
-      end
+    else
+      post_id = BadgeGranter.post_for_reason(params[:reason], guardian:)&.id
     end
 
     grant_opts_from_params =
@@ -148,6 +136,8 @@ class UserBadgesController < ApplicationController
     user_badge = BadgeGranter.grant(badge, user, grant_opts_from_params)
 
     render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
+  rescue BadgeGranter::InvalidReason => error
+    render json: failed_json.merge(message: error.message), status: :bad_request
   end
 
   def destroy
@@ -274,14 +264,5 @@ class UserBadgesController < ApplicationController
 
   def ensure_badges_enabled
     raise Discourse::NotFound unless SiteSetting.enable_badges?
-  end
-
-  def is_badge_reason_valid?(reason)
-    route = Discourse.route_for(reason)
-    route &&
-      (
-        route[:controller] == "posts" || route[:controller] == "topics" ||
-          route[:controller] == "nested_topics"
-      )
   end
 end

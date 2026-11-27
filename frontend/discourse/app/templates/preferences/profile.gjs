@@ -1,7 +1,8 @@
 import { Input } from "@ember/component";
-import { array, fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import AccessNotice from "discourse/components/access-notice";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
@@ -53,12 +54,15 @@ export default <template>
         @onChange={{fn (mut @controller.model.user_option.timezone)}}
         @value={{@controller.model.user_option.timezone}}
       />
-      <DButton
-        class="btn-default"
-        @action={{@controller.useCurrentTimezone}}
-        @icon="globe"
-        @label="user.use_current_timezone"
-      />
+      <AccessNotice @kind="self" @user={{@controller.model}} as |disabled|>
+        <DButton
+          class="btn-default"
+          @action={{@controller.useCurrentTimezone}}
+          @disabled={{disabled}}
+          @icon="globe"
+          @label="user.use_current_timezone"
+        />
+      </AccessNotice>
     </div>
 
     {{#if @controller.model.can_change_location}}
@@ -99,6 +103,11 @@ export default <template>
 
   {{#each @controller.userFields as |uf|}}
     <div class="control-group" data-setting-name="user-user-fields">
+      <AccessNotice
+        @kind="staff"
+        @setting={{concat "user_field_" uf.field.id}}
+        @user={{@controller.model}}
+      />
       <UserField @field={{uf.field}} @value={{uf.value}} />
     </div>
   {{/each}}
@@ -111,6 +120,11 @@ export default <template>
           class="control-group pref-profile-bg"
           data-setting-name="user-profile-bg"
         >
+          <AccessNotice
+            @kind="staff"
+            @setting="profile_header"
+            @user={{@controller.model}}
+          />
           <label class="control-label">{{i18n
               "user.change_profile_background.title"
             }}</label>
@@ -136,6 +150,11 @@ export default <template>
           class="control-group pref-profile-bg"
           data-setting-name="user-card-bg"
         >
+          <AccessNotice
+            @kind="staff"
+            @setting="card_background"
+            @user={{@controller.model}}
+          />
           <label class="control-label">{{i18n
               "user.change_card_background.title"
             }}</label>

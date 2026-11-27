@@ -16,11 +16,15 @@ module ::Blog
       respond_to do |format|
         format.html { render "default/empty" }
         format.json do
+          if params[:blog].present?
+            blog = Instance.find_cached(params[:blog].to_i) || raise(Discourse::NotFound)
+          end
           topics =
             EditorQuery.call(
               guardian,
               filter: params[:filter].presence || "all",
               query: params[:q] || "",
+              blog:,
             )
           @page = [params[:page].to_i, 0].max
           selected =
@@ -45,7 +49,7 @@ module ::Blog
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
                    error: Readiness.new.error,
-                   blog_url: Configuration.base_url,
+                   blog_url: Configuration.base_url(blog || Instance.default_blog),
                    more: selected.size > PAGE_SIZE,
                    topics:
                      selected
@@ -120,6 +124,9 @@ module ::Blog
         end
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:blog_published) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
         on_failed_step(:submit_current_draft) { raise Discourse::InvalidAccess }
@@ -247,6 +254,9 @@ module ::Blog
         on_failed_policy(:blog_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failed_policy(:blog_published) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
         on_model_not_found(:revision) { raise Discourse::NotFound }
         on_failed_policy(:revision_is_approved) do
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
@@ -303,6 +313,7 @@ module ::Blog
 
     def preview
       @publication = find_editable_publication
+      @blog = @publication.blog
       @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
@@ -318,6 +329,7 @@ module ::Blog
       @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
       @template_variables =
         TemplateVariables.new(
+          blog: @blog,
           title: @page_title,
           article: ArticleVariables.new(@publication, revision:, topic: @topic),
         )
@@ -360,6 +372,7 @@ module ::Blog
           :cover_alt,
           :co_authors,
           :page,
+          :blog_id,
         )
         .to_h
     end

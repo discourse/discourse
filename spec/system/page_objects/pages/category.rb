@@ -71,6 +71,20 @@ module PageObjects
         self
       end
 
+      def set_style_color(color)
+        find(".category-style-trigger").click
+        find(".category-style-content input[name='color']").fill_in(with: color)
+        find(".category-style-trigger").click
+      end
+
+      def has_style_emoji?(name)
+        has_css?(".category-style-trigger img.emoji[title='#{name}']")
+      end
+
+      def has_no_style_emoji?
+        has_css?(".category-style-trigger") && has_no_css?(".category-style-trigger img.emoji")
+      end
+
       def save_settings
         if page.has_css?(".d-floating-control-bar", wait: 0)
           find(".d-floating-control-bar .btn-primary").click

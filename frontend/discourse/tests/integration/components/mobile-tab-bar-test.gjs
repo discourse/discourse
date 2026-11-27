@@ -1,10 +1,14 @@
-import { click, find, render } from "@ember/test-helpers";
+import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import MobileTabBar from "discourse/components/mobile-tab-bar";
 import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import {
+  SCROLLED_DOWN,
+  SCROLLED_UP,
+} from "discourse/services/scroll-direction";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
 import { i18n } from "discourse-i18n";
@@ -53,6 +57,9 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
 
     assert.deepEqual(tabKeys(), ["main", "one", "two", "three"]);
     assert.dom(".mobile-tab-bar__more").doesNotExist();
+    assert
+      .dom(".mobile-tab-bar__hub")
+      .doesNotExist("Eject is exclusive to Hub");
   });
 
   test("gathers the sections past three under More when they don't fit", async function (assert) {
@@ -91,6 +98,94 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     assert
       .dom(".mobile-tab-bar__more-item[data-key='three']")
       .doesNotHaveClass("--active");
+  });
+
+  module("in Discourse Hub", function (hubHooks) {
+    hubHooks.beforeEach(function () {
+      sinon
+        .stub(this.owner.lookup("service:capabilities"), "isAppWebview")
+        .value(true);
+    });
+
+    test("keeps Eject beside the bar when four sections fit", async function (assert) {
+      ["one", "two", "three"].forEach((key) => addTabPanel(key));
+
+      await render(<template><MobileTabBar /></template>);
+
+      assert.deepEqual(
+        tabKeys(),
+        ["main", "one", "two", "three"],
+        "all four slots are available to sections"
+      );
+      const bar = find(".mobile-tab-bar__controls");
+      const eject = find(".mobile-tab-bar__controls + .mobile-tab-bar__hub");
+      assert.dom(eject).hasAria("label", i18n("mobile_tab_bar.hub"));
+      assert.dom(".d-icon-eject", eject).exists("Eject uses its own button");
+      const barBox = bar.getBoundingClientRect();
+      const ejectBox = eject.getBoundingClientRect();
+      assert.true(
+        ejectBox.left > barBox.right,
+        "a gap separates Eject from the bar"
+      );
+      assert.strictEqual(ejectBox.top, barBox.top, "both controls share a row");
+      assert.strictEqual(
+        ejectBox.height,
+        barBox.height,
+        "both controls share a height"
+      );
+    });
+
+    test("keeps Eject after Create when sections overflow", async function (assert) {
+      ["one", "two", "three", "four"].forEach((key) => addTabPanel(key));
+      this.currentUser.set("can_create_topic", true);
+
+      await render(<template><MobileTabBar /></template>);
+
+      assert.deepEqual(
+        tabKeys(),
+        ["main", "one", "two", "more"],
+        "More is the last tab"
+      );
+      assert
+        .dom(".mobile-tab-bar__tabs + .mobile-tab-bar__create")
+        .exists("Create follows the navigation tabs");
+      assert
+        .dom(".mobile-tab-bar__controls + .mobile-tab-bar__hub:last-child")
+        .exists("Eject follows the bar");
+      await click(".mobile-tab-bar__more");
+
+      assert.deepEqual(
+        findAll(".mobile-tab-bar__more-item").map((item) => item.dataset.key),
+        ["three", "four"],
+        "More lists the remaining sections"
+      );
+    });
+
+    test("returns to Hub from the Topics-only layout", async function (assert) {
+      this.currentUser.set("can_create_topic", true);
+      await render(<template><MobileTabBar /></template>);
+
+      assert
+        .dom(".mobile-tab-bar__tabs")
+        .doesNotExist("the redundant Topics tab is hidden");
+      const eject = find(
+        ".mobile-tab-bar__create + .mobile-tab-bar__hub:last-child"
+      );
+      assert.dom(eject).exists("Eject follows Create");
+
+      try {
+        window.ReactNativeWebView = {
+          postMessage: (message) => assert.step(message),
+        };
+        await click(eject);
+        assert.verifySteps(
+          ['{"dismiss":true}'],
+          "Eject asks the app to close the site"
+        );
+      } finally {
+        delete window.ReactNativeWebView;
+      }
+    });
   });
 
   test("leads with primary tabs, between the menu and create buttons", async function (assert) {
@@ -171,11 +266,20 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     assert.false(this.owner.lookup("service:header").hamburgerVisible);
   });
 
-  test("gives the current section a strip above the tabs for its views", async function (assert) {
+  test("puts the views slot between the menu and create buttons when Topics is the only section", async function (assert) {
     const mobileTabBar = this.owner.lookup("service:mobile-tab-bar");
+    this.currentUser.set("can_create_topic", true);
 
     await render(<template><MobileTabBar /></template>);
 
+    assert
+      .dom(
+        ".mobile-tab-bar__menu + .mobile-tab-bar__views + .mobile-tab-bar__create"
+      )
+      .exists("the views sit between the two actions in keyboard order");
+    assert
+      .dom(".mobile-tab-bar__tabs")
+      .doesNotExist("the Topics tab is redundant");
     assert
       .dom(".mobile-tab-bar__views > *")
       .doesNotExist("the strip waits for a section to fill it");
@@ -186,6 +290,96 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       mobileTabBar.viewsSlot,
       document.querySelector(".mobile-tab-bar__views"),
       "sections render into the strip through the service"
+    );
+  });
+
+  test("keeps the single row of topic views available while scrolling down", async function (assert) {
+    this.currentUser.set("can_create_topic", true);
+    this.owner.lookup("service:scroll-direction").lastScrollDirection =
+      SCROLLED_DOWN;
+
+    await render(
+      <template>
+        <MobileTabBar />
+        <MobileTabBarViews>
+          <ul class="nav-pills">
+            <li><a href="/latest">Latest</a></li>
+          </ul>
+        </MobileTabBarViews>
+      </template>
+    );
+
+    const views = find(".mobile-tab-bar__views");
+    assert.strictEqual(
+      getComputedStyle(find(".mobile-tab-bar__menu")).pointerEvents,
+      "auto",
+      "the menu stays available on lists"
+    );
+    assert.strictEqual(
+      getComputedStyle(find(".mobile-tab-bar__create")).pointerEvents,
+      "auto",
+      "the create button stays available on lists"
+    );
+    assert.dom(views).isVisible("the views remain visible");
+    assert.strictEqual(
+      getComputedStyle(views).pointerEvents,
+      "auto",
+      "the views still accept taps"
+    );
+    assert.strictEqual(
+      views.offsetHeight,
+      find(".mobile-tab-bar__menu").offsetHeight,
+      "the views and the menu share a height"
+    );
+  });
+
+  test("tucks the side buttons while reading a topic and reveals them on scroll up", async function (assert) {
+    this.currentUser.set("can_create_topic", true);
+    sinon.stub(this.owner.lookup("service:router"), "currentRoute").value({
+      name: "topic.show",
+    });
+    const scrollDirection = this.owner.lookup("service:scroll-direction");
+    scrollDirection.lastScrollDirection = SCROLLED_DOWN;
+
+    await render(
+      <template>
+        <MobileTabBar />
+        <MobileTabBarViews>
+          <button type="button">Timeline</button>
+        </MobileTabBarViews>
+      </template>
+    );
+
+    const menu = find(".mobile-tab-bar__menu");
+    const create = find(".mobile-tab-bar__create");
+    assert.strictEqual(
+      getComputedStyle(menu).pointerEvents,
+      "none",
+      "the menu yields to the page"
+    );
+    assert.strictEqual(
+      getComputedStyle(create).pointerEvents,
+      "none",
+      "the create button yields to the page"
+    );
+    assert.strictEqual(
+      getComputedStyle(find(".mobile-tab-bar__views")).pointerEvents,
+      "auto",
+      "the timeline stays interactive"
+    );
+
+    scrollDirection.lastScrollDirection = SCROLLED_UP;
+    await settled();
+
+    assert.strictEqual(
+      getComputedStyle(menu).pointerEvents,
+      "auto",
+      "the menu returns"
+    );
+    assert.strictEqual(
+      getComputedStyle(create).pointerEvents,
+      "auto",
+      "the create button returns"
     );
   });
 
@@ -233,6 +427,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       "a file isn't a section's page"
     );
   });
+
   test("highlights the active view in an overflowing RTL strip", async function (assert) {
     await render(
       <template>

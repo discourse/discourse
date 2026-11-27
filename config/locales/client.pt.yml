@@ -455,8 +455,6 @@ pt:
       fonts:
         base_font: "Corpo"
         heading_font: "Cabeçalhos"
-      logo:
-        help_text: "O tamanho recomendado é 600 x 80 píxeis."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -875,7 +873,6 @@ pt:
         is_this_post: "Isto é %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algum problema com este %{reviewable_type}?"
-        something_wrong_with_post: "Existe algo de errado com esta publicação?"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -3451,7 +3448,7 @@ pt:
         back_description: "Voltar à última publicação não lida"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "ir para..."
         jump_prompt_of:
           one: "de %{count} publicação"
@@ -3687,10 +3684,8 @@ pt:
           label: "selecionado"
           title: "Clique para desseleccionar a mensagem"
         select_replies:
-          label: "selecione +respostas"
           title: "Adicionar o post e todas as suas respostas à seleção"
         select_below:
-          label: "Selecione +abaixo"
           title: "Adicionar a postagem e tudo após ela à seleção"
         delete: eliminar selecionados
         cancel: cancelar seleção
@@ -3989,25 +3984,18 @@ pt:
       save_error: Ocorreu um erro ao guardar a categoria.
       validations:
         icon_required: "Selecione um ícone."
+      icon_search_placeholder: "Pesquisar…"
       description: "Descrição"
       style: "Estilo"
-      icon: "Ícone"
-      emoji: "Emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
         cant_be_empty: "não pode estar vazio"
       styles:
-        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         square: "Quadrado"
-        options:
-          square: "Quadrado"
-          icon: "Ícone"
-          emoji: "Emoji"
       color_used: "Cor em utilização"
-      color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
@@ -6027,6 +6015,8 @@ pt:
           dropdown: "Lista pendente"
       site_text:
         search_label: "Procurar"
+        preview:
+          default: "Predefinição"
         theme_disabled: "Desativado"
         filters: "Filtros"
         edit: "Editar"
@@ -6101,7 +6091,7 @@ pt:
           modal_title: Grupos de Crachás
         granted_by: Concedido Por
         granted_at: Concedido Em
-        reason_help: (Uma ligação para uma publicação ou tópico)
+        reason_help: Uma ligação para uma publicação ou tópico
         save: Guardar
         delete: Apagar
         delete_confirm: Tem a certeza que quer eliminar este crachá?

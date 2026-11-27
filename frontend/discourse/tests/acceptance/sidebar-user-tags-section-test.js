@@ -54,6 +54,12 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       });
     });
 
+    server.get("/tags/c/faq/4/tag1/1/l/latest.json", () =>
+      helper.response(
+        cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
+      )
+    );
+
     ["latest", "top", "new", "unread", "hot"].forEach((type) => {
       server.get(`/tag/:tagId/l/${type}.json`, (request) => {
         const json = cloneJSON(
@@ -124,6 +130,14 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag2] a.active`)
       .exists("the tag2 section link is marked as active");
+  });
+
+  test("all tags is active only on the tag directory", async function (assert) {
+    const allTags = '[data-link-name="all-tags"]';
+    await visit("/tags");
+    assert.dom(allTags).hasClass("active");
+    await visit("/tags/c/faq/4/tag1/1");
+    assert.dom(allTags).doesNotHaveClass("active");
   });
 
   test("clicking tag section links - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {

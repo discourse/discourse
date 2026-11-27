@@ -48,12 +48,6 @@ fr:
         flagged_post_response: "Réponse du modèle : %{llm_response}"
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
-          body: |
-            Bonjour @%{username},
-
-            Votre publication dans « %{topic_title} » a été temporairement retirée et placée dans notre file d'attente de vérification afin d'être examinée par l'équipe de modération. Si elle est approuvée, elle sera automatiquement restaurée.
-
-            Référence : %{post_url}
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"
@@ -416,6 +410,8 @@ fr:
           text_color: "couleur du texte"
         approve_label: "Oui"
         reject_label: "Non"
+        category_access_levels:
+          readonly: "Voir"
         empty_value: "Vide"
         approved: "Approuvé par @%{username}."
         rejected: "Rejeté par @%{username}."
@@ -463,8 +459,7 @@ fr:
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
-        discourse_admin_assistant:
-          name: "Assistant d'administration Discourse"
+        admin_assistant:
           description: "Bot d'IA qui répond aux questions sur Discourse et aide les administrateurs à gérer les paramètres du site"
         web_artifact_creator:
           name: "Créateur d'artefacts Web"
@@ -630,6 +625,7 @@ fr:
         edit_tag: "Modifier l'étiquette"
         create_category: "Créer une catégorie"
         edit_category: "Modifier la catégorie"
+        delete_category: "Supprimer la catégorie"
         set_topic_timer: "Définir le minuteur du sujet"
         set_slow_mode: "Définir le mode lent"
         move_posts: "Déplacer les publications"
@@ -852,6 +848,12 @@ fr:
       edit_category:
         errors:
           not_found: "Catégorie introuvable."
+      set_category_permissions:
+        errors:
+          not_found: "Catégorie introuvable."
+      delete_category:
+        errors:
+          not_found: "Catégorie introuvable."
       change_topic_category:
         errors:
           not_found: "Sujet introuvable."
@@ -954,6 +956,8 @@ fr:
           secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être lu ici."
           themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être lu ici."
     appearance_authoring:
+      component_on: "Activé"
+      component_off: "Désactivé"
       default_theme: "Thème par défaut"
       colors:
         light:

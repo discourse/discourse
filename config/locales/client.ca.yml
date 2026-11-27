@@ -2183,7 +2183,7 @@ ca:
         back_description: "Vés a la darrera publicació no llegida"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progrés del tema
+        title: "progrés del tema"
         jump_prompt_to_date: "fins a la data"
         jump_prompt_or: "o"
       notifications:
@@ -2386,10 +2386,8 @@ ca:
           label: "seleccionat"
           title: "Feu clic per a eliminar una publicació de la selecció"
         select_replies:
-          label: "tria+respostes"
           title: "Afegeix una publicació i totes les seves respostes a la selecció"
         select_below:
-          label: "selecciona +sota"
           title: "Afegeix una publicació i totes les següents a la selecció"
         delete: suprimeix seleccionats
         cancel: cancel·la seleccionats
@@ -2591,18 +2589,12 @@ ca:
       creation_error: Hi ha hagut un error en crear aquesta categoria.
       save_error: Hi ha hagut un error en desar la categoria.
       description: "Descripció"
-      icon: "Icona"
-      emoji: "Emoji"
       background_color: "Color"
       color_validations:
         cant_be_empty: "no pot ser buit"
       styles:
         icon: "Icona"
         emoji: "Emoji"
-        options:
-          icon: "Icona"
-          emoji: "Emoji"
-      color_placeholder: "Qualsevol color web"
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
       no_description: "Introduïu una descripció per a aquesta categoria."
@@ -3030,6 +3022,7 @@ ca:
       share: "Comparteix"
       dismiss: "Descarta-ho"
     mobile_tab_bar:
+      new_topic: "Tema nou"
       create: "Crea"
       more: "Més"
       back: "Enrere"
@@ -4314,7 +4307,6 @@ ca:
         silence_modal_title: "Usuari silenciat"
         silence_duration: "Quant de temps estarà silenciat l'usuari?"
         silence_reason_placeholder: "Raó del silenciament"
-        silence_message: "Missatge de correu"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."
@@ -4495,6 +4487,8 @@ ca:
           dropdown: "Desplega"
       site_text:
         search_label: "Cerca"
+        preview:
+          default: "Per defecte"
         theme_disabled: "Desactivat"
         filters: "Filtres"
         edit: "Edita"
@@ -4578,7 +4572,7 @@ ca:
           modal_title: Agrupacions d'insígnies
         granted_by: Concedit per
         granted_at: Concedida el
-        reason_help: (Un enllaç a una publicació o a un tema)
+        reason_help: Un enllaç a una publicació o a un tema
         save: Desa
         delete: Suprimeix
         delete_confirm: Esteu segur que voleu suprimir aquesta insígnia?

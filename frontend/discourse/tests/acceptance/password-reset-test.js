@@ -3,7 +3,9 @@ import { test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
-import { parsePostData } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -59,6 +61,33 @@ acceptance("Password Reset", function (needs) {
         });
       }
     });
+  });
+
+  test("successful reset with denied automatic login stays on the page", async function (assert) {
+    PreloadStore.store("password_reset", { admin: true });
+    pretender.put("/u/password-reset/myvalidtoken.json", () => [
+      200,
+      { "Content-Type": "application/json" },
+      JSON.stringify({
+        success: true,
+        message: "Password changed.",
+        login_error: "IP denied",
+        requires_approval: false,
+      }),
+    ]);
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/u/password-reset/myvalidtoken");
+    await fillIn(".password-reset input", "perf3ctly5ecur3");
+    await click(".password-reset form button[type='submit']");
+
+    assert.false(DiscourseURL.redirectTo.called);
+    assert.dom(".password-reset").includesText("Password changed.");
+    assert.dom(".password-reset .alert-error").hasText("IP denied");
+    assert.dom(".password-reset a.btn").exists();
+    assert
+      .dom(".password-reset")
+      .doesNotIncludeText(i18n("login.not_approved"));
   });
 
   test("Password Reset Page", async function (assert) {
@@ -139,5 +168,47 @@ acceptance("Password Reset", function (needs) {
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"
     );
+  });
+
+  function capturePasswordResetRequest() {
+    const captured = {};
+    pretender.put("/u/password-reset/myvalidtoken.json", (request) => {
+      captured.body = parsePostData(request.requestBody);
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          success: true,
+          message: "Password changed.",
+          login_error: "IP denied",
+        }),
+      ];
+    });
+    return captured;
+  }
+
+  test("revokes apps authorized after the page loaded", async function (assert) {
+    const captured = capturePasswordResetRequest();
+    PreloadStore.store("password_reset", { has_connected_apps: false });
+
+    await visit("/u/password-reset/myvalidtoken");
+    assert.dom(".change-password-form__revoke-apps").doesNotExist();
+
+    await fillIn(".password-reset input", "perf3ctly5ecur3");
+    await click(".password-reset form button[type='submit']");
+    assert.strictEqual(captured.body.revoke_connected_apps, "true");
+  });
+
+  test("keeps connected apps when the option is unchecked", async function (assert) {
+    const captured = capturePasswordResetRequest();
+    PreloadStore.store("password_reset", { has_connected_apps: true });
+
+    await visit("/u/password-reset/myvalidtoken");
+    assert.dom(".change-password-form__revoke-apps-checkbox").isChecked();
+
+    await click(".change-password-form__revoke-apps-checkbox");
+    await fillIn(".password-reset input", "perf3ctly5ecur3");
+    await click(".password-reset form button[type='submit']");
+    assert.strictEqual(captured.body.revoke_connected_apps, "false");
   });
 });

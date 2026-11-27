@@ -48,7 +48,7 @@ a deferred, interactive Discourse discussion below each article.
   no discussion section is shown. Theme previews use the newest published page. Their
   structured data is `WebPage` rather than
   `BlogPosting`, and new pages get a `/<slug>` path whatever the path format. The About
-  page stays the `blog_about` setting. Topics in the blog and drafts categories skip
+  page stays the blog's About text, edited on its About tab. Topics in the blog and drafts categories skip
   the forum's minimum title length, so a page can be called "Contact".
 - Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
   articles under their name, avatar and bio. Bylines link to them. The bio follows the
@@ -72,7 +72,7 @@ a deferred, interactive Discourse discussion below each article.
 - A configurable paper/ink/accent palette, graphic covers, and Liquid-based
   designs, with bundled Editorial-style and minimal-reference examples under
   `branding/`.
-- Separate Settings, Themes, and Identity pages, with focused FormKit editors for named theme drafts, Git imports,
+- Separate Blogs, Themes, and Settings pages, with a page for each blog (About, Settings, Theme) and focused FormKit editors for named theme drafts, Git imports,
   syntax-highlighted CSS/JavaScript editors, expiring blog-origin previews, and explicit
   activation of immutable snapshots. Editing or pulling a draft never changes readers.
 - Automatic light/dark mode, responsive layouts, and a custom-code safe mode.
@@ -85,11 +85,41 @@ By default the blog is served under `/blog` on the community, for example
 can pick it as the site homepage.
 
 A blog can instead have its own hostname, such as `https://blog.example.com`, set
-in `blog_url`. The hostname needs DNS, TLS and routing set up outside Discourse
-first. A host that offers it only on some plans can hide `blog_url` elsewhere, since
-site admins cannot change hidden settings. While a dedicated hostname is active,
+as **Custom domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
+The hostname needs DNS, TLS and routing set up outside Discourse first. A host that
+offers custom domains only on some plans turns off the hidden
+`blog_custom_domains_enabled` setting elsewhere: the field is then locked and a new
+custom domain is refused, while a blog that already has one keeps it. While a dedicated
+hostname is active,
 `/blog` on the community redirects to it with a temporary (302) redirect, so
 dropping the hostname later does not leave browsers stuck on the old one.
+
+### Several blogs
+
+A site can have more than one blog. **Add blog** on the **Blogs** tab asks for a name
+and a slug. The main blog stays at `/blog`; another blog lives at `/blog/<slug>`
+until it is given a custom domain. Each blog has its own name, address, discussion
+category, article address format and theme. All blogs share the drafts category
+and the three role groups, so a writer chooses the blog for each draft: from the
+**New draft** menu in `/blog-editor`, or in the article's settings until it is
+published.
+
+- A new blog starts unpublished: it can be named, themed and written for, but
+  readers get a not-found page and nothing can be published to it until
+  **Publish blog** is used. The main blog is always published.
+- A blog's slug is fixed once it has published articles, so their addresses keep
+  working. A slug cannot match a reserved path or the start of a main-blog
+  article address.
+- A blog can be deleted only while it has no articles or drafts; its discussion
+  category is kept. The main blog cannot be deleted.
+- The hidden `blog_max_instances` setting (default 10) caps how many blogs a site
+  may have, so a host can lower it per plan. Existing blogs keep working when a
+  site is over its limit; only adding is refused.
+- The hidden `blog_role_groups_enabled` setting (on by default) lets a site choose
+  which groups hold the contributor, editor and publisher roles. A host can turn it
+  off per plan: staff then hold all three roles whatever groups are saved, the drafts
+  category is limited to staff within the hour, and the saved groups take effect
+  again when the setting is turned back on.
 
 Enabling the blog claims `/blog` in both modes. A theme or plugin that already
 serves its own page under `/blog` stops receiving those requests.
@@ -100,7 +130,7 @@ review links under `/blog/review`.
 ## Installation
 
 The plugin is bundled with Discourse as `plugins/blog`. Until launch its enabled
-setting is hidden, so it can only be turned on from the Rails console (step 5).
+setting is hidden, so it can only be turned on from the Rails console (step 3).
 
 1. Make sure migrations have run; they create the plugin's tables on every site.
 2. For a dedicated hostname only: route both HTTPS hostnames to the same Discourse installation/database. Keep
@@ -111,24 +141,21 @@ setting is hidden, so it can only be turned on from the Rails console (step 5).
    deployments do not need a database hostname alias. DNS/TLS/proxy configuration
    must still preserve the original `Host` header. Do not disable hostname checking
    or forward arbitrary untrusted host headers.
-3. Create one public **Blog** category. Suggested permissions: everyone can **See
-   / Reply**, staff can **See / Reply / Create**. In Ruby these are `:create_post`
-   and `:full`, respectively. Replies must be permitted for the audience you want
-   to participate.
-4. Create a separate **Blog editorial** category, granting access only to the staff,
-   admins, and/or moderators automatic groups. A category open to any other group
-   is rejected as the drafts category. Use a different category from core's shared
-   drafts feature. Do not use the Blog category's description
-   topic as an article.
-5. Configure:
-   - For a dedicated hostname only: `blog_url`, e.g. `https://blog.example.com`, no
-     trailing slash/path.
-   - `blog_category`: the single public category.
-   - `blog_drafts_category`: the private editorial category.
-   - `blog_title`, `blog_description`, `blog_about`.
-   - `blog_enabled`: enable after configuration. The setting is hidden
-     for now, so set it from the Rails console:
-     `SiteSetting.blog_enabled = true`.
+3. Enable the blog. The setting is hidden for now, so set it from the Rails
+   console: `SiteSetting.blog_enabled = true`. The blog's own admin pages only
+   load once it is enabled, so enable first and configure second.
+4. Open **Admin → Plugins → Blog → Blogs** and edit the blog: its name, tagline
+   and About text on the About tab; its custom domain (dedicated hostname only, no
+   trailing slash or path), discussion category, articles per page and article
+   address format on the Settings tab; its design on the Theme tab.
+5. Leave the categories to the plugin. It creates a private drafts category when the
+   first draft is started, shared by every blog and visible only to the blog role
+   groups, and a public discussion category for a blog when its first article is
+   published. The discussion category is named "Blog" for the main blog and after
+   the blog for others ("Engineering Blog"). If that name is taken, the blog shows
+   "Needs attention" until a category is chosen on its Settings tab. A chosen
+   category must be public; the drafts category is refused. Use a different
+   category from core's shared drafts feature.
 6. In **Admin → Customize → Embedding**, add an embedding host for the blog. Under
    `/blog`, that is the community's own hostname with the allowed paths `^/blog(/|$)`; on a
    dedicated hostname, it is that exact hostname. Enable `embed_full_app` and
@@ -149,20 +176,27 @@ appear signed out in the comments.
 
 Locally, `*.localhost` names reach the Rails server without DNS or hosts-file
 changes, and two of them are the same site when they share a parent, for example
-`community.dev.localhost` and `blog.dev.localhost`. Environment overrides set the
-hostnames for a single run without changing the database. While an override is
-set, that setting is hidden in the admin UI.
+`community.dev.localhost` and `blog.dev.localhost`. An environment override sets the
+community's hostname for a single run without changing the database. The blog's
+hostname is stored on the blog, and the admin form only accepts `https://`, so for
+plain HTTP set it from the Rails console:
+
+```ruby
+Blog::Instance.find_by(is_default: true).update_columns(url: "http://blog.dev.localhost:3000")
+Blog::Instance.clear_cache
+```
+
+Set `url` back to `nil` the same way to return to `/blog`.
 
 The simplest setup uses plain HTTP on the Rails port:
 
 ```sh
 DISCOURSE_FORCE_HOSTNAME=community.dev.localhost \
-DISCOURSE_BLOG_URL=http://blog.dev.localhost:3000 \
 DISCOURSE_CONTENT_SECURITY_POLICY_FRAME_ANCESTORS=false \
 bin/dev
 ```
 
-The environment override skips the setting's `https://` validation. Frame-ancestors
+Frame-ancestors
 protection is turned off because core only allows `https://` embedding hosts to
 frame the community, which would otherwise block the discussion. Add
 `blog.dev.localhost:3000` as an embedding host, then sign in at
@@ -213,9 +247,15 @@ during plugin installation or migration.
 ## Appearance and custom code
 
 Open **Admin → Plugins → Blog**. **Themes** lists the included designs, then the
-saved drafts, and badges the one currently shown to readers; **Identity** holds the blog name, tagline, and About
-content. A design owns its whole look: palette, CSS, JavaScript, and Liquid
+saved drafts, and badges the one currently shown to readers; **Blogs** lists each blog, whose About tab holds its name, tagline, and About
+content and whose Theme tab picks its design. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
+
+The hidden `blog_custom_themes_enabled` setting (on by default) lets a host offer
+custom themes only on some plans. With it off, a site keeps to the included designs
+as shipped: creating, customizing, importing, pulling and previewing unsaved edits
+are refused, and so is activating a custom theme. A blog already showing a custom
+theme keeps it, and existing themes can still be exported or deleted.
 
 Included designs are the built-in **Default** and each folder under `branding/`
 with a `blog-theme.json`. They are read-only: activating one stores only its id,
@@ -276,7 +316,7 @@ Each code field is limited to 65,536 characters. Invalid CSS/JavaScript is not
 silently repaired: test your code before deploying it to readers.
 
 **Recovery:** open a blog URL with `?blog_safe_mode=1` to skip both custom snippets
-for that view. The Identity page links to the blog and to that recovery view, and
+for that view. A blog's About tab links to the blog and to that recovery view, and
 stays usable even if a customization breaks the blog.
 Clear the relevant code field in the theme editor, save the draft, and activate it
 to remove a customization. The built-in theme still loads in safe mode. CSS and

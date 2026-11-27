@@ -1912,6 +1912,15 @@ RSpec.describe TagsController do
     end
 
     context "with tagging enabled" do
+      it "ignores the search parameter on tag autocomplete" do
+        RateLimiter.enable
+        SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+        2.times { get "/tags/filter/search.json", params: { q: "stuff", search: "ignored" } }
+
+        expect(response).to have_http_status(:ok)
+      end
+
       it "can return some tags" do
         stuff = Fabricate(:tag, name: "stuff")
         stumped = Fabricate(:tag, name: "stumped")
@@ -2710,6 +2719,20 @@ RSpec.describe TagsController do
       expect(hidden_tag_by_id.reload.target_tag_id).to be_nil
       expect(hidden_tag_by_name.reload.target_tag_id).to be_nil
       expect_same_tag_names(topic.reload.tags, [hidden_tag_by_id, hidden_tag_by_name])
+    end
+
+    it "does not merge hidden tags submitted in a different letter case" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|14"
+      hidden_tag = Fabricate(:tag, name: "İzmir")
+      topic = Fabricate(:topic, tags: [hidden_tag])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_tag])
+
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "izmir" }] }
+
+      expect(response.status).to eq(200)
+      expect(hidden_tag.reload.target_tag_id).to be_nil
+      expect_same_tag_names(topic.reload.tags, [hidden_tag])
     end
 
     context "when signed in as admin" do

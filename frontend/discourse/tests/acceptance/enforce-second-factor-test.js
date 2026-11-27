@@ -21,33 +21,25 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
-        unconfirmed_session: "true",
+        unconfirmed_session: true,
       });
     });
   });
 
-  test("as an admin", async function (assert) {
-    await visit("/u/eviltrout/preferences/second-factor");
+  test("required users can confirm a local credential directly on the enrollment page", async function (assert) {
     this.siteSettings.enforce_second_factor = "staff";
 
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.security",
-      "it transitions to security preferences"
-    );
-  });
-
-  test("as a user", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: false });
-
     await visit("/u/eviltrout/preferences/second-factor");
-    this.siteSettings.enforce_second_factor = "all";
 
     assert.strictEqual(
       currentRouteName(),
-      "preferences.security",
-      "it will transition to security preferences"
+      "preferences.second-factor",
+      "does not try to redirect a required user to security preferences"
     );
+    assert.dom(".new-totp").doesNotExist("requires confirmation first");
+    assert.dom(".second-factor .cancel").doesNotExist("must enroll to leave");
+    await click(".second-factor .btn-primary");
+    assert.dom(".confirm-session").exists("opens local confirmation");
   });
 
   test("as an anonymous user", async function (assert) {
@@ -87,7 +79,7 @@ acceptance("Enforce second factor for OAuth logins", function (needs) {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
-        unconfirmed_session: "true",
+        unconfirmed_session: true,
       });
     });
   });

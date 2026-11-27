@@ -53,6 +53,40 @@ describe McpOauthAuthorizationsController do
       expect(response.status).to eq(403)
       expect(McpOauthAuthorization.count).to eq(0)
     end
+
+    it "does not grant access once a password change revokes the session mid-request" do
+      sign_in(admin)
+      client =
+        McpOauthClient.create!(
+          client_id: "password-change-client",
+          name: "Password change client",
+          registration_type: "pre_registered",
+          trust_state: "approved",
+          redirect_uris: ["http://127.0.0.1/callback"],
+        )
+      allow(DiscourseMcp::OAuth::ClientResolver).to receive(
+        :resolve!,
+      ).and_wrap_original do |original, *args, **kwargs|
+        result = original.call(*args, **kwargs)
+        admin.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      post "/oauth2/mcp/authorize",
+           params: {
+             client_id: client.client_id,
+             redirect_uri: client.redirect_uris.first,
+             response_type: "code",
+             code_challenge: "a" * 43,
+             code_challenge_method: "S256",
+             resource: DiscourseMcp.resource_url,
+             scope: "mcp:profile:read",
+             decision: "approve",
+           }
+
+      expect(response.status).to eq(403)
+      expect(McpOauthAuthorization.where(user: admin)).to be_empty
+    end
   end
 
   it "labels the OAuth resource as the MCP server" do

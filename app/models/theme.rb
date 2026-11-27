@@ -689,9 +689,11 @@ class Theme < ActiveRecord::Base
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
+  # A theme's own fields, even while it's disabled, so a staff preview can
+  # compile a component before it's enabled. Color definitions include the
+  # theme's enabled components.
   def list_baked_fields(target, name)
-    theme_ids = Theme.transform_ids(id)
-    theme_ids = [theme_ids.first] if name != :color_definitions
+    theme_ids = name == :color_definitions ? Theme.transform_ids(id) : [id]
     self.class.list_baked_fields(theme_ids, target, name)
   end
 

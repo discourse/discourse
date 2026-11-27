@@ -76,6 +76,7 @@ pl_PL:
   mcp:
     errors:
       author_must_match: "To połączenie działa jako %{username} i nie może tworzyć treści jako inny użytkownik. Pomiń parametr author_username lub użyj parametru %{username}."
+      authoring_guide_unavailable: "Przewodnik niedostępny. Wybierz plik Markdown w katalogu .skills/ lub docs/developer-guides/ w repozytorium tej witryny (maksymalnie 256 KiB)."
       category_create_failed: "Nie można utworzyć kategorii"
       category_delete_confirmation_required: "Usunięcie kategorii musi zostać potwierdzone"
       category_delete_name_mismatch: "Nazwa kategorii nie pasuje"
@@ -113,6 +114,7 @@ pl_PL:
       moderation_operation_failed: "Nie udało się zweryfikować działania moderacji. Przed ponowieniem próby odczytaj aktualny stan użytkownika."
       moderation_user_not_found: "Użytkownik nie został znaleziony. Użyj dokładnej, istniejącej nazwy użytkownika."
       post_not_found: "Nie znaleziono wpisu"
+      post_not_created: "Nie udało się utworzyć wpisu"
       user_directory_disabled: "Katalog użytkowników jest wyłączony"
       filter_only_for_filtered_view: "Filtr jest obsługiwany tylko przez widok filtrowany"
       filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
@@ -155,6 +157,9 @@ pl_PL:
       site_setting_value_forbidden: "Nie podawaj wartości podczas resetowania ustawień witryny"
       site_setting_value_required: "Podaj wartość podczas ustawiania ustawień witryny"
       site_setting_verification_failed: "Nie można zweryfikować aktualizacji ustawień witryny"
+      source_path_unavailable: "Wybierz śledzony plik źródłowy w udokumentowanych katalogach źródłowych. Ścieżki bezwzględne, konfiguracja prywatna i ucieczki dowiązań symbolicznych są niedostępne."
+      source_too_large: "Dane wyjściowe są za duże. Użyj węższego zapytania, mniejszej liczby wierszy lub pliku o rozmiarze maksymalnie 2 MiB."
+      source_unavailable: "Pobranie źródła lub zgłoszone zatwierdzenie jest niedostępne. Nie pobrano najnowszej wersji zapasowej."
       theme_children_must_be_components: "Tylko samodzielne motywy mogą mieć komponenty potomne, a każdy child_theme_id musi identyfikować istniejący komponent. Najpierw przekonwertuj samodzielny motyw potomny za pomocą component:true."
       theme_code_compile_failed: "Kompilacja motywu nie powiodła się; nie zatwierdzono żadnych zmian: %{message}"
       theme_code_js_invalid: "Kompilacja pakietu JavaScript motywu nie powiodła się, prawdopodobnie w innym pliku; nie zatwierdzono żadnych zmian: %{message}"
@@ -195,6 +200,16 @@ pl_PL:
       topic_not_found: "Temat nie został znaleziony"
       topic_update_required: "Podaj co najmniej jedno pole tematu do aktualizacji"
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
+      webhook_confirmation: "Potwierdź tę operację za pomocą %{field}=true przed kontynuowaniem"
+      webhook_changed: "Zmienił się cel, stan aktywny lub status zdarzenia webhooka. Przeczytaj go ponownie przed kontynuowaniem."
+      webhook_destination_unreachable: "Nie udało się znaleźć hosta docelowego. Sprawdź nazwę hosta i spróbuj ponownie."
+      webhook_event_not_deliverable: "Nie można ponownie dostarczyć tego wydarzenia. Użyj narzędzia ping do pingowania zdarzeń."
+      webhook_event_not_found: "Zdarzenie nie należy do tego webhooka lub nie jest już dostępne"
+      webhook_invalid_destination: "Podaj adres docelowy HTTP lub HTTPS bez danych uwierzytelniających adres URL lub fragmentu"
+      webhook_no_change: "Podaj co najmniej jedno pole webhooka z inną wartością"
+      webhook_not_found: "Nie znaleziono webhooka"
+      webhook_unknown_selection: "Jeden lub więcej identyfikatorów w %{field} jest nieznany lub niedostępny"
+      webhook_wildcard_events: "Webhooki z symbolami wieloznacznymi nie mogą również wybierać poszczególnych typów zdarzeń"
       upload_not_found: "Nie znaleziono pliku do przesłania"
       upload_too_large: "Przesłany plik jest za duży"
       user_create_failed: "Nie udało się utworzyć użytkownika"
@@ -1520,6 +1535,7 @@ pl_PL:
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
     activated: "Przepraszamy, to konto zostało już aktywowane."
     email_change_not_allowed: "To konto było już wcześniej aktywne, więc można je reaktywować tylko przy użyciu aktualnego adresu e-mail."
+    email_change_not_allowed_after_invite: "To konto przyjęło zaproszenie, więc można je aktywować tylko przy użyciu bieżącego adresu e-mail."
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy na pewno chcesz, aby <b>%{target_username} (%{target_email})</b> był administratorem?"
@@ -3167,7 +3183,7 @@ pl_PL:
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
     enable_new_reordering_controls: "Użyj współdzielonych elementów sterujących kolejnością ustawień listy, list administracyjnych, kolumn katalogu użytkowników i łączy paska bocznego, zapewniając każdemu z nich ten sam uchwyt przeciągania, menu przenoszenia i obsługę klawiatury."
     enable_main_outlet_grid_layout_change: "Umieść kompozytora wewnątrz głównej siatki układu, aby motywy mogły go umieścić w kolumnie siatki, i użyj węższego paska bocznego."
-    review_queue_consistent_answers: "Każde pytanie w kolejce recenzji formułuj tak, aby odpowiedź „Tak” zawsze oznaczała, że wystąpił problem, i oznaczaj recenzowane elementy etykietami „Problem potwierdzony” lub „Nie znaleziono problemu” dla każdego typu pytania."
+    review_queue_consistent_answers: 'Użyj opcji „Zatwierdź” i „Odrzuć” w przypadku rejestracji, postów w kolejce i recenzji opublikowanych postów. Flagi i historia recenzji pokazują, czy wykryto problem.'
     enable_composer_toolbar_customization: "Umożliw członkom wybór, które przyciski będą wyświetlane na pasku narzędzi kompozytora, w preferencjach interfejsu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
@@ -3219,7 +3235,7 @@ pl_PL:
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie {{setting:faq_url}} działa jak poprzednio."
-    enable_category_hashtag_cards: "Wyświetla pływającą kartę kategorii po kliknięciu hashtagu kategorii, jeśli użytkownik ma uprawnienia do wyświetlania danej kategorii."
+    enable_category_hashtag_cards: "Wyświetla pływającą kartę kategorii po najechaniu kursorem na hashtag kategorii, jeśli użytkownik ma uprawnienia do wyświetlania tej kategorii."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
@@ -3372,6 +3388,7 @@ pl_PL:
         value: "Sekret DiscourseConnect"
   search:
     extreme_load_error: "Strona jest pod ekstremalnym obciążeniem, wyszukiwanie jest wyłączone, spróbuj ponownie później"
+    keyword_search_timeout: "Wyszukiwanie trwało zbyt długo. Wypróbuj bardziej szczegółowe słowa kluczowe."
     within_post: "#%{post_number} przez %{username}"
     types:
       category: "Kategorie"
@@ -4050,17 +4067,15 @@ pl_PL:
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
-
-        <%{base_url}%{url}>
+        To jest automatyczna wiadomość od %{site_name} informująca, że [Twój wpis](%{base_url}%{url}) został ukryty.
 
         %{flag_reason}
 
-        Ten post został ukryty z powodu flag społeczności, więc zastanów się, jak możesz poprawić swój wpis, aby odzwierciedlić ich opinie. **Możesz edytować swój post po %{edit_delay} minutach, a zostanie on automatycznie przywrócony.**
+        Ten wpis został ukryty z powodu zgłoszeń od społeczności, więc zastanów się, jak możesz zmienić swój wpis, aby odzwierciedlał ich opinię. **Możesz edytować swój wpis po %{edit_delay} minutach, a zostanie on automatycznie odkryty.**
 
-        Jeśli jednak post zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.
+        Jeśli jednak wpis zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty do momentu, aż zajmie się nim personel.
 
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany."
     reviewable_queued_post_revise_and_reject_edit_topic: "Możesz edytować oryginalny wpis dotyczący Twojego tematu poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
@@ -4116,28 +4131,24 @@ pl_PL:
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} informująca, że Twój wpis został ponownie ukryty.
-
-        <%{base_url}%{url}>
+        To automatyczna wiadomość od użytkownika %{site_name} z informacją, że [Twój wpis](%{base_url}%{url}) został ponownie ukryty.
 
         %{flag_reason}
 
-        Społeczność oznaczyła ten post i teraz jest ukryty. **Ponieważ ten wpis był ukrywany więcej niż raz, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.**
+        Społeczność oznaczyła ten wpis jako ukryty i jest on teraz ukryty. **Ponieważ ten wpis był ukrywany więcej niż raz, Twój wpis pozostanie ukryty do momentu, aż zajmie się nim członek personelu.**
 
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     queued_by_staff:
       title: "Post wymaga zatwierdzenia"
       subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że Twój wpis został ukryty.
+        To automatyczna wiadomość od użytkownika %{site_name} informująca, że [Twój wpis](%{base_url}%{url}) został ukryty.
 
-        <%{base_url}%{url}>
+        Twój wpis pozostanie ukryty, dopóki nie sprawdzi go członek personelu.
 
-        Twój wpis pozostanie ukryty, dopóki pracownik go nie przejrzy.
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     flags_disagreed:
       title: "Oflagowany wpis został przywrócony przez personel"
       subject_template: "Oflagowany wpis został przywrócony przez personel"
@@ -4681,6 +4692,22 @@ pl_PL:
         Jako środek zapobiegawczy, Twoje nowe konto zostało pozbawione możliwości tworzenia nowych odpowiedzi lub tematów do czasu sprawdzenia Twojego konta. Przepraszamy za niedogodności.
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Wyciszenie przez moderatora"
+      subject_template: "Twoje konto zostało wyciszone"
+      timed: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto do czasu %{silenced_till}."
+      indefinite: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto na czas nieokreślony."
+      text_body_template: |
+        Witaj!
+
+        %{decision}
+
+        Powód: %{reason}
+
+        Nadal możesz czytać dyskusje, ale nie możesz brać w nich udziału, dopóki Twoje konto jest wyciszone.
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [zasadami społeczności](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Wyciszony przez personel"
       preview: "Konto zostało tymczasowo zawieszone."
@@ -4710,11 +4737,11 @@ pl_PL:
       text_body_template: |
         To jest wiadomość automatyczna.
 
-        Nowy użytkownik [%{username}](%{user_url}) został automatycznie uciszony.
+        Nowy użytkownik [%{username}](%{user_url}) został automatycznie wyciszony.
 
-        Powód - %{reason}
+        Powód: %{reason}
 
-        Proszę [przejrzeć flagi](%{base_url}/review). Jeśli użytkownik %{username} został niesłusznie uciszony i nie może publikować, kliknij przycisk przywracania wyciszenia na [stronie administracyjnej tego użytkownika](%{user_url}).
+        Proszę [sprawdzić flagi](%{base_url}/review). Jeśli użytkownik %{username} został niesłusznie wyciszony i nie może publikować, kliknij przycisk przywracania wyciszenia na [stronie administracyjnej tego użytkownika](%{user_url}).
 
         Próg ten można zmienić w ustawieniach witryny `silence_new_user`.
     spam_post_blocked:
@@ -5078,11 +5105,11 @@ pl_PL:
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
       subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         To automatyczna wiadomość od %{site_name} informująca, że Twoje konto zostało zawieszone do %{suspended_till}.
 
-        Powód - %{reason}
+        Powód: %{reason}
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_suspended_forever:
@@ -5094,32 +5121,7 @@ pl_PL:
 
         To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało zawieszone.
 
-        Powód — %{reason}
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "Konto uciszone"
-      subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
-      subject_template_improved: "Twoje konto zostało wyciszone"
-      text_body_template: |
-        Witaj!
-
-        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone do czasu %{silenced_till}.
-
-        Powód — %{reason}
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
-    account_silenced_forever:
-      title: "Konto uciszone"
-      subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
-      subject_template_improved: "Twoje konto zostało wyciszone"
-      text_body_template: |
-        Witaj,
-
-        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone.
-
-        Powód - %{reason}
+        Powód: %{reason}
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_deleted:
@@ -5329,10 +5331,13 @@ pl_PL:
     signup_after_reject:
       title: "Zarejestruj się po odrzuceniu"
       subject_template: "Odrzucono Cię na %{site_name}"
+      reason_line: "\n\nPowód: %{reason}"
       text_body_template: |
-        Członek obsługi odrzucił Twoje konto na %{site_name}.
+        Witaj!
 
-        %{reject_reason}
+        To automatyczna wiadomość od %{site_name} informująca, że członek personelu odrzucił Twoją rejestrację.%{reason_line}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     signup:
       title: "Podpis"
       preview: "Potwierdź swoje konto."
@@ -5402,6 +5407,11 @@ pl_PL:
     welcome_message: "# Witamy na %{title}"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
+    too_many_short_urls:
+      one: "Nie można wyszukać więcej niż %{count} adresu URL w jednym żądaniu."
+      few: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
+      many: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
+      other: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Przepraszamy, ale przy tym ustawieniu możesz przesyłać tylko obrazy."
     pasted_image_filename: "Wklejone zdjęcie"
@@ -5466,20 +5476,30 @@ pl_PL:
     group_smtp_disabled_for_group: "smtp został wyłączony dla grupy"
   appearance_changes:
     dark_palette_name: "Ciemny %{name}"
+    draft_name: "%{name} (szkic)"
+    previous_name: "%{name} (poprzedni)"
   color_schemes:
     base_theme_name: "Podstawa"
     light: "Jasny"
     dark: "Ciemny"
     neutral: "Neutralne"
+    neutral_dark: "Neutralny ciemny"
     grey_amber: "Szary bursztyn"
+    grey_amber_light: "Szaro-bursztynowy jasny"
     shades_of_blue: "Odcienie niebieskiego"
+    shades_of_blue_dark: "Odcienie niebieskiego ciemny"
     latte: "Latte"
+    latte_light: "Latte jasny"
     summer: "Lato"
+    summer_dark: "Letni jasny"
     dark_rose: "Ciemna róża"
+    rose: "Różany"
     wcag: "Jasny WCAG"
     wcag_theme_name: "Jasny WCAG"
     dracula: "Dracula"
     dracula_theme_name: "Dracula"
+    dracula_light: "Drakula jasny"
+    dracula_light_theme_name: "Drakula jasny"
     solarized_light: "Jasny Solarized"
     solarized_light_theme_name: "Jasny Solarized"
     solarized_dark: "Ciemny Solarized"
@@ -5489,11 +5509,17 @@ pl_PL:
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
     neutral_theme_name: "Neutralne"
+    neutral_dark_theme_name: "Neutralny ciemny"
     grey_amber_theme_name: "Szary bursztyn"
+    grey_amber_light_theme_name: "Szaro-bursztynowy jasny"
     shades_of_blue_theme_name: "Odcienie niebieskiego"
+    shades_of_blue_dark_theme_name: "Odcienie niebieskiego ciemny"
     latte_theme_name: "Latte"
+    latte_light_theme_name: "Latte jasny"
     summer_theme_name: "Lato"
+    summer_dark_theme_name: "Letni jasny"
     dark_rose_theme_name: "Ciemna róża"
+    rose_theme_name: "Różany"
     errors:
       cannot_edit_remote_copies: "Edycja zdalnych kopii palet kolorów jest niedozwolona."
   edit_this_page: "Edytuj tę stronę"
@@ -5988,6 +6014,31 @@ pl_PL:
     title: "Tryb programisty"
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
+  popular_themes:
+    graceful:
+      description: "Lekki i elegancki motyw dla Discourse."
+    material_design:
+      description: "Zainspirowany Material Design motyw oferuje kilka palet kolorów."
+    mint:
+      description: "Motyw w kolorze miętowym z wyróżnionymi kategoriami na stronie głównej i banerem wyszukiwania."
+    simple:
+      description: "Uproszczony projekt strony głównej z klasyczną kolorystyką i typografią."
+    brand_header:
+      description: "Dodaj dodatkowy nagłówek górny ze swoim logo, linkami nawigacyjnymi i ikonami mediów społecznościowych."
+    custom_header_links:
+      description: "Łatwe dodawanie niestandardowych linków tekstowych do nagłówka."
+    category_banners:
+      description: "Wyświetlaj banery na stronach kategorii, wykorzystując istniejące szczegóły kategorii."
+    tag_banners:
+      description: "Wyświetlaj banery na stronach tagów, używając istniejących szczegółów tagu."
+    sidebar_theme_toggle:
+      description: "Wyświetla selektor motywu w stopce menu bocznego, pod warunkiem, że użytkownik ma do wyboru więcej niż jeden motyw."
+    header_submenus:
+      description: "Umożliwia zbudowanie menu nagłówkowego z podmenu (listami rozwijanymi)."
+    table_of_contents:
+      description: "Generuje interaktywny spis treści na pasku bocznym wybranego tematu za pomocą jednego kliknięcia w edytorze."
+    easy_footer:
+      description: "Dodaj w pełni responsywną stopkę bez konieczności pisania kodu HTML."
   design_wizard:
     themes:
       concord:
@@ -6005,7 +6056,7 @@ pl_PL:
       dracula: "Dracula"
       grey_amber: "Szary bursztyn"
       latte: "Latte"
-      dark_rose: "Ciemna róża"
+      dark_rose: "Różany"
   wizard:
     title: "Instalacja Discourse"
     step:
@@ -6219,8 +6270,6 @@ pl_PL:
     actions:
       answer_yes:
         title: "Tak"
-        delete_post_title: "Tak, usuń wpis"
-        keep_post_deleted_title: "Tak, zachowaj wpis usunięty"
       answer_no:
         title: "Nie"
       agree:
@@ -6267,6 +6316,7 @@ pl_PL:
       delete_and_ignore_replies:
         title: "Usuń wpis i odpowiedzi, zignoruj flagę"
         description: "Usuń wpis i wszystkie odpowiedzi, a następnie zignoruj flagę, usuwając ją z kolejki; jeśli to pierwszy wpis, usuń również temat"
+        confirm_title: "Usunąć wpis i odpowiedzi, zignorować flagę?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       delete_and_agree:
@@ -6276,6 +6326,7 @@ pl_PL:
       delete_and_agree_replies:
         title: "Usuń post i odpowiedzi"
         description: "Zgódź się z flagą i usuń ten post oraz wszystkie jego odpowiedzi; jeśli to pierwszy post, usuń również temat."
+        confirm_title: "Usunąć wpis i odpowiedzi?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       disagree_and_restore:
@@ -6321,6 +6372,21 @@ pl_PL:
         title: "Tak"
         action_title: "Zatwierdź wpis"
         complete: "Post zatwierdzony."
+      approve_topic:
+        title: "Zatwierdź temat"
+      deny_topic:
+        title: "Odrzuć temat"
+      deny_post:
+        title: "Odrzuć wpis"
+      deny_and_delete_post:
+        title: "Odrzuć i usuń wpis"
+        complete: "Wpis usunięty."
+      deny_and_delete_topic:
+        title: "Odrzuć i usuń temat"
+        complete: "Temat usunięty."
+      deny_and_keep_deleted:
+        title: "Odrzuć i zachowaj usunięty wpis"
+        complete: "Wpis został usunięty."
       approve_post_closed:
         title: "Tak"
         confirm: "Ten temat jest zamknięty. Czy mimo to chcesz utworzyć wpis?"
@@ -6336,17 +6402,24 @@ pl_PL:
         complete: "Awatar został usunięty."
       approve_user:
         title: "Tak"
+        action_title: "Zatwierdź konto"
         complete: "Użytkownik zatwierdzony."
+      deny_account:
+        title: "Odrzuć konto"
+      approve_account_review:
+        complete: "Zatwierdzono przegląd konta."
       reject_user:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm_title: "Usunąć @%{username}?"
           confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm_title: "Usunąć i zablokować @%{username}?"
           confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
@@ -6379,9 +6452,14 @@ pl_PL:
         title: Wyczyść rekord
       approve_and_restore:
         title: "Tak"
+        action_title: "Zatwierdź i przywróć wpis"
         complete: "Post zatwierdzony i przywrócony."
+      approve_and_restore_topic:
+        action_title: "Zatwierdź i przywróć temat"
+        complete: "Temat zaakceptowany i przywrócony."
       approve_and_unhide:
         title: "Tak"
+        action_title: "Zatwierdź i pokaż wpis"
         complete: "Post zatwierdzony i nieukryty"
       silence_user:
         title: "Wycisz użytkownika"

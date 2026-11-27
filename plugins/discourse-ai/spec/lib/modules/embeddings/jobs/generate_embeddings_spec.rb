@@ -57,5 +57,29 @@ RSpec.describe Jobs::GenerateEmbeddings do
       expect { job.execute(target_id: topic.id, target_type: "Topic") }.not_to raise_error
       expect(a_request(:post, vector_def.url)).not_to have_been_made
     end
+
+    it "works for active inferred concepts and skips retired ones" do
+      concept =
+        Fabricate(
+          :inferred_concept,
+          name: "Rate Limiting",
+          description: "Controlling API request rates",
+          aliases: ["throttling"],
+        )
+      retired_concept = Fabricate(:inferred_concept, name: "Legacy Concept", status: :retired)
+      expected_embedding = [0.0038493] * vector_def.dimensions
+      concepts_schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+
+      text = vector_def.prepare_target_text(concept)
+      EmbeddingsGenerationStubs.hugging_face_service(text, expected_embedding)
+
+      job.execute(target_id: concept.id, target_type: "InferredConcept")
+      job.execute(target_id: retired_concept.id, target_type: "InferredConcept")
+
+      expect(concepts_schema.find_by_embedding(expected_embedding).inferred_concept_id).to eq(
+        concept.id,
+      )
+      expect(concepts_schema.find_by_target(retired_concept)).to be_nil
+    end
   end
 end

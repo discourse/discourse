@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import TopicStatus from "discourse/components/topic-status";
@@ -11,7 +10,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import DButton from "discourse/ui-kit/d-button";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -22,7 +20,6 @@ import Participant from "./participant.gjs";
 
 export default class Info extends Component {
   @service currentUser;
-  @service mobileTabBar;
   @service site;
   @service siteSettings;
 
@@ -69,24 +66,8 @@ export default class Info extends Component {
     return participants.slice(0, this.maxExtraItems);
   }
 
-  // With the tab bar, the header holds the topic's title in place of the
-  // page's, so it also leads to editing it
-  get showEditTopic() {
-    return (
-      this.mobileTabBar.isTitledPage && this.args.topicInfo.details?.can_edit
-    );
-  }
-
   get pmHref() {
     return this.currentUser.pmPath(this.args.topicInfo);
-  }
-
-  // As tapping the page's own title does: edit, then show the editor up top
-  @action
-  editTopic(event) {
-    const topicController = getOwner(this).lookup("controller:topic");
-    topicController.editTopic(event);
-    topicController.jumpTop(event);
   }
 
   @action
@@ -144,15 +125,6 @@ export default class Info extends Component {
               >
                 <span>{{trustHTML @topicInfo.fancyTitle}}</span>
               </a>
-
-              {{#if this.showEditTopic}}
-                <DButton
-                  class="btn-transparent btn-small header-title__edit"
-                  @action={{this.editTopic}}
-                  @icon="pencil"
-                  @title="mobile_tab_bar.edit_topic"
-                />
-              {{/if}}
 
               <span class="header-topic-title-suffix">
                 <PluginOutlet

@@ -448,9 +448,6 @@ ja:
       fonts:
         base_font: "本文"
         heading_font: "見出し"
-      logo:
-        description: "サイトのトップナビゲーションと、サイトのメール通知の上部に表示されます。"
-        help_text: "推奨サイズは 600 x 80 ピクセルです。"
       homepage:
         topics: "トピック"
         categories: "カテゴリ"
@@ -852,7 +849,6 @@ ja:
         suspect_user: "これは迷惑ユーザーですか？"
         approve_post: "この投稿を承認しますか？"
         approve_topic: "このトピックを承認しますか？"
-        something_wrong_with_post: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -3553,7 +3549,7 @@ ja:
         back_description: "最後の未読の投稿に戻る"
         replies_short: "%{current} / %{total}"
       progress:
-        title: トピックの進捗
+        title: "トピックの進捗"
         jump_prompt: "ジャンプ…"
         jump_prompt_of:
           other: "/ %{count} の投稿"
@@ -3791,10 +3787,8 @@ ja:
           label: "選択済み"
           title: "クリックして選択から投稿を削除する"
         select_replies:
-          label: "複数の返信を選択"
           title: "投稿とすべての返信を選択に追加する"
         select_below:
-          label: "+下を選択"
           title: "投稿とその後のすべてを選択に追加する"
         delete: 選択済みを削除
         cancel: 選択をキャンセル
@@ -4162,7 +4156,7 @@ ja:
       validations:
         icon_required: "アイコンを選択する."
       name: "カテゴリ名"
-      untitled: "無題のカテゴリ"
+      icon_search_placeholder: "検索…"
       description: "説明"
       logo: "カテゴリのロゴ画像"
       logo_dark: "カテゴリのダークモード用ロゴ画像"
@@ -4170,9 +4164,6 @@ ja:
       background_image: "カテゴリの背景画像"
       background_image_dark: "カテゴリのダークモード用背景画像"
       style: "スタイル"
-      icon: "アイコン"
-      emoji: "絵文字"
-      select_emoji: "絵文字を選択する"
       background_color: "色"
       foreground_color: "テキストの色"
       color_validations:
@@ -4180,18 +4171,11 @@ ja:
         incorrect_length: "#RRGGBB または #RGB の形式に一致する必要があります"
         non_hexdecimal: "16 進文字 (0～9、A～F) のみを含む必要があります"
       styles:
-        type: "スタイル"
         icon: "アイコン"
         emoji: "絵文字"
         square: "正方形"
-        options:
-          square: "正方形"
-          icon: "アイコン"
-          emoji: "絵文字"
       color_used: "使用中の色"
-      predefined_colors: "既定の色オプション"
       name_placeholder: "1 単語または 2 単語を推奨"
-      color_placeholder: "すべてのウェブ色"
       delete_confirm: "このカテゴリを削除してもよろしいですか？"
       delete_error: "カテゴリを削除中にエラーが発生しました。"
       list: "カテゴリをリスト表示"
@@ -4830,7 +4814,6 @@ ja:
         other: "下書き (%{count})"
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
-    theme_preview_notice: "現在、テーマをプレビューしています。通常のサイト構成に戻るには、このブラウザタブまたはウィンドウを閉じてください。"
     theme_preview_failed: "テーマをプレビューできませんでした。テーマが存在しないか、テーマにアクセスする権限がありません。"
     image_removed: "(画像は削除されました)"
     pause_notifications:
@@ -6908,8 +6891,6 @@ ja:
           title: "色"
           edit: "編集"
           view: "表示"
-          set_default_light: "デフォルトのテーマのライトパレットとして設定する (%{theme})"
-          set_default_dark: "デフォルトのテーマのダークパレットとして設定する (%{theme})"
           set_default_success: "%{schemeName} を %{themeName} のデフォルトのパレットとして設定しました"
           saved_refreshing: "保存されました！色を更新しています..."
           from_theme: "元のテーマ: %{name}"
@@ -7544,7 +7525,6 @@ ja:
         silence_duration: "ユーザーをどれくらいの期間、投稿禁止にしますか？"
         silence_reason_title: "投稿禁止の理由"
         silence_reason_placeholder: "投稿禁止の理由"
-        silence_message: "メールメッセージ"
         suspended_until: "(%{until} まで)"
         suspend_forever: "永久に凍結する"
         cant_suspend: "このユーザーを凍結できません。"
@@ -7848,6 +7828,8 @@ ja:
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
         search_label: "検索"
+        preview:
+          default: "デフォルト"
         theme_disabled: "無効"
         filters: "フィルター"
         status:
@@ -8006,7 +7988,7 @@ ja:
           modal_title: バッジのグループ
         granted_by: 付与者
         granted_at: 付与日
-        reason_help: (投稿またはトピックへのリンク)
+        reason_help: 投稿またはトピックへのリンク
         save: 保存
         delete: 削除
         delete_confirm: このバッジを削除してもよろしいですか？

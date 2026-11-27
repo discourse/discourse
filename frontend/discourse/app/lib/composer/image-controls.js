@@ -37,18 +37,37 @@ function buildScaleButton(selectedScale, scale) {
   );
 }
 
-function buildShowAltTextControls(altText) {
+function buildShowAltTextControls(altText, openDescriptions) {
+  const title = i18n("composer.image_alt_text.title");
+  const pencil = element(
+    "span",
+    { class: "alt-text-edit-btn", title },
+    iconElement("pencil")
+  );
+
+  if (openDescriptions) {
+    pencil.setAttribute("aria-haspopup", "dialog");
+    pencil.setAttribute("aria-label", title);
+    pencil.setAttribute("role", "button");
+    pencil.tabIndex = 0;
+    pencil.addEventListener("click", (event) => {
+      event.preventDefault();
+      openDescriptions();
+    });
+    pencil.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        if (!event.repeat) {
+          pencil.click();
+        }
+      }
+    });
+  }
+
   return element(
     "span",
     { class: "alt-text-readonly-container" },
-    element(
-      "span",
-      {
-        class: "alt-text-edit-btn",
-        title: i18n("composer.image_alt_text.title"),
-      },
-      iconElement("pencil")
-    ),
+    pencil,
     element(
       "span",
       {
@@ -117,7 +136,7 @@ function buildExtraButton({ label, btnClass, icon }) {
   );
 }
 
-function buildButtonWrapper(image) {
+function buildButtonWrapper(image, openDescriptions) {
   const altText = image.getAttribute("alt") || "";
   const imageCount = parseInt(image.dataset.imageRun, 10);
 
@@ -131,7 +150,7 @@ function buildButtonWrapper(image) {
   }
 
   wrapper.append(
-    buildShowAltTextControls(altText),
+    buildShowAltTextControls(altText, openDescriptions),
     buildEditAltTextControls(altText),
     element(
       "span",
@@ -151,13 +170,19 @@ function buildButtonWrapper(image) {
   return wrapper;
 }
 
-export function decorateImageControls(preview) {
+export function decorateImageControls(preview, openDescriptions) {
   preview
     .querySelectorAll("img[data-image-index][data-scale]")
     .forEach((image) => {
       const wrapper = element("span", { class: "image-wrapper" });
 
       image.replaceWith(wrapper);
-      wrapper.append(image, buildButtonWrapper(image));
+      wrapper.append(
+        image,
+        buildButtonWrapper(
+          image,
+          openDescriptions && (() => openDescriptions(image))
+        )
+      );
     });
 }

@@ -10,6 +10,17 @@ RSpec.describe UserSilencer do
 
     let(:silencer) { UserSilencer.new(user) }
 
+    it "clears the excerpts of topics whose first post gets hidden" do
+      post.sync_first_post_caches
+      topic_localization =
+        Fabricate(:topic_localization, topic: post.topic, excerpt: "A localized excerpt")
+
+      silence_user
+
+      expect(post.topic.reload.excerpt).to be_nil
+      expect(topic_localization.reload.excerpt).to be_nil
+    end
+
     it "silences the user correctly" do
       expect { UserSilencer.silence(user, admin) }.to change { user.reload.silenced? }
 
@@ -192,22 +203,6 @@ RSpec.describe UserSilencer do
         ).count
 
       expect(count).to eq(1)
-    end
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions in the unsilence notice" do
-        user.update!(silenced_till: 1.year.from_now)
-
-        UserSilencer.unsilence(user, admin)
-
-        pm = user.topics_allowed.order("topics.id desc").first
-        expect(pm.first_post.raw).to include("To appeal this decision, contact appeals@example.com")
-      end
     end
 
     it "does nothing when the user is not silenced" do

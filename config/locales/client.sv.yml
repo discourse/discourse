@@ -721,7 +721,6 @@ sv:
         is_this_post: "Är detta %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "eller"
         something_else_wrong: "Är det något fel med denna %{reviewable_type}?"
-        something_wrong_with_post: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -3045,7 +3044,7 @@ sv:
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: ämnesförlopp
+        title: "ämnesförlopp"
         jump_prompt: "hoppa till…"
         jump_prompt_of:
           one: "av %{count} inlägg"
@@ -3292,10 +3291,8 @@ sv:
           label: "markerad"
           title: "Klicka för att ta bort inlägg från markering"
         select_replies:
-          label: "välj +svar"
           title: "Lägg till inlägg samt alla tillhörande svar till markering"
         select_below:
-          label: "välj +nedanför"
           title: "Lägg till inlägg, samt allting efter det, till markering"
         delete: radera markerade
         cancel: avbryt markering
@@ -3600,19 +3597,14 @@ sv:
       save_error: Ett fel inträffade då kategorin skulle sparas.
       validations:
         icon_required: "Välj en ikon."
+      icon_search_placeholder: "Sök…"
       description: "Beskrivning"
-      icon: "Ikon"
-      emoji: "Emoji"
       background_color: "Färg"
       color_validations:
         cant_be_empty: "kan inte vara tomt"
       styles:
         icon: "Ikon"
         emoji: "Emoji"
-        options:
-          icon: "Ikon"
-          emoji: "Emoji"
-      color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       no_description: "Lägg till en beskrivning för den här kategorin."
@@ -4167,6 +4159,7 @@ sv:
       share: "Dela"
       dismiss: "Avfärda"
     mobile_tab_bar:
+      new_topic: "Nytt ämne"
       create: "Skapa"
       more: "Mer"
       back: "Tillbaka"
@@ -6018,7 +6011,6 @@ sv:
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
         silence_reason_placeholder: "Anledning till att tysta"
-        silence_message: "E-postmeddelande"
         suspended_until: "(till %{until})"
         suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."
@@ -6266,6 +6258,8 @@ sv:
           multiselect: "Multival"
       site_text:
         search_label: "Sök"
+        preview:
+          default: "Standard"
         theme_disabled: "Inaktiverad"
         filters: "Filter"
         edit: "Redigera"
@@ -6374,7 +6368,7 @@ sv:
           modal_title: Utmärkelsegrupper
         granted_by: Utfärdad av
         granted_at: Utfärdad vid
-        reason_help: (En länk till ett inlägg eller ämne)
+        reason_help: En länk till ett inlägg eller ämne
         save: Spara
         delete: Ta bort
         delete_confirm: Är du säker på att du vill ta bort den utmärkelsen?

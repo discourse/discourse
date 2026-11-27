@@ -1926,48 +1926,12 @@ da:
     post_hidden:
       title: "Indlæg Skjult"
       subject_template: "Indlægget er skjult pga. fællesskabs-anmeldelser"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at fortælle dig, at dit indlæg er blevet skjult.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Dette indlæg er blevet skjult på grund af anmeldelser fra fællesskabet, så overvej hvordan du kan revidere dit indlæg for at afspejle deres feedback. **Du kan redigere dit indlæg efter %{edit_delay} minutter, og det vil automatisk blive synligt igen.**
-
-        Hvis indlægget bliver skjulet af fællesskabet endnu en gang, forbliver det skjult, indtil det håndteres af personalet.
-
-        For yderligere vejledning henvises til vores [fællesskabs-retningslinjer](%{base_url}/guidelines).
     post_hidden_again:
       title: "Indlæg Skjult igen"
       subject_template: "Indlæg skjult af fællesskabsmarkeringer, personale underrettet"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatiseret besked fra %{site_name} for at fortælle dig, at dit indlæg blev skjult igen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Fællesskabet anmeldte dette indlæg, og det er nu skjult. **Da dette indlæg er skjult mere end én gang, forbliver dit indlæg nu skjult, indtil det håndteres af en medarbejder.**
-
-        For yderligere vejledning henvises til vores [retningslinjer for fællesskabet](%{base_url}/guidelines).
     queued_by_staff:
       title: "Indlæg Kræver Godkendelse"
       subject_template: "Indlæg skjult af personale, afventer godkendelse"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at fortælle dig, at dit indlæg er blevet skjult.
-
-        <%{base_url}%{url}>
-
-        Dit indlæg vil forblive skjult, indtil en medarbejder har gennemgår det.
-
-        For yderligere vejledning henvises til vores [fællesskabs-retningslinjer](%{base_url}/guidelines).
     flags_disagreed:
       title: "Anmeldt indlæg genoprettet af personale"
       subject_template: "Anmeldt indlæg genoprettet af personale"
@@ -2591,12 +2555,6 @@ da:
     account_suspended_forever:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-    account_silenced:
-      title: "Konto gjort tavs"
-      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
-    account_silenced_forever:
-      title: "Konto gjort tavs"
-      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"
@@ -2760,10 +2718,6 @@ da:
     signup_after_reject:
       title: "Tilmelding efter Afvisning"
       subject_template: "Du er blevet afvist på %{site_name}"
-      text_body_template: |
-        En medarbejder afviste din konto på %{site_name}.
-
-        %{reject_reason}
     signup:
       subject_template: "[%{email_prefix}] Bekræft din nye konto"
       text_body_template: |
@@ -3280,6 +3234,8 @@ da:
       approve_post:
         title: "Ja"
         complete: "Indlæg godkendt."
+      deny_and_delete_post:
+        complete: "Indlæg slettet."
       approve_post_closed:
         title: "Ja"
         complete: "Indlæg godkendt."

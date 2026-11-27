@@ -56,6 +56,7 @@ jobs:
 
     env:
       RAILS_ENV: test
+      RUBY_YJIT_ENABLE: "1"
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
@@ -125,6 +126,10 @@ jobs:
           # Fail stalled fetches so checkout retries them
           GIT_HTTP_LOW_SPEED_LIMIT: 1000
           GIT_HTTP_LOW_SPEED_TIME: 30
+
+      - name: Log Ruby version and YJIT status
+        run: |
+          LD_PRELOAD="$RUBY_ALLOCATOR" ruby --disable=gems -v -e 'puts "YJIT enabled: #{defined?(RubyVM::YJIT) ? RubyVM::YJIT.enabled? : false}"'
 
       - name: Setup Git
         run: |
@@ -276,9 +281,14 @@ jobs:
             exit 1
           fi
 
-      - name: Install playwright
-        if: matrix.build_type == 'system'
-        run: pnpm playwright-install
+      - name: Install Playwright
+        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+        run: |
+          if [[ "${{ matrix.build_type }}" == system && "${{ matrix.target }}" == core ]]; then
+            pnpm exec playwright install chromium
+          else
+            pnpm playwright-install
+          fi
 
       - name: Precompile the JS bundles
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
@@ -340,6 +350,8 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
+          DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL: "1"
+          DISCOURSE_SYSTEM_TEST_NODE_READ_FAST: "1"
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests

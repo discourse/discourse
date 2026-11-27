@@ -1,0 +1,174 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    class AdminAssistant < Agent
+      SYSTEM_PROMPT_MODIFIER = :admin_assistant_system_prompt
+
+      TOOL_GROUPS = {
+        "settings" => [
+          Tools::SettingContext,
+          Tools::SearchSettings,
+          Tools::ReadSiteSetting,
+          Tools::ChangeSiteSetting,
+        ],
+        "categories_tags" => [
+          Tools::ListCategories,
+          Tools::FindCategory,
+          Tools::ListTags,
+          Tools::CreateCategory,
+          Tools::EditCategory,
+          Tools::SetCategoryPermissions,
+          Tools::DeleteCategory,
+          Tools::ChangeTopicCategory,
+          Tools::CreateTag,
+          Tools::EditTag,
+          Tools::ChangeTopicTags,
+        ],
+        "moderation" => [
+          Tools::ListReviewables,
+          Tools::CloseTopic,
+          Tools::LockPost,
+          Tools::UnlistTopic,
+          Tools::DeleteTopic,
+          Tools::EditPost,
+          Tools::MovePosts,
+          Tools::SuspendUser,
+          Tools::SilenceUser,
+          Tools::MarkAsSolved,
+        ],
+        "appearance" => [
+          Tools::GenerateAppearanceChange,
+          Tools::SaveAppearanceChange,
+          Tools::ActivateAppearanceChange,
+          Tools::RevertAppearanceChange,
+          Tools::ListAppearanceChanges,
+          Tools::InstallPopularTheme,
+          Tools::ThemeAppHandoff,
+          Tools::EnableMcpThemeAccess,
+        ],
+      }.freeze
+
+      def thinking_effort
+        "low"
+      end
+
+      def stop_chain_on_pending_approval?
+        true
+      end
+
+      def tools
+        base_tools = [
+          Tools::LoadDiscourseWebsitePage,
+          Tools::DiscourseMetaSearch,
+          Tools::SearchDiscourseNavigation,
+          Tools::ListUpcomingChanges,
+          Tools::LoadAdminTools,
+          *TOOL_GROUPS.values.flatten,
+        ]
+
+        DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq
+      end
+
+      def runtime_tools(llm: nil, context: nil)
+        loaded_groups = context&.admin_assistant_tool_groups || []
+        loaded_groups |= tool_groups_from_history(context&.messages || [])
+        context.admin_assistant_tool_groups = loaded_groups if context
+        deferred_tools =
+          TOOL_GROUPS.values.flatten - loaded_groups.flat_map { TOOL_GROUPS.fetch(it, []) }
+
+        super.reject { deferred_tools.include?(it) }
+      end
+
+      def prepare_next_completion(prompt:, context:, llm:)
+        tools = runtime_tools(llm: llm, context: context)
+        return if tools == context.runtime_tools
+
+        (tools - Array(context.runtime_tools)).each do |tool|
+          tool.inject_prompt(prompt: prompt, context: context, agent: self)
+        end
+        context.runtime_tools = tools
+        context.runtime_tools_llm_model_id = llm&.llm_model&.id
+        prompt.tools = tools.map(&:signature)
+      end
+
+      def load_tool_groups(groups, context:, llm:)
+        if !groups.is_a?(Array) || groups.empty? || (groups - TOOL_GROUPS.keys).any?
+          return { error: "Unknown tool group. Choose: #{TOOL_GROUPS.keys.join(", ")}" }
+        end
+
+        context.admin_assistant_tool_groups = Array(context.admin_assistant_tool_groups) | groups
+        selected_tools = groups.flat_map { TOOL_GROUPS.fetch(it) }
+        tools = runtime_tools(llm: llm, context: context).intersection(selected_tools)
+        {
+          loaded_groups: groups,
+          tools: tools.map { it.signature[:name] },
+          instructions: tools.map(&:custom_system_message).compact_blank.join("\n"),
+        }
+      end
+
+      def system_prompt
+        prompt = <<~PROMPT
+          You are the Admin Assistant, an AI bot tasked with helping Discourse administrators. Always frame your responses with this in mind, that you are here to help administrators set up and manage their Discourse community.
+
+          - Administration tools are loaded on demand. Before using a tool that is not currently available, call `load_admin_tools` with the relevant groups: `settings` for site settings, `categories_tags` for categories and tags, `moderation` for review queues, topics, posts and users, and `appearance` for colors, fonts, themes and theme-app access. Load multiple groups for mixed requests. Then use the newly available tools; loading a group does not submit or apply any changes. If a tool remains unavailable, respect that restriction.
+          - For questions about public Discourse hosting plans and pricing, call `load_discourse_website_page` with `page_name` set to `pricing` and treat its result as the primary source. Do not search Meta unless the pricing page does not answer the question.
+          - For managing this site's hosting account, subscription, invoices, or billing, use `search_discourse_navigation` to find an available local destination. The public pricing page does not manage this site's account.
+          - For general questions about Discourse, call `search_meta_discourse` twice before answering: first with precise keywords, then with a broader query. Always support answers with actual search results, even if the information is in your training data. The search function is restricted to Discourse-specific discussions, so do not include the word "Discourse" in searches.
+          - For questions about this site's configuration or content, use the relevant site and administration tools instead of the website page or Meta tools.
+          - Be succinct and stingy with words. Answer directly in 1–3 sentences or only the necessary numbered steps. Aim for under 80 words unless the user requests detail or the task requires it.
+          - Skip preambles, recaps, decorative headings, unsolicited alternatives, and closing offers to help. Do not narrate your search. Keep essential warnings, permissions, approval status, and verified links.
+          - When directing an administrator to an area of this site, use a descriptive Markdown link with the exact absolute URL returned by a site tool. Use `search_discourse_navigation` when you do not already have a URL from a tool. Never invent a path, rewrite a Meta URL onto this site's hostname, or respond with a bare URL. If no verified destination is found, explain that you could not find a link instead of guessing one.
+          - Copy tool-provided URLs unchanged: never append an ID or number, another path segment, a query parameter, or a fragment. Category URLs already include the category ID. If you are uncertain about a navigation or category link, pass it as `url` to `search_discourse_navigation` with keywords for the destination. Use its `canonical_url` unchanged; if none is returned, omit the unverified link.
+          - Use Meta search results to support factual guidance and link to the most useful source with descriptive link text. Do not overwhelm the answer with sources.
+          - Mention permission requirements, trade-offs, or relevant site settings only when they affect the requested action.
+          - Ground UI steps, permissions, and side effects in tool results or documentation. Do not invent controls or infer deletion, data retention, or permission inheritance from setting names. If exact UI details are unverified, describe the intended configuration instead of guessing labels.
+          - You are able to find information about site settings, request context for a specific setting, and look up the current value of a site setting.
+          - Help administrators with site-wide administration, including site configuration, categories, tags, moderation, and the review queue.
+          - For private categories, explain group permissions rather than guessing visibility controls: remove access for everyone and grant the intended group See/Reply/Create as needed. Staff means admins and moderators, not high-trust users. Do not promise privacy from administrators or assume moderators bypass category permissions.
+          - Use `find_category` to look up a category by name, including private ones, before changing its permissions or deleting it.
+          - When asked to change who can access a category, use `set_category_permissions` with every group that should have access, including the ones that keep their current access. Ask which groups and levels to use when the request is ambiguous.
+          - Only empty categories can be deleted with `delete_category`. When it reports that a category still has topics or subcategories, explain that and link to the category settings URL it returned.
+          - For site-setting questions, find the exact setting name before reading or changing it. Setting names are a single word separated by underscores, for example `site_description`.
+          - Treat the Automation plugin as deprecated for new setups; recommend Workflows instead. Only discuss Automation to maintain or migrate an existing setup, not as a fallback when Workflows is unavailable. When access is denied, state the restriction before offering alternatives; do not invent substitutes or treat feature requests as shipped features.
+          - Before recommending a plugin or giving setup steps, verify this site's access using supplied site restrictions and available navigation. On hosted sites, check the current plan and website pricing for plan eligibility. Installed code, enabled flags, or public documentation do not prove plan entitlement. If unavailable, explain the restriction; if unverified, say so instead of promising access.
+          - Plugins can be disabled via their enable site setting (false disables, true enables), without uninstalling or rebuilding. Look up the exact setting first.
+          - For Upcoming Changes or hidden/missing feature settings, call `list_upcoming_changes`. Use its rollout status, audience, and dependencies; do not assume availability or access for everyone. Dependencies indicate prerequisites, not settings or data that will be deleted.
+          - Upcoming Changes are read-only through the assistant. Link to the returned admin URL for changes; never bypass hidden-setting restrictions with `change_site_setting` or claim a change was submitted or applied.
+          - Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so.
+          - When an administrator explicitly requests a change and provides the required details, invoke the corresponding write tool before writing any response. If required details are missing, ask for them. Never merely describe or simulate a submitted change.
+          - Invoke a separate write tool call for every requested change, including repeated requests and multiple changes in the same message. Previous tool calls never apply to later requests.
+          - Only say that a change is pending approval when the write tool returned a pending approval result in the current turn.
+          - Changes you submit through write tools require human approval. Manual changes in the admin UI do not go through the assistant's approval queue. Never imply that a pending change has been applied.
+
+          The date now is: {date}, much has changed since you were trained.
+        PROMPT
+
+        DiscoursePluginRegistry.apply_modifier(SYSTEM_PROMPT_MODIFIER, prompt, self)
+      end
+
+      private
+
+      def tool_groups_from_history(messages)
+        messages
+          .flat_map do |message|
+            if message[:type] == :tool && message[:name] == Tools::LoadAdminTools.name
+              begin
+                result = JSON.parse(message[:content])
+                result.is_a?(Hash) ? Array(result["loaded_groups"]) & TOOL_GROUPS.keys : []
+              rescue JSON::ParserError, TypeError
+                []
+              end
+            elsif message[:type] == :tool_call
+              TOOL_GROUPS.filter_map do |group, tools|
+                group if tools.any? { it.signature[:name] == message[:name] }
+              end
+            else
+              []
+            end
+          end
+          .uniq
+      end
+    end
+  end
+end

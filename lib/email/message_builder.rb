@@ -173,6 +173,8 @@ module Email
         header_instructions
         respond_instructions
       ].each do |key|
+        next if html_override.exclude?("%{#{key}}")
+
         cooked = @template_args[key].present? ? PrettyText.cook(@template_args[key]) : ""
         html_override.gsub!("%{#{key}}") { cooked }
       end

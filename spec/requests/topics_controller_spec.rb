@@ -3003,11 +3003,13 @@ RSpec.describe TopicsController do
             filter_top_level_replies: true,
             print: true,
             preview_theme_id: 9999,
+            preview_color_scheme_id: 1,
+            preview_dark_color_scheme_id: 2,
             include_raw: true,
           }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&include_raw=true",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&preview_color_scheme_id=1&preview_dark_color_scheme_id=2&include_raw=true",
       )
 
       get "/t/external_id/asdf.json", params: { page: "0" }
@@ -3111,10 +3113,16 @@ RSpec.describe TopicsController do
       it "shows a descriptive error message containing the group name" do
         get "/t/#{topic.id}.json"
 
-        html = CGI.unescapeHTML(response.parsed_body["extras"]["html"])
+        extras = response.parsed_body["extras"]
+        html = CGI.unescapeHTML(extras["html"])
         expect(response.status).to eq(403)
+        expect(extras["title"]).to eq(I18n.t("page_forbidden.page_title"))
         expect(html).to include(I18n.t("not_in_group.title_topic", group: group.name))
         expect(html).to include(I18n.t("not_in_group.join_group"))
+
+        get "/t/#{topic.id}"
+        expect(response).to have_http_status(:forbidden)
+        expect(css_select("title").text).to include(I18n.t("page_forbidden.page_title"))
       end
     end
 
@@ -3398,6 +3406,21 @@ RSpec.describe TopicsController do
         a_hash_including("url" => visible_link.url, "title" => visible_link.title),
       )
       expect(response.body).not_to include(hidden_link.url)
+    end
+
+    it "keeps the preview params when redirecting a short topic URL" do
+      get "/t/#{topic.id}",
+          params: {
+            preview_theme_id: 9999,
+            preview_base_font: "lora",
+            preview_heading_font: "roboto",
+            preview_component_ids: "12,13",
+          }
+
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(
+        "#{topic.relative_url}?preview_theme_id=9999&preview_base_font=lora&preview_heading_font=roboto&preview_component_ids=12%2C13",
+      )
     end
 
     it "shows a blank-slug topic without redirecting" do

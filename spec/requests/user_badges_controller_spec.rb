@@ -492,6 +492,41 @@ RSpec.describe UserBadgesController do
         )
       end
 
+      it "does not include the attributes for unlisted topics on the badge page" do
+        post.topic.update!(visible: false)
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"]).to be_blank
+        expect(
+          response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["post_id"] }.compact,
+        ).to be_empty
+      end
+
+      it "does not include the attributes for unlisted topics on the user's badge list" do
+        post.topic.update!(visible: false)
+
+        get "/user-badges/#{user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["user_badges"].flat_map do |ub|
+            ub.values_at("topic_id", "topic_title")
+          end,
+        ).to all(be_nil)
+      end
+
+      it "includes the attributes for unlisted topics when the current user can see unlisted topics" do
+        post.topic.update!(visible: false)
+        sign_in(Fabricate(:moderator))
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"].map { |t| t["id"] }).to contain_exactly(post.topic_id)
+      end
+
       it "includes the attributes for regular topic, private messages and restricted topics which the current user can see" do
         group.add(user)
         private_message_topic.allowed_users << user
@@ -736,14 +771,22 @@ RSpec.describe UserBadgesController do
       sign_in(moderator)
 
       [private_message_post, restricted_post].each do |inaccessible_post|
-        post "/user_badges.json",
-             params: {
-               badge_id: badge.id,
-               username: user.username,
-               post_id: inaccessible_post.id,
-             }
+        post_references = [
+          { post_id: inaccessible_post.id },
+          { reason: "/p/#{inaccessible_post.id}" },
+          { reason: "/posts/#{inaccessible_post.id}.json" },
+          { reason: inaccessible_post.url },
+        ]
+        post_references.each do |reference|
+          post "/user_badges.json",
+               params: {
+                 badge_id: badge.id,
+                 username: user.username,
+                 **reference,
+               }
 
-        expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:forbidden)
+        end
       end
       expect(UserBadge.exists?(user:, badge:)).to eq(false)
 

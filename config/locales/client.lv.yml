@@ -2107,7 +2107,7 @@ lv:
         back_description: "Atgriezties pie pēdējā nelasītā ieraksta"
         replies_short: "%{current} / %{total}"
       progress:
-        title: tēmas progress
+        title: "tēmas progress"
         jump_prompt_or: "vai"
       notifications:
         title: izmainīt to, cik bieži jūs saņemsiet paziņojumus par šo temu
@@ -2278,8 +2278,6 @@ lv:
         selected: "izvēlēti (%{count})"
         select_post:
           label: "izvēlēties"
-        select_replies:
-          label: "izvēlēties +atbildes"
         delete: dzēst izvēlētos
         cancel: atcelt izvēlēšanos
         select_all: izvēlēties visu
@@ -2433,16 +2431,10 @@ lv:
       validations:
         icon_required: "Izvēlieties ikonu."
       description: "Apraksts"
-      icon: "Ikona"
-      emoji: "Smaidiņi"
       background_color: "Krāsa"
       styles:
         icon: "Ikona"
         emoji: "Smaidiņi"
-        options:
-          icon: "Ikona"
-          emoji: "Smaidiņi"
-      color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
@@ -2827,6 +2819,7 @@ lv:
       share: "Dalīties"
       dismiss: "Nerādīt"
     mobile_tab_bar:
+      new_topic: "Jauna tēma"
       create: "Izveidot"
       more: "Vairāk"
       back: "Atpakaļ"
@@ -3960,6 +3953,8 @@ lv:
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
         search_label: "Meklēt"
+        preview:
+          default: "Noklusējums"
         theme_disabled: "Atslēgt"
         edit: "Rediģēt"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
@@ -4032,7 +4027,7 @@ lv:
           modal_title: Žetonu Grupa
         granted_by: Piešķīra
         granted_at: Piešķirta
-        reason_help: (Saite uz ierakstu vai tēmu)
+        reason_help: Saite uz ierakstu vai tēmu
         save: Saglabāt
         delete: Dzēst
         delete_confirm: Vai tiešām vēlies dzēst šo žetonu?

@@ -77,6 +77,9 @@ after_initialize do
   register_user_custom_field_type(frequency_field, :integer, max_length: 10)
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
+  add_to_serializer(:user, :can_assign, include_condition: -> { include_can_edit? && can_edit }) do
+    object.can_assign?
+  end
 
   add_to_serializer(
     :notification,
@@ -149,9 +152,10 @@ after_initialize do
   end
 
   add_model_callback(Group, :before_destroy) do
-    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{id}[|]?/, "")
-    new_setting = new_setting.chomp("|") if new_setting.ends_with?("|")
-    SiteSetting.assign_allowed_on_groups = new_setting
+    allowed_group_ids = SiteSetting.assign_allowed_on_groups_map
+    next if allowed_group_ids.exclude?(id)
+
+    SiteSetting.assign_allowed_on_groups = (allowed_group_ids - [id]).join("|")
   end
 
   on(:assign_topic) do |topic, user, assigning_user, force|

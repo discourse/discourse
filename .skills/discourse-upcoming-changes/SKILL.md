@@ -64,7 +64,7 @@ enable_your_feature_name:
 
 **Learn more URL:** Add `learn_more_url: "https://..."` for documentation link. This should generally be a Discourse Meta URL in the format https://meta.discourse.org/t/-/999999 . If the user pastes a topic URL with a slug, remove the slug and replace with a `-` as shown.
 
-**Optional:** Add `allow_enabled_for:` to restrict which "Enabled for" dropdown options the admin can choose. Accepts any subset of `everyone`, `staff`, `specific_groups`. "No one" is always available. If `everyone` is included it must be the only value. Omit the key to allow all options (the default).
+**Optional:** Add `allow_enabled_for:` to constrain the audience. Use `[everyone]` or `[logged_in_users]` for a fixed audience, or use `staff`, `specific_groups`, or both. Admins can always disable the change. Omit the key to let admins pick any groups.
 
 ```yaml
 upcoming_change:

@@ -65,6 +65,7 @@ zh_TW:
         requires_ai: "需要啟用 AI 插件"
       nodes:
         "action:ai_agent": "AI 智能體"
+        "action:ai_tool": "AI 工具"
       node_descriptions:
         "action:ai_agent": "運行 AI 智能體來處理資料或生成內容"
     discourse_automation:
@@ -243,6 +244,15 @@ zh_TW:
               description: "允許為系統使用者創建的貼文添加標簽。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "重新整理"
+        columns:
+          user: "使用者"
+          reason: "檢舉為"
+          created: "建立時間"
+          status: "狀態"
+        status:
+          applying: "套用中…"
       copied: "已複製"
       view_raw: "檢視原始內容"
       view_decoded: "檢視解碼後內容"
@@ -258,11 +268,9 @@ zh_TW:
         error: "錯誤"
         response: "回應"
       post_image_captions:
-        edit: "編輯 AI 圖片說明"
-        title: "編輯 AI 圖片說明"
-        description: "說明"
-        save: "保存說明"
         saved: "AI 圖片說明已保存"
+        image_descriptions:
+          apply: "應用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能體"
@@ -280,6 +288,16 @@ zh_TW:
           upload_ids: "上傳 ID"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
+        ai_tool:
+          tool_ref: "工具"
+          llm_model_id: "LLM 模型"
+          arguments: "參數"
+          list_item: "清單項目"
+          add_list_item: "新增項目"
+        mcp_tool:
+          mcp_server_id: "MCP 服務器"
+          tool_name: "工具"
+          arguments: "參數"
         classify:
           text: "文字"
           upload_ids: "圖像"
@@ -424,6 +442,9 @@ zh_TW:
             enabled_features: "啟用的功能"
             automation: "自動化"
             agents: "智能體"
+        review_queue:
+          setting_groups:
+            settings: "設置"
         image_caption:
           name: "圖片說明"
           description: "為貼文圖片生成 AI 說明，將其提供給讀者和輔助閱讀技術。"
@@ -1032,6 +1053,31 @@ zh_TW:
         mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
         modal:
           title: "創建新憑據"
+      concepts:
+        edit: "編輯"
+        seed:
+          refresh: "重新整理"
+        delete: "刪除"
+        columns:
+          status: "狀態"
+          topics: "主題"
+          posts: "新發表的貼文"
+        statuses:
+          all: "所有狀態"
+          active: "啟用"
+        form:
+          name: "名稱"
+          description: "描述"
+          aliases: "別名"
+          status: "狀態"
+        shared_topics_count:
+          other: "%{count} 個話題"
+        tagged_topics: "帶標簽的主題"
+        topic_columns:
+          topic: "主題"
+          primary: "主要"
+          relevance: "相關性"
+        primary_badge: "主要"
       decision_models:
         no_preset: "無"
         display_name: "名稱"
@@ -1446,8 +1492,7 @@ zh_TW:
         filter_standalone: "獨立活動"
       ai_bot:
         title: "AI 機器人"
-        agent: "智能體："
-        llm: "模型："
+        agent_menu_heading: "智能體"
         pm_warning: "版主會定期監控 AI 聊天機器人消息。"
         cancel_streaming: "停止回復"
         try_again: "重試"
@@ -1517,7 +1562,6 @@ zh_TW:
           tab_label: "AI"
           header: "我能幫上什么忙？"
           submit: "提交問題"
-          disclaimer: "生成式 AI 可能會犯錯。請驗證重要資訊。"
           placeholder: "提問…"
           new: "新問題"
           min_input_length_message:

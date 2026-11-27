@@ -1390,6 +1390,29 @@ RSpec.describe Post do
       expect(revised_post.cook("#secret-plans")).not_to include(category.name)
     end
 
+    context "when the post is a system message" do
+      subject(:cooked) { system_message.cook("##{restricted_category.slug}") }
+
+      fab!(:recipient, :user)
+      fab!(:restricted_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      let(:system_message) { SystemMessage.create(recipient, :welcome_user) }
+
+      context "when the recipient cannot see the category" do
+        it "does not resolve the hashtag" do
+          expect(cooked).not_to include(restricted_category.name)
+        end
+      end
+
+      context "when the recipient can see the category" do
+        before { restricted_category.groups.first.add(recipient) }
+
+        it "resolves the hashtag" do
+          expect(cooked).to include(restricted_category.name)
+        end
+      end
+    end
+
     describe "mentions" do
       fab!(:group) do
         Fabricate(
@@ -1522,6 +1545,30 @@ RSpec.describe Post do
 
     post = Post.find(post.id)
     expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
+  end
+
+  describe "#system_message?" do
+    fab!(:recipient, :user)
+
+    let(:system_message) { SystemMessage.create(recipient, :welcome_user) }
+
+    context "when the post is the first post of a system message topic" do
+      subject(:post) { system_message }
+
+      it { is_expected.to be_a_system_message }
+    end
+
+    context "when the post is a reply in a system message topic" do
+      subject(:reply) { Fabricate(:post, topic: system_message.topic, user: recipient) }
+
+      it { is_expected.not_to be_a_system_message }
+    end
+
+    context "when the post is the first post of a regular topic" do
+      subject(:post) { Fabricate(:post) }
+
+      it { is_expected.not_to be_a_system_message }
+    end
   end
 
   describe "#excerpt_for_topic" do
@@ -1803,6 +1850,40 @@ RSpec.describe Post do
     fab!(:post)
 
     after { Discourse.redis.flushdb }
+
+    it "clears the topic excerpt of a first post until the post is unhidden" do
+      post.sync_first_post_caches
+      excerpt = post.topic.excerpt
+
+      post.hide!(PostActionType.types[:off_topic])
+      post.sync_first_post_caches
+      expect(post.topic.reload.excerpt).to be_nil
+
+      post.unhide!
+      expect(post.topic.reload.excerpt).to eq(excerpt)
+    end
+
+    it "clears localized topic excerpts of a first post until the post is unhidden" do
+      post_localization = Fabricate(:post_localization, post: post, locale: "ja")
+      topic_localization = Fabricate(:topic_localization, topic: post.topic, locale: "ja")
+      topic_localization.update_excerpt(cooked: post_localization.cooked)
+      excerpt = topic_localization.excerpt
+
+      post.hide!(PostActionType.types[:off_topic])
+      expect(topic_localization.reload.excerpt).to be_nil
+
+      post.unhide!
+      expect(topic_localization.reload.excerpt).to eq(excerpt)
+    end
+
+    it "keeps the topic excerpt when a reply is hidden" do
+      post.sync_first_post_caches
+      reply = Fabricate(:post, topic: post.topic)
+
+      expect { reply.hide!(PostActionType.types[:off_topic]) }.not_to change {
+        post.topic.reload.excerpt
+      }
+    end
 
     it "does not run post validations" do
       PostValidator.any_instance.expects(:validate).never

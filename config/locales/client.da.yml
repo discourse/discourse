@@ -451,8 +451,6 @@ da:
       fonts:
         base_font: "Brødtekst"
         heading_font: "Overskrifter"
-      logo:
-        help_text: "Anbefalet størrelse er 600 x 80 pixels."
       homepage:
         topics: "Emner"
         categories: "Kategorier"
@@ -817,7 +815,6 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
-        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -3065,7 +3062,7 @@ da:
         back_description: "Tilbage til dit seneste ulæste indlæg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: emnestatus
+        title: "emnestatus"
         jump_prompt: "spring til…"
         jump_prompt_of:
           one: "af %{count} indlæg"
@@ -3307,10 +3304,8 @@ da:
           label: "valgte"
           title: "Klik for at fjerne indlæg fra valg"
         select_replies:
-          label: "vælg +svar"
           title: "Tilføj indlæg og alle dets svar til valg"
         select_below:
-          label: "vælg + nedenfor"
           title: "Tilføj indlæg og alt efter det til valg"
         delete: slet valgte
         cancel: glem valg
@@ -3599,23 +3594,17 @@ da:
       save_error: Der opstod en fejl da kategorien skulle gemmes.
       validations:
         icon_required: "Vælg et ikon."
+      icon_search_placeholder: "Søg…"
       description: "Beskrivelse"
       style: "Stil"
-      icon: "Ikon"
-      emoji: "Humørikon"
       background_color: "Farve"
       foreground_color: "Tekst farve"
       color_validations:
         cant_be_empty: "kan ikke være tom"
       styles:
-        type: "Stil"
         icon: "Ikon"
         emoji: "Humørikon"
-        options:
-          icon: "Ikon"
-          emoji: "Humørikon"
       color_used: "Farve i brug"
-      color_placeholder: "Enhver webfarve"
       delete_confirm: "Er du sikker på, at du vil slette denne kategori?"
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
@@ -6014,7 +6003,6 @@ da:
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
-        silence_message: "Email Besked"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."
@@ -6254,6 +6242,8 @@ da:
           multiselect: "Multivælg"
       site_text:
         search_label: "Søg"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiveret"
         edit: "Rediger"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
@@ -6376,7 +6366,7 @@ da:
           modal_title: Badge grupperinger
         granted_by: Givet af
         granted_at: Givet på
-        reason_help: (Et link til et indlæg eller et emne)
+        reason_help: Et link til et indlæg eller et emne
         save: Gem
         delete: Slet
         delete_confirm: Er du sikker på du vil slette denne badge ?

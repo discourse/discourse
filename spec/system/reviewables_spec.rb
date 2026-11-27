@@ -282,6 +282,22 @@ describe "Reviewables" do
         expect(queued_post_reviewable.target_created_by).to be_nil
       end
 
+      it "lets a moderator classify an author deletion and keeps the reviewable" do
+        enable_dsa_reporting
+        modal = PageObjects::Modals::DsaModeration.new
+        review_page.visit_reviewable(queued_post_reviewable)
+        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+
+        expect(modal).to have_action_title(
+          "Delete @#{queued_post_reviewable.target_created_by.username}?",
+        )
+        expect(modal).to have_classification
+        modal.confirm("Delete user")
+
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload.target_created_by).to be_nil
+      end
+
       it "delete_user can be cancelled from the confirmation dialog" do
         review_page.visit_reviewable(queued_post_reviewable)
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")

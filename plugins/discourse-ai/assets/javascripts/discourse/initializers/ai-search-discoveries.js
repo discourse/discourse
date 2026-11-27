@@ -19,8 +19,13 @@ export default apiInitializer((api) => {
     currentUser?.can_use_ai_discover_agent &&
     currentUser.user_option?.ai_search_discoveries !== false;
 
-  if (settings.ai_discover_enabled && currentUser?.can_use_ai_discover_agent) {
+  if (settings.ai_discover_enabled && settings.ai_discover_agent) {
     api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
+  }
+
+  if (settings.ai_ask_ai_enabled) {
+    // listed as saveable so the preferences page sends it with the rest
+    api.addSaveableUserOption("ai_ask_ai_default", { page: "interface" });
   }
 
   if (!settings.ai_ask_ai_enabled || !currentUser?.can_use_ask_ai) {
@@ -29,9 +34,6 @@ export default apiInitializer((api) => {
     }
     return;
   }
-
-  // listed as saveable so the preferences page sends it with the rest
-  api.addSaveableUserOption("ai_ask_ai_default", { page: "interface" });
 
   const search = api.container.lookup("service:search");
   const discobotDiscoveries = api.container.lookup(

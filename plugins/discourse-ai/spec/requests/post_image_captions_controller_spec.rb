@@ -231,8 +231,8 @@ describe DiscourseAi::PostImageCaptionsController do
         "description" => "An edited 字 description",
       )
       expect(
-        AiPostImageCaption.find_by(post_id: post.id, base62_sha1: upload.base62_sha1).description,
-      ).to eq("An edited 字 description")
+        AiPostImageCaption.find_by!(post_id: post.id, base62_sha1: upload.base62_sha1),
+      ).to have_attributes(description: "An edited 字 description", source: "manual")
       expect(post.post_search_data.raw_data).to include("An edited 字 description")
 
       Jobs::ProcessPost.new.execute(post_id: post.id)

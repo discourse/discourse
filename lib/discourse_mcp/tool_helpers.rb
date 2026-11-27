@@ -3,6 +3,7 @@
 module DiscourseMcp
   module ToolHelpers
     MAX_READ_LENGTH = 50_000
+    PRIVATE_MESSAGE_DRAFT_ACTION = "privateMessage"
 
     module_function
 
@@ -139,7 +140,7 @@ module DiscourseMcp
       user
     end
 
-    def visible_post!(post_id, request_context)
+    def visible_post!(post_id, request_context, access: :read)
       guardian = request_context.guardian
       post = Post.with_deleted.find_by(id: post_id)
       topic = Topic.with_deleted.find_by(id: post&.topic_id)
@@ -149,7 +150,7 @@ module DiscourseMcp
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
       end
 
-      ensure_private_message_scope!(topic, request_context, access: :read)
+      ensure_private_message_scope!(topic, request_context, access:)
       post
     end
 
@@ -159,10 +160,17 @@ module DiscourseMcp
       request_context.ensure_scopes!("mcp:private-messages:#{access}")
     end
 
-    def ensure_private_message_draft_scope!(draft_key, request_context, access:)
+    def ensure_private_message_draft_scope!(
+      draft_key,
+      request_context,
+      access:,
+      action: nil,
+      archetype: nil
+    )
       topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
       private_message_draft =
         draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
+          action == PRIVATE_MESSAGE_DRAFT_ACTION || archetype == Archetype.private_message ||
           (
             topic_id &&
               Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
@@ -172,11 +180,62 @@ module DiscourseMcp
       request_context.ensure_scopes!("mcp:private-messages:#{access}")
     end
 
+    def ensure_private_message_stored_draft_scope!(draft, request_context, access:)
+      return if draft.blank?
+
+      ensure_private_message_draft_scope!(
+        draft.draft_key,
+        request_context,
+        access:,
+        action: draft_action(draft),
+        archetype: draft_archetype(draft),
+      )
+    end
+
+    def draft_action(draft)
+      data = draft&.parsed_data
+      data["action"] if data.is_a?(Hash)
+    end
+
+    def draft_archetype(draft)
+      data = draft&.parsed_data
+      data["archetypeId"] if data.is_a?(Hash)
+    end
+
     def ensure_current_author!(arguments, user)
       requested_author = arguments["author_username"]
       return if requested_author.blank? || requested_author.casecmp?(user.username)
 
       raise ToolError, I18n.t("mcp.errors.author_must_match", username: user.username)
+    end
+
+    # The checks for the first post of a user (fast typing, silence words,
+    # silence regex) stay off, as for an API request: a tool call has no
+    # typing time.
+    def submit_post!(user, **options)
+      result = NewPostManager.new(user, options.with_indifferent_access).perform
+
+      if result.failed? || (result.post.nil? && !queued?(result))
+        raise ToolError,
+              result.errors.full_messages.flatten.to_sentence.presence ||
+                I18n.t("mcp.errors.post_not_created")
+      end
+
+      result
+    end
+
+    def queued?(submission)
+      submission.action == :enqueued
+    end
+
+    def author_fields(arguments, user)
+      requested_author = arguments["author_username"]
+
+      {
+        username: user.username,
+        requested_author:,
+        author_applied: requested_author.present? ? user.username.casecmp?(requested_author) : nil,
+      }
     end
 
     def user_post_json(action)

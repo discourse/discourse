@@ -20,9 +20,7 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
-  api.registerValueTransformer("code-login-auto-create-account", () => false);
-
-  api.registerBehaviorTransformer("create-account", async ({ next }) => {
+  const withCaptcha = async (next) => {
     const captchaService = container.lookup("service:captcha-service");
     captchaService.submitted = true;
 
@@ -57,6 +55,25 @@ function initializeHCaptcha(api, container) {
     } finally {
       captchaService.reset();
     }
+  };
+
+  // The challenge is solved before the code is emailed. Resending to the same
+  // address reuses that solve, and invitations are never challenged.
+  api.registerBehaviorTransformer("request-login-code", ({ next, context }) => {
+    if (context?.isInvite || context?.resend) {
+      return next();
+    }
+
+    return withCaptcha(next);
+  });
+
+  api.registerBehaviorTransformer("create-account", ({ next, context }) => {
+    // Code login signups already solved the challenge before the code was sent.
+    if (context?.codeLogin) {
+      return next();
+    }
+
+    return withCaptcha(next);
   });
 }
 

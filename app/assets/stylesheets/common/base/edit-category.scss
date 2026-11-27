@@ -73,15 +73,6 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
-  .form-kit__conditional-display-content {
-    // prevent content shift when changing style options
-    min-height: 2.6em;
-
-    &:has(.badge-category__wrapper) {
-      justify-content: center;
-    }
-  }
-
   .--radio-cards {
     .form-kit__container-title {
       max-width: var(--form-kit-max-input);
@@ -97,13 +88,6 @@ $number-input-width: var(--form-kit-small-input);
 
   .add-required-tag-group {
     align-self: start;
-  }
-
-  #control-icon,
-  #control-emoji {
-    &.form-kit__field .form-kit__container-content {
-      width: auto;
-    }
   }
 
   .edit-category-page-header {
@@ -268,20 +252,58 @@ $number-input-width: var(--form-kit-small-input);
   }
 }
 
+.category-name-style {
+  width: 100%;
+
+  &__name {
+    width: 100%;
+  }
+
+  &__square {
+    background: currentcolor;
+    border-radius: 0.15em;
+  }
+
+  &__tabs .d-tabs__strip {
+    margin-block-end: var(--space-2);
+  }
+
+  &__color-warning.btn {
+    --d-button-transparent-icon-color: var(--danger);
+    --d-button-transparent-text-color--hover: var(--danger);
+    flex: 1;
+    padding: 0;
+  }
+
+  &__color .form-kit__control-color-input-prefix {
+    .fk-d-tooltip__trigger,
+    .fk-d-tooltip__trigger-container {
+      flex: 1;
+      align-self: stretch;
+    }
+  }
+
+  &__tabs .d-tabs__panel > &__color {
+    .form-kit__container-content,
+    .form-kit__control-color-input-picker {
+      width: 100%;
+    }
+
+    .form-kit__control-color-picker-wrapper {
+      flex: 1;
+    }
+  }
+}
+
 .edit-category-description-container {
   .readonly-field {
     width: 100%;
     font-size: var(--font-down-1);
     color: var(--primary-high);
 
-    // field renders as an excerpt, so these hit nothing of importance atm
-    // > :first-child {
-    //   margin-top: 0;
-    // }
-
-    // > :last-child {
-    //   margin-bottom: 0;
-    // }
+    p {
+      margin: 0;
+    }
   }
 
   .description-content {

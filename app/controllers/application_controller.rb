@@ -375,7 +375,7 @@ class ApplicationController < ActionController::Base
                    request.params[:action] == "find_by_slug"
                )
             opts[:extras] = {
-              title: I18n.t("page_not_found.page_title"),
+              title: error_page_title(status_code),
               html: build_not_found_page(error_page_opts),
               group: error_page_opts[:group],
             }
@@ -650,6 +650,44 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_search!
+    if current_user.present?
+      RateLimiter.new(
+        current_user,
+        "search-min",
+        SiteSetting.rate_limit_search_user,
+        1.minute,
+      ).performed!
+
+      return
+    end
+
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-sec",
+      SiteSetting.rate_limit_search_anon_user_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-min",
+      SiteSetting.rate_limit_search_anon_user_per_minute,
+      1.minute,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-sec",
+      SiteSetting.rate_limit_search_anon_global_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-min",
+      SiteSetting.rate_limit_search_anon_global_per_minute,
+      1.minute,
+    ).performed!
+  end
 
   def rate_limit_second_factor_by_ip!
     return if params[:second_factor_token].blank?
@@ -966,6 +1004,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def error_page_title(status)
+    I18n.t(status == 403 ? "page_forbidden.page_title" : "page_not_found.page_title")
+  end
+
   def build_not_found_page(opts = {})
     if SiteSetting.bootstrap_error_pages?
       initialize_application_layout_preloader
@@ -999,7 +1041,7 @@ class ApplicationController < ActionController::Base
     end
 
     @container_class = "wrap not-found-container"
-    @page_title = I18n.t("page_not_found.page_title")
+    @page_title = error_page_title(opts[:status])
     @title =
       if opts[:custom_message]
         I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
@@ -1119,7 +1161,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def run_second_factor!(action_class, action_data: nil, target_user: current_user)
+  def run_second_factor!(
+    action_class,
+    action_data: nil,
+    target_user: current_user,
+    nonce: params[:second_factor_nonce].presence
+  )
     if current_user && target_user != current_user
       # Anon can run 2fa against another target, but logged-in users should not.
       # This should be validated at the `run_second_factor!` call site.
@@ -1129,7 +1176,7 @@ class ApplicationController < ActionController::Base
     action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
     manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
-    result = manager.run!(request, params, server_session)
+    result = manager.run!(request, params, server_session, nonce:)
 
     if !result.no_second_factors_enabled? && !result.second_factor_auth_completed? &&
          !result.second_factor_auth_skipped?

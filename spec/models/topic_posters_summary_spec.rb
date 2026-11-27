@@ -2,7 +2,7 @@
 
 RSpec.describe TopicPostersSummary do
   describe "#summary" do
-    let!(:topic_creator) { Fabricate(:user) }
+    fab!(:topic_creator, :user)
 
     context "when there are no other posters" do
       let!(:topic) { Fabricate(:topic, user: topic_creator) }

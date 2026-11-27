@@ -206,6 +206,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
             :source => "context",
             "subagent_depth" => 1,
             "subagent_agent_id" => 7,
+            "workflow_id" => "17",
           },
         )
 
@@ -228,6 +229,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           "source" => "caller",
           "subagent_depth" => 1,
           "subagent_agent_id" => 7,
+          "workflow_id" => "17",
         )
       end
     end

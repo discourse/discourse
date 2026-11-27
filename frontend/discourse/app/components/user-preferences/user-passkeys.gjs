@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import AccessNotice from "discourse/components/access-notice";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
@@ -22,66 +23,106 @@ export default class UserPasskeys extends Component {
   @service currentUser;
   @service capabilities;
   @service router;
+  @service siteSettings;
 
   get showActions() {
+    return this.args.model.isCurrent && !this.capabilities.isAppWebview;
+  }
+
+  get canConfirmLocally() {
     return (
-      this.currentUser.id === this.args.model.id &&
-      !this.capabilities.isAppWebview
+      this.siteSettings.enable_local_logins &&
+      (!this.args.model.no_password ||
+        this.args.model.user_passkeys?.length > 0)
     );
   }
 
+  handlePasskeyRequestError(error) {
+    const xhr = error?.jqXHR ?? error?.source ?? error;
+    if (
+      xhr?.responseJSON?.error_type === "second_factor_external_login_required"
+    ) {
+      this.dialog.confirm({
+        title: i18n("user.confirm_access.title"),
+        message: i18n("user.passkeys.external_login_required"),
+        confirmButtonLabel: "user.log_out",
+        didConfirm: () => this.args.logout?.(),
+      });
+    } else {
+      popupAjaxError(error);
+    }
+  }
+
   async createPasskey() {
+    let response;
     try {
-      const response = await this.args.model.createPasskey();
+      response = await this.args.model.createPasskey();
+    } catch (error) {
+      this.handlePasskeyRequestError(error);
+      return;
+    }
 
-      const publicKeyCredentialCreationOptions = {
-        challenge: Uint8Array.from(response.challenge, (c) => c.charCodeAt(0)),
-        rp: {
-          name: response.rp_name,
-          id: response.rp_id,
-        },
-        user: {
-          id: Uint8Array.from(response.user_secure_id, (c) => c.charCodeAt(0)),
-          name: this.currentUser.username,
-          displayName: this.currentUser.username,
-        },
-        pubKeyCredParams: response.supported_algorithms.map((alg) => {
-          return { type: "public-key", alg };
-        }),
-        excludeCredentials: response.existing_passkey_credential_ids.map(
-          (credentialId) => {
-            return {
-              type: "public-key",
-              id: stringToBuffer(atob(credentialId)),
-            };
-          }
-        ),
-        authenticatorSelection: {
-          // https://www.w3.org/TR/webauthn-2/#user-verification
-          // for passkeys (first factor), user verification should be marked as required
-          // it ensures browser prompts user for PIN/fingerprint/faceID before authenticating
-          userVerification: "required",
-          // See https://w3c.github.io/webauthn/#sctn-createCredential for context
-          // This ensures that the authenticator stores a client-side private key
-          // physical security keys (like Yubikey) need this
-          requireResidentKey: true,
-        },
-      };
+    const publicKeyCredentialCreationOptions = {
+      challenge: Uint8Array.from(response.challenge, (c) => c.charCodeAt(0)),
+      rp: {
+        name: response.rp_name,
+        id: response.rp_id,
+      },
+      user: {
+        id: Uint8Array.from(response.user_secure_id, (c) => c.charCodeAt(0)),
+        name: this.currentUser.username,
+        displayName: this.currentUser.username,
+      },
+      pubKeyCredParams: response.supported_algorithms.map((alg) => {
+        return { type: "public-key", alg };
+      }),
+      excludeCredentials: response.existing_passkey_credential_ids.map(
+        (credentialId) => {
+          return {
+            type: "public-key",
+            id: stringToBuffer(atob(credentialId)),
+          };
+        }
+      ),
+      authenticatorSelection: {
+        // https://www.w3.org/TR/webauthn-2/#user-verification
+        // for passkeys (first factor), user verification should be marked as required
+        // it ensures browser prompts user for PIN/fingerprint/faceID before authenticating
+        userVerification: "required",
+        // See https://w3c.github.io/webauthn/#sctn-createCredential for context
+        // This ensures that the authenticator stores a client-side private key
+        // physical security keys (like Yubikey) need this
+        requireResidentKey: true,
+      },
+    };
 
-      const credential = await navigator.credentials.create({
+    let credential;
+    try {
+      credential = await navigator.credentials.create({
         publicKey: publicKeyCredentialCreationOptions,
         signal: WebauthnAbortHandler.signal(),
       });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      this.errorMessage =
+        error.name === "InvalidStateError"
+          ? i18n("user.passkeys.already_added_error")
+          : i18n("user.passkeys.not_allowed_error");
+      this.dialog.alert(this.errorMessage);
+      return;
+    }
 
-      let credentialParam = {
-        id: credential.id,
-        rawId: bufferToBase64(credential.rawId),
-        type: credential.type,
-        attestation: bufferToBase64(credential.response.attestationObject),
-        clientData: bufferToBase64(credential.response.clientDataJSON),
-        name: i18n("user.passkeys.name.default"),
-      };
+    const credentialParam = {
+      id: credential.id,
+      rawId: bufferToBase64(credential.rawId),
+      type: credential.type,
+      attestation: bufferToBase64(credential.response.attestationObject),
+      clientData: bufferToBase64(credential.response.clientDataJSON),
+      name: i18n("user.passkeys.name.default"),
+    };
 
+    try {
       const registrationResponse =
         await this.args.model.registerPasskey(credentialParam);
 
@@ -100,13 +141,7 @@ export default class UserPasskeys extends Component {
         bodyComponentModel: registrationResponse,
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      this.errorMessage =
-        error.name === "InvalidStateError"
-          ? i18n("user.passkeys.already_added_error")
-          : i18n("user.passkeys.not_allowed_error");
-      this.dialog.alert(this.errorMessage);
+      this.handlePasskeyRequestError(error);
     }
   }
 
@@ -115,13 +150,16 @@ export default class UserPasskeys extends Component {
       this.dialog.deleteConfirm({
         title: i18n("user.passkeys.confirm_delete_passkey"),
         didConfirm: () => {
-          this.args.model.deletePasskey(id).then((response) => {
-            if (response.success) {
-              this.router.refresh();
-            } else {
-              this.dialog.alert(response.message);
-            }
-          });
+          this.args.model
+            .deletePasskey(id)
+            .then((response) => {
+              if (response.success) {
+                this.router.refresh();
+              } else {
+                this.dialog.alert(response.message);
+              }
+            })
+            .catch((error) => this.handlePasskeyRequestError(error));
         },
       });
     });
@@ -129,6 +167,11 @@ export default class UserPasskeys extends Component {
 
   @action
   async addPasskey() {
+    if (!this.canConfirmLocally) {
+      await this.createPasskey();
+      return;
+    }
+
     try {
       const trustedSession = await this.args.model.trustedSession();
 
@@ -149,6 +192,11 @@ export default class UserPasskeys extends Component {
 
   @action
   async deletePasskey(id) {
+    if (!this.canConfirmLocally) {
+      this.confirmDelete(id);
+      return;
+    }
+
     try {
       const trustedSession = await this.args.model.trustedSession();
 
@@ -234,16 +282,19 @@ export default class UserPasskeys extends Component {
         {{/each}}
       </div>
 
-      {{#if this.showActions}}
-        <div class="controls pref-passkeys__add">
-          <DButton
-            class="btn-default"
-            @action={{this.addPasskey}}
-            @icon="plus"
-            @label="user.passkeys.add_passkey"
-          />
-        </div>
-      {{/if}}
+      {{#unless this.capabilities.isAppWebview}}
+        <AccessNotice @kind="self" @user={{@model}} as |disabled|>
+          <div class="controls pref-passkeys__add">
+            <DButton
+              class="btn-default"
+              @action={{this.addPasskey}}
+              @disabled={{disabled}}
+              @icon="plus"
+              @label="user.passkeys.add_passkey"
+            />
+          </div>
+        </AccessNotice>
+      {{/unless}}
     </div>
   </template>
 }

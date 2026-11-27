@@ -3065,18 +3065,6 @@ pt_BR:
       title: "Postagem oculta"
       preview: "Postagem ocultada devido a denúncias de membros da comunidade."
       subject_template: "Post oculto pelos sinalizadores da comunidade"
-      text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta postagem foi oculta devido às sinalizações da comunidade. Portanto, considere como você pode alterar sua postagem para atender aos seus comentários. **Você pode editar sua postagem após %{edit_delay} minutos e ela será automaticamente exibida.**
-
-        No entanto, se a postagem for oculta pela comunidade outra vez, permanecerá assim até ser tratada pela equipe.
-
-        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Comentários sobre sua postagem"
       subject_template: "Comentários sobre sua postagem em %{topic_title}"
@@ -3087,29 +3075,9 @@ pt_BR:
       title: "Postagem oculta novamente"
       preview: "Postagem ocultada novamente pelos membros da comunidade."
       subject_template: "Postagem oculta por sinalizadores da comunidade, a equipe foi notificada"
-      text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta outra vez.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A comunidade sinalizou esta postagem e agora está oculta. **Como a postagem foi oculta mais de uma vez, ela permanecerá assim até ser tratada por um membro da equipe.**
-
-        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     queued_by_staff:
       title: "A postagem requer aprovação"
       subject_template: "Postagem oculta pela equipe, aguardando aprovaçao"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para avisar que sua postagem foi oculta.
-
-        <%{base_url}%{url}>
-
-        Sua postagem permanecerá oculta até a revisão de um membro da equipe.
-
-        Para mais informações, consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Postagem sinalizada restaurada pela equipe"
       subject_template: "Postagem sinalizada restaurada pela equipe"
@@ -3614,16 +3582,6 @@ pt_BR:
     user_automatically_silenced_with_reason:
       title: "Usuário(a) silenciado(a) automaticamente"
       subject_template: "O(a) novo(a) usuário(a) %{username} silenciado(a) devido a denúncias da comunidade"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O(a) novo(a) usuário(a) [%{username}](%{user_url}) foi silenciado(a) automaticamente.
-
-        Razão: %{reason}.
-
-        [Revise as denúncias](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) para não postar, clique no botão de ativar som do(a) usuário(a) na [página de administração do(a) usuário(a)](%{user_url}).
-
-        Este limite pode ser alterado nas configurações do site "silence_new_user".
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Postagens de novo(a) usuário(a )%{username} bloqueadas devido a links repetidos"
@@ -3953,12 +3911,6 @@ pt_BR:
     account_suspended_forever:
       title: "Conta suspensa"
       subject_template: "%{email_prefix}, sua conta foi suspensa"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "%{email_prefix}, sua conta foi silenciada"
     account_deleted:
       title: "Conta excluída"
       subject_template: "%{email_prefix}, sua conta foi excluída"
@@ -4146,10 +4098,6 @@ pt_BR:
     signup_after_reject:
       title: "Criar conta após rejeição"
       subject_template: "Você foi rejeitado(a) em %{site_name}"
-      text_body_template: |
-        Um membro da equipe rejeitou a sua conta em %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Criar conta"
       preview: "Confirme sua conta"
@@ -4757,7 +4705,6 @@ pt_BR:
       dracula: "Drácula"
       grey_amber: "Âmbar cinzento"
       latte: "Latte"
-      dark_rose: "Rosa-escuro"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -4972,6 +4919,7 @@ pt_BR:
       delete_and_ignore_replies:
         title: "Excluir a postagem e as respostas, ignorar denúncia"
         description: "Excluir a postagem e todas as suas respostas e ignorar a denúncia removendo-a da fila; se for a primeira postagem, excluir também o tópico."
+        confirm_title: "Excluir a postagem e as respostas, ignorar denúncia?"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       delete_and_agree:
@@ -4981,6 +4929,7 @@ pt_BR:
       delete_and_agree_replies:
         title: "Excluir a postagem e respostas"
         description: "Aceite o sinalizador e exclua esta postagem e todas as suas respostas. Se for a primeira postagem, exclua o tópico também."
+        confirm_title: "Excluir a postagem e respostas?"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       disagree_and_restore:
@@ -5015,6 +4964,8 @@ pt_BR:
       approve_post:
         title: "Sim"
         complete: "Postagem aprovada."
+      deny_and_delete_post:
+        complete: "Postagem excluída."
       approve_post_closed:
         title: "Sim"
         confirm: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"

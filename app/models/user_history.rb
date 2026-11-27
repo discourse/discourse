@@ -17,6 +17,9 @@ class UserHistory < ActiveRecord::Base
   # Subjects logged alongside the :admin_onboarding_step_completed action, one
   # per step of the admin onboarding panel.
   ADMIN_ONBOARDING_STEPS = %w[select_theme create_category invite_collaborators].freeze
+  # Steps the panel no longer offers but older sites have already logged, kept
+  # so the onboarding stats still report them.
+  RETIRED_ADMIN_ONBOARDING_STEPS = %w[start_posting].freeze
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
@@ -193,6 +196,8 @@ class UserHistory < ActiveRecord::Base
         create_bot: 136,
         web_hook_ping: 137,
         web_hook_redeliver: 138,
+        change_bot_interactivity: 139,
+        approve_account_review: 140,
       )
   end
 
@@ -201,6 +206,7 @@ class UserHistory < ActiveRecord::Base
     @staff_actions ||= %i[
       delete_user
       create_bot
+      change_bot_interactivity
       change_trust_level
       change_site_setting
       change_theme
@@ -259,6 +265,7 @@ class UserHistory < ActiveRecord::Base
       change_name
       topic_timestamps_changed
       approve_user
+      approve_account_review
       web_hook_create
       web_hook_update
       web_hook_destroy
@@ -346,6 +353,7 @@ class UserHistory < ActiveRecord::Base
     @moderator_visible_actions ||= [
       # user account
       :approve_user,
+      :approve_account_review,
       :activate_user,
       :deactivate_user,
       :delete_user,

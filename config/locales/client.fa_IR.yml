@@ -786,7 +786,6 @@ fa_IR:
         is_this_post: "آیا این %{reviewable_type}، %{reviewable_human_score_types} است؟"
         delimiter: "یا"
         something_else_wrong: "آیا مشکلی در %{reviewable_type} وجود دارد؟"
-        something_wrong_with_post: "آیا مشکلی در این نوشته وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -3341,7 +3340,7 @@ fa_IR:
         back_description: "بازگشت به اولین نوشته‌ی خوانده نشده"
         replies_short: "%{current} از %{total}"
       progress:
-        title: پیشرفت موضوع
+        title: "پیشرفت موضوع"
         jump_prompt: "برو به…"
         jump_prompt_of:
           one: "از %{count} نوشته"
@@ -3589,10 +3588,8 @@ fa_IR:
           label: "انتخاب شده"
           title: "برای حذف پست از حالت انتخاب کلیک کنید"
         select_replies:
-          label: "انتخاب کردن + جواب دادن"
           title: "پست و تمام پاسخ های آن را به انتخاب اضافه کنید"
         select_below:
-          label: "انتخاب نوشته  + موارد زیر آن"
           title: "پست و همه پس از آن را به انتخاب اضافه کنید"
         delete: حذف انتخاب شده ها
         cancel: لغو انتخاب
@@ -3931,22 +3928,15 @@ fa_IR:
       validations:
         icon_required: "یک آیکون را انتخاب کنید."
       name: "نام دسته‌بندی"
-      untitled: "دسته‌بندی بدون‌عنوان"
+      icon_search_placeholder: "جستجو…"
       description: "توضیحات"
-      icon: "آیکن"
-      emoji: "شکلک"
       background_color: "رنگ"
       color_validations:
         cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"
-        options:
-          icon: "آیکن"
-          emoji: "شکلک"
       color_used: "رنگ در حال استفاده"
-      predefined_colors: "گزینه‌های رنگ از پیش تعریف شده"
-      color_placeholder: "هر رنگ وب"
       delete_confirm: "آیا مطمئنید که می‌خواهید این دسته‌بندی را پاک کنید؟"
       delete_error: "هنگام حذف دسته بندی خطایی رخ داد."
       list: "فهرست دسته‌بندی‌ها"
@@ -4554,6 +4544,7 @@ fa_IR:
       share: "اشتراک‌گذاری"
       dismiss: "نخواستیم"
     mobile_tab_bar:
+      new_topic: "موضوع جدید"
       create: "ایجاد"
       more: "بیشتر"
       back: "بازگشت"
@@ -6757,7 +6748,6 @@ fa_IR:
         silence_duration: "کاربر تا چه مدت در حالت سکوت خواهد بود؟"
         silence_reason_title: "دلیل سکوت"
         silence_reason_placeholder: "دلیل سکوت"
-        silence_message: "پیام ایمیل"
         suspended_until: "(تا %{until})"
         suspend_forever: "تعلیق برای همیشه"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."
@@ -7008,6 +6998,8 @@ fa_IR:
       site_text:
         description: "شما می توانید هر یک از متن های موجود در انجمن خود را سفارشی کنید."
         search_label: "جستجو"
+        preview:
+          default: "پیش‌فرض"
         all_themes: "تمام متن‌های وبگاه"
         theme_disabled: "ازکاراندازی"
         filters: "فیلترها"
@@ -7140,7 +7132,7 @@ fa_IR:
           modal_title: گروه بندی نشان
         granted_by: اعطا شده توسط
         granted_at: اعطا شده در
-        reason_help: (یک لینک به یک نوشته یا موضوع)
+        reason_help: یک لینک به یک نوشته یا موضوع
         save: ذخیره
         delete: حذف
         delete_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟

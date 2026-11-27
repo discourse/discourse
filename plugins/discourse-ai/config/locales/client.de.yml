@@ -64,6 +64,7 @@ de:
         requires_ai: "Erfordert die Aktivierung des KI-Plug-ins."
       nodes:
         "action:ai_agent": "KI-Agent"
+        "action:ai_tool": "KI-Tool"
       node_descriptions:
         "action:ai_agent": "Lass einen KI-Agenten laufen, um Daten zu verarbeiten oder Inhalte zu generieren"
     discourse_automation:
@@ -242,6 +243,15 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      review_bulk:
+        refresh: "Aktualisieren"
+        columns:
+          user: "Nutzer"
+          reason: "Gemeldet als"
+          created: "Erstellt"
+          status: "Status"
+        status:
+          applying: "Wird angewendet…"
       dsa_classification:
         suggest: "Mit KI vorschlagen"
       copied: "Kopiert"
@@ -253,11 +263,9 @@ de:
         error: "Fehler"
         response: "Antwort"
       post_image_captions:
-        edit: "KI-Bildbeschriftung bearbeiten"
-        title: "KI-Bildbeschriftung bearbeiten"
-        description: "Beschriftung"
-        save: "Bildbeschriftung speichern"
         saved: "KI-Bildbeschriftung gespeichert"
+        image_descriptions:
+          apply: "Anwenden"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -272,6 +280,16 @@ de:
           upload_ids: "Upload-IDs"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wähle einen Agenten aus …"
+        ai_tool:
+          tool_ref: "Tool"
+          llm_model_id: "LLM-Modell"
+          arguments: "Argumente"
+          list_item: "Listenelement"
+          add_list_item: "Element hinzufügen "
+        mcp_tool:
+          mcp_server_id: "MCP-Server"
+          tool_name: "Tool"
+          arguments: "Argumente"
         classify:
           text: "Text"
           upload_ids: "Bilder"
@@ -416,6 +434,9 @@ de:
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
             agents: "Agenten"
+        review_queue:
+          setting_groups:
+            settings: "Einstellungen"
         image_caption:
           name: "Bildbeschriftung"
           description: "Generiert KI-Bildbeschriftungen für Beitragsbilder und stellt diese Lesern und assistiven Technologien zur Verfügung."
@@ -962,6 +983,32 @@ de:
         mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      concepts:
+        edit: "Bearbeiten"
+        seed:
+          refresh: "Aktualisieren"
+        delete: "Löschen"
+        columns:
+          status: "Status"
+          topics: "Themen"
+          posts: "Beiträge"
+        statuses:
+          all: "Alle Status"
+          active: "Aktiv"
+        form:
+          name: "Name"
+          description: "Beschreibung"
+          aliases: "Aliase"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} Thema"
+          other: "%{count} Themen"
+        tagged_topics: "Themen mit Schlagwörtern"
+        topic_columns:
+          topic: "Thema"
+          primary: "Primär"
+          relevance: "Relevanz"
+        primary_badge: "Primär"
       decision_models:
         no_preset: "Keine Erfassung"
         display_name: "Name"
@@ -1369,8 +1416,7 @@ de:
         filter_standalone: "Einzeln"
       ai_bot:
         title: "KI-Bot"
-        agent: "Agent:"
-        llm: "Modell:"
+        agent_menu_heading: "Agent"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"
@@ -1436,7 +1482,6 @@ de:
           tab_label: "KI"
           header: "Wie kann ich helfen?"
           submit: "Frage abschicken"
-          disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
           placeholder: "Stell eine Frage …"
           new: "Neue Frage"
           min_input_length_message:

@@ -1,4 +1,5 @@
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
+import AccessNotice from "discourse/components/access-notice";
 import IgnoredUserList from "discourse/components/ignored-user-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
@@ -16,6 +17,11 @@ export default <template>
       class="control-group user-ignore"
       data-setting-name="user-ignored-users"
     >
+      <AccessNotice
+        @kind="staff"
+        @setting="ignored_users"
+        @user={{@controller.model}}
+      />
       <div class="controls tracking-controls user-notifications">
         <label>{{dIcon "far-eye-slash" class="icon"}}
           {{i18n "user.ignored_users"}}</label>
@@ -29,6 +35,11 @@ export default <template>
 
   {{#if @controller.model.can_mute_users}}
     <div class="control-group user-mute" data-setting-name="user-muted-users">
+      <AccessNotice
+        @kind="staff"
+        @setting="muted_users"
+        @user={{@controller.model}}
+      />
       <div class="controls tracking-controls">
         <label>
           {{dIcon "d-muted" class="icon"}}
@@ -36,7 +47,7 @@ export default <template>
         </label>
         <UserChooser
           @onChange={{@controller.onChangeMutedUsernames}}
-          @options={{hash excludeCurrentUser=true}}
+          @options={{hash excludedUsernames=(array @controller.model.username)}}
           @value={{@controller.mutedUsernames}}
         />
       </div>
@@ -46,6 +57,11 @@ export default <template>
 
   {{#if @controller.model.can_send_private_messages}}
     <div class="control-group private-messages">
+      <AccessNotice
+        @kind="staff"
+        @setting="private_messages"
+        @user={{@controller.model}}
+      />
       <label class="control-label">{{i18n "user.private_messages"}}</label>
       <div
         class="control-group user-allow-pm"
@@ -74,7 +90,9 @@ export default <template>
           <div class="controls tracking-controls">
             <UserChooser
               @onChange={{@controller.onChangeAllowedPmUsernames}}
-              @options={{hash excludeCurrentUser=true}}
+              @options={{hash
+                excludedUsernames=(array @controller.model.username)
+              }}
               @value={{@controller.allowedPmUsernames}}
             />
           </div>

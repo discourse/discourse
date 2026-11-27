@@ -16,6 +16,14 @@ zh_TW:
         desktop: 桌面設備
         mobile: 移動設備
         save: 儲存
+        about_tab: 關於
+        blog_slug: 縮寫
+        settings_tab: 設置
+        theme_tab: 主題
+        column_name: 名稱
+        column_category: 分類
+        column_status: 狀態
+        needs_attention: 需要關注
         path_formats:
           custom: 客製
         back_to_themes: 返回佈景主題

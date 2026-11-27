@@ -2025,10 +2025,6 @@ te:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
       title: "ఖాతా నిలిపివేయబడింది"
-    account_silenced:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
-    account_silenced_forever:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
       subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"
@@ -2447,7 +2443,6 @@ te:
       dracula: "డ్రాక్యులా"
       grey_amber: "గ్రే అంబర్"
       latte: "లాట్టే"
-      dark_rose: "ముదురు గులాబీ"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:

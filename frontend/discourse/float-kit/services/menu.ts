@@ -148,9 +148,9 @@ export default class Menu extends Service {
 
     menu.expanded = false;
 
-    if (this.registeredMenus.has(menu)) {
-      this.registeredMenus.delete(menu);
-    }
+    // No `has()` guard: probing a tracked set for an absent key makes it hold a strong
+    // reference to that key, which would retain every instance closed while unregistered.
+    this.registeredMenus.delete(menu);
 
     await new Promise((resolve) =>
       // cast away resolve's value parameter: `schedule`'s typed rest args would

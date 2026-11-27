@@ -67,18 +67,20 @@ export function restoreColorSchemeLinks(original) {
 }
 
 /**
- * Which color mode the page is currently rendering.
+ * Which color mode the page is rendering, or would render with the given
+ * link state.
  *
+ * @param {ColorSchemeLinkState} [links] - defaults to the page's current links
  * @returns {"light" | "dark"}
  */
-export function renderedColorMode() {
+export function renderedColorMode(links = captureColorSchemeLinks()) {
   const isActive = (link) =>
     link &&
     link.media !== "none" &&
     window.matchMedia(link.media || "all").matches;
 
-  const lightIsActive = isActive(schemeLink("light"));
-  const darkIsActive = isActive(schemeLink("dark"));
+  const lightIsActive = isActive(links.light);
+  const darkIsActive = isActive(links.dark);
 
   return darkIsActive && !lightIsActive ? "dark" : "light";
 }

@@ -673,6 +673,8 @@ en:
         username: "User"
         badge_id: "Badge"
         badge_id_placeholder: "Select a badge"
+        reason: "Reason"
+        reason_tooltip: "Use post:123 for a post ID or topic:123 for a topic ID. In expression mode, put the prefix before the expression."
         actor_username: "Performed by user"
       send_personal_message:
         recipient_usernames: "Recipients"
@@ -1578,6 +1580,9 @@ en:
         failures: "Failures"
         failure_rate: "Failure rate"
         avg_run_time: "Avg. run time"
+        ai_requests: "AI requests"
+        ai_tokens: "AI tokens"
+        ai_estimated_cost: "Estimated AI cost (USD)"
         period: "Last 7 days"
       variables:
         title: "Variables"

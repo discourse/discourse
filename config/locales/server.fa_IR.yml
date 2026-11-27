@@ -2552,10 +2552,6 @@ fa_IR:
     signup_after_reject:
       title: "بعد از رد شدن ثبت‌نام کنید"
       subject_template: "شما در %{site_name} رد شدید"
-      text_body_template: |
-        یکی از کارمندان حساب کاربری شما را در %{site_name} رد کرد.
-
-        %{reject_reason}
     signup:
       title: "ثبت‌نام"
       subject_template: "[%{email_prefix}] حساب کاربری خود را تایید کنید."
@@ -2941,6 +2937,8 @@ fa_IR:
       approve_post:
         title: "بله"
         complete: "نوشته تایید شده."
+      deny_and_delete_post:
+        complete: "نوشته حذف شده."
       approve_post_closed:
         title: "بله"
         complete: "نوشته تایید شده."

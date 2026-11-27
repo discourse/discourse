@@ -17,6 +17,13 @@ ru:
         desktop: Настольная
         mobile: Мобильная
         save: Сохранить
+        about_tab: Информация
+        blog_slug: Slug (текстовый идентификатор)
+        settings_tab: Настроек
+        theme_tab: тема
+        column_name: Название
+        column_category: Категория
+        column_status: Статус
         path_formats:
           custom: Другое
         back_to_themes: Назад к темам

@@ -18,17 +18,15 @@ module ::Blog
 
     # Each role includes the ones below it: publisher, editor, contributor.
     def is_blog_publisher?
-      blog_role_user? && (is_admin? || in_blog_role_groups?(SiteSetting.blog_publisher_groups_map))
+      blog_role_user? && (is_admin? || in_blog_role_groups?(Roles.publisher_group_ids))
     end
 
     def is_blog_editor?
-      is_blog_publisher? ||
-        (blog_role_user? && in_blog_role_groups?(SiteSetting.blog_editor_groups_map))
+      is_blog_publisher? || (blog_role_user? && in_blog_role_groups?(Roles.editor_group_ids))
     end
 
     def is_blog_contributor?
-      is_blog_editor? ||
-        (blog_role_user? && in_blog_role_groups?(SiteSetting.blog_contributor_groups_map))
+      is_blog_editor? || (blog_role_user? && in_blog_role_groups?(Roles.contributor_group_ids))
     end
 
     # Editorial work on an article's working copy or its Blog-category topic.
@@ -88,7 +86,7 @@ module ::Blog
     end
 
     def blog_article_topic?(topic)
-      categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
+      categories = [*Instance.category_ids, SiteSetting.blog_drafts_category.to_i]
       return false if topic.private_message?
       return false if topic.shared_draft?
       return false if !categories.include?(topic.category_id)

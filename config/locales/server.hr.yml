@@ -1849,20 +1849,6 @@ hr:
     post_hidden:
       title: "Skrivena objava"
       subject_template: "Objava skrivena zbog prijava članova zajednice"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ova je objava skrivena zbog prijava članova zajednice, stoga razmislite o tome kako možete prilagoditi svoju objavu na temelju njihovih povratnih informacija. **Možete urediti svoju objavu nakon %{edit_delay} minuta i automatski će se ponoviti prikazivanje.**
-
-        Međutim, ako zajednica drugi put prijavi objavu, ona će ostati skrivena dok je ne obradi osoblje.
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     reviewable_queued_post_revise_and_reject:
       title: "Povratne informacije o vašoj objavi"
       subject_template: "Povratne informacije o vašoj objavi u %{topic_title}"
@@ -1872,31 +1858,9 @@ hr:
     post_hidden_again:
       title: "Objava je opet skrivena"
       subject_template: "Objava skrivena zbog prijava članova zajednice, osoblje obaviješteno"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka %{site_name}a kojom vas obavještavamo da je vaša objava ponovno skrivena.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Članovi zajednica su prijavili ovu objavu i sada je skrivena. **Budući da je ova objava skrivena više puta, vaša će objava ostati skrivena dok je ne obradi član osoblja.**
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     queued_by_staff:
       title: "Objava zahtijeva odobrenje"
       subject_template: "Osoblje sakrilo objavu, čeka odobrenje"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
-
-        <%{base_url}%{url}>
-
-        Vaša će objava ostati skrivena dok je ne pregleda član osoblja.
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     flags_disagreed:
       title: "Osoblje vratilo prijavljenu objavu"
       subject_template: "Osoblje vratilo prijavljenu objavu"
@@ -2262,12 +2226,6 @@ hr:
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-    account_silenced:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-    account_silenced_forever:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"
@@ -2430,10 +2388,6 @@ hr:
         Uživajte u boravku!
     signup_after_reject:
       subject_template: "Odbijeni ste na %{site_name}"
-      text_body_template: |
-        Član osoblja odbio je vaš korisnički račun na %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registracija"
       subject_template: "[%{email_prefix}] Potvrdite svoj novi korisnički račun"
@@ -2887,6 +2841,8 @@ hr:
       approve_post:
         title: "Da"
         complete: "Objava odobrena."
+      deny_and_delete_post:
+        complete: "Post izbrisan."
       approve_post_closed:
         title: "Da"
         complete: "Objava odobrena."

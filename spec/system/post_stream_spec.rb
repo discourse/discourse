@@ -117,6 +117,57 @@ describe "Post stream" do
       expect(post_stream).to have_css("> [data-post-number='1'].post-stream--cloaked")
     end
 
+    it "only updates the style of the posts that are cloaked or uncloaked while scrolling" do
+      # a short viewport ensures many posts are cloaked at once
+      resize_window(height: 400) do
+        visit "/t/#{topic.slug}/#{topic.id}/1"
+
+        post_stream = find(".post-stream")
+        send_keys(:end)
+        expect(post_stream).to have_css("> [data-post-number='1'].post-stream--cloaked")
+
+        nearest_cloaked_post_number = page.evaluate_script(<<~JS)
+          (() => {
+            const postStream = document.querySelector(".post-stream");
+            window.cloakingStyleChanges = { flipped: [], rewritten: [] };
+
+            new MutationObserver((records) => {
+              for (const { target, oldValue } of records) {
+                if (target.parentElement !== postStream) {
+                  continue;
+                }
+
+                const rewritten = oldValue && target.getAttribute("style");
+                window.cloakingStyleChanges[rewritten ? "rewritten" : "flipped"].push(
+                  Number(target.dataset.postNumber)
+                );
+              }
+            }).observe(postStream, {
+              subtree: true,
+              attributeFilter: ["style"],
+              attributeOldValue: true,
+            });
+
+            const nearestCloakedPost = [
+              ...postStream.querySelectorAll(":scope > .post-stream--cloaked"),
+            ].at(-1);
+            nearestCloakedPost.scrollIntoView();
+
+            return Number(nearestCloakedPost.dataset.postNumber);
+          })()
+        JS
+
+        expect(post_stream).to have_no_css(
+          "> [data-post-number='#{nearest_cloaked_post_number}'].post-stream--cloaked",
+        )
+        expect(post_stream).to have_css("> [data-post-number='1'].post-stream--cloaked")
+
+        style_changes = page.evaluate_script("window.cloakingStyleChanges")
+        expect(style_changes["flipped"]).to include(nearest_cloaked_post_number)
+        expect(style_changes["rewritten"]).to be_empty
+      end
+    end
+
     it "keeps the state of quoted posts after uncloaking them" do
       first_post = posts[0]
       second_post = posts[1]

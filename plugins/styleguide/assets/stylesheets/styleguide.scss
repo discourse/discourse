@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "colors";
 @import "typography";
 
@@ -1232,5 +1233,50 @@
   &__decision {
     color: var(--primary-high);
     font-size: var(--font-down-1);
+  }
+}
+
+.styleguide-horizontal-form {
+  .form-kit__section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__settings {
+    margin-top: var(--space-8);
+
+    @include viewport.until(sm) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+  }
+}
+
+.styleguide-design-variables {
+  margin-top: var(--space-4);
+
+  &__row.--not-editable {
+    color: var(--primary-medium);
+  }
+
+  &__scope {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    word-break: break-word;
+  }
+
+  code {
+    word-break: break-all;
+  }
+
+  &__palette {
+    margin-top: var(--space-6);
+
+    ul {
+      columns: 3 12rem;
+    }
   }
 }

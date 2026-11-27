@@ -64,11 +64,6 @@ export default class Header extends Service {
       return false;
     }
 
-    // With the tab bar, a titled page keeps its title in the header
-    if (this.mobileTabBar.isTitledPage) {
-      return true;
-    }
-
     // The latch is only honored while actively scrolling down — this
     // prevents the IntersectionObserver feedback loop (header height
     // change shifting content), but automatically releases when scroll
@@ -83,7 +78,8 @@ export default class Header extends Service {
 
     if (
       this.site.mobileView &&
-      this.scrollDirection.lastScrollDirection === SCROLLED_UP
+      this.scrollDirection.lastScrollDirection === SCROLLED_UP &&
+      !this.mobileTabBar.enabled
     ) {
       return false;
     }

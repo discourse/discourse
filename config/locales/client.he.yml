@@ -583,9 +583,6 @@ he:
       fonts:
         base_font: "Body"
         heading_font: "כותרות"
-      logo:
-        description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
-        help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
       homepage:
         topics: "נושאים"
         categories: "קטגוריות"
@@ -1071,7 +1068,6 @@ he:
         suspect_user: "האם זה משתמש ספאם?"
         approve_post: "לאשר את הפוסט הזה?"
         approve_topic: "לאשר את הנושא הזה?"
-        something_wrong_with_post: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שסומן"
@@ -4121,7 +4117,7 @@ he:
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
         replies_short: "%{current} / %{total}"
       progress:
-        title: התקדמות נושא
+        title: "התקדמות נושא"
         jump_prompt: "מעבר אל…"
         jump_prompt_of:
           one: "מתוך פוסט %{count}"
@@ -4386,10 +4382,8 @@ he:
           label: "נבחרים"
           title: "הקליקו לביטול בחירת הפוסט"
         select_replies:
-          label: "בחירת +תגובות"
           title: "הוספת פוסט ואת כל התגובות שלו לבחירה"
         select_below:
-          label: "יש לבחור +להלן"
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
@@ -4795,6 +4789,8 @@ he:
         tag_group: "קבוצת תגיות"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחיקת קטגוריה"
+      empty_state:
+        edit_category: "עריכת קטגוריה"
       create: "קטגוריה חדשה"
       create_long: "יצירת קטגוריה חדשה"
       type_settings_schema:
@@ -4809,7 +4805,7 @@ he:
       validations:
         icon_required: "נא לבחור סמל."
       name: "שם קטגוריה"
-      untitled: "קטגוריה ללא שם"
+      icon_search_placeholder: "חיפוש…"
       description: "תיאור"
       logo: "תמונת לוגו לקטגוריה"
       logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
@@ -4817,8 +4813,6 @@ he:
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
       style: "סגנון"
-      icon: "סמל"
-      emoji: "אמוג׳י"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
       color_validations:
@@ -4826,17 +4820,10 @@ he:
         incorrect_length: "חייב להתאים לתבנית ‎#RRGGBB‎ או ‎#RGB‎"
         non_hexdecimal: "יכול להכיל תווים הקסדצימליים בלבד (0-9, A-F)"
       styles:
-        type: "סגנון"
         icon: "סמל"
         emoji: "אמוג׳י"
         square: "מרובע"
-        options:
-          square: "מרובע"
-          icon: "סמל"
-          emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
-      predefined_colors: "אפשרויות צבע מוגדרות מראש"
-      color_placeholder: "כל צבע אינטרנטי"
       delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
       delete_error: "ארעה שגיאה במחיקת הקטגוריה."
       list: "הצגת קטגוריות"
@@ -5570,7 +5557,6 @@ he:
         other: "טיוטות (%{count})"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
-    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
@@ -7743,8 +7729,6 @@ he:
           title: "צבעים"
           edit: "עריכה"
           view: "תצוגה"
-          set_default_light: "הגדרה כערכת צבעים בהירה בערכת העיצוב של ברירת המחדל (%{theme})"
-          set_default_dark: "הגדרה כערכת צבעים כהה בערכת העיצוב של ברירת המחדל (%{theme})"
           set_default_success: "%{schemeName} הוגדרה כערכת ברירת מחדל עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
@@ -8386,7 +8370,6 @@ he:
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
         silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
-        silence_message: "הודעה בדוא״ל"
         suspended_until: "(עד %{until})"
         suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
@@ -8686,6 +8669,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8853,7 +8838,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

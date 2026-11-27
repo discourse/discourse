@@ -2171,48 +2171,12 @@ ko:
     post_hidden:
       title: "숨겨진 게시물"
       subject_template: "커뮤니티 신고로 숨겨진 게시물"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        이 게시물은 커뮤니티 신고로 인해 숨겨졌으므로 커뮤니티 피드백을 반영하여 게시물을 되살릴 방법을 고려해 보시기 바랍니다. **%{edit_delay}분 후에 게시물을 편집할 수 있으며 자동으로 숨김 해제됩니다.**
-
-        하지만 게시물이 커뮤니티에 의해 한 번 더 숨겨질 경우 운영진이 처리할 때까지 숨겨진 상태로 유지됩니다.
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     post_hidden_again:
       title: "다시 숨겨진 게시물"
       subject_template: "커뮤니티 신고로 숨겨진 게시물, 운영진 알림 전송됨"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 다시 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        커뮤니티 신고로 인해 게시물이 숨겨졌습니다. **게시물이 두 번째 숨겨졌으므로 이제 이 게시물은 운영진이 처리할 때까지 숨겨진 상태로 유지됩니다.**
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     queued_by_staff:
       title: "승인이 필요한 게시물"
       subject_template: "운영진이 숨긴 게시물, 승인 대기 중"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        게시물은 운영진이 검토할 때까지 숨겨진 상태로 유지됩니다.
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     flags_disagreed:
       title: "운영진이 복원한 신고된 게시물"
       subject_template: "운영진이 복원한 신고된 게시물"
@@ -2944,12 +2908,6 @@ ko:
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-    account_silenced:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-    account_silenced_forever:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3108,10 +3066,6 @@ ko:
     signup_after_reject:
       title: "가입 거부"
       subject_template: "%{site_name}에서 가입이 거부되었습니다."
-      text_body_template: |
-        운영진이 %{site_name} 계정 가입을 거부했습니다.
-
-        %{reject_reason}
     signup:
       title: "가입"
       subject_template: "[%{email_prefix}] 새 계정 확인"
@@ -3553,7 +3507,6 @@ ko:
       summer: "여름"
       grey_amber: "회색 호박색"
       latte: "라떼"
-      dark_rose: "다크 로즈"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3691,6 +3644,8 @@ ko:
         title: "예"
       approve_post:
         title: "예"
+      deny_and_delete_post:
+        complete: "게시물 삭제됨."
       approve_post_closed:
         title: "예"
         confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"

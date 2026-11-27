@@ -17,10 +17,12 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Blog themes and identity", function (needs) {
+acceptance("Blog themes", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true });
-  needs.site({ blog_base_url: "https://blog.example.com" });
+  needs.settings({ blog_enabled: true, blog_custom_themes_enabled: true });
+  needs.site({
+    blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
+  });
 
   let active;
   let draft;
@@ -79,35 +81,22 @@ acceptance("Blog themes and identity", function (needs) {
     pretender.get("/admin/plugins/blog/themes/candidate.json", () =>
       response({ theme: draft, active })
     );
-    const settings = {
-      blog_title: "Fieldnotes",
-      blog_description: "Ideas worth sharing",
-      blog_about: "About our community",
-    };
-    pretender.get("/admin/site_settings.json", () =>
-      response({
-        site_settings: Object.entries(settings).map(([setting, value]) => ({
-          setting,
-          value,
-        })),
-      })
-    );
   });
 
-  test("separates the themes list from focused theme editing and identity", async function (assert) {
+  test("separates the themes list from focused theme editing and the blogs", async function (assert) {
     await visit("/admin/plugins/blog/themes");
     assert
       .dom(".admin-plugin-config-page__top-nav-item")
       .exists(
         { count: 3 },
-        "Settings, Themes, and Identity are distinct sections"
+        "Settings, Themes, and Blogs are distinct sections"
       );
     assert
       .dom(".blog-theme-editor__form")
       .doesNotExist("the list does not contain code editors");
     assert
-      .dom(".blog-identity__form")
-      .doesNotExist("identity is not mixed into the themes list");
+      .dom(".blog-about__form")
+      .doesNotExist("the About form is not mixed into the themes list");
     await click('[data-theme-id="candidate"] a');
     assert.strictEqual(
       currentURL(),
@@ -654,89 +643,6 @@ acceptance("Blog themes and identity", function (needs) {
       .includesText("abc123", "the source is retained in its own disclosure");
   });
 
-  test("saves identity separately through the audited settings endpoint", async function (assert) {
-    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
-      const values = new URLSearchParams(request.requestBody);
-      assert.strictEqual(
-        values.get("settings[blog_title][value]"),
-        "New identity",
-        "identity is saved"
-      );
-      assert.false(
-        [...values.keys()].some((key) => key.includes("custom_css")),
-        "identity never publishes theme code"
-      );
-      return response(204);
-    });
-    await visit("/admin/plugins/blog/identity");
-    assert.dom(".blog-themes").doesNotExist("identity contains no themes list");
-    assert
-      .dom(".blog-theme-editor__form")
-      .doesNotExist("identity contains no theme editor");
-    const form = formKit(".blog-identity__form");
-    await form.field("blog_title").fillIn("New identity");
-    await form.submit();
-  });
-
-  test("saves the article URL format with the identity", async function (assert) {
-    const saved = [];
-    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
-      const values = new URLSearchParams(request.requestBody);
-      saved.push(values.get("settings[blog_path_format][value]"));
-      return response(204);
-    });
-    await visit("/admin/plugins/blog/identity");
-    const today = moment.utc();
-    assert
-      .dom(".blog-identity__form")
-      .includesText("/my-article", "the slug format shows an example")
-      .includesText(
-        `/${today.format("YYYY/MM")}/my-article`,
-        "the monthly format shows today's example"
-      )
-      .includesText(
-        `/${today.format("YYYY/MM/DD")}/my-article`,
-        "the daily format shows today's example"
-      );
-    const form = formKit(".blog-identity__form");
-    assert.form(".blog-identity__form").field("path_format").hasValue("slug");
-    await form.field("path_format").select("year_month_slug");
-    await form.submit();
-
-    await form.field("path_format").select("custom");
-    await form.field("custom_path_format").fillIn("/news/{slug}");
-    assert
-      .dom(".blog-identity__form")
-      .includesText("/news/my-article", "the custom format shows an example");
-    await form.submit();
-
-    assert.deepEqual(
-      saved,
-      ["/{year}/{month}/{slug}", "/news/{slug}"],
-      "presets and custom formats are saved as templates"
-    );
-  });
-
-  test("rejects a custom URL format without a unique placeholder", async function (assert) {
-    pretender.put("/admin/site_settings/bulk_update.json", () => {
-      assert.step("saved");
-      return response(204);
-    });
-    await visit("/admin/plugins/blog/identity");
-    const form = formKit(".blog-identity__form");
-    await form.field("path_format").select("custom");
-    await form.field("custom_path_format").fillIn("/{year}/{month}");
-    await form.submit();
-
-    assert
-      .form(".blog-identity__form")
-      .field("custom_path_format")
-      .hasError(
-        "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
-      );
-    assert.verifySteps([], "nothing is saved");
-  });
-
   test("warns before leaving a theme with unsaved changes", async function (assert) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     await formKit(".blog-theme-editor__form")
@@ -852,11 +758,11 @@ acceptance("Blog themes and identity", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-candidate"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button'
       )
       .exists(
-        { count: 4 },
-        "a Git design offers activate, pull, preview, and delete"
+        { count: 5 },
+        "a Git design offers activate, pull, preview, export, and delete"
       );
     assert
       .dom(
@@ -873,8 +779,10 @@ acceptance("Blog themes and identity", function (needs) {
 
     await click(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`);
     assert
-      .dom('[data-identifier="blog-theme-actions-live"] .theme-card__button')
-      .exists({ count: 3 }, "a design without a Git source cannot be pulled");
+      .dom(
+        '[data-identifier="blog-theme-actions-live"] .blog-theme-card__button'
+      )
+      .exists({ count: 4 }, "a design without a Git source cannot be pulled");
     assert
       .dom('[data-identifier="blog-theme-actions-live"] .preview')
       .exists("the live design keeps a useful action");
@@ -889,6 +797,57 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`)
       .exists("the menu belongs to the card it was opened from");
+  });
+
+  test("locks making and changing themes when the site may not use custom themes", async function (assert) {
+    this.siteSettings.blog_custom_themes_enabled = false;
+    const preset = { ...draft, id: "default", name: "Default", preset: true };
+    const imported = {
+      ...draft,
+      source: { repository: "https://example.com/blog-theme.git" },
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [preset, imported], active: preset })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+
+    assert
+      .dom(".blog-themes .d-page-subheader .btn-primary")
+      .isDisabled("New theme is locked");
+    assert
+      .dom(".blog-themes .d-page-subheader .btn-default")
+      .isDisabled("Import is locked");
+    assert
+      .dom('.theme-card[data-theme-id="default"] .customize')
+      .isDisabled("a built-in design cannot be customized");
+    assert
+      .dom('.theme-card[data-theme-id="candidate"] .edit')
+      .isDisabled("a custom theme cannot be edited");
+
+    await click(
+      '.theme-card[data-theme-id="candidate"] .theme-card__footer-menu'
+    );
+    const menu = '[data-identifier="blog-theme-actions-candidate"]';
+    assert
+      .dom(`${menu} .activate`)
+      .isDisabled("a custom theme cannot be activated");
+    assert.dom(`${menu} .pull`).isDisabled("nor pulled");
+    assert
+      .dom(`${menu} .export`)
+      .hasAttribute(
+        "href",
+        "/admin/plugins/blog/themes/candidate/export",
+        "it can still be exported"
+      );
+    assert.dom(`${menu} .--danger`).isEnabled("and deleted");
+
+    await click(
+      '.theme-card[data-theme-id="default"] .theme-card__footer-menu'
+    );
+    assert
+      .dom('[data-identifier="blog-theme-actions-default"] .activate')
+      .isDisabled("the built-in design in use needs no activating");
   });
 
   test("shows presets as read-only cards that can be customized", async function (assert) {
@@ -948,7 +907,7 @@ acceptance("Blog themes and identity", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-discourse-blog"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-discourse-blog"] .blog-theme-card__button'
       )
       .exists({ count: 2 }, "a preset offers only activate and preview");
     assert
@@ -1089,7 +1048,7 @@ acceptance("Blog themes and identity", function (needs) {
     );
     const loadsBeforeActivating = listLoads;
     await click(
-      '[data-identifier="blog-theme-actions-candidate"] .theme-card__button:not([disabled])'
+      '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button:not([disabled])'
     );
     assert.verifySteps([], "opening the confirmation changes nothing");
     await click(".dialog-footer .btn-primary");
@@ -1152,5 +1111,67 @@ acceptance("Blog themes and identity", function (needs) {
       "/admin/plugins/blog/themes",
       "old bookmarks open the themes index"
     );
+  });
+});
+
+acceptance("Blog themes with several blogs", function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ blog_enabled: true, blog_custom_themes_enabled: true });
+  needs.site({
+    blogs: [
+      { id: 1, is_default: true, base_url: "https://blog.example.com" },
+      {
+        id: 2,
+        is_default: false,
+        base_url: "https://blog.example.com/blog/engineering",
+      },
+    ],
+  });
+
+  needs.pretender((server, helper) => {
+    const theme = {
+      id: "candidate",
+      name: "Candidate",
+      revision: 1,
+      preview_url: "https://blog.example.com/?blog_theme_preview=signed",
+      accent_color: "d64b2a",
+      paper_color: "f5f0e6",
+      ink_color: "19382d",
+      css: "",
+      javascript: "",
+    };
+    server.get("/admin/plugins/blog.json", () =>
+      helper.response({
+        id: "blog",
+        name: "blog",
+        humanized_name: "Blog",
+        enabled: true,
+        has_settings: true,
+        admin_route: { use_new_show_route: true, location: "blog" },
+      })
+    );
+    server.get("/admin/plugins/blog/theme-authoring.json", () =>
+      helper.response({
+        templates: {},
+        articles: [],
+        has_page: false,
+        variables: { site: {}, article: {} },
+      })
+    );
+    server.get("/admin/plugins/blog/themes/candidate.json", () =>
+      helper.response({ theme, active: { id: "default" } })
+    );
+    server.get("/admin/plugins/blog/themes.json", () =>
+      helper.response({ themes: [theme], active: { id: "default" }, blogs: [] })
+    );
+  });
+
+  test("leaves activation to each blog's Theme tab", async function (assert) {
+    await visit("/admin/plugins/blog/themes/candidate/edit");
+
+    assert.dom(".blog-theme-editor__form").exists("the editor opens");
+    assert
+      .dom(".blog-theme-editor__activate")
+      .doesNotExist("the editor does not pick one blog to activate on");
   });
 });

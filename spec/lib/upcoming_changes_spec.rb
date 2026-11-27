@@ -122,10 +122,12 @@ RSpec.describe UpcomingChanges do
       )
     end
 
-    it "returns an empty hash for a setting without metadata" do
+    it "returns a frozen empty hash without allocating for a setting without metadata" do
       metadata = described_class.change_metadata("nonexistent_setting")
 
       expect(metadata).to eq({})
+      expect(metadata).to be_frozen
+      expect(described_class.change_metadata(:nonexistent_setting)).to equal(metadata)
     end
 
     it "accepts string setting names" do
@@ -936,6 +938,43 @@ RSpec.describe UpcomingChanges do
       SiteSetting.enable_upload_debug_mode = true
 
       expect(SiteSetting.hidden_settings).to include(*hidden_setting_names)
+    end
+  end
+
+  describe ".enabled_for_user? with a fixed logged-in audience" do
+    fab!(:user)
+
+    before do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :stable,
+          allow_enabled_for: [:logged_in_users],
+        },
+      )
+      Fabricate(
+        :site_setting_group,
+        name: setting_name,
+        group_ids: Group::AUTO_GROUPS[:anonymous_users].to_s,
+      )
+    end
+
+    it "applies the fixed audience when the change is auto-promoted" do
+      SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+
+    it "applies the fixed audience when the change becomes permanent" do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :permanent,
+          allow_enabled_for: [:logged_in_users],
+        },
+      )
+
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
     end
   end
 

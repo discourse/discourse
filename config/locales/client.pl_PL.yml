@@ -718,7 +718,7 @@ pl_PL:
           title: "Wygląd i odczucia"
           description: "Wybierz czcionki i to, co członkowie zobaczą w pierwszej kolejności."
       sections:
-        colors: "Tryby kolorów witryny"
+        colors: "Domyślne tryby kolorów"
         fonts: "Czcionki"
         logo: "Logo"
         homepage: "Strona główna"
@@ -727,9 +727,9 @@ pl_PL:
         applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
-        description: "Ustaw domyślną paletę dla każdego trybu. Preferencje dotyczące wyglądu członków decydują o tym, którą paletę zobaczą."
-        light_palette: "Jasna paleta"
-        dark_palette: "Ciemna paleta"
+        palette: "Paleta"
+        manage_palettes_prompt: "Chcesz mieć własną paletę lub decydować, z jakich palet mogą wybierać członkowie?"
+        manage_palettes: "Zarządzaj paletami kolorów"
         modes:
           label: "Tryby kolorów"
           both: "Jasny i ciemny"
@@ -738,9 +738,6 @@ pl_PL:
       fonts:
         base_font: "Treść"
         heading_font: "Nagłówki"
-      logo:
-        description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
-        help_text: "Zalecany rozmiar to 600 x 80 pikseli."
       homepage:
         topics: "Tematy"
         categories: "Kategorie"
@@ -938,9 +935,9 @@ pl_PL:
           many: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
           other: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
     copy_codeblock:
-      copied: "skopiowane!"
-      copy: "skopiuj kod do schowka"
-      fullscreen: "pokaż kod na pełnym ekranie"
+      copied: "Skopiowano!"
+      copy: "Skopiuj kod do schowka"
+      fullscreen: "Pokaż kod na pełnym ekranie"
       view_code: "Zobacz kod"
     drafts:
       label: "Szkice"
@@ -1046,12 +1043,12 @@ pl_PL:
       none_found: "Nie znaleziono tematów."
       title:
         search: "Wyszukaj temat"
-        placeholder: "tutaj wpisz tytuł tematu, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł tematu, adres URL lub identyfikator"
     choose_message:
       none_found: "Nie znaleziono wiadomości."
       title:
         search: "Wyszukaj wiadomość"
-        placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł wiadomości, adres URL lub identyfikator"
     dsa_statements:
       title: "Klasyfikacja DSA"
       help_title: "O klasyfikacji w ramach ustawy o usługach cyfrowych UE"
@@ -1289,6 +1286,10 @@ pl_PL:
           title: "Wszystkie sprawdzone"
         all:
           title: "Wszystko"
+      pending_post_approval: "Zatwierdzenie wpisu"
+      pending_topic_approval: "Zatwierdzenie tematu"
+      pending_account_approval: "Zatwierdzenie konta"
+      account_review: "Przegląd konta"
       context_question:
         is_this_post: "Czy to jest %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "lub"
@@ -1297,9 +1298,6 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
-        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
-        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
-        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -1341,6 +1339,7 @@ pl_PL:
         target_deleted: "Wpis usunięty"
         target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
         queued_post_deleted_by: "Wpis z kolejki usunięty przez %{username} · %{relativeDate}"
+        queued_for_approval_by: "Oczekuje na zatwierdzenie przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -1814,16 +1813,16 @@ pl_PL:
       "15": "Szkice"
       "17": "Linki"
     categories:
-      categories_label: "kategorie"
-      subcategories_label: "podkategorie"
-      no_subcategories: "brak podkategorii"
-      remove_filter: "usuń filtr"
+      categories_label: "Kategorie"
+      subcategories_label: "Podkategorie"
+      no_subcategories: "Brak podkategorii"
+      remove_filter: "Usuń filtr"
       plus_more_count:
         one: "+%{count} więcej"
         few: "+%{count} więcej"
         many: "+%{count} więcej"
         other: "+%{count} więcej"
-      view_all: "pokaż wszystkie"
+      view_all: "Pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
       page_layout: "Układ strony kategorii"
@@ -3445,6 +3444,7 @@ pl_PL:
       standard: Standardowe
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Emoji 3D Noto
       twemoji: Twemoji
     category_page_style:
       categories_only: "Tylko kategorie"
@@ -3729,7 +3729,7 @@ pl_PL:
       more_emoji: "więcej…"
       options: "Opcje"
       ai_content:
-        menu: "Dodaj treść AI..."
+        menu: "Oznacz treść AI..."
         code: "Kod"
         quote: "Cytat"
         details: "Detale"
@@ -5052,7 +5052,8 @@ pl_PL:
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
         replies_short: "%{current} / %{total}"
       progress:
-        title: postęp tematu
+        title: "Postęp tematu"
+        position: "Postęp tematu, %{current} z %{total}"
         jump_prompt: "przejdź do…"
         jump_prompt_of:
           one: "z %{count} wpisu"
@@ -5205,19 +5206,19 @@ pl_PL:
       invite_private:
         title: "Zaproś do dyskusji"
         email_or_username: "Adres email lub nazwa użytkownika zapraszanej osoby"
-        email_or_username_placeholder: "adres email lub nazwa użytkownika"
+        email_or_username_placeholder: "Adres e-mail lub nazwa użytkownika"
         action: "Zaproś"
         success: "Wskazany użytkownik został zaproszony do udziału w tej dyskusji."
         success_group: "Zaprosiliśmy tę grupę do uczestnictwa w tej wiadomości"
         error: "Przepraszamy, wystąpił błąd w trakcie zapraszania użytkownika(-czki)."
         not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
-        group_name: "nazwa grupy"
+        group_name: "Nazwa grupy"
       controls: "Ustawienia tematu"
       invite_reply:
         title: "Zaproś"
-        username_placeholder: "nazwa użytkownika"
+        username_placeholder: "Nazwa użytkownika"
         action: "Wyślij zaproszenie"
-        help: "zaproś innych do tego tematu e-mailem lub powiadomieniem"
+        help: "Zaproś innych do tego tematu e-mailem lub powiadomieniem"
         to_forum: "Wyślemy krótką wiadomość e-mail umożliwiającą znajomemu natychmiastowe dołączenie poprzez kliknięcie linku."
         discourse_connect_enabled: "Wpisz nazwę użytkownika osoby, którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
@@ -5239,11 +5240,11 @@ pl_PL:
         cancel: "Usuń filtr"
       move_to:
         title: "Przenieś do"
-        action: "przenieś do"
+        action: "Przenieś do"
         error: "Podczas przenoszenia wpisów wystąpił błąd."
       split_topic:
         title: "Przenieś do nowego tematu"
-        action: "przenieś do nowego tematu"
+        action: "Przenieś do nowego tematu"
         topic_name: "Nowy tytuł tematu"
         radio_label: "Nowy temat"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
@@ -5254,7 +5255,7 @@ pl_PL:
           other: "Masz zamiar utworzyć nowy temat, składający się z <b>%{count}</b> wybranych przez ciebie wpisów."
       merge_topic:
         title: "Przenieś do Istniejącego Tematu"
-        action: "przenieś do istniejącego tematu"
+        action: "Przenieś do istniejącego tematu"
         error: "Wystąpił błąd podczas przenoszenia wpisów do danego tematu."
         radio_label: "Istniejący temat"
         instructions:
@@ -5265,7 +5266,7 @@ pl_PL:
         chronological_order: "zachować porządek chronologiczny po połączeniu"
       move_to_new_message:
         title: "Przejdź do nowej wiadomości"
-        action: "przejdź do nowej wiadomości"
+        action: "Przejdź do nowej wiadomości"
         message_title: "Tytuł nowej wiadomości"
         radio_label: "Nowa wiadomość"
         participants: "Uczestnicy"
@@ -5276,7 +5277,7 @@ pl_PL:
           other: "Za chwilę utworzysz nową wiadomość i wypełnisz ją wybranymi <b>%{count}</b> postami."
       move_to_existing_message:
         title: "Przejdź do istniejącej wiadomości"
-        action: "przejdź do istniejącej wiadomości"
+        action: "Przejdź do istniejącej wiadomości"
         radio_label: "Istniejąca wiadomość"
         participants: "Uczestnicy"
         instructions:
@@ -5286,7 +5287,7 @@ pl_PL:
           other: "Wybierz wiadomość, do której chcesz przenieść te <b>%{count}</b> postów."
       merge_posts:
         title: "Scal wybrane wpisy"
-        action: "scal wybrane wpisy"
+        action: "Scal wybrane wpisy"
         error: "Wystąpił błąd podczas łączenia wybranych wpisów"
       publish_page:
         title: "Publikowanie strony"
@@ -5304,9 +5305,9 @@ pl_PL:
         publishing_settings: "Ustawienia publikowania"
       change_owner:
         title: "Zmiana właściciela"
-        action: "zmień właściciela"
+        action: "Zmiana właściciela"
         error: "Wystąpił błąd podczas zmiany właściciela wpisów."
-        placeholder: "nazwa nowego właściciela"
+        placeholder: "Nazwa użytkownika nowego właściciela"
         instructions:
           one: "Wybierz nowego właściciela posta przez <b>@ %{old_user}</b>"
           few: "Wybierz nowego właściciela postów %{count} autorstwa <b>@ %{old_user}</b>"
@@ -5324,24 +5325,24 @@ pl_PL:
         error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
         instructions: "Wybierz nowy znacznik czasu dla tematu. Wpisy w temacie zostaną zaktualizowane o tę samą różnicę."
       multi_select:
-        select: "wybierz"
-        selected: "wybrano (%{count})"
+        select: "Wybierz"
+        selected: "Wybrano (%{count})"
         select_post:
-          label: "wybierz"
+          label: "Wybierz"
           title: "Dodaj wpis do zaznaczenia"
         selected_post:
-          label: "zaznaczone"
+          label: "Wybrane"
           title: "Kliknij aby usunąć wpis z zaznaczenia"
         select_replies:
-          label: "wybierz +replies"
+          label: "Wybierz i odpowiedzi"
           title: "Dodaj wpis i wszystkie jego odpowiedzi do wyboru"
         select_below:
-          label: "wybierz + poniżej"
+          label: "Wybierz i poniżej"
           title: "Dodaj wpis i wszystko po nim do wyboru"
-        delete: usuń wybrane
-        cancel: anuluj wybieranie
-        select_all: zaznacz wszystkie
-        deselect_all: odznacz wszystkie
+        delete: Usuń wybrane
+        cancel: Anuluj wybieranie
+        select_all: Wybierz wszystkie
+        deselect_all: Usuń wybór wszystkich
         description:
           one: Wybrano <b>%{count}</b> wpis.
           few: "Wybrano <b>%{count}</b> wpisy."
@@ -5818,6 +5819,11 @@ pl_PL:
         delete_title: "Edytuj tę kategorię"
         delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
         delete_title_forbidden: "Nie można usunąć tej kategorii"
+      empty_state:
+        title: "Rozpocznij rozmowę"
+        body: "Nowe tematy w tej kategorii będą pojawiać się tutaj."
+        create_topic: "Utwórz pierwszy temat"
+        edit_category: "Edytuj kategorię"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
@@ -5847,7 +5853,12 @@ pl_PL:
         icon_required: "Wybierz ikonę."
         groups_required: "Wybierz co najmniej jedną grupę dla tego trybu zatwierdzania."
       name: "Nazwa kategorii"
-      untitled: "Kategoria bez tytułu"
+      name_and_style: "Nazwa kategorii i styl"
+      choose_style: "Wybierz styl kategorii (aktualnie %{style})"
+      choose_style_with_icon: "Wybierz styl kategorii (aktualnie ikona %{name})"
+      choose_style_with_emoji: "Wybierz styl kategorii (aktualnie emoji %{name})"
+      choose_style_with_emoji_tone: "Wybierz styl kategorii (aktualnie emoji %{name} , %{tone})"
+      icon_search_placeholder: "Szukaj…"
       description: "Opis"
       logo: "Grafika z logo kategorii"
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
@@ -5855,10 +5866,6 @@ pl_PL:
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
       style: "Styl"
-      icon: "Ikona"
-      emoji: "Emoji"
-      select_emoji: "Wybierz emoji"
-      select_icon: "Wybierz ikonę"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -5866,22 +5873,15 @@ pl_PL:
         incorrect_length: "musi być zgodny z formatem #RRGGBB lub #RGB"
         non_hexdecimal: "może zawierać wyłącznie znaki szesnastkowe (0-9, AF)"
       styles:
-        type: "Styl"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Kwadrat"
-        options:
-          square: "Kwadrat"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Kolor w użyciu"
-      predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Zalecane jedno lub dwa słowa"
       category_types: "Typy kategorii"
       unknown_category_type: "Nieznany typ kategorii"
       unknown_category_type_description: "Typ kategorii '%{categoryType}' nie jest obsługiwany lub wyłączony w tej kategorii."
       category_types_no_results: "Nie znaleziono innych typów kategorii"
-      color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
       list: "Wymień kategorie"
@@ -6518,9 +6518,9 @@ pl_PL:
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
-      selector_tags: "tagi"
-      selector_no_tags: "brak tagów"
-      selector_remove_filter: "usuń filtr"
+      selector_tags: "Tagi"
+      selector_no_tags: "Brak tagów"
+      selector_remove_filter: "Usuń filtr"
       tags: "Tagi"
       choose_for_topic: "Opcjonalne tagi…"
       choose_for_topic_required:
@@ -6734,7 +6734,6 @@ pl_PL:
       create: "Utwórz"
       menu: "Menu"
       more: "Więcej"
-      edit_topic: "Edytuj tytuł, kategorię i tagi"
       menu_with_reviewables:
         one: "Menu, %{count} pozycja do przejrzenia"
         few: "Menu, %{count} pozycje do przejrzenia"
@@ -6750,7 +6749,8 @@ pl_PL:
       hub: "Hub"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
-    theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
+    theme_preview_notice: "Obecnie przeglądasz motyw."
+    exit_theme_preview: "Wyjdź z podglądu"
     theme_preview_failed: "Nie można wyświetlić podglądu motywu, ponieważ motyw nie istnieje lub nie masz uprawnień dostępu do niego."
     image_removed: "(obraz usunięty)"
     pause_notifications:
@@ -9089,6 +9089,7 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
+          your_organization_description: "Szczegóły dotyczące osób zarządzających tą witryną."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
           company_url: "Strona internetowa"
@@ -9706,8 +9707,8 @@ pl_PL:
           title: "Kolory"
           edit: "Edytuj"
           view: "Widok"
-          set_default_light: "Ustaw jako jasną paletę w domyślnym motywie (%{theme})"
-          set_default_dark: "Ustaw jako ciemną paletę w domyślnym motywie (%{theme})"
+          set_default_light: "Ustaw jako jasny"
+          set_default_dark: "Ustaw jako ciemny"
           set_default_success: "%{schemeName} ustaw jako domyślną paletę dla %{themeName}"
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"
@@ -9935,6 +9936,7 @@ pl_PL:
             mcp_client_updated: "aktualizacja klienta MCP OAuth"
             delete_user: "usunięcie użytkownika"
             create_bot: "Utwórz bota"
+            change_bot_interactivity: "Zmień interaktywność bota"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
@@ -9998,11 +10000,14 @@ pl_PL:
             change_name: "zmień nazwe"
             topic_timestamps_changed: "zmieniono znaczniki czasowe wątku"
             approve_user: "zatwierdzony użytkownik"
+            approve_account_review: "zatwierdzony przegląd konta"
             removed_avatar: "usunięto awatar"
             web_hook_create: "utwórz webhooka"
             web_hook_update: "zaktualizuj webhooka"
             web_hook_destroy: "zniszcz webhooka"
             web_hook_deactivate: "deaktywuj webhooka"
+            web_hook_ping: "Ping webhooka"
+            web_hook_redeliver: "Ponowne wysłanie webhooka"
             embeddable_host_create: "utwórz hosta do osadzania"
             embeddable_host_update: "zmodyfikuj hosta do osadzania"
             embeddable_host_destroy: "usuń hosta do osadzania"
@@ -10361,6 +10366,9 @@ pl_PL:
               description: "Konto do integracji, webhooków lub automatycznego publikowania za pośrednictwem interfejsu API."
           back: "Powrót do botów"
           help: "Boty to konta użytkowników, które nie mogą się logować w celu integracji i automatycznego publikowania."
+          interactive_bot: "Interaktywny"
+          interactive_column: "Interaktywny?"
+          interactive_bot_description: "Powiadamiaj tego bota o wzmiankach na forum, bezpośrednich odpowiedziach i wiadomościach prywatnych do niego adresowanych. Gdy czat jest włączony, wyświetlaj go również w selektorze wiadomości bezpośrednich."
           generate_api_key: "Wygeneruj klucz API"
           generate_api_key_description: "Potrzebne tylko dla usług zewnętrznych, które działają jako ten bot. Wtyczki Discourse nie wymagają tego."
           scope_mode_description: "Klucz ma uprawnienia wyłącznie tego bota."
@@ -10424,8 +10432,8 @@ pl_PL:
         silence_reason_hidden_label: "Dlaczego wyciszasz? Ten tekst będzie widoczny tylko dla personelu i tego użytkownika. Niech będzie krótki."
         silence_reason_title: "Powód wyciszenia"
         silence_reason_placeholder: "Powód wyciszenia"
-        silence_message: "Wiadomość Email"
-        silence_message_placeholder: "Opcjonalnie podaj więcej informacji na temat tej czynności. Zostaną one dołączone do wiadomości e-mail wysłanej do uciszonego użytkownika."
+        silence_notice_message: "Wiadomość do użytkownika"
+        silence_notice_message_placeholder: "Opcjonalnie możesz dodać szczegóły do wiadomości, którą otrzyma uciszony użytkownik."
         suspended_until: "(do %{until})"
         suspend_forever: "Zawieś na zawsze"
         cant_suspend: "Nie można zawiesić tego użytkownika."
@@ -10759,6 +10767,7 @@ pl_PL:
           text: "Tekst"
           textarea: "Obszar tekstowy"
           date: "Data"
+          number: "Liczba"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"
@@ -10766,6 +10775,10 @@ pl_PL:
         description: "Możesz dostosować dowolny tekst na swoim forum."
         search: "Wyszukaj tekst lub klucze tłumaczeń"
         search_label: "Szukaj"
+        preview:
+          label: "Podgląd tekstu dla %{key}"
+          customized: "Twój tekst"
+          default: "Domyślny"
         theme: "Motyw lub komponent"
         all_themes: "Wszystkie teksty witryny"
         theme_disabled: "Wyłączone"
@@ -10864,9 +10877,9 @@ pl_PL:
           many: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
           other: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
         clear_filter: "Wyczyść"
-        add_url: "dodaj URL"
-        add_host: "dodaj host"
-        add_group: "dodaj grupę"
+        add_url: "Dodaj adres URL"
+        add_host: "Dodaj host"
+        add_group: "Dodaj grupę"
         uploaded_image_list:
           label: "Edytuj listę"
           empty: "Nie ma jeszcze zdjęć. Proszę jakieś przesłać."
@@ -10988,7 +11001,7 @@ pl_PL:
           modal_title: Grupy odznak
         granted_by: Przyznana przez
         granted_at: Przyznana
-        reason_help: (Link do wpisu lub tematu)
+        reason_help: Link do wpisu lub tematu
         save: Zapisz
         delete: Usuń
         delete_confirm: Czy na pewno chcesz usunąć tę odznakę?

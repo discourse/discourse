@@ -177,5 +177,14 @@ RSpec.describe BackupRestore::SystemInterface do
         expect(Sidekiq.paused?).to eq(true)
       end
     end
+
+    it "keeps readonly mode enabled" do
+      Discourse.enable_readonly_mode
+      system_interface.flush_redis
+
+      expect(Discourse.readonly_mode?).to eq(true)
+    ensure
+      Discourse.disable_readonly_mode
+    end
   end
 end

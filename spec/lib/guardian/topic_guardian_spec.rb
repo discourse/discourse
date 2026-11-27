@@ -428,6 +428,88 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_discover_topic?" do
+    fab!(:unlisted_topic) { Fabricate(:topic, category: category, visible: false) }
+
+    it "is allowed for listed topics the user can see" do
+      expect(user.guardian.can_discover_topic?(topic)).to eq(true)
+      expect(Guardian.new.can_discover_topic?(topic)).to eq(true)
+    end
+
+    it "is not allowed for topics the user cannot see" do
+      expect(user.guardian.can_discover_topic?(private_topic)).to eq(false)
+    end
+
+    it "is only allowed for unlisted topics when the user can see unlisted topics or is the author" do
+      expect(moderator.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(tl4_user.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(unlisted_topic.user.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(tl3_user.guardian.can_discover_topic?(unlisted_topic)).to eq(false)
+      expect(Guardian.new.can_discover_topic?(unlisted_topic)).to eq(false)
+    end
+  end
+
+  describe "#can_discover_topic_ids" do
+    fab!(:unlisted_topic) { Fabricate(:topic, category: category, visible: false) }
+
+    let(:topic_ids) { [topic.id, unlisted_topic.id, private_topic.id] }
+
+    it "excludes unlisted topics and topics the user cannot see" do
+      expect(tl3_user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(topic.id)
+      expect(Guardian.new.can_discover_topic_ids(topic_ids:)).to contain_exactly(topic.id)
+    end
+
+    it "includes unlisted topics for the author and for users who can see unlisted topics" do
+      expect(unlisted_topic.user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(
+        topic.id,
+        unlisted_topic.id,
+      )
+      expect(tl4_user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(
+        topic.id,
+        unlisted_topic.id,
+      )
+      expect(admin.guardian.can_discover_topic_ids(topic_ids:)).to match_array(topic_ids)
+    end
+
+    it "returns the same topics as #can_discover_topic? for every kind of viewer" do
+      group_member = Fabricate(:user, groups: [group])
+      pm_recipient = Fabricate(:user)
+      topics = [
+        topic,
+        unlisted_topic,
+        private_topic,
+        Fabricate(:topic, category: private_category, visible: false),
+        Fabricate(:topic, category: category, user: group_member, visible: false),
+        Fabricate(:topic, category: category, deleted_at: 1.day.ago),
+        private_message_topic,
+        Fabricate(:private_message_topic, recipient: pm_recipient, visible: false),
+      ]
+      viewers = [
+        nil,
+        user,
+        tl3_user,
+        tl4_user,
+        moderator,
+        admin,
+        group_member,
+        pm_recipient,
+        unlisted_topic.user,
+        private_message_topic.user,
+      ]
+
+      viewers.each do |viewer|
+        guardian = Guardian.new(viewer)
+        expected_ids =
+          topics.select { |candidate| guardian.can_discover_topic?(candidate) }.map(&:id)
+
+        expect(guardian.can_discover_topic_ids(topic_ids: topics.map(&:id))).to match_array(
+          expected_ids,
+        ),
+        "mismatch for #{viewer&.username || "anonymous"}"
+      end
+    end
+  end
+
   # The test cases here are intentionally kept brief because majority of the cases are already handled by
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.

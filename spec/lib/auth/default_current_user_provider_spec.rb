@@ -251,6 +251,28 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
     after { user.clear_last_seen_cache!(@orig) }
 
+    it "records the visit as mobile for a mobile user agent" do
+      provider(
+        "/",
+        "HTTP_COOKIE" => "_t=#{cookie}",
+        "HTTP_USER_AGENT" =>
+          "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36",
+      ).current_user
+
+      expect(user.visit_record_for(Date.current).mobile).to eq(true)
+    end
+
+    it "records the visit as desktop for a desktop user agent" do
+      provider(
+        "/",
+        "HTTP_COOKIE" => "_t=#{cookie}",
+        "HTTP_USER_AGENT" =>
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+      ).current_user
+
+      expect(user.visit_record_for(Date.current).mobile).to eq(false)
+    end
+
     it "does not update last seen for suspended users" do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
@@ -319,77 +341,73 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     context "with the shared session key header" do
-      def authenticate_via_shared_key(stored_value)
-        key = SecureRandom.hex
-        Auth::DefaultCurrentUserProvider.store_shared_session_key(key, stored_value)
+      let(:token) { UserAuthToken.generate!(user_id: user.id) }
+      let(:key) { described_class.store_shared_session_key(token, user) }
+
+      def authenticate(key)
         provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user
       end
 
-      def expired_token(user)
-        UserAuthToken
-          .generate!(user_id: user.id)
-          .tap do |token|
-            token.update!(rotated_at: (SiteSetting.maximum_session_age.hours + 1.hour).ago)
-          end
-      end
-
-      it "authenticates the user of the bound auth token" do
-        token = UserAuthToken.generate!(user_id: user.id)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
+      it "remains usable after the browser token rotates" do
+        expect(authenticate(key)).to eq(user)
+        token.update!(auth_token_seen: true)
+        expect(token.rotate!).to eq(true)
+        expect(authenticate(key)).to eq(user)
       end
 
       it "returns nil once the bound user is suspended" do
-        token = UserAuthToken.generate!(user_id: user.id)
+        expect(authenticate(key)).to eq(user)
         user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+        expect(authenticate(key)).to be_nil
       end
 
       it "returns nil once the bound user is deactivated" do
-        token = UserAuthToken.generate!(user_id: user.id)
+        expect(authenticate(key)).to eq(user)
         user.update!(active: false)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+        expect(authenticate(key)).to be_nil
       end
 
-      it "returns nil after the bound auth token is destroyed" do
-        token = UserAuthToken.generate!(user_id: user.id)
-        stored_value = token.id.to_s
+      it "returns nil once the token expires or is revoked" do
+        expect(authenticate(key)).to eq(user)
+        token.update!(rotated_at: (SiteSetting.maximum_session_age.hours + 1.hour).ago)
+        expect(authenticate(key)).to be_nil
+        token.update!(rotated_at: Time.zone.now)
         token.destroy!
-        expect(authenticate_via_shared_key(stored_value)).to eq(nil)
+        expect(authenticate(key)).to be_nil
       end
 
-      it "does not authenticate an expired token" do
-        token = expired_token(user)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
-      end
-
-      it "authenticates the impersonated user while the bound token is impersonating" do
+      it "does not upgrade an impersonated credential when impersonation expires" do
         admin = Fabricate(:admin)
-        token = UserAuthToken.generate!(user_id: admin.id)
-        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
-      end
+        admin_token = UserAuthToken.generate!(user_id: admin.id)
+        admin_token.update!(
+          impersonated_user_id: user.id,
+          impersonation_expires_at: 1.hour.from_now,
+        )
+        impersonated_key = described_class.store_shared_session_key(admin_token, user)
+        expect(authenticate(impersonated_key)).to eq(user)
 
-      it "authenticates the acting user once impersonation has expired" do
-        admin = Fabricate(:admin)
-        token = UserAuthToken.generate!(user_id: admin.id)
-        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.ago)
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(admin)
+        freeze_time 61.minutes.from_now
+        expect(authenticate(impersonated_key)).to be_nil
       end
 
       it "returns nil when the bound token's user no longer exists" do
-        token = UserAuthToken.generate!(user_id: user.id)
+        expect(authenticate(key)).to eq(user)
         user.delete
-        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+        expect(authenticate(key)).to be_nil
       end
 
-      it "returns nil when the stored value is not a token id" do
-        expect(authenticate_via_shared_key("not-a-token-id")).to eq(nil)
+      it "rejects missing or malformed shared keys and bindings" do
+        expect(described_class.read_shared_session_key(nil)).to be_nil
+        expect(authenticate("v2_invalid")).to be_nil
+        Discourse.redis.setex(described_class.shared_session_redis_key(key), 7.days, token.id.to_s)
+        expect(authenticate(key)).to be_nil
       end
 
-      it "returns nil for a value stored under the legacy namespace" do
-        key = SecureRandom.hex
-        Discourse.redis.setex("shared_session_key_#{key}", 7.days, user.id.to_s)
-        expect(provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user).to eq(nil)
+      it "ignores both legacy namespaces, including formerly rebound credentials" do
+        legacy_key = SecureRandom.hex
+        Discourse.redis.setex("shared_session_key_#{legacy_key}", 7.days, user.id.to_s)
+        Discourse.redis.setex("shared_session_user_auth_token_id:#{legacy_key}", 7.days, token.id)
+        expect(authenticate(legacy_key)).to be_nil
       end
     end
   end
@@ -678,6 +696,31 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(provider("/", "HTTP_COOKIE" => "_t=#{cookie}").current_user).to eq(nil)
   end
 
+  it "rejects excluded staged users before issuing a session" do
+    user.update!(staged: true)
+    SiteSetting.allowed_email_domains = "allowed.example"
+    @provider = provider("/")
+
+    expect { @provider.log_on_user(user, {}, @provider.cookie_jar) }.to raise_error(
+      ActiveRecord::RecordInvalid,
+    )
+
+    expect(user.reload.staged).to eq(true)
+    expect(user.user_auth_tokens).to be_empty
+    expect(@provider.cookie_jar["_t"]).to be_nil
+  end
+
+  it "allows existing members to log in after their domain is excluded" do
+    SiteSetting.allowed_email_domains = "allowed.example"
+    @provider = provider("/")
+    existing_user = Fabricate(:user, email: "member@allowed.example")
+    SiteSetting.allowed_email_domains = "other.example"
+
+    @provider.log_on_user(existing_user, {}, @provider.cookie_jar)
+
+    expect(@provider.cookie_jar["_t"]).to be_present
+  end
+
   it "always unstage users" do
     user.update!(staged: true)
     @provider = provider("/")
@@ -901,12 +944,165 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(provider2.cookie_jar.encrypted["_t"].keys).to include("user_id", "token") # (strings)
   end
 
+  describe "#authenticated_session_user" do
+    let(:token) { UserAuthToken.generate!(user_id: user.id) }
+    let(:cookie) { "_t=#{create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)}" }
+
+    it "accepts a still-valid previous token, not a token that has rotated out" do
+      freeze_time
+      session_provider = provider("/", "HTTP_COOKIE" => cookie)
+      expect(session_provider.current_user).to eq(user)
+      expect(token.rotate!).to eq(true)
+      expect(session_provider.authenticated_session_user).to eq(user)
+
+      freeze_time 2.minutes.from_now
+      # Acknowledging the new cookie permits the next rotation to drop the old one.
+      UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+      expect(token.rotate!).to eq(true)
+      expect(session_provider.authenticated_session_user).to be_nil
+    end
+
+    it "checks cookie age even when authentication earlier in the request succeeded" do
+      freeze_time
+      SiteSetting.maximum_session_age = 1
+      old_cookie = create_auth_cookie(token: token.unhashed_auth_token, issued_at: 59.minutes.ago)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{old_cookie}")
+      expect(session_provider.current_user).to eq(user)
+
+      freeze_time 2.minutes.from_now
+      expect(session_provider.authenticated_session_user).to be_nil
+    end
+
+    it "rejects delegated credentials even alongside a valid cookie" do
+      key = Fabricate(:api_key, user: user)
+      shared_key = described_class.store_shared_session_key(token, user)
+
+      [
+        { "HTTP_API_KEY" => key.key },
+        { "HTTP_X_SHARED_SESSION_KEY" => shared_key },
+      ].each do |headers|
+        session_provider = provider("/", headers.merge("HTTP_COOKIE" => cookie))
+        expect(session_provider.current_user).to eq(user)
+        expect(session_provider.authenticated_session_user).to be_nil
+      end
+    end
+
+    it "does not turn an impersonation into an independent session" do
+      GlobalSetting.stubs(:allow_impersonation).returns(true)
+      admin = Fabricate(:admin)
+      token = UserAuthToken.generate!(user_id: admin.id)
+      token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: admin.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+
+      expect(session_provider.current_user).to eq(user)
+      expect(session_provider.authenticated_session_user).to be_nil
+    end
+  end
+
+  describe "#authenticated_credential_user" do
+    it "re-reads a User API key authenticated by another provider instance" do
+      key = Fabricate(:user_api_key, user:, scopes: [UserApiKeyScope.new(name: "write")])
+      env = create_request_env(path: "/").merge("HTTP_USER_API_KEY" => key.key)
+      expect(TestProvider.new(env).current_user).to eq(user)
+
+      credential_provider = TestProvider.new(env)
+      expect(credential_provider.authenticated_credential_user).to eq(user)
+
+      key.update!(revoked_at: Time.zone.now)
+      expect(credential_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "rejects a browser session revoked after authentication" do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+      expect(session_provider.authenticated_credential_user).to eq(user)
+
+      token.destroy!
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "rejects a cookie that no longer matches its session" do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+
+      token.update_columns(auth_token: "rotated", prev_auth_token: "rotated")
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+
+    it "accepts the impersonated user of a valid impersonation session" do
+      GlobalSetting.stubs(:allow_impersonation).returns(true)
+      admin = Fabricate(:admin)
+      token = UserAuthToken.generate!(user_id: admin.id)
+      token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+      cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: admin.id)
+      session_provider = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
+      expect(session_provider.current_user).to eq(user)
+
+      expect(session_provider.authenticated_credential_user).to eq(user)
+
+      token.update!(impersonation_expires_at: 1.minute.ago)
+      expect(session_provider.authenticated_credential_user).to be_nil
+    end
+  end
+
+  describe "#log_on_user" do
+    it "rejects active and historical shadows after master deletion even when anonymous mode is disabled" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      historical_shadow = AnonymousShadowCreator.get(master)
+      historical_shadow.anonymous_user_master.update!(active: false)
+      shadow = AnonymousShadowCreator.get(master)
+
+      master.destroy!
+      SiteSetting.allow_anonymous_mode = false
+
+      [shadow, historical_shadow].each do |retained_shadow|
+        retained_shadow.reload
+        expect(retained_shadow.master_user).to be_nil
+        user_provider = provider("/")
+
+        expect do
+          user_provider.log_on_user(retained_shadow, {}, user_provider.cookie_jar)
+        end.to raise_error(Discourse::InvalidAccess)
+        expect(retained_shadow.user_auth_tokens).to be_empty
+      end
+    end
+  end
+
   describe "#log_off_user" do
     let(:env) do
       user_provider = provider("/")
       user_provider.log_on_user(user, {}, user_provider.cookie_jar)
       cookie = CGI.escape(user_provider.cookie_jar["_t"])
       create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+    end
+
+    it "does not let delegated logout act on a browser cookie sent with the request" do
+      SiteSetting.log_out_strict = true
+      browser_user = Fabricate(:user)
+      browser_token = UserAuthToken.generate!(user_id: browser_user.id)
+      delegated_token = UserAuthToken.generate!(user_id: user.id)
+      shared_key = described_class.store_shared_session_key(delegated_token, user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      [
+        { "HTTP_X_SHARED_SESSION_KEY" => shared_key },
+        { "HTTP_API_KEY" => api_key.key },
+      ].each do |headers|
+        session_provider =
+          provider("/", headers.merge("HTTP_COOKIE" => "_t=#{browser_token.unhashed_auth_token}"))
+        expect(session_provider.current_user).to eq(user)
+        request = ActionDispatch::Request.new(session_provider.env)
+        expect(Guardian.new(user, request).current_login_id).to be_nil
+        session_provider.log_off_user({}, session_provider.cookie_jar)
+        expect(UserAuthToken.exists?(browser_token.id)).to be(true)
+        expect(UserAuthToken.exists?(delegated_token.id)).to be(true)
+      end
     end
 
     it "logs off a user cached by another provider instance" do
@@ -931,47 +1127,60 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       DiscourseEvent.off(:user_logged_out, &event_handler)
     end
 
-    context "with push subscriptions" do
-      let(:device_a_data) do
-        { endpoint: "https://push.example.com/device-a", keys: { p256dh: "key_a", auth: "auth_a" } }
-      end
-      let(:device_b_data) do
-        { endpoint: "https://push.example.com/device-b", keys: { p256dh: "key_b", auth: "auth_b" } }
-      end
-
-      before do
-        PushSubscription.create!(user: user, data: device_a_data.to_json)
-        PushSubscription.create!(user: user, data: device_b_data.to_json)
-      end
-
-      it "only removes the current device push subscription on normal logout" do
-        user_provider = TestProvider.new(env)
-        user_provider.log_off_user(
-          {},
-          user_provider.cookie_jar,
-          push_subscription: device_a_data.with_indifferent_access,
+    it "ignores endpoint data from another login on ordinary logout" do
+      SiteSetting.log_out_strict = false
+      user_provider = TestProvider.new(env)
+      expect(user_provider.current_user).to eq(user)
+      current_token = user.user_auth_tokens.sole
+      Fabricate(:push_subscription, user: user, user_auth_token: current_token)
+      other_push =
+        Fabricate(
+          :bound_push_subscription,
+          user: user,
+          data: {
+            endpoint: "https://push.example.com/other",
+            keys: {
+              p256dh: "other",
+              auth: "other",
+            },
+          }.to_json,
         )
 
-        remaining = user.push_subscriptions.reload
-        expect(remaining.size).to eq(1)
-        expect(remaining.first.parsed_data["endpoint"]).to eq("https://push.example.com/device-b")
-      end
+      user_provider.log_off_user(
+        {},
+        user_provider.cookie_jar,
+        push_subscription: other_push.parsed_data.with_indifferent_access,
+      )
 
-      it "preserves all push subscriptions when no push subscription data is provided" do
-        user_provider = TestProvider.new(env)
-        user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(user.push_subscriptions).to contain_exactly(other_push)
+    end
 
-        expect(user.push_subscriptions.reload.size).to eq(2)
-      end
+    it "clears even legacy push subscriptions on strict logout" do
+      SiteSetting.log_out_strict = true
+      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
 
-      it "clears all push subscriptions on strict logout" do
-        SiteSetting.log_out_strict = true
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
 
-        user_provider = TestProvider.new(env)
-        user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(user.push_subscriptions).to be_empty
+    end
 
-        expect(user.push_subscriptions.reload.size).to eq(0)
-      end
+    it "revokes anonymous shadow credentials on strict logout", :aggregate_failures do
+      SiteSetting.log_out_strict = true
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      master = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      shadow = AnonymousShadowCreator.get(master)
+      shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+      shadow_api_key = Fabricate(:user_api_key, user: shadow)
+
+      master_provider = provider("/")
+      master_provider.log_on_user(master, {}, master_provider.cookie_jar)
+      master_provider.log_off_user({}, master_provider.cookie_jar)
+
+      expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+      expect(shadow_api_key.reload.revoked_at).to be_present
     end
   end
 
@@ -996,6 +1205,23 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       user.reload
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+
+    it "only makes the user into an admin from an IP inside the admin IP allowlist" do
+      SiteSetting.use_admin_ip_allowlist = true
+      Fabricate(
+        :screened_ip_address,
+        ip_address: "198.51.100.7",
+        action_type: ScreenedIpAddress.actions[:allow_admin],
+      )
+
+      outside_provider = provider("/", "REMOTE_ADDR" => "203.0.113.9")
+      outside_provider.log_on_user(user, {}, outside_provider.cookie_jar)
+      expect(user.reload.admin).to eq(false)
+
+      inside_provider = provider("/", "REMOTE_ADDR" => "198.51.100.7")
+      inside_provider.log_on_user(user, {}, inside_provider.cookie_jar)
+      expect(user.reload.admin).to eq(true)
     end
   end
 

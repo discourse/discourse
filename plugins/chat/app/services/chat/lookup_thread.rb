@@ -57,8 +57,7 @@ module Chat
     end
 
     def original_message_not_deleted(thread:, guardian:)
-      thread.original_message.deleted_at.blank? ||
-        guardian.can_moderate_chat?(thread.channel.chatable)
+      guardian.can_see_chat_thread?(thread)
     end
 
     def fetch_membership(thread:, guardian:)

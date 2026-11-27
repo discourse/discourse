@@ -7,6 +7,11 @@ class UserField < ActiveRecord::Base
 
   FLAG_ATTRIBUTES = %w[editable show_on_profile show_on_signup show_on_user_card searchable].freeze
 
+  # The HTML spec's "valid floating-point number", i.e. what a number input submits. Written to
+  # work as both a Ruby and a PostgreSQL regex. The short exponent keeps SQL casts in range.
+  NUMBER_VALUE_PATTERN = '-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d{1,3})?'
+  NUMBER_VALUE_REGEX = /\A#{NUMBER_VALUE_PATTERN}\z/
+
   deprecate_column :required, drop_from: "3.3"
   self.ignored_columns += %i[field_type]
 
@@ -27,11 +32,28 @@ class UserField < ActiveRecord::Base
 
   enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
   enum :field_type_enum,
-       { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4, date: 5 }.freeze
+       { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4, date: 5, number: 6 }.freeze
   alias_attribute :field_type, :field_type_enum
 
   def self.max_length
     2048
+  end
+
+  # Returns an Integer or Float for a stored number field value, or nil if it isn't a number.
+  def self.cast_number(value)
+    return if !value.is_a?(String) || !NUMBER_VALUE_REGEX.match?(value)
+
+    number = value.to_f
+    return if !number.finite?
+
+    number == number.truncate ? number.to_i : number
+  end
+
+  # Values are stored as text, so number fields need this cast to sort numerically in SQL.
+  # Values that aren't numbers become NULL instead of raising.
+  def self.number_value_sql(value_column)
+    pattern = ActiveRecord::Base.connection.quote("^#{NUMBER_VALUE_PATTERN}$")
+    "(CASE WHEN #{value_column} ~ #{pattern} THEN #{value_column}::numeric END)"
   end
 
   def required?

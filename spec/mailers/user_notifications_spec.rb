@@ -6,7 +6,7 @@ RSpec.describe UserNotifications do
   describe "#get_context_posts" do
     fab!(:category)
 
-    it "does not include hidden/deleted/user_deleted posts in context" do
+    it "excludes hidden and deleted context posts and limits whispers to whisperers" do
       post1 = create_post
       _post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
       _post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
@@ -20,12 +20,34 @@ RSpec.describe UserNotifications do
 
       # default is only post #1
       expect(UserNotifications.get_context_posts(last, nil, post1.user).count).to eq(1)
-      # staff members can also see the whisper
-      moderator = build(:moderator)
-      moderator.user_option = UserOption.new
-      moderator.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
-      tu = TopicUser.new(topic: post1.topic, user: moderator)
-      expect(UserNotifications.get_context_posts(last, tu, tu.user).count).to eq(2)
+      whisper_group = Fabricate(:group)
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+
+      moderator = Fabricate(:moderator)
+      moderator.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      moderator_topic_user = TopicUser.new(topic: post1.topic, user: moderator)
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
+
+      whisperer = Fabricate(:moderator)
+      whisper_group.add(whisperer)
+      whisperer.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      whisperer_topic_user = TopicUser.new(topic: post1.topic, user: whisperer)
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
     end
 
     it "allows users to control context" do
@@ -157,19 +179,6 @@ RSpec.describe UserNotifications do
 
   describe ".post_approved" do
     fab!(:post)
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions when DSA reporting and an appeal address are configured" do
-        mail = UserNotifications.post_approved(user, notification_data_hash: { post_url: post.url })
-
-        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
-      end
-    end
 
     it "addresses the post approval email to the user with a subject and body" do
       subject =
@@ -1182,14 +1191,14 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_replied" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
-    let(:category) { Fabricate(:category, name: "India") }
-    let(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
-    let(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
-    let(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    fab!(:category) { Fabricate(:category, name: "India") }
+    fab!(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
+    fab!(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
+    fab!(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
 
-    let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-    let!(:hidden_tag_group) do
+    fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    fab!(:hidden_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
@@ -1472,8 +1481,8 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_posted" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
-    let(:topic) { Fabricate(:topic, title: "Super cool topic") }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
+    fab!(:topic) { Fabricate(:topic, title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic) }
     let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
@@ -2366,8 +2375,8 @@ RSpec.describe UserNotifications do
     end
 
     context "when showing the right name in 'From' field" do
-      let(:inviter) { Fabricate(:user) }
-      let(:invitee) { Fabricate(:user) }
+      fab!(:inviter, :user)
+      fab!(:invitee, :user)
 
       let(:notification) do
         Fabricate(

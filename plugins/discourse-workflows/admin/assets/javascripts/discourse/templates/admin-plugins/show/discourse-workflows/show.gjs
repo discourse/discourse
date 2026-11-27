@@ -55,7 +55,7 @@ class WorkflowShowPage extends Component {
           <WorkflowTagsEditor @workflow={{this.workflow}} />
         </div>
 
-        <Stats @stats={{this.stats}} />
+        <Stats @stats={{this.stats}} @workflow={{this.workflow}} />
       </div>
 
       <div class="workflows-show-nav">

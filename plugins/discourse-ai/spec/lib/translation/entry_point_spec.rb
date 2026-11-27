@@ -292,7 +292,7 @@ describe DiscourseAi::Translation::EntryPoint do
       SiteSetting.content_localization_enabled = true
       SiteSetting.allow_user_locale = true
       SiteSetting.content_localization_supported_locales = "en|ja"
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
     end
 
     it "holds the push until the translation is stored" do

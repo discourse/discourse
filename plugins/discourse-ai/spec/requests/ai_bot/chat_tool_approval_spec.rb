@@ -3,9 +3,9 @@
 RSpec.describe "AI agent chat tool approval" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
+  include_context "with AI bot enabled"
+
   before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(admin)

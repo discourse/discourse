@@ -44,6 +44,35 @@ RSpec.describe Blog::Publication::Publish do
       it { is_expected.to fail_a_policy(:blog_ready) }
     end
 
+    context "when the article's blog is not published" do
+      before do
+        blog = Blog::Instance.create!(name: "Engineering", slug: "engineering", published: false)
+        publication.save!
+        publication.update_columns(blog_id: blog.id)
+      end
+
+      it "publishes nothing and starts no public discussion" do
+        expect { result }.not_to change { Topic.count }
+        expect(result).to fail_a_policy(:blog_published)
+      end
+    end
+
+    context "when the article's blog has no category yet" do
+      let(:blog) { Blog::Instance.create!(name: "Engineering", slug: "engineering") }
+
+      before do
+        publication.save!
+        publication.update_columns(blog_id: blog.id)
+      end
+
+      it "creates a category named after the blog for the discussion" do
+        expect(result).to run_successfully
+        category = Category.find(blog.reload.category_id)
+        expect(category).to have_attributes(name: "Engineering Blog", slug: "engineering-blog")
+        expect(publication.reload.discussion_topic.category).to eq(category)
+      end
+    end
+
     context "without a revision" do
       it { is_expected.to run_successfully }
 
@@ -200,7 +229,7 @@ RSpec.describe Blog::Publication::Publish do
       let(:params) { { topic_id: topic.id, revision_id: revision.id } }
 
       before do
-        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
         freeze_time Time.utc(2026, 10, 30)
         approve_blog_revision(publication, revision, acting_user)
         freeze_time Time.utc(2026, 11, 2)

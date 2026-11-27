@@ -600,9 +600,6 @@ ru:
       fonts:
         base_font: "Body"
         heading_font: "Заголовки"
-      logo:
-        description: "Отображается в верхней части навигации сайта, а также в верхней части уведомлений по электронной почте сайта."
-        help_text: "Рекомендуемый размер — 600 x 80 пикселей."
       homepage:
         topics: "Новые темы"
         categories: "Категории"
@@ -1110,7 +1107,6 @@ ru:
         suspect_user: "Это спам от пользователя?"
         approve_post: "Одобрить этот пост?"
         approve_topic: "Одобрить эту тему?"
-        something_wrong_with_post: "Что-то не так с этим сообщением?"
       types:
         reviewable_flagged_post:
           title: "На это сообщение поступила жалоба"
@@ -4255,7 +4251,7 @@ ru:
         back_description: "Перейти к последнему непрочитанному сообщению"
         replies_short: "%{current} из %{total}"
       progress:
-        title: Текущее местоположение в теме
+        title: "Текущее местоположение в теме"
         jump_prompt: "перейти к…"
         jump_prompt_of:
           one: "из %{count} сообщения"
@@ -4529,10 +4525,8 @@ ru:
           label: "выбрано"
           title: "Нажмите, чтобы удалить сообщение из подборки"
         select_replies:
-          label: "выбрать + ответы"
           title: "Добавить сообщение и все ответы на него в подборку"
         select_below:
-          label: "выбрать + все ниже"
           title: "Добавить сообщение и все последующие в подборку"
         delete: удалить выбранные
         cancel: отменить
@@ -4955,6 +4949,8 @@ ru:
         tag_group: "Группа тегов"
       topic_featured_link_allowed: "Разрешить избранные ссылки в этой категории"
       delete: "Удаление категории"
+      empty_state:
+        edit_category: "Редактировать категорию"
       create: "Создать категорию"
       create_with_type: "Новая категория %{typeName}"
       create_long: "Создать новую категорию"
@@ -4977,7 +4973,7 @@ ru:
         emoji_required: "Выберите эмодзи."
         icon_required: "Выбрать значок."
       name: "Название категории"
-      untitled: "Категория без названия"
+      icon_search_placeholder: "Поиск…"
       description: "Описание"
       logo: "Изображение логотипа категории"
       logo_dark: "Изображение логотипа категории в темном режиме"
@@ -4985,10 +4981,6 @@ ru:
       background_image: "Фоновое изображение категории"
       background_image_dark: "Темное фоновое изображение категории"
       style: "Стиль"
-      icon: "Значок"
-      emoji: "Эмодзи"
-      select_emoji: "Выберите эмодзи"
-      select_icon: "Выбрать иконку"
       background_color: "Цвет"
       foreground_color: "Цвет текста"
       color_validations:
@@ -4996,18 +4988,11 @@ ru:
         incorrect_length: "формат должен соответствовать #RRGGBB или #RGB"
         non_hexdecimal: "должны содержать только шестнадцатеричные символы (0-9, AF)."
       styles:
-        type: "Стиль"
         icon: "Значок"
         emoji: "Эмодзи"
         square: "Квадрат"
-        options:
-          square: "Квадрат"
-          icon: "Значок"
-          emoji: "Эмодзи"
       color_used: "Используемый цвет"
-      predefined_colors: "Предустановленные варианты цветов"
       name_placeholder: "Рекомендуется одно-два слова."
-      color_placeholder: "Любой цвет из веб-палитры"
       delete_confirm: "Действительно удалить категорию?"
       delete_error: "При удалении категории произошла ошибка."
       list: "Вывод списка категорий"
@@ -5761,7 +5746,6 @@ ru:
         other: "Черновики (%{count})"
     safe_mode:
       enabled: "Включён безопасный режим. Чтобы выйти из него, закройте это окно браузера."
-    theme_preview_notice: "Сейчас вы просматриваете тему. Закройте эту вкладку или окно браузера, чтобы вернуться к обычной конфигурации сайта."
     theme_preview_failed: "Не удалось просмотреть тему, поскольку она не существует или у вас нет прав доступа к ней."
     image_removed: "(изображение удалено)"
     pause_notifications:
@@ -7967,8 +7951,6 @@ ru:
           title: "Цвета"
           edit: "Изменить"
           view: "Вид"
-          set_default_light: "Установить как светлую палитру в теме по умолчанию (%{theme})"
-          set_default_dark: "Установить как темную палитру в теме по умолчанию (%{theme})"
           set_default_success: "%{schemeName} установить в качестве палитры по умолчанию для %{themeName}"
           saved_refreshing: "Сохранено! Обновление цветов..."
           from_theme: "Из темы: %{name}"
@@ -8612,7 +8594,6 @@ ru:
         silence_duration: "Как долго пользователь будет заморожен?"
         silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
-        silence_message: "Сообщение на электронную почту"
         suspended_until: "(блокировка до %{until})"
         suspend_forever: "Бессрочная блокировка"
         cant_suspend: "Этого пользователя нельзя заблокировать."
@@ -8950,6 +8931,8 @@ ru:
       site_text:
         description: "Вы можете настроить любой текст на своем форуме."
         search_label: "Искать"
+        preview:
+          default: "Домашнюю страницу"
         theme_disabled: "Отключен"
         filters: "Фильтры"
         status:
@@ -9132,7 +9115,7 @@ ru:
           modal_title: Группы наград
         granted_by: Кем выдана
         granted_at: Когда выдана
-        reason_help: (Ссылка на сообщение или тему)
+        reason_help: Ссылка на сообщение или тему
         save: Сохранить
         delete: Удалить
         delete_confirm: Действительно удалить эту награду?

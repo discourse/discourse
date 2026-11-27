@@ -9,12 +9,22 @@ module BlogSpecHelpers
   # hostnames; without one the blog is served under /blog on the forum.
   def enable_blog!(category: nil, drafts: nil, custom_domain: true)
     SiteSetting.blog_enabled = true
+    attributes = {}
     if custom_domain
       RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(BLOG_HOSTNAMES)
-      SiteSetting.blog_url = "https://#{BLOG_HOST}"
+      attributes[:url] = "https://#{BLOG_HOST}"
     end
-    SiteSetting.blog_category = category.id if category
+    attributes[:category_id] = category.id if category
+    update_default_blog(**attributes) if attributes.present?
     SiteSetting.blog_drafts_category = drafts.id if drafts
+  end
+
+  # Saved without validation, so specs can set values the admin form would refuse.
+  def update_default_blog(**attributes)
+    blog = Blog::Instance.find_by!(is_default: true)
+    blog.assign_attributes(attributes)
+    blog.save!(validate: false)
+    blog
   end
 
   def create_blog_theme(attributes, user:, source: nil)
@@ -131,4 +141,8 @@ module BlogSpecHelpers
   end
 end
 
-RSpec.configure { |config| config.include(BlogSpecHelpers) }
+RSpec.configure do |config|
+  config.include(BlogSpecHelpers)
+  # The database rolls back between examples, but the cached blog list does not.
+  config.before { Blog::Instance.clear_cache }
+end

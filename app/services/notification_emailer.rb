@@ -140,7 +140,7 @@ class NotificationEmailer
   end
 
   def self.process_notification(notification, no_delay: false)
-    return if @disabled
+    return if @disabled || notification.user&.interactive_bot?
 
     email_user = EmailUser.new(notification, no_delay: no_delay)
     email_method = Notification.types[notification.notification_type]

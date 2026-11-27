@@ -62,6 +62,7 @@ tr_TR:
     discourse_workflows:
       nodes:
         "action:ai_agent": "Yapay Zeka Ajanı"
+        "action:ai_tool": "Yapay Zeka Aracı"
     discourse_automation:
       scriptables:
         llm_report:
@@ -238,6 +239,13 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      review_bulk:
+        refresh: "Yenile"
+        columns:
+          user: "Kullanıcı"
+          reason: "Bayrak ekleme nedeni:"
+          created: "Oluşturulma"
+          status: "Durum"
       dsa_classification:
         suggest: "YZ ile öner"
       copied: "Kopyalandı"
@@ -248,10 +256,22 @@ tr_TR:
         type: "Tür"
         error: "Hata"
         response: "Yanıt"
+      post_image_captions:
+        image_descriptions:
+          apply: "Uygula"
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
           mode: "Mod"
+        ai_tool:
+          tool_ref: "Araç"
+          arguments: "Tartışmalar"
+          list_item: "Liste ögesi"
+          add_list_item: "Öge ekle"
+        mcp_tool:
+          mcp_server_id: "MCP sunucusu"
+          tool_name: "Araç"
+          arguments: "Tartışmalar"
         classify:
           text: "Metin"
           upload_ids: "Görüntüler"
@@ -386,6 +406,9 @@ tr_TR:
             enabled_features: "Etkinleştirilmiş Özellikler"
             automation: "Otomasyon"
             agents: "Ajanlar"
+        review_queue:
+          setting_groups:
+            settings: "Ayarlar"
         image_caption:
           setting_groups:
             settings: "Ayarlar"
@@ -858,6 +881,31 @@ tr_TR:
         mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      concepts:
+        edit: "Düzenle"
+        seed:
+          refresh: "Yenile"
+        delete: "Sil"
+        columns:
+          status: "Durum"
+          topics: "Konular"
+          posts: "Gönderi"
+        statuses:
+          all: "Tüm durumlar"
+          active: "Aktif"
+        form:
+          name: "Ad"
+          description: "Açıklama"
+          status: "Durum"
+        shared_topics_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
+        tagged_topics: "Etiketli konular"
+        topic_columns:
+          topic: "Konu"
+          primary: "Birincil"
+          relevance: "İlgi"
+        primary_badge: "Birincil"
       decision_models:
         no_preset: "Hiçbiri"
         display_name: "Ad"
@@ -1237,8 +1285,7 @@ tr_TR:
         filter_conversation: "Konuşma"
       ai_bot:
         title: "YZ botu"
-        agent: "Ajan:"
-        llm: "Model:"
+        agent_menu_heading: "Ajan"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
         try_again: "Tekrar deneyin"
@@ -1304,7 +1351,6 @@ tr_TR:
           tab_label: "YZ"
           header: "Nasıl yardımcı olabilirim?"
           submit: "Soru gönder"
-          disclaimer: "Üretken YZ, hata yapabilir. Önemli bilgileri doğrulayın."
           placeholder: "Soru sorun..."
           new: "Yeni Soru"
           min_input_length_message:

@@ -117,7 +117,6 @@ class UserMcpAuthorizationRow extends Component {
 
 export default class UserMcpAuthorizations extends Component {
   @service a11y;
-  @service currentUser;
   @service dialog;
   @service toasts;
 
@@ -135,8 +134,7 @@ export default class UserMcpAuthorizations extends Component {
 
   get shouldRender() {
     return (
-      this.args.model?.id === this.currentUser?.id &&
-      this.args.model?.show_mcp_authorizations
+      this.args.model?.isCurrent && this.args.model?.show_mcp_authorizations
     );
   }
 

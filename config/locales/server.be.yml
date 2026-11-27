@@ -1870,11 +1870,6 @@ be:
     account_suspended_forever:
       title: "Аккаунт прыпынены"
       subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
-    account_silenced:
-      title: "Аккаунт прыпынены"
-      subject_template: "[% {Email_prefix}] Ваш уліковы запіс была адключаная"
-    account_silenced_forever:
-      title: "Аккаунт прыпынены"
     account_exists:
       title: "Лік ужо існуе"
       subject_template: "[% {Email_prefix}] Лік ужо існуе"
@@ -2313,7 +2308,6 @@ be:
       summer: "лета"
       grey_amber: "шэры Amber"
       latte: "Latte"
-      dark_rose: "Dark Rose"
   wizard:
     title: "дыскурс Setup"
     step:

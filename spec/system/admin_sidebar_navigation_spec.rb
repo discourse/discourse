@@ -50,13 +50,10 @@ describe "Admin | Sidebar Navigation" do
     end
   end
 
-  it "displays the panel header" do
+  it "shows a panel header and lets the admin toggle sections that start collapsed" do
     visit("/admin")
     expect(sidebar).to have_panel_header
-  end
 
-  it "collapses sections by default" do
-    visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
@@ -69,30 +66,7 @@ describe "Admin | Sidebar Navigation" do
         I18n.t("admin_js.admin.config.upcoming_changes.title"),
       ],
     )
-  end
 
-  context "when on mobile" do
-    it "shows the admin sidebar links in the header-dropdown when navigating to an admin route and hides them when leaving",
-       mobile: true do
-      visit("/latest")
-      sidebar_dropdown.click
-      expect(sidebar).to have_section("community")
-      sidebar.click_link_in_section("community", "admin")
-      expect(page).to have_current_path("/admin")
-      sidebar_dropdown.click
-      expect(sidebar).to have_no_section("community")
-      expect(page).to have_no_css(".admin-main-nav")
-
-      sidebar.click_back_to_forum
-      expect(page).to have_current_path("/latest")
-
-      sidebar_dropdown.click
-      expect(sidebar).to have_no_section("admin-root")
-    end
-  end
-
-  it "allows sections to be expanded" do
-    visit("/admin")
     sidebar.toggle_all_sections
     expect(page).to have_selector(
       ".sidebar-section-link-content-text",
@@ -120,6 +94,26 @@ describe "Admin | Sidebar Navigation" do
       ".sidebar-section-link-content-text",
       minimum: UNFILTERED_LINK_COUNT,
     )
+  end
+
+  context "when on mobile" do
+    it "shows the admin sidebar links in the header-dropdown when navigating to an admin route and hides them when leaving",
+       mobile: true do
+      visit("/latest")
+      sidebar_dropdown.click
+      expect(sidebar).to have_section("community")
+      sidebar.click_link_in_section("community", "admin")
+      expect(page).to have_current_path("/admin")
+      sidebar_dropdown.click
+      expect(sidebar).to have_no_section("community")
+      expect(page).to have_no_css(".admin-main-nav")
+
+      sidebar.click_back_to_forum
+      expect(page).to have_current_path("/latest")
+
+      sidebar_dropdown.click
+      expect(sidebar).to have_no_section("admin-root")
+    end
   end
 
   it "highlights the 'Themes and components' link when either the themes, themes components or theme site settings admin page is visited" do

@@ -15,13 +15,13 @@ module DesignWizard
       { key: "default", light: "Light", dark: "Dark" },
       { key: "wcag", light: "WCAG", dark: "WCAG Dark" },
       { key: "solarized", light: "Solarized Light", dark: "Solarized Dark" },
-      { key: "neutral", light: "Neutral", dark: nil },
-      { key: "shades_of_blue", light: "Shades of Blue", dark: nil },
-      { key: "summer", light: "Summer", dark: nil },
-      { key: "dracula", light: nil, dark: "Dracula" },
-      { key: "grey_amber", light: nil, dark: "Grey Amber" },
-      { key: "latte", light: nil, dark: "Latte" },
-      { key: "dark_rose", light: nil, dark: "Dark Rose" },
+      { key: "neutral", light: "Neutral", dark: "Neutral Dark" },
+      { key: "shades_of_blue", light: "Shades of Blue", dark: "Shades of Blue Dark" },
+      { key: "summer", light: "Summer", dark: "Summer Dark" },
+      { key: "dracula", light: "Dracula Light", dark: "Dracula" },
+      { key: "grey_amber", light: "Grey Amber Light", dark: "Grey Amber" },
+      { key: "latte", light: "Latte Light", dark: "Latte" },
+      { key: "dark_rose", light: "Rose", dark: "Dark Rose" },
     ].freeze
 
     def self.for_theme(theme)

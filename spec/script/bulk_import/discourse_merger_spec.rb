@@ -221,6 +221,41 @@ if merger_dependencies_available
       instance_double(PG::Connection, exec: rows)
     end
 
+    describe "#copy_user_stuff" do
+      it "leaves push subscriptions behind even if a source token ID exists in the destination" do
+        merged_user = Fabricate(:user)
+        existing = Fabricate(:bound_push_subscription)
+        source_row =
+          PushSubscription
+            .column_names
+            .index_with { |column| existing.read_attribute_before_type_cast(column)&.to_s }
+            .merge("user_id" => "42")
+        source = instance_double(PG::Connection)
+        allow(source).to receive(:exec) { |sql|
+          sql.end_with?("FROM push_subscriptions") ? [source_row] : []
+        }
+        merger =
+          build_merger(
+            raw_connection: ActiveRecord::Base.connection.raw_connection,
+            encoder: PG::TextEncoder::CopyRow.new,
+            merged_user_ids: [],
+            sequences: {
+            },
+            users: {
+              42 => merged_user.id,
+            },
+          )
+        allow(merger).to receive(:source_raw_connection).and_return(source)
+        allow(merger).to receive(:puts)
+
+        merger.copy_user_stuff
+
+        expect(
+          PushSubscription.where(user_id: [merged_user.id, existing.user_id]),
+        ).to contain_exactly(existing)
+      end
+    end
+
     describe "#merge_same_named_rows" do
       fab!(:destination_group) { Fabricate(:group, name: "support_team") }
       fab!(:other_group, :group)

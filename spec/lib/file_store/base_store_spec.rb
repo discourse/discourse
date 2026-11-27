@@ -200,6 +200,22 @@ RSpec.describe FileStore::BaseStore do
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
+    it "returns the store path of local uploads only when the file exists" do
+      local_store = FileStore::LocalStore.new
+      upload = Fabricate(:upload, url: "#{local_store.relative_base_url}/original/1X/a.png")
+      path = local_store.path_for(upload)
+      FileHelper.expects(:download).never
+
+      expect(local_store.download(upload)).to be_nil
+
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, "a")
+
+      expect(local_store.download(upload)).to eq(path)
+    ensure
+      FileUtils.rm_f(path)
+    end
+
     it "returns a file path" do
       path = store.download(upload_s3)
 
@@ -255,6 +271,12 @@ RSpec.describe FileStore::BaseStore do
       FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
 
       expect { store.download!(upload_s3) }.to raise_error(FileStore::DownloadError)
+    end
+
+    it "raises DownloadError when the file is missing" do
+      expect { FileStore::LocalStore.new.download!(Fabricate(:upload)) }.to raise_error(
+        FileStore::DownloadError,
+      )
     end
 
     it "returns a file path" do

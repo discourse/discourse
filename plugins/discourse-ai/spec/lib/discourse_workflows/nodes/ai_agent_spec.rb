@@ -458,6 +458,21 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     end
   end
 
+  it "attributes agent requests to the workflow" do
+    workflow = Fabricate(:discourse_workflows_workflow)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Hello",
+      },
+      workflow: workflow,
+    )
+
+    expect(bot_contexts.first.feature_context).to eq(workflow_id: workflow.id.to_s)
+    expect(bot_contexts.first.feature_name).to eq("workflow")
+  end
+
   it "uses an empty string when the optional prompt is blank" do
     items = execute_node_output(configuration: { "agent_id" => agent.id }).first
 

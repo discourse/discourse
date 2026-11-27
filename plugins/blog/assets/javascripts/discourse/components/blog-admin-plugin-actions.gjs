@@ -1,9 +1,14 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
+import { defaultBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
 export default class BlogAdminPluginActions extends Component {
   @service site;
+
+  get defaultBlogUrl() {
+    return defaultBlog(this.site)?.base_url;
+  }
 
   <template>
     <@actions.Wrapped as |wrapped|>
@@ -15,7 +20,7 @@ export default class BlogAdminPluginActions extends Component {
         }}
         rel="noopener noreferrer"
         target="_blank"
-        @href={{this.site.blog_base_url}}
+        @href={{this.defaultBlogUrl}}
         @label="blog.admin.view_blog"
       />
     </@actions.Wrapped>

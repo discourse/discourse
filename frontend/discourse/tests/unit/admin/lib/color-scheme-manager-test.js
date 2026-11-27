@@ -2,6 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   applyColorScheme,
+  renderedColorMode,
   setDefaultColorScheme,
 } from "discourse/admin/lib/color-scheme-manager";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -119,6 +120,25 @@ module("Unit | Admin | Lib | color-scheme-manager", function (hooks) {
       defaultTheme.dark_color_scheme_id,
       43,
       "updates the theme's dark scheme"
+    );
+  });
+
+  test("renderedColorMode reads the mode a link state would render", function (assert) {
+    this.lightLink.media = "all";
+    this.darkLink.media = "none";
+
+    assert.strictEqual(
+      renderedColorMode(),
+      "light",
+      "defaults to the page's current links"
+    );
+    assert.strictEqual(
+      renderedColorMode({
+        light: { href: ORIGINAL_LIGHT_HREF, media: "none" },
+        dark: { href: ORIGINAL_DARK_HREF, media: "all" },
+      }),
+      "dark",
+      "reads a captured state instead of the page"
     );
   });
 });

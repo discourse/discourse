@@ -350,6 +350,9 @@ class InvitesController < ApplicationController
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.record.errors.full_messages.first)
       end
+
+      # A new address reaches a new person, so it counts like a new invite.
+      invite.limit_invites_per_day.performed! if new_email && old_email != new_email
     end
 
     if invite.emailed_status == Invite.emailed_status_types[:pending]

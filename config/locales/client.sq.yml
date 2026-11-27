@@ -3216,7 +3216,7 @@ sq:
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresi i temës
+        title: "progresi i temës"
         jump_prompt: "shkoni në…"
         jump_prompt_of:
           one: "nga %{count} postim"
@@ -3413,8 +3413,6 @@ sq:
         selected: "të zgjedhura (%{count})"
         select_post:
           label: "zgjidh"
-        select_replies:
-          label: "select +replies"
         delete: fshij të përzgjedhurat
         cancel: anulo përzgjedhjen
         select_all: përzgjidhi të gjitha
@@ -3556,19 +3554,14 @@ sq:
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       validations:
         icon_required: "Zgjidhni një ikonë."
+      icon_search_placeholder: "Kërkoni…"
       description: "Përshkrimi"
-      icon: "Ikonë"
-      emoji: "Emoji"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
       styles:
         icon: "Ikonë"
         emoji: "Emoji"
-        options:
-          icon: "Ikonë"
-          emoji: "Emoji"
-      color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
@@ -3924,6 +3917,7 @@ sq:
       share: "Shpërndaje"
       dismiss: "Hiqe"
     mobile_tab_bar:
+      new_topic: "Temë e re"
       create: "Krijo"
       more: "Më shumë"
       back: "Kthehu mbrapa"
@@ -5002,6 +4996,8 @@ sq:
           dropdown: "Listë Dropdown"
       site_text:
         search_label: "Kërko"
+        preview:
+          default: "Paracaktuar"
         theme_disabled: "E çaktivizuar"
         edit: "Redaktoni"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
@@ -5070,7 +5066,6 @@ sq:
           modal_title: Grupime Steme
         granted_by: Atribuar nga
         granted_at: Atribuar më
-        reason_help: '{një lidhje për një postim ose temë)'
         save: Ruaj
         delete: Fshij
         delete_confirm: Jeni i sigurtë që doni ta fshini këtë stemë?

@@ -57,6 +57,10 @@ module UserNotificationsHelper
   def email_excerpt(html_arg, post = nil)
     html = (first_paragraphs_from(html_arg) || html_arg).to_s
     PrettyText.format_for_email(html, post).html_safe
+  rescue ArgumentError
+    # Nokogiri raises when the HTML exceeds its parser limits (e.g. tree depth);
+    # a missing excerpt must not prevent the email from being sent.
+    "".html_safe
   end
 
   def normalize_name(name)

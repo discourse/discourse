@@ -6,6 +6,11 @@ Blog::Engine.routes.draw do
   delete "/blog-editor/publications/:topic_id/reviews/:id" => "reviews#destroy"
   get "/blog-editor/publications/:topic_id/reviews/:id/feedback" => "reviews#feedback"
   get "/blog-editor/publications/:topic_id/feedback" => "reviews#topic_feedback"
+  get "/admin/plugins/blog/blogs" => "blogs#index"
+  post "/admin/plugins/blog/blogs" => "blogs#create"
+  get "/admin/plugins/blog/blogs/:id" => "blogs#show", :constraints => { id: /\d+/ }
+  put "/admin/plugins/blog/blogs/:id" => "blogs#update", :constraints => { id: /\d+/ }
+  delete "/admin/plugins/blog/blogs/:id" => "blogs#destroy", :constraints => { id: /\d+/ }
   get "/admin/plugins/blog/themes" => "themes#index"
   post "/admin/plugins/blog/themes" => "themes#create"
   post "/admin/plugins/blog/themes/import" => "themes#import"

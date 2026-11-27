@@ -33,6 +33,7 @@ export interface AdminUserExport {
 
 /** Core admin serializer additions; plugins augment this interface. All admin additions can be absent on basic users. */
 export interface AdminUserFields extends UserFields {
+  interactive_bot?: boolean;
   active?: boolean;
   approved?: boolean;
   last_emailed_at?: string | null;

@@ -16,6 +16,13 @@ ug:
         desktop: ئۈستەل يۈزى
         mobile: كۆچمە
         save: ساقلا
+        about_tab: ھەققىدە
+        blog_slug: قىسقارتما
+        settings_tab: تەڭشەك
+        theme_tab: ئۆرنەك
+        column_name: ئىسمى
+        column_category: سەھىپە
+        column_status: ھالەت
         path_formats:
           custom: ئىختىيارى
         back_to_themes: ئۆرنەككە قايت

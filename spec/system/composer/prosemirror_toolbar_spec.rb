@@ -266,7 +266,7 @@ describe "Composer - ProseMirror - Toolbar" do
       expect(heading_menu.option("[data-name='heading-4']")).to have_css(".d-icon-check")
       heading_menu.collapse
 
-      composer.select_range_rich_editor(0, 0)
+      rich.find("h2", text: "This is a test", exact_text: true).click
       expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
       heading_menu.expand
       expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")

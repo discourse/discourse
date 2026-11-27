@@ -45,6 +45,23 @@ RSpec.describe Notification::Action::BulkCreate do
         expect { action }.to change { Notification.count }.by(1)
       end
 
+      it "publishes and triggers nothing when its transaction is rolled back" do
+        events = nil
+        messages =
+          MessageBus.track_publish("/notification/#{user1.id}") do
+            events =
+              DiscourseEvent.track_events(:notification_created) do
+                ActiveRecord::Base.transaction(requires_new: true) do
+                  action
+                  raise ActiveRecord::Rollback
+                end
+              end
+          end
+
+        expect(messages).to be_empty
+        expect(events).to be_empty
+      end
+
       it "returns the notification ids" do
         expect(action.length).to eq(1)
         expect(notification).to be_present

@@ -18,6 +18,9 @@ sl:
           cross_list_primary: "Primarna"
         colors:
           title: "Barve"
+        design_variables:
+          type: "Tip"
+          default: "Privzeto"
         categories:
           title: "Kategorije"
         navigation:

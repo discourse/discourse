@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserAuthenticator
+  attr_reader :enrollment_proof_expires_at
+
   def initialize(
     user,
     session,
@@ -9,8 +11,9 @@ class UserAuthenticator
   )
     @user = user
     @session = session
-    if session.try(:[], :authentication).is_a?(Hash)
-      @auth_result = Auth::Result.from_session_data(session[:authentication], user: user)
+    @authentication_data = session.try(:[], :authentication)
+    if @authentication_data.is_a?(Hash)
+      @auth_result = Auth::Result.from_session_data(@authentication_data, user: user)
     end
     @authenticator_finder = authenticator_finder
     @require_password = require_password
@@ -33,7 +36,10 @@ class UserAuthenticator
   def finish
     if authenticator
       authenticator.after_create_account(@user, @auth_result)
-      confirm_email
+      if authenticated?
+        @user.activate
+        @enrollment_proof_expires_at = @authentication_data[:enrollment_proof_expires_at]
+      end
     end
     if @session.try(:[], :authentication)
       @session.delete(:authentication)
@@ -46,6 +52,13 @@ class UserAuthenticator
     @auth_result&.email_valid
   end
 
+  def unstage!(signup_email:)
+    if @user.email == signup_email && authenticated? && @auth_result.skip_email_validation
+      @user.skip_email_validation = true
+    end
+    @user.unstage!
+  end
+
   def authenticated?
     return false if !@auth_result
     return false if @auth_result&.email&.downcase != @user.email.downcase
@@ -54,10 +67,6 @@ class UserAuthenticator
   end
 
   private
-
-  def confirm_email
-    @user.activate if authenticated?
-  end
 
   def authenticator
     if authenticator_name

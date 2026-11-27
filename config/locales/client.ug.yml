@@ -551,8 +551,6 @@ ug:
         applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
       colors:
-        light_palette: "يورۇق رەڭ تۈسى"
-        dark_palette: "قاراڭغۇ رەڭ تۈسى"
         modes:
           label: "رەڭ ھالىتى"
           both: "يورۇق ۋە قاراڭغۇ"
@@ -561,9 +559,6 @@ ug:
       fonts:
         base_font: "مەزمۇن"
         heading_font: "ماۋزۇ"
-      logo:
-        description: "تور بېكەتنىڭ چوققىسىدىكى يولباشچىدا ۋە تور بېكەتنىڭ ئېلخەت ئۇقتۇرۇشىنىڭ چوققىسىدا كۆرۈنىدۇ."
-        help_text: "تەۋسىيە قىلىنغان چوڭلۇقى 600x80 پىكسېل."
       homepage:
         topics: "تېما"
         categories: "سەھىپە"
@@ -3860,7 +3855,7 @@ ug:
         back_description: "ئاخىرقى ئوقۇلمىغان يازمىڭىزغا قايتىدۇ"
         replies_short: "%{current} / %{total}"
       progress:
-        title: تېما ئىلگىرىلىشى
+        title: "تېما ئىلگىرىلىشى"
         jump_prompt: "ئاتلاش ئورنى…"
         jump_prompt_of:
           one: "/ %{count} يازما"
@@ -4110,10 +4105,8 @@ ug:
           label: "تاللاندى"
           title: "چېكىلسە يازمىنى تاللانمىدىن چىقىرىۋېتىدۇ"
         select_replies:
-          label: "تاللا + جاۋاب"
           title: "يازما ۋە ئۇنىڭ بارلىق جاۋابلىرىنى تاللانمىغا قوشىدۇ"
         select_below:
-          label: "تاللا + تۆۋەندىكى"
           title: "يازما ۋە ئۇنىڭدىن كېيىنكىنىڭ ھەممىسىنى تاللانمىغا قوشىدۇ"
         delete: تاللانغاننى ئۆچۈر
         cancel: تاللاشتىن ۋاز كەچ
@@ -4497,7 +4490,7 @@ ug:
       validations:
         icon_required: "سىنبەلگە تاللىنىدۇ."
       name: "سەھىپە ئىسمى"
-      untitled: "ئاتسىز سەھىپە"
+      icon_search_placeholder: "ئىزدە…"
       description: "چۈشەندۈرۈش"
       logo: "سەھىپە تۇغ سۈرىتى"
       logo_dark: "قاراڭغۇ ھالەتتىكى سەھىپە تۇغ سۈرىتى"
@@ -4505,8 +4498,6 @@ ug:
       background_image: "سەھىپە تەگلىك سۈرىتى"
       background_image_dark: "قاراڭغۇ سەھىپە تەگلىك سۈرىتى"
       style: "ئۇسلۇب"
-      icon: "سىنبەلگە"
-      emoji: "چىراي ئىپادە"
       background_color: "رەڭ"
       foreground_color: "تېكىست رەڭگى"
       color_validations:
@@ -4514,17 +4505,10 @@ ug:
         incorrect_length: "چوقۇم #RRGGBB ياكى #RGB پىچىمىغا ماس كېلىشى كېرەك"
         non_hexdecimal: "پەقەت ئون ئالتىلىك سىستېمىدىكى ھەرپنىلا ئۆز ئىچىگە ئالىدۇ (0-9, A-F)"
       styles:
-        type: "ئۇسلۇب"
         icon: "سىنبەلگە"
         emoji: "چىراي ئىپادە"
         square: "چاسا"
-        options:
-          square: "چاسا"
-          icon: "سىنبەلگە"
-          emoji: "چىراي ئىپادە"
       color_used: "ئىشلىتىلىۋاتقان رەڭ"
-      predefined_colors: "ئالدىن بېكىتىلگەن رەڭ تاللانمىسى"
-      color_placeholder: "خالىغان تور رەڭگى"
       delete_confirm: "بۇ سەھىپىنى راستتىنلا ئۆچۈرەمسىز؟"
       delete_error: "بۇ سەھىپىنى ئۆچۈرۈۋاتقاندا خاتالىق كۆرۈلگەن."
       list: "سەھىپە تىزىمىنى كۆرسەت"
@@ -5185,7 +5169,6 @@ ug:
         other: "دەسلەپكى نۇسخا (%{count})"
     safe_mode:
       enabled: "بىخەتەر ھالەت قوزغىتىلغان، بىخەتەر ھالەتتىن چېكىنىشتە بۇ توركۆرگۈ كۆزنىكىنى تاقايدۇ"
-    theme_preview_notice: "سىز ھازىر بىر ئۆرنەكنى ئالدىن كۆزىتىۋاتىسىز، بۇ توركۆرگۈ بەتكۈچى ياكى كۆزنىكىنى تاقىسىڭىز ئادەتتىكى تور بېكەت سەپلىمىسىگە قايتىسىز."
     theme_preview_failed: "ئۆرنەكنى ئالدىن كۆزىتەلمەيدۇ چۈنكى ئۇ مەۋجۇت ئەمەس ياكى ئۇنى زىيارەت قىلىش ئىجازىتىڭىز يوق."
     image_removed: "(سۈرەت چىقىرىۋېتىلدى)"
     pause_notifications:
@@ -7871,7 +7854,6 @@ ug:
         silence_duration: "ئىشلەتكۈچى قاچانغىچە سۈكۈت قىلىدۇ؟"
         silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
-        silence_message: "ئېلخەت ئۇچۇرى"
         suspended_until: "(%{until} غىچە)"
         suspend_forever: "مەڭگۈلۈك توختات"
         cant_suspend: "بۇ ئىشلەتكۈچىنى توختاتقىلى بولمايدۇ."
@@ -8171,6 +8153,8 @@ ug:
       site_text:
         description: "مۇنبىرىڭىزدىكى خالىغان تېكىستنى خاسلاشتۇرالايسىز."
         search_label: "ئىزدە"
+        preview:
+          default: "كۆڭۈلدىكى"
         theme_disabled: "چەكلەندى"
         title: "بېكەت تېكىستى"
         edit: "تەھرىر"
@@ -8322,7 +8306,7 @@ ug:
           modal_title: تارتۇق گۇرۇپپىسى
         granted_by: ئىجازەت بەرگۈچى
         granted_at: ئىجازەت ۋاقتى
-        reason_help: (يازما ياكى تېمىغا ئۇلىنىش)
+        reason_help: يازما ياكى تېمىغا ئۇلىنىش
         save: ساقلا
         delete: ئۆچۈر
         delete_confirm: بۇ تارتۇقنى راستتىنلا ئۆچۈرەمسىز؟

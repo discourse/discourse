@@ -1692,7 +1692,7 @@ sw:
         back_description: "Rudi kwenye chapisho la mwisho ambalo haujalisoma"
         replies_short: "%{current} / %{total}"
       progress:
-        title: maendeleo ya mada
+        title: "maendeleo ya mada"
         jump_prompt_or: "au"
       notifications:
         title: badilisha mara ngapi utapata taarifa kuhusu mada hii
@@ -1849,10 +1849,8 @@ sw:
           label: "imechaguliwa"
           title: "Bofya kuondoa chapisho kwenye chaguo"
         select_replies:
-          label: "chagua +majibu"
           title: "Ongeza chapisho na majibu yake yote kwenye uteuzi"
         select_below:
-          label: "chagua +chini"
           title: "Ongeza chapisho na vile vya baadae kwenye uteuzi"
         delete: futa vilivyochaguliwa
         cancel: ghairi uchaguaji
@@ -2012,18 +2010,12 @@ sw:
       creation_error: Tatizo limetokea wakati wa kutengeneza kategoria.
       save_error: Hitilafu imetokea wakati wa kuhifadhi kategoria.
       description: "Maelezo"
-      icon: "ikoni"
-      emoji: "Emoji"
       background_color: "Rangi"
       color_validations:
         cant_be_empty: "haiwezi kuachwa wazi"
       styles:
         icon: "ikoni"
         emoji: "Emoji"
-        options:
-          icon: "ikoni"
-          emoji: "Emoji"
-      color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
       delete_error: "Hitilafu imetokea wakati wa kuondoa kategoria."
       no_description: "Tafadhali, ongeza maelezo kuhusu kategoria hii."
@@ -2368,6 +2360,7 @@ sw:
       share: "Shirikisha"
       dismiss: "Ondosha"
     mobile_tab_bar:
+      new_topic: "Mada Mpya"
       create: "Tengeneza"
       more: "Zaidi"
       back: "Iliyopita"
@@ -3412,7 +3405,6 @@ sw:
         silence_modal_title: "Nyamazisha Mtumiaji"
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
         silence_reason_placeholder: "Nyamazisha Sababu"
-        silence_message: "Tuma ujumbe kwa Barua Pepe"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"
@@ -3579,6 +3571,8 @@ sw:
           dropdown: "Shusha Chini"
       site_text:
         search_label: "Tafuta"
+        preview:
+          default: "Halisi"
         theme_disabled: "Imezuiwa"
         filters: "Inachujwa"
         edit: "Hariri"
@@ -3650,7 +3644,7 @@ sw:
           modal_title: VIkundi vya beji
         granted_by: Imetolewa na
         granted_at: Imetolewa wakati wa
-        reason_help: (Kiungo cha taarifa au ujumbe)
+        reason_help: Kiungo cha taarifa au ujumbe
         save: Hifadhi
         delete: Futa
         delete_confirm: Una uhakika unata kufuta hii beji?

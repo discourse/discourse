@@ -89,7 +89,7 @@ class TopicList
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
     @dismissed_topic_users_lookup =
-      DismissedTopicUser.lookup_for(@current_user, @topics) if @current_user
+      DismissedTopicUser.lookup_for(@current_user, @topics).to_set if @current_user
 
     post_action_type =
       if @current_user
@@ -105,10 +105,12 @@ class TopicList
     # Create a lookup for all the user ids we need
     user_ids = []
     group_ids = []
+    translations = TopicPostersSummary.translations
     @topics.each do |ft|
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
-      group_ids |= ft.allowed_group_ids || []
+      group_ids.concat(ft.allowed_group_ids || [])
     end
+    group_ids.uniq!
 
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
@@ -127,7 +129,7 @@ class TopicList
         ft.user_data.post_action_data = { post_action_type => actions }
       end
 
-      ft.posters = ft.posters_summary(user_lookup: user_lookup)
+      ft.posters = ft.posters_summary(user_lookup: user_lookup, translations: translations)
 
       ft.participants = ft.participants_summary(user_lookup: user_lookup, user: @current_user)
       ft.participant_groups =

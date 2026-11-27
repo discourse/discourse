@@ -30,6 +30,7 @@ export default class PasswordReset extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
+    controller.revokeConnectedApps = true;
     controller.initSelectedSecondFactorMethod();
   }
 }

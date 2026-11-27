@@ -244,5 +244,17 @@ RSpec.describe AppearanceChange::Activate do
         )
       end
     end
+
+    context "with an installed theme" do
+      fab!(:appearance_change, :installed_theme_appearance_change)
+
+      it { is_expected.to run_successfully }
+
+      it "makes the theme the default, keeping its files" do
+        expect { result }.to change { SiteSetting.default_theme_id }.to(appearance_change.theme_id)
+        expect(appearance_change.reload).to be_applied
+        expect(appearance_change.theme.theme_fields.count).to eq(1)
+      end
+    end
   end
 end

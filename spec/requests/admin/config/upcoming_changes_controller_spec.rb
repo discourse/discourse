@@ -352,6 +352,46 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3|12")
       end
 
+      context "when the audience is fixed to logged-in users" do
+        before do
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              status: :experimental,
+              allow_enabled_for: [:logged_in_users],
+            },
+          )
+          SiteSetting.enable_form_templates = false
+        end
+
+        it "enables the change for logged-in users with no custom groups" do
+          put "/admin/config/upcoming-changes/toggle.json",
+              params: {
+                setting_name:,
+                enabled: true,
+                group_names: [],
+              },
+              as: :json
+
+          expect(response.status).to eq(200)
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+          expect(UpcomingChanges.enabled_for_user?(setting_name, nil)).to eq(false)
+          expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+        end
+
+        it "rejects an anonymous audience" do
+          put "/admin/config/upcoming-changes/toggle.json",
+              params: {
+                setting_name:,
+                enabled: true,
+                group_names: ["anonymous_users"],
+              },
+              as: :json
+
+          expect(response.status).to eq(422)
+          expect(SiteSetting.enable_form_templates).to eq(false)
+        end
+      end
+
       it "toggles a linked change independently while preserving its configured audience" do
         mock_upcoming_change_metadata(
           enable_form_templates: {

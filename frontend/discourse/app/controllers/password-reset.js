@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 
 export default class PasswordResetController extends Controller {
   @tracked accountPassword;
+  @tracked revokeConnectedApps = true;
 
   passwordRequired = true;
 
@@ -20,6 +21,7 @@ export default class PasswordResetController extends Controller {
 
   /** @type {string | null} */
   successMessage = null;
+  loginError = null;
   requiresApproval = false;
   redirected = false;
   maskPassword = true;
@@ -156,16 +158,18 @@ export default class PasswordResetController extends Controller {
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
+          revoke_connected_apps: this.revokeConnectedApps,
         },
       });
 
       if (result.success) {
         this.set("successMessage", result.message);
         this.set("redirectTo", result.redirect_to);
+        this.set("loginError", result.login_error);
 
         if (result.requires_approval) {
           this.set("requiresApproval", true);
-        } else {
+        } else if (!result.login_error) {
           this.set("redirected", true);
           DiscourseURL.redirectTo(result.redirect_to || "/");
         }

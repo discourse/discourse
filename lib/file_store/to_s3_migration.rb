@@ -175,15 +175,19 @@ module FileStore
       log "Uploading files to S3..."
       log " - Listing local files"
 
-      local_files = []
-      IO
-        .popen(
-          ["find", "uploads/#{@current_db}/original", "-type", "f", "-print0"],
-          chdir: public_directory,
-        )
-        .each("\0", chomp: true) do |file|
-          local_files << file
-          putc "." if local_files.size % 1000 == 0
+      originals = "uploads/#{@current_db}/original"
+      local_files =
+        if Dir.exist?(File.join(public_directory, originals))
+          Discourse::Utils.execute_command(
+            "find",
+            originals,
+            "-type",
+            "f",
+            "-print0",
+            chdir: public_directory,
+          ).split("\0")
+        else
+          []
         end
 
       log " => #{local_files.size} files"
@@ -329,21 +333,21 @@ module FileStore
 
         unless @dry_run
           # Legacy inline image format
+          regexp =
+            %r{!\[\]\((/uploads/#{@current_db}/original/\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9.]*)\)}
+
           Post
-            .where("raw LIKE '%![](/uploads/default/original/%)%'")
-            .each do |post|
-              regexp =
-                /!\[\](\/uploads\/#{@current_db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
+            .where("raw LIKE ?", "%![](/uploads/#{@current_db}/original/%)%")
+            .find_each do |post|
+              post.raw =
+                post
+                  .raw
+                  .gsub(regexp) do |match|
+                    upload = Upload.get_from_url($1)
+                    upload ? "![](#{upload.short_url})" : match
+                  end
 
-              post
-                .raw
-                .scan(regexp)
-                .each do |upload_url, _|
-                  upload = Upload.get_from_url(upload_url)
-                  post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
-                end
-
-              post.save!(validate: false)
+              post.save!(validate: false) if post.raw_changed?
             end
         end
 

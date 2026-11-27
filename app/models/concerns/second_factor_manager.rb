@@ -65,22 +65,21 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps.any?
+    second_factor_methods_allowed? && totps.any?
   end
 
   def backup_codes_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      user_second_factors&.backup_codes&.exists?
+    second_factor_methods_allowed? && user_second_factors&.backup_codes&.exists?
   end
 
   def security_keys_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+    second_factor_methods_allowed? &&
       security_key_factor_enabled?(UserSecurityKey.factor_types[:second_factor])
   end
 
   def passkeys_available_as_second_factor?
     SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
-      !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      second_factor_methods_allowed? &&
       security_key_factor_enabled?(UserSecurityKey.factor_types[:first_factor])
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
@@ -91,6 +90,10 @@ module SecondFactorManager
   # make those flows skip 2FA for passkey-only users.
   def has_any_second_factor_methods_enabled?
     totp_enabled? || security_keys_enabled?
+  end
+
+  def requires_second_factor_for_login?
+    has_any_second_factor_methods_enabled? || backup_codes_enabled?
   end
 
   def has_multiple_second_factor_methods?
@@ -115,7 +118,7 @@ module SecondFactorManager
 
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
-    if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
+    if !requires_second_factor_for_login? &&
          (!passkeys_available_as_second_factor? || params[:second_factor_method].blank?)
       return ok_result
     end
@@ -303,6 +306,11 @@ module SecondFactorManager
   end
 
   private
+
+  def second_factor_methods_allowed?
+    !SiteSetting.enable_discourse_connect &&
+      (SiteSetting.enable_local_logins || SiteSetting.enforce_second_factor_on_external_auth)
+  end
 
   def security_key_factor_enabled?(factor_type)
     if security_keys.loaded?

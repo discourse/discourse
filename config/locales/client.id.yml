@@ -590,7 +590,6 @@ id:
         is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
         something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
-        something_wrong_with_post: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -1978,6 +1977,9 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
       multi_select:
+        select: "Pilih"
+        select_post:
+          label: "Pilih"
         selected_post:
           label: "dipilih"
         deselect_all: batalkan pilihan semua
@@ -2297,6 +2299,7 @@ id:
     footer_nav:
       dismiss: "Bubar"
     mobile_tab_bar:
+      new_topic: "Topik Baru"
       create: "Buat"
       more: "Selengkapnya"
       back: "Kembali"
@@ -3104,6 +3107,8 @@ id:
           date: "Tanggal"
       site_text:
         search_label: "Cari"
+        preview:
+          default: "Asal"
         theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

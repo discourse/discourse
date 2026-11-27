@@ -386,12 +386,7 @@ module Email
           next if email_size + attached_upload.filesize > max_email_size
 
           begin
-            path =
-              if attached_upload.local?
-                Discourse.store.path_for(attached_upload)
-              else
-                Discourse.store.download!(attached_upload)
-              end
+            path = Discourse.store.download!(attached_upload)
 
             @message_attachments_index[original_upload.sha1] = @message.attachments.size
             @message.attachments[original_upload.original_filename] = File.read(path)

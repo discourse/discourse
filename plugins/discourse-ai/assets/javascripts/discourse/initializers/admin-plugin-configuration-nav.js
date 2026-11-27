@@ -51,6 +51,11 @@ export default {
           description: "discourse_ai.spam.spam_description",
         },
         {
+          label: "discourse_ai.concepts.short_title",
+          route: "adminPlugins.show.discourse-ai-concepts",
+          description: "discourse_ai.concepts.description",
+        },
+        {
           label: "discourse_ai.translations.title",
           route: "adminPlugins.show.discourse-ai-translations",
           description: "discourse_ai.translations.description",

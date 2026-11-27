@@ -13,7 +13,7 @@ module Live
 
       class << self
         def participant_user_ids(room)
-          return [] unless sync?(room, agent_cleanup: false)
+          return [] if Live::ParticipantTracker.pinned_transport(room.id) == "mesh"
 
           result = list_participants(Livekit.room_name(room))
           return [] unless result[:ok]
@@ -66,6 +66,45 @@ module Live
               },
             },
           )
+        end
+
+        # Best-effort server-side mute of a participant's published microphone
+        # track(s), leaving their publish grant intact so they can unmute later.
+        def mute_participant_audio(room, user_id, identity: nil)
+          return false unless sync?(room, agent_cleanup: false)
+
+          livekit_room = Livekit.room_name(room)
+          participant_id = identity || participant_identity(room, user_id)
+          response =
+            post(
+              "GetParticipant",
+              { room: livekit_room, identity: participant_id },
+              { roomAdmin: true, room: livekit_room },
+            )
+          return false unless response.status == 200
+
+          data = JSON.parse(response.body)
+          tracks =
+            Array(data["tracks"]).select do |track|
+              track["type"].to_s.upcase == "AUDIO" && track["source"].to_s.upcase == "MICROPHONE" &&
+                !track["muted"]
+            end
+          return true if tracks.empty?
+
+          tracks.all? do |track|
+            call(
+              room,
+              "MutePublishedTrack",
+              body: {
+                identity: participant_id,
+                track_sid: track["sid"],
+                muted: true,
+              },
+            )
+          end
+        rescue StandardError => e
+          Live.warn("[live-livekit] MutePublishedTrack failed for room #{room.id}: #{e.class}")
+          false
         end
 
         def delete_room(room)

@@ -142,9 +142,11 @@ module Discourse
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "UTC"
 
-    # auto-load locales in plugins
-    # NOTE: we load both client & server locales since some might be used by PrettyText
-    config.i18n.load_path += Dir["#{Rails.root.join("plugins/*/config/locales/*.yml")}"]
+    # Client locales are included because PrettyText looks up `js.*` keys on the server.
+    config.i18n.load_path +=
+      Dir[Rails.root.join("plugins/*/config/locales/*.yml").to_s].select do |path|
+        GlobalSetting.load_plugin?(File.basename(File.dirname(path, 3)))
+      end
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

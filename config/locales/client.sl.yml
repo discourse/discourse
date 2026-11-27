@@ -2600,7 +2600,7 @@ sl:
         back_description: "Pojdi nazaj na zadnji neprebrani prispevek"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredek teme
+        title: "napredek teme"
         jump_prompt_of:
           one: "od %{count} prispevka"
           two: "od %{count} prispevkov"
@@ -2838,10 +2838,8 @@ sl:
           label: "izbran"
           title: "Kliknite za odstranitev prispevka iz izbranih"
         select_replies:
-          label: "izberi +odgovore"
           title: "Dodaj prispevek in vse njegove odgovore med izbrane"
         select_below:
-          label: "izberi +nadaljnje"
           title: "Dodaj prispevek in vse nadaljnje med izbrane"
         delete: izbriši izbrano
         cancel: prekliči izbiro
@@ -3094,16 +3092,10 @@ sl:
       validations:
         icon_required: "Izberite ikono."
       description: "Opis"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Barva"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
-        options:
-          icon: "Ikona"
-          emoji: "Emoji"
-      color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
@@ -3619,6 +3611,7 @@ sl:
       share: "Deli"
       dismiss: "Opusti"
     mobile_tab_bar:
+      new_topic: "Nova tema"
       create: "Ustvari"
       more: "Več"
       back: "Nazaj"
@@ -4719,7 +4712,6 @@ sl:
         silence_modal_title: "Utišaj uporabnika/co"
         silence_duration: "Za kako dolgo bo uporabnik utišan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "E-sporočilo za uporabnika"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"
@@ -4885,6 +4877,8 @@ sl:
           dropdown: "Spustni meni"
       site_text:
         search_label: "Išči"
+        preview:
+          default: "Privzeto"
         theme_disabled: "Onemogočeno"
         filters: "Filtri"
         edit: "Uredi"
@@ -4961,7 +4955,7 @@ sl:
           modal_title: Skupine značk
         granted_by: Podeljeno od
         granted_at: Podeljeno
-        reason_help: (povezava na prispevek ali temo)
+        reason_help: povezava na prispevek ali temo
         save: Shrani
         delete: Izbriši
         delete_confirm: Si prepričan, da želiš odstraniti to značko?

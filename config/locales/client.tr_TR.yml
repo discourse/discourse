@@ -527,9 +527,6 @@ tr_TR:
       fonts:
         base_font: "Gövde"
         heading_font: "Başlıklar"
-      logo:
-        description: "Sitenin üst navigasyonunda ve sitenin E-posta Bildirimlerinin üstünde görünür."
-        help_text: "Önerilen boyut 600 x 80 pikseldir."
       homepage:
         topics: "Konular"
         categories: "Kategoriler"
@@ -988,7 +985,6 @@ tr_TR:
         suspect_user: "Bu kullanıcı spam mı?"
         approve_post: "Bu gönderiyi onaylıyor musunuz?"
         approve_topic: "Bu konuyu onaylıyor musunuz?"
-        something_wrong_with_post: "Bu gönderiyle ilgili bir sorun mu var?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
@@ -3989,7 +3985,7 @@ tr_TR:
         back_description: "Son okunmamış gönderinize geri dönün"
         replies_short: "%{current} / %{total}"
       progress:
-        title: konu ilerlemesi
+        title: "konu ilerlemesi"
         jump_prompt: "şuraya atla…"
         jump_prompt_of:
           one: "/ %{count} gönderi"
@@ -4245,10 +4241,8 @@ tr_TR:
           label: "seçili"
           title: "Gönderiyi seçimden kaldırmak için tıklayın"
         select_replies:
-          label: "+yanıtları seçin"
           title: "Gönderiyi ve tüm yanıtlarını seçime ekleyin"
         select_below:
-          label: "+aşağıdan seçin"
           title: "Gönderiyi ve ondan sonraki her şeyi seçime ekle"
         delete: seçilenleri sil
         cancel: seçimi iptal et
@@ -4639,6 +4633,8 @@ tr_TR:
         tag_group: "Etiket grubu"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
       delete: "Kategoriyi sil"
+      empty_state:
+        edit_category: "Kategoriyi düzenle"
       create: "Yeni kategori"
       create_with_type: "Yeni %{typeName} kategorisi"
       create_long: "Yeni bir kategori oluştur"
@@ -4663,7 +4659,7 @@ tr_TR:
         icon_required: "Simge seçin."
         groups_required: "Bu onay modu için en az bir grup seçin."
       name: "Kategori adı"
-      untitled: "Başlıksız kategori"
+      icon_search_placeholder: "Ara…"
       description: "Açıklama"
       logo: "Kategori logosu görüntüsü"
       logo_dark: "Karanlık mod kategori logosu görüntüsü"
@@ -4671,10 +4667,6 @@ tr_TR:
       background_image: "Kategori arka plan resmi"
       background_image_dark: "Koyu renkli kategori arka plan resmi"
       style: "Stil"
-      icon: "Simge"
-      emoji: "Emoji"
-      select_emoji: "Emoji seç"
-      select_icon: "Simgeyi seç"
       background_color: "Renk"
       foreground_color: "Metin rengi"
       color_validations:
@@ -4682,18 +4674,11 @@ tr_TR:
         incorrect_length: "#RRGGBB veya #RGB biçimiyle eşleşmelidir"
         non_hexdecimal: "sadece onaltılık karakterler (0-9, A-F) içermelidir"
       styles:
-        type: "Stil"
         icon: "Simge"
         emoji: "Emoji"
         square: "Kare"
-        options:
-          square: "Kare"
-          icon: "Simge"
-          emoji: "Emoji"
       color_used: "Kullanılan renk"
-      predefined_colors: "Önceden tanımlanmış renk seçenekleri"
       name_placeholder: "Bir veya iki kelime önerilir"
-      color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
       delete_error: "Kategori silinirken bir hata oluştu."
       list: "Kategorileri listele"
@@ -5399,7 +5384,6 @@ tr_TR:
         other: "Taslaklar (%{count})"
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
-    theme_preview_notice: "Şu anda bir temayı ön izliyorsunuz, normal site yapılandırmanıza dönmek için bu tarayıcı sekmesini veya penceresini kapatın."
     theme_preview_failed: "Tema mevcut olmadığı veya erişim izniniz olmadığı için önizleme yapılamadı."
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
@@ -7565,8 +7549,6 @@ tr_TR:
           title: "Renkler"
           edit: "Düzenle"
           view: "Görüntüle"
-          set_default_light: "Varsayılan temada açık renk paleti olarak ayarla (%{theme})"
-          set_default_dark: "Varsayılan temada koyu renk paleti olarak ayarla (%{theme})"
           set_default_success: "%{schemeName} %{themeName} için varsayılan palet olarak ayarlandı"
           saved_refreshing: "Kaydedildi! Renkler yenileniyor..."
           from_theme: "Temadan: %{name}"
@@ -8206,7 +8188,6 @@ tr_TR:
         silence_duration: "Kullanıcı ne kadar süreyle susturulacak?"
         silence_reason_title: "Susturulma sebebi"
         silence_reason_placeholder: "Susturulma Nedeni"
-        silence_message: "E-posta Mesajı"
         suspended_until: "(şu zamana kadar: %{until})"
         suspend_forever: "Sonsuza kadar askıya al"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
@@ -8520,6 +8501,8 @@ tr_TR:
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
         search_label: "Ara"
+        preview:
+          default: "Varsayılan"
         theme_disabled: "Devre Dışı"
         filters: "Filtreler"
         status:
@@ -8693,7 +8676,7 @@ tr_TR:
           modal_title: Rozet Gruplamaları
         granted_by: 'Veren:'
         granted_at: 'Verme zamanı:'
-        reason_help: (Bir gönderi veya konuya bağlantı)
+        reason_help: Bir gönderi veya konuya bağlantı
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinizden emin misiniz?

@@ -42,6 +42,15 @@ describe DiscourseMcp::AuthorizationStatus do
     expect(described_class.for([authorization])).to eq(authorization.id => "access_removed")
   end
 
+  it "removes access for an unscoped token when an ordinary user loses all MCP grants" do
+    grant = authorization
+    McpGroupScope.where(group: [group, other_group]).delete_all
+
+    expect(described_class.for([grant], scopes_by_authorization_id: { grant.id => [] })).to eq(
+      grant.id => "access_removed",
+    )
+  end
+
   it "reports the current server, client, and user restriction" do
     authorization
     SiteSetting.mcp_server_enabled = false

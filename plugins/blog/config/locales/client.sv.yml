@@ -15,6 +15,13 @@ sv:
         desktop: Skrivbord
         mobile: Mobil
         save: Spara
+        about_tab: Om
+        blog_slug: Slug
+        settings_tab: Inställningar
+        theme_tab: Tema
+        column_name: Namn
+        column_category: Kategori
+        column_status: Status
         path_formats:
           custom: Anpassad
         themes: Teman

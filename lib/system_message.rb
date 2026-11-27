@@ -21,6 +21,7 @@ class SystemMessage
 
     from_system = params.delete(:from_system)
     target_group_names = params.delete(:target_group_names)
+    markdown_escape_keys = Array(params.delete(:escape_markdown_params))
 
     params = defaults.merge(params)
 
@@ -33,14 +34,20 @@ class SystemMessage
         I18n.with_locale(@recipient.effective_locale) do
           I18n.t("system_messages.#{type}.subject_template", params)
         end
+
+    body_params = params.dup
+    markdown_escape_keys.each do |key|
+      body_params[key] = escape_markdown(params[key]) if params.key?(key)
+    end
+
     raw =
       params[:message_raw] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t("system_messages.#{type}.text_body_template", params)
+          I18n.t("system_messages.#{type}.text_body_template", body_params)
         end
 
     if key = params[:body_suffix_key]
-      paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
+      paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, body_params) }
       raw = "#{raw.rstrip}\n\n#{paragraph}"
     end
 
@@ -106,5 +113,13 @@ class SystemMessage
       base_url: Discourse.base_url,
       email_preview: "",
     }
+  end
+
+  private
+
+  # Escapes user-provided values so that they render as literal text instead of
+  # adding links, images, tags or block level elements to the cooked body.
+  def escape_markdown(text)
+    text.to_s.squish.gsub(/[!-\/:-@\[-`{-~]/) { |character| "\\#{character}" }
   end
 end

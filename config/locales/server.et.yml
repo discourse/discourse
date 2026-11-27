@@ -1198,6 +1198,8 @@ et:
         title: "Jah"
       approve_post:
         title: "Jah"
+      deny_and_delete_post:
+        complete: "Postitus kustutatud."
       approve_post_closed:
         title: "Jah"
       reject_post_bundle:

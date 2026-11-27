@@ -17,6 +17,13 @@ hu:
         desktop: Asztali
         mobile: Mobil
         save: Mentés
+        about_tab: Névjegy
+        blog_slug: URL slug
+        settings_tab: Beállítások
+        theme_tab: Téma
+        column_name: Név
+        column_category: Kategória
+        column_status: Állapot
         path_formats:
           custom: Egyéni
         back_to_themes: Vissza a témákhoz

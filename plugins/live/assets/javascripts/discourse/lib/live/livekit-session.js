@@ -229,6 +229,15 @@ export default class LivekitRoomSession {
     }
   }
 
+  // A moderator's mute lands on the publication itself, which flipping
+  // track.enabled cannot undo: the SFU keeps dropping the track until the
+  // publisher unmutes it through the SDK.
+  async unmuteMicrophone() {
+    if (this.#micPublication?.isMuted) {
+      await this.#micPublication.unmute();
+    }
+  }
+
   // Brings the video and screen-audio publications in line with the local
   // capture state. The mesh equivalent gates per watching peer; on the SFU
   // media is published once and receive gating moves to the subscriber side.

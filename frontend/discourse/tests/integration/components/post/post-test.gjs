@@ -1156,7 +1156,7 @@ module("Integration | Component | Post", function (hooks) {
       );
   });
 
-  test("a11y heading id is unique for different post numbers", async function (assert) {
+  test("a11y headings identify the post and its reply target", async function (assert) {
     const post1 = this.store.createRecord("post", {
       id: 100,
       post_number: 1,
@@ -1170,6 +1170,8 @@ module("Integration | Component | Post", function (hooks) {
       post_number: 2,
       topic: this.post.topic,
       username: "user2",
+      reply_to_post_number: 1,
+      reply_to_user: { username: "user1", avatar_template: "/avatar.png" },
       created_at: new Date(),
     });
 
@@ -1182,7 +1184,7 @@ module("Integration | Component | Post", function (hooks) {
       </template>
     );
 
-    assert.dom("#post-heading-1").exists("first post heading has correct id");
-    assert.dom("#post-heading-2").exists("second post heading has correct id");
+    assert.dom("#post-heading-1").includesText("post by user1");
+    assert.dom("#post-heading-2").includesText("replying to post #1");
   });
 });

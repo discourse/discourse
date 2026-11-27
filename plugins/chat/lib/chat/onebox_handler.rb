@@ -19,7 +19,9 @@ module Chat
         thread = chat_channel.threads.find_by(id: route[:thread_id]) if route[:thread_id]
       end
 
-      return if !Guardian.new.can_preview_anonymous_public_chat_channel?(chat_channel)
+      guardian = Guardian.new
+      return if !guardian.can_preview_anonymous_public_chat_channel?(chat_channel)
+      return if thread.present? && !guardian.can_see_chat_thread?(thread)
 
       args = build_args(url, chat_channel)
 

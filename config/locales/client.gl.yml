@@ -2374,7 +2374,7 @@ gl:
         back_description: "Volver á última publicación pendente de lectura"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progreso do tema
+        title: "progreso do tema"
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicacións"
@@ -2601,10 +2601,8 @@ gl:
           label: "seleccionado"
           title: "Prema para eliminar a publicación da selección"
         select_replies:
-          label: "seleccionar +respostas"
           title: "Engadir a publicación e todas as respostas asociadas á selección"
         select_below:
-          label: "seleccione +seguintes"
           title: "Engadir publicación e todas as posteriores á selección"
         delete: eliminar seleccionados
         cancel: cancelar a selección
@@ -2858,18 +2856,12 @@ gl:
       validations:
         icon_required: "Seleccionar unha icona."
       description: "Descrición"
-      icon: "Icona"
-      emoji: "Emoji"
       background_color: "Cor"
       color_validations:
         cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"
-        options:
-          icon: "Icona"
-          emoji: "Emoji"
-      color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
@@ -3338,6 +3330,7 @@ gl:
       share: "Compartir"
       dismiss: "Desbotar"
     mobile_tab_bar:
+      new_topic: "Novo tema"
       create: "Crear"
       more: "Máis"
       back: "Volver"
@@ -4759,7 +4752,6 @@ gl:
         silence_modal_title: "Silenciar o usuario"
         silence_duration: "Canto tempo estará silenciado o usuario?"
         silence_reason_placeholder: "Razón do silencio"
-        silence_message: "Mensaxe de correo"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
@@ -4972,6 +4964,8 @@ gl:
           dropdown: "Despregábel"
       site_text:
         search_label: "Buscar"
+        preview:
+          default: "Predeterminado"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         edit: "Editar"
@@ -5060,7 +5054,7 @@ gl:
           modal_title: Grupos de insignias
         granted_by: Concedido por
         granted_at: Concedido
-        reason_help: (Ligazón a unha publicación ou tema)
+        reason_help: Ligazón a unha publicación ou tema
         save: Gardar
         delete: Eliminar
         delete_confirm: Confirma a eliminación desta insignia?

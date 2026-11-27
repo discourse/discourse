@@ -52,12 +52,6 @@ ar:
         flagged_post_response: "الاستجابة من النموذج: %{llm_response}"
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
-          body: |
-            مرحبًا @%{username}،
-
-            تم إزالة منشورك في "%{topic_title}" مؤقتًا ووضعه في قائمة انتظار المراجعة ليطلع عليه أحد المشرفين. إذا تم الموافقة عليه، سيتم استعادته تلقائيًا.
-
-            المرجع: %{post_url}
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
@@ -434,6 +428,8 @@ ar:
           text_color: "لون النص"
         approve_label: "نعم"
         reject_label: "لا"
+        category_access_levels:
+          readonly: "العرض"
         empty_value: "فارغ"
         approved: "تمت الموافقة عليه من قِبل @%{username}."
         rejected: "تم رفضه من قِبل @%{username}."
@@ -481,8 +477,7 @@ ar:
         discourse_helper:
           name: "مساعد Discourse"
           description: "روبوت ذكاء اصطناعي متخصص في المساعدة على المهام المتعلقة بمنصة Discourse"
-        discourse_admin_assistant:
-          name: "مساعد مسؤولي Discourse"
+        admin_assistant:
           description: "روبوت الذكاء الاصطناعي الذي يجيب عن الأسئلة على Discourse ويساعد المسؤولين في إدارة إعدادات الموقع"
         web_artifact_creator:
           name: "مُنشئ الملفات الثانوية على الويب"
@@ -648,6 +643,7 @@ ar:
         edit_tag: "تعديل الوسم"
         create_category: "إنشاء فئة"
         edit_category: "تعديل الفئة"
+        delete_category: "احذف الفئة"
         set_topic_timer: "تعيين مؤقِّت للموضوع"
         set_slow_mode: "ضبط الوضع البطيء"
         move_posts: "نقل المنشورات"
@@ -904,6 +900,12 @@ ar:
         errors:
           tagging_disabled: "الوسوم غير مفعّلة في هذا الموقع."
       edit_category:
+        errors:
+          not_found: "لم يتم العثور على الفئة."
+      set_category_permissions:
+        errors:
+          not_found: "لم يتم العثور على الفئة."
+      delete_category:
         errors:
           not_found: "لم يتم العثور على الفئة."
       change_topic_category:

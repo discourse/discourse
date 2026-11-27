@@ -148,9 +148,12 @@ module UpcomingChanges
     data
   end
 
+  EMPTY_METADATA = {}.freeze
+  private_constant :EMPTY_METADATA
+
   def self.change_metadata(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    settings_provider.upcoming_change_metadata[change_setting_name] || {}
+    settings_provider.upcoming_change_metadata[change_setting_name] || EMPTY_METADATA
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -182,7 +185,7 @@ module UpcomingChanges
   end
 
   def self.exists?(change_setting_name)
-    change_metadata(change_setting_name.to_sym).present?
+    !change_metadata(change_setting_name).empty?
   end
 
   # An upcoming change owned by a plugin that is not configurable on this site,
@@ -283,9 +286,13 @@ module UpcomingChanges
 
   # The `allow_enabled_for` metadata for an upcoming change, or nil if unset.
   # When nil, admins can enable for everyone or select groups. Otherwise it
-  # restricts the audience to everyone, staff, specific_groups, or staff plus specific_groups.
+  # restricts the audience to one of the supported scopes.
   def self.allow_enabled_for(change_setting_name)
     change_metadata(change_setting_name)[:allow_enabled_for]
+  end
+
+  def self.logged_in_users_only?(change_setting_name)
+    allow_enabled_for(change_setting_name) == [:logged_in_users]
   end
 
   # Whether a setting's `allow_enabled_for` permits a given audience.
@@ -357,6 +364,8 @@ module UpcomingChanges
   end
 
   def self.group_scope_allowed?(change_setting_name, group_names)
+    return group_names.empty? if logged_in_users_only?(change_setting_name)
+
     allow = allow_enabled_for(change_setting_name)
     staff_name = Group.find(Group::AUTO_GROUPS[:staff]).name
     if allow&.include?(:staff) && allow.include?(:specific_groups) &&
@@ -384,6 +393,8 @@ module UpcomingChanges
     if (group_setting = group_setting_name(change_setting_name))
       return settings_provider.public_send("#{group_setting}_map")
     end
+    return [Group::AUTO_GROUPS[:logged_in_users]] if logged_in_users_only?(change_setting_name)
+
     return [] if change_status(change_setting_name) == :permanent
     settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end

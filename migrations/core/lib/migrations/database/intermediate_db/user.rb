@@ -22,6 +22,7 @@ module Migrations
             first_seen_at,
             flair_group_id,
             group_locked_trust_level,
+            interactive_bot,
             ip_address,
             last_seen_at,
             locale,
@@ -40,7 +41,7 @@ module Migrations
             views
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -59,6 +60,7 @@ module Migrations
         # @param first_seen_at               [Time, nil]
         # @param flair_group_id              [Integer, String, nil]
         # @param group_locked_trust_level    [Integer, nil]
+        # @param interactive_bot             [Boolean, nil]
         # @param ip_address                  [IPAddr, nil]
         # @param last_seen_at                [Time, nil]
         # @param locale                      [String, nil]
@@ -90,6 +92,7 @@ module Migrations
           first_seen_at: nil,
           flair_group_id: nil,
           group_locked_trust_level: nil,
+          interactive_bot: nil,
           ip_address: nil,
           last_seen_at: nil,
           locale: nil,
@@ -121,6 +124,7 @@ module Migrations
             Migrations::Database.format_datetime(first_seen_at),
             flair_group_id,
             group_locked_trust_level,
+            Migrations::Database.format_boolean(interactive_bot),
             Migrations::Database.format_ip_address(ip_address),
             Migrations::Database.format_datetime(last_seen_at),
             locale,

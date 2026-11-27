@@ -35,10 +35,6 @@
         align-items: stretch;
       }
 
-      input {
-        height: 34px;
-      }
-
       .control-group {
         margin-bottom: 0;
 
@@ -59,7 +55,14 @@
       .future-date-input-time-picker {
         align-items: center;
         display: flex;
+        flex-shrink: 0;
         margin-left: 0.5em;
+      }
+
+      // Wide enough for a YYYY-MM-DD date, measured inside the padding.
+      .future-date-input-date-picker input {
+        box-sizing: content-box;
+        width: 10ch;
       }
     }
   }

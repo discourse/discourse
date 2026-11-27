@@ -555,9 +555,6 @@ zh_TW:
         custom_theme_notice: "你的網站目前使用 %{name} 作為預設佈景主題。請選擇下方的佈景主題進行預覽。儲存後將取代目前的佈景主題。"
       fonts:
         base_font: "內文"
-      logo:
-        description: "出現在網站的頂部導覽，以及網站的電子郵件通知頂部。"
-        help_text: "建議尺寸為 600 x 80 像素。"
       homepage:
         topics: "主題"
         categories: "分類"
@@ -4198,7 +4195,7 @@ zh_TW:
         back_description: "回到最後一個未讀貼文"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 主題進度
+        title: "主題進度"
         jump_prompt: "跳到"
         jump_prompt_of:
           other: "%{count} 貼文"
@@ -4443,10 +4440,8 @@ zh_TW:
           label: "已選取"
           title: "點擊後將文章移除"
         select_replies:
-          label: "選取＋回覆"
           title: "將貼文及所有回覆加入選取列表"
         select_below:
-          label: "選取 + 底下"
           title: "將此貼文及其所有以下貼文加入選取列表"
         delete: 刪除選取的貼文
         cancel: 取消選取
@@ -4835,6 +4830,8 @@ zh_TW:
         delete_title: "刪除此分類"
         delete_description: "刪除後，將無法復原此分類及其設定。你必須先重新指派其中的主題。"
         delete_title_forbidden: "無法刪除此分類"
+      empty_state:
+        edit_category: "編輯分類"
       create: "新分類"
       create_with_type: "新的 %{typeName} 分類"
       create_long: "建立新的分類"
@@ -4863,7 +4860,7 @@ zh_TW:
         icon_required: "選擇圖示."
         groups_required: "請為此核准模式選擇至少一個群組。"
       name: "分類名稱"
-      untitled: "未命名分類"
+      icon_search_placeholder: "搜尋…"
       description: "描述"
       logo: "分類標誌圖片"
       logo_dark: "深色模式分類標誌圖片"
@@ -4871,10 +4868,6 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色模式分類背景圖片"
       style: "樣式"
-      icon: "圖示"
-      emoji: "Emoji"
-      select_emoji: "選擇表情符號"
-      select_icon: "選擇圖示"
       background_color: "顏色"
       foreground_color: "文字顏色"
       color_validations:
@@ -4882,22 +4875,15 @@ zh_TW:
         incorrect_length: "必須符合 #RRGGBB 或 #RGB 格式"
         non_hexdecimal: "只能包含十六進位字元（0-9、A-F）"
       styles:
-        type: "樣式"
         icon: "圖示"
         emoji: "Emoji"
         square: "方形"
-        options:
-          square: "方形"
-          icon: "圖示"
-          emoji: "Emoji"
       color_used: "使用中的顏色"
-      predefined_colors: "預先定義的顏色選項"
       name_placeholder: "建議使用一到兩個字"
       category_types: "分類類型"
       unknown_category_type: "未知的分類類型"
       unknown_category_type_description: "分類類型「%{categoryType}」不受支援，或未在此分類中啟用。"
       category_types_no_results: "找不到其他分類類型"
-      color_placeholder: "任何網頁顏色"
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
       list: "列出分類"
@@ -5655,7 +5641,6 @@ zh_TW:
         other: "草稿（%{count}）"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
-    theme_preview_notice: "您當前正在預覽佈景主題，請關閉此瀏覽器標籤頁或窗口以返回到正常網站配置。"
     theme_preview_failed: "無法預覽佈景主題，因為它不存在，或你沒有存取權。"
     image_removed: "(圖片被移除)"
     pause_notifications:
@@ -8211,8 +8196,6 @@ zh_TW:
           title: "顏色"
           edit: "編輯"
           view: "查看"
-          set_default_light: "設為預設佈景主題（%{theme}）的淺色調色盤"
-          set_default_dark: "設為預設佈景主題（%{theme}）的深色調色盤"
           set_default_success: "已將 %{schemeName} 設為 %{themeName} 的預設調色盤"
           saved_refreshing: "已儲存！正在重新整理色彩…"
           from_theme: "來自佈景主題：%{name}"
@@ -8876,7 +8859,6 @@ zh_TW:
         silence_duration: "這位使用者將會被靜音多久？"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
-        silence_message: "Email 訊息"
         suspended_until: "(直到%{until})"
         suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"
@@ -9190,6 +9172,8 @@ zh_TW:
       site_text:
         description: "您可以自訂論壇上的任何文字。"
         search_label: "搜索"
+        preview:
+          default: "默認"
         theme_disabled: "已停用"
         filters: "過濾器"
         status:
@@ -9362,7 +9346,7 @@ zh_TW:
           modal_title: 徽章群組
         granted_by: 升級者為
         granted_at: 升級在
-        reason_help: (連結至貼文或話題)
+        reason_help: 連結至貼文或話題
         save: 儲存
         delete: 刪除
         delete_confirm: 你確定要刪除徽章 ?

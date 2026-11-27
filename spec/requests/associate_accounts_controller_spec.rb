@@ -30,6 +30,46 @@ RSpec.describe Users::AssociateAccountsController do
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
 
+    it "does not allow an existing shadow association to log in independently" do
+      SiteSetting.allow_anonymous_mode = true
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      shadow = AnonymousShadowCreator.get(master)
+      UserAssociatedAccount.create!(
+        user: shadow,
+        provider_name: "google_oauth2",
+        provider_uid: "12345",
+      )
+
+      SiteSetting.delete_associated_accounts_on_password_reset = true
+      email_token = Fabricate(:email_token, user: master, scope: EmailToken.scopes[:password_reset])
+      put "/u/password-reset/#{email_token.token}.json", params: { password: "newpassword123" }
+      expect(response.status).to eq(200)
+      cookies.delete("_t")
+
+      post "/auth/google_oauth2"
+      get "/auth/google_oauth2/callback.json"
+      expect(response.status).to eq(403)
+      expect(UserAuthToken.where(user_id: shadow.id)).to be_empty
+    end
+
+    it "does not associate an external account with an anonymous shadow" do
+      SiteSetting.allow_anonymous_mode = true
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      sign_in_and_switch_to_anonymous_mode(master)
+
+      post "/auth/google_oauth2?reconnect=true"
+      get "/auth/google_oauth2/callback.json"
+      expect(response.status).to eq(302)
+      uri = URI.parse(response.redirect_url)
+      get "#{uri.path}.json"
+      expect(response.status).to eq(403)
+
+      post "#{uri.path}.json"
+
+      expect(response.status).to eq(403)
+      expect(UserAssociatedAccount.where(user_id: master.shadow_user.id)).to be_empty
+    end
+
     it "associates the external account" do
       sign_in(user)
 

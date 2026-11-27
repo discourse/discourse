@@ -15,6 +15,13 @@ sk:
         desktop: Desktop
         mobile: Mobil
         save: Uložiť
+        about_tab: O stránke
+        blog_slug: Slug
+        settings_tab: Nastavení
+        theme_tab: Téma
+        column_name: Meno
+        column_category: Kategória
+        column_status: Stav
         path_formats:
           custom: Vlastné
         back_to_themes: Späť na témy

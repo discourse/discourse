@@ -494,5 +494,33 @@ module(
       );
       assert.strictEqual(element.innerHTML, original);
     });
+
+    test("reuses a module-level component reference across calls", function (assert) {
+      const rendered = [];
+      const helper = {
+        renderGlimmer(_el, component, data) {
+          rendered.push({ component, data });
+        },
+      };
+
+      for (const id of [101, 102]) {
+        const message = approvalMessage(id, {
+          name: `Workflow ${id}`,
+          operations: [addNode("manual", "Manual", "trigger:manual")],
+        });
+        const element = document.createElement("div");
+        element.innerHTML = message.cooked;
+        decorateWorkflowPreview(element, helper, message);
+      }
+
+      assert.strictEqual(rendered.length, 2);
+      assert.strictEqual(
+        rendered[0].component,
+        rendered[1].component,
+        "reuses the same module-level component reference across decorated messages"
+      );
+      assert.strictEqual(rendered[0].data.message.id, 101);
+      assert.strictEqual(rendered[1].data.message.id, 102);
+    });
   }
 );

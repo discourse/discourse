@@ -97,6 +97,32 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     return role === "moderator" || role === "speaker";
   }
 
+  get hasPendingSpeakInvitation() {
+    return !!this.participant.speak_invited_at;
+  }
+
+  get canInviteToSpeak() {
+    return (
+      this.canManageRoom &&
+      this.isStageRoom &&
+      !this.participant.external_agent &&
+      !this.isCurrentUser &&
+      !this.participantIsSpeakerOrMod &&
+      !this.hasPendingSpeakInvitation
+    );
+  }
+
+  get canWithdrawSpeakInvitation() {
+    return (
+      this.canManageRoom &&
+      this.isStageRoom &&
+      !this.participant.external_agent &&
+      !this.isCurrentUser &&
+      !this.participantIsSpeakerOrMod &&
+      this.hasPendingSpeakInvitation
+    );
+  }
+
   get canPromoteToSpeaker() {
     return (
       this.canManageRoom &&
@@ -117,6 +143,26 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     );
   }
 
+  get canStepDown() {
+    return (
+      this.isCurrentUser &&
+      this.isStageRoom &&
+      this.participant.role === "speaker" &&
+      !this.currentUser?.admin &&
+      Number(this.room.creator_id) !== Number(this.currentUser?.id)
+    );
+  }
+
+  get canMuteForEveryone() {
+    return (
+      this.canManageRoom &&
+      !this.isCurrentUser &&
+      !this.participant.external_agent &&
+      (!this.isStageRoom || this.participantIsSpeakerOrMod) &&
+      !this.participant.is_muted
+    );
+  }
+
   get canDismissRequest() {
     return (
       this.canManageRoom &&
@@ -126,11 +172,22 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     );
   }
 
+  get speakRequestsDisabled() {
+    return this.room.speak_requests_enabled === false;
+  }
+
+  get raiseHandDisabled() {
+    return !this.handRaised && this.speakRequestsDisabled;
+  }
+
   get handRaised() {
     return !!this.participant.hand_raised_at;
   }
 
   get raiseHandLabel() {
+    if (!this.handRaised && this.speakRequestsDisabled) {
+      return i18n("live.stage.requests_paused");
+    }
     return this.handRaised
       ? i18n("live.stage.lower_hand")
       : i18n("live.stage.raise_hand");
@@ -334,8 +391,53 @@ export default class LiveParticipantSidebarContextMenu extends Component {
   }
 
   @action
+  async inviteToSpeak() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/invite_to_speak`, {
+        type: "POST",
+        data: { user_id: this.participant.id },
+      });
+      this.args.close();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async withdrawSpeakInvitation() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/invite_to_speak`, {
+        type: "DELETE",
+        data: { user_id: this.participant.id },
+      });
+      this.args.close();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async muteForEveryone() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/mute_participant`, {
+        type: "POST",
+        data: { user_id: this.participant.id },
+      });
+      this.args.close();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async stepDown() {
+    await this.liveWebrtc.stepDownFromStage(this.room.id);
+    this.args.close();
+  }
+
+  @action
   async promoteToSpeaker() {
-    await this.#changeParticipantRole("speaker");
+    await this.#changeParticipantRole("speaker", { sessionOnly: true });
   }
 
   @action
@@ -343,11 +445,15 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     await this.#changeParticipantRole("participant");
   }
 
-  async #changeParticipantRole(newRole) {
+  async #changeParticipantRole(newRole, { sessionOnly = false } = {}) {
     try {
+      const data = { user_id: this.participant.id, role: newRole };
+      if (sessionOnly) {
+        data.session_only = true;
+      }
       await ajax(`/live/rooms/${this.room.id}/memberships`, {
         type: "POST",
-        data: { user_id: this.participant.id, role: newRole },
+        data,
       });
       this.args.close();
     } catch (error) {
@@ -455,12 +561,24 @@ export default class LiveParticipantSidebarContextMenu extends Component {
             />
           </dropdown.item>
         {{/if}}
+        {{#if this.canStepDown}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__step-down-btn"
+              @action={{this.stepDown}}
+              @icon="ear-listen"
+              @label="live.stage.step_down"
+              @title="live.stage.step_down"
+            />
+          </dropdown.item>
+        {{/if}}
         {{#if this.isListenerInStage}}
           <dropdown.item>
             <DButton
               class="live-participant-sidebar-context-menu__raise-hand-btn
                 {{if this.handRaised '--active'}}"
               @action={{this.toggleRaiseHand}}
+              @disabled={{this.raiseHandDisabled}}
               @icon="hand"
               @translatedLabel={{this.raiseHandLabel}}
               @translatedTitle={{this.raiseHandLabel}}
@@ -469,7 +587,13 @@ export default class LiveParticipantSidebarContextMenu extends Component {
           <dropdown.item>
             <span
               class="live-participant-sidebar-context-menu__stage-hint"
-            >{{i18n "live.room.listeners_cannot_unmute"}}</span>
+            >{{i18n
+                (if
+                  this.speakRequestsDisabled
+                  "live.stage.requests_paused_hint"
+                  "live.room.listeners_cannot_unmute"
+                )
+              }}</span>
           </dropdown.item>
         {{/if}}
       {{else}}
@@ -527,6 +651,39 @@ export default class LiveParticipantSidebarContextMenu extends Component {
               @icon={{this.muteIcon}}
               @translatedLabel={{this.muteLabel}}
               @translatedTitle={{this.muteLabel}}
+            />
+          </dropdown.item>
+        {{/if}}
+        {{#if this.canMuteForEveryone}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__force-mute-btn"
+              @action={{this.muteForEveryone}}
+              @icon="microphone-slash"
+              @label="live.stage.mute_for_everyone"
+              @title="live.stage.mute_for_everyone"
+            />
+          </dropdown.item>
+        {{/if}}
+        {{#if this.canInviteToSpeak}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__invite-speak-btn"
+              @action={{this.inviteToSpeak}}
+              @icon="hand"
+              @label="live.stage.invite_to_speak"
+              @title="live.stage.invite_to_speak"
+            />
+          </dropdown.item>
+        {{/if}}
+        {{#if this.canWithdrawSpeakInvitation}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__withdraw-invite-btn"
+              @action={{this.withdrawSpeakInvitation}}
+              @icon="xmark"
+              @label="live.stage.withdraw_invitation"
+              @title="live.stage.withdraw_invitation"
             />
           </dropdown.item>
         {{/if}}

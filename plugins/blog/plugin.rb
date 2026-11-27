@@ -35,6 +35,7 @@ register_homepage(
 
 after_initialize do
   register_problem_check ProblemCheck::BlogNotReady
+  register_seedfu_fixtures(Rails.root.join("plugins/blog/db/fixtures"))
 
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
@@ -44,9 +45,22 @@ after_initialize do
 
   add_to_serializer(
     :site,
-    :blog_base_url,
+    :blogs,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
-  ) { Blog::Configuration.base_url }
+  ) do
+    blogs = Blog::Instance.cached
+    blogs = blogs.select(&:published) if !scope.is_blog_contributor?
+    blogs.map do |blog|
+      {
+        id: blog.id,
+        name: blog.name,
+        base_url: Blog::Configuration.base_url(blog),
+        category_id: blog.category_id,
+        path_format: blog.path_format,
+        is_default: blog.is_default,
+      }
+    end
+  end
   add_to_serializer(:current_user, :can_blog_edit) { scope.is_blog_contributor? }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
@@ -68,14 +82,14 @@ after_initialize do
     include_condition: -> do
       object.is_first_post? && object.word_count.to_i >= 250 &&
         Blog::Configuration.public_enabled? &&
-        object.topic.category_id == SiteSetting.blog_category.to_i
+        Blog::Instance.category_ids.include?(object.topic.category_id)
     end,
   ) do
     if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
-        blog_name: SiteSetting.blog_title,
+        blog_name: publication.blog.name,
       }
     end
   end
@@ -100,13 +114,21 @@ after_initialize do
     @blog_publication
   end
 
+  # "New draft" sends the blog the editor was viewing.
+  add_permitted_post_create_param(:blog_id)
+  on(:topic_created) do |topic, opts, user|
+    next if opts[:blog_id].blank? || user.nil?
+    Blog::Publication::StartOnBlog.call(
+      params: {
+        topic_id: topic.id,
+        blog_id: opts[:blog_id],
+      },
+      guardian: user.guardian,
+    )
+  end
+
   on(:site_setting_changed) do |name|
-    name = name.to_sym
-    if %i[blog_category blog_publisher_groups].include?(name)
-      Blog::AddPublishersToPublicCategory.call
-    end
-    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
-    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
+    Blog::ManagedCategories.sync_role_access if Blog::Roles::SETTINGS.include?(name.to_sym)
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

@@ -269,6 +269,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
 
   [
     { allow: ["everyone"], groups: [], locked: true },
+    { allow: ["logged_in_users"], groups: [], locked: true },
     { allow: ["staff"], groups: ["staff"], locked: true },
     { allow: ["staff", "specific_groups"], groups: ["staff"], locked: false },
     { allow: undefined, groups: [], locked: false },
@@ -302,6 +303,14 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       assert
         .dom(".upcoming-change__save-groups")
         .exists({ count: locked ? 0 : 1 });
+      if (allow?.includes("logged_in_users")) {
+        assert
+          .dom(`${chip("logged_in_users")} .d-icon-lock`)
+          .exists("shows logged-in users as the locked audience");
+        assert
+          .dom(chip("anonymous_users"))
+          .doesNotExist("omits anonymous users from the audience");
+      }
       await click(".upcoming-change__enabled");
       assert.deepEqual(requests, [
         { enabled: true, setting_name: "test_setting", group_names: groups },

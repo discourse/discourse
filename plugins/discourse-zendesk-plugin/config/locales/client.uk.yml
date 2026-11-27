@@ -15,6 +15,7 @@ uk:
       create_zendesk_issue: "Створити запит на Zendesk"
       view_zendesk_issue: "Переглянути на Zendesk"
     zendesk:
+      ticket_created: "Заявку на Zendesk створено"
       credentials_not_setup: Ви не налаштували свої облікові дані Zendesk.
       url_not_set: Вашу URL-адресу Zendesk наразі не встановлено.
       general_error: Щось пішло не так.

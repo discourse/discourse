@@ -5,6 +5,8 @@
 module ExternalUploadHelpers
   extend ActiveSupport::Concern
 
+  MAX_PARTS_PER_PRESIGN_BATCH = 100
+
   class ExternalUploadValidationError < StandardError
   end
 
@@ -129,7 +131,7 @@ module ExternalUploadHelpers
       1.minute,
     ).performed!
 
-    part_numbers = part_numbers.map { |part_number| validate_part_number(part_number) }
+    part_numbers = validate_part_numbers(part_numbers)
 
     external_upload_stub = find_external_upload_stub(unique_identifier:, created_by: current_user)
     return render_404 if external_upload_stub.blank?
@@ -340,6 +342,18 @@ module ExternalUploadHelpers
 
   def validate_before_create_multipart(file_name:, file_size:, upload_type:)
     # noop, should be overridden
+  end
+
+  def validate_part_numbers(part_numbers)
+    raise Discourse::InvalidParameters.new(:part_numbers) unless part_numbers.is_a?(Array)
+
+    if part_numbers.size > MAX_PARTS_PER_PRESIGN_BATCH
+      raise Discourse::InvalidParameters.new(
+              "At most #{MAX_PARTS_PER_PRESIGN_BATCH} part numbers are allowed",
+            )
+    end
+
+    part_numbers.map { validate_part_number(it) }
   end
 
   def validate_part_number(part_number)

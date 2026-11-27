@@ -11,9 +11,9 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
   fab!(:reply, :post) { Fabricate(:post, topic: topic) }
   fab!(:reply2, :post) { Fabricate(:post, topic: topic) }
 
+  include_context "with AI bot enabled"
+
   before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
     SiteSetting.solved_enabled = true
     SiteSetting.allow_solved_on_all_topics = true
   end

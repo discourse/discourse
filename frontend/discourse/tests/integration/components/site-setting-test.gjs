@@ -28,6 +28,17 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
+function captureSave(setting) {
+  const body = {};
+
+  pretender.put(`/admin/site_settings/${setting}`, (request) => {
+    Object.assign(body, parsePostData(request.requestBody));
+    return response(200, {});
+  });
+
+  return body;
+}
+
 function renderSetting(props) {
   const setting = SiteSetting.create(props);
   return render(
@@ -51,6 +62,17 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".setting-label h3").doesNotHaveAttribute("tabindex");
   });
 
+  test("text-like settings share the string row class", async function (assert) {
+    await renderSetting({
+      setting: "test_ratio",
+      value: "1.5",
+      type: "float",
+    });
+
+    assert.dom(".row.setting").hasClass("string");
+    assert.dom(".row.setting").doesNotHaveClass("float");
+  });
+
   test("displays host-list setting value", async function (assert) {
     await renderSetting({
       setting: "blocked_onebox_domains",
@@ -71,7 +93,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -89,7 +111,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -108,7 +130,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "original",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "new value");
     await click(".setting .d-icon-check");
@@ -266,11 +288,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("toggling a bool setting on and saving persists the wire value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_bool", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_bool");
 
     await renderSetting({
       setting: "test_bool",
@@ -316,10 +334,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
         "new-password",
         "does not let password managers autofill credentials"
       );
-    assert
-      .dom(".setting-toggle-secret")
-      .doesNotExist("the control owns the reveal toggle");
-
     await click(".form-kit__control-password-toggle");
     assert.dom(".form-kit__control-password").hasAttribute("type", "text");
   });
@@ -396,83 +410,13 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".tag-chooser").hasClass("is-disabled");
   });
 
-  test("a group list setting saves the picked groups as a pipe-delimited value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_groups", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
-
-    await renderSetting({
-      setting: "test_groups",
-      value: "1",
-      type: "group_list",
-    });
-
-    const groups = selectKit(".form-kit__field .list-setting");
-    await groups.expand();
-    await groups.selectRowByValue("2");
-    await click(".setting-controls__ok");
-
-    assert.strictEqual(body.test_groups, "1|2");
-  });
-
-  test("a compact list setting saves the picked choices as a pipe-delimited value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_list", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
-
-    await renderSetting({
-      setting: "test_list",
-      value: "a",
-      type: "list",
-      list_type: "compact",
-      choices: ["a", "b"],
-    });
-
-    const list = selectKit(".form-kit__field .list-setting");
-    await list.expand();
-    await list.selectRowByValue("b");
-    await click(".setting-controls__ok");
-
-    assert.strictEqual(body.test_list, "a|b");
-  });
-
-  test("a category list setting saves an emptied selection", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_categories", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
-    const categoryId = Site.current().categories[0].id;
-
-    await renderSetting({
-      setting: "test_categories",
-      value: String(categoryId),
-      type: "category_list",
-    });
-
-    const categories = selectKit(".form-kit__field .category-selector");
-    await categories.expand();
-    await categories.deselectItemByValue(categoryId);
-    await click(".setting-controls__ok");
-
-    assert.strictEqual(body.test_categories, "");
-  });
-
   for (const [type, saved] of [
     ["list", "a|b"],
     ["value_list", "a\nb"],
     ["url_list", "a\nb"],
   ]) {
     test(`a ${type} setting saves the added value in its wire format`, async function (assert) {
-      let body;
-      pretender.put("/admin/site_settings/test_values", (request) => {
-        body = parsePostData(request.requestBody);
-        return response(200, {});
-      });
+      const body = captureSave("test_values");
 
       await renderSetting({ setting: "test_values", value: "a", type });
 
@@ -487,11 +431,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   }
 
   test("a simple list setting saves the typed values as a pipe-delimited value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_simple", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_simple");
 
     await renderSetting({
       setting: "test_simple",
@@ -508,11 +448,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("an emoji list setting saves the remaining emojis as a pipe-delimited value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_emojis", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_emojis");
 
     await renderSetting({
       setting: "test_emojis",
@@ -530,11 +466,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("a secret list setting saves key and secret pairs", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_secrets", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_secrets");
 
     await renderSetting({
       setting: "test_secrets",
@@ -565,15 +497,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .dom(".value[data-index='0'] .secret")
       .hasAttribute("type", "password");
     assert.dom(".new-value-input.secret").hasAttribute("type", "password");
-
-    await click(".value[data-index='0'] .secret-value-list__reveal");
-
-    assert
-      .dom(".value[data-index='0'] .secret")
-      .hasAttribute("type", "text", "the toggle reveals its own row");
-    assert
-      .dom(".new-value-input.secret")
-      .hasAttribute("type", "password", "other rows stay masked");
 
     await click(".form-kit__field .add-value-btn");
 
@@ -610,30 +533,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .hasAttribute("placeholder", "a secret");
   });
 
-  test("cancelling a secret list setting clears its invalid input error", async function (assert) {
-    await renderSetting({
-      setting: "test_secrets",
-      value: "k1|s1",
-      type: "list",
-      list_type: "secret",
-    });
-
-    await click(".form-kit__field .remove-value-btn");
-    await click(".form-kit__field .add-value-btn");
-
-    assert.dom(".form-kit__field .form-kit__errors").exists();
-
-    await click(".setting-controls__cancel");
-
-    assert.dom(".form-kit__field .form-kit__errors").doesNotExist();
-  });
-
   test("a file types list setting adds default types to an empty value", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_types", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_types");
 
     await renderSetting({
       setting: "test_types",
@@ -653,11 +554,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("an upload setting shows its restrictions and saves a removed file", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_upload", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_upload");
 
     await renderSetting({
       setting: "test_upload",
@@ -682,11 +579,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("an uploaded image list setting saves the images kept in its modal", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/selectable_avatars", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("selectable_avatars");
     const modal = getOwner(this).lookup("service:modal");
     const show = sinon.stub(modal, "show");
 
@@ -710,11 +603,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("a color setting saves the typed hex with its prefix", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_color", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_color");
 
     await renderSetting({
       setting: "test_color",
@@ -740,11 +629,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("a locale list setting names its choices from the available locales", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_locales", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_locales");
     this.siteSettings.available_locales = [
       { value: "en", name: "English" },
       { value: "fr", name: "Français" },
@@ -785,11 +670,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("a topic setting saves the picked topic id", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_topic", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
+    const body = captureSave("test_topic");
     pretender.get("/search/query", () =>
       response({
         topics: [{ id: 42, title: "Moderator guide" }],
@@ -812,74 +693,29 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.test_topic, "42");
   });
 
-  test("a datetime setting saves the local time as UTC", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_datetime", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
-    const savedTime = "2026-01-15T10:00:00Z";
-    const pickedLocalTime = "2026-02-01T08:30";
+  const savedTime = "2026-01-15T10:00:00Z";
+  const pickedLocalTime = "2026-02-01T08:30";
 
-    await renderSetting({
-      setting: "test_datetime",
-      value: savedTime,
-      type: "datetime",
-    });
-
-    assert
-      .dom(".form-kit__field input[type='datetime-local']")
-      .hasValue(
-        moment(savedTime).local().format(moment.HTML5_FMT.DATETIME_LOCAL)
-      );
-
-    await fillIn(
-      ".form-kit__field input[type='datetime-local']",
-      pickedLocalTime
-    );
-    await click(".setting-controls__ok");
-
-    assert.strictEqual(
-      body.test_datetime,
-      moment(pickedLocalTime).utc().format()
-    );
-  });
-
-  test("a date setting saves the picked date", async function (assert) {
-    let body;
-    pretender.put("/admin/site_settings/test_date", (request) => {
-      body = parsePostData(request.requestBody);
-      return response(200, {});
-    });
-
-    await renderSetting({
-      setting: "test_date",
-      value: "",
-      type: "date",
-    });
-    await fillIn(".form-kit__field input[type='date']", "2026-01-15");
-    await click(".setting-controls__ok");
-
-    assert.strictEqual(body.test_date, "2026-01-15");
-  });
-
-  for (const [type, selector, saved, shown] of [
-    ["date", "input[type='date']", "2026-01-15", "2026-01-15"],
+  for (const [type, selector, saved, shown, picked, pickedWire] of [
+    [
+      "date",
+      "input[type='date']",
+      "2026-01-15",
+      "2026-01-15",
+      "2026-02-01",
+      "2026-02-01",
+    ],
     [
       "datetime",
       "input[type='datetime-local']",
-      "2026-01-15T10:00:00Z",
-      moment("2026-01-15T10:00:00Z")
-        .local()
-        .format(moment.HTML5_FMT.DATETIME_LOCAL),
+      savedTime,
+      moment(savedTime).local().format(moment.HTML5_FMT.DATETIME_LOCAL),
+      pickedLocalTime,
+      moment(pickedLocalTime).utc().format(),
     ],
   ]) {
-    test(`a ${type} setting can be emptied, then reset to a non-empty default`, async function (assert) {
-      let body;
-      pretender.put("/admin/site_settings/test_when", (request) => {
-        body = parsePostData(request.requestBody);
-        return response(200, {});
-      });
+    test(`a ${type} setting can be emptied, reset to its default and set again`, async function (assert) {
+      const body = captureSave("test_when");
       const input = `.form-kit__field ${selector}`;
 
       await renderSetting({
@@ -902,6 +738,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
       await click(".setting-controls__ok");
 
       assert.strictEqual(body.test_when, saved);
+
+      await fillIn(input, picked);
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, pickedWire, "saves in wire format");
     });
   }
 
@@ -1344,14 +1185,14 @@ module(
         .exists("the cancel button is shown");
     });
 
-    test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
+    test("clearing the input field keeps the cancel button and clears the validation error", async function (assert) {
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
       assert.dom(".form-kit__errors").exists();
 
       await fillIn(".file-size-input", "");
-      assert.dom(".form-kit__errors").exists();
+      assert.dom(".form-kit__errors").doesNotExist();
       assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
         .dom(".setting-controls__cancel")
@@ -1383,13 +1224,7 @@ module(
 
     test("sets body-font-X classNames on each field choice", async function (assert) {
       await renderSetting({
-        category: "",
         choices: fonts,
-        default: "",
-        description: "Base font",
-        placeholder: null,
-        preview: null,
-        secret: false,
         setting: "base_font",
         type: "font_list",
         value: "arial",

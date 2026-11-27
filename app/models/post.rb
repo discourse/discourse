@@ -373,7 +373,12 @@ class Post < ActiveRecord::Base
     # user to be present. The last editing user of the post will be more
     # generally up to date than the creating user.
     options[:user_id] = last_editor_id
-    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
+    options[:hashtag_user_ids] = [
+      user_id,
+      last_editor_id,
+      *post_revisions.pluck(:user_id),
+      *system_message_recipient_ids,
+    ].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -616,6 +621,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def system_message?
+    is_first_post? && topic&.subtype == TopicSubtype.system_message
+  end
+
   def is_last_reply?
     topic.try(:highest_post_number) == post_number && post_number != 1
   end
@@ -719,6 +728,11 @@ class Post < ActiveRecord::Base
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
+      if is_first_post?
+        topic.update_excerpt(nil)
+        topic.localizations.update_all(excerpt: nil)
+      end
+
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
@@ -739,20 +753,21 @@ class Post < ActiveRecord::Base
 
     # inform user
     if user.present?
+      message_type = (custom_message || (hiding_again ? :post_hidden_again : :post_hidden)).to_s
+      appeal_options =
+        message_type == "queued_by_staff" ? {} : Dsa::AppealInstructions.message_options
+
       options = {
-        **Dsa::AppealInstructions.message_options,
+        **appeal_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         **message_options,
       }
 
-      message = custom_message
-      message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
-
       ModerationNotice.enqueue(
         delay: 5.seconds,
         user: user,
-        message_type: message.to_s,
+        message_type: message_type,
         message_options: options,
         post_action_type_id:,
       )
@@ -764,6 +779,7 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       update!(hidden: false)
+      restore_topic_excerpts if is_first_post?
       should_update_user_stat = true
 
       # NOTE: We have to consider `nil` a valid reason here because historically
@@ -1276,6 +1292,20 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def restore_topic_excerpts
+    topic.update_excerpt(excerpt_for_topic)
+    topic.localizations.each do |topic_localization|
+      cooked = localizations.find_by(locale: topic_localization.locale)&.cooked
+      topic_localization.update_excerpt(cooked:)
+    end
+  end
+
+  def system_message_recipient_ids
+    return [] if !system_message?
+
+    topic.topic_allowed_users.pluck(:user_id)
+  end
 
   def unvalidated_media_limit
     writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]

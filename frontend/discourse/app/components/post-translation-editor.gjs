@@ -101,6 +101,8 @@ export default class PostTranslationEditor extends Component {
       @categoryId={{this.composer.model.category.id}}
       @change={{this.handleInput}}
       @composerEvents={{true}}
+      @composerImageDescriptions={{true}}
+      @decoratePreviewImageControls={{@decoratePreviewImageControls}}
       @disabled={{this.composer.disableTextarea}}
       @disableSubmit={{this.composer.disableSubmit}}
       @extraButtons={{@extraButtons}}

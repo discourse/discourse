@@ -501,6 +501,45 @@ RSpec.describe Boards::Api::BoardsController do
       expect(card_titles).not_to include(private_topic.title)
     end
 
+    it "only includes unlisted topics for users who can see unlisted topics" do
+      listed_topic = Fabricate(:topic, category: category)
+      unlisted_topic = Fabricate(:topic, category: category, visible: false)
+
+      board = Fabricate(:boards_board, name: "Manual", slug: "manual", created_by: admin)
+      Fabricate(
+        :access_control_list_with_groups,
+        target: board,
+        permission: "view",
+        groups: [read_group],
+      )
+      column = board.columns.create!(title: "Col", position: 0)
+      [listed_topic, unlisted_topic].each_with_index do |topic, position|
+        board.cards.create!(
+          card_type: :topic,
+          topic_id: topic.id,
+          column_id: column.id,
+          position: position,
+          created_by_id: admin.id,
+        )
+      end
+
+      sign_in(reader)
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["columns"][0]["cards"].map { |c| c["topic_id"] }).to eq(
+        [listed_topic.id],
+      )
+      expect(response.body).not_to include(unlisted_topic.title)
+
+      sign_in(admin)
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(
+        response.parsed_body["columns"][0]["cards"].map { |c| c["topic_id"] },
+      ).to contain_exactly(listed_topic.id, unlisted_topic.id)
+    end
+
     it "does not backfill cards into unconstrained columns even when the board filter matches" do
       topic = Fabricate(:topic, category: category)
       board =
@@ -965,6 +1004,141 @@ RSpec.describe Boards::Api::BoardsController do
       put "/boards/api/boards/#{board.id}.json", params: { board: { name: "Hacked" } }
 
       expect(response.status).to eq(403)
+    end
+
+    context "when the constraints exclude a card that the user cannot see" do
+      subject(:update_response) do
+        put "/boards/api/boards/#{board.id}.json",
+            params: {
+              board: {
+                category_ids: [category.id],
+              },
+            }
+        response.parsed_body
+      end
+
+      fab!(:board) do
+        Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+      end
+      fab!(:column) { Fabricate(:boards_column, board:) }
+      fab!(:hidden_card) do
+        Fabricate(
+          :boards_topic_card,
+          board:,
+          column:,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+      end
+
+      before { sign_in(manager) }
+
+      context "when the constraints exclude a visible card too" do
+        fab!(:visible_card) do
+          Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:topic))
+        end
+
+        it "returns the count of the visible cards" do
+          expect(update_response["cards_removed_count"]).to eq(1)
+        end
+      end
+
+      it "returns no count" do
+        expect(update_response.keys).to contain_exactly("board")
+      end
+    end
+  end
+
+  describe "POST /boards/api/boards/:id/constraint-preview" do
+    subject(:preview) do
+      post "/boards/api/boards/#{board.id}/constraint-preview.json", params: constraints
+      response
+    end
+
+    fab!(:other_category, :category)
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:public_tag, :tag)
+    fab!(:staff_tag, :tag)
+    fab!(:board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+    fab!(:column) { Fabricate(:boards_column, board:) }
+    fab!(:matching_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category:, tags: [public_tag]),
+      )
+    end
+    fab!(:visible_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: other_category),
+      )
+    end
+    fab!(:hidden_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: private_category, tags: [staff_tag]),
+      )
+    end
+
+    let(:constraints) { { category_ids: [category.id] } }
+    let(:cards_to_remove) { preview.parsed_body["cards_to_remove"] }
+
+    before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [staff_tag]) }
+
+    context "when the user cannot manage the board" do
+      before { sign_in(writer) }
+
+      it "denies access" do
+        expect(preview).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the user can see all cards of the board" do
+      before { sign_in(admin) }
+
+      it "counts all cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(2)
+      end
+    end
+
+    context "when the user cannot see a card of the board" do
+      before { sign_in(manager) }
+
+      context "when the constraints have a category that the user cannot see" do
+        let(:constraints) { { category_ids: [private_category.id] } }
+
+        it "counts the visible cards" do
+          expect(cards_to_remove).to eq(2)
+        end
+      end
+
+      context "when the constraints have a tag that the user can see" do
+        let(:constraints) { { tag_names: [public_tag.name] } }
+
+        it "counts the visible cards without the tag" do
+          expect(cards_to_remove).to eq(1)
+        end
+      end
+
+      context "when the constraints have a tag that the user cannot see" do
+        let(:constraints) { { tag_names: [staff_tag.name] } }
+
+        it "ignores the tag" do
+          expect(cards_to_remove).to eq(0)
+        end
+      end
+
+      it "counts only the visible cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(1)
+      end
     end
   end
 

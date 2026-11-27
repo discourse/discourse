@@ -247,6 +247,12 @@
         "can_delete_all_posts": {
           "type": "boolean"
         },
+        "staff_only_settings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "locale": {
           "type": [
             "string",

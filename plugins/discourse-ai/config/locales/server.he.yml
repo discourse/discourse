@@ -28,12 +28,6 @@ he:
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
         notify_author_pm:
           subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
-          body: |
-            שלום ‎@%{username},
-
-            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
-
-            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
@@ -289,6 +283,8 @@ he:
           text_color: "צבע הטקסט"
         approve_label: "כן"
         reject_label: "לא"
+        category_access_levels:
+          readonly: "לראות"
         empty_value: "ריק"
       agents:
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
@@ -446,6 +442,7 @@ he:
         edit_post: "עריכת פוסט"
         edit_tag: "עריכת תגית"
         create_category: "יצירת קטגוריה"
+        delete_category: "מחיקת קטגוריה"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -555,6 +552,12 @@ he:
         errors:
           not_found: "הנושא לא נמצא."
       edit_category:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      set_category_permissions:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      delete_category:
         errors:
           not_found: "לא נמצאה קטגוריה."
       change_topic_category:

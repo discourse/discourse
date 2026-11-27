@@ -94,6 +94,70 @@ describe "MCP transport" do
   describe "#create" do
     fab!(:category)
 
+    it "lets a tool choose a smaller result when the complete response exceeds the byte limit" do
+      name = "size_aware_tool"
+      full_result = DiscourseMcp::ToolHelpers.text_and_structured(message: "雪" * 3000)
+      fallback = DiscourseMcp::ToolHelpers.text_and_structured(message: "short")
+      registry = DiscourseMcp::Registry.new
+      registry.register_tool(
+        name,
+        title: "Size-aware tool",
+        description: "Returns a message that fits the response",
+        required_scopes: [DiscourseMcp::Scopes::PROFILE_READ],
+        implementation: ->(arguments:, request_context:) do
+          request_context.result_fits?(full_result) ? full_result : fallback
+        end,
+      )
+      allow(DiscourseMcp).to receive(:registry).and_return(registry)
+      McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+      request_headers = headers.merge("HTTP_MCP_NAME" => name)
+      request_payload = payload.deep_merge(id: 'request-"雪"', params: { name: })
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.parsed_body.dig("result", "structuredContent")).to eq(
+        full_result[:structuredContent].stringify_keys,
+      )
+      SiteSetting.mcp_max_response_bytes = response.body.bytesize
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.body.bytesize).to eq(SiteSetting.mcp_max_response_bytes)
+      expect(response.parsed_body.dig("result", "structuredContent")).to eq(
+        full_result[:structuredContent].stringify_keys,
+      )
+
+      request_payload[:id] += "x"
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "structuredContent")).to eq(
+        fallback[:structuredContent].stringify_keys,
+      )
+    end
+
+    it "requires repository scope rather than theme scope for source access" do
+      name = "discourse_source_version"
+      McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::THEMES_READ)
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = name
+      request_headers = headers.merge("HTTP_MCP_NAME" => name)
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(403)
+
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::REPOSITORY_READ)
+      request_headers[
+        "HTTP_AUTHORIZATION"
+      ] = "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}"
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(false)
+      expect(response.parsed_body.dig("result", "structuredContent", "source")).to include(
+        "site_version" => Discourse::VERSION::STRING,
+        "source_revision" => Discourse.git_version,
+        "public_permalink_verified" => false,
+      )
+    end
+
     it "requires theme write scope and returns compilation failures without changing saved code" do
       theme = Fabricate(:theme, component: true)
       name = "discourse_set_theme_code"

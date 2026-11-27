@@ -53,6 +53,8 @@ module WildcardUrlChecker
   end
 
   def self.wildcard_match?(pattern, value, wildcard_pattern)
+    return pattern.casecmp?(value) if pattern.exclude?("*")
+
     escaped_pattern = Regexp.escape(pattern).gsub("\\*", wildcard_pattern)
     Regexp.new("\\A#{escaped_pattern}\\z", "i").match?(value)
   end

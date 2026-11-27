@@ -55,6 +55,37 @@ module("Integration | Component | TopicNavigation", function (hooks) {
     assert.dom(".with-timeline").exists();
   });
 
+  test("hands over the latest scroll event without re-rendering on scroll", async function (assert) {
+    forceMobile();
+    const topic = this.topic;
+    const appEvents = this.owner.lookup("service:app-events");
+
+    await render(
+      <template>
+        <TopicNavigation @topic={{topic}} as |info|>
+          <span class="scrolled-post">{{info.prevEvent.postIndex}}</span>
+        </TopicNavigation>
+      </template>
+    );
+
+    appEvents.trigger("topic:current-post-scrolled", {
+      postIndex: 4,
+      percent: 0.6,
+    });
+    await settled();
+
+    assert
+      .dom(".scrolled-post")
+      .hasNoText("scrolling does not invalidate the yielded block");
+
+    appEvents.trigger("topic:toggle-progress-expansion");
+    await settled();
+
+    assert
+      .dom(".scrolled-post")
+      .hasText("4", "switching to the timeline reads the latest event");
+  });
+
   module("short desktop viewport", function (viewportHooks) {
     viewportHooks.beforeEach(function () {
       this.matchMedia = sinon.stub(window, "matchMedia").callsFake((query) => {

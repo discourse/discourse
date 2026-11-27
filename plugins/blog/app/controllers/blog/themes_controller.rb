@@ -47,6 +47,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:custom_themes_allowed) do |policy|
+          render_json_error policy.reason, status: :forbidden
+        end
         on_model_not_found(:preview_path) { raise Discourse::NotFound }
       end
     end
@@ -57,15 +60,26 @@ module ::Blog
                  ActiveModel::ArraySerializer.new(
                    ThemePresets.all + BlogTheme.all,
                    each_serializer: BlogThemeSerializer,
+                   blog: Instance.find_by(id: params[:blog_id]),
                  ).as_json,
-               active: BlogTheme.active,
+               active: BlogTheme.active_for(Instance.default_blog),
+               blogs:
+                 Instance.ordered.map do |blog|
+                   active = BlogTheme.active_for(blog)
+                   {
+                     id: blog.id,
+                     name: blog.name,
+                     active_theme_id: active["id"],
+                     active_revision: active["revision"],
+                   }
+                 end,
              }
     end
 
     def show
       render json: {
                theme: BlogThemeSerializer.new(BlogTheme.find(params[:id]), root: false).as_json,
-               active: BlogTheme.active,
+               active: BlogTheme.active_for(Instance.default_blog),
              }
     end
 
@@ -78,6 +92,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:custom_themes_allowed) do |policy|
+          render_json_error policy.reason, status: :forbidden
+        end
         on_failed_policy(:within_theme_limit) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
@@ -96,6 +113,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:custom_themes_allowed) do |policy|
+          render_json_error policy.reason, status: :forbidden
+        end
         on_model_not_found(:theme) { raise Discourse::NotFound }
         on_failed_policy(:revision_is_current) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
@@ -129,6 +149,10 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:custom_themes_allowed) do |policy|
+          render_json_error policy.reason, status: :forbidden
+        end
+        on_model_not_found(:blog) { raise Discourse::NotFound }
         on_model_not_found(:theme) { raise Discourse::NotFound }
         on_failed_policy(:revision_is_current) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
@@ -163,6 +187,9 @@ module ::Blog
           on_failed_policy(:can_manage_themes) do
             render_json_error I18n.t("invalid_access"), status: :forbidden
           end
+          on_failed_policy(:custom_themes_allowed) do |policy|
+            render_json_error policy.reason, status: :forbidden
+          end
           on_model_not_found(:theme) { render_json_error I18n.t("not_found"), status: :not_found }
           on_failed_policy(:imported_from_repository) do
             render_json_error I18n.t("invalid_params", message: "source"), status: :bad_request
@@ -190,6 +217,9 @@ module ::Blog
         end
         on_failed_contract { raise Discourse::InvalidParameters.new(:file) }
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:custom_themes_allowed) do |policy|
+          render_json_error policy.reason, status: :forbidden
+        end
         on_exceptions { |error| raise Discourse::InvalidParameters.new(error.message) }
         on_failed_step(:create_theme) { |step| raise Discourse::InvalidParameters.new(step.error) }
       end
@@ -207,6 +237,9 @@ module ::Blog
           end
           on_failed_policy(:can_manage_themes) do
             render_json_error I18n.t("invalid_access"), status: :forbidden
+          end
+          on_failed_policy(:custom_themes_allowed) do |policy|
+            render_json_error policy.reason, status: :forbidden
           end
           on_failed_policy(:can_import_repository) do
             render_json_error I18n.t("invalid_access"), status: :forbidden

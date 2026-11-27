@@ -65,17 +65,12 @@ module Chat
         if !thread_id.present?
           messages =
             messages.left_joins(:thread).where(
-              "chat_threads.id IS NULL OR chat_threads.force = false OR chat_messages.id = chat_threads.original_message_id",
+              "chat_threads.id IS NULL OR chat_threads.force = false OR
+                chat_messages.broadcasted OR chat_messages.id = chat_threads.original_message_id",
             )
         end
       else
-        messages = messages.where(<<~SQL, channel_id: channel.id)
-          chat_messages.thread_id IS NULL OR chat_messages.id IN (
-            SELECT original_message_id
-            FROM chat_threads
-            WHERE chat_threads.channel_id = :channel_id
-          )
-        SQL
+        messages = messages.channel_stream
       end
 
       if target_message_id.present? && direction.blank?

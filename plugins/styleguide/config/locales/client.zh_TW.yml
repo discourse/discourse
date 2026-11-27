@@ -56,6 +56,9 @@ zh_TW:
           title: "字型系統"
         colors:
           title: "顏色"
+        design_variables:
+          type: "類型"
+          default: "默認"
         dialog:
           title: "對話框"
         drag_and_drop:

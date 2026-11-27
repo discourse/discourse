@@ -51,6 +51,9 @@ ar:
           title: "نظام الخطوط"
         colors:
           title: "الألوان"
+        design_variables:
+          type: "النوع"
+          default: "افتراضي"
         dialog:
           title: "حوار"
         drag_and_drop:

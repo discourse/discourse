@@ -51,6 +51,8 @@ it:
           column_title: "Titolo"
           icon: "Icona"
           color: "Colore"
+          color_palette: "Schema di colori"
+          icon_search_placeholder: "Cerca…"
           default_sort_priority: "Priorità"
           tag: "Etichetta"
           move_to_assigned_unassign: "Annulla assegnazione"

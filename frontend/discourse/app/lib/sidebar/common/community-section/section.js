@@ -113,10 +113,11 @@ export default class CommunitySection {
       return false;
     }
 
-    return (
-      link instanceof EverythingSectionLink ||
-      this.mobileTabBar.leadsToSectionTab(link)
-    );
+    if (link instanceof EverythingSectionLink) {
+      return this.mobileTabBar.barTabs.length > 0;
+    }
+
+    return this.mobileTabBar.leadsToSectionTab(link);
   }
 
   #generateLink(link, inMoreDrawer = false) {

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe UserPostBookmarkSerializer do
-  let(:user) { Fabricate(:user) }
-  let(:topic) { Fabricate(:topic) }
-  let(:post) { Fabricate(:post, user: user, topic: topic) }
-  let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: post) }
+  fab!(:user)
+  fab!(:topic)
+  fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+  fab!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: post) }
 
   describe "#highest_post_number" do
     let(:whisperers_group) { Fabricate(:group) }

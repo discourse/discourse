@@ -3,16 +3,28 @@
 RSpec.describe Jobs::GenerateInferredConcepts do
   subject(:job) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic)
   fab!(:post)
   fab!(:concept) { Fabricate(:inferred_concept, name: "programming") }
 
   before do
     enable_current_plugin
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
   end
 
   describe "#execute" do
+    it "does nothing when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+      expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).not_to receive(
+        :generate_concepts_from_topic,
+      )
+
+      job.execute(item_type: "topics", item_ids: [topic.id])
+    end
+
     it "does nothing with blank item_ids" do
       expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).not_to receive(
         :match_topic_to_concepts,
@@ -136,6 +148,9 @@ RSpec.describe Jobs::GenerateInferredConcepts do
     end
 
     it "uses default batches of 100 IDs without loading absent topics" do
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
+        :match_topic_to_concepts,
+      )
       last_topic = Fabricate(:topic)
       topic_ids = [topic.id, *Array.new(99) { |index| 1_000_000 + index }, last_topic.id]
 
@@ -151,6 +166,9 @@ RSpec.describe Jobs::GenerateInferredConcepts do
     end
 
     it "respects custom batch size" do
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
+        :match_topic_to_concepts,
+      )
       topics = Array.new(5) { Fabricate(:topic) }
       topic_ids = topics.map(&:id)
 

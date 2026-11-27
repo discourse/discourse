@@ -24,6 +24,9 @@ sq:
           cross_list_primary: "Kryesor"
         colors:
           title: "Ngjyrat"
+        design_variables:
+          type: "Lloji"
+          default: "Paracaktuar"
         dropdowns:
           title: "Lista e hapësirave"
         categories:

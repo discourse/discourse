@@ -2109,48 +2109,12 @@ gl:
     post_hidden:
       title: "Publicación oculta"
       subject_template: "Publicación ocultada polas denuncias da comunidade"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} para comunicarlle que a súa publicación foi ocultada.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta publicación foi ocultada por mor das denuncias da comunidade. Daquela, considere a posibilidade de revisala tendo en conta esta reacción da comunidade. **Pode editar a súa publicación despois de %{edit_delay} minutos e automaticamente volverá estar visible.**
-
-        Porén, se a publicación volvese ser ocultada de segundas, permanecerá oculta ata que un membro do equipo a xestione.
-
-        Para máis información, visite as [directrices da nosa comunidade](%{base_url}/guidelines).
     post_hidden_again:
       title: "Publicación agochada de novo"
       subject_template: "Publicación agochada por alertas da comunidade, notificóuselle ao equipo"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} para informalo de que a súa publicación volveu ser agochada outra vez.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A comunidade alertou desta publicación e agora está agochada. **Debido a que esta publicación foi agochada máis dunha vez, seguirá así ata que sexa xestionada por un membro do equipo.**
-
-        Para obter máis axuda, consulte as [directrices da comunidade] (%{base_url}/guidelines).
     queued_by_staff:
       title: "A publicación necesita aprobación"
       subject_template: "Publicación agochada polo equipo, agarda aprobación"
-      text_body_template: |
-        Ola,
-
-        Esta é unha mensaxe automática de %{site_name} que lle permite saber que a súa publicación queda agochada.
-
-        <%{base_url}%{url}>
-
-        A publicación permanecerá agochada ata que un membro do equipo a revise.
-
-        Para indicacións a maiores, consulte as [directrices da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación sinalizada restaurada polo equipo"
       subject_template: "Publicación sinalizada restaurada polo equipo"
@@ -2848,12 +2812,6 @@ gl:
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"
@@ -3019,10 +2977,6 @@ gl:
     signup_after_reject:
       title: "Rexistro despois do rexeitamento"
       subject_template: "Resultou rexeitado en %{site_name}"
-      text_body_template: |
-        Un membro do grupo rexeitou a súa conta en %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Rexistrarse"
       subject_template: "[%{email_prefix}] Confirme a súa nova conta"
@@ -3426,7 +3380,6 @@ gl:
       summer: "Verán"
       grey_amber: "Gris ámbar"
       latte: "Latte"
-      dark_rose: "Rosa escuro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3548,6 +3501,8 @@ gl:
         title: "Si"
       approve_post:
         title: "Si"
+      deny_and_delete_post:
+        complete: "Publicación eliminada."
       approve_post_closed:
         title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"

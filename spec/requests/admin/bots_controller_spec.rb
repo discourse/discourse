@@ -97,6 +97,110 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#interactive_bot" do
+    fab!(:bot) { Fabricate(:user, id: -1234) }
+
+    it "allows admins to enable and disable interactivity and logs changes" do
+      sign_in(admin)
+
+      [true, false].each do |enabled|
+        expect do
+          put "/admin/users/#{bot.id}/interactive_bot.json",
+              params: {
+                interactive_bot: enabled,
+              },
+              as: :json
+        end.to change(UserHistory, :count).by(1)
+
+        expect(response.status).to eq(204)
+        expect(bot.reload.interactive_bot).to eq(enabled)
+        expect(UserHistory.last).to have_attributes(
+          action: UserHistory.actions[:change_bot_interactivity],
+          acting_user_id: admin.id,
+          target_user_id: bot.id,
+          previous_value: (!enabled).to_s,
+          new_value: enabled.to_s,
+        )
+      end
+    end
+
+    it "does not log unchanged values" do
+      sign_in(admin)
+
+      expect do
+        put "/admin/users/#{bot.id}/interactive_bot.json",
+            params: {
+              interactive_bot: false,
+            },
+            as: :json
+      end.not_to change(UserHistory, :count)
+
+      expect(response.status).to eq(204)
+    end
+
+    it "rejects anonymous users, regular users, and moderators" do
+      [nil, user, moderator].each do |actor|
+        sign_in(actor) if actor
+
+        expect do
+          put "/admin/users/#{bot.id}/interactive_bot.json", params: { interactive_bot: true }
+        end.to not_change { bot.reload.interactive_bot }.and(not_change(UserHistory, :count))
+
+        expect(response.status).to be_in([403, 404])
+      end
+    end
+
+    it "rejects human accounts and the system account" do
+      sign_in(admin)
+
+      [user, Discourse.system_user].each do |target|
+        expect do
+          put "/admin/users/#{target.id}/interactive_bot.json", params: { interactive_bot: true }
+        end.to not_change { target.reload.interactive_bot }.and(not_change(UserHistory, :count))
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    it "requires a boolean and rejects missing or malformed values" do
+      sign_in(admin)
+      bot.update!(interactive_bot: true)
+
+      [
+        {},
+        { interactive_bot: nil },
+        { interactive_bot: "invalid" },
+        { interactive_bot: [] },
+      ].each do |attributes|
+        expect do
+          put "/admin/users/#{bot.id}/interactive_bot.json", params: attributes, as: :json
+        end.to not_change { bot.reload.interactive_bot }.and(not_change(UserHistory, :count))
+
+        expect(response.status).to eq(422)
+      end
+    end
+
+    it "accepts form-encoded false and returns interactivity in admin detail JSON" do
+      bot.update!(interactive_bot: true)
+      sign_in(admin)
+
+      get "/admin/users/#{bot.id}.json"
+      expect(response.parsed_body["interactive_bot"]).to eq(true)
+
+      put "/admin/users/#{bot.id}/interactive_bot.json", params: { interactive_bot: "false" }
+      expect(response.status).to eq(204)
+      expect(bot.reload.interactive_bot).to eq(false)
+    end
+
+    it "returns not found for a missing bot" do
+      sign_in(admin)
+
+      put "/admin/users/-999999/interactive_bot.json", params: { interactive_bot: true }
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#create_bot" do
     context "with a plugin bot creation parameter" do
       let(:plugin) { Plugin::Instance.new }
@@ -166,6 +270,47 @@ RSpec.describe Admin::UsersController do
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
+
+      it "creates an interactive bot and records the chosen setting" do
+        post "/admin/users/bots.json",
+             params: {
+               bot: bot_params.merge(interactive_bot: true),
+             },
+             as: :json
+
+        expect(response.status).to eq(201)
+        bot = User.find(response.parsed_body.dig("user", "id"))
+        expect(bot.interactive_bot).to eq(true)
+        expect(response.parsed_body.dig("user", "interactive_bot")).to eq(true)
+        expect(
+          UserHistory.find_by!(
+            action: UserHistory.actions[:create_bot],
+            target_user_id: bot.id,
+          ).details,
+        ).to include("interactive_bot: true")
+      end
+
+      it "creates a non-interactive bot by default" do
+        post "/admin/users/bots.json", params: { bot: bot_params }, as: :json
+
+        expect(response.status).to eq(201)
+        expect(response.parsed_body.dig("user", "interactive_bot")).to eq(false)
+      end
+
+      it "rejects explicitly malformed interactivity values without creating a user" do
+        [nil, "invalid", [true], { enabled: true }].each do |value|
+          expect do
+            post "/admin/users/bots.json",
+                 params: {
+                   bot: bot_params.merge(interactive_bot: value),
+                 },
+                 as: :json
+          end.not_to change(User, :count)
+
+          expect(response.status).to eq(422),
+          "Expected interactive_bot=#{value.inspect} to be rejected: #{response.body}"
+        end
+      end
 
       it "returns the created admin-user representation and a Location header" do
         SiteSetting.default_trust_level = 4

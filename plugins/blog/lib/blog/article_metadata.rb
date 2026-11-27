@@ -42,7 +42,7 @@ module ::Blog
             {
               "@type" => "Person",
               "name" => name,
-              "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
+              "url" => "#{Configuration.base_url(@publication.blog)}#{Revision.author_path(user)}",
             }
           end
       people.many? ? people : people.first

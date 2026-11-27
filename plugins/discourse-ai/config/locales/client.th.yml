@@ -38,11 +38,22 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      review_bulk:
+        refresh: "รีเฟรช"
+        columns:
+          user: "ผู้ใช้"
+          created: "สร้างแล้ว"
+          status: "สถานะ"
       copied: "คัดลอกแล้ว"
       ai_decoded_transcript:
         type: "ชนิด"
         error: "ผิดพลาด"
+      post_image_captions:
+        image_descriptions:
+          apply: "นำไปใช้"
       discourse_workflows:
+        ai_tool:
+          list_item: "รายการ"
         classify:
           text: "ข้อความ"
           upload_ids: "รูปภาพ"
@@ -69,6 +80,9 @@ th:
         edit: "การตั้งค่า"
         search:
           name: "ค้นหา"
+        review_queue:
+          setting_groups:
+            settings: "การตั้งค่า"
         image_caption:
           setting_groups:
             settings: "การตั้งค่า"
@@ -185,6 +199,26 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      concepts:
+        edit: "แก้ไข"
+        seed:
+          refresh: "รีเฟรช"
+        delete: "ลบ"
+        columns:
+          status: "สถานะ"
+          topics: "หัวข้อ"
+          posts: "โพส"
+        statuses:
+          active: "ใช้งานอยู่"
+        form:
+          name: "ชื่อ"
+          description: "รายละเอียด"
+          status: "สถานะ"
+        shared_topics_count:
+          other: "%{count}กระทู้"
+        topic_columns:
+          topic: "หัวข้อ"
+          relevance: "เกี่ยวข้อง"
       decision_models:
         no_preset: "ไม่มี"
         display_name: "ชื่อ"

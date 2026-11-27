@@ -1,6 +1,7 @@
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
+import AccessNotice from "discourse/components/access-notice";
 import EmailDropdown from "discourse/components/email-dropdown";
 import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -24,6 +25,11 @@ function updatePrimaryGroup(controller, value) {
 
 export default <template>
   <div class="control-group pref-username" data-setting-name="user-username">
+    <AccessNotice
+      @kind="staff"
+      @setting="username"
+      @user={{@controller.model}}
+    />
     <label class="control-label">{{i18n "user.username.title"}}</label>
     <UsernamePreference @user={{@controller.model}} />
   </div>
@@ -159,108 +165,110 @@ export default <template>
           "user.associated_accounts.title"
         }}</label>
       {{#if @controller.associatedAccountsLoaded}}
-        <table class="associated-accounts">
-          <tbody>
-            {{#each @controller.authProviders as |authProvider|}}
-              {{#if authProvider.account}}
-                <tr
-                  class="{{dDasherize authProvider.method.name}}
-                    account-connected"
-                >
-                  <td class="associated-account__icon">
-                    {{#if authProvider.method.isGoogle}}
-                      <GoogleIcon />
-                    {{else}}
-                      {{dIcon (or authProvider.method.icon "user")}}
-                    {{/if}}
-                  </td>
-                  <td>
-                    <div class="associated-account__name">
-                      {{#if authProvider.method.provider_url}}
-                        <a
-                          href={{authProvider.method.provider_url}}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          {{authProvider.method.prettyName}}
-                        </a>
-                      {{else}}
-                        {{authProvider.method.prettyName}}
-                      {{/if}}
-                    </div>
-                    <div class="associated-account__description">
-                      {{authProvider.account.description}}
-                    </div>
-                  </td>
-                  <td class="associated-account__actions">
-                    {{#if authProvider.method.can_revoke}}
-                      <DButton
-                        class="btn-danger no-text"
-                        @action={{fn
-                          @controller.revokeAccount
-                          authProvider.account
-                        }}
-                        @disabled={{get
-                          @controller.revoking
-                          authProvider.method.name
-                        }}
-                        @icon="trash-can"
-                        @title="user.associated_accounts.revoke"
-                      />
-                    {{/if}}
-                  </td>
-                </tr>
-              {{else}}
-                <tr class={{dDasherize authProvider.method.name}}>
-                  <td
-                    class="associated-account__icon
-                      {{dDasherize authProvider.method.name}}"
+        <AccessNotice @kind="self" @user={{@controller.model}} as |disabled|>
+          <table class="associated-accounts">
+            <tbody>
+              {{#each @controller.authProviders as |authProvider|}}
+                {{#if authProvider.account}}
+                  <tr
+                    class="{{dDasherize authProvider.method.name}}
+                      account-connected"
                   >
-                    {{#if authProvider.method.isGoogle}}
-                      <GoogleIcon />
-                    {{else}}
-                      {{dIcon (or authProvider.method.icon "user")}}
-                    {{/if}}
-                  </td>
-                  <td>
-                    <div class="associated-account__name">
-                      {{#if authProvider.method.provider_url}}
-                        <a
-                          href={{authProvider.method.provider_url}}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          {{authProvider.method.prettyName}}
-                        </a>
+                    <td class="associated-account__icon">
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
                       {{else}}
-                        {{authProvider.method.prettyName}}
+                        {{dIcon (or authProvider.method.icon "user")}}
                       {{/if}}
-                    </div>
-                    <div class="associated-account__description">
-                      {{authProvider.account.description}}
-                    </div>
-                  </td>
-                  <td class="associated-account__actions">
-                    {{#if authProvider.method.can_connect}}
-                      <DButton
-                        class="btn-primary"
-                        @action={{fn
-                          @controller.connectAccount
-                          authProvider.method
-                        }}
-                        @disabled={{@controller.disableConnectButtons}}
-                        @icon="plug"
-                        @label="user.associated_accounts.connect"
-                      />
-                    {{else}}
-                      {{i18n "user.associated_accounts.not_connected"}}
-                    {{/if}}
-                  </td>
-                </tr>
-              {{/if}}
-            {{/each}}
-          </tbody>
-        </table>
+                    </td>
+                    <td>
+                      <div class="associated-account__name">
+                        {{#if authProvider.method.provider_url}}
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {{authProvider.method.prettyName}}
+                          </a>
+                        {{else}}
+                          {{authProvider.method.prettyName}}
+                        {{/if}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
+                    <td class="associated-account__actions">
+                      {{#if authProvider.method.can_revoke}}
+                        <DButton
+                          class="btn-danger no-text"
+                          @action={{fn
+                            @controller.revokeAccount
+                            authProvider.account
+                          }}
+                          @disabled={{get
+                            @controller.revoking
+                            authProvider.method.name
+                          }}
+                          @icon="trash-can"
+                          @title="user.associated_accounts.revoke"
+                        />
+                      {{/if}}
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr class={{dDasherize authProvider.method.name}}>
+                    <td
+                      class="associated-account__icon
+                        {{dDasherize authProvider.method.name}}"
+                    >
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
+                      {{else}}
+                        {{dIcon (or authProvider.method.icon "user")}}
+                      {{/if}}
+                    </td>
+                    <td>
+                      <div class="associated-account__name">
+                        {{#if authProvider.method.provider_url}}
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {{authProvider.method.prettyName}}
+                          </a>
+                        {{else}}
+                          {{authProvider.method.prettyName}}
+                        {{/if}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
+                    <td class="associated-account__actions">
+                      {{#if authProvider.method.can_connect}}
+                        <DButton
+                          class="btn-primary"
+                          @action={{fn
+                            @controller.connectAccount
+                            authProvider.method
+                          }}
+                          @disabled={{disabled}}
+                          @icon="plug"
+                          @label="user.associated_accounts.connect"
+                        />
+                      {{else}}
+                        {{i18n "user.associated_accounts.not_connected"}}
+                      {{/if}}
+                    </td>
+                  </tr>
+                {{/if}}
+              {{/each}}
+            </tbody>
+          </table>
+        </AccessNotice>
       {{else}}
         <div class="controls">
           <DButton
@@ -371,11 +379,11 @@ export default <template>
     </div>
   {{/if}}
 
-  {{#if @controller.canDownloadPosts}}
-    <div
-      class="control-group pref-data-export"
-      data-setting-name="user-data-export"
-    >
+  <div
+    class="control-group pref-data-export"
+    data-setting-name="user-data-export"
+  >
+    <AccessNotice @kind="self" @user={{@controller.model}} as |disabled|>
       <label class="control-label">{{i18n
           "user.download_archive.title"
         }}</label>
@@ -383,15 +391,16 @@ export default <template>
         <DButton
           class="btn-default btn-request-archive"
           @action={{@controller.exportUserArchive}}
+          @disabled={{disabled}}
           @icon="download"
           @label="user.download_archive.button_text"
         />
       </div>
-      <div class="instructions">
-        {{i18n "user.download_archive.description"}}
-      </div>
+    </AccessNotice>
+    <div class="instructions">
+      {{i18n "user.download_archive.description"}}
     </div>
-  {{/if}}
+  </div>
 
   <span>
     <PluginOutlet

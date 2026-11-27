@@ -109,6 +109,11 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
     # A callback parameter named `siteSettings` declares the object, it reads
     # no key — the reads happen through the other idioms in the body.
     let(:parameter_declaration) { /[(,]\s*siteSettings\s*(?=[,)])/ }
+    # A TypeScript cast, `(siteSettings as Type)["key"]`, often with the read on
+    # the next line.
+    let(:cast_read) do
+      /siteSettings\s+as\s+[^()]*\)\s*(?:\??\.([A-Za-z_0-9]+)|\[\s*["']([A-Za-z_0-9]+)["']\s*\])/
+    end
 
     def bundled_js_files
       root = Migrations::Converters::MarkdownEngine.discourse_root
@@ -139,6 +144,7 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       files.flat_map do |file|
         source = File.read(file)
         source.scan(property_read).flatten + source.scan(bracket_read).flatten +
+          source.scan(cast_read).flatten.compact +
           source
             .scan(destructuring_read)
             .flatten
@@ -189,13 +195,21 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
     it "recognizes every siteSettings mention, so aliases can't hide a read" do
       unrecognized =
         bundled_js_files.flat_map do |file|
-          File
-            .read(file)
+          source = File.read(file)
+          # A cast can span lines, so its lines are found in the whole source.
+          cast_lines =
+            source
+              .to_enum(:scan, cast_read)
+              .map { source[0, Regexp.last_match.begin(0)].count("\n") + 1 }
+          source
             .each_line
             .with_index(1)
             .filter_map do |line, number|
               line = line.sub(%r{//.*}, "")
               next unless line.include?("siteSettings")
+              # Doc comments describe the object; they read nothing.
+              next if line.match?(%r{\A\s*(?:/\*|\*)})
+              next if cast_lines.include?(number)
               # Object shorthand on its own line: a multiline destructuring or
               # parameter list declaring the object, same as the inline forms.
               next if line.match?(/\A\s*siteSettings,?\s*\z/)
