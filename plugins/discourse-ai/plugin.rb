@@ -203,10 +203,7 @@ after_initialize do
 
     automated ||
       scores
-        .where(
-          "context LIKE ?",
-          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
-        )
+        .merge(DiscourseAi::Automation.triage_scores)
         .or(
           scores.where(
             user_id: SiteSetting.ai_spam_detection_user_id.presence,
@@ -400,22 +397,13 @@ after_initialize do
     [
       :ai_triage_automation_id,
       Proc.new do |results, value|
-        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
         if value != :all
           automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
           next results if !automation_id || automation_id <= 0
-
-          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
         end
-
-        results.where(<<~SQL, context:)
-            EXISTS (
-              SELECT 1
-              FROM reviewable_scores
-              WHERE reviewable_scores.reviewable_id = reviewables.id
-              AND reviewable_scores.context LIKE :context
-            )
-          SQL
+        results.where(
+          id: DiscourseAi::Automation.triage_scores(automation_id).select(:reviewable_id),
+        )
       end,
     ],
     type_filter: {
