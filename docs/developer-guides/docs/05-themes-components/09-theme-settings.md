@@ -114,7 +114,7 @@ Icon settings give site owners a searchable icon picker, and the value is the ic
 
 ### `objects` type
 
-The `objects` setting type is a special type that allows you to accomplish advanced settings with custom structure and validations. We have a [separate documentation](https://meta.discourse.org/t/objects-type-for-theme-setting/305009) for this type.
+The `objects` type holds a list of objects with a structure and validations you define. See [objects type for theme settings](10-objects-for-theme-settings.md).
 
 ## :capital_abcd: Setting description and localizations
 

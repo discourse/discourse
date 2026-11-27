@@ -142,7 +142,7 @@ Access from gjs templates:
 <template>{{this.siteSettings.enable_welcome_banner}}</template>
 ```
 
-### Translations <small>[read more](https://meta.discourse.org/t/adding-localizable-strings-to-themes-and-theme-components/109867)</small>
+### Translations <small>[read more](14-localizable-strings.md)</small>
 
 `locales/en.yml`
 

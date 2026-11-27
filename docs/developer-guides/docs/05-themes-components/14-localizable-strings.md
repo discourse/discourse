@@ -4,11 +4,16 @@ short_title: Localizable strings
 id: localizable-strings
 ---
 
-For those looking to add custom languages and translations to a Discourse theme or theme component, they [can now include](https://github.com/discourse/discourse/commit/880311dd4d2b367e54cc8244fba60fce69e121c3) localised strings, which are made available for use in UI components. Translations are stored in the same format as core/plugin translations, and can be used in almost the same way.
+A theme's custom text can come from two places:
 
-Themes can supply translation files in a format like `/locales/{locale}.yml`. These files should be valid YAML, with a single top level key equal to the locale being defined. These can be defined using the `discourse_theme` CLI, importing a `.tar.gz`, installing from a GIT repository, or via the editor on theme-creator.discourse.org.
+- **Locale files** for text that ships with the theme, such as headings, button labels and messages.
+- **Object settings** for text that admins enter in the object editor, such as card titles or link labels. See [translatable settings](14a-translatable-settings.md).
 
-An example locale file might look like
+Both end up in the same theme translations. Admins translate and customize them in the admin UI, and your code reads them with `themePrefix` and `i18n`.
+
+## Locale files
+
+Add translation files to the theme as `locales/{locale}.yml`, for example `locales/en.yml` or `locales/fr.yml`. Each file is valid YAML with a single top-level key equal to its locale:
 
 ```yaml
 en:
@@ -27,30 +32,65 @@ en:
     full_profile: "View your full profile"
 ```
 
-Administrators can override individual keys on a per-theme basis in the /admin/customize/themes user interface. Fallback is handled in the same way as core, so it is ok to have incomplete translations for non-english languages will make use of the english keys.
+The `theme_metadata` block holds the theme's description and the descriptions of its settings. See [theme metadata](12-theme-metadata.md) and [theme settings](09-theme-settings.md). All other keys are yours to use in code.
 
-Administrators can also manage these translations in **Appearance → Site texts**. Select a theme or component to search its locale-file strings, edit a translation in the selected language, or revert an override to the locale-file default. The selection is linkable using `/admin/customize/site_texts?theme_id=THEME_ID`. Site texts identifies these entries as `js.theme_translations.THEME_ID.KEY`; edits use the same theme translation overrides as the theme editor.
+Fallback works as in core. A locale file can be incomplete: any key it doesn't define falls back to English.
 
-![39|690x388,50%](/assets/localizable-strings-1.png)
+## Using translations in code
 
-In the background, these translations are stored alongside the core translations, under a theme-specific namespace. For example:
+Translations are stored under a namespace for each theme. Site texts shows them as `js.theme_translations.<theme_id>.<key>`, for example `js.theme_translations.12.sidebar.welcome`.
 
-```
-theme_translation.{theme_id}.sidebar.welcome
-```
-
-You should never hardcode the theme_id in your theme code. To dynamically build the translation key, use the `themePrefix` helper:
+Never hardcode the theme ID. Build the key with the `themePrefix` helper:
 
 ```gjs
 import { i18n } from "discourse-i18n";
 import { themePrefix } from "virtual:theme";
 
 // In JS code:
-const result = i18n(themePrefix("my_translation_key"));
-console.log("From Javascript", result);
+const result = i18n(themePrefix("sidebar.welcome"));
 
 // In a template tag:
-<template>{{i18n (themePrefix "blah")}}</template>
+<template>{{i18n (themePrefix "sidebar.welcome")}}</template>
 ```
 
-For a complete example of using translations in a theme, check out @awesomerobot's Fakebook theme: https://github.com/awesomerobot/Fakebook
+`i18n()` treats `%{name}` as an interpolation placeholder. If you don't pass an argument for it, the output shows `[missing %{name} value]`.
+
+## Managing translations in the admin UI
+
+Admins can translate and customize a theme's strings on the theme's page or in Site texts. Both save the same overrides, so a change made in one shows up in the other. Each installation of a component has its own translations.
+
+### In Theme translations
+
+Open the theme or component in **Appearance → Themes & components**. The **Theme translations** section lists the theme's strings. Choose a language, edit a string, and select **reset** to go back to the shipped text.
+
+![Theme translations section on a component's page|690x673,50%](/assets/localizable-strings-1.png)
+
+When the Discourse AI plugin is enabled, **Translate** next to the language picker generates translations from the selected language into the site's content localization languages.
+
+### In Site texts
+
+In **Appearance → Site texts**, select the theme or component under **Theme or component** to show its strings. The filter can be linked to directly: `/admin/customize/site_texts?theme_id=<theme_id>`.
+
+![Site texts filtered to a theme component|690x426](/assets/localizable-strings-2.png)
+
+When you edit an entry, Site texts shows its default text, labelled with the language of that text, next to your translation. For locale files, the default text is the English text if English defines the key; otherwise the selected language's shipped text.
+
+#### Outdated translations
+
+When the default text changes, translations based on the old text are marked **Outdated**, and Site texts shows the old and new default side by side. **Only show outdated/invalid** lists them. Translations saved before Discourse tracked default text show **Unknown baseline** instead; **Acknowledge current default** starts tracking them.
+
+#### Interpolation placeholders
+
+Site texts doesn't check placeholders in locale-file translations, because your code can pass arguments that the shipped text doesn't use.
+
+### Removed keys
+
+Removing a key from a locale file keeps its translations, hidden from the admin UI, so they're used again if the key comes back. Translations are only deleted by **reset** on the theme's page, **Revert to default** in Site texts, or by deleting the theme or component.
+
+## Updating existing components
+
+To turn a plain string setting into a locale-file translation, use `helpers.migrateSettingToTranslation` in a settings migration. See [migrate settings](11-migrate-settings.md).
+
+## Example
+
+For a complete component that uses both locale files and translatable settings, see [discourse-theme-component-i18n-test](https://github.com/nattsw/discourse-theme-component-i18n-test).

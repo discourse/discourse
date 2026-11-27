@@ -26,7 +26,7 @@ You can add various pieces of metadata to a theme. Some are stored in the `about
 
 **`maximum_discourse_version`** (string, optional): the latest discourse version which this theme is compatible with. If it does not match, the theme will be auto-disabled. Should be in the format `2.4.0.beta1`.
 
-## locale files (e.g. `en.yml`) <small>[:link: file format info](https://meta.discourse.org/t/adding-localizable-strings-to-themes-and-theme-components/109867?u=david)</small>
+## locale files (e.g. `en.yml`) <small>[:link: file format info](14-localizable-strings.md)</small>
 
 **`theme_metadata.description`**: A localised description of the theme. Displayed in the admin interface.
 
