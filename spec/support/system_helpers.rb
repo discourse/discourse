@@ -287,6 +287,8 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
 
     yield(playwright_logger)
+  ensure
+    playwright_logger&.stop
   end
 
   # This method can be used to run a system test with a user that has a physical security key by adding a virtual

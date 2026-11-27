@@ -35,6 +35,8 @@ module SystemDrivers
     driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
     driver << (use_headless_shell?(example) ? :headless_shell : :chrome)
+    # The cached driver retains its video callback across resets.
+    driver << :video if example.metadata[:video]
 
     hosts = allow_network_hosts(example)
     driver << "net#{Digest::SHA1.hexdigest(hosts.join(","))[0, 10]}" if hosts.any?
@@ -92,9 +94,9 @@ module SystemDrivers
       mobile: false,
     )
 
-    # Host resolver rules apply to the entire browser, so opted-in hosts need their own driver.
+    # Host resolver rules and recording callbacks must stay on their own cached driver.
     hosts = allow_network_hosts(example)
-    if hosts.any?
+    if hosts.any? || example.metadata[:video]
       register_chrome(
         driver_for(example),
         **base_options,
