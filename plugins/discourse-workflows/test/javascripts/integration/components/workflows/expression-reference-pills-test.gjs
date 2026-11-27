@@ -2,6 +2,7 @@ import { render, triggerEvent, waitFor, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 import VariableInput from "discourse/plugins/discourse-workflows/admin/components/workflows/variable/input";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 import { buildFocusEmptyArea } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-extensions/focus-empty-area";
@@ -57,6 +58,15 @@ module(
           .textContent.includes("$json.title"),
         "the raw expression syntax is hidden"
       );
+      assert
+        .dom(".cm-wf-reference-pill .sr-only")
+        .hasText(
+          i18n("discourse_workflows.reference_pill.reference"),
+          "a screen reader hears that the pill is a reference"
+        );
+      assert
+        .dom(".cm-wf-reference-pill__drill")
+        .hasAria("hidden", "true", "the pointer-only button is not read");
 
       const dragged = {};
       await triggerEvent(pill, "dragstart", {

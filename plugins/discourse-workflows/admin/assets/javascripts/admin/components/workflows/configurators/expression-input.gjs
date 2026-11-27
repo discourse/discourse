@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { uniqueId } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 import {
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
@@ -36,6 +38,7 @@ export default class ExpressionInput extends Component {
 
   @tracked isFocused = false;
   @tracked segments = [];
+  hintId = uniqueId();
   wrapperElement = null;
   #editorView = null;
   #focusOutTimer = null;
@@ -106,6 +109,9 @@ export default class ExpressionInput extends Component {
       identifier: REFERENCE_PICKER_IDENTIFIER,
       component: ReferencePropertyPicker,
       placement: "bottom-start",
+      autofocus: true,
+      // The pill can't take focus, so closing returns to the editor, which keeps it selected.
+      focusTarget: () => this.#editorView?.contentDOM ?? null,
       data: {
         properties,
         current,
@@ -174,7 +180,10 @@ export default class ExpressionInput extends Component {
     }
     if (this.args.inputLabel) {
       view.contentDOM.setAttribute("aria-label", this.args.inputLabel);
+    } else if (this.args.field?.showTitle && this.args.field.labelId) {
+      view.contentDOM.setAttribute("aria-labelledby", this.args.field.labelId);
     }
+    view.contentDOM.setAttribute("aria-describedby", this.hintId);
   }
 
   @action
@@ -328,6 +337,9 @@ export default class ExpressionInput extends Component {
         @value={{this.displayValue}}
       />
     </div>
+    <span hidden id={{this.hintId}}>
+      {{i18n "discourse_workflows.reference_pill.editor_hint"}}
+    </span>
     <ExpressionPreview
       @segments={{this.segments}}
       @trigger={{this.triggerElement}}

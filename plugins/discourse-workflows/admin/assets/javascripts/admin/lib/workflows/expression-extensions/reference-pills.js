@@ -173,6 +173,11 @@ export function buildReferencePills(
       }`;
       pill.title = this.raw;
 
+      const kind = document.createElement("span");
+      kind.className = "sr-only";
+      kind.textContent = i18n("discourse_workflows.reference_pill.reference");
+      pill.appendChild(kind);
+
       // "click" not "mousedown", so preventDefault doesn't cancel a drag.
       // First click selects; second opens the dropdown on a timer, so a
       // double-click (edit) isn't misread as two selects.
@@ -247,6 +252,9 @@ export function buildReferencePills(
         drill.type = "button";
         drill.className = "cm-wf-reference-pill__drill";
         drill.title = i18n("discourse_workflows.reference_pill.pick_property");
+        // Pointer-only: the keyboard opens the picker with Enter on the pill.
+        drill.setAttribute("aria-hidden", "true");
+        drill.tabIndex = -1;
         drill.innerHTML = iconHTML("angle-down");
         drill.addEventListener("mousedown", (event) => {
           // mousedown, not click — click lets the editor collapse the menu first.

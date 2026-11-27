@@ -883,6 +883,8 @@ en:
         no_matches: "No matches"
         edit_as_code: "Edit code"
         pick_property: "Pick a property"
+        reference: "Reference"
+        editor_hint: "Press Enter on a reference to pick one of its properties"
       expression_docs:
         sections:
           previous_nodes: "Previous nodes"

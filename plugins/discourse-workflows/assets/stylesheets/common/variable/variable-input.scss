@@ -300,7 +300,7 @@
         text-overflow: ellipsis;
 
         &::before {
-          content: "›";
+          content: "›" / "";
           margin-inline-end: 0.3em;
           opacity: 0.6;
         }
@@ -578,6 +578,41 @@
       .d-icon {
         color: var(--tertiary-hover);
       }
+    }
+  }
+
+  &.--list {
+    min-width: 320px;
+    max-width: 400px;
+
+    .d-select__option-content {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5em;
+      min-width: 0;
+      width: 100%;
+
+      > :first-child {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-family: var(--d-font-family--monospace), monospace;
+      }
+    }
+
+    .d-select__option-description {
+      flex: 0 0 auto;
+      margin: 0;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
+
+    .workflows-reference-picker__edit {
+      padding: 0.5em 0.75em;
+      border-inline-start: 0;
+      border-top: 1px solid var(--primary-low);
     }
   }
 }

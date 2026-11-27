@@ -1,14 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
 
 export default class ReferencePropertyPicker extends Component {
+  @service siteSettings;
+
   @tracked query = "";
   @tracked activeIndex = 0;
   listElement;
@@ -117,21 +121,26 @@ export default class ReferencePropertyPicker extends Component {
   }
 
   <template>
-    <div class="workflows-reference-picker">
-      <div class="workflows-reference-picker__header">
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <div class="workflows-reference-picker --list">
         {{#if this.hasProperties}}
-          <input
-            aria-label={{i18n
-              "discourse_workflows.reference_pill.filter_placeholder"
+          <DSelectList
+            @descriptionField="type"
+            @labelField="name"
+            @multiple={{false}}
+            @onSelect={{this.select}}
+            @options={{@data.properties}}
+            @texts={{hash
+              ariaLabel=(i18n
+                "discourse_workflows.reference_pill.filter_placeholder"
+              )
+              searchPlaceholder=(i18n
+                "discourse_workflows.reference_pill.filter_placeholder"
+              )
+              noResults=(i18n "discourse_workflows.reference_pill.no_matches")
             }}
-            class="workflows-reference-picker__filter"
-            placeholder={{i18n
-              "discourse_workflows.reference_pill.filter_placeholder"
-            }}
-            type="text"
-            {{didInsert this.focusFilter}}
-            {{on "input" this.updateQuery}}
-            {{on "keydown" this.onKeydown}}
+            @value={{this.current}}
+            @valueField="name"
           />
         {{else}}
           <span class="workflows-reference-picker__unavailable">
@@ -150,39 +159,74 @@ export default class ReferencePropertyPicker extends Component {
             }}</span>
         </button>
       </div>
-
-      {{#if this.hasProperties}}
-        <ul
-          class="workflows-reference-picker__list"
-          {{didInsert this.registerList}}
-        >
-          {{#each this.filteredProperties as |property index|}}
-            <li>
-              <button
-                class={{dConcatClass
-                  "workflows-reference-picker__option"
-                  (if (eq index this.activeIndex) "--active")
-                  (if (eq property.name this.current) "--current")
-                }}
-                type="button"
-                {{on "click" (fn this.select property.name)}}
-                {{on "mouseenter" (fn this.setActive index)}}
-              >
-                <span class="workflows-reference-picker__name">
-                  {{property.name}}
-                </span>
-                <span class="workflows-reference-picker__type">
-                  {{property.type}}
-                </span>
-              </button>
-            </li>
+    {{else}}
+      <div class="workflows-reference-picker">
+        <div class="workflows-reference-picker__header">
+          {{#if this.hasProperties}}
+            <input
+              aria-label={{i18n
+                "discourse_workflows.reference_pill.filter_placeholder"
+              }}
+              class="workflows-reference-picker__filter"
+              placeholder={{i18n
+                "discourse_workflows.reference_pill.filter_placeholder"
+              }}
+              type="text"
+              {{didInsert this.focusFilter}}
+              {{on "input" this.updateQuery}}
+              {{on "keydown" this.onKeydown}}
+            />
           {{else}}
-            <li class="workflows-reference-picker__empty">
-              {{i18n "discourse_workflows.reference_pill.no_matches"}}
-            </li>
-          {{/each}}
-        </ul>
-      {{/if}}
-    </div>
+            <span class="workflows-reference-picker__unavailable">
+              {{i18n "discourse_workflows.reference_pill.no_properties"}}
+            </span>
+          {{/if}}
+
+          <button
+            class="workflows-reference-picker__edit"
+            type="button"
+            {{on "click" this.edit}}
+          >
+            {{dIcon "code"}}
+            <span>{{i18n
+                "discourse_workflows.reference_pill.edit_as_code"
+              }}</span>
+          </button>
+        </div>
+
+        {{#if this.hasProperties}}
+          <ul
+            class="workflows-reference-picker__list"
+            {{didInsert this.registerList}}
+          >
+            {{#each this.filteredProperties as |property index|}}
+              <li>
+                <button
+                  class={{dConcatClass
+                    "workflows-reference-picker__option"
+                    (if (eq index this.activeIndex) "--active")
+                    (if (eq property.name this.current) "--current")
+                  }}
+                  type="button"
+                  {{on "click" (fn this.select property.name)}}
+                  {{on "mouseenter" (fn this.setActive index)}}
+                >
+                  <span class="workflows-reference-picker__name">
+                    {{property.name}}
+                  </span>
+                  <span class="workflows-reference-picker__type">
+                    {{property.type}}
+                  </span>
+                </button>
+              </li>
+            {{else}}
+              <li class="workflows-reference-picker__empty">
+                {{i18n "discourse_workflows.reference_pill.no_matches"}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    {{/if}}
   </template>
 }
