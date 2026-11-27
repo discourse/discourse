@@ -1838,8 +1838,9 @@ it there, including when another select previously held focus. The search field 
 chips follow [the panel field](#the-panel-field) model. In a static list PageUp/PageDown
 jump to the first/last option, since every row is mounted. Tab visits the search field,
 footer controls, then the next control; neither the chips nor the listbox are Tab
-stops. Escape clears a non-empty query and is otherwise left to the containing panel,
-including a `DMenu`.
+stops. Escape clears a non-empty query, and with none it is left to the page, so a modal
+around the list closes on the next Escape. Inside a `DMenu` the menu closes on Escape either
+way, as DSelect's own popup does.
 
 Automatic cursor entry needs focus inside the root and room below the cap. With a query the
 cursor takes the first match. With an empty query a single list returns to its held value, as

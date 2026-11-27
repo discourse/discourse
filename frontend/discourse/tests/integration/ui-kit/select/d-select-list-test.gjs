@@ -2263,6 +2263,14 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
 
       assert.strictEqual(chips().length, 0, "no chip repeats the row");
       assert.dom(input()).exists("the field is the search alone");
+      const [field, list] = [input(), listbox()].map((inner) =>
+        [...root().children].find((child) => child.contains(inner))
+      );
+      assert.strictEqual(
+        list.offsetTop - (field.offsetTop + field.offsetHeight),
+        parseFloat(getComputedStyle(root()).rowGap),
+        "one gap separates the search from the rows"
+      );
       assert.dom(rows()[1]).hasAria("selected", "true");
     });
 

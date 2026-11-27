@@ -898,6 +898,11 @@
   }
 }
 
+// A list spaces its parts with its own gap.
+.d-select.--list > .d-select__search {
+  margin-bottom: 0;
+}
+
 // In a popover the field is a flat strip ruled off from the list. As a boxed input its border lay
 // on the panel's own, and the strip lines its text up with the options instead.
 .fk-d-menu.d-select__content .d-select__search {
