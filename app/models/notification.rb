@@ -171,6 +171,7 @@ class Notification < ActiveRecord::Base
         boost: 43, # Used by https://github.com/discourse/discourse-boosts
         suggested_edit_created: 44, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
         suggested_edit_accepted: 45, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
+        staff_post_deleted: 46,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow

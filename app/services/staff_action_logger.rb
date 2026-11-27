@@ -122,13 +122,21 @@ class StaffActionLogger
       ]
     end
 
-    UserHistory.create!(
-      params(opts).merge(
-        action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
-        post_id: deleted_post.id,
-        details: details.join("\n"),
-      ),
-    )
+    history =
+      UserHistory.create!(
+        params(opts).merge(
+          action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
+          post_id: deleted_post.id,
+          details: details.join("\n"),
+        ),
+      )
+
+    if !opts[:permanent] && @admin.human? && @admin.staff? &&
+         SiteSetting.staff_post_deletion_notification_groups.present?
+      DB.after_commit { Jobs.enqueue(:notify_staff_post_deleted, history_id: history.id) }
+    end
+
+    history
   end
 
   def log_post_recover(post)

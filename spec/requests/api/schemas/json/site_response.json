@@ -8,6 +8,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "staff_post_deleted": {
+          "type": "integer"
+        },
         "mentioned": {
           "type": "integer"
         },

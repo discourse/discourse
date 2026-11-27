@@ -4165,6 +4165,7 @@ en:
         liked_consolidated: "new likes"
         linked_consolidated: "new links"
         post_approved: "post approved"
+        staff_post_deleted: "Staff deleted a reply"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "vote was released"
