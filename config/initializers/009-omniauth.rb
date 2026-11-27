@@ -17,8 +17,26 @@ OmniAuth.config.before_request_phase do |env|
   # Check for CSRF token in POST requests
   CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
 
-  # If the user is trying to reconnect to an existing account, store in session
-  request.session[:auth_reconnect] = !!request.params["reconnect"]
+  Auth::SessionConfirmation.clear_external_confirmation!(request)
+
+  if request.post? && ActiveModel::Type::Boolean.new.cast(request.params["confirm_session"])
+    user_provider = Discourse.current_user_provider.new(env)
+    user =
+      begin
+        user_provider.current_user
+      rescue Discourse::InvalidAccess
+        nil
+      end
+
+    if user && !user_provider.is_api? && !user_provider.is_user_api?
+      provider_name = env["omniauth.strategy"]&.name || request.path_info[%r{/auth/([^/]+)\z}, 1]
+      Auth::SessionConfirmation.start_external_confirmation!(request, user, provider: provider_name)
+    end
+    request.session[:auth_reconnect] = false
+  else
+    # If the user is trying to reconnect to an existing account, store in session
+    request.session[:auth_reconnect] = !!request.params["reconnect"]
+  end
 
   # If the client provided an origin, store in the server session to redirect back
   request.server_session[:destination_url] = request.params["origin"] if request.params[

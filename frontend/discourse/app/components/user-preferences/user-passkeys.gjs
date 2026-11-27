@@ -5,10 +5,13 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AccessNotice from "discourse/components/access-notice";
-import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
+import ConfirmSession, {
+  hasConfirmSessionMethod,
+} from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import cookie from "discourse/lib/cookie";
 import {
   bufferToBase64,
   stringToBuffer,
@@ -23,18 +26,9 @@ export default class UserPasskeys extends Component {
   @service currentUser;
   @service capabilities;
   @service router;
-  @service siteSettings;
 
   get showActions() {
     return this.args.model.isCurrent && !this.capabilities.isAppWebview;
-  }
-
-  get canConfirmLocally() {
-    return (
-      this.siteSettings.enable_local_logins &&
-      (!this.args.model.no_password ||
-        this.args.model.user_passkeys?.length > 0)
-    );
   }
 
   handlePasskeyRequestError(error) {
@@ -42,12 +36,7 @@ export default class UserPasskeys extends Component {
     if (
       xhr?.responseJSON?.error_type === "second_factor_external_login_required"
     ) {
-      this.dialog.confirm({
-        title: i18n("user.confirm_access.title"),
-        message: i18n("user.passkeys.external_login_required"),
-        confirmButtonLabel: "user.log_out",
-        didConfirm: () => this.args.logout?.(),
-      });
+      this.#promptExternalRelogin();
     } else {
       popupAjaxError(error);
     }
@@ -167,52 +156,12 @@ export default class UserPasskeys extends Component {
 
   @action
   async addPasskey() {
-    if (!this.canConfirmLocally) {
-      await this.createPasskey();
-      return;
-    }
-
-    try {
-      const trustedSession = await this.args.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () => this.createPasskey(),
-        });
-      } else {
-        await this.createPasskey();
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    await this.#withTrustedSession(() => this.createPasskey());
   }
 
   @action
   async deletePasskey(id) {
-    if (!this.canConfirmLocally) {
-      this.confirmDelete(id);
-      return;
-    }
-
-    try {
-      const trustedSession = await this.args.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () => this.confirmDelete(id),
-        });
-      } else {
-        this.confirmDelete(id);
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    await this.#withTrustedSession(() => this.confirmDelete(id));
   }
 
   @action
@@ -223,6 +172,46 @@ export default class UserPasskeys extends Component {
       bodyComponent: RenamePasskey,
       bodyComponentModel: { id, name },
     });
+  }
+
+  #promptExternalRelogin() {
+    this.dialog.confirm({
+      title: i18n("user.confirm_access.title"),
+      message: i18n("user.passkeys.external_login_required"),
+      confirmButtonLabel: "user.log_out",
+      didConfirm: () => {
+        cookie(
+          "destination_url",
+          window.location.pathname + window.location.search
+        );
+        this.args.logout?.();
+      },
+    });
+  }
+
+  async #withTrustedSession(callback) {
+    try {
+      const trustedSession = await this.args.model.trustedSession();
+
+      if (trustedSession.success) {
+        await callback();
+      } else if (
+        !trustedSession.methods ||
+        hasConfirmSessionMethod(trustedSession.methods)
+      ) {
+        this.dialog.dialog({
+          title: i18n("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          bodyComponentModel: { methods: trustedSession.methods },
+          didConfirm: callback,
+        });
+      } else {
+        this.#promptExternalRelogin();
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

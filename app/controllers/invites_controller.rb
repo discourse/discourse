@@ -449,6 +449,7 @@ class InvitesController < ApplicationController
 
       if !redeeming_user && user.active? && user.guardian.can_access_forum?
         log_on_user(user, replay_anonymous_action: true)
+        Auth::SessionConfirmation.mark_fresh_login!(request, user)
       end
 
       user.update_timezone_if_missing(params[:timezone])

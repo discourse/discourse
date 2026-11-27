@@ -1,12 +1,16 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
+import ConfirmSession, {
+  hasConfirmSessionMethod,
+} from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
+import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
@@ -204,10 +208,30 @@ export default class SecurityController extends Controller {
       const trustedSession = await this.model.trustedSession();
 
       if (!trustedSession.success) {
+        if (
+          trustedSession.methods &&
+          !hasConfirmSessionMethod(trustedSession.methods)
+        ) {
+          this.dialog.confirm({
+            title: i18n("user.confirm_access.title"),
+            message: i18n("user.confirm_access.external_login_required"),
+            confirmButtonLabel: "user.log_out",
+            didConfirm: () => {
+              cookie(
+                "destination_url",
+                window.location.pathname + window.location.search
+              );
+              getOwner(this).lookup("route:application").send("logout");
+            },
+          });
+          return;
+        }
+
         this.dialog.dialog({
           title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
+          bodyComponentModel: { methods: trustedSession.methods },
           didConfirm: () => this.removePasswordConfirm(),
         });
       } else {

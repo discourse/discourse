@@ -81,9 +81,24 @@ export interface UserStatus {
   message_bus_last_id?: number;
 }
 
+export interface ConfirmSessionMethods {
+  password: boolean;
+  passkey: boolean;
+  email_code: boolean;
+  external_providers: string[];
+}
+
+export type TrustedSessionResponse =
+  | { success: "OK"; failed?: never; methods?: never }
+  | { failed: "FAILED"; success?: never; methods?: ConfirmSessionMethods };
+
 export type SecondFactorManagementResponse = { success: "OK" } & (
   | { external_login_required: true; unconfirmed_session?: never }
-  | { external_login_required?: never; unconfirmed_session: true }
+  | {
+      external_login_required?: never;
+      unconfirmed_session: true;
+      methods?: ConfirmSessionMethods;
+    }
   | {
       external_login_required?: never;
       unconfirmed_session?: never;
@@ -1579,7 +1594,11 @@ export default class User extends RestModel.extend(Evented) {
         unconfirmed_session === true &&
         external_login_required === undefined
       ) {
-        return { success: "OK", unconfirmed_session };
+        return {
+          success: "OK",
+          unconfirmed_session,
+          ...(response.methods ? { methods: response.methods } : {}),
+        };
       }
       if (
         external_login_required === undefined &&
@@ -1612,8 +1631,10 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  trustedSession(): globalThis.Promise<unknown> {
-    return ajax("/u/trusted-session.json");
+  trustedSession(): globalThis.Promise<TrustedSessionResponse> {
+    return ajax("/u/trusted-session.json", {
+      data: { webauthn_supported: isWebauthnSupported() },
+    });
   }
 
   createPasskey(): globalThis.Promise<unknown> {

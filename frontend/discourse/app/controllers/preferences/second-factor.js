@@ -26,6 +26,9 @@ export default class SecondFactorController extends Controller {
   @tracked localConfirmationRequired = false;
   @tracked factorsLoaded = false;
 
+  /** @type {import("discourse/models/user").ConfirmSessionMethods | null} */
+  @tracked confirmSessionMethods = null;
+
   loading = false;
   dirty = false;
 
@@ -100,6 +103,7 @@ export default class SecondFactorController extends Controller {
   resetFactorLoad() {
     this.#factorLoadId++;
     this.setProperties({
+      confirmSessionMethods: null,
       errorMessage: null,
       externalLoginRequired: false,
       factorsLoaded: false,
@@ -128,6 +132,7 @@ export default class SecondFactorController extends Controller {
       if (response.external_login_required) {
         this.externalLoginRequired = true;
       } else if (response.unconfirmed_session) {
+        this.confirmSessionMethods = response.methods ?? null;
         this.localConfirmationRequired = true;
         if (confirmOnEntry) {
           this.confirmLocalSession();
@@ -230,6 +235,7 @@ export default class SecondFactorController extends Controller {
       title: i18n("user.confirm_access.title"),
       type: "notice",
       bodyComponent: ConfirmSession,
+      bodyComponentModel: { methods: this.confirmSessionMethods },
       didConfirm: () => {
         this.markDirty();
         this.loadSecondFactors();

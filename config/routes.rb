@@ -744,6 +744,7 @@ Discourse::Application.routes.draw do
 
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
+      post "#{root_path}/confirm-session/email-code" => "users#send_confirm_session_email_code"
 
       post "#{root_path}/second_factors" => "users#list_second_factors"
       put "#{root_path}/second_factor" => "users#update_second_factor"

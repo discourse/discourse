@@ -543,6 +543,7 @@ class SessionController < ApplicationController
       else
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user, replay_anonymous_action: true)
+        Auth::SessionConfirmation.mark_fresh_login!(request, user)
         return render json: success_json
       end
     end
@@ -1229,6 +1230,7 @@ class SessionController < ApplicationController
       session.delete(ACTIVATE_USER_KEY)
       user.update_timezone_if_missing(params[:timezone])
       log_on_user(user, replay_anonymous_action: true)
+      Auth::SessionConfirmation.mark_fresh_login!(request, user)
       complete_login_code_authentication(user)
       render json:
                success_json.merge(
@@ -1553,6 +1555,7 @@ class SessionController < ApplicationController
     session.delete(ACTIVATE_USER_KEY)
     user.update_timezone_if_missing(params[:timezone])
     log_on_user(user, replay_anonymous_action: true)
+    Auth::SessionConfirmation.mark_fresh_login!(request, user)
 
     if payload = cookies.delete(:sso_payload)
       confirmed_2fa_during_login =

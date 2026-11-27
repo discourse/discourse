@@ -906,8 +906,38 @@
     margin: 1.5em 0;
   }
 
-  &__passkey {
-    margin-top: 1em;
+  &__methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    align-items: flex-start;
+    margin: 1em 0 1.5em;
+  }
+
+  &__external-providers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  &__code-step {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 1.5em 0;
+  }
+
+  &__code-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    align-items: center;
+  }
+
+  &__notice {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 
   &__fine-print {

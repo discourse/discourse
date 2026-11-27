@@ -8,7 +8,7 @@ class EmailLoginCode < ActiveRecord::Base
   MAX_ATTEMPTS = 5
   VALID_FOR = 10.minutes
 
-  enum :purpose, { login: 0, password_reset: 1 }
+  enum :purpose, { login: 0, password_reset: 1, session_confirmation: 2 }
 
   validates :email, :code_hash, presence: true
 

@@ -14,10 +14,20 @@ RSpec.describe UsersController do
     it "offers local password confirmation without using the account age as proof" do
       password = "a separate local password"
       user.update!(password: password, created_at: 1.minute.ago)
+      user.activate
       sign_in_with_oauth_token
 
       post "/u/second_factors.json"
-      expect(response.parsed_body).to eq("success" => "OK", "unconfirmed_session" => true)
+      expect(response.parsed_body).to eq(
+        "success" => "OK",
+        "unconfirmed_session" => true,
+        "methods" => {
+          "password" => true,
+          "passkey" => false,
+          "email_code" => true,
+          "external_providers" => [],
+        },
+      )
 
       post "/u/create_second_factor_totp.json"
       expect(response).to have_http_status(:forbidden)
@@ -31,18 +41,55 @@ RSpec.describe UsersController do
 
     it "offers local confirmation with an enabled passkey in a supported browser" do
       SiteSetting.enable_passkeys = true
+      SiteSetting.enable_local_logins_via_email = false
       Fabricate(:passkey_with_random_credential, user: user)
       sign_in_with_oauth_token
 
       post "/u/second_factors.json", params: { webauthn_supported: true }
-      expect(response.parsed_body).to eq("success" => "OK", "unconfirmed_session" => true)
+      expect(response.parsed_body).to eq(
+        "success" => "OK",
+        "unconfirmed_session" => true,
+        "methods" => {
+          "password" => false,
+          "passkey" => true,
+          "email_code" => false,
+          "external_providers" => [],
+        },
+      )
 
       post "/u/second_factors.json", params: { webauthn_supported: false }
       expect(response.parsed_body).to eq("success" => "OK", "external_login_required" => true)
     end
 
-    it "requires provider sign-in for a new OAuth account without usable local credentials" do
+    it "offers email code confirmation when local email logins are enabled for a passwordless user" do
+      SiteSetting.enable_local_logins_via_email = true
+      user.activate
+      sign_in_with_oauth_token
+
+      post "/u/second_factors.json", params: { webauthn_supported: false }
+      expect(response.parsed_body).to eq(
+        "success" => "OK",
+        "unconfirmed_session" => true,
+        "methods" => {
+          "password" => false,
+          "passkey" => false,
+          "email_code" => true,
+          "external_providers" => [],
+        },
+      )
+    end
+
+    it "does not offer email code confirmation when the user's email is unconfirmed" do
+      SiteSetting.enable_local_logins_via_email = true
+      sign_in_with_oauth_token
+
+      post "/u/second_factors.json", params: { webauthn_supported: false }
+      expect(response.parsed_body).to eq("success" => "OK", "external_login_required" => true)
+    end
+
+    it "requires provider sign-in for a new OAuth account without usable local or external confirmation methods" do
       SiteSetting.enable_passkeys = true
+      SiteSetting.enable_local_logins_via_email = false
       user.update!(created_at: 1.minute.ago)
       Fabricate(:passkey_with_random_credential, user: user, enabled: false)
       sign_in_with_oauth_token
@@ -117,14 +164,30 @@ RSpec.describe UsersController do
       expect(response.parsed_body["backup_codes"]).to be_present
     end
 
-    it "requires a new provider sign-in when the grant expires" do
+    it "requires re-confirmation when the grant expires" do
       freeze_time
       sign_in_with_google
       freeze_time 6.minutes.from_now
 
       post "/u/second_factors.json"
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body["external_login_required"]).to eq(true)
+      expect(response.parsed_body).to eq(
+        "success" => "OK",
+        "unconfirmed_session" => true,
+        "methods" => {
+          "password" => false,
+          "passkey" => false,
+          "email_code" => false,
+          "external_providers" => ["google_oauth2"],
+        },
+      )
+
+      post "/u/create_second_factor_totp.json"
+      expect(response).to have_http_status(:forbidden)
+
+      user.user_associated_accounts.delete_all
+      post "/u/second_factors.json"
+      expect(response.parsed_body).to eq("success" => "OK", "external_login_required" => true)
 
       post "/u/create_second_factor_totp.json"
       expect(response).to have_http_status(:forbidden)
@@ -152,20 +215,40 @@ RSpec.describe UsersController do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "does not confirm the general-purpose trusted session or allow disabling passkeys via second-factor key endpoints" do
+    it "treats a fresh external login as a trusted session and allows removing a password while still protecting passkeys on second-factor endpoints" do
       SiteSetting.enable_passkeys = true
       passkey = Fabricate(:passkey_with_random_credential, user: user)
+      user.update!(password: "an old password for removal")
+      user.user_password.update_columns(created_at: 1.hour.ago)
+
+      freeze_time
       sign_in_with_google
 
       get "/u/trusted-session.json"
-      expect(response.parsed_body["success"]).to be_nil
+      expect(response.parsed_body["success"]).to eq("OK")
 
       put "/u/security_key.json", params: { id: passkey.id, disable: "true" }
       expect(response).to have_http_status(:bad_request)
       expect(passkey.reload.enabled).to eq(true)
+
+      put "/u/#{user.username}/remove-password.json"
+      expect(response).to have_http_status(:ok)
+      expect(user.reload.user_password).to be_nil
+
+      freeze_time 6.minutes.from_now
+      get "/u/trusted-session.json"
+      expect(response.parsed_body).to eq(
+        "failed" => "FAILED",
+        "methods" => {
+          "password" => false,
+          "passkey" => false,
+          "email_code" => false,
+          "external_providers" => ["google_oauth2"],
+        },
+      )
     end
 
-    it "registers and deletes passkeys during the external-login grant and requires re-login after expiry" do
+    it "registers and deletes passkeys during the external-login grant and requires re-confirmation after expiry" do
       SiteSetting.enable_passkeys = true
       DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       attestation =
@@ -196,14 +279,16 @@ RSpec.describe UsersController do
 
       post "/u/create_passkey.json"
       expect(response).to have_http_status(:forbidden)
-      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
 
       post "/u/register_passkey.json"
       expect(response).to have_http_status(:forbidden)
-      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
 
       extra_passkey = Fabricate(:passkey_with_random_credential, user: user)
       delete "/u/delete_passkey/#{extra_passkey.id}.json"
+      expect(response).to have_http_status(:forbidden)
+
+      user.user_associated_accounts.delete_all
+      post "/u/create_passkey.json"
       expect(response).to have_http_status(:forbidden)
       expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
     end

@@ -17,6 +17,16 @@ module PageObjects
         find(".confirm-session .btn-primary:not([disabled])").click
         self
       end
+
+      def click_email_code
+        find(".confirm-session .confirm-session__email-code .btn").click
+        self
+      end
+
+      def submit_email_code(code)
+        find(".confirm-session .d-otp-input").fill_in(with: code)
+        self
+      end
     end
   end
 end

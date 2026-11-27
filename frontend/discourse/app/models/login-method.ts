@@ -80,10 +80,12 @@ export default class LoginMethod extends EmberObject {
 
   /** Adds login flags, email and origin to the caller's params object in place. */
   doLogin({
+    confirmSession = false,
     reconnect = false,
     signup = false,
     params = {},
   }: {
+    confirmSession?: boolean;
     reconnect?: boolean;
     signup?: boolean;
     params?: Record<string, unknown>;
@@ -97,6 +99,10 @@ export default class LoginMethod extends EmberObject {
       // Window's setter accepts a URL string; the global intersection obscures it.
       (window as Window).location = this.custom_url;
       return Promise.resolve();
+    }
+
+    if (confirmSession) {
+      params.confirm_session = true;
     }
 
     if (reconnect) {
@@ -113,7 +119,7 @@ export default class LoginMethod extends EmberObject {
     }
 
     const destinationUrl = cookie("destination_url");
-    if (destinationUrl) {
+    if (!params.origin && destinationUrl) {
       params.origin = destinationUrl;
     }
 

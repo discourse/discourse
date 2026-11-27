@@ -353,11 +353,24 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "succeeds with a newly-created user" do
-        user.update!(created_at: 1.minute.ago)
+      it "succeeds with a fresh login session and expires after the fresh login window" do
+        freeze_time
+        user.update!(created_at: 8.minutes.ago, password: "a_long_valid_password")
         user.user_password.update_columns(created_at: 1.hour.ago)
+        EmailToken.confirm(Fabricate(:email_token, user:).token)
+
+        post "/session.json", params: { login: user.username, password: "a_long_valid_password" }
+        expect(response.status).to eq(200)
+
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
+
+        user.update!(password: "another_valid_password")
+        user.user_password.update_columns(created_at: 1.hour.ago)
+        freeze_time 6.minutes.from_now
+
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
       end
 
       it "waits until login tokens issued before a password was added expire" do
@@ -8811,11 +8824,7 @@ RSpec.describe UsersController do
       before { sign_in(user1) }
 
       describe "create 2fa request" do
-        it "fails on incorrect password" do
-          ApplicationController
-            .any_instance
-            .expects(:server_session)
-            .returns("confirmed-session-#{user1.id}" => "false")
+        it "fails when the session is unconfirmed" do
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(403)
@@ -8846,11 +8855,8 @@ RSpec.describe UsersController do
           end
         end
 
-        it "succeeds on correct password" do
-          ApplicationController
-            .any_instance
-            .stubs(:server_session)
-            .returns("confirmed-session-#{user1.id}" => "true")
+        it "succeeds on a confirmed session" do
+          stub_server_session_confirmed
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(200)
@@ -8861,17 +8867,26 @@ RSpec.describe UsersController do
           expect(response_body["qr"]).to be_present
         end
 
-        it "raises an error for a user created > 5 mins ago without a confirmed session" do
+        it "raises an error without a confirmed or fresh session" do
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(403)
         end
 
-        it "does not require confirming session for a user created < 5 mins ago" do
-          user1.update(created_at: Time.now.utc - 4.minutes)
-          post "/users/create_second_factor_totp.json"
+        it "allows creating 2FA during a fresh login session and rejects after it expires" do
+          freeze_time
+          user1.update!(password: "a_long_valid_password")
+          EmailToken.confirm(Fabricate(:email_token, user: user1).token)
 
+          post "/session.json", params: { login: user1.username, password: "a_long_valid_password" }
           expect(response.status).to eq(200)
+
+          post "/users/create_second_factor_totp.json"
+          expect(response.status).to eq(200)
+
+          freeze_time 6.minutes.from_now
+          post "/users/create_second_factor_totp.json"
+          expect(response.status).to eq(403)
         end
       end
     end
@@ -9082,12 +9097,7 @@ RSpec.describe UsersController do
         end
 
         context "when token is valid" do
-          before do
-            ApplicationController
-              .any_instance
-              .stubs(:server_session)
-              .returns("confirmed-session-#{user1.id}" => "true")
-          end
+          before { stub_server_session_confirmed }
 
           it "disables the user's backup codes" do
             put "/users/second_factor.json",
@@ -9123,11 +9133,7 @@ RSpec.describe UsersController do
       before { sign_in(user1) }
 
       describe "create 2fa request" do
-        it "fails on incorrect password" do
-          ApplicationController
-            .any_instance
-            .expects(:server_session)
-            .returns("confirmed-session-#{user1.id}" => "false")
+        it "fails when the session is unconfirmed" do
           put "/users/second_factors_backup.json"
 
           expect(response.status).to eq(403)
@@ -9158,11 +9164,8 @@ RSpec.describe UsersController do
           end
         end
 
-        it "succeeds on correct password" do
-          ApplicationController
-            .any_instance
-            .expects(:server_session)
-            .returns("confirmed-session-#{user1.id}" => "true")
+        it "succeeds on a confirmed session" do
+          stub_server_session_confirmed
 
           put "/users/second_factors_backup.json"
 
@@ -9896,20 +9899,33 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = false
       end
 
-      it "returns unconfirmed session response when user was created more than N minutes ago" do
-        user1.created_at = 10.minutes.ago
-        user1.save!(validate: false)
+      it "returns unconfirmed session response with available methods when session is not confirmed" do
+        user1.update!(password: "acoolpassword")
+        user1.activate
+        sign_in(user1)
 
-        post "/u/second_factors.json"
+        post "/u/second_factors.json", params: { webauthn_supported: true }
 
         expect(response.status).to eq(200)
-        response_body = response.parsed_body
-        expect(response_body["unconfirmed_session"]).to eq(true)
+        expect(response.parsed_body).to eq(
+          "success" => "OK",
+          "unconfirmed_session" => true,
+          "methods" => {
+            "password" => true,
+            "passkey" => false,
+            "email_code" => true,
+            "external_providers" => [],
+          },
+        )
       end
 
-      it "returns empty list for a recently created user" do
-        user1.created_at = 1.minute.ago
-        user1.save!(validate: false)
+      it "returns empty list for a fresh login session and requires confirmation once expired" do
+        freeze_time
+        user1.update!(password: "acoolpassword")
+        EmailToken.confirm(Fabricate(:email_token, user: user1).token)
+
+        post "/session.json", params: { login: user1.username, password: "acoolpassword" }
+        expect(response.status).to eq(200)
 
         post "/u/second_factors.json"
 
@@ -9918,6 +9934,11 @@ RSpec.describe UsersController do
 
         expect(response_body["unconfirmed_session"]).to eq(nil)
         expect(response_body["security_keys"]).to eq([])
+
+        freeze_time 6.minutes.from_now
+        post "/u/second_factors.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["unconfirmed_session"]).to eq(true)
       end
 
       context "when the session is confirmed" do
@@ -9984,11 +10005,13 @@ RSpec.describe UsersController do
       end
 
       context "when params are incorrect" do
-        it "returns 400 response if no password or passkey is supplied" do
+        it "returns 400 response if no password, passkey, or email code is supplied" do
           post "/u/confirm-session.json"
 
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"][0]).to include("Missing password or passkey")
+          expect(response.parsed_body["errors"][0]).to include(
+            "Missing password, passkey, or email code",
+          )
         end
 
         it "returns incorrect response on a wrong password" do
@@ -10075,6 +10098,100 @@ RSpec.describe UsersController do
           expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
         end
       end
+
+      context "with email code" do
+        before { user1.activate }
+
+        it "sends and verifies an email confirmation code for the current session" do
+          post "/u/confirm-session/email-code.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq("success" => "OK", "email" => user1.email)
+
+          enqueued = Jobs::SendSessionConfirmationCode.jobs.last
+          expect(enqueued["args"].first["to_address"]).to eq(user1.email)
+          code = enqueued["args"].first["code"]
+
+          post "/u/confirm-session.json", params: { email_code: code }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+
+          get "/u/trusted-session.json"
+          expect(response.parsed_body["success"]).to eq("OK")
+
+          post "/u/confirm-session.json", params: { email_code: code }
+          expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+        end
+
+        it "confirms a session without requiring a second factor challenge even when 2FA is enabled" do
+          Fabricate(:user_second_factor_totp, user: user1)
+
+          post "/u/confirm-session/email-code.json"
+          code = Jobs::SendSessionConfirmationCode.jobs.last["args"].first["code"]
+
+          post "/u/confirm-session.json", params: { email_code: code }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+        end
+
+        it "rejects wrong codes, expires after MAX_ATTEMPTS, and rejects login/password-reset codes" do
+          post "/u/confirm-session/email-code.json"
+          code = Jobs::SendSessionConfirmationCode.jobs.last["args"].first["code"]
+          wrong_code = code == "000000" ? "000001" : "000000"
+
+          EmailLoginCode::MAX_ATTEMPTS.times do
+            post "/u/confirm-session.json", params: { email_code: wrong_code }
+            expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+          end
+
+          post "/u/confirm-session.json", params: { email_code: code }
+          expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+
+          login_code = EmailLoginCode.generate!(email: user1.email, purpose: :login)
+          post "/u/confirm-session.json", params: { email_code: login_code.code }
+          expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+        end
+
+        it "does not accept a code issued in a different session" do
+          post "/u/confirm-session/email-code.json"
+          code = Jobs::SendSessionConfirmationCode.jobs.last["args"].first["code"]
+
+          reset!
+          sign_in(user1)
+
+          post "/u/confirm-session.json", params: { email_code: code }
+          expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+        end
+
+        it "returns 404 when enable_local_logins_via_email is false" do
+          SiteSetting.enable_local_logins_via_email = false
+
+          post "/u/confirm-session/email-code.json"
+          expect(response.status).to eq(404)
+
+          post "/u/confirm-session.json", params: { email_code: "123456" }
+          expect(response.status).to eq(404)
+        end
+
+        it "rate limits email code requests" do
+          RateLimiter.enable
+
+          3.times do
+            post "/u/confirm-session/email-code.json"
+            expect(response.status).to eq(200)
+          end
+
+          post "/u/confirm-session/email-code.json"
+          expect(response.status).to eq(429)
+        end
+
+        it "returns 404 when the user email is not confirmed" do
+          unconfirmed_user = Fabricate(:user)
+          sign_in(unconfirmed_user)
+
+          post "/u/confirm-session/email-code.json"
+          expect(response.status).to eq(404)
+        end
+      end
     end
   end
 
@@ -10084,24 +10201,43 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "responds with a 'failed' result by default" do
+    it "responds with a 'failed' result and available methods by default" do
+      user1.update!(password: "8555039dd212cc66ec68")
+      user1.activate
       sign_in(user1)
 
+      get "/u/trusted-session.json", params: { webauthn_supported: false }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(
+        "failed" => "FAILED",
+        "methods" => {
+          "password" => true,
+          "passkey" => false,
+          "email_code" => true,
+          "external_providers" => [],
+        },
+      )
+    end
+
+    it "responds with 'success' during a fresh local login and 'failed' after it expires" do
+      freeze_time
+      user2 = Fabricate(:user, password: "8555039dd212cc66ec68")
+      EmailToken.confirm(Fabricate(:email_token, user: user2).token)
+
+      post "/session.json", params: { login: user2.username, password: "8555039dd212cc66ec68" }
+      expect(response.status).to eq(200)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      freeze_time 6.minutes.from_now
       get "/u/trusted-session.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["failed"]).to eq("FAILED")
     end
 
-    it "responds with a 'success' result if user was recently created" do
-      sign_in(user1)
-      user1.update(created_at: Time.now.utc - 4.minutes)
-
-      get "/u/trusted-session.json"
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["success"]).to eq("OK")
-    end
-
-    it "response with 'success' on a confirmed session" do
+    it "responds with 'success' on a confirmed session" do
       user2 = Fabricate(:user, password: "8555039dd212cc66ec68")
       sign_in(user2)
 
@@ -10111,6 +10247,19 @@ RSpec.describe UsersController do
       get "/u/trusted-session.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["success"]).to eq("OK")
+    end
+
+    it "returns 'failed' for API requests even if user has a confirmed browser session" do
+      user2 = Fabricate(:user, password: "8555039dd212cc66ec68")
+      api_key = Fabricate(:api_key, user: user2)
+
+      get "/u/trusted-session.json",
+          headers: {
+            "Api-Key" => api_key.key,
+            "Api-Username" => user2.username,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
     end
   end
 
