@@ -308,4 +308,28 @@ describe FinalDestination::HTTP do
       expect { FinalDestination::HTTP.start("") {} }.to raise_error(ArgumentError)
     end
   end
+
+  describe "certificate verification" do
+    subject(:http) { FinalDestination::HTTP.new("example.com", 443) }
+
+    it "refuses to disable it" do
+      expect { http.verify_mode = OpenSSL::SSL::VERIFY_NONE }.to raise_error(ArgumentError)
+      expect { http.verify_hostname = false }.to raise_error(ArgumentError)
+    end
+
+    it "accepts verifying modes" do
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      http.verify_hostname = true
+
+      expect(http.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+      expect(http.verify_hostname).to eq(true)
+    end
+
+    it "can be disabled with an explicit opt-in" do
+      http.allow_unverified_tls = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      expect(http.verify_mode).to eq(OpenSSL::SSL::VERIFY_NONE)
+    end
+  end
 end

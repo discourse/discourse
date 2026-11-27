@@ -98,6 +98,7 @@ use `bin/lint --fix --recent` only when appropriate.
 - Auth: Guardian classes (`lib/guardian.rb`), POST/PUT/DELETE for state changes, CSRF tokens, `protect_from_forgery`
 - Input: validate client+server, strong parameters, length limits, don't trust client-only validation
 - Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns. Use user.guardian shorthand not Guardian.new(user)
+- TLS: never disable certificate or hostname verification. Pass TLS and timeout options to `Net::HTTP.start(...)`, not inside its block: settings assigned there only apply to reconnections. Send outbound requests to user-supplied or third-party URLs through `FinalDestination::HTTP`, which raises on weakened modes; the only opt-out is `ssl: { verify: false }` on a Faraday connection using `FinalDestination::FaradayAdapter`, for admin-configured endpoints
 
 ## Knowledge Sharing
 - ALWAYS persist information for ALL developers (no conversational-only memory)
