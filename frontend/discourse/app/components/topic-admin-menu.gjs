@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import EditTopicFooterNotice from "discourse/components/modal/edit-topic-footer-notice";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,6 +20,7 @@ import { i18n } from "discourse-i18n";
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
+  @service modal;
   @service siteSettings;
 
   get extraButtons() {
@@ -107,6 +109,15 @@ export default class TopicAdminMenu extends Component {
     return this.currentUser?.canSetTopicTimer;
   }
 
+  get canEditFooterNotice() {
+    return (
+      this.siteSettings.enable_topic_footer_notices &&
+      this.currentUser?.staff &&
+      !this.isPrivateMessage &&
+      !this.args.topic.deleted
+    );
+  }
+
   get showTopicManagementSection() {
     return this.currentUser?.canManageTopic || this.showTopicTimerItem;
   }
@@ -169,6 +180,12 @@ export default class TopicAdminMenu extends Component {
   }
 
   @action
+  async editFooterNotice() {
+    await this.dMenu.close();
+    this.modal.show(EditTopicFooterNotice, { model: this.args.topic });
+  }
+
+  @action
   async toggleNestedReplies() {
     await this.dMenu.close();
     const topic = this.args.topic;
@@ -207,6 +224,19 @@ export default class TopicAdminMenu extends Component {
         </:trigger>
         <:content>
           <DDropdownMenu as |dropdown|>
+            {{#if this.canEditFooterNotice}}
+              <dropdown.item class="topic-admin-footer-notice">
+                <DButton
+                  @action={{this.editFooterNotice}}
+                  @icon="user-shield"
+                  @label={{if
+                    @topic.footer_staff_notice
+                    "topic.footer_staff_notice.edit"
+                    "topic.footer_staff_notice.add"
+                  }}
+                />
+              </dropdown.item>
+            {{/if}}
             {{#if
               (or
                 this.currentUser.canManageTopic

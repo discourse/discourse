@@ -4676,6 +4676,12 @@ en:
       add_to_reply: "Add to a reply"
       added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
+      footer_staff_notice:
+        title: "Topic footer notice"
+        add: "Add footer notice"
+        edit: "Edit footer notice"
+        message: "Notice"
+        description: "Everyone who can see this topic can read the notice. Leave blank to remove it."
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
@@ -9661,6 +9667,7 @@ en:
             revoke_badge: "revoke badge"
             check_email: "check email"
             delete_topic: "delete topic"
+            topic_footer_staff_notice: "edit topic footer notice"
             recover_topic: "un-delete topic"
             delete_post: "delete post"
             recover_post: "un-delete post"

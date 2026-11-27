@@ -202,6 +202,7 @@ export interface TopicFields {
   show_read_indicator?: boolean;
   slow_mode_enabled_until?: string | null;
   slow_mode_seconds?: number;
+  footer_staff_notice?: string | null;
   slug?: string;
   suggested_group_name?: string | null;
   suggested_topics?: object[];

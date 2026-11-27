@@ -44,6 +44,7 @@ class TopicViewSerializer < ApplicationSerializer
     :slow_mode_seconds,
     :external_id,
     :visibility_reason_id,
+    :footer_staff_notice,
   )
 
   attributes(
@@ -92,6 +93,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def details
     object
+  end
+
+  def include_footer_staff_notice?
+    SiteSetting.enable_topic_footer_notices && !object.topic.private_message?
   end
 
   def message_bus_last_id
