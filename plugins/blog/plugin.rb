@@ -76,6 +76,11 @@ after_initialize do
     topic.blog_article_topic? ? 1 : min_length
   end
 
+  # While an article is live it is the canonical page, so its topic stays out of the forum sitemap.
+  register_modifier(:sitemap_topics_query) do |topics|
+    topics.where.not(id: Blog::Publication.publicly_visible.select(:discussion_topic_id))
+  end
+
   add_to_serializer(
     :post,
     :blog_article,
