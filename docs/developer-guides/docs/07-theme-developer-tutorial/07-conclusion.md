@@ -24,7 +24,7 @@ If you're stuck on something that relates to themes, feel free to create a post 
 
 - https://meta.discourse.org/t/how-to-add-settings-to-your-discourse-theme/82557
 
-- https://meta.discourse.org/t/adding-localizable-strings-to-themes-and-theme-components/109867
+- [Add localizable strings to themes and theme components](../05-themes-components/14-localizable-strings.md)
 
 - [Automatically lint and format code before commits](../03-code-internals/03-lint-and-format.md)
 
