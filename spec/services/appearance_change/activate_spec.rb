@@ -256,5 +256,55 @@ RSpec.describe AppearanceChange::Activate do
         expect(appearance_change.theme.theme_fields.count).to eq(1)
       end
     end
+
+    context "when the site's owner is onboarding" do
+      before { SiteSetting.enable_site_owner_onboarding = true }
+
+      def customize_step_completed?
+        UserHistory.exists?(
+          action: UserHistory.actions[:admin_onboarding_step_completed],
+          subject: "select_theme",
+          acting_user_id: acting_user.id,
+        )
+      end
+
+      it "completes the customize step when the change brings new fonts" do
+        result
+
+        expect(customize_step_completed?).to eq(true)
+      end
+
+      it "completes the step for palettes on the default theme" do
+        appearance_change.update!(site_settings: {})
+        theme.set_default!
+
+        result
+
+        expect(customize_step_completed?).to eq(true)
+      end
+
+      it "completes the step when a new theme becomes the default" do
+        new_theme_change = Fabricate(:theme_appearance_change)
+
+        described_class.call(params: { appearance_change_id: new_theme_change.id }, **dependencies)
+
+        expect(customize_step_completed?).to eq(true)
+      end
+
+      it "leaves the step open for palettes on a theme visitors don't see" do
+        appearance_change.update!(site_settings: {})
+
+        result
+
+        expect(customize_step_completed?).to eq(false)
+      end
+
+      it "leaves the step open when the change doesn't go live" do
+        SiteSetting.stubs(:shadowed_settings).returns(Set[:base_font])
+
+        expect(result).to fail_a_step(:apply_site_settings)
+        expect(customize_step_completed?).to eq(false)
+      end
+    end
   end
 end

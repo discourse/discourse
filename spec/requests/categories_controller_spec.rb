@@ -794,7 +794,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
+          expect(UserHistory.count).to eq(3) # 1 + 1 (bootstrap first admin) + 1 (onboarding step)
         end
 
         it "creates a category with posting review mode" do

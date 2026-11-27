@@ -206,6 +206,8 @@ en:
       user_deactivation_pending_review: "Review this user's pending approval before deactivating the account."
       user_not_found: "User not found"
       user_update_required: "Provide at least one profile field to update"
+    # %{tool} is the name of a tool the agent calls.
+    setup_guide_instructions: "When an administrator asks for help setting up or changing this community, call %{tool} first and follow it."
     oauth:
       # %{client_name} is the name of the app asking for access.
       page_title: 'Authorize "%{client_name}" - %{site_name}'

@@ -3,14 +3,22 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray, trackedSet } from "@ember/reactive/collections";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
+import AgentPanel from "discourse/components/admin-onboarding/agent-panel";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import {
+  AGENT_TAB_HIDDEN_KEY,
+  CONNECT_AGENT_STEP,
   CREATE_CATEGORY_STEP,
+  isOnboardingStepCompleted,
   logOnboardingEvent,
+  markOnboardingStepCompleted,
   onboardingStepKey,
+  STEP_COMPLETED_CHANNEL,
 } from "discourse/lib/admin-onboarding";
 import { homepagePath } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
@@ -18,11 +26,20 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import DButton from "discourse/ui-kit/d-button";
+import DTabs from "discourse/ui-kit/d-tabs";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 const DEFAULT_LOCATION = "above_main_container";
+
+const StepList = <template>
+  <div class="admin-onboarding-banner__steps">
+    {{#each @steps as |Step|}}
+      <Step @onCompleted={{@onCompleted}} />
+    {{/each}}
+  </div>
+</template>;
 
 const STEPS = [
   class SelectTheme extends OnboardingStep {
@@ -64,16 +81,6 @@ const STEPS = [
 
     icon = "folder-open";
 
-    constructor() {
-      super(...arguments);
-
-      // completed by the category form, away from the banner, so this may be
-      // the first chance to notice that it was the last step left
-      if (this.completed) {
-        this.args.onCompleted?.(this.name);
-      }
-    }
-
     @action
     performAction() {
       this.categoryTypeChooser.createCategory();
@@ -109,19 +116,46 @@ export default class AdminOnboardingBanner extends Component {
   @service appEvents;
   @service currentUser;
   @service keyValueStore;
+  @service messageBus;
   @service router;
   @service toasts;
 
+  @tracked activeTab = "steps";
+  @tracked
+  agentConnected =
+    !!this.currentUser?.admin_onboarding_completed_steps?.includes(
+      CONNECT_AGENT_STEP
+    );
+  @tracked agentTabHidden = !!this.keyValueStore.get(AGENT_TAB_HIDDEN_KEY);
   @tracked dismissed = false;
   @tracked minimized = false;
   // the key value store isn't reactive, but the progress count must be
   completedStepNames = trackedSet(
     this.steps
-      .filter((Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name)))
+      .filter((Step) => isOnboardingStepCompleted(this, Step.name))
       .map((Step) => Step.name)
   );
 
+  #completion;
   #heightContainer;
+
+  #onStepCompleted = ({ step }) => {
+    if (step === CONNECT_AGENT_STEP) {
+      this.agentConnected = true;
+      return;
+    }
+
+    if (!this.steps.some((Step) => Step.name === step)) {
+      return;
+    }
+
+    markOnboardingStepCompleted(this, step);
+
+    // a hidden banner checks when it shows again
+    if (this.shouldDisplay) {
+      this.checkIfOnboardingIsComplete();
+    }
+  };
 
   constructor() {
     super(...arguments);
@@ -130,6 +164,14 @@ export default class AdminOnboardingBanner extends Component {
       this,
       this.markStepCompleted
     );
+
+    if (this.currentUser?.show_site_owner_onboarding) {
+      this.messageBus.subscribe(
+        STEP_COMPLETED_CHANNEL,
+        this.#onStepCompleted,
+        this.currentUser.admin_onboarding_channel_position
+      );
+    }
   }
 
   willDestroy() {
@@ -139,6 +181,7 @@ export default class AdminOnboardingBanner extends Component {
       this,
       this.markStepCompleted
     );
+    this.messageBus.unsubscribe(STEP_COMPLETED_CHANNEL, this.#onStepCompleted);
   }
 
   get #currentHomepage() {
@@ -205,20 +248,56 @@ export default class AdminOnboardingBanner extends Component {
     return this.completedStepNames.size;
   }
 
+  get showAgentTab() {
+    return (
+      !!this.currentUser?.admin_onboarding_agent_available &&
+      !this.agentTabHidden
+    );
+  }
+
+  @action
+  hideAgentTab() {
+    this.keyValueStore.set({ key: AGENT_TAB_HIDDEN_KEY, value: true });
+    this.agentTabHidden = true;
+    this.activeTab = "steps";
+
+    // the hide button goes away with the tab, so focus would fall back to the page
+    schedule("afterRender", () => {
+      document
+        .querySelector(".admin-onboarding-banner .onboarding-step__action .btn")
+        ?.focus();
+    });
+  }
+
   @action
   markStepCompleted(name) {
     this.completedStepNames.add(name);
   }
 
   @action
+  selectTab(key) {
+    this.activeTab = key;
+  }
+
+  /**
+   * Ends onboarding once every step is done. Also runs whenever the banner
+   * appears, because steps can be finished away from it, e.g. by an AI agent.
+   * Overlapping calls share one completion.
+   */
+  @action
   async checkIfOnboardingIsComplete() {
-    const allStepsAreDone = this.steps.every(
-      (Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name))
+    const allStepsAreDone = this.steps.every((Step) =>
+      isOnboardingStepCompleted(this, Step.name)
     );
 
-    if (allStepsAreDone) {
-      await this.endOnboarding({ skipped: false });
+    if (!allStepsAreDone || this.dismissed) {
+      return;
     }
+
+    this.#completion ??= this.endOnboarding({ skipped: false }).finally(
+      () => (this.#completion = null)
+    );
+    await this.#completion;
   }
 
   @action
@@ -252,6 +331,7 @@ export default class AdminOnboardingBanner extends Component {
     this.steps.forEach((Step) => {
       this.keyValueStore.remove(onboardingStepKey(Step.name));
     });
+    this.keyValueStore.remove(AGENT_TAB_HIDDEN_KEY);
     this.completedStepNames.clear();
 
     if (!skipped) {
@@ -269,6 +349,7 @@ export default class AdminOnboardingBanner extends Component {
         class="admin-onboarding-banner"
         {{dOnResize this.updateHeight}}
         {{willDestroy this.clearHeight}}
+        {{didInsert this.checkIfOnboardingIsComplete}}
       >
         <div class="admin-onboarding-banner__wrap">
           <div class="admin-onboarding-banner__header">
@@ -310,11 +391,42 @@ export default class AdminOnboardingBanner extends Component {
           </div>
           {{#unless this.minimized}}
             <div class="admin-onboarding-banner__content">
-              <div class="admin-onboarding-banner__steps">
-                {{#each this.steps as |Step|}}
-                  <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
-                {{/each}}
-              </div>
+              {{#if this.showAgentTab}}
+                <DTabs
+                  class="admin-onboarding-banner__tabs"
+                  @active={{this.activeTab}}
+                  @label={{i18n "admin_onboarding_banner.tabs_label"}}
+                  @onActivate={{this.selectTab}}
+                  as |tabs|
+                >
+                  <tabs.Tab
+                    @key="steps"
+                    @label={{i18n "admin_onboarding_banner.step_by_step"}}
+                  >
+                    <StepList
+                      @onCompleted={{this.checkIfOnboardingIsComplete}}
+                      @steps={{this.steps}}
+                    />
+                  </tabs.Tab>
+                  <tabs.Tab @key="agent">
+                    <:label>
+                      {{dIcon "robot"}}
+                      {{i18n "admin_onboarding_banner.agent.tab"}}
+                    </:label>
+                    <:default>
+                      <AgentPanel
+                        @connected={{this.agentConnected}}
+                        @onHide={{this.hideAgentTab}}
+                      />
+                    </:default>
+                  </tabs.Tab>
+                </DTabs>
+              {{else}}
+                <StepList
+                  @onCompleted={{this.checkIfOnboardingIsComplete}}
+                  @steps={{this.steps}}
+                />
+              {{/if}}
             </div>
           {{/unless}}
         </div>

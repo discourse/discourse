@@ -131,5 +131,33 @@ describe CategoryCreator do
       expect(category.errors).to be_present
       expect(Category.find_by(name: "Invalid style")).to be_nil
     end
+
+    describe "admin onboarding" do
+      before { SiteSetting.enable_site_owner_onboarding = true }
+
+      def onboarding_step_logged?
+        UserHistory.exists?(
+          action: UserHistory.actions[:admin_onboarding_step_completed],
+          subject: "create_category",
+          acting_user_id: admin.id,
+        )
+      end
+
+      it "completes the category step" do
+        messages =
+          MessageBus.track_publish(AdminOnboarding::STEP_COMPLETED_CHANNEL) do
+            described_class.create(admin.guardian, name: "Announcements")
+          end
+
+        expect(onboarding_step_logged?).to eq(true)
+        expect(messages.map(&:data)).to eq([{ step: "create_category" }])
+      end
+
+      it "leaves the step open when the category isn't created" do
+        described_class.create(admin.guardian, name: "")
+
+        expect(onboarding_step_logged?).to eq(false)
+      end
+    end
   end
 end

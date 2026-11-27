@@ -114,6 +114,7 @@ describe McpOauthAuthorizationsController do
     expect(response.status).to eq(200)
     labels = Nokogiri.HTML5(response.body).css("dt").map(&:text)
     expect(labels).to include(I18n.t("mcp.oauth.resource"))
+    expect(Nokogiri.HTML5(response.body).text).to include(I18n.t("mcp.oauth.acts_as_you"))
   end
 
   it "warns that a dynamically registered app's name isn't verified" do

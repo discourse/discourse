@@ -6,6 +6,7 @@ module DiscourseMcp
     SERVER_INFO_META_KEY = "io.modelcontextprotocol/serverInfo"
     PROTOCOL_META_KEY = "io.modelcontextprotocol/protocolVersion"
     CAPABILITIES_META_KEY = "io.modelcontextprotocol/clientCapabilities"
+    SETUP_GUIDE_TOOL = "discourse_get_setup_guide"
 
     Response =
       Data.define(:http_status, :body, :headers) do
@@ -237,10 +238,19 @@ module DiscourseMcp
           version: Discourse::VERSION::STRING,
         },
       }
-      if SiteSetting.mcp_server_instructions.present?
-        result[:instructions] = SiteSetting.mcp_server_instructions
-      end
+      result[:instructions] = instructions if instructions
       result
+    end
+
+    def instructions
+      return @instructions if defined?(@instructions)
+
+      if catalog.find(:tool, SETUP_GUIDE_TOOL)
+        setup_guide = I18n.t("mcp.setup_guide_instructions", tool: SETUP_GUIDE_TOOL)
+      end
+      @instructions = [setup_guide, SiteSetting.mcp_server_instructions.presence].compact
+        .join("\n\n")
+        .presence
     end
 
     def server_capabilities
@@ -265,9 +275,7 @@ module DiscourseMcp
         ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
       }
-      if SiteSetting.mcp_server_instructions.present?
-        result[:instructions] = SiteSetting.mcp_server_instructions
-      end
+      result[:instructions] = instructions if instructions
       Response.complete_result(result)
     end
 

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import {
   completeOnboardingStep,
-  onboardingStepKey,
+  isOnboardingStepCompleted,
 } from "discourse/lib/admin-onboarding";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -19,11 +19,26 @@ export default class OnboardingStep extends Component {
 
   @service keyValueStore;
   @service appEvents;
+  @service currentUser;
 
   @tracked
-  completed = this.keyValueStore.get(onboardingStepKey(this.name)) || false;
+  completed = isOnboardingStepCompleted(
+    { currentUser: this.currentUser, keyValueStore: this.keyValueStore },
+    this.name
+  );
 
   i18nKey = "admin_onboarding_banner.";
+
+  constructor() {
+    super(...arguments);
+    // the step can also be completed elsewhere, e.g. by the admin's AI agent
+    this.appEvents.on("onboarding-step:completed", this, this.#markIfNamed);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("onboarding-step:completed", this, this.#markIfNamed);
+  }
 
   get name() {
     return this.constructor.name;
@@ -65,6 +80,12 @@ export default class OnboardingStep extends Component {
     );
 
     return this.args.onCompleted?.(this.name);
+  }
+
+  #markIfNamed(name) {
+    if (name === this.name) {
+      this.completed = true;
+    }
   }
 
   <template>

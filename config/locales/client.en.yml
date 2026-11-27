@@ -648,6 +648,20 @@ en:
       expand: "Expand setup steps"
       collapse: "Collapse setup steps"
       dismiss: "Dismiss setup"
+      tabs_label: "Ways to set up your community"
+      step_by_step: "Step by step"
+      agent:
+        tab: "With an AI agent"
+        intro: "Paste this prompt into your AI agent. It connects to this site, asks what you'd like, and shows you a plan before changing anything."
+        # %{site_url}, %{mcp_url} and %{instructions_url} are addresses on this site. Keep discourse_get_setup_guide as it is: it's the name of a tool the agent calls.
+        prompt: "Help me set up my Discourse site at %{site_url}. Connect to its MCP server at %{mcp_url} (instructions: %{instructions_url}), then call discourse_get_setup_guide and show me a plan before changing anything."
+        copy_prompt: "Copy prompt"
+        prompt_copied: "Prompt copied"
+        safety_note: "Never paste a password or token into the chat. You can disconnect agents at any time under MCP Apps in <a href='%{preferences_url}'>your security preferences</a>."
+        hide: "Hide this tab"
+        connected: "Your AI agent is connected. Carry on in its chat."
+        show_prompt: "Show prompt"
+        hide_prompt: "Hide prompt"
       select_theme:
         title: "Customize your site"
         description: "Make your site your own with logo, colors, and layout."

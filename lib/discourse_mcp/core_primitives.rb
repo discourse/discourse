@@ -71,6 +71,7 @@ module DiscourseMcp
       register_site_setting_tools(registry)
       register_theme_tools(registry)
       register_authoring_guide_tools(registry)
+      register_setup_guide_tools(registry)
       register_source_tools(registry)
       register_theme_management_tools(registry)
       register_group_tools(registry)
@@ -158,6 +159,19 @@ module DiscourseMcp
         annotations: READ_ONLY,
         risk: :read,
         availability: -> { Tools::SourceSupport.available? },
+      )
+    end
+
+    def register_setup_guide_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_setup_guide",
+        title: "Get site setup guide",
+        description:
+          "Returns the guide for helping an administrator set up or reconfigure this community, with a snapshot of its current settings, default theme, color palettes, categories and seeded topics, and the tools this connection can use. Call it before making setup changes and follow it. Administrator only.",
+        implementation: Tools::GetSetupGuide,
+        annotations: READ_ONLY,
+        risk: :read,
       )
     end
 

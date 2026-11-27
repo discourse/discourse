@@ -175,6 +175,7 @@ TEXT
         # grouped under their stat type rather than being flat top-level keys
         :onboarding,
         :category_types,
+        :mcp,
       )
     end
 

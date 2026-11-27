@@ -368,6 +368,12 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_steps).to eq(completed: 2)
       end
 
+      it "doesn't count an AI agent connecting as a step" do
+        complete_step("connect_agent", at: 9.days.ago)
+
+        expect(described_class.onboarding_steps).to eq(completed: 0)
+      end
+
       it "does not double count a step completed more than once" do
         complete_step("select_theme", at: 9.days.ago)
         complete_step("select_theme", at: 8.days.ago)
@@ -409,6 +415,19 @@ RSpec.describe Statistics do
 
       it "is zero for both when the panel was never touched" do
         expect(described_class.onboarding_panel).to eq(completed: 0, dismissed: 0)
+      end
+    end
+
+    describe ".onboarding_agent" do
+      it "reports when an AI agent first used the setup guide" do
+        complete_step("connect_agent", at: first_admin.created_at + 90.minutes)
+        complete_step("connect_agent", at: first_admin.created_at + 2.days)
+
+        expect(described_class.onboarding_agent).to eq(connected: 1, minutes_to_connected: 90)
+      end
+
+      it "reports nothing when no agent has connected" do
+        expect(described_class.onboarding_agent).to eq(connected: 0, minutes_to_connected: nil)
       end
     end
 
@@ -479,6 +498,82 @@ RSpec.describe Statistics do
           completed: nil,
         )
       end
+    end
+  end
+
+  describe "MCP" do
+    fab!(:admin)
+    fab!(:other_admin, :admin)
+
+    let(:client) do
+      McpOauthClient.create!(
+        client_id: "statistics-spec-client",
+        name: "Statistics spec client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: ["http://127.0.0.1/callback"],
+      )
+    end
+
+    def authorize(user)
+      DiscourseMcp::OAuth::AuthorizationGrant.create!(
+        user:,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: %w[mcp:profile:read],
+      )
+    end
+
+    def log_tool_call(user:, outcome: "success", at: 1.hour.ago)
+      McpAuditLog.create!(
+        occurred_at: at,
+        user_id: user.id,
+        mcp_oauth_client_id: client.id,
+        method: "tools/call",
+        tool: "discourse_get_setup_guide",
+        outcome:,
+      )
+    end
+
+    it "reports whether the server is on and how many connections it has" do
+      SiteSetting.mcp_server_enabled = true
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_search", enabled: true)
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_create_topic", enabled: false)
+      authorize(admin)
+      authorize(other_admin)
+
+      expect(described_class.mcp_server).to eq(
+        enabled: 1,
+        exposed_tools: 1,
+        active_authorizations: 2,
+        authorized_users: 2,
+      )
+    end
+
+    it "reports the server as off" do
+      SiteSetting.mcp_server_enabled = false
+
+      expect(described_class.mcp_server).to include(enabled: 0)
+    end
+
+    it "counts successful and failed tool calls separately" do
+      log_tool_call(user: admin)
+      log_tool_call(user: admin, at: 3.days.ago)
+      log_tool_call(user: admin, at: 20.days.ago)
+      log_tool_call(user: admin, at: 40.days.ago)
+      log_tool_call(user: admin, outcome: "error", at: 2.days.ago)
+
+      expect(described_class.mcp_tool_calls).to eq(last_day: 1, "7_days": 2, "30_days": 3)
+      expect(described_class.mcp_tool_call_errors).to eq("7_days": 1, "30_days": 1)
+    end
+
+    it "counts users with a successful tool call" do
+      log_tool_call(user: admin)
+      log_tool_call(user: admin)
+      log_tool_call(user: other_admin, at: 10.days.ago)
+      log_tool_call(user: other_admin, outcome: "error")
+
+      expect(described_class.mcp_active_users).to eq("7_days": 1, "30_days": 2)
     end
   end
 end

@@ -5,8 +5,8 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { categoryStyleErrors } from "discourse/admin/lib/category-style-validation";
 import {
-  completeOnboardingStep,
   CREATE_CATEGORY_STEP,
+  markOnboardingStepCompleted,
 } from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -408,9 +408,9 @@ export default class EditCategoryTabsController extends Controller {
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
-      // awaited ahead of the reloads below, which would cancel the audit write
+      // the server recorded the step when it created the category
       if (isNew && this.currentUser?.show_site_owner_onboarding) {
-        await completeOnboardingStep(
+        markOnboardingStepCompleted(
           { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
           CREATE_CATEGORY_STEP
         );

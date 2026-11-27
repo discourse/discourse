@@ -109,14 +109,7 @@ module DiscourseMcp
           component: theme.component,
           enabled: theme.enabled,
           activation: {
-            applies_to_default_theme:
-              (
-                if theme.component?
-                  theme.enabled? && theme.parent_theme_ids.include?(SiteSetting.default_theme_id)
-                else
-                  theme.default?
-                end
-              ),
+            applies_to_default_theme: applies_to_default_theme?(theme),
             note:
               "Enabled does not mean applied. Components must be attached to a theme; standalone themes must be default or selected by a user. Browser appearance is not verified.",
           },
@@ -140,6 +133,22 @@ module DiscourseMcp
               { key: translation.key, value: translation.value, default: translation.default }
             end,
         }
+      end
+
+      def applies_to_default_theme?(theme)
+        if theme.component?
+          theme.enabled? && theme.parent_theme_ids.include?(SiteSetting.default_theme_id)
+        else
+          theme.default?
+        end
+      end
+
+      # Ticks the admin's "Customize your site" onboarding step, but only for a
+      # change visitors see.
+      def record_site_customization(theme, user)
+        return if !applies_to_default_theme?(theme)
+
+        AdminOnboarding.complete_step("select_theme", user)
       end
 
       def theme_field_json(field)
@@ -298,6 +307,7 @@ module DiscourseMcp
 
         ThemeSupport.raise_create_failure!(result) if result.failure?
 
+        ThemeSupport.record_site_customization(result.theme, guardian.user)
         ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(result.theme))
       end
     end
@@ -370,6 +380,7 @@ module DiscourseMcp
               logger.log_theme_component_disabled(theme)
             end
           end
+          ThemeSupport.record_site_customization(theme, guardian.user)
         end
 
         ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(theme))
