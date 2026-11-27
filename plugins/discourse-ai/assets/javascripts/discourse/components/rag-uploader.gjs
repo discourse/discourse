@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import helperFn from "discourse/helpers/helper-fn";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -39,7 +38,7 @@ export default class RagUploader extends Component {
   loadIndexingStatuses = helperFn(() => {
     const targetId = this.args.target?.id;
     const uploadIds = this.ragUploads.map((upload) => upload.id).join(",");
-    const statusesKey = `${this.#targetName}:${targetId}:${uploadIds}`;
+    const statusesKey = `${targetId}:${uploadIds}`;
 
     // @target is replaced on every form change
     if (statusesKey === this.#statusesKey) {
@@ -52,14 +51,12 @@ export default class RagUploader extends Component {
     }
 
     ajax(
-      `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.#targetName}&target_id=${targetId}`
-    )
-      .then((statuses) => {
-        if (this.#statusesKey === statusesKey && !this.isDestroying) {
-          this.ragIndexingStatuses = statuses;
-        }
-      })
-      .catch(popupAjaxError);
+      `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.args.targetName}&target_id=${targetId}`
+    ).then((statuses) => {
+      if (this.#statusesKey === statusesKey && !this.isDestroying) {
+        this.ragIndexingStatuses = statuses;
+      }
+    });
   });
 
   #statusesKey;
@@ -86,10 +83,6 @@ export default class RagUploader extends Component {
 
   get ragUploads() {
     return this.args.target?.rag_uploads ?? [];
-  }
-
-  get #targetName() {
-    return this.args.targetName || this.args.target?.constructor?.name;
   }
 
   @action
