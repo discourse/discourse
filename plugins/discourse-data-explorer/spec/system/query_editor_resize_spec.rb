@@ -54,7 +54,8 @@ RSpec.describe "Data explorer query editor resizing" do
 
       # Stacked, the floor is what the panes rest at, not just a drag limit. The
       # taller figure would leave the editor standing in space it cannot fill.
-      expect(query_runner.pane_floor).to be < with_schema
+      # Retried because DResizeSeparator refreshes aria-valuemin from a ResizeObserver.
+      try_until_success { expect(query_runner.pane_floor).to be < with_schema }
     end
   end
 

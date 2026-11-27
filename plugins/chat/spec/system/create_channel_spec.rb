@@ -132,10 +132,10 @@ RSpec.describe "Create channel" do
       channel_modal.fill_slug("pets-everywhere")
       channel_modal.click_primary_button
 
-      expect(page).to have_content(name)
+      expect(channel_modal).to be_closed
       created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
       expect(created_channel.slug).to eq("pets-everywhere")
-      expect(page).to have_current_path(chat.channel_path(created_channel.slug, created_channel.id))
+      expect(page).to have_current_path(chat.channel_path("pets-everywhere", created_channel.id))
     end
 
     context "when saving" do
