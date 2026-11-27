@@ -200,6 +200,19 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     expect(a_request(:get, redirected_url)).to have_been_made.once
   end
 
+  it "rejects redirects to URLs FinalDestination rejects" do
+    original_url = "https://example.com/docs"
+    redirect_url = "https://example.com:8443/guide"
+    stub_request(:get, original_url).to_return(status: 302, headers: { "Location" => redirect_url })
+    redirect_request = stub_request(:get, redirect_url)
+
+    expect { described_class.fetch(url: original_url) }.to raise_error(
+      DiscourseAi::Rag::WebPageFetcher::FetchError,
+      "The page URL is invalid",
+    )
+    expect(redirect_request).not_to have_been_requested
+  end
+
   it "normalizes transport timeouts into fetch errors" do
     url = "https://example.com/docs"
     stub_request(:get, url).to_timeout
