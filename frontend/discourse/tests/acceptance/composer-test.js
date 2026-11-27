@@ -2381,6 +2381,18 @@ acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
     "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
   });
 
+  test("hides the AI content menu when labelling is disabled", async function (assert) {
+    this.siteSettings.enable_ai_content_labelling_in_composer = false;
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await click(".toolbar-menu__options-trigger");
+
+    assert
+      .dom("[data-name='ai-content']")
+      .doesNotExist("the AI content submenu is hidden");
+  });
+
   test("inserts a marked code block and quote", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");

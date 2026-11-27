@@ -2388,6 +2388,7 @@ en:
     notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the user who started the topic, flag both of their posts as potential spam."
 
+    enable_ai_content_labelling_in_composer: "Allow members to label content in the composer, including quotes, details, and code blocks, as AI generated"
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     enable_markdown_typographer: "Use typography rules to improve readability of text: replace straight quotes ' with curly quotes ’, (tm) with symbol, -- with emdash –, etc"
     enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.example.com and https://example.com will be automatically linked"
