@@ -41,6 +41,7 @@ export default class AdminLogoForm extends Component {
       mobile_logo_dark_required: !!this.siteSettings.mobile_logo_dark,
       mobile_logo_dark: this.siteSettings.mobile_logo_dark,
       manifest_icon: this.siteSettings.manifest_icon,
+      manifest_maskable_icon: this.siteSettings.manifest_maskable_icon,
       manifest_screenshots: this.siteSettings.manifest_screenshots,
       apple_touch_icon: this.siteSettings.apple_touch_icon,
       digest_logo: this.siteSettings.digest_logo,
@@ -73,6 +74,7 @@ export default class AdminLogoForm extends Component {
           mobile_logo: data.mobile_logo,
           mobile_logo_dark: data.mobile_logo_dark,
           manifest_icon: data.manifest_icon,
+          manifest_maskable_icon: data.manifest_maskable_icon,
           manifest_screenshots: data.manifest_screenshots,
           apple_touch_icon: data.apple_touch_icon,
           digest_logo: data.digest_logo,
@@ -293,6 +295,23 @@ export default class AdminLogoForm extends Component {
               @name="manifest_icon"
               @onSet={{fn this.handleUpload "manifest_icon"}}
               @title={{i18n "admin.config.logo.form.manifest_icon.title"}}
+              @type="image"
+              as |field|
+            >
+              <field.Control @type="branding" />
+            </form.Field>
+            <form.Field
+              @description={{i18n
+                "admin.config.logo.form.manifest_maskable_icon.description"
+              }}
+              @helpText={{i18n
+                "admin.config.logo.form.manifest_maskable_icon.help_text"
+              }}
+              @name="manifest_maskable_icon"
+              @onSet={{fn this.handleUpload "manifest_maskable_icon"}}
+              @title={{i18n
+                "admin.config.logo.form.manifest_maskable_icon.title"
+              }}
               @type="image"
               as |field|
             >

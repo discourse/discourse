@@ -43,6 +43,7 @@ class Admin::Config::LogoController < Admin::AdminController
         mobile_logo
         mobile_logo_dark
         manifest_icon
+        manifest_maskable_icon
         manifest_screenshots
         apple_touch_icon
         digest_logo
@@ -51,6 +52,7 @@ class Admin::Config::LogoController < Admin::AdminController
         x_summary_large_image
       ].filter_map do |setting|
         next if SiteSetting.hidden_settings.include?(setting)
+        next if setting == :manifest_maskable_icon && !params.key?(setting)
         { setting_name: setting, value: params[setting] }
       end
 
