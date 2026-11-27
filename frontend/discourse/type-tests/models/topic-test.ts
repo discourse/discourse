@@ -43,6 +43,15 @@ interface ExpectedTag {
   slug: string;
 }
 
+interface ExpectedLatestReply {
+  post_number: number;
+  excerpt: string;
+  created_at: string;
+  username: string;
+  name: string | null;
+  avatar_template: string;
+}
+
 /** `Topic#thumbnail_info`: the original has no max size; optimized ones do. */
 interface ExpectedThumbnail {
   max_width: number | null;
@@ -200,6 +209,7 @@ interface ExpectedTopicFields {
   last_poster_username?: string | null;
   last_read_post_id?: number | null;
   last_read_post_number?: number | null;
+  latest_reply?: ExpectedLatestReply;
   like_count?: number;
   liked?: boolean | null;
   liked_post_numbers?: number[];

@@ -83,6 +83,10 @@ class TopicList
       topics.map { |t| [t.category&.parent_category, t.category] }.flatten.uniq.compact
   end
 
+  def latest_reply_for(topic)
+    @latest_replies&.[](topic.id)
+  end
+
   def load_topics
     @topics = @topics_input
 
@@ -112,11 +116,21 @@ class TopicList
     end
     group_ids.uniq!
 
+    if SiteSetting.include_latest_reply_excerpt_on_topic_list
+      @latest_replies = load_latest_replies
+      user_ids.concat(@latest_replies.values.map(&:user_id))
+    end
+
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
     group_lookup = GroupLookup.new(group_ids)
 
     @topics.each do |ft|
+      if (reply = latest_reply_for(ft))
+        reply.association(:topic).target = ft
+        reply.association(:user).target = user_lookup[reply.user_id]
+      end
+
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
 
       if ft.regular? && category_user_lookup.present?
@@ -179,6 +193,33 @@ class TopicList
   end
 
   private
+
+  def load_latest_replies
+    topic_ids =
+      @topics.filter_map do |topic|
+        topic.id if topic.regular? && topic.highest_post_number.to_i > 1
+      end
+    return {} if topic_ids.empty?
+
+    replies =
+      Post
+        .where(
+          topic_id: topic_ids,
+          post_type: Post.types[:regular],
+          hidden: false,
+          user_deleted: false,
+        )
+        .where("posts.post_number > 1")
+        .select("DISTINCT ON (posts.topic_id) posts.*")
+        .order("posts.topic_id, posts.post_number DESC")
+
+    if @current_user
+      ignored = @current_user.ignored_user_records.select(:ignored_user_id)
+      replies = replies.where.not(user_id: ignored)
+    end
+
+    replies.index_by(&:topic_id)
+  end
 
   def category_user_lookup
     @category_user_lookup ||=
