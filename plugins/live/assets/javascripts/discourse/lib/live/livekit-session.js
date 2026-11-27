@@ -141,6 +141,12 @@ export default class LivekitRoomSession {
     this.#getQualityTiers = getQualityTiers;
   }
 
+  // A rejected publish is logged, not raised, so callers that must know the
+  // microphone reached the room check here.
+  get microphonePublished() {
+    return !!this.#micPublication;
+  }
+
   async connect(wsUrl, token) {
     this.#sdk ||= await this.#loadSdk();
 

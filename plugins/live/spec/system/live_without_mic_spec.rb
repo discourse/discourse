@@ -23,68 +23,21 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
   end
 
-  def install_controllable_mic_failure(error_name:, error_message:)
-    install_live_fake_media
-
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.add_init_script(script: <<~JS)
-        (() => {
-          window.__allowLiveMic = false;
-          const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(
-            navigator.mediaDevices
-          );
-          navigator.mediaDevices.getUserMedia = async (constraints = {}) => {
-            if (constraints.audio && !window.__allowLiveMic) {
-              throw new DOMException(#{error_message.to_json}, #{error_name.to_json});
-            }
-            return originalGetUserMedia(constraints);
-          };
-        })();
-      JS
-    end
-  end
-
   def join_room_page
     visit("/live/r/#{room.slug}")
     click_button(I18n.t("js.live.room.join"))
     expect(page).to have_css(".live-room-page__leave")
   end
 
-  def has_live_remote_audio?(timeout: 15)
-    page.evaluate_async_script(<<~JS, timeout * 1000)
-      const [timeoutMs, done] = arguments;
-      const startedAt = performance.now();
-      const check = () => {
-        const audios = Array.from(document.querySelectorAll(".live-voice-canvas audio"));
-        const live = audios.some((audio) => {
-          if (audio.muted) {
-            return false;
-          }
-          const stream = audio.srcObject;
-          if (!stream?.active) {
-            return false;
-          }
-          return stream.getAudioTracks().some((t) => t.readyState === "live" && t.enabled);
-        });
-        if (live) {
-          done(true);
-        } else if (performance.now() - startedAt > timeoutMs) {
-          done(false);
-        } else {
-          setTimeout(check, 100);
-        }
-      };
-      check();
-    JS
-  end
-
   it "lets a user join muted when mic permission is denied (offerer), hear peers, see video, and unmute once granted" do
     # first_user has the lower ID, so it initiates the WebRTC offer without a mic.
     using_session(:listener) do
       sign_in(first_user)
-      install_controllable_mic_failure(
-        error_name: "NotAllowedError",
-        error_message: "Permission denied",
+      install_live_fake_media(
+        mic_failure: {
+          name: "NotAllowedError",
+          message: "Permission denied",
+        },
       )
       join_room_page
 
@@ -108,6 +61,8 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
         wait: 10,
       )
 
+      expect(has_live_remote_voice?(timeout: 2)).to eq(false)
+
       click_button(I18n.t("js.live.video.camera_on"))
       expect(page).to have_css(
         ".live-video-tile.--video[data-user-id='#{second_user.id}'] video.live-video-tile__video",
@@ -115,7 +70,7 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
     end
 
     using_session(:listener) do
-      expect(has_live_remote_audio?).to eq(true)
+      expect(has_live_remote_voice?).to eq(true)
 
       remote_video =
         ".live-video-tile.--video[data-user-id='#{second_user.id}'] video.live-video-tile__video"
@@ -127,13 +82,13 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
       find(".live-call-controls__mic-combo .live-call-controls__combo-main").click
       expect(page).to have_css(".live-mic-permission-modal")
       expect(page).to have_css(".live-room-page__leave")
-      expect(has_live_remote_audio?(timeout: 3)).to eq(true)
+      expect(has_live_remote_voice?(timeout: 3)).to eq(true)
 
       find(".live-mic-permission-modal__ok").click
       expect(page).to have_no_css(".live-mic-permission-modal")
 
       # Once mic permission is allowed, clicking unmute acquires and publishes it.
-      page.execute_script("window.__allowLiveMic = true;")
+      allow_live_fake_mic
       find(".live-call-controls__mic-combo .live-call-controls__combo-main").click
 
       expect(page).to have_css(
@@ -151,7 +106,7 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
         ".live-video-tile[data-user-id='#{first_user.id}'] .d-icon-microphone-slash",
         wait: 10,
       )
-      expect(has_live_remote_audio?).to eq(true)
+      expect(has_live_remote_voice?).to eq(true)
     end
   end
 
@@ -165,9 +120,11 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
 
     using_session(:listener) do
       sign_in(second_user)
-      install_controllable_mic_failure(
-        error_name: "NotFoundError",
-        error_message: "Requested device not found",
+      install_live_fake_media(
+        mic_failure: {
+          name: "NotFoundError",
+          message: "Requested device not found",
+        },
       )
       join_room_page
 
@@ -176,17 +133,17 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
       expect(page).to have_css(
         ".live-call-controls__mic-combo .live-call-controls__combo-main.--off",
       )
-      expect(has_live_remote_audio?).to eq(true)
+      expect(has_live_remote_voice?).to eq(true)
 
       # Clicking unmute while still missing hardware shows the unavailable toast
       # (not the permission modal) and leaves incoming audio untouched.
       find(".live-call-controls__mic-combo .live-call-controls__combo-main").click
       expect(page).to have_no_css(".live-mic-permission-modal")
       expect(toasts).to have_error(I18n.t("js.live.room.mic_unavailable"))
-      expect(has_live_remote_audio?(timeout: 3)).to eq(true)
+      expect(has_live_remote_voice?(timeout: 3)).to eq(true)
 
-      # Connecting a mic and clicking unmute renegotiates cleanly even as the higher-ID peer.
-      page.execute_script("window.__allowLiveMic = true;")
+      # Connecting a mic and clicking unmute publishes it from the answering side too.
+      allow_live_fake_mic
       find(".live-call-controls__mic-combo .live-call-controls__combo-main").click
 
       expect(page).to have_css(
@@ -195,14 +152,16 @@ describe "Live rooms without a microphone", allow_network: ["*.local"] do
       )
     end
 
-    using_session(:speaker) { expect(has_live_remote_audio?).to eq(true) }
+    using_session(:speaker) { expect(has_live_remote_voice?).to eq(true) }
   end
 
   it "still populates output devices in voice settings when no microphone is available" do
     sign_in(first_user)
-    install_controllable_mic_failure(
-      error_name: "NotFoundError",
-      error_message: "Requested device not found",
+    install_live_fake_media(
+      mic_failure: {
+        name: "NotFoundError",
+        message: "Requested device not found",
+      },
     )
     join_room_page
 

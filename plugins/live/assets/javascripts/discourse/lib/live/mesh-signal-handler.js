@@ -215,6 +215,7 @@ export default class MeshSignalHandler {
         const room = this.#getRoom(roomId);
         const canPublish =
           !room || participantCanSpeak(room, this.#getCurrentUserId());
+        PeerManager.alignMicTransceiverForAnswer(pc, { canPublish });
         PeerManager.alignVideoTransceiverForAnswer(pc, { canPublish });
         PeerManager.alignScreenAudioTransceiverForAnswer(pc, { canPublish });
         await this.#peerManager.flushPendingCandidates(

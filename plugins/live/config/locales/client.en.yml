@@ -84,6 +84,7 @@ en:
         noise_suppression_active: "Noise suppression active"
         connection_error: "We couldn't start a WebRTC session. Please ensure your browser has microphone permissions."
         mic_unavailable: "We couldn't access your microphone. Check that it is connected and not in use by another app, then try again."
+        mic_publish_failed: "We couldn't share your microphone with the room. Try unmuting again."
         joined_without_mic: "Joined muted — no microphone could be accessed. You can still listen, and unmute once one is available."
         joined_without_mic_permission: "Joined muted — microphone permission was denied. You can still listen, or allow access in your browser to unmute."
         deafen_on: "Deafen"

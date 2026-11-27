@@ -7,6 +7,10 @@ import { recordIceError } from "./connection-diagnostics.js";
 // order at every lookup.
 const screenAudioTransceivers = new WeakMap();
 
+// The microphone transceiver is remembered the same way, so a microphone
+// captured after the connection was negotiated can be attached to it.
+const micTransceivers = new WeakMap();
+
 // Recent ICE candidate errors per connection, kept for connection diagnostics:
 // they are the only signal that a STUN/TURN server rejected or never answered
 // this peer's allocation.
@@ -114,6 +118,42 @@ export default class PeerManager {
         liveLog.warn("[live] failed to migrate video track");
       });
       orphan.sender.replaceTrack(null).catch(() => {});
+    }
+  }
+
+  // Same JSEP problem as the video m-line, for a microphone m-line answered
+  // without a local microphone: the fresh transceiver is receive-only, so a
+  // microphone captured later could not be sent without renegotiating. Flips
+  // it to sendrecv with an idle sender. The sender needs a stream: receivers
+  // tell a microphone from screen audio by the track arriving with one.
+  static alignMicTransceiverForAnswer(pc, { canPublish = true } = {}) {
+    const associated = pc
+      .getTransceivers()
+      .find(
+        (transceiver) =>
+          transceiver.receiver?.track?.kind === "audio" &&
+          transceiver.mid !== null
+      );
+    const preallocated = micTransceivers.get(pc);
+    if (!associated || associated === preallocated) {
+      return;
+    }
+
+    micTransceivers.set(pc, associated);
+
+    if (!canPublish || typeof associated.sender?.setStreams !== "function") {
+      return;
+    }
+
+    associated.direction = "sendrecv";
+    associated.sender.setStreams(new MediaStream());
+
+    const track = preallocated?.sender?.track;
+    if (track && !associated.sender.track) {
+      associated.sender.replaceTrack(track).catch(() => {
+        liveLog.warn("[live] failed to migrate microphone track");
+      });
+      preallocated.sender.replaceTrack(null).catch(() => {});
     }
   }
 
@@ -278,6 +318,29 @@ export default class PeerManager {
     return senders;
   }
 
+  // Attaches a microphone captured after the room's connections were set up
+  // to their idle microphone senders. Returns false, leaving every connection
+  // untouched, when one of them cannot send it without renegotiating.
+  async attachMicTrack(roomId, track) {
+    const senders = [];
+    for (const [, pc] of this.#peerConnections.get(roomId) || []) {
+      const transceiver = micTransceivers.get(pc);
+      if (transceiver?.direction !== "sendrecv") {
+        return false;
+      }
+      senders.push(transceiver.sender);
+    }
+
+    for (const sender of senders) {
+      try {
+        await sender.replaceTrack(track);
+      } catch {
+        liveLog.warn("[live] failed to attach microphone track on peer");
+      }
+    }
+    return true;
+  }
+
   async replaceMicTrack(newTrack) {
     for (const [, peers] of this.#peerConnections) {
       for (const [, pc] of peers) {
@@ -330,19 +393,30 @@ export default class PeerManager {
       );
     }
 
+    // The microphone m-line always comes first, so a remote microphone never
+    // lands on the screen-audio slot. Without a local microphone its sender
+    // idles, like the video one, until a microphone is captured.
+    const canPublish = this.#canPublishMedia(roomId);
     const localStream = this.#getLocalStream();
     const localTracks = localStream?.getTracks?.() || [];
     if (localTracks.length) {
       for (const track of localTracks) {
-        pc.addTrack(track, localStream);
+        const sender = pc.addTrack(track, localStream);
+        micTransceivers.set(
+          pc,
+          pc
+            .getTransceivers()
+            .find((transceiver) => transceiver.sender === sender)
+        );
       }
     } else {
-      // Reserve the microphone m-line in slot 0 even without a local mic so
-      // offers always carry both audio m-lines (mic first, screen audio last)
-      // and a remote peer's microphone never lands on the screen-audio slot.
-      pc.addTransceiver("audio", {
-        direction: "recvonly",
-      });
+      micTransceivers.set(
+        pc,
+        pc.addTransceiver("audio", {
+          direction: canPublish ? "sendrecv" : "recvonly",
+          streams: canPublish ? [new MediaStream()] : [],
+        })
+      );
     }
 
     // The video m-line is negotiated up-front so that turning a camera or
@@ -351,7 +425,6 @@ export default class PeerManager {
     // An idle sender transmits nothing. When the local role cannot publish
     // (stage listener) the m-line is receive-only; a promotion rebuilds all
     // peers, so the direction never needs to change on a live connection.
-    const canPublish = this.#canPublishMedia(roomId);
     const videoTransceiver = pc.addTransceiver("video", {
       direction: canPublish ? "sendrecv" : "recvonly",
     });

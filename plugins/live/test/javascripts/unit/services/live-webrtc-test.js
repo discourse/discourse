@@ -4110,17 +4110,13 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
         "keeps remote peer audio playing after a failed unmute attempt"
       );
 
-      // Once permission is granted, clicking unmute captures the mic, rebuilds
-      // the peer connection with an immediate offer, and unmutes.
+      // Once permission is granted, clicking unmute captures the mic and
+      // sends it over the existing connection, which keeps its data channel.
       allowMic = true;
       muteRequests.length = 0;
       signalRequests.length = 0;
 
       await this.subject.toggleMute();
-      await waitUntil(
-        () => signalRequests.some((s) => s.type === "offer"),
-        1000
-      );
 
       assert.true(this.subject.audioEnabled, "unmutes once the mic is granted");
       assert.notStrictEqual(
@@ -4128,9 +4124,19 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
         null,
         "stores the newly acquired microphone stream"
       );
-      assert.true(
-        signalRequests.some((s) => s.recipientId === 2 && s.type === "offer"),
-        "immediately sends a fresh offer with the newly acquired microphone"
+      assert.strictEqual(
+        FakeRTCPeerConnection.created,
+        pcsBeforeUnmute,
+        "keeps the existing peer connection"
+      );
+      assert.false(
+        signalRequests.some((s) => s.type === "offer"),
+        "does not renegotiate"
+      );
+      assert.strictEqual(
+        pc.transceivers[0].sender.track,
+        this.subject.localStream.getAudioTracks()[0],
+        "attaches the microphone to the idle microphone sender"
       );
       assert.true(
         muteRequests.some((body) => body.includes("muted=false")),

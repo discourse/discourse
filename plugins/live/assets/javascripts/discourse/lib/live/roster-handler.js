@@ -374,12 +374,7 @@ export default class RosterHandler {
   // untouched when capture fails. Resolves to whether the microphone is now
   // available.
   async acquireDeferredMicrophone(roomId) {
-    if (this.#getLocalStream()) {
-      return true;
-    }
-
-    const acquired = await this.#acquireMicrophone();
-    if (!acquired) {
+    if (!this.#getLocalStream() && !(await this.#acquireMicrophone())) {
       return false;
     }
 
@@ -394,22 +389,41 @@ export default class RosterHandler {
       return false;
     }
 
-    this.#setMicEnabled(!this.#getPttEnabled());
-    this.#ensureLocalAudioMonitor(roomId);
-
     if (this.#isMeshRoom(roomId)) {
-      this.#reconnectAllPeers(roomId, { initiateImmediately: true });
-    } else {
-      try {
-        await this.#livekit.sessionFor(roomId)?.refreshPublications();
-      } catch {
-        liveLog.warn(
-          `[live-livekit] failed to refresh publications after deferred microphone acquisition in room ${roomId}`
-        );
+      this.#setMicEnabled(!this.#getPttEnabled());
+
+      // Rebuilding the connections would also drop their data channels, so
+      // it is only the fallback for a connection with no idle sender.
+      const track = this.#getLocalStream().getAudioTracks()[0];
+      if (!(await this.#peerManager.attachMicTrack(roomId, track))) {
+        this.#reconnectAllPeers(roomId, { initiateImmediately: true });
       }
+    } else if (!(await this.#publishMicrophone(roomId))) {
+      // The capture is kept, so the next unmute only retries the publish.
+      this.#setMicEnabled(false);
+      this.#toasts.error({
+        duration: 5000,
+        data: { message: i18n("live.room.mic_publish_failed") },
+      });
+      return false;
+    } else {
+      this.#setMicEnabled(!this.#getPttEnabled());
     }
 
+    this.#ensureLocalAudioMonitor(roomId);
     return true;
+  }
+
+  async #publishMicrophone(roomId) {
+    const session = this.#livekit.sessionFor(roomId);
+    try {
+      await session?.refreshPublications();
+    } catch {
+      liveLog.warn(
+        `[live-livekit] failed to refresh publications after deferred microphone acquisition in room ${roomId}`
+      );
+    }
+    return !!session?.microphonePublished;
   }
 
   #syncRemoteMediaTracks(roomId, participants) {

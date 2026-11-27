@@ -735,6 +735,14 @@ export default class LiveWebrtcService extends Service {
     );
   }
 
+  // A rejected publish leaves a captured microphone the SFU never received.
+  get #microphoneUnpublished() {
+    return (
+      !!this.localStream &&
+      this.#livekit.sessionFor(this.activeRoomId)?.microphonePublished === false
+    );
+  }
+
   setNoiseSuppressionMode(mode) {
     return this.#localAudio.setNoiseSuppressionMode(mode);
   }
@@ -1312,7 +1320,10 @@ export default class LiveWebrtcService extends Service {
       return;
     }
 
-    if (this.#microphoneDeferred) {
+    if (
+      this.#microphoneDeferred ||
+      (!this.audioEnabled && this.#microphoneUnpublished)
+    ) {
       if (!(await this.#acquireDeferredMicrophone())) {
         return;
       }
@@ -1963,7 +1974,13 @@ export default class LiveWebrtcService extends Service {
 
     this.#acquiringDeferredMicrophone = true;
     try {
-      return await this.#roster.acquireDeferredMicrophone(this.activeRoomId);
+      const acquired = await this.#roster.acquireDeferredMicrophone(
+        this.activeRoomId
+      );
+      if (acquired) {
+        await this.#applyVoiceQualityToPeers();
+      }
+      return acquired;
     } finally {
       this.#acquiringDeferredMicrophone = false;
     }
@@ -2521,7 +2538,7 @@ export default class LiveWebrtcService extends Service {
     if (this.activeRoomId && !this.#canPublishMediaIn(this.activeRoomId)) {
       return;
     }
-    if (this.#microphoneDeferred) {
+    if (this.#microphoneDeferred || this.#microphoneUnpublished) {
       // The first press only captures; the key was likely released by the
       // time the microphone is ready.
       this.#acquireDeferredMicrophone();
