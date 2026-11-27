@@ -115,5 +115,24 @@ module(
         "resets to the new leaderboard's default"
       );
     });
+
+    test("hides period chooser caret when period filter is disabled", async function (assert) {
+      const model = {
+        leaderboard: {
+          id: 3,
+          default_period: 3,
+          period_filter_disabled: true,
+        },
+        personal: "",
+        users: [{ username: "winner" }],
+      };
+
+      await render(
+        <template><GamificationLeaderboard @model={{model}} /></template>
+      );
+
+      assert.dom(".leaderboard__period-chooser.is-disabled").exists();
+      assert.dom(".leaderboard__period-chooser .angle-icon").doesNotExist();
+    });
   }
 );

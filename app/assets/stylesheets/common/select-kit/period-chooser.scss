@@ -8,6 +8,10 @@
         padding: 5px;
       }
 
+      &.is-disabled .period-chooser-header {
+        cursor: default;
+      }
+
       .period-chooser-header {
         display: inline-block; // safari 14 has issues with summary elements and flexbox
         background: transparent;
