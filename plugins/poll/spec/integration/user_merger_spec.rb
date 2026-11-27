@@ -94,6 +94,24 @@ RSpec.describe UserMerger do
     ).from(0).to(1)
   end
 
+  it "moves the source user's votes in polls where the target user has not voted" do
+    Fabricate(:poll_vote, poll: poll_regular, user: target_user, poll_option: poll_regular_option1)
+    Fabricate(:poll_vote, poll: poll_regular, user: source_user, poll_option: poll_regular_option2)
+    Fabricate(
+      :poll_vote,
+      poll: poll_multiple,
+      user: source_user,
+      poll_option: poll_multiple_optionB,
+    )
+
+    DiscourseEvent.trigger(:merging_users, source_user, target_user)
+
+    expect(PollVote.where(user: target_user).pluck(:poll_option_id)).to contain_exactly(
+      poll_regular_option1.id,
+      poll_multiple_optionB.id,
+    )
+  end
+
   it "keeps any existing target_user votes" do
     Fabricate(:poll_vote, poll: poll_regular, user: target_user)
 
