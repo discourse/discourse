@@ -301,6 +301,52 @@ module("Integration | Component | UpcomingEventsAgenda", function (hooks) {
       .exists({ count: 1 }, "deduplicates overlapping occurrences");
   });
 
+  test("keeps later exhausted after retrying an earlier page with no loaded events", async function (assert) {
+    const directions = [];
+    pretender.get("/discourse-post-event/events/agenda", ({ queryParams }) => {
+      directions.push(queryParams.direction);
+      if (directions.length === 2) {
+        return response(500, {});
+      }
+      const earlier = queryParams.direction === "earlier";
+      return response({
+        events: [],
+        has_earlier: !earlier,
+        has_later: earlier,
+      });
+    });
+
+    await render(
+      <template>
+        <UpcomingEventsCalendar
+          @initialView="year"
+          @updateRouteOnDatesChange={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".upcoming-events-agenda__later")
+      .doesNotExist("initially exhausts later events");
+    await click(".upcoming-events-agenda__earlier");
+    assert.dom("[role=alert]").exists("shows the earlier-page failure");
+
+    await click("[role=alert] + .btn");
+
+    assert.deepEqual(
+      directions,
+      ["later", "earlier", "earlier"],
+      "retries the failed direction"
+    );
+    assert.dom("[role=alert]").doesNotExist("clears the error after retry");
+    assert
+      .dom(".upcoming-events-agenda__earlier")
+      .doesNotExist("exhausts earlier events");
+    assert
+      .dom(".upcoming-events-agenda__later")
+      .doesNotExist("preserves the exhausted later direction");
+  });
+
   test("shows the server's rate-limit message and allows retry", async function (assert) {
     const message = "Please wait 42 seconds before trying again.";
     let requests = 0;

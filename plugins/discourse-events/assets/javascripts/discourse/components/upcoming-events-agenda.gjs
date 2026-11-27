@@ -28,6 +28,7 @@ export default class UpcomingEventsAgenda extends Component {
   #generation = 0;
   #range;
   #retryDirection = "later";
+  #retryInitial = false;
 
   willDestroy() {
     this.#generation++;
@@ -71,7 +72,7 @@ export default class UpcomingEventsAgenda extends Component {
 
   @action
   retry() {
-    return this.#load(this.#retryDirection, this.events.length === 0);
+    return this.#load(this.#retryDirection, this.#retryInitial);
   }
 
   @action
@@ -100,6 +101,7 @@ export default class UpcomingEventsAgenda extends Component {
     const previousTop = firstDay?.getBoundingClientRect().top;
     this.loading = direction;
     this.#retryDirection = direction;
+    this.#retryInitial = initial;
     this.error = null;
     try {
       const result = await ajax("/discourse-post-event/events/agenda", {
