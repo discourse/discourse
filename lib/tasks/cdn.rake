@@ -26,7 +26,6 @@ task "assets:prestage" => :environment do |t|
   uri = URI.parse("https://client.cdn77.com/api/prefetch")
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true
-  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
   failed_assets = []
   request = Net::HTTP::Post.new(uri.request_uri)
