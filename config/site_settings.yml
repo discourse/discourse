@@ -1539,6 +1539,10 @@ posting:
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
     area: "posts_and_topics"
+  enable_ai_content_labelling_in_composer:
+    client: true
+    default: true
+    area: "posts_and_topics"
   traditional_markdown_linebreaks:
     client: true
     default: false
