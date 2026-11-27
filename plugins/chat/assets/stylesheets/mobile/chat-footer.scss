@@ -62,10 +62,6 @@ html.mobile-tab-bar-visible {
       margin: 0;
     }
 
-    .c-unread-indicator {
-      margin-left: var(--space-1);
-    }
-
     .c-footer__options {
       display: flex;
       flex: none;
@@ -93,10 +89,29 @@ html.mobile-tab-bar-visible {
   }
 }
 
-.mobile-tab-bar__badge .chat-channel-unread-indicator,
-.mobile-tab-bar__more-badge .chat-channel-unread-indicator {
+.mobile-tab-bar__badge .c-unread-indicator,
+.mobile-tab-bar__more-badge .c-unread-indicator {
   position: static;
   margin: 0;
+}
+
+// Sized and ringed like the tab bar's own counts, keeping chat's colors
+.mobile-tab-bar__badge .c-unread-indicator {
+  outline: 2px solid var(--mobile-tab-bar-badge-background);
+
+  &.-urgent {
+    min-width: var(--mobile-tab-bar-badge-size);
+    height: var(--mobile-tab-bar-badge-size);
+    padding: 0 0.3em;
+    box-sizing: border-box;
+    font-size: var(--font-down-3);
+    font-weight: bold;
+    line-height: var(--mobile-tab-bar-badge-size);
+  }
+
+  .c-unread-indicator__number {
+    line-height: inherit;
+  }
 }
 
 // The tabs name the list, so the lists' own title bars only repeat them
