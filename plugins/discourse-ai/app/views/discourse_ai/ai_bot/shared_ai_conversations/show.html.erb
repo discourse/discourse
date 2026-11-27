@@ -29,9 +29,11 @@
       <a class="site-title" href="<%= Discourse.base_url %>">
         <%= SiteSetting.title %>
       </a>
-      <div class="llm-name">
-        <span><%= @shared_conversation.llm_name %></span>
-      </div>
+      <% if SiteSetting.ai_bot_show_model_name %>
+        <div class="llm-name">
+          <span><%= @shared_conversation.llm_name %></span>
+        </div>
+      <% end %>
     </header>
     <section>
       <header class="page-header">
@@ -46,7 +48,7 @@
             <% if post.agent.present? %>
               <span class="post__agent"><%= post.agent %></span>
             <% end %>
-            <% if post.llm_name.present? %>
+            <% if SiteSetting.ai_bot_show_model_name && post.llm_name.present? %>
               <span class="post__model"><%= post.llm_name %></span>
             <% end %>
             <time class="post__date" datetime="<%= post.created_at.iso8601 %>"><%= post.created_at.strftime('%Y-%m-%d') %></time>
