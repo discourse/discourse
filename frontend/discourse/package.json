@@ -60,7 +60,7 @@
     "@fullcalendar/timegrid": "^6.1.22",
     "@glimmer/syntax": "0.95.0",
     "@glint/ember-tsc": "^1.11.6",
-    "@glint/template": "^1.9.0",
+    "@glint/template": "^1.11.1",
     "@highlightjs/cdn-assets": "11.12.0",
     "@json-editor/json-editor": "2.17.4",
     "@lezer/common": "^1.5.6",
@@ -180,7 +180,7 @@
     "source-map-js": "^1.2.4",
     "testem": "^3.21.5",
     "tracked-built-ins": "^4.1.2",
-    "typescript": "7.1.0-dev.20260930.4",
+    "typescript": "7.1.0-dev.20261120.1",
     "util": "^0.12.5",
     "vite": "^8.2.4",
     "xss": "1.0.17"
