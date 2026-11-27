@@ -66,7 +66,7 @@ module DiscoursePolicy
     end
 
     def policy_not_accepted_by
-      post_policy.not_accepted_by.order(:id).limit(DiscoursePolicy::POLICY_USER_DEFAULT_LIMIT)
+      post_policy.not_accepted_by.limit(DiscoursePolicy::POLICY_USER_DEFAULT_LIMIT)
     end
 
     def policy_not_accepted_by_count
