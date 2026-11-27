@@ -1147,7 +1147,7 @@ RSpec.describe SessionController do
     describe "when in development mode" do
       before { Rails.env.stubs(:development?).returns(true) }
 
-      it "works" do
+      it "signs in as the requested user" do
         get "/session/#{user.username}/become"
 
         expect(response).to be_redirect
@@ -1574,7 +1574,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects to root when a protocol-relative return_path has a different host" do
       sso = get_sso("//eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
@@ -1585,7 +1585,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects to root when an absolute return_path has a different host" do
       sso = get_sso("http://eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
@@ -3815,7 +3815,85 @@ RSpec.describe SessionController do
     describe "rate limiting" do
       before { RateLimiter.enable }
 
-      it "enforces rate limits correctly" do
+      it "applies the same daily limit to known and unknown emails across IP addresses" do
+        SiteSetting.hide_email_address_taken = true
+        known_email = Fabricate(:user).email
+        freeze_time
+
+        7.times do |attempt|
+          responses =
+            [known_email, "unknown@example.com"].map do |login|
+              post "/session/forgot_password.json",
+                   params: {
+                     login: attempt.odd? ? login.upcase : login,
+                   },
+                   headers: {
+                     "REMOTE_ADDR" => "10.0.0.#{attempt + 1}",
+                   }
+              [response.status, response.parsed_body]
+            end
+
+          expect(responses.first).to eq(responses.last)
+          expect(responses.first.first).to eq(attempt < 6 ? 200 : 422)
+        end
+      end
+
+      it "silently limits account delivery through another login" do
+        SiteSetting.hide_email_address_taken = true
+        secondary_email = Fabricate(:secondary_email, user: user).email
+        freeze_time
+
+        limit =
+          RateLimiter.new(
+            nil,
+            "forgot-password-login-day-#{user.username}",
+            SessionController::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+            1.day,
+          )
+        limit.max.times { limit.performed! }
+
+        responses =
+          [secondary_email, "unknown@example.com"].map do |login|
+            post "/session/forgot_password.json", params: { login: }
+            [response.status, response.parsed_body]
+          end
+
+        expect(responses.first).to eq(responses.last)
+        expect(response.status).to eq(200)
+        expect(Jobs::CriticalUserEmail.jobs).to be_empty
+      end
+
+      it "delivers reset mail during Redis read-only failover" do
+        SiteSetting.hide_email_address_taken = true
+        allow(RateLimiter::PERFORM_LUA).to receive(:eval).and_raise(Redis::ReadOnlyError)
+
+        expect_enqueued_with(job: :critical_user_email) do
+          post "/session/forgot_password.json", params: { login: user.email }
+        end
+        expect(response.status).to eq(200)
+      end
+
+      it "reports the account delivery limit to staff when account existence is hidden" do
+        SiteSetting.hide_email_address_taken = true
+        sign_in(admin)
+        secondary_email = Fabricate(:secondary_email, user: user).email
+        freeze_time
+
+        limit =
+          RateLimiter.new(
+            nil,
+            "forgot-password-login-day-#{user.username}",
+            SessionController::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+            1.day,
+          )
+        limit.max.times { limit.performed! }
+
+        post "/session/forgot_password.json", params: { login: secondary_email }
+        expect(response.status).to eq(422)
+        expect(Jobs::CriticalUserEmail.jobs).to be_empty
+      end
+
+      it "rate-limits repeated password-reset requests" do
         user = Fabricate(:user)
 
         3.times do
@@ -3842,7 +3920,7 @@ RSpec.describe SessionController do
 
         post "/session/forgot_password.json",
              params: {
-               login: user.username,
+               login: user.email,
              },
              headers: {
                "REMOTE_ADDR" => "100.1.1.1",
