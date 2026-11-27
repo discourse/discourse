@@ -35,7 +35,10 @@ export default class HeartbeatManager {
       return;
     }
 
-    const timer = setInterval(() => this.#beat(roomId), this.#intervalMs);
+    const timer = setInterval(
+      () => this.#beat(roomId, timer),
+      this.#intervalMs
+    );
     this.#timers.set(roomId, timer);
   }
 
@@ -56,7 +59,7 @@ export default class HeartbeatManager {
     }
   }
 
-  async #beat(roomId) {
+  async #beat(roomId, timer) {
     if (!this.#isActiveRoom(roomId)) {
       this.stop(roomId);
       return;
@@ -82,6 +85,12 @@ export default class HeartbeatManager {
 
       liveLog.info(`[live] heartbeat sent for room ${roomId}`);
     } catch (error) {
+      // A beat from before a stop may carry a session the server has since
+      // closed (e.g. leave and rejoin)
+      if (this.#timers.get(roomId) !== timer) {
+        return;
+      }
+
       const status = error?.jqXHR?.status || error?.status;
 
       liveLog.warn(`[live] heartbeat failed for room ${roomId}`);
