@@ -157,7 +157,13 @@ export default class BlogDashboard extends Component {
   @action
   async newDraftOn(blog, menu) {
     await menu.close();
-    await this.#openDraftComposer(blog);
+    await this.#openDraftComposer({ blog });
+  }
+
+  @action
+  async newPage(menu) {
+    await menu.close();
+    await this.#openDraftComposer({ page: true });
   }
 
   @action
@@ -234,7 +240,7 @@ export default class BlogDashboard extends Component {
     }
   }
 
-  async #openDraftComposer(blog) {
+  async #openDraftComposer({ blog, page } = {}) {
     const category =
       Category.findById(this.siteSettings.blog_drafts_category) ||
       (await this.#ensureDraftsCategory());
@@ -249,6 +255,7 @@ export default class BlogDashboard extends Component {
     }
     // A draft without a recorded blog belongs to the default blog.
     model.set("blogId", blog && !blog.is_default ? blog.id : null);
+    model.set("blogPage", page ? true : null);
   }
 
   // The drafts category is created the first time anyone starts a draft.
@@ -344,8 +351,17 @@ export default class BlogDashboard extends Component {
               @title={{i18n "blog.editor_table.more_actions"}}
               @triggerClass="btn-default btn-small blog-dashboard__page-actions"
             >
-              <:content>
+              <:content as |menu|>
                 <DDropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <DButton
+                      class="btn-transparent blog-dashboard__new-page"
+                      @action={{fn this.newPage menu}}
+                      @disabled={{this.data.error}}
+                      @icon="file"
+                      @label="blog.new_page"
+                    />
+                  </dropdown.item>
                   <dropdown.item>
                     <DButton
                       class="btn-transparent blog-dashboard__visit-blog"

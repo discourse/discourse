@@ -171,6 +171,22 @@ RSpec.describe "Several blogs", type: :request do
       )
     end
 
+    it "starts a new draft as a page" do
+      sign_in(writer)
+
+      post "/posts.json",
+           params: {
+             title: "How to get in touch with us",
+             raw: "Write to the team and we will reply within two working days.",
+             category: drafts.id,
+             blog_page: true,
+           }
+
+      expect(response.status).to eq(200)
+      publication = Blog::Publication.find_by!(topic_id: response.parsed_body["topic_id"])
+      expect(publication).to have_attributes(page: true, path: "/how-to-get-in-touch-with-us")
+    end
+
     it "moves a draft to another blog until it is published" do
       topic = Fabricate(:topic, category: drafts, user: admin, title: "A draft that changes blogs")
       Fabricate(:post, topic:, user: admin)

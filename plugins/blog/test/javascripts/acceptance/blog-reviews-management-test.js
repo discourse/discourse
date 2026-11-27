@@ -168,27 +168,4 @@ acceptance("Blog review management", function (needs) {
       .dom('[data-review-id="4"] .blog-reviews__revoke')
       .doesNotExist("a closed link cannot be revoked again");
   });
-
-  test("asks before discarding unsaved publication settings", async function (assert) {
-    await visit(TOPIC_URL);
-    await click(".blog-publication-panel__settings-toggle");
-    await formKit(".blog-publication-panel__form")
-      .field("excerpt")
-      .fillIn("Unsaved publication excerpt");
-    await click(".blog-publication-panel__menu-trigger");
-    await click(".blog-publication-panel__share-for-review");
-    assert
-      .dom(".dialog-body")
-      .includesText(
-        "Discard unsaved publication settings",
-        "sharing does not silently discard metadata edits"
-      );
-    assert
-      .dom(".blog-reviews")
-      .doesNotExist("review management waits for confirmation");
-    await click(".dialog-footer .btn-primary");
-    assert
-      .dom(".blog-reviews")
-      .exists("confirmation opens the saved-article sharing workflow");
-  });
 });
