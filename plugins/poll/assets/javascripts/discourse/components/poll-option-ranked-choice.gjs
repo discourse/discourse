@@ -18,13 +18,13 @@ export default class PollOptionsComponent extends Component {
     <div
       class="ranked-choice-poll-option"
       data-poll-option-id={{@option.id}}
-      data-poll-option-rank={{@option.rank}}
+      data-poll-option-rank={{@rank}}
       tabindex="0"
     >
       {{#if this.currentUser}}
         <PollOptionRankedChoiceDropdown
           @option={{@option}}
-          @rank={{@option.rank}}
+          @rank={{@rank}}
           @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
           @sendRank={{this.sendRank}}
         />
