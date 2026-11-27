@@ -606,6 +606,36 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu").exists();
   });
 
+  test("Escape closes only the newest of nested menus", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @contentClass="outer-content"
+          @inline={{true}}
+          @label="outer"
+          @triggerClass="outer-trigger"
+        >
+          <DMenu
+            @contentClass="inner-content"
+            @inline={{true}}
+            @label="inner"
+            @triggerClass="inner-trigger"
+          />
+        </DMenu>
+      </template>
+    );
+    await click(".outer-trigger");
+    await click(".inner-trigger");
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+    assert.dom(".inner-content").doesNotExist("the inner menu closes");
+    assert.dom(".outer-content").exists("the outer menu stays open");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+    assert.dom(".outer-content").doesNotExist("the next Escape closes it");
+  });
+
   test("@closeOnClickOutside", async function (assert) {
     await render(
       <template>
