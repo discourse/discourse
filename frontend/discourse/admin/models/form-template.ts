@@ -6,6 +6,8 @@ export interface FormTemplateFields {
   id: number;
   name: string;
   template: string;
+  /** Liquid that renders the post; blank uses the default layout. */
+  output_template: string | null;
 }
 
 /** Form input; new templates have no id. */
@@ -13,6 +15,7 @@ export interface FormTemplateInput {
   id?: number;
   name: string;
   template: string;
+  output_template?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging

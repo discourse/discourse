@@ -96,6 +96,8 @@ export interface ComposerFields {
   hasTargetGroups?: boolean;
   warningsDisabled?: boolean;
   formTemplateId?: number;
+  /** JSON of the form template id and answers, sent when creating the post. */
+  formTemplateData?: string | null;
   composerHeight?: string | number;
   _hasTopicTemplates?: boolean;
 }
@@ -176,6 +178,7 @@ const CLOSED = "closed",
   // When creating, these fields are moved into the post model from the composer model
   _create_serializer: Record<string, string> = {
     raw: "reply",
+    form_template_data: "formTemplateData",
     title: "title",
     unlist_topic: "unlistTopic",
     category: "categoryId",

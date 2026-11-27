@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FormTemplatesController < ApplicationController
+  include FormTemplateSubmissions
+
   requires_login
   before_action :ensure_form_templates_enabled
 
@@ -19,6 +21,13 @@ class FormTemplatesController < ApplicationController
     template.process!(guardian)
 
     render_serialized(template, FormTemplateSerializer, root: "form_template")
+  end
+
+  def render_output
+    render_form_submission(
+      category_id: params[:category_id],
+      allow_incomplete_answers: true,
+    ) { |raw| render json: { raw: } }
   end
 
   private
