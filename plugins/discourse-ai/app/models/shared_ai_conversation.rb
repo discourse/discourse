@@ -151,7 +151,7 @@ class SharedAiConversation < ActiveRecord::Base
     <div>
       <aside class="onebox allowlistedgeneric" data-onebox-src="#{url}">
       <header class="source">
-        <span class="onebox-ai-llm-title">#{I18n.t("discourse_ai.share_ai.onebox_title", llm_name: llm_name)}</span>
+        <span class="onebox-ai-llm-title">#{ERB::Util.html_escape(onebox_title)}</span>
         <a href="#{url}" target="_blank" rel="nofollow ugc noopener" tabindex="-1">#{Discourse.base_uri}</a>
       </header>
       <article class="onebox-body">
@@ -173,8 +173,21 @@ class SharedAiConversation < ActiveRecord::Base
     excerpt
   end
 
+  def onebox_title
+    agent_names = context.filter_map { |post| post["agent"].presence }.uniq
+    if agent_names.one?
+      I18n.t("discourse_ai.share_ai.conversation_with_agent", agent_name: agent_names.first)
+    else
+      I18n.t("discourse_ai.share_ai.conversation")
+    end
+  end
+
   def formatted_excerpt
-    I18n.t("discourse_ai.share_ai.formatted_excerpt", llm_name: llm_name, excerpt: excerpt)
+    I18n.t(
+      "discourse_ai.share_ai.conversation_excerpt",
+      conversation: onebox_title,
+      excerpt: excerpt,
+    )
   end
 
   def self.build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)

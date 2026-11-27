@@ -555,8 +555,9 @@ en:
 
     share_ai:
       read_more: "Read full transcript"
-      onebox_title: "AI Conversation with %{llm_name}"
-      formatted_excerpt: "AI Conversation with %{llm_name}:\n %{excerpt}"
+      conversation: "AI conversation"
+      conversation_with_agent: "AI conversation with %{agent_name}"
+      conversation_excerpt: "%{conversation}:\n %{excerpt}"
       title: "%{title} - AI Conversation - %{site_name}"
       errors:
         not_allowed: "You are not allowed to share this topic"

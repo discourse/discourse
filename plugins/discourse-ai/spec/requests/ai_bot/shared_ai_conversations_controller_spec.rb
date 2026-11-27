@@ -684,6 +684,12 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       html = Nokogiri.HTML5(response.body)
       expect(html.css(".llm-name, .post__model")).to be_empty
       expect(html.at_css(".post__agent").text).to eq(agent.name)
+      expect(html.at_css('meta[property="og:description"]')["content"]).to eq(
+        "AI conversation with #{agent.name}:\n #{shared_conversation.excerpt}",
+      )
+      expect(html.at_css('meta[name="twitter:description"]')["content"]).to eq(
+        "AI conversation with #{agent.name}:\n #{shared_conversation.excerpt}",
+      )
     end
 
     it "is also able to render in json format" do
