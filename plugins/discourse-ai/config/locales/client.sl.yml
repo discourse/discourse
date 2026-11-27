@@ -48,6 +48,9 @@ sl:
       ai_decoded_transcript:
         type: "Tip"
         error: "napaka"
+      post_image_captions:
+        image_descriptions:
+          apply: "Uporabi"
       discourse_workflows:
         ai_tool:
           list_item: "Element seznama"
@@ -242,6 +245,8 @@ sl:
         embedding: "Vdelovanje"
       concepts:
         edit: "Uredi"
+        seed:
+          refresh: "Osveži"
         delete: "Izbriši"
         columns:
           status: "Status"
@@ -253,6 +258,11 @@ sl:
           name: "Ime"
           description: "Opis"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          two: "%{count} temi"
+          few: "%{count} teme"
+          other: "%{count} tem"
         topic_columns:
           topic: "Tema"
           primary: "Primarna"

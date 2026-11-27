@@ -189,7 +189,7 @@ export default class SimpleList extends Component {
             <ComboBox
               class="add-value-input"
               @content={{this.validValues}}
-              @nameProperty={{@setting.computedNameProperty}}
+              @nameProperty={{null}}
               @onChange={{this.addValue}}
               {{! Without an empty-selection label the closed-set picker renders
                 as an empty box under the reorderable list. The free-text branch
@@ -204,7 +204,7 @@ export default class SimpleList extends Component {
                 (hash castInteger=true allowAny=false)
               }}
               @value={{this.newValue}}
-              @valueProperty={{@setting.computedValueProperty}}
+              @valueProperty={{null}}
             />
           {{/if}}
         {{else}}

@@ -162,6 +162,17 @@ RSpec.describe UserCardSerializer do
       expect(json[:featured_topic]).to be_nil
     end
 
+    it "only includes an unlisted featured topic when the viewer can see unlisted topics" do
+      featured_topic.update_columns(visible: false)
+      user.reload
+
+      json = described_class.new(user, scope: Fabricate(:user).guardian, root: false).as_json
+      expect(json[:featured_topic]).to be_nil
+
+      json = described_class.new(user, scope: Fabricate(:moderator).guardian, root: false).as_json
+      expect(json[:featured_topic][:id]).to eq(featured_topic.id)
+    end
+
     it "does not include the featured topic for anonymous users when topic is restricted" do
       restricted_category = Fabricate(:category, read_restricted: true)
       featured_topic.update!(category: restricted_category)

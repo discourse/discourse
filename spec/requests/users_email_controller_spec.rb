@@ -64,6 +64,39 @@ RSpec.describe UsersEmailController do
       end
     end
 
+    it "does not let a verified second factor challenge confirm a different email change" do
+      sign_in(user)
+      second_factor = Fabricate(:user_second_factor_totp, user: user)
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
+      original_email = user.email
+      first_change = updater.change_to("bubblegum@adventuretime.ooo")
+
+      put "/u/confirm-new-email/#{first_change.new_email_token.token}.json", xhr: true
+      expect(response.status).to eq(403)
+      nonce = response.parsed_body.fetch("second_factor_challenge_nonce")
+
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: second_factor.totp_object.now,
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["ok"]).to eq(true)
+
+      # Requesting another change expires the first link, but not its 2FA challenge.
+      second_change = updater.change_to("marceline@adventuretime.ooo")
+      put "/u/confirm-new-email/#{second_change.new_email_token.token}.json",
+          params: {
+            second_factor_nonce: nonce,
+          }
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_not_found"))
+      expect(user.reload.email).to eq(original_email)
+      expect(second_change.reload.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+    end
+
     it "destroys email tokens associated with the old email after the new email is confirmed" do
       SiteSetting.enable_secondary_emails = true
 

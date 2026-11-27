@@ -53,6 +53,8 @@ he:
           column_title: "כותרת"
           icon: "סמל"
           color: "צבע"
+          color_palette: "ערכת צבעים"
+          icon_search_placeholder: "חיפוש…"
           default_sort_priority: "עדיפות"
           tag: "תגית"
           move_to_assigned_unassign: "ביטול הקצאה"

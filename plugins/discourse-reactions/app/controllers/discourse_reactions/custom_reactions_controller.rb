@@ -50,7 +50,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         .where(user_id: user.id)
         .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
-    reaction_users = secure_reaction_users!(reaction_users)
+    reaction_users = secure_reaction_users!(reaction_users, user)
 
     if params[:before_reaction_user_id]
       reaction_users =
@@ -355,9 +355,9 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     post
   end
 
-  def secure_reaction_users!(reaction_users)
+  def secure_reaction_users!(reaction_users, user)
     builder = DB.build("/*where*/")
-    UserAction.apply_common_filters(builder, current_user.id, guardian)
+    UserAction.apply_common_filters(builder, user.id, guardian)
     sql =
       builder
         .to_sql

@@ -52,6 +52,9 @@ hr:
         type: "Tip"
         error: "Greška"
         response: "Odgovor"
+      post_image_captions:
+        image_descriptions:
+          apply: "Primijeni"
       discourse_workflows:
         ai_agent:
           mode: "Modus"
@@ -253,6 +256,8 @@ hr:
         embedding: "Ugrađivanje"
       concepts:
         edit: "Uredi"
+        seed:
+          refresh: "Osvježi"
         delete: "Izbriši"
         columns:
           status: "Statust"
@@ -264,6 +269,10 @@ hr:
           name: "Ime"
           description: "Opis"
           status: "Statust"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} teme"
         tagged_topics: "Tagirane teme"
         topic_columns:
           topic: "Tema"

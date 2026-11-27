@@ -43,6 +43,8 @@ vi:
           column_title: "Tiêu đề"
           icon: "Biểu tượng"
           color: "Màu sắc"
+          color_palette: "Bảng màu"
+          icon_search_placeholder: "Tìm kiếm…"
           tag: "Thẻ"
           move_to_status_open: "Mở"
           move_to_status_closed: "Đã đóng"

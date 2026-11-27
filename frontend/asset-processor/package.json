@@ -14,13 +14,13 @@
     "@babel/plugin-transform-modules-amd": "^7.29.7",
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
-    "@csstools/postcss-light-dark-function": "^3.0.8",
+    "@csstools/postcss-light-dark-function": "^3.0.9",
     "@glimmer/syntax": "^0.95.0",
-    "@rollup/browser": "^4.68.2",
+    "@rollup/browser": "^4.68.7",
     "@rollup/plugin-babel": "^7.0.0",
-    "autoprefixer": "^10.6.2",
+    "autoprefixer": "^10.7.0",
     "babel-plugin-ember-template-compilation": "^4.0.1",
-    "content-tag": "^4.2.1",
+    "content-tag": "^4.3.0",
     "core-js": "^3.51.0",
     "decorator-transforms": "^2.4.0",
     "discourse": "workspace:0.0.0",
@@ -30,13 +30,13 @@
     "magic-string": "^1.4.5",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "postcss-nesting": "^14.0.3",
     "postcss-value-parser": "^4.2.0",
     "rolldown": "1.2.7",
-    "source-map-js": "^1.2.2",
+    "source-map-js": "^1.2.4",
     "strip-test-selectors": "^0.1.0",
-    "terser": "^5.51.2"
+    "terser": "^5.51.3"
   },
   "engines": {
     "node": "^22.22.0 || ^24.13.0 || >=26.0.0",
@@ -46,6 +46,6 @@
   },
   "devDependencies": {
     "vite": "^8.2.4",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   }
 }

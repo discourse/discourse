@@ -93,3 +93,7 @@ en:
 
           Report created at %{created_at} (%{timezone})
       upload_appendix: "Appendix: [%{filename}|attachment](%{short_url})"
+  mcp:
+    oauth:
+      scopes:
+        mcp_data_explorer_read: "See and run Data Explorer queries"

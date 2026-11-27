@@ -339,9 +339,7 @@ ja:
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
       secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードを有効にする必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect が有効になっている場合、2FA を適用することはできません。"
-      local_login_cannot_be_disabled_if_second_factor_enforced: "2FA が適用されている場合、ローカルログインを無効にすることはできません。ローカルログインを無効にする前に、適用されている 2FA を無効にしてください。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 アップロードはすでにグローバルに有効になっているため、S3 アップロードを有効にできません。サイトレベルでこれを有効にすると、アップロードで重大な問題が発生する可能性があります。"
       cors_origins_should_not_have_trailing_slash: "CORS オリジンに末尾のスラッシュ (/) を追加しないでください。"
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "ユーザーエージェントは、正当なユーザーを誤ってレート制限しないように、3 文字以上である必要があります。"
@@ -3975,6 +3973,7 @@ ja:
 
         これは、%{site_name} からの自動メッセージです。[あなたの投稿](%{base_url}%{post_url})が承認されたことをお知らせします。
   page_forbidden:
+    page_title: "アクセス拒否"
     title: "おっとっと！そのページは非公開です。"
   site_setting_missing: "`%{name}` サイト設定は、設定されている必要があります。"
   page_not_found:

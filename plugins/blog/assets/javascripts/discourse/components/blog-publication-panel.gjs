@@ -1,26 +1,23 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash, uniqueId } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import Form from "discourse/components/form";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import EmbedMode from "discourse/lib/embed-mode";
 import { longDate } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
-import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
-import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
+import BlogArticleSettings from "./modal/blog-article-settings.gjs";
 import BlogReviews from "./modal/blog-reviews.gjs";
 import BlogSchedule from "./modal/blog-schedule.gjs";
 
@@ -50,7 +47,6 @@ export default class BlogPublicationPanel extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
-  @service site;
   @service toasts;
 
   @tracked busy = false;
@@ -61,11 +57,7 @@ export default class BlogPublicationPanel extends Component {
   @tracked feedbackMore = false;
   @tracked feedbackOpen = false;
   @tracked olderFeedbackOpen = false;
-  @tracked settingsOpen = false;
-  // The settings form keeps its own snapshot so state changes do not discard edits in progress.
-  @tracked settingsData;
   #feedbackPage = 0;
-  #form;
   #menu;
   #replaced;
   @tracked _publication;
@@ -74,7 +66,6 @@ export default class BlogPublicationPanel extends Component {
     super(...arguments);
     this.appEvents.on("composer:edited-post", this, this.refresh);
     this.appEvents.on("blog:topic-edited", this, this.refreshTopic);
-    this.settingsData = this.#settingsSnapshot();
   }
 
   willDestroy() {
@@ -128,21 +119,6 @@ export default class BlogPublicationPanel extends Component {
     return i18n(`blog.panel.headline.${this.status}`);
   }
 
-  // On the forum's own host the path is enough; a separate blog domain is worth showing.
-  get displayUrl() {
-    const url = new URL(this.publication.url, window.location.origin);
-    return url.host === window.location.host
-      ? url.pathname
-      : `${url.host}${url.pathname}`;
-  }
-
-  get pathHint() {
-    const blog = findBlog(this.site, this.publication.blog_id);
-    return /\{(year|month|day)\}/.test(blog?.path_format)
-      ? i18n("blog.path_hint_dated")
-      : i18n("blog.path_hint");
-  }
-
   // Always relative ("6 days ago"); the exact time is in the tooltip.
   get lastUpdatedAgo() {
     return moment(this.publication.draft_updated_at).fromNow();
@@ -171,10 +147,6 @@ export default class BlogPublicationPanel extends Component {
 
   get hasPendingChanges() {
     return this.publication.published && this.publication.changes.length > 0;
-  }
-
-  get canPickBlog() {
-    return this.site.blogs?.length > 1 && this.publication.can_change_blog;
   }
 
   get canShowDiff() {
@@ -215,18 +187,19 @@ export default class BlogPublicationPanel extends Component {
   }
 
   @action
-  registerForm(api) {
-    this.#form = api;
-  }
-
-  @action
   registerMenu(api) {
     this.#menu = api;
   }
 
   @action
-  toggleSettings() {
-    this.settingsOpen = !this.settingsOpen;
+  openSettings() {
+    this.modal.show(BlogArticleSettings, {
+      model: {
+        publication: this.publication,
+        coAuthorExclusions: this.coAuthorExclusions,
+        onSave: this.saveSettings,
+      },
+    });
   }
 
   @action
@@ -361,18 +334,12 @@ export default class BlogPublicationPanel extends Component {
   }
 
   @action
-  setCover(upload, { set }) {
-    set("cover_upload_id", upload?.id ?? "");
-    set("cover_url", upload?.url ?? "");
-  }
-
-  @action
-  async saveSettings(data) {
+  saveSettings(data) {
     const current = this.publication.published_at;
     // The URL only previews the upload; the server stores its id.
     const settings = { ...data };
     delete settings.cover_url;
-    const result = await this.#mutate(
+    return this.#mutate(
       "",
       {
         publication: {
@@ -387,31 +354,18 @@ export default class BlogPublicationPanel extends Component {
       },
       "PUT"
     );
-    if (result) {
-      this.#form.commit();
-    }
   }
 
   @action
   async shareForReview() {
     await this.#menu?.close();
-    const open = async () => {
-      const result = await this.modal.show(BlogReviews, {
-        model: { topicId: this.publication.source_topic_id, draft: true },
-      });
-      // Links may have been issued or revoked while the modal was open.
-      await this.refresh();
-      if (result?.showFeedback) {
-        await this.toggleFeedback();
-      }
-    };
-    if (this.#form?.isDirty) {
-      this.dialog.confirm({
-        message: i18n("blog.review.discard_metadata"),
-        didConfirm: open,
-      });
-    } else {
-      open();
+    const result = await this.modal.show(BlogReviews, {
+      model: { topicId: this.publication.source_topic_id, draft: true },
+    });
+    // Links may have been issued or revoked while the modal was open.
+    await this.refresh();
+    if (result?.showFeedback) {
+      await this.toggleFeedback();
     }
   }
 
@@ -492,26 +446,6 @@ export default class BlogPublicationPanel extends Component {
     this.feedback = null;
     this.feedbackOpen = false;
     this.olderFeedbackOpen = false;
-    if (!this.#form?.isDirty) {
-      this.settingsData = this.#settingsSnapshot();
-    }
-  }
-
-  #settingsSnapshot() {
-    return {
-      blog_id: this.publication?.blog_id,
-      path: this.publication?.path,
-      excerpt: this.publication?.excerpt || "",
-      meta_description: this.publication?.meta_description || "",
-      canonical_url: this.publication?.canonical_url || "",
-      cover_upload_id: this.publication?.cover_upload_id || "",
-      cover_url: this.publication?.cover_url || "",
-      cover_alt: this.publication?.cover_alt || "",
-      co_authors: this.publication?.co_authors || [],
-      featured: this.publication?.featured,
-      page: this.publication?.page,
-      published_at: this.publication?.published_at?.slice(0, 10) || "",
-    };
   }
 
   // Publishing closes the draft's preview links, so say so rather than leaving them looking revoked.
@@ -557,34 +491,29 @@ export default class BlogPublicationPanel extends Component {
           />
         </div>
       {{else}}
-        {{#let (uniqueId) as |settingsId|}}
-          <section
-            aria-label={{i18n "blog.panel.aria_label"}}
-            class="blog-publication-panel {{this.statusClass}}"
-          >
-            <div class="blog-publication-panel__summary">
-              <div class="blog-publication-panel__status">
-                <span
-                  class="blog-publication-panel__badge {{this.statusClass}}"
-                >{{this.badge}}</span>
-                <span
-                  class="blog-publication-panel__headline"
-                >{{this.headline}}</span>
-              </div>
+        <section
+          aria-label={{i18n "blog.panel.aria_label"}}
+          class="blog-publication-panel {{this.statusClass}}"
+        >
+          <div class="blog-publication-panel__summary">
+            <div class="blog-publication-panel__status">
+              <span
+                class="blog-publication-panel__badge {{this.statusClass}}"
+              >{{this.badge}}</span>
+              <span
+                class="blog-publication-panel__headline"
+              >{{this.headline}}</span>
+            </div>
+            {{#if (eq this.status "draft")}}
+              {{#if this.publication.draft_updated_at}}
+                <p
+                  class="blog-publication-panel__meta blog-publication-panel__last-updated"
+                  title={{this.lastUpdatedDate}}
+                >{{i18n "blog.panel.last_updated" age=this.lastUpdatedAgo}}</p>
+              {{/if}}
+            {{else}}
               <p class="blog-publication-panel__meta">
-                {{#if (eq this.status "draft")}}
-                  <DInterpolatedTranslation
-                    @key="blog.panel.will_publish_to"
-                    as |Placeholder|
-                  >
-                    <Placeholder @name="url">
-                      <span
-                        class="blog-publication-panel__future-url"
-                        title={{this.publication.url}}
-                      >{{this.displayUrl}}</span>
-                    </Placeholder>
-                  </DInterpolatedTranslation>
-                {{else if (eq this.status "scheduled")}}
+                {{#if (eq this.status "scheduled")}}
                   {{i18n
                     "blog.panel.scheduled_revision"
                     user=this.publication.scheduled_revision.approved_by
@@ -625,193 +554,146 @@ export default class BlogPublicationPanel extends Component {
                   >{{i18n "blog.panel.view_live"}}</a>
                 {{/if}}
               </p>
-            </div>
+            {{/if}}
+          </div>
 
-            <div class="blog-publication-panel__actions">
-              {{#if (eq this.status "scheduled")}}
-                <a
-                  class="btn btn-default blog-publication-panel__preview"
-                  href={{this.publication.scheduled_revision.preview_url}}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >{{dIcon "eye"}}<span class="d-button-label">{{i18n
-                      "blog.panel.preview_scheduled"
-                    }}</span></a>
-                {{#if this.publication.can_publish}}
-                  <DButton
-                    class="btn-default blog-publication-panel__cancel-schedule"
-                    @action={{this.cancelSchedule}}
-                    @disabled={{this.busy}}
-                    @label="blog.panel.cancel_schedule"
-                  />
-                  <DButton
-                    class="btn-primary blog-publication-panel__publish-now"
-                    @action={{fn
-                      this.publishRevision
-                      this.publication.scheduled_revision
+          <div class="blog-publication-panel__actions">
+            <DButton
+              class="btn-default blog-publication-panel__settings"
+              @action={{this.openSettings}}
+              @disabled={{this.busy}}
+              @icon="gear"
+              @label="blog.panel.settings_button"
+            />
+            {{#if (eq this.status "scheduled")}}
+              <a
+                class="btn btn-default blog-publication-panel__preview"
+                href={{this.publication.scheduled_revision.preview_url}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >{{dIcon "eye"}}<span class="d-button-label">{{i18n
+                    "blog.panel.preview_scheduled"
+                  }}</span></a>
+              {{#if this.publication.can_publish}}
+                <DButton
+                  class="btn-default blog-publication-panel__cancel-schedule"
+                  @action={{this.cancelSchedule}}
+                  @disabled={{this.busy}}
+                  @label="blog.panel.cancel_schedule"
+                />
+                <DButton
+                  class="btn-primary blog-publication-panel__publish-now"
+                  @action={{fn
+                    this.publishRevision
+                    this.publication.scheduled_revision
+                  }}
+                  @disabled={{this.busy}}
+                  @label="blog.panel.publish_now"
+                />
+              {{/if}}
+            {{else}}
+              <a
+                class="btn btn-default blog-publication-panel__preview"
+                href={{this.publication.preview_url}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >{{dIcon "eye"}}<span class="d-button-label">{{i18n
+                    "blog.panel.preview"
+                  }}</span></a>
+              {{! Publishers reach sharing through their menu; others have no menu. }}
+              {{#if
+                (and
+                  this.publication.source_topic_id
+                  (not this.publication.can_publish)
+                )
+              }}
+                <DButton
+                  class="btn-default blog-publication-panel__share-for-review"
+                  @action={{this.shareForReview}}
+                  @disabled={{this.busy}}
+                  @icon="share"
+                  @label="blog.panel.share_for_review"
+                />
+              {{/if}}
+              {{#if this.canRelease}}
+                <DComboButton
+                  class="blog-publication-panel__primary"
+                  @btnTypeClass="btn-primary"
+                  @hasMenu={{this.publication.can_publish}}
+                  as |combo|
+                >
+                  <combo.Button
+                    class="blog-publication-panel__publish"
+                    @action={{if
+                      this.publication.can_publish
+                      this.publish
+                      this.submit
                     }}
                     @disabled={{this.busy}}
-                    @label="blog.panel.publish_now"
+                    @label={{this.primaryLabel}}
                   />
-                {{/if}}
-              {{else}}
-                <a
-                  class="btn btn-default blog-publication-panel__preview"
-                  href={{this.publication.preview_url}}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >{{dIcon "eye"}}<span class="d-button-label">{{i18n
-                      "blog.panel.preview"
-                    }}</span></a>
-                {{! Publishers reach sharing through their menu; others have no menu. }}
-                {{#if
-                  (and
-                    this.publication.source_topic_id
-                    (not this.publication.can_publish)
-                  )
-                }}
-                  <DButton
-                    class="btn-default blog-publication-panel__share-for-review"
-                    @action={{this.shareForReview}}
-                    @disabled={{this.busy}}
-                    @icon="share"
-                    @label="blog.panel.share_for_review"
-                  />
-                {{/if}}
-                {{#if this.canRelease}}
-                  <DComboButton
-                    class="blog-publication-panel__primary"
-                    @btnTypeClass="btn-primary"
-                    @hasMenu={{this.publication.can_publish}}
-                    as |combo|
-                  >
-                    <combo.Button
-                      class="blog-publication-panel__publish"
-                      @action={{if
-                        this.publication.can_publish
-                        this.publish
-                        this.submit
-                      }}
-                      @disabled={{this.busy}}
-                      @label={{this.primaryLabel}}
-                    />
-                    <combo.Menu
-                      class="blog-publication-panel__menu-trigger"
-                      @identifier="blog-publish-menu"
-                      @modalForMobile={{true}}
-                      @onRegisterApi={{this.registerMenu}}
-                      @title={{i18n "blog.panel.more_options"}}
-                    >
-                      <DDropdownMenu as |dropdown|>
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__menu-schedule"
-                            @action={{this.openSchedule}}
-                            @icon="calendar-days"
-                          >
-                            <span class="blog-publication-panel__menu-text">
-                              <span
-                                class="blog-publication-panel__menu-label"
-                              >{{i18n "blog.panel.schedule"}}</span>
-                              <span
-                                class="blog-publication-panel__menu-hint"
-                              >{{i18n "blog.panel.schedule_hint"}}</span>
-                            </span>
-                          </DButton>
-                        </dropdown.item>
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__menu-submit"
-                            @action={{this.submit}}
-                            @icon="user-check"
-                          >
-                            <span class="blog-publication-panel__menu-text">
-                              <span
-                                class="blog-publication-panel__menu-label"
-                              >{{i18n "blog.panel.submit"}}</span>
-                              <span
-                                class="blog-publication-panel__menu-hint"
-                              >{{i18n "blog.panel.submit_hint"}}</span>
-                            </span>
-                          </DButton>
-                        </dropdown.item>
-                        {{#if this.publication.source_topic_id}}
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__share-for-review"
-                              @action={{this.shareForReview}}
-                              @icon="share"
-                            >
-                              <span class="blog-publication-panel__menu-text">
-                                <span
-                                  class="blog-publication-panel__menu-label"
-                                >{{i18n "blog.panel.share_for_review"}}</span>
-                                <span
-                                  class="blog-publication-panel__menu-hint"
-                                >{{i18n
-                                    "blog.panel.share_for_review_hint"
-                                  }}</span>
-                              </span>
-                            </DButton>
-                          </dropdown.item>
-                        {{/if}}
-                        {{#if this.publication.published}}
-                          <dropdown.divider />
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__unpublish"
-                              @action={{this.unpublish}}
-                              @icon="eye-slash"
-                            >
-                              <span class="blog-publication-panel__menu-text">
-                                <span
-                                  class="blog-publication-panel__menu-label"
-                                >{{i18n "blog.unpublish"}}</span>
-                                <span
-                                  class="blog-publication-panel__menu-hint"
-                                >{{i18n "blog.panel.unpublish_hint"}}</span>
-                              </span>
-                            </DButton>
-                          </dropdown.item>
-                        {{/if}}
-                      </DDropdownMenu>
-                    </combo.Menu>
-                  </DComboButton>
-                {{else if this.publication.can_publish}}
-                  {{! Nothing differs from the live article, so no publishing actions are offered. }}
-                  <DMenu
-                    class="btn-default blog-publication-panel__options"
-                    @disabled={{this.busy}}
-                    @icon="ellipsis-vertical"
+                  <combo.Menu
+                    class="blog-publication-panel__menu-trigger"
                     @identifier="blog-publish-menu"
                     @modalForMobile={{true}}
                     @onRegisterApi={{this.registerMenu}}
-                    @placement="bottom-end"
                     @title={{i18n "blog.panel.more_options"}}
                   >
-                    <:content>
-                      <DDropdownMenu as |dropdown|>
-                        {{#if this.publication.source_topic_id}}
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__share-for-review"
-                              @action={{this.shareForReview}}
-                              @icon="share"
-                            >
-                              <span class="blog-publication-panel__menu-text">
-                                <span
-                                  class="blog-publication-panel__menu-label"
-                                >{{i18n "blog.panel.share_for_review"}}</span>
-                                <span
-                                  class="blog-publication-panel__menu-hint"
-                                >{{i18n
-                                    "blog.panel.share_for_review_hint"
-                                  }}</span>
-                              </span>
-                            </DButton>
-                          </dropdown.item>
-                          <dropdown.divider />
-                        {{/if}}
+                    <DDropdownMenu as |dropdown|>
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__menu-schedule"
+                          @action={{this.openSchedule}}
+                          @icon="calendar-days"
+                        >
+                          <span class="blog-publication-panel__menu-text">
+                            <span
+                              class="blog-publication-panel__menu-label"
+                            >{{i18n "blog.panel.schedule"}}</span>
+                            <span
+                              class="blog-publication-panel__menu-hint"
+                            >{{i18n "blog.panel.schedule_hint"}}</span>
+                          </span>
+                        </DButton>
+                      </dropdown.item>
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__menu-submit"
+                          @action={{this.submit}}
+                          @icon="user-check"
+                        >
+                          <span class="blog-publication-panel__menu-text">
+                            <span
+                              class="blog-publication-panel__menu-label"
+                            >{{i18n "blog.panel.submit"}}</span>
+                            <span
+                              class="blog-publication-panel__menu-hint"
+                            >{{i18n "blog.panel.submit_hint"}}</span>
+                          </span>
+                        </DButton>
+                      </dropdown.item>
+                      {{#if this.publication.source_topic_id}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__share-for-review"
+                            @action={{this.shareForReview}}
+                            @icon="share"
+                          >
+                            <span class="blog-publication-panel__menu-text">
+                              <span
+                                class="blog-publication-panel__menu-label"
+                              >{{i18n "blog.panel.share_for_review"}}</span>
+                              <span
+                                class="blog-publication-panel__menu-hint"
+                              >{{i18n
+                                  "blog.panel.share_for_review_hint"
+                                }}</span>
+                            </span>
+                          </DButton>
+                        </dropdown.item>
+                      {{/if}}
+                      {{#if this.publication.published}}
+                        <dropdown.divider />
                         <dropdown.item>
                           <DButton
                             class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__unpublish"
@@ -828,312 +710,213 @@ export default class BlogPublicationPanel extends Component {
                             </span>
                           </DButton>
                         </dropdown.item>
-                      </DDropdownMenu>
-                    </:content>
-                  </DMenu>
+                      {{/if}}
+                    </DDropdownMenu>
+                  </combo.Menu>
+                </DComboButton>
+              {{else if this.publication.can_publish}}
+                {{! Nothing differs from the live article, so no publishing actions are offered. }}
+                <DMenu
+                  class="btn-default blog-publication-panel__options"
+                  @disabled={{this.busy}}
+                  @icon="ellipsis-vertical"
+                  @identifier="blog-publish-menu"
+                  @modalForMobile={{true}}
+                  @onRegisterApi={{this.registerMenu}}
+                  @placement="bottom-end"
+                  @title={{i18n "blog.panel.more_options"}}
+                >
+                  <:content>
+                    <DDropdownMenu as |dropdown|>
+                      {{#if this.publication.source_topic_id}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__share-for-review"
+                            @action={{this.shareForReview}}
+                            @icon="share"
+                          >
+                            <span class="blog-publication-panel__menu-text">
+                              <span
+                                class="blog-publication-panel__menu-label"
+                              >{{i18n "blog.panel.share_for_review"}}</span>
+                              <span
+                                class="blog-publication-panel__menu-hint"
+                              >{{i18n
+                                  "blog.panel.share_for_review_hint"
+                                }}</span>
+                            </span>
+                          </DButton>
+                        </dropdown.item>
+                        <dropdown.divider />
+                      {{/if}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent --with-description blog-publication-panel__menu-item blog-publication-panel__unpublish"
+                          @action={{this.unpublish}}
+                          @icon="eye-slash"
+                        >
+                          <span class="blog-publication-panel__menu-text">
+                            <span
+                              class="blog-publication-panel__menu-label"
+                            >{{i18n "blog.unpublish"}}</span>
+                            <span
+                              class="blog-publication-panel__menu-hint"
+                            >{{i18n "blog.panel.unpublish_hint"}}</span>
+                          </span>
+                        </DButton>
+                      </dropdown.item>
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              {{/if}}
+            {{/if}}
+          </div>
+
+          {{#if this.hasPendingChanges}}
+            <div class="blog-publication-panel__changes">
+              <div class="blog-publication-panel__changes-header">
+                <span class="blog-publication-panel__changes-title">{{i18n
+                    "blog.panel.changes_title"
+                  }}</span>
+                {{#if this.canShowDiff}}
+                  <DButton
+                    aria-expanded={{if this.diffOpen "true" "false"}}
+                    class="btn-flat blog-publication-panel__toggle-diff"
+                    @action={{this.toggleDiff}}
+                    @disabled={{this.busy}}
+                    @label={{if
+                      this.diffOpen
+                      "blog.panel.hide_diff"
+                      "blog.panel.show_diff"
+                    }}
+                  />
+                {{/if}}
+              </div>
+              {{#if this.changedFields}}
+                <p class="blog-publication-panel__changed">{{i18n
+                    "blog.panel.changed"
+                    fields=this.changedFields
+                  }}</p>
+              {{/if}}
+              {{#if this.diffOpen}}
+                {{#if this.diff.diff_error}}
+                  <p class="blog-publication-panel__diff-error">{{i18n
+                      "blog.panel.diff_error"
+                    }}</p>
+                {{else}}
+                  {{#if this.diff.title_diff_html}}
+                    <div class="blog-publication-panel__diff --title">
+                      {{trustHTML this.diff.title_diff_html}}
+                    </div>
+                  {{/if}}
+                  <div class="blog-publication-panel__diff">
+                    {{trustHTML this.diff.diff_html}}
+                  </div>
                 {{/if}}
               {{/if}}
             </div>
+          {{/if}}
 
-            {{#if this.hasPendingChanges}}
-              <div class="blog-publication-panel__changes">
-                <div class="blog-publication-panel__changes-header">
-                  <span class="blog-publication-panel__changes-title">{{i18n
-                      "blog.panel.changes_title"
-                    }}</span>
-                  {{#if this.canShowDiff}}
+          {{#if this.hasReviews}}
+            <div class="blog-publication-panel__reviews">
+              <div class="blog-publication-panel__reviews-header">
+                <span class="blog-publication-panel__reviews-title">
+                  {{#if this.publication.review_feedback_count}}
                     <DButton
-                      aria-expanded={{if this.diffOpen "true" "false"}}
-                      class="btn-flat blog-publication-panel__toggle-diff"
-                      @action={{this.toggleDiff}}
+                      aria-expanded={{if this.feedbackOpen "true" "false"}}
+                      class="btn-flat blog-publication-panel__toggle-feedback"
+                      @action={{this.toggleFeedback}}
                       @disabled={{this.busy}}
-                      @label={{if
-                        this.diffOpen
-                        "blog.panel.hide_diff"
-                        "blog.panel.show_diff"
-                      }}
-                    />
-                  {{/if}}
-                </div>
-                {{#if this.changedFields}}
-                  <p class="blog-publication-panel__changed">{{i18n
-                      "blog.panel.changed"
-                      fields=this.changedFields
-                    }}</p>
-                {{/if}}
-                {{#if this.diffOpen}}
-                  {{#if this.diff.diff_error}}
-                    <p class="blog-publication-panel__diff-error">{{i18n
-                        "blog.panel.diff_error"
-                      }}</p>
-                  {{else}}
-                    {{#if this.diff.title_diff_html}}
-                      <div class="blog-publication-panel__diff --title">
-                        {{trustHTML this.diff.title_diff_html}}
-                      </div>
-                    {{/if}}
-                    <div class="blog-publication-panel__diff">
-                      {{trustHTML this.diff.diff_html}}
-                    </div>
-                  {{/if}}
-                {{/if}}
-              </div>
-            {{/if}}
-
-            {{#if this.hasReviews}}
-              <div class="blog-publication-panel__reviews">
-                <div class="blog-publication-panel__reviews-header">
-                  <span class="blog-publication-panel__reviews-title">
-                    {{#if this.publication.review_feedback_count}}
-                      <DButton
-                        aria-expanded={{if this.feedbackOpen "true" "false"}}
-                        class="btn-flat blog-publication-panel__toggle-feedback"
-                        @action={{this.toggleFeedback}}
-                        @disabled={{this.busy}}
-                        @icon={{if
-                          this.feedbackOpen
-                          "chevron-down"
-                          "chevron-right"
-                        }}
-                        @label={{if
-                          this.feedbackOpen
-                          "blog.panel.feedback.hide"
-                          "blog.panel.feedback.show"
-                        }}
-                      />
-                    {{else}}
-                      {{i18n "blog.panel.feedback.none"}}
-                    {{/if}}
-                  </span>
-                  <DButton
-                    class="btn-flat blog-publication-panel__manage-reviews"
-                    @action={{this.shareForReview}}
-                    @disabled={{this.busy}}
-                    @label="blog.panel.feedback.manage_links"
-                  />
-                </div>
-                {{#if this.feedbackOpen}}
-                  {{#if this.currentFeedback.length}}
-                    <p class="blog-publication-panel__feedback-notice">{{i18n
-                        "blog.review.unverified"
-                      }}</p>
-                  {{/if}}
-                  {{#if this.currentFeedback.length}}
-                    <ul class="blog-publication-panel__feedback">
-                      {{#each this.currentFeedback key="id" as |entry|}}
-                        <FeedbackEntry @entry={{entry}} />
-                      {{/each}}
-                    </ul>
-                  {{else}}
-                    <p class="blog-publication-panel__no-new-feedback">{{i18n
-                        "blog.panel.feedback.no_new"
-                      }}</p>
-                  {{/if}}
-                  {{#if this.olderFeedback.length}}
-                    <DButton
-                      aria-expanded={{if this.olderFeedbackOpen "true" "false"}}
-                      class="btn-flat blog-publication-panel__toggle-older-feedback"
-                      @action={{this.toggleOlderFeedback}}
                       @icon={{if
-                        this.olderFeedbackOpen
+                        this.feedbackOpen
                         "chevron-down"
                         "chevron-right"
                       }}
-                      @translatedLabel={{if
-                        this.olderFeedbackOpen
-                        (i18n "blog.panel.feedback.hide_older")
-                        (i18n
-                          "blog.panel.feedback.show_older"
-                          count=this.olderFeedback.length
-                        )
+                      @label={{if
+                        this.feedbackOpen
+                        "blog.panel.feedback.hide"
+                        "blog.panel.feedback.show"
                       }}
                     />
-                    {{#if this.olderFeedbackOpen}}
-                      <ul
-                        class="blog-publication-panel__feedback blog-publication-panel__older-feedback"
-                      >
-                        {{#each this.olderFeedback key="id" as |entry|}}
-                          <FeedbackEntry @entry={{entry}} />
-                        {{/each}}
-                      </ul>
-                    {{/if}}
+                  {{else}}
+                    {{i18n "blog.panel.feedback.none"}}
                   {{/if}}
-                  {{#if this.feedbackMore}}
-                    <DButton
-                      class="btn-flat blog-publication-panel__more-feedback"
-                      @action={{this.loadMoreFeedback}}
-                      @disabled={{this.busy}}
-                      @label="blog.load_more"
-                    />
-                  {{/if}}
-                {{/if}}
-              </div>
-            {{/if}}
-
-            {{#if this.publication.schedule_error}}
-              <div class="blog-publication-panel__error">
-                <DFlashMessage
-                  @flash={{this.publication.schedule_error}}
-                  @type="error"
+                </span>
+                <DButton
+                  class="btn-flat blog-publication-panel__manage-reviews"
+                  @action={{this.shareForReview}}
+                  @disabled={{this.busy}}
+                  @label="blog.panel.feedback.manage_links"
                 />
               </div>
-            {{/if}}
-
-            <div class="blog-publication-panel__settings">
-              <div class="blog-publication-panel__settings-row">
-                <DButton
-                  aria-controls={{settingsId}}
-                  aria-expanded={{if this.settingsOpen "true" "false"}}
-                  class="btn-flat blog-publication-panel__settings-toggle"
-                  @action={{this.toggleSettings}}
-                  @icon={{if this.settingsOpen "chevron-down" "chevron-right"}}
-                  @label="blog.panel.settings"
-                >
-                  <span class="blog-publication-panel__settings-hint">{{i18n
-                      "blog.panel.settings_hint"
-                    }}</span>
-                </DButton>
-                {{#if
-                  (and
-                    (eq this.status "draft") this.publication.draft_updated_at
-                  )
-                }}
-                  <span
-                    class="blog-publication-panel__last-updated"
-                    title={{this.lastUpdatedDate}}
-                  >{{i18n
-                      "blog.panel.last_updated"
-                      age=this.lastUpdatedAgo
-                    }}</span>
+              {{#if this.feedbackOpen}}
+                {{#if this.currentFeedback.length}}
+                  <p class="blog-publication-panel__feedback-notice">{{i18n
+                      "blog.review.unverified"
+                    }}</p>
                 {{/if}}
-              </div>
-              <div hidden={{unless this.settingsOpen true}} id={{settingsId}}>
-                <Form
-                  class="blog-publication-panel__form"
-                  @data={{this.settingsData}}
-                  @onRegisterApi={{this.registerForm}}
-                  @onSubmit={{this.saveSettings}}
-                  as |form|
-                >
-                  {{#if this.canPickBlog}}
-                    <form.Field
-                      @description={{i18n "blog.blog_field_hint"}}
-                      @format="full"
-                      @name="blog_id"
-                      @title={{i18n "blog.blog_field"}}
-                      @type="select"
-                      as |field|
+                {{#if this.currentFeedback.length}}
+                  <ul class="blog-publication-panel__feedback">
+                    {{#each this.currentFeedback key="id" as |entry|}}
+                      <FeedbackEntry @entry={{entry}} />
+                    {{/each}}
+                  </ul>
+                {{else}}
+                  <p class="blog-publication-panel__no-new-feedback">{{i18n
+                      "blog.panel.feedback.no_new"
+                    }}</p>
+                {{/if}}
+                {{#if this.olderFeedback.length}}
+                  <DButton
+                    aria-expanded={{if this.olderFeedbackOpen "true" "false"}}
+                    class="btn-flat blog-publication-panel__toggle-older-feedback"
+                    @action={{this.toggleOlderFeedback}}
+                    @icon={{if
+                      this.olderFeedbackOpen
+                      "chevron-down"
+                      "chevron-right"
+                    }}
+                    @translatedLabel={{if
+                      this.olderFeedbackOpen
+                      (i18n "blog.panel.feedback.hide_older")
+                      (i18n
+                        "blog.panel.feedback.show_older"
+                        count=this.olderFeedback.length
+                      )
+                    }}
+                  />
+                  {{#if this.olderFeedbackOpen}}
+                    <ul
+                      class="blog-publication-panel__feedback blog-publication-panel__older-feedback"
                     >
-                      <field.Control @includeNone={{false}} as |select|>
-                        {{#each this.site.blogs as |blog|}}
-                          <select.Option
-                            @value={{blog.id}}
-                          >{{blog.name}}</select.Option>
-                        {{/each}}
-                      </field.Control>
-                    </form.Field>
+                      {{#each this.olderFeedback key="id" as |entry|}}
+                        <FeedbackEntry @entry={{entry}} />
+                      {{/each}}
+                    </ul>
                   {{/if}}
-                  <form.Field
-                    @description={{this.pathHint}}
-                    @format="full"
-                    @name="path"
-                    @title={{i18n "blog.path"}}
-                    @type="input"
-                    @validation="required"
-                    as |field|
-                  ><field.Control maxlength="240" /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.excerpt_hint"}}
-                    @format="full"
-                    @name="excerpt"
-                    @title={{i18n "blog.excerpt"}}
-                    @type="textarea"
-                    as |field|
-                  ><field.Control maxlength="1000" @rows={{3}} /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.cover_hint"}}
-                    @format="full"
-                    @name="cover_url"
-                    @onSet={{this.setCover}}
-                    @title={{i18n "blog.cover"}}
-                    @type="image"
-                    as |field|
-                  ><field.Control @type="blog_cover" /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.cover_alt_hint"}}
-                    @format="full"
-                    @name="cover_alt"
-                    @title={{i18n "blog.cover_alt"}}
-                    @type="input"
-                    as |field|
-                  ><field.Control maxlength="500" /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.meta_description_hint"}}
-                    @format="full"
-                    @name="meta_description"
-                    @title={{i18n "blog.meta_description"}}
-                    @type="textarea"
-                    as |field|
-                  ><field.Control maxlength="500" @rows={{2}} /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.canonical_url_hint"}}
-                    @format="full"
-                    @name="canonical_url"
-                    @title={{i18n "blog.canonical_url"}}
-                    @type="input"
-                    as |field|
-                  ><field.Control
-                      maxlength="1000"
-                      placeholder={{this.publication.url}}
-                      @type="url"
-                    /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.co_authors_hint"}}
-                    @format="full"
-                    @name="co_authors"
-                    @title={{i18n "blog.co_authors"}}
-                    @type="custom"
-                    as |field|
-                  >
-                    <field.Control>
-                      <UserChooser
-                        @onChange={{field.set}}
-                        @options={{hash
-                          maximum=10
-                          excludedUsernames=this.coAuthorExclusions
-                        }}
-                        @value={{field.value}}
-                      />
-                    </field.Control>
-                  </form.Field>
-                  <form.Field
-                    @description={{i18n "blog.date_hint"}}
-                    @name="published_at"
-                    @title={{i18n "blog.date"}}
-                    @type="input"
-                    as |field|
-                  ><field.Control @type="date" /></form.Field>
-                  <form.Field
-                    @name="featured"
-                    @title={{i18n "blog.featured"}}
-                    @type="checkbox"
-                    as |field|
-                  ><field.Control /></form.Field>
-                  <form.Field
-                    @description={{i18n "blog.page_hint"}}
-                    @name="page"
-                    @title={{i18n "blog.page"}}
-                    @type="checkbox"
-                    as |field|
-                  ><field.Control /></form.Field>
-                  <form.Actions>
-                    <form.Submit @disabled={{this.busy}} @label="blog.save" />
-                  </form.Actions>
-                </Form>
-              </div>
+                {{/if}}
+                {{#if this.feedbackMore}}
+                  <DButton
+                    class="btn-flat blog-publication-panel__more-feedback"
+                    @action={{this.loadMoreFeedback}}
+                    @disabled={{this.busy}}
+                    @label="blog.load_more"
+                  />
+                {{/if}}
+              {{/if}}
             </div>
-          </section>
-        {{/let}}
+          {{/if}}
+
+          {{#if this.publication.schedule_error}}
+            <div class="blog-publication-panel__error">
+              <DFlashMessage
+                @flash={{this.publication.schedule_error}}
+                @type="error"
+              />
+            </div>
+          {{/if}}
+
+        </section>
       {{/if}}
     {{/if}}
   </template>

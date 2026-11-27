@@ -73,7 +73,7 @@ class UsersController < ApplicationController
                        user_menu_messages
                      ]
 
-  before_action :check_confirmed_session,
+  before_action :check_second_factor_management_session,
                 only: %i[
                   create_second_factor_totp
                   enable_second_factor_totp
@@ -82,9 +82,10 @@ class UsersController < ApplicationController
                   create_second_factor_backup
                   register_second_factor_security_key
                   create_second_factor_security_key
+                  update_security_key
+                  create_passkey
                   register_passkey
                   delete_passkey
-                  update_security_key
                 ]
   before_action :respond_to_suspicious_request, only: [:create]
   before_action :ensure_random_username_access, only: [:generate_random_username]
@@ -726,7 +727,7 @@ class UsersController < ApplicationController
 
   def user_from_params_or_current_user
     return current_user if !params[:for_user_id]
-    return User.find(params[:for_user_id]) if current_user&.admin?
+    return User.find(params[:for_user_id]) if current_user&.staff?
 
     if current_user&.id == params[:for_user_id].to_i
       guardian.ensure_can_edit_username!(current_user)
@@ -841,6 +842,9 @@ class UsersController < ApplicationController
     if user.save
       authentication.finish
       activation.finish
+      if expires_at = authentication.enrollment_proof_expires_at
+        Auth::SecondFactorEnrollment.mark_external_login!(request, user, expires_at:)
+      end
       associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
@@ -907,6 +911,7 @@ class UsersController < ApplicationController
         security_key_required: @user.security_keys_enabled?,
         backup_enabled: @user.backup_codes_enabled?,
         multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+        has_connected_apps: @user.has_connected_apps?,
       }
     end
 
@@ -995,6 +1000,8 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
+        @user.revoke_connected_apps_on_password_change =
+          ActiveModel::Type::Boolean.new.cast(params[:revoke_connected_apps])
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1005,10 +1012,19 @@ class UsersController < ApplicationController
             @user.user_associated_accounts.destroy_all
           end
 
+          history_details =
+            @user
+              .revoked_connected_apps
+              &.select { |_, count| count > 0 }
+              &.map { |type, count| "revoked_#{type}: #{count}" }
+              &.join("\n")
+              .presence
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
             action: UserHistory.actions[:change_password],
+            details: history_details,
           )
 
           reset_csrf_token(request)
@@ -1030,6 +1046,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+          has_connected_apps: @user.has_connected_apps?,
         }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
@@ -1120,16 +1137,26 @@ class UsersController < ApplicationController
 
     RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
+    login_key = Digest::SHA256.hexdigest(User.normalize_username(params[:login].to_s.strip).to_s)
+    RateLimiter.new(nil, "email-login-param-hour-#{login_key}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "email-login-param-min-#{login_key}", 3, 1.minute).performed!
+
     user = User.real.find_by_username_or_email(params[:login])
     user_presence = user.present? && !user.staged
 
     if user
-      RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
-      RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
+      hourly_limit =
+        RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!(
+          raise_error: !SiteSetting.hide_email_address_taken,
+        )
+      minute_limit =
+        RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!(
+          raise_error: !SiteSetting.hide_email_address_taken,
+        )
 
       raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
-      if user_presence
+      if user_presence && hourly_limit != false && minute_limit != false
         DiscourseEvent.trigger(:before_email_login, user)
 
         email_token =
@@ -1231,7 +1258,7 @@ class UsersController < ApplicationController
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true
-      elsif @user.totp_or_backup_codes_enabled? || @user.security_keys_enabled?
+      elsif @user.requires_second_factor_for_login?
         @redirect_to = path("/login")
       else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
@@ -1352,11 +1379,14 @@ class UsersController < ApplicationController
 
     @user = User.find_by_username_or_email(params[:username].to_s) if params[:username].present?
 
-    raise Discourse::NotFound unless @user
-
-    if !current_user&.staff? && @user.id != session[SessionController::ACTIVATE_USER_KEY]
+    # Authorize before reporting a missing account, otherwise the 403/404 split
+    # reveals to non-staff callers whether an email address is registered.
+    if !current_user&.staff? &&
+         (@user.blank? || @user.id != session[SessionController::ACTIVATE_USER_KEY])
       raise Discourse::InvalidAccess.new
     end
+
+    raise Discourse::NotFound if @user.blank?
 
     session.delete(SessionController::ACTIVATE_USER_KEY)
 
@@ -1570,20 +1600,24 @@ class UsersController < ApplicationController
     if params[:notification_level] == "ignore"
       @error_message = "ignore_error"
       guardian.ensure_can_ignore_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
+
+      expiring_at =
+        begin
+          Time.zone.parse(params.require(:expiring_at).to_s)
+        rescue ArgumentError
+          nil
+        end
+      raise Discourse::InvalidParameters.new(:expiring_at) if expiring_at.nil?
+
       MutedUser.where(user: acting_user, muted_user: target_user).delete_all
-      ignored_user = IgnoredUser.find_by(user: acting_user, ignored_user: target_user)
-      if ignored_user.present?
-        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
-      else
-        IgnoredUser.create!(
-          user: acting_user,
-          ignored_user: target_user,
-          expiring_at: Time.parse(params[:expiring_at]),
-        )
-      end
+      IgnoredUser.find_or_initialize_by(user: acting_user, ignored_user: target_user).update!(
+        expiring_at:,
+      )
     elsif params[:notification_level] == "mute"
       @error_message = "mute_error"
       guardian.ensure_can_mute_user!(target_user)
+      raise Discourse::InvalidAccess if acting_user == target_user
       IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
       MutedUser.find_or_create_by!(user: acting_user, muted_user: target_user)
     elsif params[:notification_level] == "normal"
@@ -1704,11 +1738,12 @@ class UsersController < ApplicationController
   end
 
   def list_second_factors
-    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound unless second_factor_management_enabled?
 
-    if session_is_trusted?
+    case second_factor_management_access(
+      webauthn_supported: params[:webauthn_supported].to_s == "true",
+    )
+    when :allowed
       totp_second_factors =
         current_user
           .totps
@@ -1725,8 +1760,12 @@ class UsersController < ApplicationController
           .as_json(only: %i[id user_id credential_id public_key factor_type enabled name last_used])
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
-    else
+    when :external_login_required
+      render json: success_json.merge(external_login_required: true)
+    when :local_confirmation_required
       render json: success_json.merge(unconfirmed_session: true)
+    else
+      raise Discourse::InvalidAccess
     end
   end
 
@@ -1824,9 +1863,13 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+    security_key =
+      current_user.security_keys.find_by(
+        id: params[:id].to_i,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      )
 
-    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
+    if security_key && current_user.passkey_credential_ids.length == 1
       if !current_user.has_password? && current_user.associated_accounts.blank?
         return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
       end
@@ -1843,7 +1886,11 @@ class UsersController < ApplicationController
     params.require(:id)
     params.require(:name)
 
-    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
+    passkey =
+      current_user.security_keys.find_by(
+        id: params[:id].to_i,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      )
     raise Discourse::InvalidParameters.new(:id) unless passkey
 
     passkey.update!(name: params[:name])
@@ -1851,7 +1898,7 @@ class UsersController < ApplicationController
   end
 
   def update_security_key
-    user_security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+    user_security_key = current_user.second_factor_security_keys.find_by(id: params[:id].to_i)
     raise Discourse::InvalidParameters unless user_security_key
 
     user_security_key.update!(name: params[:name]) if params[:name] && params[:name].present?
@@ -1936,15 +1983,6 @@ class UsersController < ApplicationController
     current_user.created_at > 5.minutes.ago
   end
 
-  def check_confirmed_session
-    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
-      raise Discourse::NotFound
-    end
-
-    raise Discourse::InvalidAccess.new if !current_user
-    raise Discourse::InvalidAccess.new unless session_is_trusted?
-  end
-
   def revoke_account
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -1992,6 +2030,7 @@ class UsersController < ApplicationController
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
       user.revoke_family_sessions!
+      user.logged_out
     end
 
     render json: success_json
@@ -2413,6 +2452,57 @@ class UsersController < ApplicationController
 
   def session_is_trusted?
     server_session_confirmed? || user_just_created
+  end
+
+  def second_factor_management_access(webauthn_supported: true)
+    if !current_user || current_user.anonymous? || current_user.is_impersonating || is_api? ||
+         is_user_api?
+      return :denied
+    end
+
+    local_logins_available =
+      SiteSetting.enable_local_logins && !SiteSetting.enable_discourse_connect
+    return :allowed if local_logins_available && server_session_confirmed?
+    return :allowed if Auth::SecondFactorEnrollment.recent_external_login?(request, current_user)
+    return :external_login_required unless local_logins_available
+
+    if !current_user.authenticated_with_oauth
+      return user_just_created ? :allowed : :local_confirmation_required
+    end
+
+    # Browser capability only selects the prompt; neither prompt grants access.
+    if current_user.has_password? ||
+         (
+           webauthn_supported && SiteSetting.enable_passkeys &&
+             current_user.passkey_credential_ids.any?
+         )
+      :local_confirmation_required
+    else
+      :external_login_required
+    end
+  end
+
+  def check_second_factor_management_session
+    raise Discourse::NotFound unless second_factor_management_enabled?
+
+    case second_factor_management_access
+    when :allowed
+      nil
+    when :external_login_required
+      render_json_error(
+        I18n.t("login.second_factor_external_login_required"),
+        status: :forbidden,
+        skip_error_prefix: true,
+        type: "second_factor_external_login_required",
+      )
+    else
+      raise Discourse::InvalidAccess
+    end
+  end
+
+  def second_factor_management_enabled?
+    !SiteSetting.enable_discourse_connect &&
+      (SiteSetting.enable_local_logins || SiteSetting.enforce_second_factor_on_external_auth)
   end
 
   def summary_cache_key(user)

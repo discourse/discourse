@@ -19,7 +19,6 @@ de:
         save: Speichern
         about_tab: Details
         blog_slug: Sprechender Name für URL
-        general_heading: Allgemein
         settings_tab: Einstellungen
         theme_tab: Theme
         column_name: Name
@@ -51,6 +50,7 @@ de:
           title: titel
           body: body
           tags: Schlagwörter
+        settings_button: Einstellungen
       review:
         create: Link erstellen
         copy: Kopieren
@@ -73,5 +73,7 @@ de:
       drafts: Entwürfe
       pages: Seiten
       preview: Vorschau
+      article_settings:
+        kind_page: Seite
       unpublish: Veröffentlichung aufheben
       appearance_link: Erscheinungsbild

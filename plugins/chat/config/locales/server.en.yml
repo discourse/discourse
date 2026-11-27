@@ -404,3 +404,8 @@ en:
   category:
     cannot_delete:
       has_chat_channels: "Can't delete this category because it has chat channels."
+  mcp:
+    oauth:
+      scopes:
+        chat_read: "Read chat messages in channels you can see"
+        chat_write: "Send chat messages"

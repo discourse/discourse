@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -114,6 +114,66 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".dialog-container .btn-primary");
 
     sinon.assert.calledOnce(stub);
+  });
+
+  test("disables the settings only the user can use on another user's account", async function (assert) {
+    await visit("/u/charlie/preferences/account");
+
+    assert
+      .dom(".pref-data-export .access-notice.--self")
+      .exists("explains only the user can export their data");
+    assert
+      .dom(".btn-request-archive")
+      .isDisabled("disables requesting an archive");
+
+    await click(".user-nav__preferences-calendar-subscriptions a");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.calendar-subscriptions",
+      "opens the calendar subscriptions page"
+    );
+    assert
+      .dom(".calendar-subscriptions .access-notice.--self")
+      .exists("explains only the user can subscribe");
+    assert
+      .dom(".calendar-subscriptions .btn-primary")
+      .isDisabled("disables generating subscription URLs");
+  });
+
+  test("explains once that only the user can connect accounts", async function (assert) {
+    const site = this.owner.lookup("service:site");
+    site.set("auth_providers", [
+      ...site.auth_providers,
+      { name: "github", can_connect: true, can_revoke: true },
+    ]);
+    pretender.get("/u/charlie/emails.json", () =>
+      response({ email: "charlie@example.com", associated_accounts: [] })
+    );
+
+    await visit("/u/charlie/preferences/account");
+    await click(".pref-associated-accounts .btn");
+
+    assert
+      .dom(".pref-associated-accounts .access-notice.--self")
+      .exists({ count: 1 }, "shows the notice once");
+    assert
+      .dom(".pref-associated-accounts .associated-account__actions .btn")
+      .exists({ count: 2 })
+      .isDisabled("disables connecting accounts");
+  });
+
+  test("loads your calendar subscription after viewing another user's", async function (assert) {
+    pretender.get("/calendar-subscriptions.json", () =>
+      response({ has_subscription: true })
+    );
+
+    await visit("/u/charlie/preferences/calendar-subscriptions");
+    await visit("/u/eviltrout/preferences/calendar-subscriptions");
+
+    assert
+      .dom(".calendar-subscriptions__active")
+      .exists("shows your active subscription");
   });
 
   test("Delete dialog", async function (assert) {

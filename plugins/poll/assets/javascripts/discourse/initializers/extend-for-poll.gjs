@@ -6,6 +6,15 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
 import Poll from "../components/poll.gjs";
 
+const PollTemplate = <template>
+  <Poll
+    @isDynamic={{if @data.isDynamic true @data.poll.dynamic}}
+    @poll={{@data.poll}}
+    @post={{@data.post}}
+    @titleHTML={{@data.titleHTML}}
+  />
+</template>;
+
 function attachPolls(elem, helper) {
   let pollNodes = [...elem.querySelectorAll(".poll")];
   pollNodes = pollNodes.filter(
@@ -45,17 +54,12 @@ function attachPolls(elem, helper) {
       }
 
       pollNode.replaceWith(newPollNode);
-      helper.renderGlimmer(
-        newPollNode,
-        <template>
-          <Poll
-            @isDynamic={{if isDynamic true poll.dynamic}}
-            @poll={{poll}}
-            @post={{pollPost}}
-            @titleHTML={{titleHTML}}
-          />
-        </template>
-      );
+      helper.renderGlimmer(newPollNode, PollTemplate, {
+        isDynamic,
+        poll,
+        post: pollPost,
+        titleHTML,
+      });
     }
   });
 }

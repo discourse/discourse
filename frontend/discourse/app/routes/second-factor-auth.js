@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAuth extends DiscourseRoute {
   queryParams = {
@@ -30,8 +31,10 @@ export default class SecondFactorAuth extends DiscourseRoute {
     super.setupController(...arguments);
     controller.resetState();
 
-    if (model.error) {
-      controller.displayError(model.error);
+    if (model.error || controller.shownSecondFactorMethod === null) {
+      controller.displayError(
+        model.error || i18n("second_factor_auth.no_available_method")
+      );
       controller.set("loadError", true);
     } else {
       controller.maybeAutoTriggerPasskey();

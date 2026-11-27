@@ -49,6 +49,9 @@ lv:
         type: "Tips"
         error: "Kļūda..."
         response: "Atbilde"
+      post_image_captions:
+        image_descriptions:
+          apply: "Pielietot"
       discourse_workflows:
         ai_tool:
           list_item: "Saraksta punkts"
@@ -224,6 +227,8 @@ lv:
         embedding: "Ieguldīšana"
       concepts:
         edit: "Labot"
+        seed:
+          refresh: "Pārlādēt"
         delete: "Dzēst"
         columns:
           status: "Statuss"
@@ -235,6 +240,10 @@ lv:
           name: "Vārds"
           description: "Apraksts"
           status: "Statuss"
+        shared_topics_count:
+          zero: "%{count} tēmas"
+          one: "%{count} tēma"
+          other: "%{count} tēmas"
         topic_columns:
           topic: "Tēmas"
           primary: "Primārais"

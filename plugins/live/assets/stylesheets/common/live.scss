@@ -73,8 +73,8 @@
     }
   }
 
-  // The hover button already reserves space on the right; without this its
-  // own auto margin would pull the suffix icons away from the right edge.
+  // The suffix icons hold the right edge; without this the hover button's own
+  // auto margin would split the free space with them.
   .sidebar-section-link-hover {
     margin-left: 0;
   }

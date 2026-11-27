@@ -39,7 +39,9 @@ class McpOauthAuthorization < ActiveRecord::Base
         authorizations = authorizations.where(id: authorization_ids)
       end
       authorizations = authorizations.where(mcp_oauth_client_id: client_ids) if client_ids.present?
-      authorization_ids = authorizations.select(:id)
+      # Lock grants before their tokens, in id order, like #revoke! and password
+      # changes, so concurrent revocations cannot deadlock.
+      authorization_ids = authorizations.order(:id).lock.pluck(:id)
       now = Time.zone.now
       McpOauthAccessToken.where(
         mcp_oauth_authorization_id: authorization_ids,
@@ -49,7 +51,7 @@ class McpOauthAuthorization < ActiveRecord::Base
         mcp_oauth_authorization_id: authorization_ids,
         revoked_at: nil,
       ).update_all(revoked_at: now, updated_at: now)
-      authorizations.update_all(status: "consent_required", updated_at: now)
+      where(id: authorization_ids).update_all(status: "consent_required", updated_at: now)
     end
   end
 

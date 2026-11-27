@@ -49,6 +49,9 @@ nb_NO:
         type: "Type"
         error: "Feil"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Bruk"
       discourse_workflows:
         ai_tool:
           list_item: "Listeelement"
@@ -234,6 +237,8 @@ nb_NO:
         embedding: "Innbygging"
       concepts:
         edit: "Rediger"
+        seed:
+          refresh: "Last inn siden på nytt"
         delete: "Slett"
         columns:
           status: "Status"
@@ -245,6 +250,9 @@ nb_NO:
           name: "Navn"
           description: "Beskrivelse"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
         tagged_topics: "Emner med stikkord"
         topic_columns:
           topic: "Emne"

@@ -1372,6 +1372,17 @@ acceptance(
       });
     });
 
+    test("the header dropdown is named More options", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+        )
+        .hasAttribute("title", i18n("more_options"));
+    });
+
     test("hamburger closes when header dropdown navigates to a new page", async function (assert) {
       await visit("/");
       await click("#toggle-hamburger-menu");

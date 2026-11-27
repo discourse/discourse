@@ -48,6 +48,9 @@ bg:
       ai_decoded_transcript:
         type: "Тип"
         error: "Грешка"
+      post_image_captions:
+        image_descriptions:
+          apply: "Приложи"
       discourse_workflows:
         ai_tool:
           list_item: "Списък"
@@ -228,6 +231,8 @@ bg:
         embedding: "Ембедване"
       concepts:
         edit: "Редактирай"
+        seed:
+          refresh: "Обнови"
         delete: "Изтрий"
         columns:
           status: "Статус"
@@ -239,6 +244,9 @@ bg:
           name: "Име"
           description: "Описание"
           status: "Статус"
+        shared_topics_count:
+          one: "%{count} тема"
+          other: "%{count} теми"
         topic_columns:
           topic: "Тема"
           primary: "Основен"

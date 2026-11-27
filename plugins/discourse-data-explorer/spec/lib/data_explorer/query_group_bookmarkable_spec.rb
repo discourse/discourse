@@ -104,6 +104,17 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     end
   end
 
+  it "exports links only for visible report bookmarks" do
+    job = Jobs::ExportUserArchive.new
+    job.archive_for_user = user
+    links = job.bookmarks_export.to_h { |id, _type, link, *| [id, link] }
+
+    expect(links.fetch(query_group1.id)).to eq(
+      "#{Discourse.base_url}/g/#{group0.name}/reports/#{query1.id}",
+    )
+    expect(links.fetch(query_group4.id)).to eq("")
+  end
+
   describe "#perform_search_query" do
     before { SearchIndexer.enable }
 

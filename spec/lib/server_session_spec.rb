@@ -63,6 +63,21 @@ RSpec.describe ServerSession do
     end
   end
 
+  describe "#compare_and_set" do
+    it "only replaces or removes the value that was read, preserving its expiry" do
+      session.set(:action, { nonce: "first" }, expires: 2.minutes)
+      first = session[:action]
+      second = { nonce: "second" }
+      expect(session.compare_and_set(:action, expected: first, replacement: second)).to eq(true)
+      expect(session.ttl(:action)).to be_within(1.second).of(2.minutes)
+      expect(session.compare_and_set(:action, expected: first, replacement: nil)).to eq(false)
+      expect(session[:action]).to eq(second)
+      expect(session.compare_and_set(:action, expected: second, replacement: nil)).to eq(true)
+      expect(session.compare_and_set(:action, expected: second, replacement: nil)).to eq(false)
+      expect(session[:action]).to be_nil
+    end
+  end
+
   describe "#delete" do
     before { session[:key] = "value" }
 

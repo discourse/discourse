@@ -385,11 +385,9 @@ uk:
         error: "Помилка"
         response: "відповідь"
       post_image_captions:
-        edit: "Редагувати підпис до зображення, створеного ШІ"
-        title: "Редагувати підпис до зображення, створеного ШІ"
-        description: "Підпис"
-        save: "Зберегти підпис"
         saved: "Підпис зображення ШІ збережено"
+        image_descriptions:
+          apply: "Застосувати"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -1464,6 +1462,8 @@ uk:
       concepts:
         edit: "Редагувати"
         clear_filters: "Очистити фільтри"
+        seed:
+          refresh: "Оновити"
         load_more: "Завантажити більше"
         delete: "Видалити"
         parent_label: "Батьківський код: %{name}"
@@ -1481,6 +1481,11 @@ uk:
           description: "Опис"
           aliases: "Аліаси"
           status: "Статус"
+        shared_topics_count:
+          one: "%{count} тема"
+          few: "%{count} тем"
+          many: "%{count} тем"
+          other: "%{count} тем"
         tagged_topics: "Позначені теми"
         topic_columns:
           topic: "Тема"

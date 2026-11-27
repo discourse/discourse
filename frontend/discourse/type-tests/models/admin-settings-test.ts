@@ -193,15 +193,9 @@ expectTypeOf(themeSiteSetting.value).toEqualTypeOf<string>();
 expectTypeOf(setting.value).not.toBeAny();
 setting.value = { sections: [{ visible: true, id: 1 }] };
 setting.overridden = false;
-setting.computedValueProperty = "value";
-setting.computedNameProperty = null;
-expectTypeOf<SiteSetting["computedNameProperty"]>().toEqualTypeOf<
-  string | null
->();
 setting.validValues = ["one", { name: "Two", value: 2 }];
 expectTypeOf(setting.validValues).not.toBeAny();
 setting.allowsNone = "admin.settings.none";
-setting.anyValue = true;
 expectTypeOf(setting.buffered.get("value")).toEqualTypeOf<
   SiteSetting["value"]
 >();

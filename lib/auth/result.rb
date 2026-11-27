@@ -17,7 +17,6 @@ class Auth::Result
     admin_not_allowed_from_ip_address
     skip_email_validation
     destination_url
-    omniauth_disallow_totp
     failed
     failed_reason
     failed_code
@@ -155,10 +154,6 @@ class Auth::Result
     return { requires_invite: true } if requires_invite
 
     return { suspended: true, suspended_message: user.suspended_message } if user&.suspended?
-
-    if omniauth_disallow_totp
-      return { omniauth_disallow_totp: !!omniauth_disallow_totp, email: email }
-    end
 
     if user
       result = {

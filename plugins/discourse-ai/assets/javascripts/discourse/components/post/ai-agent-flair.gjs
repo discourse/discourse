@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { isGPTBot } from "../../lib/ai-bot-helper.js";
 
@@ -9,12 +10,17 @@ export default class AiAgentFlair extends Component {
     );
   }
 
+  @service siteSettings;
+
   get agentName() {
     return this.args.outletArgs.post.ai_agent_name;
   }
 
   get modelName() {
-    return this.args.outletArgs.post.llm_name;
+    return (
+      this.siteSettings.ai_bot_show_model_name &&
+      this.args.outletArgs.post.llm_name
+    );
   }
 
   get user() {

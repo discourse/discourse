@@ -240,6 +240,7 @@ export default class DEditor extends Component {
    * @property {function} toggleDirection - Toggles text direction
    * @property {function} getText - Gets the text
    * @property {function} addText - Adds text
+   * @property {function} insertBlock - Inserts a standalone block
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
    * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
@@ -276,6 +277,8 @@ export default class DEditor extends Component {
         this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
+      insertBlock: (block, options) =>
+        this.textManipulation.insertBlock(block, { ...options, selected }),
       applyLink: (url) => this.textManipulation.applyLink(url),
       getText: () => this.value,
       toggleDirection: () => this.textManipulation.toggleDirection(),

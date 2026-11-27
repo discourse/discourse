@@ -2,6 +2,10 @@ import { apiInitializer } from "discourse/lib/api";
 import AdminAssistantWorkflowPreview from "../components/admin-assistant/workflow-preview.gjs";
 import { extractWorkflowPreview } from "../lib/admin-assistant/workflow-preview.js";
 
+const WorkflowPreviewTemplate = <template>
+  <AdminAssistantWorkflowPreview @message={{@data.message}} />
+</template>;
+
 export function decorateWorkflowPreview(element, helper, message) {
   if (
     !helper.renderGlimmer ||
@@ -21,10 +25,7 @@ export function decorateWorkflowPreview(element, helper, message) {
 
   const target = element.ownerDocument.createElement("div");
   code.closest("pre").replaceWith(target);
-  helper.renderGlimmer(
-    target,
-    <template><AdminAssistantWorkflowPreview @message={{message}} /></template>
-  );
+  helper.renderGlimmer(target, WorkflowPreviewTemplate, { message });
 }
 
 export default apiInitializer((api) => {

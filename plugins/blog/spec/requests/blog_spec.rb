@@ -240,6 +240,17 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).not_to include(publication.url)
     end
 
+    it "leaves a live article's topic out of the forum sitemap until the article is unpublished" do
+      other_topic = Fabricate(:topic, category:)
+
+      expect(Sitemap.indexable_topics).to include(other_topic)
+      expect(Sitemap.indexable_topics).not_to include(publication.discussion_topic)
+
+      unpublish_blog_article(publication, admin)
+
+      expect(Sitemap.indexable_topics).to include(publication.discussion_topic)
+    end
+
     it "shows an article's cover above the body and uses it for link previews" do
       cover = Fabricate(:upload, user: admin, width: 1200, height: 630)
       update_blog_metadata(

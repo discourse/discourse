@@ -1,4 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
+import { trackedMap } from "@ember/reactive/collections";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -169,5 +171,72 @@ module("Integration | Component | Post | PostCookedHtml", function (hooks) {
         "open",
         "the details tag remains closed after re-rendering"
       );
+  });
+
+  test("it keeps the state of a decorator when rendered again with the same `@decoratorState`", async function (assert) {
+    const decoratorState = trackedMap();
+    const visible = tracked(true);
+    const post = this.post;
+    post.cooked = "<p>Content</p>";
+
+    const runs = [];
+    const countRuns = (element, context) => {
+      const count = (context.decoratorState.get("runs") ?? 0) + 1;
+      context.decoratorState.set("runs", count);
+      runs.push(count);
+    };
+
+    await render(
+      <template>
+        {{#if visible.value}}
+          <PostCookedHtml
+            @decoratorState={{decoratorState}}
+            @extraDecorators={{countRuns}}
+            @post={{post}}
+          />
+        {{/if}}
+      </template>
+    );
+
+    visible.value = false;
+    await settled();
+    visible.value = true;
+    await settled();
+
+    assert.deepEqual(
+      runs,
+      [1, 2],
+      "the decorator receives the state it stored in the previous render"
+    );
+  });
+
+  test("it does not retain the decorators in the shared `@decoratorState`", async function (assert) {
+    const decoratorState = trackedMap();
+    const visible = tracked(true);
+    const post = this.post;
+    post.cooked = `<aside class="quote" data-username="alice" data-post="2" data-topic="1">
+      <div class="title">alice:</div>
+      <blockquote><p>Quoted</p></blockquote>
+    </aside>`;
+
+    await render(
+      <template>
+        {{#if visible.value}}
+          <PostCookedHtml @decoratorState={{decoratorState}} @post={{post}} />
+        {{/if}}
+      </template>
+    );
+
+    visible.value = false;
+    await settled();
+    visible.value = true;
+    await settled();
+
+    assert.dom("aside.quote blockquote").hasText("Quoted");
+    assert.strictEqual(
+      decoratorState.size,
+      0,
+      "no decorator is stored as a key of the shared state"
+    );
   });
 });

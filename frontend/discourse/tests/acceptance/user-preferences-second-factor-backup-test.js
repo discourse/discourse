@@ -13,6 +13,7 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
       return helper.response({
         success: "OK",
         totps: [{ id: 1, name: "one of them" }],
+        security_keys: [],
       });
     });
 

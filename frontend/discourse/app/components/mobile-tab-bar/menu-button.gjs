@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class MobileTabBarMenuButton extends Component {
@@ -20,17 +21,19 @@ export default class MobileTabBarMenuButton extends Component {
       aria-expanded={{if this.mobileTabBar.isMenuOpen "true" "false"}}
       class="btn-default mobile-tab-bar__menu"
       @action={{this.mobileTabBar.toggleMenu}}
-      @icon="bars"
       @title="mobile_tab_bar.menu"
       @translatedAriaLabel={{this.ariaLabel}}
     >
-      {{#if this.currentUser.reviewable_count}}
-        <span class="mobile-tab-bar__badge">
-          <span class="mobile-tab-bar__count">
-            {{this.currentUser.reviewable_count}}
+      <span class="mobile-tab-bar__indicator">
+        {{dIcon "bars"}}
+        {{#if this.currentUser.reviewable_count}}
+          <span class="mobile-tab-bar__badge">
+            <span class="mobile-tab-bar__count">
+              {{this.currentUser.reviewable_count}}
+            </span>
           </span>
-        </span>
-      {{/if}}
+        {{/if}}
+      </span>
     </DButton>
   </template>
 }

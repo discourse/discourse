@@ -255,6 +255,9 @@ es:
         type: "Tipo"
         error: "Error"
         response: "Respuesta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
@@ -876,6 +879,8 @@ es:
           title: "Crear nueva credencial"
       concepts:
         edit: "Editar"
+        seed:
+          refresh: "Volver a cargar"
         delete: "Eliminar"
         columns:
           status: "Estado"
@@ -888,6 +893,9 @@ es:
           name: "Nombre"
           description: "Descripción"
           status: "Estado"
+        shared_topics_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
         tagged_topics: "Temas etiquetados"
         topic_columns:
           topic: "Tema"

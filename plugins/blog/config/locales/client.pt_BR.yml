@@ -19,7 +19,6 @@ pt_BR:
         save: Salvar
         about_tab: Sobre
         blog_slug: Slug
-        general_heading: Geral
         settings_tab: Definições
         theme_tab: Tema
         column_name: Nome
@@ -50,6 +49,7 @@ pt_BR:
           title: título
           body: corpo
           tags: tags
+        settings_button: Definições
       review:
         create: Criar link
         copy: Copiar
@@ -72,5 +72,7 @@ pt_BR:
       drafts: Rascunhos
       pages: Páginas
       preview: Pré-visualizar
+      article_settings:
+        kind_page: Página
       unpublish: Cancelar postagem
       appearance_link: Aparência

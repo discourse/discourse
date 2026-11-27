@@ -50,6 +50,9 @@ te:
         type: "రకం"
         error: "లోపం"
         response: "ప్రతిస్పందన"
+      post_image_captions:
+        image_descriptions:
+          apply: "దరఖాస్తు చేసుకోండి"
       discourse_workflows:
         ai_tool:
           list_item: "జాబితా అంశం"
@@ -227,6 +230,8 @@ te:
         embedding: "పొందుపరచడం"
       concepts:
         edit: "సవరించండి"
+        seed:
+          refresh: "రిఫ్రెష్ చేయండి"
         delete: "తొలగించు"
         columns:
           status: "స్థితి"
@@ -238,6 +243,9 @@ te:
           name: "పేరు"
           description: "వివరణ"
           status: "స్థితి"
+        shared_topics_count:
+          one: "%{count} విషయం"
+          other: "%{count} విషయాలు"
         tagged_topics: "ట్యాగ్ చేయబడిన విషయాలు"
         topic_columns:
           topic: "విషయం"

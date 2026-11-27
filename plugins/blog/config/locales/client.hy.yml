@@ -16,7 +16,6 @@ hy:
         mobile: Հեռախոսային
         save: Պահպանել
         about_tab: Մասին
-        general_heading: Ընդհանուր
         settings_tab: Կարգավորումներ
         theme_tab: Թեմա
         column_name: Անուն
@@ -43,6 +42,7 @@ hy:
           title: վերնագիր
           body: բովանդակություն
           tags: պիտակներ
+        settings_button: Կարգավորումներ
       review:
         copy: Կրկնօրինակել
         open: Բացել

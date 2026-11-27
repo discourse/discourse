@@ -1541,9 +1541,6 @@ sq:
         show_key_description: "Futni manualisht"
         short_description: |
           Mbroni llogarinë tuaj me kode sigurie një përdorimshe ose çelësa sigurie fizike.
-        extended_description: |
-          Autentifikimi me dy faktorë shton siguri shtesë në llogarinë tuaj duke kërkuar një shenjë një herë përveç fjalëkalimit tuaj. Shenjat mund të gjenerohen në pajisjet <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> dhe <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
-        oauth_enabled_warning: "Ju lutemi vini re se hyrjet sociale do të çaktivizohen pasi të jetë aktivizuar vërtetimi me dy faktorë në llogarinë tuaj."
         use: "Përdorni aplikacionin Authenticator"
         enforced_with_oauth_notice: "Ju kërkohet të aktivizoni vërtetimin me dy faktorë. Do t'ju kërkohet ta përdorni këtë vetëm kur identifikoheni me një fjalëkalim, jo me vërtetimin e jashtëm ose metodat e hyrjes në rrjetet sociale."
         enforced_notice: "Ju kërkohet të aktivizoni vërtetimin me dy faktorë përpara se të hyni në këtë faqe."
@@ -3216,7 +3213,7 @@ sq:
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresi i temës
+        title: "progresi i temës"
         jump_prompt: "shkoni në…"
         jump_prompt_of:
           one: "nga %{count} postim"

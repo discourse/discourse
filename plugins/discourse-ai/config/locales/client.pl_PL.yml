@@ -385,11 +385,19 @@ pl_PL:
         error: "Błąd"
         response: "Odpowiedź"
       post_image_captions:
-        edit: "Edytuj podpis obrazu AI"
-        title: "Edytuj podpis obrazu AI"
-        description: "Podpis"
-        save: "Zapisz podpis"
         saved: "Zapisano podpis obrazu AI"
+        image_descriptions:
+          title: "Opisy obrazów"
+          alt: "Tekst alternatywny"
+          alt_updated: "Tekst alternatywny zaktualizowano w szkicu."
+          alt_read_only: "Tekstu alternatywnego nie można edytować z poziomu tego podglądu."
+          alt_not_updated: "Tekst alternatywny nie został zaktualizowany, ponieważ obraz uległ zmianie. Otwórz ponownie opisy obrazów, aby spróbować ponownie."
+          ai: "Opis AI"
+          loading: "Ładowanie opisu AI…"
+          load_failed: "Nie można załadować opisu AI."
+          not_supported: "Brak opisu AI dla tego obrazu."
+          pending: "Niedostępne jeszcze. Opisy AI są generowane po opublikowaniu."
+          apply: "Zastosuj"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -639,6 +647,7 @@ pl_PL:
           deduplicate_concepts: "Koncepcje deduplikacji"
           setting_groups:
             settings: "Ustawienia podstawowe"
+            seeding_and_backfill: "Wysiew i zasypywanie"
             topic_criteria: "Kryteria tematów"
             post_criteria: "Kryteria wpisów"
             agents: "Agenty"
@@ -1005,6 +1014,8 @@ pl_PL:
         credits_remaining: "Pozostałe kredyty"
         models_breakdown: "Wykorzystanie na model"
         users_breakdown: "Wykorzystanie na użytkownika"
+        workflows_breakdown: "Wykorzystanie na przepływ pracy"
+        workflow: "Przepływ pracy"
         all_features: "Wszystkie funkcje"
         all_models: "Wszystkie modele"
         username: "Nazwa użytkownika"
@@ -1083,6 +1094,8 @@ pl_PL:
         topic_short: "Temat %{id}"
         post: "Post"
         post_short: "Wpis %{id}"
+        workflow: "Przepływ pracy"
+        workflow_link: "Przepływ pracy: %{name}"
         duration: "Czas trwania"
         tokens_direction: "Tokeny (wejście → wyjście)"
         first_token: "Pierwszy token"
@@ -1476,6 +1489,14 @@ pl_PL:
         no_results: "Żadne koncepcje nie pasują do tych filtrów."
         clear_filters: "Wyczyść filtry"
         empty: "Brak jeszcze wywnioskowanych koncepcji"
+        empty_description: "Wywnioskowane koncepcje automatycznie odkrywają powtarzające się tematy z dyskusji w Twojej społeczności. Rozpocznij analizę wstępną, aby przeanalizować próbkę popularnych tematów w różnych kategoriach i zbudować swoją pierwszą taksonomię lub twórz koncepcje ręcznie."
+        seed:
+          action: "Koncepcje nasion"
+          enqueued: "Koncepcja zasiewania jest ustawiana w kolejce do uruchomienia w tle."
+          queued: "Proces zasiewania koncepcji jest ustawiany w kolejce do uruchomienia w tle."
+          running_progress: "Zasiewanie koncepcji w tle (przetworzono %{processed} / %{total} tematów)."
+          failed: "Poprzednia próba zasiewania koncepcji nie powiodła się. Możesz spróbować ponownie."
+          refresh: "Odśwież"
         load_more: "Załaduj więcej"
         saved: "Koncepcja zapisana"
         confirm_delete: "Usunąć „%{name}”? Powiązania z tematem i wpisem zostaną usunięte."
@@ -1516,7 +1537,20 @@ pl_PL:
           parent: "Koncepcja nadrzędna"
           parent_none: "Brak (najwyższy poziom)"
         children: "Podkoncepcje"
+        neighbor_concepts: "Koncepcje sąsiedzkie"
+        neighbor_concepts_description: "Najbliższe koncepcje poprzez osadzenie podobieństwa."
+        no_neighbor_concepts: "Nie znaleziono jeszcze podobnych koncepcji. Osadzenia mogą być nadal generowane."
+        co_occurring_concepts: "Współwystępujące koncepcje"
+        co_occurring_concepts_description: "Koncepcje, które mają najwięcej wspólnych tematów z tą."
+        no_co_occurring_concepts: "Na razie żaden inny koncept nie ma podobnej tematyki."
+        shared_topics_count:
+          one: "%{count} temat"
+          few: "%{count} tematy"
+          many: "%{count} tematów"
+          other: "%{count} tematów"
         tagged_topics: "Oznaczone tematy"
+        tagged_topics_count: "Oznaczone tematy (%{count})"
+        showing_top_topics: "Wyświetlono %{shown} najpopularniejszych z %{total} widocznych tematów."
         no_tagged_topics: "Żadne widoczne tematy publiczne nie są jeszcze oznaczone tą koncepcją."
         topic_columns:
           topic: "Temat"
@@ -2034,6 +2068,7 @@ pl_PL:
         quick_search:
           suffix: "we wszystkich tematach i postach z AI"
       ai_artifact:
+        move_warning: "Jeśli przeniesiesz wpis z aktywnym artefaktem, publiczne udostępnienie tej konwersacji nie będzie już dawało dostępu do tego artefaktu. Udostępnij lub zaktualizuj konwersację docelową, aby ponownie przyznać dostęp publiczny. Oddzielne udostępnione migawki nie zostaną naruszone."
         editor:
           title: "Artefakt AI"
           edit_options: "Opcje edycji"

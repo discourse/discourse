@@ -45,20 +45,17 @@ export default {
           } else {
             const siteSettings = owner.lookup("service:site-settings");
 
-            const loginError = (flash, properties, callback) => {
+            const loginError = (flash) => {
               const props = {
                 flash,
                 flashType: "error",
                 awaitingApproval: options.awaiting_approval,
-                ...properties,
               };
 
               router.transitionTo("login").then(() => {
                 const controller = owner.lookup("controller:login");
                 controller.setProperties(props);
               });
-
-              next(() => callback?.());
             };
 
             const error = AuthErrors.find((name) => options[name]);
@@ -68,17 +65,6 @@ export default {
 
             if (options.suspended) {
               return loginError(options.suspended_message);
-            }
-
-            if (options.omniauth_disallow_totp) {
-              return loginError(
-                i18n("login.omniauth_disallow_totp"),
-                {
-                  loginName: options.email,
-                  showLoginButtons: false,
-                },
-                () => document.getElementById("login-account-password").focus()
-              );
             }
 
             if (options.authenticated) {

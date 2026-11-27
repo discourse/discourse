@@ -14,7 +14,10 @@ export default class RagUploadProgress extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.messageBus.unsubscribe(`/discourse-ai/rag/${this.args.upload.id}`);
+    this.messageBus.unsubscribe(
+      `/discourse-ai/rag/${this.args.upload.id}`,
+      this.onIndexingUpdate
+    );
   }
 
   get calculateProgress() {

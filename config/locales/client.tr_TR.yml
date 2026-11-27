@@ -1951,9 +1951,6 @@ tr_TR:
         show_key_description: "Manuel olarak girin"
         short_description: |
           Hesabınızı tek kullanımlık güvenlik kodları ya da fiziksel güvenlik anahtarlarıyla koruyun.
-        extended_description: |
-          İki adımlı kimlik doğrulama, şifrenize ek olarak tek seferlik belirteç gerektirerek hesabınıza ekstra güvenlik ekler. Belirteçler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarında oluşturulabilir.
-        oauth_enabled_warning: "Hesabınızda iki adımlı kimlik doğrulama etkinleştirildikten sonra sosyal giriş yapma işlemlerinin devre dışı bırakılacağını lütfen dikkate alın."
         use: "Authenticator uygulamasını kullan"
         enforced_with_oauth_notice: "İki adımlı kimlik doğrulamayı etkinleştirmeniz gerekiyor. Bunu harici kimlik doğrulama veya sosyal giriş yöntemleriyle değil, yalnızca bir şifreyle giriş yaparken kullanmanız istenir."
         enforced_notice: "Bu siteye erişmeden önce iki adımlı kimlik doğrulamayı etkinleştirmeniz gerekir."
@@ -2775,7 +2772,6 @@ tr_TR:
       not_allowed_from_ip_address: "Bu IP adresinden giriş yapamazsınız."
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak giriş yapamazsınız."
       resend_activation_email: "Etkinleştirme e-postasını yeniden göndermek için buraya tıklayın."
-      omniauth_disallow_totp: "Hesabınızda iki adımlı kimlik doğrulama etkin. Lütfen şifrenizle giriş yapın."
       works_with: "Şunlarla çalışır"
       activate_account: "Hesabı aktive et"
       resend_title: "Etkinleştirme e-postasını yeniden gönder"
@@ -3985,7 +3981,7 @@ tr_TR:
         back_description: "Son okunmamış gönderinize geri dönün"
         replies_short: "%{current} / %{total}"
       progress:
-        title: konu ilerlemesi
+        title: "konu ilerlemesi"
         jump_prompt: "şuraya atla…"
         jump_prompt_of:
           one: "/ %{count} gönderi"

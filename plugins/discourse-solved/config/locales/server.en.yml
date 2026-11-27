@@ -102,3 +102,7 @@ en:
       - The solution doesn't work for you
 
       If you have an unrelated issue, please [start a new topic](%{base_url}/new-topic) instead.
+  mcp:
+    oauth:
+      scopes:
+        discourse_solved_write: "Mark and unmark solutions"

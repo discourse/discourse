@@ -57,7 +57,13 @@ class UsersEmailController < ApplicationController
     change_request = load_change_request(:new)
 
     result =
-      run_second_factor!(SecondFactor::Actions::ConfirmEmail, target_user: change_request.user)
+      run_second_factor!(
+        SecondFactor::Actions::ConfirmEmail,
+        target_user: change_request.user,
+        action_data: {
+          change_request_id: change_request.id,
+        },
+      )
 
     if result.no_second_factors_enabled? || result.second_factor_auth_completed?
       updater = EmailUpdater.new

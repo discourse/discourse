@@ -261,11 +261,9 @@ fr:
         error: "Erreur"
         response: "Réponse"
       post_image_captions:
-        edit: "Modifier la légende d'image générée par l'IA"
-        title: "Modifier la légende d'image générée par l'IA"
-        description: "Légende"
-        save: "Enregistrer la légende"
         saved: "Légende d'image générée par l'IA enregistrée"
+        image_descriptions:
+          apply: "Appliquer"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -985,6 +983,8 @@ fr:
           title: "Créer un nouvel identifiant"
       concepts:
         edit: "Modifier"
+        seed:
+          refresh: "Actualiser"
         delete: "Supprimer"
         columns:
           status: "Statut"
@@ -998,6 +998,9 @@ fr:
           description: "Description"
           aliases: "Alias"
           status: "Statut"
+        shared_topics_count:
+          one: "%{count} sujet"
+          other: "%{count} sujets"
         tagged_topics: "Sujets étiquetés"
         topic_columns:
           topic: "Sujet"

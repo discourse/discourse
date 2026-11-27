@@ -253,4 +253,19 @@ module("Unit | Model | user", function (hooks) {
       "user is in one group (not the first one) and not allowed on the topic"
     );
   });
+
+  test("userApiKeys", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { user_api_keys: [{ id: 1 }] });
+
+    assert.strictEqual(user.userApiKeys.length, 1, "wraps the serialized keys");
+
+    user.set("user_api_keys", [{ id: 1 }, { id: 2 }]);
+
+    assert.strictEqual(
+      user.userApiKeys.length,
+      2,
+      "follows keys loaded after the first read"
+    );
+  });
 });

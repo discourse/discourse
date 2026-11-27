@@ -99,6 +99,7 @@ describe "Admin AI concepts" do
     visit "/admin/plugins/discourse-ai/ai-concepts"
 
     expect(page).to have_css(".ai-concepts-list__table")
+    expect(page).to have_no_css(".ai-concepts-list__table th", text: "Posts")
     expect(page).to have_css("[data-concept-id='#{kubernetes.id}']", text: "Kubernetes")
     expect(page).to have_css("[data-concept-id='#{kubernetes.id}']", text: "k8s-cluster")
     expect(page).to have_css("[data-concept-id='#{helm.id}']", text: "Helm")
@@ -113,10 +114,17 @@ describe "Admin AI concepts" do
       PageObjects::Components::SelectKit.new(".ai-concept-editor__parent-chooser"),
     ).to have_selected_name("Infrastructure")
     expect(page).to have_css(".ai-concept-editor__children-card", text: "Helm")
+    expect(page).to have_css(".ai-concept-editor__neighbors-card")
+    expect(page).to have_css(".ai-concept-editor__co-occurring-card", text: "Helm")
+    expect(page).to have_css(
+      ".ai-concept-editor__topics-card .admin-config-area-card__title",
+      text: "2",
+    )
     expect(page).to have_css(
       ".ai-concept-editor__topics-card",
       text: "Deploying Discourse clusters on Kubernetes",
     )
+    expect(page).to have_css(".ai-concept-editor__topic-concepts .ai-concept-pill", text: "Helm")
 
     find(".ai-concept-editor .back-button").click
 

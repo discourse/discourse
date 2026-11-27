@@ -394,6 +394,11 @@
     @include ellipsis;
   }
 
+  // the wrapper clips overflow, so keep the outline inside the link
+  :is(.topic-link, a.badge-category__wrapper):focus-visible {
+    outline-offset: -2px;
+  }
+
   .topic-statuses {
     .d-icon {
       color: var(--header_primary-medium);

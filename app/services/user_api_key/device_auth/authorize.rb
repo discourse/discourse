@@ -62,7 +62,7 @@ class UserApiKey::DeviceAuth::Authorize
         )
       end
 
-      key = UserApiKey::DeviceAuth::KeyCreator.create!(grant, user)
+      key = create_key(grant, user)
       grant.authorize!(
         payload: UserApiKey::DeviceAuth::PayloadBuilder.encrypted_payload!(grant, key),
       )
@@ -91,6 +91,22 @@ class UserApiKey::DeviceAuth::Authorize
       user_id: user.id,
     )
     raise
+  end
+
+  # A caller can pass +credential_lock+ to serialize issuing the key with
+  # password-change revocation. The key commits before the grant publishes it.
+  def create_key(grant, user)
+    create =
+      proc do
+        # The lock can wait for a password change, during which the grant may
+        # have expired or changed.
+        if UserApiKey::DeviceAuth::GrantStore.load(grant.device_code) != grant
+          raise Discourse::InvalidAccess
+        end
+        UserApiKey::DeviceAuth::KeyCreator.create!(grant, user)
+      end
+    lock = context[:credential_lock]
+    lock ? lock.call(&create) : create.call
   end
 
   def fail_authorize_grant!(reason, params:, user:, request_id:, grant: nil)

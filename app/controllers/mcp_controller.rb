@@ -74,8 +74,8 @@ class McpController < ApplicationController
     mcp_response.headers.each { |name, value| response.set_header(name, value) }
     return head mcp_response.http_status if mcp_response.body.nil?
 
-    encoded_response = JSON.generate(mcp_response.body)
-    if encoded_response.bytesize > SiteSetting.mcp_max_response_bytes
+    encoded_response = mcp_response.encoded_body_within_limit
+    if encoded_response.nil?
       return(
         render json: jsonrpc_error(payload["id"], -32_603, "Response too large"),
                status: :internal_server_error

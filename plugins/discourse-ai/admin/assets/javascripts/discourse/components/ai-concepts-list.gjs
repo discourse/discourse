@@ -20,21 +20,31 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import AiConceptMergeModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-concept-merge-modal";
 
+const SEED_STATUS_CHANNEL = "/discourse-ai/admin/inferred-concepts/seed";
+
 export default class AiConceptsList extends Component {
   @service adminPluginNavManager;
   @service dialog;
+  @service messageBus;
   @service modal;
   @service router;
   @service toasts;
 
   #filterDebounce = null;
+  #isRefreshing = false;
   #isStartingSeed = tracked(false);
   #overrideConcepts = tracked(null);
   #overrideMeta = tracked(null);
 
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe(SEED_STATUS_CHANNEL, this.onSeedStatusUpdate);
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#filterDebounce);
+    this.messageBus.unsubscribe(SEED_STATUS_CHANNEL, this.onSeedStatusUpdate);
   }
 
   get concepts() {
@@ -63,6 +73,10 @@ export default class AiConceptsList extends Component {
 
   get hasMore() {
     return Boolean(this.meta.has_more);
+  }
+
+  get showPostsColumn() {
+    return this.meta.posts_enabled !== false;
   }
 
   get canRunCuration() {
@@ -252,6 +266,47 @@ export default class AiConceptsList extends Component {
   }
 
   @action
+  onSeedStatusUpdate(data) {
+    if (!data?.status) {
+      return;
+    }
+
+    const current = this.seedStatus;
+    const sameRun =
+      !data.run_id || !current?.run_id || data.run_id === current.run_id;
+
+    if (sameRun && current) {
+      if (
+        (current.status === "completed" || current.status === "failed") &&
+        (data.status === "queued" || data.status === "running")
+      ) {
+        return;
+      }
+
+      if (
+        current.status === "running" &&
+        data.status === "running" &&
+        (data.processed || 0) < (current.processed || 0)
+      ) {
+        return;
+      }
+    }
+
+    const hadNoConcepts = !this.hasAnyConcepts;
+    this.#overrideMeta.value = {
+      ...this.meta,
+      seed_status: data,
+    };
+
+    if (
+      data.status === "completed" ||
+      (hadNoConcepts && data.status === "running" && (data.processed || 0) > 0)
+    ) {
+      this.#refreshList();
+    }
+  }
+
+  @action
   async promoteConcept(concept, closeMenu) {
     closeMenu?.();
     await this.#updateConceptStatus(
@@ -335,6 +390,12 @@ export default class AiConceptsList extends Component {
   }
 
   async #refreshList() {
+    if (this.#isRefreshing) {
+      return;
+    }
+
+    this.#isRefreshing = true;
+
     try {
       const data = {};
       if (this.selectedStatus !== "all") {
@@ -353,10 +414,17 @@ export default class AiConceptsList extends Component {
           data,
         }
       );
+
+      if (this.isDestroying) {
+        return;
+      }
+
       this.#overrideConcepts.value = response.ai_concepts || [];
       this.#overrideMeta.value = response.meta;
     } catch (error) {
       popupAjaxError(error);
+    } finally {
+      this.#isRefreshing = false;
     }
   }
 
@@ -459,7 +527,9 @@ export default class AiConceptsList extends Component {
                 <th>{{i18n "discourse_ai.concepts.columns.name"}}</th>
                 <th>{{i18n "discourse_ai.concepts.columns.status"}}</th>
                 <th>{{i18n "discourse_ai.concepts.columns.topics"}}</th>
-                <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
+                {{#if this.showPostsColumn}}
+                  <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
+                {{/if}}
                 <th></th>
               </tr>
             </thead>
@@ -523,12 +593,14 @@ export default class AiConceptsList extends Component {
                     </div>
                     {{concept.topics_count}}
                   </td>
-                  <td class="d-table__cell --detail">
-                    <div class="d-table__mobile-label">
-                      {{i18n "discourse_ai.concepts.columns.posts"}}
-                    </div>
-                    {{concept.posts_count}}
-                  </td>
+                  {{#if this.showPostsColumn}}
+                    <td class="d-table__cell --detail">
+                      <div class="d-table__mobile-label">
+                        {{i18n "discourse_ai.concepts.columns.posts"}}
+                      </div>
+                      {{concept.posts_count}}
+                    </td>
+                  {{/if}}
                   <td class="d-table__cell --controls">
                     <div class="d-table__cell-actions">
                       <DButton

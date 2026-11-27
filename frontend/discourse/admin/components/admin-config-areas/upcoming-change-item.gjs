@@ -72,6 +72,10 @@ export default class UpcomingChangeItem extends Component {
     if (this._linkedGroupSetting) {
       return this.bufferedGroups;
     }
+    if (this.#loggedInUsersOnly) {
+      const group = AUTO_GROUPS.logged_in_users;
+      return [this.site.groupsById[group.id]?.name || group.name];
+    }
     if (this.isLocked) {
       return this.requiresStaff ? [this.staffGroupName] : this.roleGroups;
     }
@@ -215,6 +219,10 @@ export default class UpcomingChangeItem extends Component {
     return `upcoming_change_default_override:${this.args.change.setting}`;
   }
 
+  get #loggedInUsersOnly() {
+    return this.isLocked && this.allowEnabledFor.includes("logged_in_users");
+  }
+
   @action
   async toggleEnabled() {
     if (this.savingEnabledFor) {
@@ -301,6 +309,9 @@ export default class UpcomingChangeItem extends Component {
     if (!enabled) {
       return "no_one";
     }
+    if (this.#loggedInUsersOnly) {
+      return "groups";
+    }
     if (this._linkedGroupSetting) {
       const everyone = [
         AUTO_GROUPS.logged_in_users,
@@ -381,6 +392,7 @@ export default class UpcomingChangeItem extends Component {
 
   #showSuccessToast(enabled, groups, previousEnabledFor) {
     let message;
+    const audience = this.#loggedInUsersOnly ? this.displayGroups : groups;
     if (this._linkedGroupSetting && enabled) {
       message = i18n("admin.upcoming_changes.change_enabled");
     } else if (enabled === (previousEnabledFor !== "no_one")) {
@@ -389,16 +401,16 @@ export default class UpcomingChangeItem extends Component {
       message = i18n("admin.upcoming_changes.change_disabled");
     } else {
       let enabledFor;
-      if (groups.length === 1 && groups[0] === this.staffGroupName) {
+      if (audience.length === 1 && audience[0] === this.staffGroupName) {
         enabledFor = i18n("admin.upcoming_changes.enabled_for_options.staff", {
           staffGroupName: this.staffGroupName,
         });
-      } else if (groups.length) {
+      } else if (audience.length) {
         enabledFor = i18n(
           "admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
           {
-            groupNames: groups.join(", "),
-            count: groups.length,
+            groupNames: audience.join(", "),
+            count: audience.length,
           }
         );
       } else {

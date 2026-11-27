@@ -354,9 +354,7 @@ fa_IR:
       s3_bucket_reused: "شما نمی توانید از یک مخزن برای \"s3_upload_bucket\" و \"s3_backup_bucket\" استفاده کنید. یک مخزن متفاوت انتخاب کنید یا برای هر مخزن از مسیر متفاوتی استفاده کنید."
       secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
       share_quote_facebook_requirements: "برای فعال کردن اشتراک‌گذاری نقل قول برای فیس‌بوک، باید یک شناسه برنامه فیسبوک تنظیم کنید."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "اگر ورود به سیستم محلی غیرفعال باشد، نمی توانید 2FA را اعمال کنید."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال باشد، نمی توانید 2FA را اعمال کنید."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "اگر 2FA اجرا شود، نمی توانید ورود محلی را غیرفعال کنید. قبل از غیرفعال کردن ورودهای محلی، 2FA اجرا شده را غیرفعال کنید."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "نمی‌توانید آپلودهای S3 را فعال کنید زیرا آپلودهای S3 قبلاً به صورت سراسری فعال شده‌اند و فعال کردن این site-level می‌تواند مشکلات مهمی در بارگذاری‌ها ایجاد کند."
       cors_origins_should_not_have_trailing_slash: "شما نباید اسلش انتهایی (/) را به مبدا CORS اضافه کنید."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "یوزر ایجینت باید حداقل 3 کاراکتر داشته باشند تا از محدود شدن نرخ درخواست کاربران قانونی به صورت تصادفی جلوگیری شود."
@@ -2569,6 +2567,8 @@ fa_IR:
         سلام،
 
         این یک پیام خودکار از %{site_name} است تا به شما اطلاع دهد که [فرسته شما](%{base_url}%{post_url}) تایید شده است.
+  page_forbidden:
+    page_title: "دسترسی قطع شده است"
   page_not_found:
     page_title: "صفحه پیدا نشد"
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."

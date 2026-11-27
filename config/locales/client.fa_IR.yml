@@ -1631,9 +1631,6 @@ fa_IR:
         show_key_description: "دستی وارد کنید"
         short_description: |
           از حساب خود با کدهای امنیتی یکبار مصرف یا کلیدهای امنیتی فیزیکی محافظت کنید.
-        extended_description: |
-          احراز هویت دو مرحله‌ای امنیت بیشتری به حساب کاربری شما م‌یدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن‌ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
-        oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
         use: "از اپلیکیشن احراز هویت استفاده کنید"
         enforced_with_oauth_notice: "شما باید احراز هویت دو مرحله ای را فعال کنید. فقط هنگام ورود به سیستم با رمز عبور از شما خواسته می شود که از آن استفاده کنید، نه با احراز هویت خارجی یا روش های ورود به سیستم از طریق شبکه‌های اجتماعی."
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
@@ -2432,7 +2429,6 @@ fa_IR:
       not_allowed_from_ip_address: "امکان ورود با این آدرس آی پی وجود ندارد."
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را کلیک کنید."
-      omniauth_disallow_totp: "حساب کاربری شما برای ورود دو مرحله ای تنظیم شده است. لطفا با رمز عبور وارد شوید."
       activate_account: "فعال‌سازی حساب کاربری"
       resend_title: "ارسال مجدد ایمیل فعالسازی"
       change_email: "تغییر ایمیل"
@@ -3340,7 +3336,7 @@ fa_IR:
         back_description: "بازگشت به اولین نوشته‌ی خوانده نشده"
         replies_short: "%{current} از %{total}"
       progress:
-        title: پیشرفت موضوع
+        title: "پیشرفت موضوع"
         jump_prompt: "برو به…"
         jump_prompt_of:
           one: "از %{count} نوشته"

@@ -1844,6 +1844,15 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].pluck("id")).to eq(
         [topic_ids[1], topic_ids[2], topic_ids[0]],
       )
+
+      get "/topics/private-messages/#{user.username}.json",
+          params: {
+            order: "activity",
+            page: 1,
+            per_page: 1,
+          }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to eq([topic_ids[2]])
     end
   end
 

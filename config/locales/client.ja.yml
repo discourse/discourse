@@ -1759,9 +1759,6 @@ ja:
         show_key_description: "手動で入力する"
         short_description: |
           使い捨てのセキュリティコードまたは物理的なセキュリティキーを使ってアカウントを保護します。
-        extended_description: |
-          二要素認証は、パスワードに加えてワンタイムトークンを必要とすることで、アカウントにさらにセキュリティを追加します。トークンは <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> および <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> デバイスで生成できます。
-        oauth_enabled_warning: "アカウントで二要素認証が有効になると、ソーシャルログインは無効になります。"
         use: "認証アプリを使用する"
         enforced_with_oauth_notice: "二要素認証を有効にする必要があります。パスワードを使用してログインする場合にのみ、これを使用するように求められます。外部認証またはソーシャルログインの場合は求められません。"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
@@ -2545,7 +2542,6 @@ ja:
       not_allowed_from_ip_address: "この IP アドレスでログインできません。"
       admin_not_allowed_from_ip_address: "その IP アドレスからは管理者としてログインできません。"
       resend_activation_email: "ここをクリックすると、再度アクティベーションメールを送信します。"
-      omniauth_disallow_totp: "あなたのアカウントは二要素認証が有効になっています。ログインにはパスワードが必要です。"
       works_with: "利用可能なログイン方法"
       activate_account: "アカウントを有効化"
       resend_title: "アクティベーションメールの再送"
@@ -3549,7 +3545,7 @@ ja:
         back_description: "最後の未読の投稿に戻る"
         replies_short: "%{current} / %{total}"
       progress:
-        title: トピックの進捗
+        title: "トピックの進捗"
         jump_prompt: "ジャンプ…"
         jump_prompt_of:
           other: "/ %{count} の投稿"

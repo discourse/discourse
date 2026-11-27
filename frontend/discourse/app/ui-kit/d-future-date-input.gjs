@@ -187,7 +187,6 @@ export default class DFutureDateInput extends Component {
         </div>
 
         <div class="control-group future-date-input-time-picker">
-          {{dIcon "far-clock"}}
           <Input
             class="time-input"
             disabled={{this.timeInputDisabled}}

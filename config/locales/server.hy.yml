@@ -2458,6 +2458,8 @@ hy:
       title: "Նոր Մուտքի Զգուշացում"
     post_approved:
       title: "Ձեր գրառումը հաստատված է"
+  page_forbidden:
+    page_title: "Մուտքը մերժված է"
   page_not_found:
     page_title: "Էջը Չի Գտնվել"
     title: "Օյ! Այդ էջը գոյություն չունի կամ մասնավոր է:"

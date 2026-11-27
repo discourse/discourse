@@ -20,6 +20,7 @@ module ::Blog
                :preview_url,
                :url,
                :path,
+               :generated_paths,
                :excerpt,
                :meta_description,
                :canonical_url,
@@ -115,6 +116,14 @@ module ::Blog
 
     def path
       metadata["path"]
+    end
+
+    def generated_paths
+      @generated_paths ||= object.generated_paths
+    end
+
+    def include_generated_paths?
+      generated_paths.present?
     end
 
     def excerpt

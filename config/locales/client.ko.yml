@@ -1373,9 +1373,6 @@ ko:
           지원되는 앱(<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>)에서 이 QR 코드를 스캔하고 인증 코드를 입력하세요.
         disable_description: "앱의 인증 코드를 입력하세요"
         show_key_description: "수동으로 입력"
-        extended_description: |
-          2단계 인증은 암호 외에 일회성 토큰을 요구하여 계정에 보안을 강화합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 디바이스에서 생성될 수 있습니다.
-        oauth_enabled_warning: "계정에서 2단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
         use: "인증 앱 사용"
         enforced_notice: "이 사이트에 액세스하려면 2단계 인증을 활성화해야 합니다."
         disable: "비활성화"
@@ -1985,7 +1982,6 @@ ko:
       not_allowed_from_ip_address: "이 IP 주소로는 로그인할 수 없습니다."
       admin_not_allowed_from_ip_address: "이 IP 주소로는 관리자로 로그인할 수 없습니다."
       resend_activation_email: "활성화 이메일을 다시 보내려면 여기를 클릭하세요."
-      omniauth_disallow_totp: "계정에 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인하세요."
       activate_account: "계정 활성화"
       resend_title: "활성화 이메일 재전송"
       change_email: "이메일 주소 변경"
@@ -2694,7 +2690,7 @@ ko:
         back_description: "읽지 않은 마지막 게시물로 이동합니다"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 진행 중인 주제
+        title: "진행 중인 주제"
         jump_prompt_of:
           other: "/ %{count}개의 게시물"
         jump_prompt_to_date: "현재까지"

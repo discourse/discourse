@@ -51,6 +51,9 @@ gl:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_tool:
           list_item: "Elemento da listaxe"
@@ -232,6 +235,8 @@ gl:
         embedding: "Incorporando"
       concepts:
         edit: "Editar"
+        seed:
+          refresh: "Actualizar"
         delete: "Eliminar"
         columns:
           status: "Estado"
@@ -243,6 +248,9 @@ gl:
           name: "Nome"
           description: "Descrición"
           status: "Estado"
+        shared_topics_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
         tagged_topics: "Temas etiquetados"
         topic_columns:
           topic: "Tema"

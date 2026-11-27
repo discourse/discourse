@@ -51,12 +51,14 @@
 #                            An empty list means no audience; anonymous access requires anonymous_users.
 #                            Linked audience restrictions still apply after auto-promotion and permanent status.
 #                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
-#                            Valid values: everyone, staff, specific_groups.
+#                            Valid values: everyone, logged_in_users, staff, specific_groups.
 #
 #                            `everyone` must be the only value and means the change can't be scoped to
 #                            groups; the admin UI then shows the impact role's groups as a locked audience,
-#                            so make the role match who the change affects. Omit the key to let admins
-#                            pick any groups, starting from the impact role's groups.
+#                            so make the role match who the change affects. `logged_in_users` must
+#                            also be the only value and restricts the change to signed-in users,
+#                            including after auto-promotion or when permanent. Omit the key to let
+#                            admins pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.
@@ -735,7 +737,7 @@ login:
     hidden: true
   allow_passkeys_for_2fa:
     client: true
-    default: false
+    default: true
     area: "login"
   allow_new_registrations:
     client: true
@@ -1538,6 +1540,10 @@ posting:
     area: "posts_and_topics"
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
+    area: "posts_and_topics"
+  enable_ai_content_labelling_in_composer:
+    client: true
+    default: true
     area: "posts_and_topics"
   traditional_markdown_linebreaks:
     client: true

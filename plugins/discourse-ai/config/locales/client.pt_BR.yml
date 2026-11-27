@@ -233,6 +233,9 @@ pt_BR:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_agent:
           mode: "Modo"
@@ -769,6 +772,8 @@ pt_BR:
           title: "Criar nova credencial"
       concepts:
         edit: "Editar"
+        seed:
+          refresh: "Atualizar"
         delete: "Excluir"
         columns:
           status: "Status"
@@ -781,6 +786,9 @@ pt_BR:
           name: "Nome"
           description: "Descrição"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} tópico"
+          other: "%{count} tópicos"
         tagged_topics: "Tópicos com etiqueta"
         topic_columns:
           topic: "Tópico"

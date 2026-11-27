@@ -103,6 +103,9 @@ id:
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      post_image_captions:
+        image_descriptions:
+          apply: "menerapkan"
       discourse_workflows:
         classify:
           name: "Nama"
@@ -266,6 +269,8 @@ id:
         delete: "Hapus"
       concepts:
         edit: "Ubah"
+        seed:
+          refresh: "Segarkan"
         delete: "Hapus"
         columns:
           status: "Status"
@@ -277,6 +282,8 @@ id:
           name: "Nama"
           description: "Deskripsi"
           status: "Status"
+        shared_topics_count:
+          other: "%{count} topik"
         tagged_topics: "Topik yang diberi tag"
         topic_columns:
           topic: "Topik"

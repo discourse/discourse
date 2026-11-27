@@ -102,12 +102,16 @@ export default class NavigationItem extends Component {
           <span class={{@content.name}}></span>
         {{/if}}
         {{#if @countAsBadge}}
-          <span
-            data-label={{@content.displayNameWithoutCount}}
-          >{{@content.displayNameWithoutCount}}</span>
-          {{#if this.badgeCount}}
-            <span class="navigation-item__count">{{this.badgeCount}}</span>
-          {{/if}}
+          <span class="mobile-tab-bar__indicator">
+            <span
+              data-label={{@content.displayNameWithoutCount}}
+            >{{@content.displayNameWithoutCount}}</span>
+            {{#if this.badgeCount}}
+              <span class="mobile-tab-bar__badge">
+                <span class="navigation-item__count">{{this.badgeCount}}</span>
+              </span>
+            {{/if}}
+          </span>
         {{else}}
           {{@content.displayName}}
         {{/if}}

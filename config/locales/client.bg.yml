@@ -1352,9 +1352,6 @@ bg:
           Сканирайте този QR код в поддържано приложение (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) и въведете своя код за удостоверяване.
         disable_description: "Моля, въведете кода за удостоверяване от вашето приложение"
         show_key_description: "Въведете ръчно"
-        extended_description: |
-          Двуфакторното удостоверяване добавя допълнителна сигурност към вашия акаунт, като изисква еднократен токен в допълнение към вашата парола. Токените могат да се генерират на <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>устройства с Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Моля, имайте предвид, че влизане чрез социална мрежа, ще бъдат деактивирани, след като двуфакторното удостоверяване е активирано във вашия акаунт."
         use: "Използвайте приложението за удостоверяване"
         enforced_notice: "От вас се изисква да активирате двуфакторна автентификация, преди да влезете в този сайт."
         disable: "Деактивиране"
@@ -1980,7 +1977,6 @@ bg:
       not_allowed_from_ip_address: "Не можете да влезете от този IP адрес."
       admin_not_allowed_from_ip_address: "Не може да влезете като админ от този IP адрес."
       resend_activation_email: "Натиснете тук, за да изпратите повторен имейл за активация."
-      omniauth_disallow_totp: "Вашият акаунт има активирана двуфакторна автентификация. Моля, влезте с вашата парола."
       activate_account: "Активирай профила"
       resend_title: "Изпрати отново активационен имейл "
       change_email: "Смени имейл адреса"
@@ -2599,7 +2595,7 @@ bg:
       timeline:
         back: "Назад"
       progress:
-        title: прогрес на темата
+        title: "прогрес на темата"
         jump_prompt_to_date: "до дата"
         jump_prompt_or: "или"
       notifications:

@@ -21,6 +21,31 @@ function createModel(attrs = {}) {
 module("Integration | Component | DiscoveryTopics", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("shows the category empty state below the About topic", async function (assert) {
+    const store = this.owner.lookup("service:store");
+    const category = store.createRecord("category", {
+      id: 11,
+      slug: "meta",
+      topic_url: "/t/about-the-meta-category/19",
+    });
+    const aboutTopic = store.createRecord("topic", {
+      id: 19,
+      title: "About Meta",
+      posters: [],
+    });
+    const model = createModel({ topics: [aboutTopic] });
+
+    await render(
+      <template>
+        <DiscoveryTopics @category={{category}} @model={{model}} />
+      </template>
+    );
+
+    assert
+      .dom(".topic-list ~ .empty-state__container.--empty-category")
+      .exists("the empty state follows the topic list");
+  });
+
   module("showEmptyFilterEducationInFooter", function () {
     test("shows EmptyTopicFilter when all topics loaded and list is empty", async function (assert) {
       const model = createModel({

@@ -213,17 +213,8 @@ module SiteSettings::Validations
 
   def validate_enforce_second_factor(new_val)
     if new_val != "no" && SiteSetting.enable_discourse_connect?
-      return validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
+      validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
     end
-    return if SiteSetting.enable_local_logins
-    return if new_val == "no"
-    validate_error :second_factor_cannot_be_enforced_with_disabled_local_login
-  end
-
-  def validate_enable_local_logins(new_val)
-    return if new_val == "t"
-    return if SiteSetting.enforce_second_factor == "no"
-    validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
   end
 
   def validate_cors_origins(new_val)

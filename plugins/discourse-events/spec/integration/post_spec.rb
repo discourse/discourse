@@ -524,6 +524,32 @@ describe Post do
           end
         end
 
+        context "when an existing event's max attendees is above a lowered limit" do
+          let!(:post) { create_post_with_event(user, 'max-attendees="10"') }
+
+          before { SiteSetting.discourse_post_event_max_attendees_limit = 5 }
+
+          it "allows editing the post without changing max attendees" do
+            revised = PostRevisor.new(post, post.topic).revise!(user, raw: "#{post.raw}\nUpdated")
+
+            expect(revised).to eq(true)
+            expect(post.reload.event.max_attendees).to eq(10)
+          end
+
+          it "rejects changing max attendees to another value above the limit" do
+            revised =
+              PostRevisor.new(post, post.topic).revise!(
+                user,
+                raw: post.raw.sub('max-attendees="10"', 'max-attendees="9"'),
+              )
+
+            expect(revised).to eq(false)
+            expect(post.errors.full_messages).to include(
+              I18n.t("discourse_post_event.errors.models.event.invalid_max_attendees", maximum: 5),
+            )
+          end
+        end
+
         context "when max attendees is at the limit" do
           it "creates the event" do
             limit = SiteSetting.discourse_post_event_max_attendees_limit
@@ -628,12 +654,12 @@ describe Post do
 
         context "when there are too many topic bump reminders" do
           it "raises an error" do
-            reminders = "bumpTopic.1.hours,bumpTopic.2.hours"
+            reminders = "bumpTopic.1.hours,bumpTopic.2.hours,bumpTopic.3.hours"
 
             expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
               I18n.t(
                 "discourse_post_event.errors.models.event.too_many_reminders.bump_topic",
-                count: 1,
+                count: 2,
               ),
             )
           end
@@ -641,11 +667,46 @@ describe Post do
 
         context "when each reminder type is at its limit" do
           it "creates the event" do
-            reminders = "notification.1.minutes,notification.2.minutes,bumpTopic.1.hours"
+            reminders =
+              "notification.1.minutes,notification.2.minutes,bumpTopic.7.days,bumpTopic.1.days"
 
             post = create_post_with_event(user, "reminders=\"#{reminders}\"").reload
 
             expect(post.event.reminders).to eq(reminders)
+          end
+        end
+
+        context "when an existing event has more reminders than the limit" do
+          let(:reminders) { "notification.1.minutes,notification.2.minutes,notification.3.minutes" }
+          let!(:post) do
+            stub_const(
+              DiscourseEvents::Events::Event,
+              "MAX_REMINDERS_PER_TYPE",
+              { "notification" => 3, "bumpTopic" => 2 },
+            ) { create_post_with_event(user, "reminders=\"#{reminders}\"") }
+          end
+
+          it "allows editing the post without changing reminders" do
+            revised = PostRevisor.new(post, post.topic).revise!(user, raw: "#{post.raw}\nUpdated")
+
+            expect(revised).to eq(true)
+            expect(post.reload.event.reminders).to eq(reminders)
+          end
+
+          it "rejects changing reminders while still over the limit" do
+            revised =
+              PostRevisor.new(post, post.topic).revise!(
+                user,
+                raw: post.raw.sub("notification.3.minutes", "notification.4.minutes"),
+              )
+
+            expect(revised).to eq(false)
+            expect(post.errors.full_messages).to include(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.notification",
+                count: 2,
+              ),
+            )
           end
         end
 

@@ -29,6 +29,10 @@
     display: inline-block;
     overflow: hidden;
 
+    &:focus-visible {
+      @include default-focus;
+    }
+
     &:hover .meta {
       user-select: none;
       opacity: 0.9;

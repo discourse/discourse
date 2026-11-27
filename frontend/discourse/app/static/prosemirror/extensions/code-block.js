@@ -373,8 +373,15 @@ const extension = {
           return command(state, dispatch);
         }
 
-        // Case 3: Selection spans multiple blocks OR covers entire block content
-        if (isBlockLevelSelection(selection)) {
+        // Case 3: Block selection or a selection containing a line break
+        if (
+          isBlockLevelSelection(selection) ||
+          state.doc
+            .textBetween(selection.from, selection.to, "\n", (node) =>
+              node.type === schema.nodes.hard_break ? "\n" : ""
+            )
+            .includes("\n")
+        ) {
           return convertSelectionToCodeBlock(schema)(state, dispatch);
         }
 

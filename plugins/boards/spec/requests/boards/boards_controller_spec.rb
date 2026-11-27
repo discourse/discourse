@@ -501,6 +501,45 @@ RSpec.describe Boards::Api::BoardsController do
       expect(card_titles).not_to include(private_topic.title)
     end
 
+    it "only includes unlisted topics for users who can see unlisted topics" do
+      listed_topic = Fabricate(:topic, category: category)
+      unlisted_topic = Fabricate(:topic, category: category, visible: false)
+
+      board = Fabricate(:boards_board, name: "Manual", slug: "manual", created_by: admin)
+      Fabricate(
+        :access_control_list_with_groups,
+        target: board,
+        permission: "view",
+        groups: [read_group],
+      )
+      column = board.columns.create!(title: "Col", position: 0)
+      [listed_topic, unlisted_topic].each_with_index do |topic, position|
+        board.cards.create!(
+          card_type: :topic,
+          topic_id: topic.id,
+          column_id: column.id,
+          position: position,
+          created_by_id: admin.id,
+        )
+      end
+
+      sign_in(reader)
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["columns"][0]["cards"].map { |c| c["topic_id"] }).to eq(
+        [listed_topic.id],
+      )
+      expect(response.body).not_to include(unlisted_topic.title)
+
+      sign_in(admin)
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(
+        response.parsed_body["columns"][0]["cards"].map { |c| c["topic_id"] },
+      ).to contain_exactly(listed_topic.id, unlisted_topic.id)
+    end
+
     it "does not backfill cards into unconstrained columns even when the board filter matches" do
       topic = Fabricate(:topic, category: category)
       board =

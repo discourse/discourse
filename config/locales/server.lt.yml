@@ -254,9 +254,7 @@ lt:
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Negalite vykdyti 2FA, jei DiscoureConnect yra įjungtas."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Negalite išjungti vietinio prisijungimo, jei taikomas 2FA. Prieš išjungdami vietinius prisijungimus, išjunkite priverstinį 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Negalite įgalinti S3 įkėlimų, nes S3 įkėlimai jau įgalinti visame pasaulyje, o įjungus šį svetainės lygį gali kilti kritinių įkėlimų problemų"
       cors_origins_should_not_have_trailing_slash: "Neturėtumėte pridėti galinio brūkšnio (/) prie CORS šaltinių."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Prie nustatymo negalite pridėti nė vienos iš šių reikšmių: %{values}."
@@ -2315,6 +2313,7 @@ lt:
 
         Tai yra automatinis pranešimas nuo %{site_name} , informuojantis, kad [jūsų pranešimas] (%{base_url}%{post_url}) buvo patvirtintas.
   page_forbidden:
+    page_title: "Nėra Teisių"
     title: "Oi! Šis puslapis yra privatus."
   page_not_found:
     page_title: "Puslapis nerastas"

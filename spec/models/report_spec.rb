@@ -433,10 +433,10 @@ RSpec.describe Report do
       it "works and does not count browser or mobile pageviews" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
         4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
         CachedCounting.flush
@@ -453,24 +453,6 @@ RSpec.describe Report do
     end
 
     let(:report) { Report.find("page_view_total_reqs") }
-
-    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
-      SiteSetting.use_legacy_pageviews = false
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser,
-        count: 4,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-
-      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
-      expect(report.total).to eq(12)
-    end
 
     context "with no data" do
       it "returns no page-view requests" do
@@ -497,10 +479,10 @@ RSpec.describe Report do
         it "works and does not count browser or mobile pageviews" do
           3.times { ApplicationRequest.increment!(:page_view_crawler) }
           8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
           2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
           2.times { ApplicationRequest.increment!(:page_view_anon) }
-          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
           CachedCounting.flush
@@ -515,10 +497,10 @@ RSpec.describe Report do
         it "works and does not count mobile pageviews, and only counts browser pageviews" do
           3.times { ApplicationRequest.increment!(:page_view_crawler) }
           8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
           2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
           2.times { ApplicationRequest.increment!(:page_view_anon) }
-          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
           CachedCounting.flush
@@ -1767,9 +1749,9 @@ RSpec.describe Report do
       it "returns consolidated browser-detection data" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1789,9 +1771,9 @@ RSpec.describe Report do
       it "gives the same total as page_view_total_reqs" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1820,9 +1802,9 @@ RSpec.describe Report do
 
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1856,7 +1838,7 @@ RSpec.describe Report do
 
     let(:reports) { Report.find("site_traffic") }
 
-    it "reports initial beacon pageviews even without piggyback history" do
+    it "splits browser pageviews from other pageviews" do
       ApplicationRequest.create!(
         date: Date.current,
         req_type: :page_view_anon_browser_beacon,
@@ -1875,57 +1857,6 @@ RSpec.describe Report do
       expect(series["page_view_anon_browser"]).to eq([{ x: Date.current, y: 8 }])
       expect(series["page_view_logged_in_browser"]).to eq([{ x: Date.current, y: 2 }])
       expect(series["page_view_other"]).to eq([{ x: Date.current, y: 2 }])
-    end
-
-    it "keeps piggyback counts in the browser series after an isolated day of beacon data" do
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser_beacon,
-        count: 1,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 30)
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 30)
-
-      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
-
-      expect(series["page_view_anon_browser"].last).to eq({ x: Date.current, y: 30 })
-      expect(series["page_view_other"].last).to eq({ x: Date.current, y: 0 })
-    end
-
-    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser,
-        count: 4,
-      )
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_logged_in_browser,
-        count: 6,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_logged_in_browser_beacon,
-        count: 2,
-      )
-
-      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
-
-      expect(series["page_view_anon_browser"]).to eq(
-        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
-      )
-      expect(series["page_view_logged_in_browser"]).to eq(
-        [{ x: Date.current - 2, y: 6 }, { x: Date.current, y: 2 }],
-      )
-      expect(series["page_view_other"]).to eq(
-        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
-      )
     end
 
     context "with no data" do
@@ -1956,8 +1887,8 @@ RSpec.describe Report do
           .each do |date, logged_in_count|
             ApplicationRequest.write_cache!(:page_view_anon, 2, date)
             ApplicationRequest.write_cache!(:page_view_logged_in, logged_in_count, date)
-            ApplicationRequest.write_cache!(:page_view_anon_browser, 5, date)
-            ApplicationRequest.write_cache!(:page_view_logged_in_browser, 1, date)
+            ApplicationRequest.write_cache!(:page_view_anon_browser_beacon, 5, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in_browser_beacon, 1, date)
           end
 
         series = reports.data.index_by { |report| report[:req] }
@@ -1977,9 +1908,9 @@ RSpec.describe Report do
         Fabricate(:embeddable_host)
 
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
         3.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         4.times { ApplicationRequest.increment!(:page_view_embed) }
         CachedCounting.flush
 
@@ -2001,8 +1932,8 @@ RSpec.describe Report do
         before { SiteSetting.improved_crawler_detection = true }
 
         it "reclassifies likely crawlers out of the logged in and anonymous series" do
-          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
-          20.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
+          20.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           CachedCounting.flush
 
           Fabricate(
@@ -2037,7 +1968,7 @@ RSpec.describe Report do
         it "leaves the series out and keeps counts intact when the change is disabled" do
           SiteSetting.improved_crawler_detection = false
 
-          10.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          10.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           CachedCounting.flush
 
           Fabricate(

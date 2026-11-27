@@ -9,6 +9,8 @@ module DiscourseAi
       MAX_PER_PAGE = 200
       MAX_FILTER_LENGTH = 200
       TOPICS_LIMIT = 25
+      RELATED_CONCEPTS_LIMIT = 10
+      NEIGHBOR_CANDIDATES_LIMIT = 100
 
       def index
         scope = apply_status_filter(InferredConcept.all)
@@ -40,6 +42,7 @@ module DiscourseAi
                    counts: counts,
                    enabled: SiteSetting.inferred_concepts_enabled,
                    embeddings_enabled: DiscourseAi::Embeddings.enabled?,
+                   posts_enabled: SiteSetting.inferred_concepts_daily_posts_limit > 0,
                    seed_status: DiscourseAi::InferredConcepts::Seeder.status,
                  },
                }
@@ -48,18 +51,27 @@ module DiscourseAi
       def show
         concept = InferredConcept.includes(:parent, :children).find(params[:id])
 
-        topic_links =
+        visible_links_scope =
           InferredConceptTopic
             .where(inferred_concept_id: concept.id)
             .joins(:topic)
             .where(topics: { deleted_at: nil, archetype: Archetype.default })
+            .merge(Topic.secured(guardian))
+
+        topics_total = visible_links_scope.count
+
+        topic_links =
+          visible_links_scope
             .order(primary: :desc, relevance: :desc, created_at: :desc)
             .limit(TOPICS_LIMIT)
             .includes(:topic)
             .select { |link| guardian.can_see?(link.topic) }
 
+        concepts_by_topic_id = load_concepts_by_topic_id(topic_links.map(&:topic_id))
+
         render json: {
                  ai_concept: serialize_concept(concept),
+                 topics_total: topics_total,
                  topics:
                    topic_links.map do |link|
                      {
@@ -69,6 +81,7 @@ module DiscourseAi
                        relevance: link.relevance,
                        primary: link.primary,
                        created_at: link.topic.created_at,
+                       concepts: concepts_by_topic_id[link.topic_id] || [],
                      }
                    end,
                  children:
@@ -76,6 +89,8 @@ module DiscourseAi
                      .children
                      .order(:name)
                      .map do |child| { id: child.id, name: child.name, status: child.status } end,
+                 neighbor_concepts: load_neighbor_concepts(concept),
+                 co_occurring_concepts: load_co_occurring_concepts(concept, visible_links_scope),
                }
       end
 
@@ -313,6 +328,136 @@ module DiscourseAi
         end
 
         raw
+      end
+
+      def load_concepts_by_topic_id(topic_ids)
+        return {} if topic_ids.blank?
+
+        grouped = Hash.new { |h, k| h[k] = [] }
+
+        InferredConceptTopic
+          .where(topic_id: topic_ids)
+          .joins(:inferred_concept)
+          .where.not(inferred_concepts: { status: :retired })
+          .includes(:inferred_concept)
+          .order(primary: :desc, relevance: :desc, inferred_concept_id: :asc)
+          .each do |link|
+            grouped[link.topic_id] << {
+              id: link.inferred_concept_id,
+              name: link.inferred_concept.name,
+              status: link.inferred_concept.status,
+              primary: link.primary,
+            }
+          end
+
+        grouped
+      end
+
+      def load_neighbor_concepts(concept)
+        return [] unless DiscourseAi::Embeddings.enabled?
+
+        vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
+        return [] if vector_def.nil?
+
+        dimensions = vector_def.dimensions.to_i
+        table = DiscourseAi::Embeddings::Schema::INFERRED_CONCEPTS_TABLE
+        statuses = [InferredConcept.statuses[:active], InferredConcept.statuses[:candidate]]
+
+        rows =
+          ActiveRecord::Base.transaction do
+            DB.exec("SET LOCAL hnsw.iterative_scan = relaxed_order;")
+
+            DB.query(
+              <<~SQL,
+                WITH target AS (
+                  SELECT embeddings
+                  FROM #{table}
+                  WHERE inferred_concept_id = :concept_id
+                    AND model_id = :model_id
+                    AND strategy_id = :strategy_id
+                  LIMIT 1
+                ),
+                candidates AS (
+                  SELECT
+                    c.id,
+                    c.name,
+                    c.status,
+                    e.embeddings,
+                    target.embeddings AS target_embeddings
+                  FROM target
+                  INNER JOIN #{table} e ON e.model_id = :model_id
+                    AND e.strategy_id = :strategy_id
+                    AND e.inferred_concept_id <> :concept_id
+                  INNER JOIN inferred_concepts c ON c.id = e.inferred_concept_id
+                  WHERE c.status IN (:statuses)
+                  ORDER BY binary_quantize(e.embeddings)::bit(#{dimensions}) <~> binary_quantize(target.embeddings)::bit(#{dimensions})
+                  LIMIT :candidates_limit
+                )
+                SELECT
+                  id,
+                  name,
+                  status,
+                  (1.0 - (embeddings::halfvec(#{dimensions}) <=> target_embeddings::halfvec(#{dimensions}))) AS similarity
+                FROM candidates
+                ORDER BY (embeddings::halfvec(#{dimensions}) <=> target_embeddings::halfvec(#{dimensions})) ASC, lower(name) ASC
+                LIMIT :limit
+              SQL
+              concept_id: concept.id,
+              model_id: vector_def.id,
+              strategy_id: vector_def.strategy_id,
+              statuses: statuses,
+              candidates_limit: NEIGHBOR_CANDIDATES_LIMIT,
+              limit: RELATED_CONCEPTS_LIMIT,
+            )
+          end
+
+        rows.map do |row|
+          similarity = row.similarity.to_f
+          similarity = 0.0 unless similarity.finite?
+
+          {
+            id: row.id,
+            name: row.name,
+            status: InferredConcept.statuses.key(row.status) || row.status.to_s,
+            similarity: similarity.clamp(0.0, 1.0).round(4),
+          }
+        end
+      rescue PG::Error => e
+        Rails.logger.error(
+          "Error #{e} querying neighbor concepts for inferred concept #{concept.id}",
+        )
+        []
+      end
+
+      def load_co_occurring_concepts(concept, visible_links_scope)
+        rows =
+          InferredConceptTopic
+            .joins(:inferred_concept)
+            .where(topic_id: visible_links_scope.select(:topic_id))
+            .where.not(inferred_concept_id: concept.id)
+            .where.not(inferred_concepts: { status: :retired })
+            .group("inferred_concepts.id", "inferred_concepts.name", "inferred_concepts.status")
+            .order(
+              Arel.sql(
+                "COUNT(DISTINCT inferred_concept_topics.topic_id) DESC, lower(inferred_concepts.name) ASC",
+              ),
+            )
+            .limit(RELATED_CONCEPTS_LIMIT)
+            .pluck(
+              "inferred_concepts.id",
+              "inferred_concepts.name",
+              "inferred_concepts.status",
+              Arel.sql("COUNT(DISTINCT inferred_concept_topics.topic_id)"),
+            )
+
+        rows.map do |id, name, status, count|
+          {
+            id: id,
+            name: name,
+            status: InferredConcept.statuses.key(status) || status.to_s,
+            shared_topics_count: count.to_i,
+          }
+        end
       end
     end
   end

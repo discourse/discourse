@@ -55,9 +55,7 @@ class TopicTrackingState
 
     message = { topic_id: topic.id, message_type: NEW_TOPIC_MESSAGE_TYPE, payload: payload }
 
-    group_ids = secure_category_group_ids(topic)
-
-    MessageBus.publish(NEW_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
+    publish_to_topic_audience(NEW_MESSAGE_BUS_CHANNEL, message, topic)
     publish_read(topic.id, 1, topic.user)
   end
 
@@ -74,8 +72,7 @@ class TopicTrackingState
 
     message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: }
 
-    group_ids = secure_category_group_ids(topic)
-    MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, group_ids:)
+    publish_to_topic_audience(LATEST_MESSAGE_BUS_CHANNEL, message, topic)
   end
 
   def self.unread_channel_key(user_id)
@@ -157,11 +154,9 @@ class TopicTrackingState
   def self.publish_recover(topic)
     return unless topic.regular?
 
-    group_ids = secure_category_group_ids(topic)
-
     message = { topic_id: topic.id, message_type: RECOVER_MESSAGE_TYPE }
 
-    MessageBus.publish(RECOVER_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
+    publish_to_topic_audience(RECOVER_MESSAGE_BUS_CHANNEL, message, topic)
   end
 
   # Called when a topic's category changes.
@@ -662,4 +657,24 @@ class TopicTrackingState
     GroupUser.where(group_id: group_ids).select(:user_id)
   end
   private_class_method :members_of
+
+  # Unlisted topics are only announced to users who can see unlisted topics,
+  # on top of the restrictions of the category.
+  def self.publish_to_topic_audience(channel, message, topic)
+    group_ids = secure_category_group_ids(topic)
+    return MessageBus.publish(channel, message.as_json, group_ids:) if topic.visible?
+
+    unlisted_group_ids = [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:trust_level_4]]
+    if group_ids.nil? || group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+      return MessageBus.publish(channel, message.as_json, group_ids: unlisted_group_ids)
+    end
+
+    user_ids =
+      GroupUser
+        .where(group_id: unlisted_group_ids, user_id: members_of(group_ids))
+        .distinct
+        .pluck(:user_id)
+    MessageBus.publish(channel, message.as_json, user_ids:) if user_ids.present?
+  end
+  private_class_method :publish_to_topic_audience
 end

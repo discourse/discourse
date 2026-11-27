@@ -21,8 +21,8 @@ class Jobs::ReviewablePriorities < ::Jobs::Scheduled
     res =
       DB.query_single(
         <<~SQL,
-      SELECT COALESCE(PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY score), 0.0) AS medium,
-        COALESCE(PERCENTILE_DISC(0.85) WITHIN GROUP (ORDER BY score), 0.0) AS high
+      SELECT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY score) AS medium,
+        PERCENTILE_DISC(0.85) WITHIN GROUP (ORDER BY score) AS high
       FROM (
         SELECT r.score
         FROM reviewables AS r
@@ -39,6 +39,7 @@ class Jobs::ReviewablePriorities < ::Jobs::Scheduled
     return unless res && res.size == 2
 
     medium, high = res
+    return if medium.nil? || high.nil?
 
     Reviewable.set_priorities(low: min_priority_threshold, medium: medium, high: high)
   end

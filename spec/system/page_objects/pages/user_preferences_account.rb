@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class UserPreferencesAccount < PageObjects::Pages::Base
+      SETTINGS = { username: ".pref-username", data_export: ".pref-data-export" }
+
       def visit(user)
         page.visit("/u/#{user.username}/preferences/account")
         self
@@ -29,6 +31,25 @@ module PageObjects
 
       def has_system_avatar_image?
         has_css?(".pref-avatar img.avatar[src*='letter_avatar']")
+      end
+
+      def has_username_preference?
+        has_css?(".pref-username")
+      end
+
+      def edit_username(username)
+        find(".username-preference__edit-username").click
+        find(".username-preference__input").fill_in(with: username)
+        find(".username-preference__submit:not([disabled])").click
+        self
+      end
+
+      def notice(setting = nil)
+        PageObjects::Components::AccessNotice.new(SETTINGS[setting])
+      end
+
+      def has_request_archive_disabled?
+        has_css?(".btn-request-archive[disabled]")
       end
     end
   end

@@ -4,12 +4,22 @@ module DiscourseMcp
   class RequestContext
     attr_reader :user_id, :oauth_client_id, :authorization_id, :access_token_id, :scopes
 
+    attr_writer :request_id
+
     def initialize(token)
       @user_id = token.user_id
       @oauth_client_id = token.mcp_oauth_client_id
       @authorization_id = token.mcp_oauth_authorization_id
       @access_token_id = token.id
       @scopes = token.scopes.to_set.freeze
+    end
+
+    # Tools can check a candidate result before choosing a smaller page or acknowledgment.
+    def result_fits?(result)
+      return true if @request_id.nil? # Notifications have no response body.
+
+      response = Server::Response.success(@request_id, Server::Response.complete_result(result))
+      !response.encoded_body_within_limit.nil?
     end
 
     def user

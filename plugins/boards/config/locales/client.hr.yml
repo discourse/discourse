@@ -46,6 +46,7 @@ hr:
           column_title: "Titula"
           icon: "Ikona"
           color: "Boja"
+          icon_search_placeholder: "Traži…"
           tag: "Označiti"
           move_to_status_open: "Otvori"
           move_to_status_closed: "🔐"

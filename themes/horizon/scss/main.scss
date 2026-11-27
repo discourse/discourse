@@ -135,6 +135,20 @@ aside.onebox {
     border-radius: var(--d-border-radius-large);
     max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
   }
+
+  // Matches the content card of the app's pages, and grows with a long list of permissions
+  &.mcp-consent-page #main-outlet {
+    max-height: none;
+    background-color: var(--d-content-background);
+
+    @include viewport.from(lg) {
+      margin-inline: calc(var(--d-wrap-padding-x) + var(--main-grid-gap));
+    }
+
+    @include viewport.until(lg) {
+      border-radius: 0;
+    }
+  }
 }
 
 .activate-account {

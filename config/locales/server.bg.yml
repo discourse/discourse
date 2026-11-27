@@ -1226,6 +1226,8 @@ bg:
       subject_template_improved: "Логване"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
+  page_forbidden:
+    page_title: "Достъпът е ограничен"
   page_not_found:
     page_title: "Страницата не е намерена"
     see_more: "Повече"

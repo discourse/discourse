@@ -214,6 +214,9 @@ he:
         type: "סוג"
         error: "תקלה"
         response: "תשובה"
+      post_image_captions:
+        image_descriptions:
+          apply: "החלה"
       discourse_workflows:
         ai_agent:
           mode: "מצב"
@@ -684,6 +687,8 @@ he:
         tool: "כלי"
       concepts:
         edit: "עריכה"
+        seed:
+          refresh: "רענון"
         delete: "מחיקה"
         columns:
           status: "מצב"
@@ -697,6 +702,10 @@ he:
           description: "תיאור"
           aliases: "כינויים"
           status: "מצב"
+        shared_topics_count:
+          one: "נושא"
+          two: "שני נושאים"
+          other: "שני נושאים"
         tagged_topics: "נושאים מתויגים"
         topic_columns:
           topic: "נושא"

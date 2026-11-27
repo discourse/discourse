@@ -40,5 +40,6 @@ te:
           column_title: "శీర్షిక"
           icon: "చిహ్నం"
           color: "రంగు"
+          icon_search_placeholder: "శోధించండి…"
           tag: "ట్యాగ్"
           move_to_status_closed: "మూసివేయబడినవి"

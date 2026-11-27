@@ -3,11 +3,11 @@ import Component from "@ember/component";
 import { action, computed, set } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -25,8 +25,26 @@ export default class TopicProgress extends Component {
   /** @type {number | null} */
   progressPosition = null;
 
-  /** @type {number | string | null} */
-  _streamPercentage = null;
+  /**
+   * Written straight to the element: the fill moves on every scroll event,
+   * and a tracked value would re-validate the whole page each time.
+   */
+  syncProgressWidth = modifier((element) => {
+    this.#progressElement = element;
+    this.#writeProgressWidth();
+
+    return () => {
+      if (this.#progressElement === element) {
+        this.#progressElement = null;
+      }
+    };
+  });
+
+  /** @type {HTMLElement | null} */
+  #progressElement = null;
+
+  /** @type {number | string} */
+  #streamPercentage = 0;
 
   @computed("topic.postStream")
   get postStream() {
@@ -86,11 +104,6 @@ export default class TopicProgress extends Component {
     return this.ariaRole ? i18n("topic.progress.title") : null;
   }
 
-  @computed("_streamPercentage")
-  get progressStyle() {
-    return `--progress-bg-width: ${this._streamPercentage || 0}%`;
-  }
-
   @computed("progressPosition", "postStream.filteredPostsCount")
   get progressLabel() {
     const total = this.postStream?.filteredPostsCount;
@@ -134,19 +147,26 @@ export default class TopicProgress extends Component {
     this.jumpToPost(this.get("topic.last_read_post_number"));
   }
 
-  _topicScrolled(event) {
-    if (this.docked && !this.mobileTabBar.enabled) {
-      this.setProperties({
-        progressPosition: this.get("postStream.filteredPostsCount"),
-        _streamPercentage: 100,
-      });
-      return;
-    }
+  #writeProgressWidth() {
+    this.#progressElement?.style.setProperty(
+      "--progress-bg-width",
+      `${this.#streamPercentage}%`
+    );
+  }
 
-    this.setProperties({
-      progressPosition: event.postIndex,
-      _streamPercentage: (event.percent * 100).toFixed(2),
-    });
+  _topicScrolled(event) {
+    const docked = this.docked && !this.mobileTabBar.enabled;
+
+    this.set(
+      "progressPosition",
+      docked ? this.get("postStream.filteredPostsCount") : event.postIndex
+    );
+
+    const percentage = docked ? 100 : (event.percent * 100).toFixed(2);
+    if (this.#streamPercentage !== percentage) {
+      this.#streamPercentage = percentage;
+      this.#writeProgressWidth();
+    }
   }
 
   <template>
@@ -175,10 +195,10 @@ export default class TopicProgress extends Component {
         <DButton
           class="btn-transparent {{if this.hideProgress 'hidden'}}"
           id="topic-progress"
-          style={{trustHTML this.progressStyle}}
           @action={{this.onExpandToggle}}
           @title="topic.progress.title"
           @translatedAriaLabel={{this.progressLabel}}
+          {{this.syncProgressWidth}}
         >
           <span class="nums">
             <span>{{this.progressPosition}}</span>
@@ -204,8 +224,8 @@ export default class TopicProgress extends Component {
         aria-label={{i18n "topic.progress.title"}}
         class={{if this.hideProgress "hidden"}}
         id="topic-progress"
-        style={{trustHTML this.progressStyle}}
         title={{i18n "topic.progress.title"}}
+        {{this.syncProgressWidth}}
       >
         <div class="nums">
           <span>{{this.progressPosition}}</span>

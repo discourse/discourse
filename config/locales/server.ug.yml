@@ -362,9 +362,7 @@ ug:
       s3_backup_requires_s3_settings: "«%{setting_name}» نى تەمىنلىمىگۈچە S3 نى زاپاسلاش ئورنى سۈپىتىدە ئىشلىتەلمەيسىز."
       s3_bucket_reused: "ئوخشاش بىر ساقلاش چىلىكىنى «s3_upload_bucket» ۋە «3_backup_bucket'» غا ئىشلىتەلمەيسىز. پەرقلىق چىلەك تاللاڭ ياكى ھەر بىر چىلەككە پەرقلىق يول ئىشلىتىڭ."
       share_quote_facebook_requirements: "سىز Facebook ئەپ كىملىكىنى تەڭشىسىڭىز ئاندىن Facebook قا نەقىل ئېلىپ ھەمبەھىرلىيەلەيسىز."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "ئەگەر يەرلىك تىزىمغا كىرىش چەكلەنگەن بولسا ئىككى ئامىللىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "ئەگەر DiscourseConnect قوزغىتىلغان بولسا ئىككى ئامىللىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "ئەگەر ئىككى ئامىللىق دەلىللەش قوزغىتىلغان بولسا يەرلىك تىزىمغا كىرىشنى چەكلىيەلمەيسىز. يەرلىك تىزىمغا كىرىشنى چەكلەشتىن ئىلگىرى ئىككى ئامىللىق دەلىللەشنى چەكلەش كېرەك."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 يۈكلەشنى قوزغىتالمايسىز، چۈنكى S3 يۈكلەش ئاللىقاچان پۈتكۈل بېكەت دائىرىسىدە قوزغىتىلغان ، بۇ توربېكەت دائىرىسىدە قوزغىتىلسا يۈكلەشتە ھالقىلىق مەسىلىلەرنى كەلتۈرۈپ چىقىرىشى مۇمكىن."
       cors_origins_should_not_have_trailing_slash: "سىز CORS مەنبەسىگە ئوڭ يانتۇ سىزىق (/) نى قوشماسلىقىڭىز كېرەك."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "تاسادىپىي قانۇنلۇق ئىشلەتكۈچىنى سۈرئىتىنى چەكلەشنىڭ ئالدىنى ئېلىش ئۈچۈن ئىشلەتكۈچى ۋاكالەتچىنىڭ ئۇزۇنلۇقى كەم دېگەندە 3 ھەرپ بولۇشى كېرەك."
@@ -3942,6 +3940,7 @@ ug:
 
         بۇ %{site_name} سىزگە ئاپتوماتىك يوللىغان ئېلخەت، [يازمىڭىز] (%{base_url}%{post_url}) نىڭ تەستىقلانغانلىقىنى ئۇقتۇرىدۇ.
   page_forbidden:
+    page_title: "زىيارەت رەت قىلىندى"
     title: "ئاپلا! ئۇ شەخسىي بەت."
   site_setting_missing: "بېكەت تەڭشىكىدە «%{name}» تەڭشىلىشى كېرەك."
   page_not_found:

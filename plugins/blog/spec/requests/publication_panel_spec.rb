@@ -35,6 +35,26 @@ RSpec.describe "Blog publication panel", type: :request do
     expect(response.parsed_body).not_to have_key("blog_publication")
   end
 
+  it "tells editors the path a draft would get as an article or as a page" do
+    freeze_time Time.utc(2026, 11, 6)
+    update_default_blog(path_format: "/{year}/{slug}")
+    sign_in(admin)
+
+    get "/blog-editor/publications/#{topic.id}.json"
+    expect(response.parsed_body["generated_paths"]).to eq(
+      "article" => "/2026/#{topic.slug}",
+      "page" => "/#{topic.slug}",
+    )
+
+    put "/blog-editor/publications/#{topic.id}.json",
+        params: {
+          publication: {
+            path: "/a-path-of-my-own",
+          },
+        }
+    expect(response.parsed_body).not_to have_key("generated_paths")
+  end
+
   it "publishes the current draft in one step and then reports drift from the live revision" do
     sign_in(admin)
     post "/blog-editor/publications/#{topic.id}/publish.json"

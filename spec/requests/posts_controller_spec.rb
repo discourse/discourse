@@ -752,6 +752,63 @@ RSpec.describe PostsController do
       }
     end
 
+    context "when editing a whisper with delegated edit permissions" do
+      fab!(:editor, :user)
+      fab!(:edit_group, :group)
+      let(:original_raw) { "staff-only whisper body" }
+      let!(:whisper) { Fabricate(:whisper, topic: post.topic, user: admin, raw: original_raw) }
+
+      before do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+        edit_group.add(editor)
+        sign_in(editor)
+      end
+
+      it "denies a wiki editor who cannot see whispers", :aggregate_failures do
+        whisper.update!(wiki: true)
+        SiteSetting.edit_wiki_post_allowed_groups = edit_group.id.to_s
+
+        put "/posts/#{whisper.id}.json", params: { post: { raw: "attacker replacement" } }
+
+        expect(response).to be_forbidden
+        expect(response.body).not_to include(original_raw)
+        expect(whisper.reload.raw).to eq(original_raw)
+      end
+
+      it "denies an edit-all user who cannot see whispers", :aggregate_failures do
+        SiteSetting.edit_all_post_groups = edit_group.id.to_s
+
+        put "/posts/#{whisper.id}.json", params: { post: { raw: "attacker replacement" } }
+
+        expect(response).to be_forbidden
+        expect(response.body).not_to include(original_raw)
+        expect(whisper.reload.raw).to eq(original_raw)
+      end
+
+      it "denies a category group moderator who cannot see whispers", :aggregate_failures do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: post.topic.category, group: edit_group)
+
+        put "/posts/#{whisper.id}.json", params: { post: { raw: "attacker replacement" } }
+
+        expect(response).to be_forbidden
+        expect(response.body).not_to include(original_raw)
+        expect(whisper.reload.raw).to eq(original_raw)
+      end
+
+      it "allows an edit-all user who can see whispers to edit the whisper" do
+        SiteSetting.whispers_allowed_groups = edit_group.id.to_s
+        SiteSetting.edit_all_post_groups = edit_group.id.to_s
+        updated_raw = "updated whisper body"
+
+        put "/posts/#{whisper.id}.json", params: { post: { raw: updated_raw } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["post"]["raw"]).to eq(updated_raw)
+        expect(whisper.reload.raw).to eq(updated_raw)
+      end
+    end
+
     context "when a trust level 1 user edits a public wiki post" do
       it "does not publish a hidden new user profile onebox" do
         author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)

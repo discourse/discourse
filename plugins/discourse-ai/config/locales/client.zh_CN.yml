@@ -339,11 +339,9 @@ zh_CN:
         error: "错误"
         response: "回答"
       post_image_captions:
-        edit: "编辑 AI 图片说明"
-        title: "编辑 AI 图片说明"
-        description: "说明"
-        save: "保存说明"
         saved: "AI 图片说明已保存"
+        image_descriptions:
+          apply: "应用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -1204,6 +1202,8 @@ zh_CN:
           title: "创建新凭据"
       concepts:
         edit: "编辑"
+        seed:
+          refresh: "刷新"
         load_more: "加载更多"
         delete: "删除"
         parent_label: "父级： %{name}"
@@ -1219,6 +1219,8 @@ zh_CN:
           description: "描述"
           aliases: "别名"
           status: "状态"
+        shared_topics_count:
+          other: "%{count} 个话题"
         tagged_topics: "带标签的话题"
         topic_columns:
           topic: "话题"

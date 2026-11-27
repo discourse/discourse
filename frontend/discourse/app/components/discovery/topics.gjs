@@ -272,14 +272,6 @@ export default class DiscoveryTopics extends Component {
         />
       </span>
 
-      {{#if this.showEmptyCategory}}
-        <EmptyCategory
-          @category={{@category}}
-          @createTopic={{@createTopic}}
-          @createTopicDisabled={{@createTopicDisabled}}
-        />
-      {{/if}}
-
       {{#if this.hasTopics}}
         <List
           @ariaLabelledby="topic-list-heading"
@@ -308,6 +300,14 @@ export default class DiscoveryTopics extends Component {
           @enabled={{@model.canLoadMore}}
           @isLoading={{@model.loadingMore}}
           @rootMargin={{LOAD_MORE_ROOT_MARGIN}}
+        />
+      {{/if}}
+
+      {{#if this.showEmptyCategory}}
+        <EmptyCategory
+          @category={{@category}}
+          @createTopic={{@createTopic}}
+          @createTopicDisabled={{@createTopicDisabled}}
         />
       {{/if}}
 

@@ -13,7 +13,6 @@ th:
         mobile: โทรศัพท์
         save: บันทึก
         about_tab: เกี่ยวกับ
-        general_heading: ทั่วไป
         settings_tab: การตั้งค่า
         theme_tab: ธีม
         column_name: ชื่อ
@@ -35,6 +34,7 @@ th:
         change:
           title: ชื่อเรื่อง
           tags: ป้าย
+        settings_button: การตั้งค่า
       review:
         copy: คัดลอก
         open: เปิด

@@ -4,20 +4,11 @@ import FileSizeInput from "discourse/admin/components/file-size-input";
 import showFieldError from "discourse/admin/lib/show-field-error";
 
 export default class SettingFieldFileSizeRestriction extends Component {
-  #validationMessage;
-
   @action
-  setValidationMessage(message) {
-    this.#validationMessage = message;
-  }
-
-  @action
-  async changeSize(size) {
-    this.#validationMessage = this.args.field.error?.messages[0];
-
+  async changeSize(size, validationMessage) {
     await this.args.field.set(size);
 
-    showFieldError(this.args.field, this.#validationMessage);
+    showFieldError(this.args.field, validationMessage);
   }
 
   <template>
@@ -26,7 +17,6 @@ export default class SettingFieldFileSizeRestriction extends Component {
         @max={{@definition.max}}
         @min={{@definition.min}}
         @onChangeSize={{this.changeSize}}
-        @setValidationMessage={{this.setValidationMessage}}
         @sizeValueKB={{@field.value}}
       />
     </@field.Control>

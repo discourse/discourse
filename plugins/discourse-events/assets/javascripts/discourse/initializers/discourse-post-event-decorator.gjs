@@ -11,6 +11,26 @@ const ComposerEventEditorTemplate = <template>
   <ComposerEventEditor />
 </template>;
 
+const EventOneboxTemplate = <template>
+  <DiscoursePostEvent @event={{@data.event}} @linkToPost={{true}} />
+</template>;
+
+const EventOneboxPreviewTemplate = <template>
+  <DiscoursePostEventOneboxPreview
+    @fallbackHtml={{@data.fallbackHtml}}
+    @readOnly={{@data.readOnly}}
+    @topicId={{@data.topicId}}
+  />
+</template>;
+
+const PostEventTemplate = <template>
+  <DiscoursePostEvent
+    @event={{@data.event}}
+    @hideLivestreamVideo={{@data.hideLivestreamVideo}}
+    @post={{@data.post}}
+  />
+</template>;
+
 function _invalidEventPreview(eventContainer) {
   eventContainer.classList.add(
     "discourse-post-event-preview",
@@ -45,12 +65,7 @@ function _decorateEventOneboxes(cooked, helper) {
       aside.replaceWith(wrapper);
 
       const event = DiscoursePostEventEvent.create(data);
-      helper.renderGlimmer(
-        wrapper,
-        <template>
-          <DiscoursePostEvent @event={{event}} @linkToPost={{true}} />
-        </template>
-      );
+      helper.renderGlimmer(wrapper, EventOneboxTemplate, { event });
     });
 }
 
@@ -71,16 +86,11 @@ function _decorateInternalEventOneboxes(cooked, helper, readOnly) {
       const wrapper = document.createElement("div");
       aside.replaceWith(wrapper);
 
-      helper.renderGlimmer(
-        wrapper,
-        <template>
-          <DiscoursePostEventOneboxPreview
-            @fallbackHtml={{fallbackHtml}}
-            @readOnly={{readOnly}}
-            @topicId={{topicId}}
-          />
-        </template>
-      );
+      helper.renderGlimmer(wrapper, EventOneboxPreviewTemplate, {
+        fallbackHtml,
+        readOnly,
+        topicId,
+      });
     });
 }
 
@@ -149,16 +159,11 @@ function initializeDiscoursePostEventDecorator(api) {
 
         const event = DiscoursePostEventEvent.create(post.event);
 
-        helper.renderGlimmer(
-          wrapper,
-          <template>
-            <DiscoursePostEvent
-              @event={{event}}
-              @hideLivestreamVideo={{hideLivestreamVideo}}
-              @post={{post}}
-            />
-          </template>
-        );
+        helper.renderGlimmer(wrapper, PostEventTemplate, {
+          event,
+          hideLivestreamVideo,
+          post,
+        });
       }
     },
     {

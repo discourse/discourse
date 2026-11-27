@@ -24,6 +24,22 @@ class FinalDestination::HTTP < Net::HTTP
   # of open_timeout. Unset by default.
   attr_accessor :total_timeout
 
+  attr_accessor :allow_unverified_tls
+
+  def verify_mode=(mode)
+    if mode == OpenSSL::SSL::VERIFY_NONE && !allow_unverified_tls
+      raise ArgumentError.new("certificate verification cannot be disabled")
+    end
+    super
+  end
+
+  def verify_hostname=(value)
+    if value == false && !allow_unverified_tls
+      raise ArgumentError.new("hostname verification cannot be disabled")
+    end
+    super
+  end
+
   def connect
     raise ArgumentError.new("address cannot be nil or empty") if @address.blank?
 

@@ -17,7 +17,6 @@ ko:
         save: 저장
         about_tab: 소개
         blog_slug: 강타
-        general_heading: 일반
         settings_tab: 설정
         theme_tab: 테마
         column_name: 그룹명
@@ -43,6 +42,7 @@ ko:
           title: 제목
           body: 바디
           tags: 태그
+        settings_button: 설정
       review:
         create: 링크 만들기
         copy: 복사

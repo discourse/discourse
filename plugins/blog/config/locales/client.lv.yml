@@ -14,7 +14,6 @@ lv:
         mobile: Mobilais
         save: Saglabāt
         about_tab: Par
-        general_heading: Vispārīgi
         settings_tab: Iestatījumi
         theme_tab: Tēma
         column_name: Vārds
@@ -35,6 +34,7 @@ lv:
           title: virsraksts
           body: saturs
           tags: birkas
+        settings_button: Iestatījumi
       review:
         copy: Kopēt
         open: Atvērt

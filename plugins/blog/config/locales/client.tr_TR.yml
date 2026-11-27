@@ -19,7 +19,6 @@ tr_TR:
         save: Kaydet
         about_tab: Hakkında
         blog_slug: Kısa ad
-        general_heading: Genel
         settings_tab: Ayarlar
         theme_tab: Tema
         column_name: Ad
@@ -50,6 +49,7 @@ tr_TR:
           title: başlık
           body: gövde
           tags: etiketler
+        settings_button: Ayarlar
       review:
         create: Bağlantı oluştur
         copy: Kopyala
@@ -72,5 +72,7 @@ tr_TR:
       drafts: Taslaklar
       pages: Sayfa
       preview: Ön izle
+      article_settings:
+        kind_page: Sayfa
       unpublish: Yayından kaldır
       appearance_link: Görünüm

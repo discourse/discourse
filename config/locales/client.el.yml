@@ -1942,7 +1942,6 @@ el:
           Σαρώστε αυτόν τον κωδικό QR σε μια υποστηριζόμενη εφαρμογή (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) και εισαγάγετε τον κωδικό ελέγχου ταυτότητας.
         disable_description: "Παρακαλώ εισαγάγετε τον κωδικό ελέγχου ταυτότητας από την εφαρμογή σας"
         show_key_description: "Εισαγάγετε χειροκίνητα"
-        oauth_enabled_warning: "Λάβετε υπόψη ότι οι συνδέσεις κοινωνικών δικτύων θα απενεργοποιηθούν μόλις ενεργοποιηθεί ο έλεγχος ταυτότητας δύο παραγόντων στον λογαριασμό σας."
         use: "Χρησιμοποιήστε την εφαρμογή Authenticator"
         disable: "Απενεργοποίηση"
         delete: "Διαγραφή"
@@ -3977,7 +3976,7 @@ el:
         back_description: "Πήγαινε πίσω στην τελευταία αδιάβαστη ανάρτηση"
         replies_short: "%{current} / %{total}"
       progress:
-        title: πρόοδος θέματος
+        title: "πρόοδος θέματος"
         jump_prompt: "μετάβαση σε…"
         jump_prompt_of:
           one: "από %{count} ανάρτηση"

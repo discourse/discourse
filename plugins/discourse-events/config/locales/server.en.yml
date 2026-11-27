@@ -246,3 +246,7 @@ en:
   discourse_push_notifications:
     popup:
       event_reminder: "Event Reminder"
+  mcp:
+    oauth:
+      scopes:
+        discourse_calendar_read: "See events"

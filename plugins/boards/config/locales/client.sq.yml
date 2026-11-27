@@ -38,5 +38,6 @@ sq:
           column_title: "Titulli"
           icon: "Ikonë"
           color: "Ngjyra"
+          icon_search_placeholder: "Kërkoni…"
           move_to_status_open: "Fillo"
           move_to_status_closed: "Mbyllur"

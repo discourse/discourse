@@ -1848,7 +1848,8 @@ module Email
     end
 
     def should_invite?(email)
-      email !~ Email::Receiver.reply_by_email_address_regex &&
+      !email.casecmp?(SiteSetting.notification_email) &&
+        email !~ Email::Receiver.reply_by_email_address_regex &&
         group_incoming_emails.exclude?(email) && email !~ category_email_in_regex
     end
 

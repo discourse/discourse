@@ -12,7 +12,10 @@ export default class AdminPluginsShowDiscourseAiConceptsNewRoute extends Discour
         parent_name: null,
       },
       topics: [],
+      topicsTotal: 0,
       children: [],
+      neighborConcepts: [],
+      coOccurringConcepts: [],
       isNew: true,
     };
   }

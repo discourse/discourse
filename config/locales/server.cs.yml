@@ -419,9 +419,7 @@ cs:
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Přihlášení nelze vypnout, pokud je vynuceno 2FA. Před vypnutím lokálního přihlašování deaktivujte 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nemůžete povolit nahrávání S3, protože nahrávání S3 je již globálně povoleno a povolení této úrovně webu by mohlo způsobit kritické problémy s nahráváním"
       cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
@@ -3748,6 +3746,7 @@ cs:
 
         Toto je automatická zpráva od %{site_name} , která vás informuje, že [váš příspěvek](%{base_url}%{post_url}) byl schválen.
   page_forbidden:
+    page_title: "Přístup zamítnut"
     title: "Jejda! Tato stránka je soukromá."
   site_setting_missing: "Musí být nastaveno nastavení webu `%{name}`."
   page_not_found:

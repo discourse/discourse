@@ -16,7 +16,6 @@ sw:
         mobile: Kifaa cha kiganjani
         save: Hifadhi
         about_tab: Kuhusu
-        general_heading: Jumla
         settings_tab: Mipangilio
         theme_tab: Mandhari
         column_name: Jina
@@ -40,6 +39,7 @@ sw:
           title: kichwa cha Habari
           body: mwili
           tags: lebo
+        settings_button: Mipangilio
       review:
         copy: Nakili
         open: Fungua

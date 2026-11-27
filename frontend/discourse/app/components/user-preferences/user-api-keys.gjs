@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
 import { longDate } from "discourse/lib/formatter";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,7 +12,13 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 class UserApiKeyRow extends Component {
+  @service currentUser;
+
   @tracked showScopes = false;
+
+  get canRevoke() {
+    return this.currentUser.admin || this.args.user.isCurrent;
+  }
 
   get isExpired() {
     return (
@@ -59,21 +66,23 @@ class UserApiKeyRow extends Component {
         </div>
       </div>
 
-      <div class="user-api-key__actions">
-        {{#if @apiKey.revoked}}
-          <DButton
-            class="btn-default btn-small"
-            @action={{fn (routeAction "undoRevokeApiKey") @apiKey}}
-            @label="user.undo_revoke_access"
-          />
-        {{else}}
-          <DButton
-            class="btn-default btn-small"
-            @action={{fn (routeAction "revokeApiKey") @apiKey}}
-            @label="user.revoke_access"
-          />
-        {{/if}}
-      </div>
+      {{#if this.canRevoke}}
+        <div class="user-api-key__actions">
+          {{#if @apiKey.revoked}}
+            <DButton
+              class="btn-default btn-small"
+              @action={{fn (routeAction "undoRevokeApiKey") @apiKey}}
+              @label="user.undo_revoke_access"
+            />
+          {{else}}
+            <DButton
+              class="btn-default btn-small"
+              @action={{fn (routeAction "revokeApiKey") @apiKey}}
+              @label="user.revoke_access"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
 
       {{#if @apiKey.scopes.length}}
         <div class="user-api-key__scopes-toggle">
@@ -107,7 +116,7 @@ const UserApiKeys = <template>
 
       <div class="user-api-keys">
         {{#each @model.userApiKeys as |key|}}
-          <UserApiKeyRow @apiKey={{key}} />
+          <UserApiKeyRow @apiKey={{key}} @user={{@model}} />
         {{/each}}
       </div>
     </div>

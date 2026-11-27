@@ -18,7 +18,6 @@ zh_TW:
         save: 儲存
         about_tab: 關於
         blog_slug: 縮寫
-        general_heading: 常規
         settings_tab: 設置
         theme_tab: 主題
         column_name: 名稱
@@ -50,6 +49,7 @@ zh_TW:
           title: 標題
           body: 內文
           tags: 標簽
+        settings_button: 設置
       review:
         label: 標籤
         create: 建立連結

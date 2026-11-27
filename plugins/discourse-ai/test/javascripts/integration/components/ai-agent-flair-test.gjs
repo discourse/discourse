@@ -6,6 +6,71 @@ import AiAgentFlair from "discourse/plugins/discourse-ai/discourse/components/po
 module("Integration | Component | AiAgentFlair", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("hides the model label while preserving agent attribution", async function (assert) {
+    this.siteSettings.ai_bot_show_model_name = false;
+    this.outletArgs = {
+      post: {
+        ai_agent_id: -7,
+        ai_agent_name: "Forum helper",
+        llm_name: "Model snapshot",
+        topic: {},
+      },
+      user: { username: "forum_helper_bot" },
+    };
+
+    await render(
+      <template>
+        <AiAgentFlair @outletArgs={{this.outletArgs}}>
+          <span class="technical-name">forum_helper_bot</span>
+        </AiAgentFlair>
+      </template>
+    );
+
+    assert.dom(".agent-flair__model").doesNotExist("the model label is hidden");
+    assert
+      .dom(".technical-name")
+      .doesNotExist("the agent replaces the technical username");
+    assert
+      .dom(".agent-flair a")
+      .hasText("Forum helper", "the agent remains visible");
+    assert.strictEqual(
+      this.outletArgs.post.llm_name,
+      "Model snapshot",
+      "the model metadata is preserved"
+    );
+  });
+
+  test("hides the model label while preserving legacy author attribution", async function (assert) {
+    this.siteSettings.ai_bot_show_model_name = false;
+    this.outletArgs = {
+      post: {
+        llm_name: "Legacy model",
+        topic: {},
+      },
+    };
+
+    await render(
+      <template>
+        <AiAgentFlair @outletArgs={{this.outletArgs}}>
+          <span class="technical-name">Historical author</span>
+        </AiAgentFlair>
+      </template>
+    );
+
+    assert.dom(".agent-flair__model").doesNotExist("the model label is hidden");
+    assert
+      .dom(".agent-flair")
+      .doesNotExist("no agent replaces the historical author");
+    assert
+      .dom(".technical-name")
+      .hasText("Historical author", "the original author remains visible");
+    assert.strictEqual(
+      this.outletArgs.post.llm_name,
+      "Legacy model",
+      "the model metadata is preserved"
+    );
+  });
+
   test("replaces the technical username with agent and model attribution", async function (assert) {
     this.outletArgs = {
       post: {

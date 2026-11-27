@@ -256,6 +256,9 @@ tr_TR:
         type: "Tür"
         error: "Hata"
         response: "Yanıt"
+      post_image_captions:
+        image_descriptions:
+          apply: "Uygula"
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
@@ -880,6 +883,8 @@ tr_TR:
           title: "Yeni kimlik bilgisi oluştur"
       concepts:
         edit: "Düzenle"
+        seed:
+          refresh: "Yenile"
         delete: "Sil"
         columns:
           status: "Durum"
@@ -892,6 +897,9 @@ tr_TR:
           name: "Ad"
           description: "Açıklama"
           status: "Durum"
+        shared_topics_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
         tagged_topics: "Etiketli konular"
         topic_columns:
           topic: "Konu"

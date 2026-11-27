@@ -1953,9 +1953,6 @@ pt_BR:
         show_key_description: "Inserir manualmente"
         short_description: |
           Proteja sua conta com códigos de segurança avulsos ou chaves de segurança físicas
-        extended_description: |
-          A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Observe que as entradas com rede social serão desativadas após a ativação da autenticação de dois fatores na sua conta."
         use: "Usar app autenticador"
         enforced_with_oauth_notice: "É preciso ativar a autenticação de dois fatores. Será solicitado o uso da autenticação ao entrar com uma senha e não com redes sociais ou algum método de autenticação externo."
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
@@ -2788,7 +2785,6 @@ pt_BR:
       not_allowed_from_ip_address: "Você não pode entrar com este endereço IP."
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador(a) com este endereço IP."
       resend_activation_email: "Clique aqui para enviar o e-mail de ativação novamente."
-      omniauth_disallow_totp: "Sua conta tem autenticação dois fatores ativada. Entre com sua senha."
       works_with: "Funciona com"
       activate_account: "Ativar conta"
       resend_title: "Enviar novamente e-mail de ativação"
@@ -3897,7 +3893,7 @@ pt_BR:
         back_description: "Voltar para a sua última postagem não lida"
         replies_short: "%{current}/%{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "pular para…"
         jump_prompt_of:
           one: "de %{count} postagem"

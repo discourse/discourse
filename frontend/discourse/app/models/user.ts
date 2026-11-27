@@ -42,6 +42,7 @@ import {
 } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
@@ -79,6 +80,31 @@ export interface UserStatus {
   ends_at: string | null;
   message_bus_last_id?: number;
 }
+
+export type SecondFactorManagementResponse = { success: "OK" } & (
+  | { external_login_required: true; unconfirmed_session?: never }
+  | { external_login_required?: never; unconfirmed_session: true }
+  | {
+      external_login_required?: never;
+      unconfirmed_session?: never;
+      totps: {
+        id: number;
+        name: string | null;
+        method: number;
+        last_used: string | null;
+      }[];
+      security_keys: {
+        id: number;
+        user_id: number;
+        credential_id: string;
+        public_key: string;
+        factor_type: number;
+        enabled: boolean;
+        name: string;
+        last_used: string | null;
+      }[];
+    }
+);
 
 /** Options are partial: current-user and profile serializers expose different subsets. */
 export interface UserOption {
@@ -172,8 +198,8 @@ export interface UserApiKey {
 
 type WrappedUserApiKey = EmberObject &
   UserApiKey & {
-    revoke(): void;
-    undoRevoke(): void;
+    revoke(): globalThis.Promise<void>;
+    undoRevoke(): globalThis.Promise<void>;
   };
 
 /** Core serializer and client-assigned fields. Plugins augment this interface. */
@@ -348,6 +374,7 @@ export interface UserFields {
   sidebar_tags?: SiteSidebarTag[];
   silence_reason?: string | null;
   silenced_till?: string | null;
+  staff_only_settings?: string[];
   staged?: boolean;
   /** Legacy compatibility field; current serializers do not supply it. */
   stats?: UserActionStat[];
@@ -1054,7 +1081,7 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  @computed()
+  @computed("user_api_keys")
   get userApiKeys(): WrappedUserApiKey[] | undefined {
     const keys = this.user_api_keys;
     if (keys) {
@@ -1064,13 +1091,9 @@ export default class User extends RestModel.extend(Evented) {
           raw as Partial<EmberObject>
         ) as WrappedUserApiKey;
 
-        obj.revoke = () => {
-          this.revokeApiKey(obj);
-        };
+        obj.revoke = () => this.revokeApiKey(obj);
 
-        obj.undoRevoke = () => {
-          this.undoRevokeApiKey(obj);
-        };
+        obj.undoRevoke = () => this.undoRevokeApiKey(obj);
 
         return obj;
       });
@@ -1283,13 +1306,15 @@ export default class User extends RestModel.extend(Evented) {
     return this.user_option?.text_size;
   }
 
-  @computed("second_factor_enabled", "staff")
-  get enforcedSecondFactor() {
+  @computed("siteSettings.enforce_second_factor", "staff")
+  get requiresSecondFactor(): boolean {
     const enforce = this.siteSettings.enforce_second_factor;
-    return (
-      !this.second_factor_enabled &&
-      (enforce === "all" || (enforce === "staff" && this.staff))
-    );
+    return enforce === "all" || (enforce === "staff" && !!this.staff);
+  }
+
+  @computed("second_factor_enabled", "requiresSecondFactor")
+  get enforcedSecondFactor(): boolean {
+    return this.requiresSecondFactor && !this.second_factor_enabled;
   }
 
   @computed("tracked_tags.[]", "watched_tags.[]", "watching_first_post_tags.[]")
@@ -1530,10 +1555,48 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
-  loadSecondFactorCodes(): globalThis.Promise<unknown> {
-    return ajax("/u/second_factors.json", {
+  async loadSecondFactorCodes(): globalThis.Promise<SecondFactorManagementResponse> {
+    const response = await ajax<
+      (SecondFactorManagementResponse & { error?: string }) | null
+    >("/u/second_factors.json", {
+      data: { webauthn_supported: isWebauthnSupported() },
       type: "POST",
     });
+
+    if (response?.error) {
+      throw new Error(response.error);
+    }
+
+    if (response?.success === "OK") {
+      const { external_login_required, unconfirmed_session } = response;
+      if (
+        external_login_required === true &&
+        unconfirmed_session === undefined
+      ) {
+        return { success: "OK", external_login_required };
+      }
+      if (
+        unconfirmed_session === true &&
+        external_login_required === undefined
+      ) {
+        return { success: "OK", unconfirmed_session };
+      }
+      if (
+        external_login_required === undefined &&
+        unconfirmed_session === undefined &&
+        "totps" in response &&
+        Array.isArray(response.totps) &&
+        response.totps.every((factor) => Number.isSafeInteger(factor?.id)) &&
+        Array.isArray(response.security_keys) &&
+        response.security_keys.every((factor) =>
+          Number.isSafeInteger(factor?.id)
+        )
+      ) {
+        return response;
+      }
+    }
+
+    throw new Error(i18n("generic_error"));
   }
 
   requestSecurityKeyChallenge(): globalThis.Promise<unknown> {

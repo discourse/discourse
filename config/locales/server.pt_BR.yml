@@ -370,9 +370,7 @@ pt_BR:
       s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
       secure_uploads_requirements: "Envios S3 devem ser ativados antes dos envios seguros."
       share_quote_facebook_requirements: "É preciso definir uma id do app Facebook para permitir o compartilhamento de citação para Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Não é possível aplicar 2FA se o DiscourseConnect estiver ativado."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Não é possível desativar a entrada com conta em modo local se o 2FA estiver aplicado. Desative o 2FA aplicado antes de desativar entradas com conta em modo local."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Não possível ativar envios S3 porque os envios S3 já estão ativados globalmente, e ativar este nível do site pode causar problemas críticos com os envios."
       cors_origins_should_not_have_trailing_slash: "Você não deve adicionar a barra à direita (/) às origens CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agentes de usuário(a) devem ter pelo menos três caracteres para evitar limitação de taxa de usuários(as) legítimos(as) sem querer."
@@ -4147,6 +4145,7 @@ pt_BR:
 
         Esta é uma mensagem automática de %{site_name} para avisar que [sua postagem](%{base_url}%{post_url}) foi aprovada.
   page_forbidden:
+    page_title: "Acesso negado"
     title: "Ops! Essa página é privada."
   site_setting_missing: "O site %{name} precisa ser configurado."
   page_not_found:
