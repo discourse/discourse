@@ -1059,6 +1059,46 @@ RSpec.describe Assigner do
     end
   end
 
+  describe "tracking posts for post targets the topic audience cannot see" do
+    fab!(:admin)
+    fab!(:tracking_topic, :topic)
+    fab!(:whisper_group, :group)
+
+    before do
+      Fabricate(:post, topic: tracking_topic, user: admin)
+      SiteSetting.assigns_public = true
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+    end
+
+    it "does not create a tracking post for a hidden post target" do
+      post = Fabricate(:post, topic: tracking_topic, user: admin, hidden: true)
+
+      expect {
+        described_class.new(post, admin).assign(admin, note: "hidden target note")
+      }.not_to change { tracking_topic.posts.count }
+    end
+
+    it "does not create a tracking post for a trashed post target" do
+      post = Fabricate(:post, topic: tracking_topic, user: admin)
+      described_class.new(post, admin).assign(admin)
+      post.update!(deleted_at: 1.minute.ago)
+      trashed_post = Post.with_deleted.find(post.id)
+
+      expect { described_class.new(trashed_post, admin).unassign }.not_to change {
+        tracking_topic.posts.count
+      }
+    end
+
+    it "still creates a whisper tracking post for a whisper target" do
+      post = Fabricate(:post, topic: tracking_topic, user: admin, post_type: Post.types[:whisper])
+
+      expect { described_class.new(post, admin).assign(admin, note: "whisper note") }.to change {
+        tracking_topic.posts.count
+      }.by(1)
+      expect(tracking_topic.posts.last).to be_whisper
+    end
+  end
+
   describe "assign_emailer" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }

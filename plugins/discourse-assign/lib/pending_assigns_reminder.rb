@@ -71,6 +71,7 @@ class PendingAssignsReminder
         .joins_with_topics
         .where(assigned_to_id: user.id, assigned_to_type: "User", active: true)
         .merge(visible_topics(user))
+        .where(DiscourseAssign::Visibility.visible_assignments_sql(user.guardian))
     assignments =
       DiscoursePluginRegistry.apply_modifier(:assigned_count_for_user_query, assignments, user)
     assignments.count
@@ -88,7 +89,11 @@ class PendingAssignsReminder
           user.id,
         )
     topics = DiscoursePluginRegistry.apply_modifier(:assigns_reminder_assigned_topics_query, topics)
-    topics.merge(secure).order("assignments.created_at #{order}").limit(3)
+    topics
+      .merge(secure)
+      .where(DiscourseAssign::Visibility.visible_assignments_sql(user.guardian))
+      .order("assignments.created_at #{order}")
+      .limit(3)
   end
 
   def reminder_body(user, assigned_topics_count, first_three_topics, last_three_topics)

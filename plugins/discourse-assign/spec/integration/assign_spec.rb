@@ -82,7 +82,7 @@ describe "integration tests" do
 
       expect(message.data[:topic_id]).to eq(topic.id)
       expect(message.user_ids).to eq([user.id]) if user
-      expect(message.group_ids).to eq([group.id]) if group
+      expect(message.user_ids).to match_array(group.users.pluck(:id)) if group
     end
 
     it "publishes the right message on archive and move to inbox" do

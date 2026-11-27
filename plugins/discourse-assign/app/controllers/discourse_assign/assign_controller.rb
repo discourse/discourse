@@ -81,6 +81,7 @@ module DiscourseAssign
           .joins(
             "JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL",
           )
+          .where(DiscourseAssign::Visibility.visible_assignments_sql(guardian, table_alias: "a"))
           .order("a.assigned_to_id, topics.bumped_at desc")
           .offset(offset)
           .limit(limit)
@@ -134,6 +135,7 @@ module DiscourseAssign
           .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
           .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
           .where("a.assigned_to_id IS NOT NULL AND a.active")
+          .where(DiscourseAssign::Visibility.visible_assignments_sql(guardian, table_alias: "a"))
           .order("COUNT(users.id) DESC")
           .group("users.id")
           .select('users.*, COUNT(users.id) as "assignments_count"')
@@ -146,7 +148,11 @@ module DiscourseAssign
         users_with_assignments_count =
           users_with_assignments_count.where(filter_query, pattern: "%#{params[:filter]}%")
       end
-      group_assignments_count = Assignment.active_for_group(group).count
+      group_assignments_count =
+        Assignment
+          .active_for_group(group)
+          .where(DiscourseAssign::Visibility.visible_assignments_sql(guardian))
+          .count
       users_assignments_count =
         users_with_assignments_count.reduce(0) do |sum, assignment|
           sum + assignment.assignments_count

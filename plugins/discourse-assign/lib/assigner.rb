@@ -126,9 +126,12 @@ class ::Assigner
   end
 
   def self.publish_topic_tracking_state(topic, user_id)
-    if topic.private_message?
-      MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids: [user_id])
-    end
+    return if !topic.private_message?
+
+    user = User.find_by(id: user_id)
+    return if !user || !user.guardian.can_see?(topic)
+
+    MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids: [user.id])
   end
 
   def initialize(target, user)
@@ -138,7 +141,7 @@ class ::Assigner
 
   def allowed_user_ids
     @allowed_user_ids ||=
-      DiscourseAssign::AssignmentPermissions.assignable_user_ids(@target).pluck(:id)
+      DiscourseAssign::AssignmentPermissions.visible_assignable_user_ids(@target)
   end
 
   def can_assign_to?(assign_to)
@@ -430,8 +433,8 @@ class ::Assigner
 
       assigned_to = assignment.assigned_to
 
-      if SiteSetting.unassign_creates_tracking_post && !silent
-        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+      if SiteSetting.unassign_creates_tracking_post && !silent && tracking_post_allowed?
+        post_type = tracking_post_type
 
         custom_fields = small_action_username_or_name(assigned_to)
 
@@ -536,6 +539,8 @@ class ::Assigner
   end
 
   def add_small_action_post(action_code, assign_to, text)
+    return if !tracking_post_allowed?
+
     custom_fields = small_action_username_or_name(assign_to)
 
     if post_target?
@@ -549,10 +554,35 @@ class ::Assigner
       text,
       bump: false,
       auto_track: false,
-      post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
+      post_type: tracking_post_type,
       action_code: action_code,
       custom_fields: custom_fields,
     )
+  end
+
+  # Tracking posts are readable by the whole topic audience (small action) or by
+  # whisperers, so they may only be created when one of those audiences is
+  # contained in the target's own audience.
+  def tracking_post_allowed?
+    return true if !post_target?
+
+    !@target.hidden? && !@target.trashed?
+  end
+
+  # Tracking posts are visible to the whole audience of the topic, so they may
+  # only be public when the assignment target is visible to that same audience.
+  def tracking_post_type
+    if SiteSetting.assigns_public && target_visible_to_topic_readers?
+      Post.types[:small_action]
+    else
+      Post.types[:whisper]
+    end
+  end
+
+  def target_visible_to_topic_readers?
+    return true if !post_target?
+
+    !@target.whisper? && !@target.hidden? && !@target.trashed?
   end
 
   def moderator_post_assign_action_code(assignment, action_code)
