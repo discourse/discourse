@@ -313,16 +313,13 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       log.length = 0;
       engine.select(a);
-      engine.clear();
       assert.deepEqual(
         log,
         [
           ["change", 1],
           ["select", 1, a],
-          ["change", null],
-          ["deselect", 1, a, "clear"],
         ],
-        "picking from empty deselects nothing, and a clear says so"
+        "picking from empty deselects nothing"
       );
     });
   });

@@ -364,8 +364,7 @@ export default class SelectionActions {
       this.#report(
         this.#args.onSelect,
         [this.#args.recordValue(record)],
-        () => held,
-        { config: this.#getExtensionContext().config }
+        () => held
       );
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
@@ -456,11 +455,8 @@ export default class SelectionActions {
       picked.push(this.#args.recordValue(pick.record));
     }
     if (additions.length === 0) {
-      this.#report(
-        this.#args.onSelect,
-        picked,
-        (value) => this.#resolveOneSync(value),
-        { config: this.#getExtensionContext().config }
+      this.#report(this.#args.onSelect, picked, (value) =>
+        this.#resolveOneSync(value)
       );
       if (held + limit > 0) {
         this.#args.onBulkUnchanged?.({ held, limit });
@@ -634,17 +630,19 @@ export default class SelectionActions {
 
   /**
    * Hands a selection callback its values and their records in the select's arity. A single
-   * select reports nothing for `null`, which is no value.
+   * select reports nothing for `null`, which is no value. A re-pick has no `change`, so it
+   * reads the live config.
    */
   #report(
     callback: SelectChangeHandler | undefined,
     values: readonly SelectId[],
     lookUp: (value: SelectId) => SelectRecord | undefined,
-    change: SelectChange
+    change?: SelectChange
   ): void {
     if (!callback) {
       return;
     }
+    change ??= { config: this.#getExtensionContext().config };
     if (this.#args.multiple) {
       if (values.length > 0) {
         const next = this.#coerceValue(values, lookUp) as SelectId[];
