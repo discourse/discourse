@@ -1,0 +1,4 @@
+plugins:
+  rhodes_enabled:
+    default: true
+    client: true
