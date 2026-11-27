@@ -317,6 +317,7 @@ after_initialize do
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
+  require_relative "lib/discourse_events/events/agenda"
   require_relative "lib/discourse_events/events/onebox_data"
   require_relative "lib/discourse_events/events/onebox_occurrence"
   require_relative "lib/discourse_events/events/parser"

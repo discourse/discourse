@@ -40,6 +40,7 @@ export default class FullCalendar extends Component {
 
   @controller topic;
 
+  @tracked beforeEventsElement = null;
   @tracked isRendered = false;
 
   calendar = null;
@@ -104,7 +105,7 @@ export default class FullCalendar extends Component {
   }
 
   @action
-  async setupCalendar(element) {
+  async setupCalendar(element, [hasBlock]) {
     const calendarModule = await loadFullCalendar();
 
     this.calendar = new calendarModule.Calendar(element, {
@@ -214,6 +215,14 @@ export default class FullCalendar extends Component {
     });
 
     this.calendar.render();
+    if (hasBlock) {
+      const slot = document.createElement("div");
+      this.calendar.el.insertBefore(
+        slot,
+        this.calendar.el.querySelector(".fc-view-harness")
+      );
+      this.beforeEventsElement = slot;
+    }
     this.isRendered = true;
   }
 
@@ -226,6 +235,11 @@ export default class FullCalendar extends Component {
   }
 
   <template>
+    {{#if this.beforeEventsElement}}
+      {{#in-element this.beforeEventsElement insertBefore=null}}
+        {{yield}}
+      {{/in-element}}
+    {{/if}}
     {{#if this.showPlaceholder}}
       <CalendarPlaceholder
         @height={{@height}}
@@ -236,7 +250,7 @@ export default class FullCalendar extends Component {
     <div
       aria-busy={{if this.showPlaceholder "true"}}
       ...attributes
-      {{didInsert this.setupCalendar}}
+      {{didInsert this.setupCalendar (has-block)}}
       {{didUpdate
         this.updateCalendar
         @events

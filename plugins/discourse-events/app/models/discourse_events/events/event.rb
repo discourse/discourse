@@ -714,6 +714,48 @@ module DiscourseEvents
         )
       end
 
+      def each_recurring_occurrence(after:, before:)
+        return enum_for(__method__, after:, before:) unless block_given?
+        return if recurrence.blank?
+
+        if original_starts_at > after
+          return if original_starts_at >= before
+          yield({ starts_at: original_starts_at, ends_at: original_ends_at })
+          after = original_starts_at + 1.second
+        end
+
+        after_in_tz = after.in_time_zone(timezone)
+        before_in_tz = before.in_time_zone(timezone)
+        rule = recurrence_rule
+        interval_days = { "every_two_weeks" => 14, "every_four_weeks" => 28 }[recurrence]
+        if interval_days
+          original = original_starts_at.in_time_zone(timezone)
+          cycles = [(after_in_tz.to_date - original.to_date).to_i / interval_days, 0].max
+          rebased = original + (cycles * interval_days).days
+          while rebased.to_date != original.to_date + cycles * interval_days ||
+                  rebased.strftime("%H:%M:%S") != original.strftime("%H:%M:%S")
+            cycles -= 1
+            rebased = original + (cycles * interval_days).days
+          end
+          # Skip old cycles without letting a DST gap change the recurrence's wall time.
+          rule =
+            RRule::Rule.new(
+              RRuleConfigurator.rule(
+                recurrence:,
+                starts_at: original,
+                recurrence_until: recurrence_until&.in_time_zone(timezone),
+              ),
+              dtstart: rebased,
+              tzid: rrule_timezone,
+            )
+        end
+        rule.each(floor_date: after_in_tz) do |starts_at|
+          next if starts_at < after_in_tz
+          break if starts_at >= before_in_tz
+          yield({ starts_at:, ends_at: derive_next_ends_at(starts_at) })
+        end
+      end
+
       def duration
         return nil unless original_starts_at
 

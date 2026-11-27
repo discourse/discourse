@@ -8,6 +8,51 @@ RSpec.describe DiscourseEvents::Events::Event do
     SiteSetting.discourse_post_event_enabled = true
   end
 
+  describe "#each_recurring_occurrence" do
+    it "preserves wall times when a seek lands in a skipped local hour or date" do
+      [
+        ["America/New_York", [2026, 2, 22, 2, 30], [2026, 3, 8], [2026, 4, 1]],
+        ["Pacific/Apia", [2011, 12, 2, 9], [2011, 12, 31], [2012, 3, 1]],
+      ].each do |timezone, original, lower, upper|
+        zone = Time.find_zone!(timezone)
+        event =
+          described_class.new(
+            original_starts_at: zone.local(*original),
+            recurrence: "every_two_weeks",
+            timezone:,
+          )
+        after = zone.local(*lower)
+        before = zone.local(*upper)
+
+        expect(event.each_recurring_occurrence(after:, before:).to_a).to eq(
+          event.recurring_occurrences(after:, before:, limit: 50),
+        )
+      end
+    end
+
+    it "preserves recurrence dates and durations when seeking old series across DST" do
+      %w[UTC America/New_York].each do |timezone|
+        zone = Time.find_zone!(timezone)
+        DiscourseEvents::Events::RRuleConfigurator::RECURRENCES.each do |recurrence|
+          event =
+            described_class.new(
+              original_starts_at: zone.local(2000, 1, 1, 9),
+              original_ends_at: zone.local(2000, 1, 1, 11),
+              recurrence:,
+              timezone:,
+              recurrence_until: zone.local(2026, 10, 1),
+            )
+          after = zone.local(2026, 1, 1)
+          before = zone.local(2027, 1, 1)
+
+          expect(event.each_recurring_occurrence(after:, before:).to_a).to eq(
+            event.recurring_occurrences(after:, before:, limit: 367),
+          )
+        end
+      end
+    end
+  end
+
   it do
     is_expected.to validate_length_of(:description).is_at_most(
       DiscourseEvents::Events::Event::MAX_DESCRIPTION_LENGTH,

@@ -450,6 +450,9 @@ en:
         inline_title: "Inline bulk invite"
         csv_title: "CSV bulk invite"
       upcoming_events:
+        agenda:
+          show_earlier: "Show earlier"
+          show_later: "Show later"
         title: "Upcoming events"
         creator: "Creator"
         status: "Status"
