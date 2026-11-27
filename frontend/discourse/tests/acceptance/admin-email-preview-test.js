@@ -1,32 +1,40 @@
-import { click, fillIn, visit, waitUntil } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - email-preview", function (needs) {
+  let previewHasContent;
+
+  needs.hooks.beforeEach(() => {
+    previewHasContent = true;
+  });
+
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/admin/email/preview-digest.json", () =>
       helper.response(200, {
-        html_content: "<span>Hello world</span>",
-        text_content: "<span>Not actually html</span>",
+        html_content: previewHasContent ? "<span>Hello world</span>" : "",
+        text_content: previewHasContent ? "<span>Not actually html</span>" : "",
       })
     );
   });
 
   test("preview rendering", async function (assert) {
     await visit("/admin/email/preview-digest");
-    const iframe = document.querySelector(".preview-output iframe");
-
-    // Rendered as a separate document, so Ember's built-in waiters don't work properly
-    await waitUntil(() =>
-      iframe.contentWindow.document.body?.querySelector("span")
-    );
-
-    const iframeBody = iframe.contentWindow.document.body;
-
     assert
-      .dom("span", iframeBody)
-      .hasText("Hello world", "html content is rendered inside iframe");
+      .dom(".preview-output iframe")
+      .hasAttribute(
+        "srcdoc",
+        "<span>Hello world</span>",
+        "the preview HTML is supplied to the iframe"
+      )
+      .hasAttribute("sandbox", "", "the preview has no sandbox permissions")
+      .hasAttribute(
+        "referrerpolicy",
+        "no-referrer",
+        "the preview does not send referrers"
+      );
 
     await click("a.show-text-link");
     assert
@@ -35,6 +43,25 @@ acceptance("Admin - email-preview", function (needs) {
         "<span>Not actually html</span>",
         "text content is escaped correctly"
       );
+  });
+
+  test("shows no result for an empty summary", async function (assert) {
+    previewHasContent = false;
+
+    await visit("/admin/email/preview-digest");
+
+    assert
+      .dom(".preview-output iframe")
+      .doesNotExist("an empty summary has no preview document");
+    assert
+      .dom(".preview-output")
+      .hasText(
+        i18n("admin.email.no_result"),
+        "the empty-result message is shown"
+      );
+    assert
+      .dom(".email-preview-digest .controls")
+      .doesNotExist("an empty summary cannot be sent");
   });
 
   test("send digest form requires a destination email", async function (assert) {
