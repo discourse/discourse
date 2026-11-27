@@ -8,6 +8,219 @@ RSpec.describe DiscourseEvents::EventsController do
   end
 
   describe "#agenda" do
+    it "rate limits anonymous agenda requests per IP without limiting other views" do
+      RateLimiter.enable
+      params = { after: "2026-01-01", before: "2027-01-01" }
+      30.times do
+        get "/discourse-post-event/events/agenda.json", params: params
+        expect(response.status).to eq(200)
+      end
+
+      get "/discourse-post-event/events/agenda.json", params: params
+
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to be_present
+
+      get "/discourse-post-event/events/agenda.json",
+          params: params,
+          headers: {
+            "REMOTE_ADDR" => "203.0.113.1",
+          }
+      expect(response.status).to eq(200)
+
+      get "/discourse-post-event/events.json", params: params
+      expect(response.status).to eq(200)
+
+      freeze_time 61.seconds.from_now
+      get "/discourse-post-event/events/agenda.json", params: params
+      expect(response.status).to eq(200)
+    end
+
+    it "rate limits signed-in agenda requests by account" do
+      sign_in(Fabricate(:user))
+      RateLimiter.enable
+      params = { after: "2026-01-01", before: "2027-01-01" }
+      30.times { get "/discourse-post-event/events/agenda.json", params: params }
+
+      get "/discourse-post-event/events/agenda.json",
+          params: params,
+          headers: {
+            "REMOTE_ADDR" => "203.0.113.1",
+          }
+
+      expect(response.status).to eq(429)
+
+      sign_in(Fabricate(:user))
+      get "/discourse-post-event/events/agenda.json", params: params
+      expect(response.status).to eq(200)
+    end
+
+    it "prunes recurring series outside the requested side before instantiating them" do
+      earlier =
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 1, 1),
+          original_ends_at: nil,
+          recurrence: "every_week",
+          recurrence_until: Time.utc(2026, 3, 1),
+        )
+      later =
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 10, 1),
+          original_ends_at: nil,
+          recurrence: "every_week",
+        )
+      %w[earlier later].each do |direction|
+        [
+          { anchor: "2026-07-01" },
+          {
+            anchor: direction == "earlier" ? "2027-01-01" : "2026-01-01",
+            cursor_time: "2026-07-01T00:00:00Z",
+            cursor_id: 1,
+          },
+        ].each do |position|
+          loaded_events = 0
+          subscriber = ->(*args) do
+            payload = args.last
+            loaded_events += payload[:record_count] if payload[:class_name] ==
+              "DiscourseEvents::Events::Event"
+          end
+          ActiveSupport::Notifications.subscribed(subscriber, "instantiation.active_record") do
+            get "/discourse-post-event/events/agenda.json",
+                params: {
+                  after: "2026-01-01",
+                  before: "2027-01-01",
+                  direction:,
+                  **position,
+                }
+          end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["events"].map { |event| event["id"] }).to eq(
+            [direction == "earlier" ? earlier.id : later.id],
+          )
+          expect(loaded_events).to eq(1)
+        end
+      end
+    end
+
+    it "keeps the final recurring occurrence while it is still ongoing" do
+      event =
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 11, 16),
+          original_ends_at: Time.utc(2026, 11, 21),
+          recurrence: "every_week",
+          recurrence_until: Time.utc(2026, 11, 23),
+        )
+
+      get "/discourse-post-event/events/agenda.json",
+          params: {
+            after: "2026-01-01",
+            before: "2027-01-01",
+            anchor: "2026-11-27",
+            timezone: "UTC",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["events"].map { |item| item["id"] }).to eq([event.id])
+      expect(response.parsed_body["events"].first["occurrences"]).to eq(
+        [{ "starts_at" => "2026-11-23T00:00:00.000Z", "ends_at" => "2026-11-28T00:00:00.000Z" }],
+      )
+    end
+
+    it "keeps floating final occurrences across the extreme timezone offsets" do
+      events =
+        %w[Pacific/Kiritimati Etc/GMT+12].map do |timezone|
+          final_start = Time.find_zone!(timezone).local(2026, 11, 27)
+          Fabricate(
+            :event,
+            original_starts_at: final_start - 1.week,
+            original_ends_at: nil,
+            recurrence: "every_week",
+            recurrence_until: final_start.end_of_day,
+            timezone:,
+            show_local_time: true,
+          )
+        end
+
+      %w[Pacific/Kiritimati Etc/GMT+12].each do |timezone|
+        zone = Time.find_zone!(timezone)
+        get "/discourse-post-event/events/agenda.json",
+            params: {
+              after: zone.local(2026, 1, 1).iso8601,
+              before: zone.local(2027, 1, 1).iso8601,
+              anchor: zone.local(2026, 11, 27).iso8601,
+              timezone:,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].map { |event| event["id"] }).to contain_exactly(
+          *events.map(&:id),
+        )
+        expect(
+          response.parsed_body["events"].flat_map do |event|
+            event["occurrences"].map { |occurrence| occurrence["starts_at"] }
+          end,
+        ).to eq(%w[2026-11-27T00:00:00 2026-11-27T00:00:00])
+      end
+    end
+
+    it "keeps an end-less all-day series on the correct side of the anchor" do
+      event =
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 11, 19),
+          original_ends_at: nil,
+          recurrence: "every_week",
+          recurrence_until: Time.utc(2026, 11, 26),
+          all_day: true,
+        )
+      params = {
+        after: "2026-01-01T00:00:00-03:00",
+        before: "2027-01-01T00:00:00-03:00",
+        anchor: "2026-11-27T00:00:00-03:00",
+        timezone: "America/Sao_Paulo",
+      }
+
+      get "/discourse-post-event/events/agenda.json", params: params
+      expect(response.parsed_body["events"]).to eq([])
+
+      get "/discourse-post-event/events/agenda.json", params: params.merge(direction: "earlier")
+      expect(response.parsed_body["events"].map { |item| item["id"] }).to eq([event.id])
+      expect(response.parsed_body["events"].first["occurrences"].last["starts_at"]).to eq(
+        "2026-11-26",
+      )
+    end
+
+    it "keeps earlier floating occurrences whose UTC start is after the anchor instant" do
+      event =
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 11, 27),
+          original_ends_at: nil,
+          recurrence: "every_week",
+          timezone: "Etc/GMT+12",
+          show_local_time: true,
+        )
+
+      get "/discourse-post-event/events/agenda.json",
+          params: {
+            after: "2026-01-01T00:00:00+13:00",
+            before: "2027-01-01T00:00:00+13:00",
+            anchor: "2026-11-27T00:00:00+13:00",
+            timezone: "Pacific/Auckland",
+            direction: "earlier",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["events"].map { |item| item["id"] }).to eq([event.id])
+      expect(response.parsed_body["events"].first["occurrences"].first["starts_at"]).to eq(
+        "2026-11-26T12:00:00",
+      )
+    end
+
     it "uses displayed dates at both year boundaries for all-day and floating events" do
       events =
         [Time.utc(2026, 1, 1), Time.utc(2026, 12, 31), Time.utc(2027, 1, 1)].flat_map do |date|

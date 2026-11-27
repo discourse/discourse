@@ -109,6 +109,9 @@ module DiscourseEvents
     end
 
     def agenda
+      rate_limit_key = current_user ? "events-agenda" : "events-agenda-#{request.remote_ip}"
+      RateLimiter.new(current_user, rate_limit_key, 30, 1.minute).performed!
+
       result =
         Events::Agenda.search(
           current_user,

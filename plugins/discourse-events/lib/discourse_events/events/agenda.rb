@@ -61,7 +61,7 @@ module DiscourseEvents
             )
             .select(:post_id)
         singles = @events.where(recurrence: nil)
-        recurring = @events.where.not(recurrence: nil)
+        recurring = recurring_scope
         if @params[:attending_user].present?
           singles = singles.or(@events.where(id: single_rsvps))
           recurring = recurring.where.not(id: single_rsvps)
@@ -181,6 +181,20 @@ module DiscourseEvents
             "(#{column}) + INTERVAL '#{@anchor.utc_offset} seconds'"
           end
         "CASE WHEN all_day THEN date_trunc('day', (#{column})) WHEN show_local_time THEN (#{column}) AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(agenda_timezones.name, timezone, 'UTC') ELSE #{viewer_time} END"
+      end
+
+      def recurring_scope
+        scope = @events.where.not(recurrence: nil)
+        bound = @cursor_time || @anchor
+        if later?
+          # Keep ongoing occurrences and allow for floating dates and implicit end times.
+          scope.where(
+            "recurrence_until IS NULL OR GREATEST(recurrence_until, original_starts_at) + COALESCE(original_ends_at - original_starts_at, INTERVAL '0') + INTERVAL '2 days' >= ?",
+            bound,
+          )
+        else
+          scope.where("original_starts_at <= ?", bound + 2.days)
+        end
       end
 
       def recurring_occurrences(event)
