@@ -290,7 +290,7 @@ describe DiscourseAi::Translation::EntryPoint do
 
     before do
       SiteSetting.content_localization_enabled = true
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_supported_locales = "en|ja"
       Fabricate(:bound_push_subscription, user: user)
     end

@@ -176,6 +176,22 @@ RSpec.describe BadgeGranter do
   end
 
   describe ".backfill" do
+    it "uses the site default for badge notifications when the saved locale is excluded" do
+      user = Fabricate(:user, locale: "fr")
+      Fabricate(:post, like_count: 10, user:)
+      SiteSetting.default_locale = "en"
+      SiteSetting.allowed_user_locales = "ja"
+      badge = Badge.find(Badge::NiceTopic)
+      expected_name = I18n.with_locale(:en) { badge.display_name }
+
+      BadgeGranter.backfill(badge)
+
+      notification =
+        user.notifications.find_by!(notification_type: Notification.types[:granted_badge])
+      expect(notification.data_hash["badge_name"]).to eq(expected_name)
+      expect(user.reload.locale).to eq("fr")
+    end
+
     it "has no broken badge queries" do
       Badge.all.each { |b| BadgeGranter.backfill(b) }
     end
@@ -226,7 +242,7 @@ RSpec.describe BadgeGranter do
     end
 
     it "grants badges in the user's locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       nice_topic = Badge.find(Badge::NiceTopic)
       name_english = nice_topic.name
@@ -809,18 +825,18 @@ RSpec.describe BadgeGranter do
 
   describe "notification locales" do
     it "is using default locales when user locales are not set" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       expect(BadgeGranter.notification_locale("")).to eq(SiteSetting.default_locale)
     end
 
     it "is using default locales when user locales are set but is not allowed" do
-      SiteSetting.allow_user_locale = false
-      expect(BadgeGranter.notification_locale("pl_PL")).to eq(SiteSetting.default_locale)
+      SiteSetting.allowed_user_locales = ""
+      expect(BadgeGranter.notification_locale("fr")).to eq(SiteSetting.default_locale)
     end
 
     it "is using user locales when set and allowed" do
-      SiteSetting.allow_user_locale = true
-      expect(BadgeGranter.notification_locale("pl_PL")).to eq("pl_PL")
+      SiteSetting.allowed_user_locales = "all"
+      expect(BadgeGranter.notification_locale("fr")).to eq("fr")
     end
   end
 

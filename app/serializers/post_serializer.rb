@@ -666,7 +666,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_locale?
-    SiteSetting.allow_user_locale && scope.is_admin? && user_locale.present?
+    SiteSetting.allowed_user_locales.present? && scope.is_admin? && user_locale.present?
   end
 
   def include_user_status?

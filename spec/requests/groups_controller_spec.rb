@@ -3369,7 +3369,7 @@ RSpec.describe GroupsController do
     end
 
     it "sends accepted membership request reply even if request is in another language" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       other_user.update!(locale: "fr")
 
       GroupRequest.create!(group: group, user: other_user)

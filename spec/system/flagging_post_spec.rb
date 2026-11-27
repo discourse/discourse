@@ -83,7 +83,7 @@ describe "Flagging post" do
 
   describe "As send a message to user" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       current_user.update!(locale: "en_GB")
       sign_in(current_user)
     end

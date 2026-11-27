@@ -191,7 +191,7 @@ describe "Edit AI post image captions" do
   end
 
   it "shows locale-specific captions and original-locale fallback", :aggregate_failures do
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:admins]
     SiteSetting.content_localization_supported_locales = "en|ja"
@@ -220,7 +220,7 @@ describe "Edit AI post image captions" do
   end
 
   it "lets the user edit a translated image caption", :aggregate_failures do
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:admins]
     SiteSetting.content_localization_supported_locales = "en|ja"

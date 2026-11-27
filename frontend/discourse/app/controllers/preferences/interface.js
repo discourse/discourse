@@ -15,7 +15,10 @@ import {
   SEND_SHORTCUT_ENTER,
   SEND_SHORTCUT_META_ENTER,
 } from "discourse/lib/constants";
-import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
+import {
+  interfaceLanguageOptions,
+  normalizeUnderstoodLanguages,
+} from "discourse/lib/content-localization";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import {
   currentThemeId,
@@ -87,7 +90,7 @@ export default class InterfaceController extends Controller {
       "hidden_composer_toolbar_buttons",
     ];
 
-    if (this.siteSettings.allow_user_locale) {
+    if (this.siteSettings.allowed_user_locales) {
       attrs.push("locale");
     }
 
@@ -117,6 +120,19 @@ export default class InterfaceController extends Controller {
   get understoodLanguages() {
     return normalizeUnderstoodLanguages(
       this.model.user_option.understood_languages
+    );
+  }
+
+  @computed(
+    "siteSettings.allowed_user_locales",
+    "siteSettings.default_locale",
+    "model.locale"
+  )
+  get availableInterfaceLocales() {
+    return interfaceLanguageOptions(
+      this.siteSettings,
+      this.availableLocales,
+      this.model.locale
     );
   }
 

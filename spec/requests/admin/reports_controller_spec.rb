@@ -98,7 +98,7 @@ RSpec.describe Admin::ReportsController do
         end
 
         it "uses the user's locale for report names and descriptions" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           admin.update!(locale: "es")
           get "/admin/reports/bulk.json",
               params: {

@@ -27,7 +27,7 @@ describe "Admin editing objects type" do
       theme.update!(component: true)
       parent_theme.add_relative_theme!(:child, theme)
       SiteSetting.default_theme_id = parent_theme.id
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       settings = YAML.safe_load(theme.settings_field.value)
       sections = settings.fetch("resource_sections")

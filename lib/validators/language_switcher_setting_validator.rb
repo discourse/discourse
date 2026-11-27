@@ -7,7 +7,8 @@ class LanguageSwitcherSettingValidator
 
   def valid_value?(val)
     return true if val == "none"
-    SiteSetting.allow_user_locale && SiteSetting.content_localization_supported_locales.present?
+    SiteSetting.allowed_user_locales.present? &&
+      SiteSetting.content_localization_supported_locales.present?
   end
 
   def error_message

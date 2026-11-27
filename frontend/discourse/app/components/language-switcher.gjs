@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import {
+  interfaceLanguageOptions,
   LOCALE_COOKIE,
   LOCALE_COOKIE_EXPIRY,
 } from "discourse/lib/content-localization";
@@ -30,13 +31,15 @@ export default class LanguageSwitcher extends Component {
   }
 
   get content() {
-    const langs = this.siteSettings.available_content_localization_locales.map(
-      ({ value }) => ({
-        name: this.languageNameLookup.getLanguageName(value),
-        value,
-        isActive: value === this.currentLocale,
-      })
-    );
+    const langs = interfaceLanguageOptions(
+      this.siteSettings,
+      this.siteSettings.available_content_localization_locales,
+      this.currentUser ? this.currentLocale : undefined
+    ).map(({ value }) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+      isActive: value === this.currentLocale,
+    }));
 
     // Cleanup "English" name when `en_GB` is the only English variant
     if (!langs.some(({ value }) => value === "en")) {

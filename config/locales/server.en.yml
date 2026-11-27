@@ -745,6 +745,7 @@ en:
     file_should_be_csv: "The uploaded file should be of csv format."
     max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
+    invalid_locale: "Language '%{language}' for '%{email}' was ignored because it is not allowed on this site."
 
   invite_link:
     email_taken: "This email is already in use. If you already have an account please log in or reset password."
@@ -2236,7 +2237,7 @@ en:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
-    allow_user_locale: "Allow users to choose their own language interface preference"
+    allowed_user_locales: "Interface languages users can choose. Leave empty to use the site default for everyone. The site default is always included. Saved language choices are kept and used again if the language is allowed later."
     set_locale_from_accept_language_header: "Set interface language for anonymous users from their web browser's language headers"
     set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
     set_locale_from_param: "Allows setting an anonymous user's locale via the 'tl' URL param, e.g. ?tl=es"
@@ -3403,7 +3404,7 @@ en:
       pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
-      user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
+      user_locale_not_enabled: "Select at least one language in {{setting:allowed_user_locales}} before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
       invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
@@ -3447,7 +3448,7 @@ en:
       uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
+      content_localization_language_switcher_requirements: "The language switcher requires at least one language in both {{setting:allowed_user_locales}} and {{setting:content_localization_supported_locales}}. {{settings:content_localization_language_switcher,allowed_user_locales,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "You must first enable 'set locale from param' before enabling this setting."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
@@ -3459,7 +3460,7 @@ en:
       about_page_extra_groups_initial_members: "expanded members"
       about_page_extra_groups_order: "sort order"
       about_page_extra_groups_show_description: "include description"
-      allow_user_locale: "let users choose their language"
+      allowed_user_locales: "let users choose their language"
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
       company_url: "website"
       content_localization_crawler_param: "let search engines index translations"

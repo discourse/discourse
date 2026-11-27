@@ -42,6 +42,27 @@ module("Integration | Component | <LanguageSwitcher />", function (hooks) {
     assert.dom("[data-menu-option-id='de']").exists();
   });
 
+  test("keeps the saved language selected while filtering new choices", async function (assert) {
+    this.siteSettings.allowed_user_locales = "fr";
+    this.siteSettings.default_locale = "en";
+    this.siteSettings.available_content_localization_locales.push({
+      value: "ja",
+    });
+    const previousLocale = I18n.locale;
+    I18n.locale = "de";
+
+    try {
+      await render(<template><LanguageSwitcher /></template>);
+      await open();
+
+      assert.dom("[data-menu-option-id='de']").hasClass("--selected");
+      assert.dom("[data-menu-option-id='fr']").exists();
+      assert.dom("[data-menu-option-id='ja']").doesNotExist();
+    } finally {
+      I18n.locale = previousLocale;
+    }
+  });
+
   test("displays locale names from language lookup service", async function (assert) {
     await render(<template><LanguageSwitcher /></template>);
     await open();

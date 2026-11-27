@@ -39,7 +39,9 @@ export function isSettingVisible(settings, setting, data) {
     const allowedValues = setting.depends_on_values?.[name];
     return allowedValues
       ? allowedValues.map(String).includes(String(value))
-      : isSettingValueTrue(value);
+      : parent.type === "list"
+        ? !!value
+        : isSettingValueTrue(value);
   });
 }
 

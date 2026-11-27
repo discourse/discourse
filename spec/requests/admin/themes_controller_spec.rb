@@ -508,7 +508,7 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(admin) }
 
       it "identifies the locale of the embedded translation rows" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         theme = Fabricate(:theme)
         theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: Hello\n")
         theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
@@ -1467,7 +1467,7 @@ RSpec.describe Admin::ThemesController do
 
         before do
           SiteSetting.tagging_enabled = true
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.content_localization_enabled = true
           admin.update!(locale: "zh_CN")
           Fabricate(:tag_localization, tag:, locale: "zh_CN", name: "猫")

@@ -1476,6 +1476,16 @@ RSpec.describe UsersController do
     end
 
     context "when creating a user" do
+      it "rejects a new user language outside the allowed list" do
+        SiteSetting.allowed_user_locales = "fr|ja"
+
+        post_user(locale: "de")
+
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["errors"]["locale"]).to be_present
+        expect(User.where(username: @user.username)).not_to exist
+      end
+
       it "sets the user locale to I18n.locale" do
         SiteSetting.default_locale = "en"
         I18n.stubs(:locale).returns(:fr)
@@ -1955,7 +1965,7 @@ RSpec.describe UsersController do
         end
 
         it "does not copy the administrator's locale to the new user" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           admin.update!(locale: :fr)
 
           post "/u.json",
@@ -3959,6 +3969,66 @@ RSpec.describe UsersController do
   end
 
   describe "#update" do
+    context "with restricted interface languages" do
+      before do
+        SiteSetting.allowed_user_locales = "fr|ja"
+        sign_in(user)
+      end
+
+      it "rejects a new language outside the allowed list without saving other preferences" do
+        category = Fabricate(:category)
+        user.user_option.update!(external_links_in_new_tab: false)
+
+        put "/u/#{user.username}.json",
+            params: {
+              locale: "de",
+              external_links_in_new_tab: true,
+              muted_category_ids: [category.id],
+            }
+
+        expect(response.status).to eq(422)
+        expect(user.reload.locale).to be_blank
+        expect(user.user_option.reload.external_links_in_new_tab).to eq(false)
+        expect(CategoryUser.exists?(user_id: user.id, category_id: category.id)).to eq(false)
+      end
+
+      it "accepts an allowed language and the site default" do
+        %w[ja en].each do |locale|
+          put "/u/#{user.username}.json", params: { locale: }
+
+          expect(response.status).to eq(200)
+          expect(user.reload.locale).to eq(locale)
+        end
+      end
+
+      it "preserves an existing language when saving other preferences" do
+        user.update_column(:locale, "de")
+
+        put "/u/#{user.username}.json", params: { locale: "de", external_links_in_new_tab: true }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.locale).to eq("de")
+        expect(user.user_option.external_links_in_new_tab).to eq(true)
+      end
+
+      it "accepts the site default when selection is disabled" do
+        SiteSetting.allowed_user_locales = ""
+
+        put "/u/#{user.username}.json", params: { locale: SiteSetting.default_locale }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.locale).to eq(SiteSetting.default_locale)
+      end
+
+      it "does not allow selecting a language when selection is disabled" do
+        SiteSetting.allowed_user_locales = ""
+
+        put "/u/#{user.username}.json", params: { locale: "fr" }
+
+        expect(response.status).to eq(422)
+      end
+    end
+
     context "with guest" do
       it "raises an error" do
         put "/u/guest.json"
@@ -4118,7 +4188,7 @@ RSpec.describe UsersController do
         end
 
         context "when a locale is chosen that differs from I18n.locale" do
-          before { SiteSetting.allow_user_locale = true }
+          before { SiteSetting.allowed_user_locales = "all" }
 
           it "updates the user's locale" do
             I18n.locale = :fr
@@ -10388,7 +10458,7 @@ RSpec.describe UsersController do
 
       it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
         SiteSetting.content_localization_enabled = true
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         sign_in(user1)
 
         get "/u/#{user1.username}/bookmarks.json"
@@ -10401,7 +10471,7 @@ RSpec.describe UsersController do
 
       it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
         SiteSetting.content_localization_enabled = false
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         sign_in(user1)
 
         get "/u/#{user1.username}/bookmarks.json"

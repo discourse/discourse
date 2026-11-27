@@ -628,6 +628,48 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
   });
 
+  test("selecting specific interface languages replaces all languages", async function (assert) {
+    this.siteSettings.default_locale = "en";
+    let body;
+    pretender.put("/admin/site_settings/allowed_user_locales", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English" },
+      { value: "fr", name: "Français" },
+    ];
+
+    await renderSetting({
+      setting: "allowed_user_locales",
+      value: "all",
+      type: "list",
+      list_type: "locale",
+      valid_values: [
+        { value: "all", name: "allowed_user_locales.all" },
+        { value: "fr", name: "languages.fr.name" },
+      ],
+      translate_names: true,
+    });
+
+    const locales = selectKit(".form-kit__field .list-setting");
+    assert.strictEqual(
+      locales.header().label(),
+      i18n("allowed_user_locales.all")
+    );
+    await locales.expand();
+    await locales.selectRowByValue("fr");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.allowed_user_locales, "fr");
+
+    await locales.expand();
+    await locales.selectRowByValue("all");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.allowed_user_locales, "all");
+  });
+
   test("a locale list setting names its choices from the available locales", async function (assert) {
     const body = captureSave("test_locales");
     this.siteSettings.available_locales = [

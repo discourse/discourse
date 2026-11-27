@@ -124,12 +124,12 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
     end
 
     context "when the change dependencies are not met" do
-      let(:setting_name) { :set_locale_from_cookie }
+      let(:setting_name) { :show_preview_for_form_templates }
 
       before do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.enable_form_templates = false
         mock_upcoming_change_metadata(
-          set_locale_from_cookie: {
+          show_preview_for_form_templates: {
             impact: "feature,all_members",
             status: :stable,
           },

@@ -632,7 +632,7 @@ RSpec.describe NotificationsController do
 
           it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
             SiteSetting.content_localization_enabled = true
-            SiteSetting.allow_user_locale = true
+            SiteSetting.allowed_user_locales = "all"
             user.update!(locale: "ja")
 
             get "/notifications.json"
@@ -644,7 +644,7 @@ RSpec.describe NotificationsController do
 
           it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
             SiteSetting.content_localization_enabled = false
-            SiteSetting.allow_user_locale = true
+            SiteSetting.allowed_user_locales = "all"
             user.update!(locale: "ja")
 
             get "/notifications.json"

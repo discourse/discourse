@@ -1560,10 +1560,10 @@ RSpec.describe ApplicationController do
         end
     end
 
-    context "with allow_user_locale disabled" do
+    context "with language selection disabled" do
       context "when accept-language header differs from default locale" do
         before do
-          SiteSetting.allow_user_locale = false
+          SiteSetting.allowed_user_locales = ""
           SiteSetting.default_locale = "en"
         end
 
@@ -1576,9 +1576,10 @@ RSpec.describe ApplicationController do
         end
 
         context "with a logged in user" do
+          fab!(:french_user) { Fabricate(:user, locale: :fr) }
+
           it "uses the default locale" do
-            user = Fabricate(:user, locale: :fr)
-            sign_in(user)
+            sign_in(french_user)
 
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
@@ -1591,7 +1592,7 @@ RSpec.describe ApplicationController do
     context "with set_locale_from_accept_language_header enabled" do
       context "when accept-language header differs from default locale" do
         before do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.set_locale_from_accept_language_header = true
           SiteSetting.default_locale = "en"
         end
@@ -1645,7 +1646,7 @@ RSpec.describe ApplicationController do
 
       context "when the preferred locale includes a region" do
         it "returns the locale and region separated by an underscore" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.set_locale_from_accept_language_header = true
           SiteSetting.default_locale = "en"
 
@@ -1657,7 +1658,7 @@ RSpec.describe ApplicationController do
 
       context "when accept-language header is not set" do
         it "uses the site default locale" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.default_locale = "en"
 
           get "/latest", headers: headers("")
@@ -1671,7 +1672,7 @@ RSpec.describe ApplicationController do
       let(:user) { Fabricate(:user, locale: :ja) }
 
       before do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.default_locale = "en"
         sign_in(user)
       end
@@ -1719,7 +1720,7 @@ RSpec.describe ApplicationController do
     context "with set_locale_from_cookie enabled" do
       context "when cookie locale differs from default locale" do
         before do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.set_locale_from_cookie = true
           SiteSetting.default_locale = "en"
         end
@@ -1744,7 +1745,7 @@ RSpec.describe ApplicationController do
 
       context "when locale cookie is not set" do
         it "uses the site default locale" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.default_locale = "en"
 
           get "/latest", headers: { Cookie: "" }
@@ -1756,7 +1757,7 @@ RSpec.describe ApplicationController do
 
     context "with the language switcher enabled and set_locale_from_cookie disabled" do
       before do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.default_locale = "en"
         SiteSetting.set_locale_from_cookie = false
         SiteSetting.content_localization_supported_locales = "es|fr"
@@ -1804,7 +1805,7 @@ RSpec.describe ApplicationController do
     context "with set_locale_from_param" do
       context "when param locale differs from default locale" do
         before do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.default_locale = "en"
         end
 
@@ -1888,7 +1889,7 @@ RSpec.describe ApplicationController do
 
       context "when locale param is not set" do
         it "uses the site default locale" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.default_locale = "en"
 
           get "/latest"
@@ -2074,7 +2075,7 @@ RSpec.describe ApplicationController do
       end
 
       before do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_cookie = true
         SiteSetting.content_localization_enabled = true
         SiteSetting.login_required = false

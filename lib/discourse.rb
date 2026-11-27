@@ -1391,10 +1391,15 @@ module Discourse
 
   def self.anonymous_locale(request, include_param: true)
     locale = request.params[LOCALE_PARAM] if include_param && SiteSetting.set_locale_from_param
+    available_locales = SiteSetting.allowed_user_locale_values
+    if locale.present? && ContentLocalization.crawler_locale_param_enabled?
+      # localized content urls are independent of interface language choices
+      available_locales |= SiteSetting.content_localization_locales
+    end
     locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
-    HttpLanguageParser.parse(locale)
+    HttpLanguageParser.parse(locale, available_locales:)
   end
 
   def self.locale_from_cookie(request)

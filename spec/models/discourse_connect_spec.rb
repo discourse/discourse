@@ -869,8 +869,28 @@ RSpec.describe DiscourseConnect do
   end
 
   describe "user locale" do
+    it "ignores disallowed languages without preventing sign-in" do
+      SiteSetting.allowed_user_locales = "fr"
+      sso = new_discourse_sso
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@example.com"
+      sso.external_id = "123"
+      sso.locale = "de"
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.locale).to be_blank
+
+      user.update_column(:locale, "es")
+      sso.locale_force_update = true
+      expect(sso.lookup_or_create_user(ip_address).locale).to eq("es")
+
+      sso.locale = "fr"
+      expect(sso.lookup_or_create_user(ip_address).locale).to eq("fr")
+    end
+
     it "sets default user locale if specified" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       sso = new_discourse_sso
       sso.username = "test"

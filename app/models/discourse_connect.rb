@@ -262,7 +262,8 @@ class DiscourseConnect < DiscourseConnectBase
           registration_ip_address: ip_address,
         }
 
-        if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+        if SiteSetting.allowed_user_locales.present? && locale &&
+             SiteSetting.allowed_user_locale_values.include?(locale)
           user_params[:locale] = locale
         end
 
@@ -357,8 +358,8 @@ class DiscourseConnect < DiscourseConnectBase
       user.name = name || User.suggest_name(username.presence || email)
     end
 
-    if locale_force_update && SiteSetting.allow_user_locale && locale.present? &&
-         LocaleSiteSetting.valid_value?(locale)
+    if locale_force_update && SiteSetting.allowed_user_locales.present? && locale.present? &&
+         SiteSetting.allowed_user_locale_values.include?(locale)
       user.locale = locale
     end
 

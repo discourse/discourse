@@ -172,6 +172,24 @@ class SiteSetting < ActiveRecord::Base
   end
   private_class_method :dangling_category?
 
+  def self.allow_user_locale(_scoped_to = nil)
+    allowed_user_locales.present?
+  end
+
+  def self.allow_user_locale?(_scoped_to = nil)
+    allow_user_locale
+  end
+
+  def self.allowed_user_locale_values(
+    value = allowed_user_locales,
+    default_locale: self.default_locale
+  )
+    return [default_locale] if value.blank?
+    return LocaleSiteSetting.supported_locales if value == "all"
+
+    (value.split("|") << default_locale).uniq
+  end
+
   def self.available_locales
     LocaleSiteSetting.values.to_json
   end
