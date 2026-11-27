@@ -114,7 +114,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   {{~#if @hasSelectionLoadingBlock~}}
                     {{yield to="selectionLoading"}}
                   {{~else~}}
-                    <DSkeleton @variant="text" @width="8ch" />
+                    <DSkeleton @variant="text" />
                   {{~/if~}}
                 </span>
               {{/unless}}
@@ -175,7 +175,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   {{~#if @hasSelectionLoadingBlock~}}
                     {{yield to="selectionLoading"}}
                   {{~else~}}
-                    <DSkeleton @variant="text" @width="8ch" />
+                    <DSkeleton @variant="text" />
                   {{~/if~}}
                 </span>
               {{/if}}
@@ -224,7 +224,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
                 {{else}}
-                  <DSkeleton @variant="text" @width="8ch" />
+                  <DSkeleton @variant="text" />
                 {{/if}}
               </span>
             {{/unless}}
@@ -300,7 +300,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{~#if @hasSelectionLoadingBlock~}}
             {{yield to="selectionLoading"}}
           {{~else~}}
-            <DSkeleton @variant="text" @width="8ch" />
+            <DSkeleton @variant="text" />
           {{~/if~}}
         </:loading>
         <:content as |selected|>

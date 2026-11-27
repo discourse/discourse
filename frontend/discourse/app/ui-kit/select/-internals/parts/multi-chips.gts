@@ -421,7 +421,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
                 {{else}}
-                  <DSkeleton @variant="text" @width="6ch" />
+                  <DSkeleton @variant="text" />
                 {{/if}}
               </li>
             {{/each}}
@@ -526,7 +526,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
                 {{else}}
-                  <DSkeleton @variant="text" @width="6ch" />
+                  <DSkeleton @variant="text" />
                 {{/if}}
               </li>
             {{/if}}

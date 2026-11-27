@@ -218,7 +218,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
         >
           {{#each this.skeletons as |index|}}
             <li class="d-select__strip-item" data-key={{index}}>
-              <DSkeleton @variant="text" @width="6ch" />
+              <DSkeleton @variant="text" />
             </li>
           {{/each}}
         </ul>
