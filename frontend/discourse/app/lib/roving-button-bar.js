@@ -47,7 +47,8 @@ function isActionable(element) {
     (element.tagName === "BUTTON" ||
       element.tagName === "A" ||
       element.getAttribute("role") === "switch" ||
-      element.getAttribute("role") === "button") &&
+      element.getAttribute("role") === "button" ||
+      element.getAttribute("role") === "combobox") &&
     !element.classList.contains("select-kit") &&
     !element.classList.contains("hidden")
   );

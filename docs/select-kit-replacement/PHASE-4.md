@@ -78,10 +78,22 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       with the sort icon, and only the icon below `sm`. Only the admin Upcoming changes page passes
       sort options today. An icon-only static trigger now says its value, and `@resettableTracked`
       no longer writes on read, which crashed a select whose value a modifier had read.
-    - ☐ Composer toolbar popup menus (`components/toolbar-popup-menu-options.gjs`): the post
-      language selector (`instance-initializers/post-language-selector.js`, ending with a
-      "None" value), and the heading and list menus (`lib/composer/toolbar.ts`), which mark the
-      format at the cursor and apply it.
+    - ☑ Composer toolbar popup menus (`components/toolbar-popup-menu-options.gjs`), decided
+      2026-11-27. The component draws every toolbar button with a `popupMenu`, commands included
+      (the "+" options menu), and customer plugins add their own.
+      - ☑ Post language (`instance-initializers/post-language-selector.js`). A toolbar
+        `popupMenu` may now declare `value`, the name of the option it holds; such a menu is
+        drawn as a static `DSelect` (`components/toolbar-popup-select.gjs`), and the others stay
+        menus. It is named "Post language" and says the post's language (the old button said
+        only "Post language"), shows the language code beside its icon, lists the languages under
+        "This post is in…" with a check on the current one, and "Not set" is an ordinary option.
+        It keeps the toolbar's look and arrow-key order: the toolbar's roving helper now stops on
+        a combobox. Opening it still runs the button's action, so plugins listening for
+        `d-editor:toolbar-button-clicked` hear it. The system spec drives the old menu.
+      - ☑ Text sizes and Lists stay on `DMenu`. Their rows are formatting commands on the text at
+        the cursor, shown with their shortcuts, and the list rows toggle (picking the current
+        list type removes it), so they aren't value pickers. Their rows don't say which one is
+        active; that is a separate fix (`menuitemradio` with `aria-checked`).
     - ☐ FormKit's `menu` control (`form-kit/components/fk/control/menu.gjs`). Only the
       styleguide uses it.
     - ☐ Admin dashboard date range (`admin/components/dashboard/date-range.gjs`). Its panel

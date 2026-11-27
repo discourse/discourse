@@ -88,6 +88,11 @@ export interface PopupMenuOption {
 interface PopupMenu {
   options: () => PopupMenuOption[] | undefined;
   action?: (option: PopupMenuOption) => void;
+  /**
+   * The name of the option currently chosen, for a menu whose options are values rather than
+   * commands. Such a menu is drawn as a select.
+   */
+  value?: () => string;
 }
 
 export interface ToolbarButton {

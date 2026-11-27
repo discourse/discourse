@@ -73,7 +73,8 @@
 }
 
 .post-language-selector-trigger {
-  .toolbar-popup-menu-options__trigger-label {
+  .toolbar-popup-menu-options__trigger-label,
+  .toolbar-popup-select__trigger-label {
     margin-left: var(--space-1);
     font-size: var(--font-down-2);
     text-transform: uppercase;

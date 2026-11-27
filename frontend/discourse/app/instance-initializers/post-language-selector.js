@@ -48,6 +48,7 @@ export default {
             triggerLabel: () => {
               return composerService.model?.locale?.toUpperCase() || "";
             },
+            value: () => composerService.model?.locale || "none",
             action: (option) => {
               composerService.model.locale = option.locale;
             },

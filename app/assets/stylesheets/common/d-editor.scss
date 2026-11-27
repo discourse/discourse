@@ -372,6 +372,25 @@
     justify-content: center;
   }
 
+  .toolbar-popup-select.d-select__trigger {
+    width: auto;
+    font-size: var(--font-down-1);
+    gap: 0;
+    margin: 0;
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--primary-high);
+    border-radius: var(--d-border-radius);
+
+    .d-select__leading-icon {
+      color: currentcolor;
+    }
+
+    .discourse-no-touch &:hover {
+      background-color: var(--d-hover);
+    }
+  }
+
   &.--replaced-toolbar {
     animation: float-left ease 0.2s 1 forwards;
 

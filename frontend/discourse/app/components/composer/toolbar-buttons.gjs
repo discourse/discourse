@@ -1,11 +1,16 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
+import ToolbarPopupSelect from "discourse/components/toolbar-popup-select";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToolbarButtons extends Component {
+  @service siteSettings;
+
   // the tab stop must be a rendered button: the leading one may be hidden by its condition
   get firstButton() {
     const { isFirst = true } = this.args;
@@ -58,6 +63,28 @@ export default class ComposerToolbarButtons extends Component {
         {{#if (this.isVisible button)}}
           {{#if (eq button.type "separator")}}
             <div class="toolbar-separator"></div>
+          {{else if
+            (and
+              button.popupMenu.value
+              this.siteSettings.enable_new_select_controls
+            )
+          }}
+            {{! TODO (select-kit-replacement-cleanup): Drop the flag check after rollout. }}
+            <ToolbarPopupSelect
+              @class={{button.className}}
+              @content={{(button.popupMenu.options)}}
+              @context={{@data.context}}
+              @header={{button.popupMenu.header}}
+              @icon={{button.icon}}
+              @identifier={{concat "toolbar-menu__" button.className}}
+              @onChange={{button.popupMenu.action}}
+              @onKeydown={{this.rovingButtonBar}}
+              @onOpen={{button.action}}
+              @tabindex={{this.tabIndex button}}
+              @title={{button.title}}
+              @triggerLabel={{button.popupMenu.triggerLabel}}
+              @value={{(button.popupMenu.value)}}
+            />
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
               @class={{dConcatClass
