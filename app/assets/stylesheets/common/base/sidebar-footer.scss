@@ -49,12 +49,12 @@
     padding: 0 0.5em;
 
     &:focus-visible {
-      background: var(--d-sidebar-highlight-background);
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
     }
 
     @media (hover: hover) {
-      &:hover,
-      &:focus {
+      &:hover {
         background: var(--d-sidebar-highlight-background);
       }
     }
@@ -75,7 +75,8 @@
     }
 
     &:focus-visible {
-      @include sidebar-footer-action-highlight;
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
     }
 
     @media (hover: hover) {
