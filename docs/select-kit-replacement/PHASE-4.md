@@ -121,8 +121,13 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
         It opens at `bottom-end`: as the row's last control, the default placement had no room and
         flipped above, as the old menu did. No other repository targets the old menu, so it takes a
         BEM class, `ai-agent-list-editor__layout`.
-    - ☐ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). It ends with
-      "Leave event" after a divider while the user is going.
+    - ☑ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). Stays on
+      `DComboButton` and `DMenu`. Its arrow half picks a scope (this event, or this and all
+      following), then "Leave event" after a divider. On desktop it is the second half of a split
+      button, and `DComboButton` only takes a `DMenu` there. Split buttons elsewhere (eBay,
+      Carbon, MUI, shadcn) open a menu from the arrow half, with the choices as radio items, never
+      a combobox. No other `DComboButton` caller holds a value, so a select half would have one
+      user. The rows don't say which scope is set; see "radio items in a menu" below.
     - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static
       `DSelect` that can't be emptied, named by its option's text, styled as the flat button it
       replaces. The trigger shows the number; the list marks both ends with the existing priority
@@ -149,7 +154,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     divider (the permission menu, revision visibility and "Going"). The action stays an option
     in the list, reached with the arrow keys and counted with the others, so a `:footer` button
     is ruled out. An option with `position: "end"` and `divider: "before"` sits there, so the
-    other two can move the same way.
+    other two can move the same way. "Going" stays on `DMenu` (see above).
 - ☐ `registerTopicFooterDropdown` gains an opt-in key.
 - ☐ Customer ports for the live patches on direct `DropdownSelectBox` invocations (caret icons
   and hidden titles).
@@ -180,6 +185,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
   list positions its rows absolutely, so `max-content` doesn't see them. Look for a way to measure
   the widest label once per option set, in its selected weight, and size the panel from it,
   capped by the viewport.
+
+- ☐ **Radio items in a menu (decide later; outside the select work).** `DDropdownMenu` is a
+  plain list of buttons inside a `DMenu` whose content is a `dialog`. A menu that marks a current
+  choice can only show it with a class and an icon, so screen readers don't hear it: "Going", the
+  editor's Text sizes and Lists, and the navigation dropdowns. React Aria lets each section of a
+  `Menu` hold its own selection beside plain action items, and shadcn uses
+  `DropdownMenuRadioGroup`. Giving `DDropdownMenu` menu semantics (`menu`, `menuitem`,
+  `menuitemradio` with `aria-checked`, `separator`, arrow keys) would fix them all. It is a
+  ui-kit change that needs its own plan.
 
 ## Exit criteria
 
