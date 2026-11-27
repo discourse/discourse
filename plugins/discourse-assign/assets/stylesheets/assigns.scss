@@ -1,15 +1,3 @@
-.user-content {
-  .assign-controls {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 0.5em;
-
-    .assign-messages-assigned {
-      margin-right: 0.5em;
-    }
-  }
-}
-
 .assigned-to {
   .d-icon,
   i.fa {
@@ -32,24 +20,6 @@
   .assigned-to {
     padding-left: 11px;
   }
-}
-
-.cant-act-flagged-post {
-  padding: 0.5em;
-  border: 1px dashed var(--primary-medium);
-  color: var(--primary);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.topic-assigned-to {
-  min-width: 15%;
-  width: 15%;
-}
-
-.list-tags.assigned {
-  margin-left: 5px;
 }
 
 .d-modal.assign {
@@ -122,17 +92,6 @@
         width: var(--font-0);
       }
     }
-
-    .suggestions-label {
-      position: absolute;
-      right: 0;
-      top: 0;
-      margin: 0.25em 0.25em 0 0;
-      color: var(--primary-low-mid);
-      font-size: var(--font-down-3);
-      font-weight: bold;
-      text-transform: uppercase;
-    }
   }
 
   .control-group.assignee-error {
@@ -147,12 +106,6 @@
   }
 }
 
-.topic-list-item {
-  .private-message-icon {
-    margin-right: 5px;
-  }
-}
-
 #topic-footer-dropdown-reassign {
   .name {
     font-weight: normal;
@@ -164,11 +117,6 @@
   .avatar {
     width: 1.19em;
     height: 1.19em;
-  }
-
-  .avatar.overlap {
-    z-index: 1;
-    margin-right: -0.4em;
   }
 
   .d-icon,
@@ -245,18 +193,6 @@
 
   .search-div {
     padding: 0 0;
-  }
-}
-
-.assigned-topic-list-header .topic-list-data.num:last-of-type {
-  margin-right: 50px; // account for button in topic-list-items in topic-list-refactor
-}
-
-.assigned-topic-list-item {
-  .topic-list-data {
-    .topic-item-stats .category a {
-      max-width: 145px;
-    }
   }
 }
 
