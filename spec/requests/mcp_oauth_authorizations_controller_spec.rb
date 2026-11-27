@@ -267,14 +267,18 @@ describe McpOauthAuthorizationsController do
     client_id = "https://client.example.com/oauth/client.json"
     redirect_uri = "https://client.example.com/callback"
     SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
-    allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata).and_return(
-      {
+    stub_request(:get, client_id).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "application/json",
+      },
+      body: {
         "client_id" => client_id,
         "client_name" => "Metadata client",
         "redirect_uris" => [redirect_uri],
         "token_endpoint_auth_method" => "private_key_jwt",
         "token_endpoint_auth_methods_supported" => %w[none private_key_jwt],
-      },
+      }.to_json,
     )
 
     get "/oauth2/mcp/authorize",
@@ -289,6 +293,50 @@ describe McpOauthAuthorizationsController do
         }
 
     expect(response.status).to eq(200)
+  end
+
+  it "rejects metadata served through a redirect from an approved host", :aggregate_failures do
+    sign_in(user)
+    group = Fabricate(:group)
+    group.add(user)
+    McpGroupScope.create!(group:, scope: "mcp:profile:read")
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+    SiteSetting.mcp_oauth_client_id_metadata_domains = "approved.example.com"
+    client_id = "https://approved.example.com/oauth/client.json"
+    redirect_uri = "https://other.example.com/callback"
+    metadata_url = "https://other.example.com/client.json"
+    stub_request(:get, client_id).to_return(status: 302, headers: { "Location" => metadata_url })
+    metadata_request =
+      stub_request(:get, metadata_url).to_return(
+        status: 200,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: {
+          client_id:,
+          client_name: "Redirected client",
+          redirect_uris: [redirect_uri],
+        }.to_json,
+      )
+    params = {
+      client_id:,
+      redirect_uri:,
+      response_type: "code",
+      code_challenge: "a" * 43,
+      code_challenge_method: "S256",
+      resource: DiscourseMcp.resource_url,
+      scope: "mcp:profile:read",
+    }
+
+    get("/oauth2/mcp/authorize", params:)
+    expect(response.status).to eq(403)
+
+    post "/oauth2/mcp/authorize", params: params.merge(decision: "approve")
+
+    expect(response.status).to eq(403)
+    expect(McpOauthClient.exists?(client_id:)).to eq(false)
+    expect(McpOauthAuthorization.exists?(user:)).to eq(false)
+    expect(metadata_request).not_to have_been_requested
   end
 
   it "rejects users without MCP access before registering a metadata client" do
