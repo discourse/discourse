@@ -160,6 +160,7 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour. Each localized gist counts toward this limit. Must be above 0 to turn on {{setting:ai_summaries_for_crawlers}}."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_show_model_name: "Show the model name on AI bot posts and chat responses."
     ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overridden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Members of these groups can have conversations with AI bots. Agents that allow personal messages use their own allowed groups instead. Anonymous users can't use the bot; when added to this setting, they can only preview the AI bot conversations page and are prompted to log in to ask a question."
@@ -554,8 +555,9 @@ en:
 
     share_ai:
       read_more: "Read full transcript"
-      onebox_title: "AI Conversation with %{llm_name}"
-      formatted_excerpt: "AI Conversation with %{llm_name}:\n %{excerpt}"
+      conversation: "AI conversation"
+      conversation_with_agent: "AI conversation with %{agent_name}"
+      conversation_excerpt: "%{conversation}:\n %{excerpt}"
       title: "%{title} - AI Conversation - %{site_name}"
       errors:
         not_allowed: "You are not allowed to share this topic"

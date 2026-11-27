@@ -441,6 +441,10 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_show_model_name:
+    default: true
+    client: true
+    area: "ai-features/bot"
   enable_ai_bot_starred_conversations:
     default: false
     hidden: true
