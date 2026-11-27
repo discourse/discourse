@@ -19,6 +19,10 @@ en:
             discourse_workflows_ai_proposal_applied: "Apply AI workflow proposal"
             discourse_workflows_workflow_created: "Create workflow"
             discourse_workflows_workflow_destroyed: "Delete workflow"
+            discourse_workflows_workflow_variable_created: "Create variable in workflow"
+            discourse_workflows_workflow_variable_destroyed: "Delete variable in workflow"
+            discourse_workflows_workflow_variable_updated: "Update variable in workflow"
+            discourse_workflows_workflow_variables_imported: "Import variables into workflow"
   js:
     review:
       types:
