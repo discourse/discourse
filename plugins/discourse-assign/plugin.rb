@@ -319,20 +319,16 @@ after_initialize do
 
     next results if !topic_query.guardian.can_assign_globally? && !SiteSetting.assigns_public
 
+    visibility =
+      DiscourseAssign::Visibility.visible_assignments_sql(topic_query.guardian, table_alias: "a")
+    assignment_join = "assignments a ON a.topic_id = topics.id AND a.active AND #{visibility}"
+
     if name == "nobody"
-      next(
-        results.joins("LEFT JOIN assignments a ON a.topic_id = topics.id AND active").where(
-          "a.assigned_to_id IS NULL",
-        )
-      )
+      next results.joins("LEFT JOIN #{assignment_join}").where("a.assigned_to_id IS NULL")
     end
 
     if name == "*"
-      next(
-        results
-          .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
-          .where.not(a: { assigned_to_id: nil })
-      )
+      next results.joins("JOIN #{assignment_join}").where.not(a: { assigned_to_id: nil })
     end
 
     user_id = topic_query.guardian.user.id if name == "me"
@@ -340,7 +336,7 @@ after_initialize do
 
     if user_id
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
+        results.joins("JOIN #{assignment_join}").where(
           "a.assigned_to_id = ? AND a.assigned_to_type = 'User'",
           user_id,
         )
@@ -356,7 +352,7 @@ after_initialize do
 
     if group_id
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
+        results.joins("JOIN #{assignment_join}").where(
           "a.assigned_to_id = ? AND a.assigned_to_type = 'Group'",
           group_id,
         )
@@ -383,6 +379,7 @@ after_initialize do
       SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
       WHERE #{where_clause}
+        AND #{DiscourseAssign::Visibility.visible_assignments_sql(guardian)}
     SQL
 
     where_args = { user_id: user.id }
@@ -412,6 +409,7 @@ after_initialize do
           (a.target_type = 'Post' AND p.deleted_at IS NULL AND p.deleted_by_id IS NULL AND p.user_deleted = false)
         )
         AND (#{assignee_condition})
+        AND #{DiscourseAssign::Visibility.visible_assignments_sql(guardian, table_alias: "a")}
     SQL
 
     sql = "topics.id IN (#{topic_ids_sql})"
@@ -436,7 +434,7 @@ after_initialize do
     list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
       topics.id IN (
         SELECT topic_id FROM assignments WHERE
-        active AND
+        active AND #{DiscourseAssign::Visibility.visible_assignments_sql(guardian)} AND
         ((assigned_to_id = :user_id AND assigned_to_type = 'User') OR
         (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group'))
       )
@@ -1029,13 +1027,12 @@ after_initialize do
 
     next if names.blank?
 
-    if names.include?("nobody")
-      next scope.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
-    end
+    visible_assignments =
+      Assignment.active.where(DiscourseAssign::Visibility.visible_assignments_sql(guardian))
 
-    if names.include?("*")
-      next scope.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
-    end
+    next scope.where.not(id: visible_assignments.select(:topic_id)) if names.include?("nobody")
+
+    next scope.where(id: visible_assignments.select(:topic_id)) if names.include?("*")
 
     found_names, user_ids =
       User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).transpose
@@ -1073,6 +1070,8 @@ after_initialize do
         )
     end
 
+    assignment_query =
+      assignment_query.where(DiscourseAssign::Visibility.visible_assignments_sql(guardian))
     scope.where(id: assignment_query.select(:topic_id))
   end
 
@@ -1119,47 +1118,54 @@ after_initialize do
       filter_values.compact.flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
     next scope if names.blank?
 
-    next scope.where.not(topic_id: Assignment.active.select(:topic_id)) if names.include?("nobody")
+    assignments =
+      Assignment.active.where(DiscourseAssign::Visibility.visible_assignments_sql(guardian))
+    next scope.where.not(topic_id: assignments.select(:topic_id)) if names.include?("nobody")
 
-    next scope.where(topic_id: Assignment.active.select(:topic_id)) if names.include?("*")
+    next scope.where(topic_id: assignments.select(:topic_id)) if names.include?("*")
 
     user_ids = User.where(username_lower: names.map(&:downcase)).select(:id)
     scope.where(
       topic_id:
-        Assignment
-          .active
-          .where(assigned_to_type: "User", assigned_to_id: user_ids)
-          .select(:topic_id),
+        assignments.where(assigned_to_type: "User", assigned_to_id: user_ids).select(:topic_id),
     )
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|
     next if !@guardian.can_assign_globally?
 
-    posts.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
+    assignments =
+      Assignment.active.where(DiscourseAssign::Visibility.visible_assignments_sql(@guardian))
+    posts.where(topic_id: assignments.select(:topic_id))
   end
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
     next if !@guardian.can_assign_globally?
 
-    posts.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
+    assignments =
+      Assignment.active.where(DiscourseAssign::Visibility.visible_assignments_sql(@guardian))
+    posts.where.not(topic_id: assignments.select(:topic_id))
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
     next if !@guardian.can_assign_globally? || match.blank?
+    assignments =
+      Assignment.active.where(DiscourseAssign::Visibility.visible_assignments_sql(@guardian))
     if user_id = User.find_by_username(match)&.id
-      posts.where(<<~SQL, user_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
-      SQL
+      posts.where(
+        topic_id:
+          assignments.where(assigned_to_id: user_id, assigned_to_type: "User").select(:topic_id),
+      )
     elsif group_id =
           Group
             .visible_groups(@guardian.user)
             .members_visible_groups(@guardian.user)
             .where(name: match)
             .pick(:id)
-      posts.where(<<~SQL, group_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
-      SQL
+      posts.where(
+        topic_id:
+          assignments.where(assigned_to_id: group_id, assigned_to_type: "Group").select(:topic_id),
+      )
     end
   end
 

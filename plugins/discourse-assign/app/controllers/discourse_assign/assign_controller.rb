@@ -81,6 +81,7 @@ module DiscourseAssign
           .joins(
             "JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL",
           )
+          .where(DiscourseAssign::Visibility.visible_assignments_sql(guardian, table_alias: "a"))
           .order("a.assigned_to_id, topics.bumped_at desc")
           .offset(offset)
           .limit(limit)

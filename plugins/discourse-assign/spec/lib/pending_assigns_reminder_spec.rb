@@ -136,6 +136,32 @@ RSpec.describe PendingAssignsReminder do
       expect(post.raw).to_not include(post.topic.fancy_title)
     end
 
+    it "excludes shared drafts from reminder lists and counts for non-viewers" do
+      draft_group = Fabricate(:group)
+      category = Fabricate(:category)
+      draft = Fabricate(:shared_draft, topic: Fabricate(:topic_with_op, category:))
+      SiteSetting.shared_drafts_category = category.id
+      SiteSetting.shared_drafts_allowed_groups = draft_group.id.to_s
+      Fabricate(:topic_assignment, topic: draft.topic, assigned_to: user)
+
+      expect(user.guardian.can_see_topic?(draft.topic)).to eq(false)
+      reminder.remind(user)
+
+      post = Post.last
+      expect(post.topic.title).to eq(
+        I18n.t("pending_assigns_reminder.title", pending_assignments: 2),
+      )
+      expect(post.raw).not_to include(draft.topic.fancy_title)
+
+      draft_group.add(user)
+      reminder.remind(user.reload)
+      post = Post.last
+      expect(post.topic.title).to eq(
+        I18n.t("pending_assigns_reminder.title", pending_assignments: 3),
+      )
+      expect(post.raw).to include(draft.topic.fancy_title)
+    end
+
     it "reminds about PMs" do
       pm = Fabricate(:private_message_topic, user: user)
       Fabricate(:post, topic: pm)
