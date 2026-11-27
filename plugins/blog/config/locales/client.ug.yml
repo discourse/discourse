@@ -45,6 +45,7 @@ ug:
           title: ئاتاق
           body: مەزمۇن
           tags: بەلگە
+        settings_button: تەڭشەك
       review:
         create: ئۇلانما قۇر
         copy: كۆچۈر
@@ -67,5 +68,7 @@ ug:
       drafts: دەسلەپكى نۇسخا
       pages: بەت
       preview: ئالدىن كۆزەت
+      article_settings:
+        kind_page: بەت
       unpublish: تارقاتما
       appearance_link: كۆرۈنۈش

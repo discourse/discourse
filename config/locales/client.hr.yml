@@ -1868,9 +1868,6 @@ hr:
         show_key_description: "Unesite ručno"
         short_description: |
           Zaštitite svoj račun jednokratnim sigurnosnim kodovima ili fizičkim sigurnosnim ključevima.
-        extended_description: |
-          Dvofaktorna provjera autentičnosti dodaje dodatnu sigurnost vašem računu tako da uz lozinku zahtijeva jednokratni token. Tokeni se mogu generirati na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> uređajima.
-        oauth_enabled_warning: "Imajte na umu da će prijave na društvene mreže biti onemogućene nakon što je omogućena dva faktora autentifikacije na vašem računu."
         use: "Korištenje aplikacije Authenticator"
         enforced_with_oauth_notice: "Morate omogućiti dvofaktorsku provjeru autentičnosti. Od vas će se tražiti da to koristite samo kada se prijavite lozinkom, a ne vanjskom autentifikacijom ili metodom prijave s društvenih mreža."
         enforced_notice: "Morate omogućiti dvofaktorsku autentifikaciju prije pristupa ovoj stranici."
@@ -2700,7 +2697,6 @@ hr:
       not_allowed_from_ip_address: "Ne možete se prijaviti s te IP adrese."
       admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao administrator s te IP adrese."
       resend_activation_email: "Pritisnite ovjde da ponovno pošaljemo aktivacijski e-mail."
-      omniauth_disallow_totp: "Na vašem je računu omogućena dvofaktorska provjera autentičnosti. Molimo prijavite se zaporkom."
       activate_account: "Aktiviraj račun"
       resend_title: "Ponovno pošaljite e-mail za aktivaciju"
       change_email: "Promijeni e-mail adresu"

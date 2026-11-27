@@ -50,6 +50,7 @@ de:
           title: titel
           body: body
           tags: Schlagwörter
+        settings_button: Einstellungen
       review:
         create: Link erstellen
         copy: Kopieren
@@ -72,5 +73,7 @@ de:
       drafts: Entwürfe
       pages: Seiten
       preview: Vorschau
+      article_settings:
+        kind_page: Seite
       unpublish: Veröffentlichung aufheben
       appearance_link: Erscheinungsbild

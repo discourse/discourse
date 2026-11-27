@@ -42,6 +42,7 @@ hy:
           title: վերնագիր
           body: բովանդակություն
           tags: պիտակներ
+        settings_button: Կարգավորումներ
       review:
         copy: Կրկնօրինակել
         open: Բացել

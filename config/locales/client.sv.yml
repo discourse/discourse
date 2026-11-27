@@ -1483,10 +1483,6 @@ sv:
         show_key_description: "Ange manuellt"
         short_description: |
           Skydda ditt konto med säkerhetskoder för engångsbruk eller fysiska säkerhetsnycklar.
-        extended_description: |
-          Tvåfaktorsautentisering lägger till extra säkerhet till ditt konto genom att begära ett engångsbevis utöver ditt lösenord.
-          Bevis kan skapas på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- och <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-enheter.
-        oauth_enabled_warning: "Notera att inloggning genom sociala medier inaktiveras när tvåfaktorsautentisering har aktiverats för ditt konto."
         use: "Använd autentiseringsappen"
         enforced_notice: "Du måste aktivera tvåfaktorsautentisering innan du kan besöka denna sida."
         disable: "Inaktivera"
@@ -2181,7 +2177,6 @@ sv:
       not_allowed_from_ip_address: "Du kan inte logga in från den IP-adressen."
       admin_not_allowed_from_ip_address: "Du kan inte logga in som administratör från den IP-adressen."
       resend_activation_email: "Klicka här för att skicka aktiveringsbrevet igen."
-      omniauth_disallow_totp: "Ditt konto har tvåfaktorsautentisering aktiverad. Logga in med ditt lösenord."
       activate_account: "Aktivera konto"
       resend_title: "Skicka aktiveringsmail igen"
       change_email: "Ändra e-postadress"

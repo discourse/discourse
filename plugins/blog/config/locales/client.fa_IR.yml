@@ -45,6 +45,7 @@ fa_IR:
           title: عنوان
           body: body
           tags: برچسب‌ها
+        settings_button: تنظیم
       review:
         create: ایجاد پیوند
         copy: کپی
@@ -67,5 +68,7 @@ fa_IR:
       drafts: پیش‌نویس‌ها
       pages: صفحه
       preview: پیش‌نمایش
+      article_settings:
+        kind_page: صفحه
       unpublish: لغو انتشار
       appearance_link: ظاهر

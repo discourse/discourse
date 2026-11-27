@@ -1330,7 +1330,6 @@ sl:
         show_key_description: "Vnesite ročno"
         short_description: |
           Zaščitite svoj račun z varnostnimi kodami za enkratno uporabo ali fizičnimi varnostnimi ključi.
-        oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočilo prijavo z družabnimi omrežji."
         use: "Uporabite aplikacijo Authenticator"
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
         disable: "Onemogoči"
@@ -1932,7 +1931,6 @@ sl:
       not_allowed_from_ip_address: "Ne morete se prijaviti s tega IP naslova."
       admin_not_allowed_from_ip_address: "Ne morete se prijaviti kot administrator iz tega IP naslova."
       resend_activation_email: "Kliknite tukaj za ponovno pošiljanje aktivacijskega e-sporočila."
-      omniauth_disallow_totp: "Vaš račun ima vklopljeno preverjanje v dveh korakih. Prijavite se z vašim geslom."
       activate_account: "Aktiviraj račun"
       resend_title: "Ponovno pošlji aktivacijsko e-sporočilo"
       change_email: "Spremeni e-naslov"

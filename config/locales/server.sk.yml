@@ -417,9 +417,7 @@ sk:
       s3_backup_requires_s3_settings: "S3 nemôžete použiť ako umiestnenie zálohy, pokiaľ nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemôžete použiť rovnaký bucket pre 's3_upload_bucket' a 's3_backup_bucket'. Vyberte iný bucket alebo použite iné cesty pre každý bucket."
       share_quote_facebook_requirements: "Ak chcete povoliť zdieľanie citácií pre Facebook, musíte nastaviť id aplikácie Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Ak sú miestne prihlásenia zakázané, nie je možné vynútiť 2FA."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Ak je zapnutá funkcia DiscourseConnect, nie je možné vynútiť 2FA."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Ak je vynútené 2FA, nemôžete vypnúť miestne prihlásenie. Pred vypnutím miestneho prihlásenia vypnite vynútené 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nemôžete povoliť odosielanie na server S3, pretože odosielanie na server S3 je už globálne povolené a povolenie tejto úrovne lokality by mohlo spôsobiť kritické problémy s odosielaním."
       cors_origins_should_not_have_trailing_slash: "Do pôvodu CORS by ste nemali pridávať koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
@@ -4201,6 +4199,7 @@ sk:
 
         Toto je automatická správa od používateľa %{site_name} , ktorou vás informujeme, že [váš príspevok](%{base_url}%{post_url}) bol schválený.
   page_forbidden:
+    page_title: "Prístup zamietnutý"
     title: "Ups! Táto stránka je súkromná."
   site_setting_missing: "`%{name}` je potrebné nastaviť nastavenie stránky."
   page_not_found:

@@ -43,6 +43,7 @@ pt:
           title: título
           body: corpo
           tags: etiquetas
+        settings_button: Configurações
       review:
         create: Criar ligação
         copy: Copiar

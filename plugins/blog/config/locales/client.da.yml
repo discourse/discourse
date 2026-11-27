@@ -45,6 +45,7 @@ da:
           title: titel
           body: brødtekst
           tags: mærker
+        settings_button: Indstillinger
       review:
         create: Opret link
         copy: Kopier
@@ -67,5 +68,7 @@ da:
       drafts: Kladder
       pages: Sider
       preview: Forhåndsvisning
+      article_settings:
+        kind_page: Side
       unpublish: Fjern udgivelsen
       appearance_link: Udseende

@@ -40,6 +40,7 @@ et:
           title: pealkiri
           body: sisu
           tags: sildid
+        settings_button: Seaded
       review:
         copy: Kopeeri
         open: Ava

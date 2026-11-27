@@ -47,6 +47,7 @@ el:
           title: τίτλος
           body: κύριο μέρος
           tags: ετικέτες
+        settings_button: Ρυθμίσεις
       review:
         create: Δημιουργία συνδέσμου
         copy: Αντιγραφή
@@ -69,5 +70,7 @@ el:
       drafts: Προσχέδια
       pages: Σελίδες
       preview: Προεπισκόπηση
+      article_settings:
+        kind_page: Σελίδα
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

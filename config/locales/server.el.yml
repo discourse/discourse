@@ -234,8 +234,6 @@ el:
       s3_backup_requires_s3_settings: "Δε μπορείτε να χρησιμοποιήσετε το S3 ως θέση αντιγράφου ασφαλείας, εκτός αν έχετε παράσχει το «%{setting_name}»."
       secure_uploads_requirements: "Οι επιφορτώσεις S3 πρέπει να είναι ενεργοποιημένες πριν ενεργοποιήσετε τις ασφαλείς επιφορτώσεις."
       share_quote_facebook_requirements: "Πρέπει να ορίσετε ένα αναγνωριστικό εφαρμογής Facebook για να ενεργοποιήσετε την κοινοποίηση παραθέσεων για το Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Δε μπορείτε να επιβάλετε 2FA εάν οι τοπικές συνδέσεις είναι απενεργοποιημένες."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Δε μπορείτε να απενεργοποιήσετε την τοπική σύνδεση εάν επιβάλλεται 2FA. Απενεργοποιήστε το επιβεβλημένο 2FA πριν από την απενεργοποίηση των τοπικών συνδέσεων."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Δεν μπορείτε να προσθέσετε καμία από τις ακόλουθες τιμές στη ρύθμιση: %{values}."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Αυτή η ρύθμιση απαιτεί πρώτα να είναι ενεργοποιημένη η ρύθμιση 'allow anonymous mode'."
   word_connector:
@@ -2716,6 +2714,8 @@ el:
     post_approved:
       title: "Η ανάρτησή σας εγκρίθηκε"
       subject_template: "[%{site_name}] Η ανάρτησή σας εγκρίθηκε"
+  page_forbidden:
+    page_title: "Άρνηση Πρόσβασης"
   page_not_found:
     page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."

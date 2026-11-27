@@ -642,6 +642,8 @@ sr:
       title: "Postavi Šifru"
     admin_login:
       subject_template_improved: "Prijava"
+  page_forbidden:
+    page_title: "Pristup odbijen"
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"

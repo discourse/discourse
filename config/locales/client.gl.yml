@@ -1199,9 +1199,6 @@ gl:
           Escanee este código QR nunha aplicación compatíbel (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e escriba o código de autenticación.
         disable_description: "Escriba o código de autenticación da súa aplicación"
         show_key_description: "Introducilo manualmente"
-        extended_description: |
-          A autenticación de dobre paso reforza a seguranza da sús conta, ao requirir un código dun só uso ademais do contrasinal. Os tokens pódense xear en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Repare en que a activación na súa conta da autenticación de dobre paso implica a desactivación do inicio de sesión a través de redes sociais."
         use: "Usar app de autenticador"
         enforced_notice: "Requírese activar a autenticación de dobre paso para acceder a este sitio."
         disable: "Desactivar"
@@ -1753,7 +1750,6 @@ gl:
       not_allowed_from_ip_address: "Non pode iniciar sesión desde este enderezo IP."
       admin_not_allowed_from_ip_address: "Non pode acceder como administrador desde ese enderezo IP."
       resend_activation_email: "Prema aquí para enviar outro correo de activación."
-      omniauth_disallow_totp: "A súa conta ten activada a autenticación de dobre paso. Inicie sesión co seu contrasinal."
       activate_account: "Activar conta"
       resend_title: "Reenviar correo electrónico de activación"
       change_email: "Cambiar enderezo de correo"

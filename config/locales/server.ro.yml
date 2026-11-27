@@ -2022,6 +2022,8 @@ ro:
         %{base_url}/u/activate-account/%{email_token}
 
         Dacă nu poți da clic pe legătura de mai sus, încearcă să o copiezi și să o inserezi în bara de adresă a navigatorului tău.
+  page_forbidden:
+    page_title: "Acces refuzat"
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."

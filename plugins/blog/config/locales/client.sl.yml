@@ -39,6 +39,7 @@ sl:
         change:
           title: naziv
           tags: oznake
+        settings_button: Nastavitve
       review:
         copy: Kopiraj
         open: Odpri

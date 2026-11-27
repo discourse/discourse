@@ -44,6 +44,7 @@ hr:
           title: titula
           body: tijelo
           tags: oznake
+        settings_button: Postavke
       review:
         create: Kreirajte poveznicu
         copy: Kopija
@@ -66,5 +67,7 @@ hr:
       drafts: Skice
       pages: Stranice
       preview: Pregled
+      article_settings:
+        kind_page: Stranica
       unpublish: Poništi objavljivanje
       appearance_link: Izgled

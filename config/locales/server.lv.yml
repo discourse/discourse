@@ -554,6 +554,8 @@ lv:
       title: "Iestatīt paroli"
     admin_login:
       subject_template_improved: "Ielogoties"
+  page_forbidden:
+    page_title: "Piekļuve liegta"
   page_not_found:
     page_title: "Lapa nav atrasta"
     see_more: "Vairāk"

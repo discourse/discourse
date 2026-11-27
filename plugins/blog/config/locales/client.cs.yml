@@ -47,6 +47,7 @@ cs:
           title: název
           body: tělo
           tags: štítky
+        settings_button: Nastavení
       review:
         create: Vytvořit odkaz
         copy: Kopírovat
@@ -69,5 +70,7 @@ cs:
       drafts: Koncepty
       pages: Stránek
       preview: Náhled
+      article_settings:
+        kind_page: Stránka
       unpublish: Zrušit publikování
       appearance_link: Vzhled

@@ -46,6 +46,7 @@ sk:
           title: názov
           body: telo
           tags: značky
+        settings_button: Nastavení
       review:
         create: Vytvorte odkaz
         copy: Kopírovať
@@ -68,5 +69,7 @@ sk:
       drafts: Koncepty
       pages: Stránky
       preview: Náhľad
+      article_settings:
+        kind_page: Stránka
       unpublish: Zrušenie zverejnenia
       appearance_link: Vzhľad

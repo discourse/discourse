@@ -360,9 +360,7 @@ zh_TW:
       s3_bucket_reused: "「s3_upload_bucket」與「s3_backup_bucket」不能使用相同的儲存貯體。請選擇不同的儲存貯體，或為每個儲存貯體使用不同路徑。"
       secure_uploads_requirements: "啟用安全上傳前，必須先啟用 S3 上傳。"
       share_quote_facebook_requirements: "您必須設定 Facebook 應用程式 ID，才能啟用 Facebook 引文分享。"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "若已停用本機登入，則無法強制使用雙因素驗證。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "若已啟用 DiscourseConnect，則無法強制使用雙因素驗證。"
-      local_login_cannot_be_disabled_if_second_factor_enforced: "強制使用雙因素驗證時，無法停用本機登入。請先停用強制雙因素驗證，再停用本機登入。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "無法啟用 S3 上傳，因為 S3 上傳已在全域啟用；若在網站層級再次啟用，可能會造成嚴重的上傳問題"
       cors_origins_should_not_have_trailing_slash: "不應在 CORS 來源結尾加上斜線（/）。"
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "使用者代理字串必須至少有 3 個字元，以免意外對合法使用者套用速率限制。"
@@ -1862,8 +1860,6 @@ zh_TW:
     email_subject: "標準電子郵件的可自訂主旨格式。請參閱 Meta 上的<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>自訂特定系統電子郵件範本</a>。"
     simple_email_subject: "啟用後，電子郵件主旨會更加精簡，只包含必要資訊，讓使用者能一眼快速瞭解電子郵件目的。"
     detailed_404: "向使用者提供更多無法存取特定主題的原因。注意：安全性較低，因為使用者會知道某個 URL 是否連結至有效主題。"
-    enforce_second_factor: "要求使用者先啟用雙因素驗證（2FA）才能存取 Discourse 介面。此設定不影響 API 或「DiscourseConnect 提供者」驗證。若已啟用 {{setting:enforce_second_factor_on_external_auth}}，使用者設定 2FA 後將無法透過外部驗證提供者登入。"
-    enforce_second_factor_on_external_auth: "要求使用者隨時使用雙因素驗證（2FA）。啟用後，已啟用 2FA 的使用者將無法透過社群登入等外部驗證方式登入。停用後，使用者只有在使用使用者名稱與密碼登入時才需確認 2FA。另請參閱 {{setting:enforce_second_factor}} 設定。"
     force_https: "強制您的網站僅使用 HTTPS。警告：在您驗證 HTTPS 已完全設置并在任何地方都可以正常工作之前，請勿啟用此功能！您是否檢查過您的 CDN、所有社交登錄以及任何外部徽標/依賴項，以確保它們都與 HTTPS 兼容？"
     summary_score_threshold: "將貼文包含在“總結此主題”中所需的最低分數"
     summary_posts_required: "啟用「摘要此主題」前，主題所需的最少貼文數。此設定的變更會在一週內追溯套用。"
@@ -4558,6 +4554,7 @@ zh_TW:
 
         這是來自 %{site_name} 的自動訊息，通知您[貼文](%{base_url}%{post_url})已獲核准。
   page_forbidden:
+    page_title: "拒絕存取"
     title: "糟糕！該頁面是私人頁面。"
   site_setting_missing: "必須設定 `%{name}` 網站設定。"
   page_not_found:

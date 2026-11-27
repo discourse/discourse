@@ -48,6 +48,7 @@ ru:
           title: название
           body: body
           tags: теги
+        settings_button: Настроек
       review:
         create: Создать ссылку
         copy: Копировать
@@ -70,5 +71,7 @@ ru:
       drafts: Черновики
       pages: страниц
       preview: Предпросмотр
+      article_settings:
+        kind_page: страница
       unpublish: Отменить публикацию
       appearance_link: Внешний вид

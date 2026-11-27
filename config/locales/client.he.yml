@@ -2076,9 +2076,6 @@ he:
         show_key_description: "הכנס ידנית"
         short_description: |
           הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה או במפתחות אבטחה פיזיים.
-        extended_description: |
-          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
         use: "להשתמש ביישומון אימות"
         enforced_with_oauth_notice: "הפעולה הזאת תפעיל אימות דו־שלבי. הבקשה להשתמש בזה תופיע רק בעת כניסה עם סיסמה, לא עם שיטות אימות חיצוניות או דרך רשתות חברתיות."
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
@@ -2934,7 +2931,6 @@ he:
       not_allowed_from_ip_address: "הכניסה מכתובת IP זו אסורה."
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
-      omniauth_disallow_totp: "בחשבון שלך מופעל אימות דו־שלבי. נא להיכנס עם הססמה שלך."
       works_with: "עובד עם"
       activate_account: "הפעלת חשבון"
       resend_title: "שליחה מחדש של הודעת הפעלה בדוא״ל"

@@ -1936,9 +1936,6 @@ es:
         show_key_description: "Introducir manualmente"
         short_description: |
           Protege tu cuenta con códigos de seguridad de un solo uso o claves de seguridad físicas.
-        extended_description: |
-          La autenticación de dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación de dos factores."
         use: "Usar la aplicación de autenticación"
         enforced_with_oauth_notice: "Debes activar la autenticación de dos factores. Solo se te pedirá que la utilices cuando inicies sesión con una contraseña, no con métodos de autenticación externa o de inicio de sesión con red social."
         enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
@@ -2759,7 +2756,6 @@ es:
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Haz clic aquí para enviar el correo electrónico de activación de nuevo."
-      omniauth_disallow_totp: "Tu cuenta tiene la autenticación de dos factores activada. Inicia sesión con tu contraseña."
       works_with: "Funciona con"
       activate_account: "Activar cuenta"
       resend_title: "Volver a enviar el correo electrónico de activación"

@@ -47,6 +47,7 @@ fi:
           title: otsikko
           body: leipäteksti
           tags: tunnisteet
+        settings_button: Asetukset
       review:
         create: Luo linkki
         copy: Kopioi
@@ -69,5 +70,7 @@ fi:
       drafts: Luonnokset
       pages: Sivut
       preview: Esikatselu
+      article_settings:
+        kind_page: Sivu
       unpublish: Peru julkaisu
       appearance_link: Ulkoasu

@@ -1522,9 +1522,6 @@ nb_NO:
         show_key_description: "Skriv inn manuelt"
         short_description: |
           Vern kontoen din med engangskoder eller fysiske sikkerhetsnøkler.
-        extended_description: |
-          To-faktor autentisering legger til ekstra sikkerhet på kontoen din ved å kreve en engangstoken i tillegg til passordet ditt. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> enheter.
-        oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
         use: "Bruk Autentisering-appen"
         enforced_with_oauth_notice: "Du må aktivere totrinnsautentisering. Du vil bare bli bedt om å bruke den når du logger inn med et passord, ikke med ekstern autentisering eller sosiale innloggingsmetoder."
         enforced_notice: "Du må aktivere totrinnsautentisering før du får tilgang til dette nettstedet."
@@ -2268,7 +2265,6 @@ nb_NO:
       not_allowed_from_ip_address: "Du kan ikke logge inn fra den IP-adressen."
       admin_not_allowed_from_ip_address: "Du kan ikke logge inn som administrator fra den IP-adressen."
       resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
-      omniauth_disallow_totp: "Kontoen din har to-faktor autentisering aktivert. Vennligst logg inn med passordet ditt."
       activate_account: "Aktiver konto"
       resend_title: "Send aktivterings-e-post på nytt"
       change_email: "Endre e-postadresse"

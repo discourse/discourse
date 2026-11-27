@@ -30,6 +30,7 @@ id:
           title: judul
           body: konten
           tags: label
+        settings_button: Pengaturan
       review:
         copy: Salin
         open: Buka

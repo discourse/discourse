@@ -42,6 +42,7 @@ nb_NO:
           title: tittel
           body: body
           tags: stikkord
+        settings_button: Innstillinger
       review:
         copy: Kopier
         open: Åpne

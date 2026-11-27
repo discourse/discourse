@@ -41,6 +41,7 @@ ca:
           title: títol
           body: cos
           tags: etiquetes
+        settings_button: Configuració
       review:
         copy: Còpia
         open: Obre

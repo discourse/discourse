@@ -42,6 +42,7 @@ ko:
           title: 제목
           body: 바디
           tags: 태그
+        settings_button: 설정
       review:
         create: 링크 만들기
         copy: 복사

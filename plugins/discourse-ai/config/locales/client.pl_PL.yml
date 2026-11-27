@@ -2068,6 +2068,7 @@ pl_PL:
         quick_search:
           suffix: "we wszystkich tematach i postach z AI"
       ai_artifact:
+        move_warning: "Jeśli przeniesiesz wpis z aktywnym artefaktem, publiczne udostępnienie tej konwersacji nie będzie już dawało dostępu do tego artefaktu. Udostępnij lub zaktualizuj konwersację docelową, aby ponownie przyznać dostęp publiczny. Oddzielne udostępnione migawki nie zostaną naruszone."
         editor:
           title: "Artefakt AI"
           edit_options: "Opcje edycji"

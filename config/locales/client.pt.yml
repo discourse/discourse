@@ -1765,9 +1765,6 @@ pt:
         show_key_description: "Inserir manualmente"
         short_description: |
           Proteja a sua conta com códigos de segurança de utilização única ou chaves de segurança físicas.
-        extended_description: |
-          A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Tenha em consideração que os logins sociais serão desativados assim que a autenticação em dois passos for ativada na sua conta."
         use: "Utilizar a aplicação Authenticator"
         enforced_with_oauth_notice: "É necessário ativar a autenticação de dois fatores. Só ser-lhe-á pedido para utilizar esta opção quando iniciar sessão com uma palavra-passe, não com autenticação externa ou métodos de início de sessão social."
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
@@ -2585,7 +2582,6 @@ pt:
       not_allowed_from_ip_address: "Você não pode efetuar login a partir desse endereço IP."
       admin_not_allowed_from_ip_address: "Não pode iniciar a sessão como administrador a partir desse endereço de IP."
       resend_activation_email: "Clique aqui para enviar novamente a mensagem de ativação."
-      omniauth_disallow_totp: "A sua conta tem a autenticação em dois passos ativa. Por favor entre com a sua senha."
       works_with: "Funciona com"
       activate_account: "Ativar Conta"
       resend_title: "Reenviar Mensagem de Ativação"

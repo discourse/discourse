@@ -39,6 +39,7 @@ bs_BA:
           title: naslov
           body: tijelo
           tags: oznake
+        settings_button: Postavke
       review:
         copy: Copy
         open: Otvori

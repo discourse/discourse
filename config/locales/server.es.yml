@@ -373,9 +373,7 @@ es:
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
       secure_uploads_requirements: "Las subidas en S3 deben estar activadas antes de activar las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "No puede desactivar el inicio de sesión local si se aplica 2FA. Desactive 2FA antes de desactivar los inicios de sesión locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes activar las cargas S3 porque las cargas S3 ya están activadas globalmente, y activar este nivel de sitio podría causar problemas críticos con las cargas."
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar accidentalmente la velocidad de los usuarios legítimos."
@@ -4230,6 +4228,7 @@ es:
 
         Esto es un mensaje automático de %{site_name} para hacerte saber que [tu publicación](%{base_url}%{post_url}) ha sido aprobada.
   page_forbidden:
+    page_title: "Acceso denegado"
     title: "¡Ups! Esa página es privada."
   site_setting_missing: "Debes rellenar el ajuste «%{name}»."
   page_not_found:
