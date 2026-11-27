@@ -1231,6 +1231,24 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
+    it "lets post excerpts omit emoji without stripping other images" do
+      emoji = '<img src="/images/emoji/twitter/heart.png" class="emoji" alt=":heart:">'
+      photo = '<img src="/uploads/photo.jpg" alt="photo">'
+      cooked = "<p>Open#{emoji} #{photo}</p>"
+
+      expect(Post.excerpt(cooked, 100, keep_images: true)).to match_html("Open:heart: #{photo}")
+      expect(Post.excerpt(cooked, 100, keep_images: true, strip_emojis: true)).to match_html(
+        "Open #{photo}",
+      )
+    end
+
+    it "can omit emoji when preserving or remapping emoji is also requested" do
+      cooked = '<img src="/images/emoji/twitter/heart.png" class="emoji" alt=":heart:">'
+
+      expect(PrettyText.excerpt(cooked, 100, strip_emojis: true, keep_emoji_images: true)).to eq("")
+      expect(PrettyText.excerpt(cooked, 100, strip_emojis: true, remap_emoji: true)).to eq("")
+    end
+
     context "with option to preserve onebox source" do
       it "returns the expected excerpt" do
         onebox =
