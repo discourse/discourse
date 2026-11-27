@@ -39,11 +39,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
   rule field (PHASE-3), notification tracking (the open decision in `ROLLOUT.md`), and
   `DMultiSelect` (PHASE-1).
   - Core:
-    - ☐ Revision visibility (`components/modal/history/visibility-menu.gjs`). Its rows leave
-      out the current value, and it ends with "Delete revision" after a divider when the
-      viewer can delete. Paused 2026-11-25: every pick saves at once, as a notification level
-      does, so it is decided with the notification-level family in `ROLLOUT.md`.
-    - ☐ Pinned options (`components/pinned-options.gjs`).
+    - ☐ Revision visibility (`components/modal/history/visibility-menu.gjs`). The trigger shows
+      the current visibility, and a pick saves it on the server at once (`modal/history.gjs`,
+      `changeVisibility`). Its list leaves out the current value, which a `DSelect` would keep,
+      and it ends with "Delete revision" after a divider when the viewer can delete. Paused
+      2026-11-25: every pick saves at once, as a notification level does, so it is decided with
+      the notification-level family in `ROLLOUT.md`.
+    - ☐ Pinned options (`components/pinned-options.gjs`). Waits on the notification-level
+      decision. The trigger shows "Pinned" or "Unpinned" and the menu offers both, with
+      descriptions. A pick sets the user's own pin state for the topic
+      (`TopicUser.cleared_pinned_at`, through `Topic#clear_pin_for` and `#re_pin_for`), so it
+      belongs with the topic's notification level.
     - ☑ Color mode (`components/interface-color-selector.gjs`). A static `DSelect` that can't be
       emptied, named "Color mode", showing only the current mode's icon, with a check on the
       current one. It is named by the picked mode's label; the old name read "[missing %{mode}
@@ -52,7 +58,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       classes and the trigger's `-expanded` state still match. Customer themes that style the
       old rows as `.interface-color-selector-content .btn` need a migration note before the flag
       defaults on.
-    - ☐ Language switcher (`components/language-switcher.gjs`).
+    - ☐ Language switcher (`components/language-switcher.gjs`). The trigger shows the current
+      language code and the list marks the current language. A pick saves the user's locale (a
+      cookie when signed out) and reloads the page. It is a personal preference, like color
+      mode, which applies on pick too, so it doesn't wait on the notification-level decision.
+      Outside repositories have hits for its names (`discourse-multilingual` ships its own
+      `language-switcher`); not yet sorted.
     - ☑ Nested replies sort (`components/nested/sort-selector.gjs`). A static `DSelect` named
       by the visible "Sort by" label and styled as the flat button it replaces. The system
       specs still drive the old menu through the nested view's page object.
@@ -94,18 +105,34 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
         the cursor, shown with their shortcuts, and the list rows toggle (picking the current
         list type removes it), so they aren't value pickers. Their rows don't say which one is
         active; that is a separate fix (`menuitemradio` with `aria-checked`).
-    - ☐ FormKit's `menu` control (`form-kit/components/fk/control/menu.gjs`). Only the
-      styleguide uses it.
+    - ☐ FormKit's `menu` control (`form-kit/components/fk/control/menu.gjs`). A form value
+      picker: the trigger shows the selection and nothing saves until submit. Its one live use
+      is the badge grouping field (`admin/components/admin-badges-show.gjs`), to port like the
+      DSA form (`@type="custom"` with a `DSelect`). The DSA form's flag-off branch, the
+      styleguide and the control's tests also use it. The control itself joins the FormKit
+      `select` decision in wave 4. No outside repository uses `@type="menu"`.
     - ☑ Admin dashboard date range (`admin/components/dashboard/date-range.gjs`). Stays on
       `DMenu`: its panel is a small form that ends with Cancel and Apply buttons, so nothing is
       picked until Apply, and a listbox that commits on each pick doesn't fit it.
-    - ☐ Grid pickers: `ui-kit/d-icon-grid-picker` and the emoji picker in value mode
-      (`components/emoji-picker/index.gjs`). A grid is not a listbox, so these may stay.
+    - ☑ Grid pickers stay. `ui-kit/d-icon-grid-picker` is already its own listbox (options with
+      `aria-selected`, arrow keys in two directions over 12 columns, search and favorites);
+      `DSelect` has no grid layout. The emoji picker (`components/emoji-picker/`) has sections
+      and a skin tone select, and its cells are `role="button"`, so it has no listbox semantics
+      at all. That is a gap of its own, not a `DSelect` port.
   - Plugins:
     - ☐ chat: the channel list filter and sort submenus (`chat-channel-list-filter-menu.gjs`,
       `chat-channel-list-sort-choice.gjs`), a channel's notification level
       (`chat-channel-sidebar-context-notification-submenu.gjs`) and the search sort
       (`chat-search.gjs`).
+      - ☐ Filter and sort, last. Their rows in the channel list's menu show the current filter
+        and sort, saved per user, so they fit `DSelect`. They already use `@contentRole="menu"`
+        with `menuitemradio` rows and `aria-checked`, so porting them gains the least. `"menu"`
+        is outside `FloatContentRole`; the `.gjs` files skip the type check, and its runtime
+        effect is unchecked.
+      - ☐ Notification level. Waits on the notification-level decision. Its row in the channel's
+        context menu has a fixed label ("Notification settings"), and the submenu marks the
+        level with a `-selected` class. A pick saves at once. The mute submenu next to it lists
+        durations to mute for, which are commands, so it stays on `DMenu`.
       - ☑ Search sort. A static `DSelect` that can't be emptied, named "Sort by", showing the
         current sort with the filter controls' sort icon, and a check on the current one. The old
         button was named only by the current sort, "Relevance". No spec or theme targets the old
@@ -133,8 +160,21 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       replaces. The trigger shows the number; the list marks both ends with the existing priority
       strings. Rows are list items without a tab stop of their own. Rows are now keyed by option id
       (#46941), so focus stays on the option just ranked.
-    - ☐ live: the call submenus for devices, noise suppression, camera and layout
-      (`live/call-submenu.gjs`).
+    - ☐ live:
+      - ☐ The voice and video settings modals: nine select-kit `ComboBox`es, each a labelled
+        field holding a value. Voice (`modal/live-voice-settings.gjs`): input device, output
+        device, noise suppression, and, when shown, the subtitles model and voice quality. Video
+        (`modal/live-video-settings.gjs`): camera, and, when shown, camera quality, screen quality
+        and screen content.
+      - ☐ The audio and video quick menus (`live/call-controls.gjs`). Their rows show the current
+        input and output device, noise suppression mode and camera, and open a submenu
+        (`live/call-submenu.gjs`) of plain buttons marked `-selected`. Each row becomes a
+        captioned `DSelect` in the same place, opening to the right as today. The plugin closes
+        the parent menu after a pick itself, and the port keeps that. To mock up before coding;
+        a `DSelect` inside a `DMenu` on mobile is unchecked.
+      - ☐ The layout row in the room's "More" menu (`live/room-page.gjs`). Its label is fixed,
+        but its icon shows the current layout, as color mode's does. Same treatment as the quick
+        menus.
     - ☑ discourse-workflows: the reference picker (`variable/reference-property-picker.gjs`). A
       single `DSelectList` in the menu the pill opens, opening on the current property, with the
       properties sorted by name. Any pick closes it through `@onSelect`, a re-pick included.
@@ -147,8 +187,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       attribute's input, and `@onDeselect` hides it and resets its value.
   - Mixed, to decide (value rows beside commands): the bookmark menu's reminder times, boards'
     add-from-topic column menu, the rich editor's table menu (an alignment group among
-    commands), chat's channel list menu and live's audio and video menus (commands that open
-    the value submenus above), the debug and admin dashboard checkbox panels, and the site
+    commands), the debug and admin dashboard checkbox panels, and the site
     traffic filter pills (they remove values but can't add any).
   - Trailing action options: three of these pickers end with a destructive action after a
     divider (the permission menu, revision visibility and "Going"). The action stays an option
@@ -189,7 +228,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
 - ☐ **Radio items in a menu (decide later; outside the select work).** `DDropdownMenu` is a
   plain list of buttons inside a `DMenu` whose content is a `dialog`. A menu that marks a current
   choice can only show it with a class and an icon, so screen readers don't hear it: "Going", the
-  editor's Text sizes and Lists, and the navigation dropdowns. React Aria lets each section of a
+  editor's Text sizes and Lists, and the navigation dropdowns. Chat's channel list filter and sort
+  already do it by hand (`menuitemradio` with `aria-checked`). React Aria lets each section of a
   `Menu` hold its own selection beside plain action items, and shadcn uses
   `DropdownMenuRadioGroup`. Giving `DDropdownMenu` menu semantics (`menu`, `menuitem`,
   `menuitemradio` with `aria-checked`, `separator`, arrow keys) would fix them all. It is a
