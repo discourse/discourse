@@ -420,6 +420,7 @@ def update_topics
            , MAX(created_at) last_post_date
            , COALESCE(SUM(word_count), 0) words
            , COALESCE(SUM(reply_count), 0) replies
+           , COUNT(DISTINCT user_id) participants
            , (  SELECT user_id
                   FROM posts
                  WHERE NOT hidden
@@ -440,6 +441,7 @@ def update_topics
        , bumped_at = X.last_post_date
        , word_count = X.words
        , reply_count = X.replies
+       , participant_count = X.participants
        , last_post_user_id = X.last_poster
     FROM X
    WHERE id = X.topic_id
@@ -448,6 +450,7 @@ def update_topics
        OR bumped_at <> X.last_post_date
        OR COALESCE(word_count, -1) <> X.words
        OR COALESCE(reply_count, -1) <> X.replies
+       OR COALESCE(participant_count, -1) <> X.participants
        OR COALESCE(last_post_user_id, -9999) <> X.last_poster)
   SQL
 end
