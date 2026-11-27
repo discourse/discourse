@@ -27,7 +27,6 @@ class McpOauthAuthorizationsController < ApplicationController
       DiscourseMcp::ScopePresenter.items(
         (@requested_scopes & DiscourseMcp.registry.scopes) - @granted_scopes,
       )
-    @custom_body_class = "mcp-consent-page"
     render :show
   end
 

@@ -589,7 +589,7 @@ class SessionController < ApplicationController
 
   def one_time_password
     user = one_time_password_user
-    @otp_username = user&.username
+    @otp_user = user
 
     if user
       if current_user&.id == user.id
