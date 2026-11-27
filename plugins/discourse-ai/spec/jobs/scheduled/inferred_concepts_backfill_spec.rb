@@ -21,7 +21,7 @@ RSpec.describe Jobs::InferredConceptsBackfill do
     SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 60
     SiteSetting.inferred_concepts_backfill_max_age_days = 365
     SiteSetting.inferred_concepts_backfill_minimum_word_count = 50
-    described_class.reset_cursor!
+    described_class.reset_inflight!
     DiscourseAi::InferredConcepts::Seeder.reset_status!
 
     vector = [0.5] * vector_def.dimensions
@@ -34,115 +34,167 @@ RSpec.describe Jobs::InferredConceptsBackfill do
   end
 
   after do
-    described_class.reset_cursor!
+    described_class.reset_inflight!
     DiscourseAi::InferredConcepts::Seeder.reset_status!
   end
 
-  def create_embedded_topic(title:, word_count: 100, created_at: 2.days.ago)
-    topic = Fabricate(:topic, title: title, word_count: word_count, created_at: created_at)
+  def create_embedded_topic(
+    title:,
+    word_count: 100,
+    created_at: 2.days.ago,
+    last_posted_at: created_at
+  )
+    topic =
+      Fabricate(
+        :topic,
+        title: title,
+        word_count: word_count,
+        created_at: created_at,
+        last_posted_at: last_posted_at,
+      )
     Fabricate(:post, topic: topic, post_number: 1, raw: "Body for #{title}")
     vector = [0.5] * vector_def.dimensions
     DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "vec-#{topic.id}")
     topic
   end
 
-  it "backfills topics with stored embeddings using active concepts only and advances cursor past 0-match topics" do
+  it "prioritizes newest untagged topics first, skips no-match topics on subsequent runs, and picks up newly created topics" do
     SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 12
-    matched_topic = create_embedded_topic(title: "Kubernetes Upgrade Guide")
-    unmatched_topic = create_embedded_topic(title: "General Offtopic Chat")
+    older_topic =
+      create_embedded_topic(
+        title: "Older historical topic",
+        created_at: 5.days.ago,
+        last_posted_at: 5.days.ago,
+      )
+    newer_topic =
+      create_embedded_topic(
+        title: "Newer active discussion",
+        created_at: 1.day.ago,
+        last_posted_at: 1.day.ago,
+      )
     short_topic = create_embedded_topic(title: "Short discussion topic", word_count: 10)
     old_topic = create_embedded_topic(title: "Ancient archived topic", created_at: 2.years.ago)
     unembedded_topic = Fabricate(:topic, title: "Topic without vector embedding", word_count: 100)
 
-    # First run processes newest eligible topic (unmatched_topic) and gets below-threshold score
-    DiscourseAi::Decisions.with_canned_answers(c_0: 0.2) do |canned|
-      job.execute({})
+    # First tick claims the newest eligible topic (newer_topic), which yields 0 matches
+    expect do job.execute({}) end.to change { Jobs::BackfillInferredConceptsBatch.jobs.size }.by(1)
 
-      expect(canned.calls.size).to eq(1)
+    first_args = Jobs::BackfillInferredConceptsBatch.jobs.last["args"].first
+    expect(first_args["topic_ids"]).to eq([newer_topic.id])
+
+    DiscourseAi::Decisions.with_canned_answers(c_0: 0.2) do
+      Jobs::BackfillInferredConceptsBatch.new.execute(first_args)
+    end
+
+    expect(newer_topic.inferred_concepts.reload).to be_empty
+    expect(
+      TopicCustomField.find_by(
+        topic_id: newer_topic.id,
+        name: described_class::NO_MATCH_CUSTOM_FIELD,
+      ),
+    ).to be_present
+
+    # A brand-new topic arrives before the next tick; it must preempt older_topic
+    brand_new_topic =
+      create_embedded_topic(
+        title: "Brand new Kubernetes question",
+        created_at: 1.minute.ago,
+        last_posted_at: 1.minute.ago,
+      )
+
+    expect do job.execute({}) end.to change { Jobs::BackfillInferredConceptsBatch.jobs.size }.by(1)
+    second_args = Jobs::BackfillInferredConceptsBatch.jobs.last["args"].first
+    expect(second_args["topic_ids"]).to eq([brand_new_topic.id])
+
+    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do |canned|
+      Jobs::BackfillInferredConceptsBatch.new.execute(second_args)
       expect(canned.calls.sole[:questions].sole.instructions).to include("Kubernetes")
       expect(canned.calls.sole[:questions].sole.instructions).not_to include("Unvetted")
     end
 
-    expect(unmatched_topic.inferred_concepts.reload).to be_empty
+    expect(brand_new_topic.inferred_concepts.reload).to eq([kubernetes])
 
-    # Second run skips unmatched_topic via cursor and matches matched_topic
-    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do |canned|
-      job.execute({})
+    # Third tick fills remaining budget with older_topic, skipping short/old/unembedded
+    expect do job.execute({}) end.to change { Jobs::BackfillInferredConceptsBatch.jobs.size }.by(1)
+    third_args = Jobs::BackfillInferredConceptsBatch.jobs.last["args"].first
+    expect(third_args["topic_ids"]).to eq([older_topic.id])
 
-      expect(canned.calls.size).to eq(1)
-      expect(canned.calls.sole[:state]).to include("Kubernetes Upgrade Guide")
+    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do
+      Jobs::BackfillInferredConceptsBatch.new.execute(third_args)
     end
 
-    expect(matched_topic.inferred_concepts.reload).to eq([kubernetes])
+    expect(older_topic.inferred_concepts.reload).to eq([kubernetes])
     expect(short_topic.inferred_concepts.reload).to be_empty
     expect(old_topic.inferred_concepts.reload).to be_empty
     expect(unembedded_topic.inferred_concepts.reload).to be_empty
 
-    # Third run finds no remaining eligible topics
-    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do |canned|
-      job.execute({})
-      expect(canned.calls).to be_empty
+    # Fourth tick has nothing left to enqueue
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
+  end
+
+  it "slices large quotas into BATCH_SIZE batch jobs and respects in-flight backpressure" do
+    SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 240 # 20 per tick
+    topics =
+      20.times.map do |idx|
+        create_embedded_topic(
+          title: "Eligible backfill topic #{idx}",
+          last_posted_at: idx.minutes.ago,
+        )
+      end
+
+    expect do job.execute({}) end.to change { Jobs::BackfillInferredConceptsBatch.jobs.size }.by(2)
+
+    enqueued_batches =
+      Jobs::BackfillInferredConceptsBatch.jobs.last(2).map { |j| j["args"].first["topic_ids"] }
+    expect(enqueued_batches.map(&:size)).to eq([15, 5])
+    expect(enqueued_batches.flatten).to eq(topics.map(&:id))
+
+    # All 20 slots are currently in-flight; immediate re-run enqueues nothing
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
+
+    # After finishing the first 15-topic batch, another tick only refills the 15 freed slots
+    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do
+      Jobs::BackfillInferredConceptsBatch.new.execute(topic_ids: enqueued_batches.first)
     end
+
+    extra_topics =
+      20.times.map do |idx|
+        create_embedded_topic(
+          title: "Subsequent backfill topic #{idx}",
+          last_posted_at: Time.zone.now + idx.seconds,
+        )
+      end
+
+    expect do job.execute({}) end.to change { Jobs::BackfillInferredConceptsBatch.jobs.size }.by(1)
+    refill_ids = Jobs::BackfillInferredConceptsBatch.jobs.last["args"].first["topic_ids"]
+    expect(refill_ids.size).to eq(15)
+    expect(refill_ids & enqueued_batches.second).to be_empty
+    expect(extra_topics.map(&:id)).to include(*refill_ids)
   end
 
-  it "falls back to the LLM Classifier when no decision model is configured" do
-    SiteSetting.inferred_concepts_match_decision_model = ""
-    topic = create_embedded_topic(title: "Kubernetes Nodes")
-
-    llm_response = { matches: [{ concept_id: kubernetes.id, relevance: 0.88, primary: true }] }
-
-    DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) { job.execute({}) }
-
-    expect(topic.inferred_concepts.reload).to eq([kubernetes])
-  end
-
-  it "stops and preserves cursor position when decision model credits are exhausted" do
+  it "skips when credits are exhausted for decision model" do
     decision_model.update!(id: -552)
+    SiteSetting.inferred_concepts_match_decision_model = decision_model.id
     Fabricate(:decision_model_credit_allocation, decision_model: decision_model, daily_credits: 5)
     DecisionModelCreditDailyUsage.increment_usage!(decision_model, 5)
-    topic = create_embedded_topic(title: "Blocked by credits")
+    create_embedded_topic(title: "Blocked by credits discussion")
 
-    DiscourseAi::Decisions.with_canned_answers(c_0: 0.9) do |canned|
-      job.execute({})
-      expect(canned.calls).to be_empty
-    end
-
-    expect(topic.inferred_concepts.reload).to be_empty
-  end
-
-  it "halts after MAX_CONSECUTIVE_FAILURES without advancing cursor past failed topics" do
-    SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 120
-    create_embedded_topic(title: "Failing discussion one")
-    create_embedded_topic(title: "Failing discussion two")
-    create_embedded_topic(title: "Failing discussion three")
-    fourth = create_embedded_topic(title: "Never reached discussion topic")
-
-    allow_any_instance_of(DiscourseAi::InferredConcepts::Applier).to receive(
-      :match_existing_concepts,
-    ).and_raise(DiscourseAi::Decisions::RequestFailed.new("Boom"))
-
-    job.execute({})
-
-    expect(fourth.inferred_concepts.reload).to be_empty
-    expect(Discourse.redis.get(described_class::CURSOR_KEY)).to be_nil
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
   end
 
   it "skips when disabled, budget is 0, no active concepts exist, or seeding is in progress" do
-    topic = create_embedded_topic(title: "Skipped backfill discussion")
+    create_embedded_topic(title: "Skipped backfill discussion")
 
     SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 0
-    job.execute({})
-    expect(topic.inferred_concepts.reload).to be_empty
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
 
     SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 60
     DiscourseAi::InferredConcepts::Seeder.mark_queued!
-    job.execute({})
-    expect(topic.inferred_concepts.reload).to be_empty
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
 
     DiscourseAi::InferredConcepts::Seeder.reset_status!
     kubernetes.update!(status: :candidate)
-    job.execute({})
-    expect(topic.inferred_concepts.reload).to be_empty
+    expect do job.execute({}) end.not_to change { Jobs::BackfillInferredConceptsBatch.jobs.size }
   end
 
   it "resumes stalled seeding runs even when backfill budget is 0 and no active concepts exist" do

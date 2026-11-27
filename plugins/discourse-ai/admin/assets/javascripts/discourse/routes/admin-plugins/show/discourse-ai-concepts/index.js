@@ -2,25 +2,20 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowDiscourseAiConceptsIndexRoute extends DiscourseRoute {
-  queryParams = {
-    status: { refreshModel: true },
-    filter: { refreshModel: true },
-    order: { refreshModel: true },
-  };
-
-  async model(params) {
+  async model(params, transition) {
+    const query = transition?.to?.queryParams || params || {};
     const data = {};
 
-    if (params.status && params.status !== "all") {
-      data.status = params.status;
+    if (query.status && query.status !== "all") {
+      data.status = query.status;
     }
 
-    if (params.filter?.trim()) {
-      data.filter = params.filter.trim();
+    if (query.filter?.trim()) {
+      data.filter = query.filter.trim();
     }
 
-    if (params.order && params.order !== "usage") {
-      data.order = params.order;
+    if (query.order && query.order !== "usage") {
+      data.order = query.order;
     }
 
     const response = await ajax(
@@ -31,9 +26,9 @@ export default class AdminPluginsShowDiscourseAiConceptsIndexRoute extends Disco
     return {
       ...response,
       queryParams: {
-        status: params.status || "all",
-        filter: params.filter || "",
-        order: params.order || "usage",
+        status: query.status || "all",
+        filter: query.filter || "",
+        order: query.order || "usage",
       },
     };
   }
