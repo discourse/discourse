@@ -20,11 +20,25 @@ module JsonApiKit
 
       def writable? = @writable
 
+      def writable_with?(http_method) = writable? && write_methods.include?(http_method)
+
+      def contract_for(location:, glossary:)
+        input_contract.new(location:, type: glossary.member_type(resource.type))
+      end
+
       def resolves?(path) = resource.resolves?(path)
 
       private
 
       attr_reader :readable
+
+      def write_methods
+        raise NotImplementedError, "#{self.class} must implement #write_methods."
+      end
+
+      def input_contract
+        raise NotImplementedError, "#{self.class} must implement #input_contract."
+      end
 
       def verify_writable
         return if [true, false].include?(@writable)

@@ -13,7 +13,13 @@ module JsonApiKit
       def initialize(raw, resource:, edition:)
         @resource = resource
         @edition = edition
-        @parameters = Parameters.new(raw.to_hash.deep_stringify_keys, resource:, glossary:)
+        @parameters =
+          Parameters.new(
+            raw.to_hash.deep_stringify_keys,
+            resource:,
+            glossary:,
+            families: contract_class.attribute_names,
+          )
       end
 
       delegate :invalid?, :refusals, to: :contract
@@ -28,6 +34,10 @@ module JsonApiKit
       delegate :glossary, :default_sorts, to: :edition, private: true
 
       def contract = @contract ||= contract_class.for(contract_parameters, resource:, glossary:)
+
+      def contract_class
+        raise NotImplementedError, "#{self.class} must implement #contract_class."
+      end
 
       def contract_parameters = parameters.to_h
     end

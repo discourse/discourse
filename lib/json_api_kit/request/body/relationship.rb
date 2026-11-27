@@ -10,14 +10,8 @@ module JsonApiKit
         end
 
         def refusals
-          unless declaration&.writable?
-            return [
-              ConversionError.new(
-                Forbidden.new("#{location.name} is not a writable relationship."),
-                location:,
-              ),
-            ]
-          end
+          return [forbidden_refusal] unless writable_by_guardian?
+
           contract.refusals
         rescue Glossary::NotAMemberName => error
           [ConversionError.new(error, location:)]
@@ -28,10 +22,8 @@ module JsonApiKit
         def value = contract.value
 
         def locations_for(parameter)
-          unless parameter.name == parameter_name || parameter.name.to_s == declaration.name
-            return []
-          end
-          [location_for(parameter)]
+          return [] unless parameter.for_relationship?(declaration)
+          [parameter.linkage_location(location)]
         end
 
         private
@@ -41,10 +33,6 @@ module JsonApiKit
         delegate :glossary, to: :edition
         delegate :edition, to: :resource
 
-        def location_for(parameter)
-          parameter.index ? location.child("data", parameter.index, "id") : location.child("data")
-        end
-
         def declaration
           @declaration ||=
             resource.relationships.fetch(
@@ -53,12 +41,17 @@ module JsonApiKit
             )
         end
 
-        def contract
-          @contract ||=
-            declaration.input_contract.new(
-              location:,
-              type: glossary.member_type(declaration.resource.type),
-            )
+        def contract = @contract ||= declaration.contract_for(location:, glossary:)
+
+        def writable_by_guardian?
+          declaration&.readable_by?(resource.guardian) && declaration.writable?
+        end
+
+        def forbidden_refusal
+          ConversionError.new(
+            Forbidden.new("#{location.name} is not a writable relationship."),
+            location:,
+          )
         end
       end
     end

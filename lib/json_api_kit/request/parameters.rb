@@ -11,10 +11,11 @@ module JsonApiKit
         "include" => Family::Include,
       }.freeze
 
-      def initialize(raw, glossary:, resource:)
+      def initialize(raw, glossary:, resource:, families: FAMILIES.keys)
         @raw = raw
         @glossary = glossary
         @resource = resource
+        @families = FAMILIES.slice(*families)
       end
 
       def to_h
@@ -28,9 +29,9 @@ module JsonApiKit
 
       private
 
-      attr_reader :raw, :glossary, :resource
+      attr_reader :raw, :glossary, :resource, :families
 
-      def family_for(key) = FAMILIES.fetch(key, Family::Other).new(glossary:, resource:)
+      def family_for(key) = families.fetch(key, Family::Other).new(glossary:, resource:)
 
       def declared_name(family)
         glossary.declared_name(Name::Member.new(value: family)).value
