@@ -14,9 +14,9 @@ module Service
       def run_step
         contract =
           class_name.new(
-            **default_values.deep_merge(params),
+            params.to_hash,
             options: context[:options],
-            provided_attributes: params.to_hash.keys,
+            model: (context[default_values_from] if default_values_from),
           )
         context[contract_name] = contract
         if contract.invalid?
@@ -37,12 +37,6 @@ module Service
 
       def default?
         name.to_sym == :default
-      end
-
-      def default_values
-        return {} unless default_values_from
-        model = context[default_values_from]
-        (model.try(:attributes) || model).with_indifferent_access
       end
     end
   end

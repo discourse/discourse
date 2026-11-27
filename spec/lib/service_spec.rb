@@ -708,6 +708,18 @@ RSpec.describe Service do
         end
       end
 
+      context "when the request supplies a model parameter" do
+        let(:params) { { model: { name: "Other" }, name: "Jane" } }
+
+        it "exposes the original hash from context" do
+          expect(result.params.model).to equal(stored_model)
+        end
+
+        it "fills omitted attributes from the context hash" do
+          expect(result.params.to_hash).to eq(id: 1, name: "Jane", groups: [])
+        end
+      end
+
       context "when an explicit nil replaces a model default" do
         let(:params) { { id: nil } }
 
@@ -824,6 +836,10 @@ RSpec.describe Service do
         context "when the model exposes its attributes" do
           let(:stored_model) { Struct.new(:attributes).new(defaults) }
 
+          it "exposes the model itself" do
+            expect(result.params.model).to equal(stored_model)
+          end
+
           it "fills omitted keys from model attributes" do
             expect(result.params.dimensions.to_hash).to eq(
               width: 800,
@@ -833,6 +849,14 @@ RSpec.describe Service do
                 y: 30,
               },
             )
+          end
+        end
+
+        context "when a nested parameter is named model" do
+          let(:params) { super().deep_merge(dimensions: { model: { width: 1 } }) }
+
+          it "leaves the nested contract without a model" do
+            expect(result.params.dimensions.model).to be_nil
           end
         end
 

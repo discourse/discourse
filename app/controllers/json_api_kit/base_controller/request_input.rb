@@ -15,7 +15,9 @@ module JsonApiKit
 
       private
 
-      def service_params = { params: request_body.parameters, guardian: }
+      def service_params = { params: request_body.parameters.merge(route_parameters), guardian: }
+
+      def route_parameters = request.path_parameters.except(:controller, :action, :format)
 
       def render_document(value, **options)
         super(

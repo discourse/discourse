@@ -3,6 +3,48 @@
 RSpec.describe Service::ContractBase, type: :model do
   subject(:contract) { contract_class.new(params) }
 
+  describe "#model" do
+    subject(:contract) { contract_class.new(params, options: service_options, model: stored_model) }
+
+    let(:contract_class) do
+      Class.new(described_class) do
+        attribute :name, :string
+        attribute :role, :string
+      end
+    end
+    let(:stored_model) { Struct.new(:attributes).new({ name: "Stored", role: "member" }) }
+    let(:service_options) { { strict: true } }
+    let(:params) { { name: "Updated" } }
+
+    it "returns the supplied model" do
+      expect(contract.model).to equal(stored_model)
+    end
+
+    it "fills omitted attributes from the model" do
+      expect(contract.to_hash).to eq(name: "Updated", role: "member")
+    end
+
+    context "when parameters include model and options keys" do
+      let(:params) { super().merge(model: "request value", options: "request value") }
+
+      it "keeps the supplied model" do
+        expect(contract.model).to equal(stored_model)
+      end
+
+      it "keeps the supplied options" do
+        expect(contract.options).to equal(service_options)
+      end
+    end
+
+    context "without a model" do
+      let(:stored_model) { nil }
+
+      it "returns nil" do
+        expect(contract.model).to be_nil
+      end
+    end
+  end
+
   describe "#provided?" do
     subject(:contract) { contract_class.new(**params) }
 
@@ -19,6 +61,20 @@ RSpec.describe Service::ContractBase, type: :model do
     it "recognizes a supplied attribute", :aggregate_failures do
       expect(contract).to be_provided(:user_id)
       expect(contract).to be_provided("user_id")
+    end
+
+    context "when a model supplies defaults" do
+      subject(:contract) { contract_class.new(params, model: stored_model) }
+
+      let(:stored_model) { Struct.new(:attributes).new({ user_id: 1, group_ids: [2] }) }
+
+      it "marks supplied attributes as provided" do
+        expect(contract).to be_provided(:user_id)
+      end
+
+      it "does not mark defaulted attributes as provided" do
+        expect(contract).not_to be_provided(:group_ids)
+      end
     end
 
     context "when the attribute is omitted" do
@@ -141,11 +197,25 @@ RSpec.describe Service::ContractBase, type: :model do
     end
     let(:created_at) { Time.zone.parse("2025-12-25 00:00") }
 
-    context "when nested input contains an undeclared metadata name" do
-      let(:params) { super().deep_merge(user: { provided_attributes: "unexpected" }) }
+    context "when nested input contains undeclared metadata names" do
+      let(:params) do
+        super().deep_merge(
+          user: {
+            provided_attributes: "unexpected",
+            options: "unexpected",
+            model: "unexpected",
+          },
+        )
+      end
 
-      it "accepts the declared attributes" do
-        expect(contract).to be_valid
+      it { is_expected.to be_valid }
+
+      it "leaves the nested contract without a model" do
+        expect(contract.user.model).to be_nil
+      end
+
+      it "leaves the nested contract without options" do
+        expect(contract.user.options).to be_nil
       end
     end
 

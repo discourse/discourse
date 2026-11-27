@@ -45,7 +45,7 @@ module JsonApiKitPatchSpec
     private
 
     def fetch_group(params:)
-      Group.find_by(id: params.group_id)
+      Group.find_by(id: params.id)
     end
 
     def can_update_group(guardian:)
@@ -81,9 +81,7 @@ module JsonApiKitPatchSpec
     resource GroupResource
 
     def update
-      UpdateGroup.call(
-        service_params.deep_merge(params: { group_id: request.path_parameters.fetch(:id) }),
-      ) do
+      UpdateGroup.call(service_params) do
         on_success { |group:| render_document(group) }
         on_failed_contract { |contract| render_validation_errors(contract.errors) }
         on_failed_policy(:can_update_group) { raise Discourse::InvalidAccess }
@@ -226,15 +224,37 @@ RSpec.describe JsonApiKitPatchSpec::GroupsController, type: :request do
       end
     end
 
-    context "when an attribute supplies another group ID" do
+    context "when an attribute supplies another ID" do
       fab!(:other_group, :group)
 
-      let(:attributes) { super().merge("groupId" => other_group.id) }
+      let(:attributes) { super().merge("id" => other_group.id) }
 
       it "updates the route's target", :aggregate_failures do
         expect { update_group }.not_to change { other_group.reload.attributes }
         expect(group.reload.name).to eq("updated_group")
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "when the route carries nested parameters and a format" do
+      let(:path) { "/api/tenants/acme/groups/#{target_id}.json" }
+
+      before do
+        allow(JsonApiKitPatchSpec::UpdateGroup).to receive(:call).and_call_original
+        Rails.application.routes.disable_clear_and_finalize = true
+        Rails.application.routes.draw do
+          patch "/api/tenants/:tenant/groups/:id" => "json_api_kit_patch_spec/groups#update"
+        end
+        Rails.application.routes.disable_clear_and_finalize = false
+      end
+
+      it "forwards route parameters without routing metadata", :aggregate_failures do
+        update_group
+
+        expect(response).to have_http_status(:ok)
+        expect(JsonApiKitPatchSpec::UpdateGroup).to have_received(:call).with(
+          a_hash_including(params: { name: "updated_group", tenant: "acme", id: target_id }),
+        ).at_least(:once)
       end
     end
 

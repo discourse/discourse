@@ -5,7 +5,7 @@ module DiscourseDataExplorer
     requires_plugin PLUGIN_NAME
 
     before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
-    before_action :set_query, only: %i[group_reports_show group_reports_run show update public_run]
+    before_action :set_query, only: %i[group_reports_show group_reports_run show public_run]
     before_action :ensure_admin
 
     skip_before_action :check_xhr, only: %i[show group_reports_run run public_run]
@@ -229,34 +229,19 @@ module DiscourseDataExplorer
     end
 
     def update
-      sql_changed = @query.sql != params.dig(:query, :sql)
-      submitted_query = params.require(:query)
-      query_params = submitted_query.permit(:name, :sql, :description, tags: [])
-      tag_names = query_params.delete(:tags)
-
-      ActiveRecord::Base.transaction do
-        @query.update!(query_params.merge(hidden: false))
-        if tag_names || submitted_query.key?(:tags_present)
-          QueryTag.sync!(query: @query, names: tag_names || [])
+      UpdateQuery.call(
+        service_params.merge(params: update_params, options: { restore_hidden: true }),
+      ) do
+        on_success { |query:| render_serialized query, QueryDetailsSerializer, root: "query" }
+        on_failed_policy(:can_update_query) { raise Discourse::InvalidAccess }
+        on_model_not_found(:query) { raise Discourse::NotFound }
+        on_failed_contract { |contract| render_json_error(contract, type: :record_invalid) }
+        on_failed_policy(:requested_groups_exist) { raise Discourse::NotFound }
+        on_exceptions(ActiveRecord::RecordInvalid) do |error|
+          render_json_error(error, type: :record_invalid, status: 422)
         end
-
-        if submitted_query.key?(:group_ids) || submitted_query.key?(:group_ids_present)
-          group_ids = Array.wrap(submitted_query[:group_ids]).reject(&:blank?)
-          query_groups = QueryGroup.where(query_id: @query.id)
-          if group_ids.empty?
-            query_groups.delete_all
-          else
-            query_groups.where.not(group_id: group_ids).delete_all
-          end
-          group_ids.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
-        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
-
-      QueryRunner.invalidate(@query.id) if sql_changed
-
-      render_serialized @query, QueryDetailsSerializer, root: "query"
-    rescue ValidationError => e
-      render_json_error e.message
     end
 
     def destroy
@@ -315,6 +300,15 @@ module DiscourseDataExplorer
 
     def create_params
       params.require(:query).permit(:name, :description, :sql, tags: [], group_ids: []).to_h
+    end
+
+    def update_params
+      attributes = params.require(:query).to_unsafe_h
+      attributes[:tags] ||= [] if attributes.key?(:tags_present)
+      if attributes.key?(:group_ids) || attributes.key?(:group_ids_present)
+        attributes[:group_ids] = Array.wrap(attributes[:group_ids]).compact_blank
+      end
+      attributes.merge(id: params[:id])
     end
 
     def rate_limit_query_runs!

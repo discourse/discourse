@@ -37,6 +37,7 @@ module DiscourseDataExplorer
     belongs_to :user
     validates :name, presence: true
 
+    scope :visible, -> { where(hidden: false) }
     scope :for_group,
           ->(group) do
             where(hidden: false).joins(
@@ -80,6 +81,10 @@ module DiscourseDataExplorer
 
     def self.is_default_query?(id)
       id.to_i < 0
+    end
+
+    def default?
+      self.class.is_default_query?(id)
     end
 
     def self.automatic_tag_names(id)

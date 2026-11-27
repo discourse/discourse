@@ -28,20 +28,23 @@ class Service::ContractBase
     end
   end
 
-  def initialize(*args, options: nil, provided_attributes: nil, **kwargs)
+  def initialize(attributes = nil, options: nil, model: nil, **kwargs)
     @__options__ = options
-    @__provided_attributes__ =
-      (
-        (provided_attributes || (args.first || kwargs).to_hash.keys).map(&:to_s) &
-          self.class.attribute_names
-      ).freeze
-    super(*args, **kwargs.deep_symbolize_keys.slice(*self.class.attribute_names.map(&:to_sym)))
+    @__model__ = model
+    input = (attributes&.to_hash || {}).merge(kwargs)
+    @__provided_attributes__ = (input.keys.map(&:to_s) & self.class.attribute_names).freeze
+    values = model ? default_values.deep_merge(input) : input
+    super(values.deep_symbolize_keys.slice(*self.class.attribute_names.map(&:to_sym)))
   end
 
   def provided?(name) = @__provided_attributes__.include?(name.to_s)
 
   def options
     @__options__
+  end
+
+  def model
+    @__model__
   end
 
   def to_hash
@@ -65,6 +68,10 @@ class Service::ContractBase
   end
 
   private
+
+  def default_values
+    (@__model__.try(:attributes) || @__model__).with_indifferent_access
+  end
 
   def nested_attributes_valid?
     nested_attributes.map(&method(:validate_nested)).all?

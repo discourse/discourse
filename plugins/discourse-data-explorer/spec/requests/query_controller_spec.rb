@@ -439,114 +439,178 @@ RSpec.describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#update" do
-      fab!(:user2, :user)
-      fab!(:group2) { Fabricate(:group, users: [user2]) }
-
-      it "allows group to access system query" do
-        query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              "query" => {
-                "name" => query.name,
-                "description" => query.description,
-                "sql" => query.sql,
-                "user_id" => query.user_id,
-                "created_at" => query.created_at,
-                "group_ids" => [group2.id],
-                "last_run_at" => query.last_run_at,
-              },
-              "id" => query.id,
-            }
-
-        expect(response.status).to eq(200)
+      subject(:update_query) do
+        put "/admin/plugins/discourse-data-explorer/queries/#{query_id}.json", **request_options
       end
 
-      it "returns a proper json error for invalid updates" do
-        query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
-            params: {
-              "query" => {
-                "name" => "",
-              },
-              "id" => query.id,
-            }
+      fab!(:other_user, :user)
+      fab!(:target_group) { Fabricate(:group, users: [other_user]) }
+      fab!(:query) { Fabricate(:query, user: admin) }
 
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
+      let(:query_id) { query.id }
+      let(:query_parameters) { { tags: %w[Staff Monthly] } }
+      let(:request_parameters) { { query: query_parameters } }
+      let(:request_options) { { params: request_parameters } }
+
+      before do
+        query.groups = [target_group]
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Staff"])
       end
 
-      it "updates query tags while preserving group access when groups are omitted" do
-        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+      it "updates tags without changing omitted group access", :aggregate_failures do
+        update_query
 
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              query: {
-                tags: %w[Staff Monthly],
-              },
-            }
-
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(:ok)
         expect(query.reload.tag_names).to eq(%w[custom monthly staff])
-        expect(query.groups.pluck(:id)).to eq([group2.id])
+        expect(query.group_ids).to contain_exactly(target_group.id)
       end
 
-      it "removes the last tag when the empty selection is submitted" do
-        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+      context "when the query is hidden" do
+        fab!(:query) { Fabricate(:query, user: admin, hidden: true) }
 
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              query: {
-                tags_present: true,
-              },
-            }
+        let(:query_parameters) { { name: "Restored", hidden: true } }
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq(["custom"])
-        expect(query.reload.tags).to be_empty
-        expect(query.groups.pluck(:id)).to eq([group2.id])
+        it "restores the query", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:ok)
+          expect(response_json.fetch("query")).to include(
+            "id" => query.id,
+            "name" => "Restored",
+            "hidden" => false,
+          )
+          expect(query.reload).not_to be_hidden
+        end
       end
 
-      it "clears group access when an empty group selection is submitted" do
-        query = make_query("SELECT 1", {}, [group2.id])
+      context "when fields appear outside the query object" do
+        fab!(:other_query, :query)
 
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              query: {
-                group_ids_present: true,
-              },
-            }
+        let(:query_parameters) { { id: other_query.id, name: "Renamed", user_id: other_user.id } }
+        let(:request_parameters) { super().merge(sql: "SELECT 99", id: other_query.id) }
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["group_ids"]).to eq([])
-        expect(query.reload.groups).to be_empty
+        it "ignores the outer and read-only fields", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:ok)
+          expect(response_json.fetch("query")).to include(
+            "id" => query.id,
+            "name" => "Renamed",
+            "sql" => query.sql,
+            "user_id" => admin.id,
+          )
+        end
       end
 
-      it "updates additional tags on default queries without removing the default tag" do
-        query = DiscourseDataExplorer::Query.find(-1)
-        query.save!
-        DiscourseDataExplorer::QueryTag.sync!(query:, names: %w[Default Staff Monthly])
+      context "when the query does not exist" do
+        let(:query_id) { 999_999 }
+        let(:query_parameters) { { name: "Missing" } }
 
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              query: {
-                tags: ["Staff"],
-              },
-            }
+        it "returns not found" do
+          update_query
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq(%w[default users staff])
-        expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[default users staff])
+          expect(response).to have_http_status(:not_found)
+        end
+      end
 
-        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
-            params: {
-              query: {
-                tags_present: true,
-              },
-            }
+      context "without a query object" do
+        let(:request_parameters) { { name: "Ignored" } }
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq(%w[default users])
-        expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[default users])
+        it "returns a bad request" do
+          update_query
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      context "when the name is blank" do
+        let(:query_parameters) { { name: "" } }
+
+        it "returns the validation error", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.parsed_body).to eq(
+            "errors" => ["Name can't be blank"],
+            "error_type" => "record_invalid",
+          )
+        end
+      end
+
+      context "when tags are cleared" do
+        let(:query_parameters) { { tags_present: true } }
+
+        it "removes the additional tags without changing group access", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:ok)
+          expect(response_json.dig("query", "tags")).to eq(["custom"])
+          expect(query.reload.tags).to be_empty
+          expect(query.group_ids).to contain_exactly(target_group.id)
+        end
+      end
+
+      context "when group access is cleared" do
+        let(:query_parameters) { { group_ids_present: false } }
+        let(:request_options) { super().merge(as: :json) }
+
+        it "removes group access", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:ok)
+          expect(response_json.dig("query", "group_ids")).to be_empty
+          expect(query.reload.groups).to be_empty
+        end
+      end
+
+      context "when the query is a persisted default" do
+        let(:stored_definition) do
+          { "name" => "Stored report", "description" => "Stored description", "sql" => "SELECT 17" }
+        end
+        let(:query) { Fabricate(:query, id: -1, **stored_definition.symbolize_keys) }
+        let(:stored_query) { DiscourseDataExplorer::Query.find_by(id: query.id) }
+        let(:query_parameters) do
+          {
+            name: "Submitted report",
+            description: "Submitted description",
+            sql: "SELECT 99",
+            tags: ["Staff"],
+            group_ids: target_group.id,
+          }
+        end
+
+        before { DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Monthly"]) }
+
+        it "preserves the stored definition", :aggregate_failures do
+          update_query
+
+          expect(response).to have_http_status(:ok)
+          expect(response_json.fetch("query")).to include(stored_definition)
+          expect(stored_query.attributes).to include(stored_definition)
+        end
+
+        it "updates group access and tags", :aggregate_failures do
+          update_query
+
+          expect(response_json.fetch("query")).to include(
+            "group_ids" => [target_group.id],
+            "tags" => %w[default users staff],
+          )
+          expect(stored_query.groups).to contain_exactly(target_group)
+          expect(stored_query.tag_names).to contain_exactly("default", "users", "staff")
+        end
+
+        context "when tags are cleared" do
+          let(:query_parameters) { { tags_present: true } }
+
+          it "removes additional tags without removing automatic tags", :aggregate_failures do
+            update_query
+
+            expect(response).to have_http_status(:ok)
+            expect(response_json.dig("query", "tags")).to eq(%w[default users])
+            expect(stored_query.tag_names).to eq(%w[default users])
+          end
+        end
       end
     end
 
