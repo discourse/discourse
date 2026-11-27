@@ -57,6 +57,26 @@ describe "Topic page" do
     end
   end
 
+  context "when printing with the sidebar enabled" do
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    it "uses the full content width and hides navigation" do
+      SiteSetting.navigation_menu = "sidebar"
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_sidebar_navigation
+
+      page.driver.with_playwright_page do |browser_page|
+        browser_page.emulate_media(media: "print")
+
+        expect(topic_page).to have_full_width_main_content
+        expect(topic_page).to have_print_navigation_hidden
+      ensure
+        browser_page.emulate_media(media: "screen")
+      end
+    end
+  end
+
   context "with links to an anchor in another topic" do
     fab!(:source_topic, :topic)
 
