@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lovelace onboarding completion options</title>
+    <style>
+      :root { color-scheme: light dark; --page: #f5f6f8; --surface: #fff; --ink: #242730; --muted: #606574; --border: #dce0e7; --tint: #edf2f8; --link: #185eaa; --green: #238341; }
+      @media (prefers-color-scheme: dark) { :root { --page: #191b20; --surface: #24272f; --ink: #f0f1f4; --muted: #bcc2ce; --border: #444a57; --tint: #303b4c; --link: #8dbfff; --green: #77d893; } }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: clamp(16px, 4vw, 48px); background: var(--page); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+      main { max-width: 1400px; margin-inline: auto; }
+      h1 { font-size: clamp(24px, 3vw, 36px); margin: 0 0 8px; }
+      h2 { font-size: 21px; margin: 12px 0 6px; }
+      h3 { font-size: 15px; margin: 0; }
+      p { margin: 0 0 16px; }
+      .intro { max-width: 900px; color: var(--muted); }
+      .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; margin-block: 28px; }
+      article { min-width: 0; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+      .badge { display: inline-block; color: var(--muted); font-size: 13px; font-weight: 650; }
+      .recommended { color: var(--green); }
+      .description { min-height: 96px; color: var(--muted); }
+      button { padding: 9px 12px; border: 1px solid var(--border); border-radius: 5px; color: var(--link); background: var(--surface); font: inherit; cursor: pointer; min-height: 44px; }
+      button:hover { background: var(--tint); }
+      button:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+      .demo { min-height: 320px; padding: 14px; background: var(--page); border-radius: 8px; margin-block: 20px; }
+      .widget { overflow: hidden; position: relative; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); }
+      .widget header { padding: 14px; background: var(--tint); }
+      .progress { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+      .row { padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); font-size: 13px; }
+      .row span { color: var(--green); }
+      .last { width: 100%; text-align: start; border-radius: 0; border: 0; border-top: 1px solid var(--border); color: var(--ink); }
+      .success { padding: 14px; margin: 0; color: var(--green); }
+      .actions { padding: 0 14px 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .sample-content { color: var(--muted); padding-block: 20px; font-size: 13px; border-bottom: 1px solid var(--border); }
+      .notice { margin-block: 12px; font-size: 13px; }
+      .tradeoff { color: var(--muted); font-size: 14px; }
+      .confetti { position: absolute; inset: 0; pointer-events: none; display: flex; justify-content: space-around; overflow: hidden; }
+      .confetti i { width: 6px; height: 12px; background: var(--link); animation: fall 2s ease-in both; }
+      .confetti i:nth-child(2n) { background: var(--green); animation-delay: .2s; }
+      .confetti i:nth-child(3n) { background: #c775bc; }
+      [hidden] { display: none !important; }
+      @keyframes fall { from { transform: translateY(-20px) rotate(0); opacity: 1; } to { transform: translateY(260px) rotate(160deg); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .confetti { display: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>A lighter finish to member onboarding</h1>
+      <p class="intro">These earlier alternatives are retained as a design reference. Option 2, “Celebrate, then close,” is now implemented in the member checklist and admin preview. These standalone demos do not change member progress or community settings.</p>
+      <p class="intro">Each demo starts at two of three items complete. Select the final item to try the finish, then use <strong>Replay</strong> to compare again. Reloading this document resets all demos.</p>
+      <div class="options">
+        <article data-option="summary">
+          <span class="badge">Option 1</span>
+          <h2>Keep a small success summary</h2>
+          <p class="description">Hide the items immediately. Keep a quiet confirmation with <strong>Review items</strong> and <strong>Done</strong>. No confetti or timer.</p>
+          <div class="demo">
+            <section class="widget" aria-label="Summary option checklist">
+              <header><h3>Your onboarding checklist</h3><p class="progress">2 of 3 complete</p></header>
+              <div class="items"><div class="row"><span aria-label="Complete">✓</span> Add a profile picture</div><div class="row"><span aria-label="Complete">✓</span> Complete your profile</div><button class="last" type="button" aria-pressed="false">○ Read community guidelines</button></div>
+              <p class="success" hidden>Well done! You’ve completed your onboarding checklist.</p>
+              <div class="actions" hidden><button class="review" type="button" aria-expanded="false">Review items</button><button class="done" type="button">Done</button></div>
+            </section>
+            <p class="notice" role="status"></p>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <p class="tradeoff">Keeps completion visible without the full list. Members can review or undo a completion before choosing Done. Proposed saved behavior: keep the summary on return visits until dismissed.</p>
+          <button class="replay" type="button">Replay option 1</button>
+        </article>
+        <article data-option="celebrate">
+          <span class="badge recommended">Option 2 · Selected</span>
+          <h2>Celebrate, then close</h2>
+          <p class="description">Hide the items, show a short celebration, then dismiss after three seconds. Reduced-motion preferences suppress confetti.</p>
+          <div class="demo">
+            <section class="widget" aria-label="Celebration option checklist">
+              <header><h3>Your onboarding checklist</h3><p class="progress">2 of 3 complete</p></header>
+              <div class="items"><div class="row"><span aria-label="Complete">✓</span> Add a profile picture</div><div class="row"><span aria-label="Complete">✓</span> Complete your profile</div><button class="last" type="button" aria-pressed="false">○ Read community guidelines</button></div>
+              <p class="success" hidden>Well done! You’re ready to join in.</p>
+              <div class="actions" hidden><button class="done" type="button">Close now</button></div>
+              <div class="confetti" aria-hidden="true" hidden><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </section>
+            <p class="notice" role="status"></p>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <p class="tradeoff">A celebratory finish that clears itself. The timer may feel abrupt to some members. Proposed saved behavior: completed checklists stay dismissed on return visits.</p>
+          <button class="replay" type="button">Replay option 2</button>
+        </article>
+        <article data-option="quiet">
+          <span class="badge">Option 3</span>
+          <h2>Close with a quiet confirmation</h2>
+          <p class="description">Dismiss the checklist immediately and announce completion in a small notice. Keep <strong>Undo</strong> available to restore the last step.</p>
+          <div class="demo">
+            <section class="widget" aria-label="Quiet option checklist">
+              <header><h3>Your onboarding checklist</h3><p class="progress">2 of 3 complete</p></header>
+              <div class="items"><div class="row"><span aria-label="Complete">✓</span> Add a profile picture</div><div class="row"><span aria-label="Complete">✓</span> Complete your profile</div><button class="last" type="button" aria-pressed="false">○ Read community guidelines</button></div>
+            </section>
+            <p class="notice" role="status"></p>
+            <button class="undo" type="button" hidden>Undo completion</button>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <p class="tradeoff">Makes the most room for the community, without animation. Less celebratory, with a larger layout change. Proposed saved behavior: remain dismissed unless the member chooses Undo.</p>
+          <button class="replay" type="button">Replay option 3</button>
+        </article>
+      </div>
+    </main>
+    <script>
+      document.querySelectorAll("article").forEach((card) => {
+        const widget = card.querySelector(".widget");
+        const items = card.querySelector(".items");
+        const last = card.querySelector(".last");
+        const progress = card.querySelector(".progress");
+        const success = card.querySelector(".success");
+        const actions = card.querySelector(".actions");
+        const confetti = card.querySelector(".confetti");
+        const notice = card.querySelector(".notice");
+        const replay = card.querySelector(".replay");
+        const review = card.querySelector(".review");
+        const undo = card.querySelector(".undo");
+        let timer;
+        let completed = false;
+        function reset() {
+          clearTimeout(timer);
+          completed = false;
+          widget.hidden = false;
+          items.hidden = false;
+          last.textContent = "○ Read community guidelines";
+          last.setAttribute("aria-pressed", "false");
+          progress.textContent = "2 of 3 complete";
+          notice.textContent = "";
+          if (success) { success.hidden = true; }
+          if (actions) { actions.hidden = true; }
+          if (confetti) { confetti.hidden = true; }
+          if (undo) { undo.hidden = true; }
+          if (review) { review.textContent = "Review items"; review.setAttribute("aria-expanded", "false"); }
+        }
+        function dismiss() {
+          clearTimeout(timer);
+          widget.hidden = true;
+          notice.textContent = "Onboarding complete. Enjoy the community!";
+          replay.focus();
+        }
+        last.addEventListener("click", () => {
+          if (completed) { reset(); last.focus(); return; }
+          completed = true;
+          progress.textContent = "3 of 3 complete";
+          last.textContent = "✓ Read community guidelines";
+          last.setAttribute("aria-pressed", "true");
+          if (card.dataset.option === "quiet") {
+            widget.hidden = true;
+            notice.textContent = "Onboarding complete. Enjoy the community!";
+            undo.hidden = false;
+            undo.focus();
+          } else {
+            items.hidden = true;
+            success.hidden = false;
+            actions.hidden = false;
+            notice.textContent = "All three onboarding items are complete.";
+            if (review) { review.focus(); }
+            if (confetti) {
+              confetti.hidden = false;
+              notice.textContent = "All three items are complete. Closing in three seconds.";
+              card.querySelector(".done").focus();
+              timer = setTimeout(dismiss, 3000);
+            }
+          }
+        });
+        replay.addEventListener("click", reset);
+        card.querySelector(".done")?.addEventListener("click", dismiss);
+        undo?.addEventListener("click", () => { reset(); last.focus(); });
+        review?.addEventListener("click", () => {
+          items.hidden = !items.hidden;
+          review.textContent = items.hidden ? "Review items" : "Hide items";
+          review.setAttribute("aria-expanded", String(!items.hidden));
+        });
+      });
+    </script>
+  </body>
+</html>
