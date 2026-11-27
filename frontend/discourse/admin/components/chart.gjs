@@ -8,11 +8,16 @@ import loadChartJS, {
 // chartConfig - object
 export default class ChartComponent extends Component {
   renderChart = modifier((element) => {
-    this.loadAndInit(element);
-    return () => this.chart?.destroy();
+    let cancelled = false;
+    this.loadAndInit(element, () => cancelled);
+    return () => {
+      cancelled = true;
+      this.chart?.destroy();
+      this.chart = null;
+    };
   });
 
-  async loadAndInit(element) {
+  async loadAndInit(element, isCancelled) {
     const chartConfig = { ...this.args.chartConfig };
 
     const Chart = await loadChartJS();
@@ -23,6 +28,10 @@ export default class ChartComponent extends Component {
         ...(chartConfig.plugins || []),
         ChartDataLabelsPlugin,
       ];
+    }
+
+    if (isCancelled()) {
+      return;
     }
 
     this.chart = new Chart(element.getContext("2d"), chartConfig);
