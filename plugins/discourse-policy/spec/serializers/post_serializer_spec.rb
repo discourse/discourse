@@ -32,7 +32,7 @@ describe PostSerializer do
 
     not_accepted = json[:post][:policy_not_accepted_by]
 
-    expect(not_accepted.map { |u| u[:id] }).to contain_exactly(admin.id, user1.id, user2.id)
+    expect(not_accepted.map { |u| u[:id] }).to eq([admin.id, user1.id, user2.id])
 
     PolicyUser.add!(user1, post.post_policy)
 
