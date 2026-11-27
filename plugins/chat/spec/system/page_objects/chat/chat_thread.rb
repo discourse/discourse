@@ -182,6 +182,33 @@ module PageObjects
       def has_bookmarked_message?(message)
         find(message_by_id_selector(message.id) + ".-bookmarked")
       end
+
+      def has_message_in_view?(message)
+        try_until_success do
+          in_view = page.evaluate_script(<<~JS)
+              (() => {
+                const scroller = document.querySelector(".chat-thread .chat-messages-scroller");
+                const el = document.querySelector(#{message_by_id_selector(message.id).to_json});
+                if (!scroller || !el) {
+                  return false;
+                }
+                const scrollerRect = scroller.getBoundingClientRect();
+                const elRect = el.getBoundingClientRect();
+                if (scrollerRect.height <= 0 || elRect.height <= 0) {
+                  return false;
+                }
+                return (
+                  elRect.top >= scrollerRect.top - 1 &&
+                  elRect.bottom <= scrollerRect.bottom + 1
+                );
+              })()
+            JS
+          raise Capybara::ExpectationNotMet if !in_view
+        end
+        true
+      rescue Capybara::ExpectationNotMet
+        false
+      end
     end
   end
 end

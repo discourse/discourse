@@ -181,7 +181,7 @@ module PageObjects
 
       # The floor the separator announces for the layout as it stands.
       def pane_floor
-        page.find(".query-editor .grippie")["aria-valuemin"].to_f
+        page.find(".query-editor .grippie[aria-valuemin]")["aria-valuemin"].to_f
       end
 
       # How much taller the panes' content is than the box clipping it. One pixel

@@ -368,7 +368,7 @@ export default class AiUsage extends Component {
   }
 
   formatRequestDate(date) {
-    return moment(date).format();
+    return date ? moment(date).toISOString(true) : null;
   }
 
   @action
