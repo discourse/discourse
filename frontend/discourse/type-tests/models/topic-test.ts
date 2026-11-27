@@ -43,6 +43,17 @@ interface ExpectedTag {
   slug: string;
 }
 
+interface ExpectedPinnedFooterPost {
+  id: number;
+  post_number: number;
+  relative_url: string;
+  username: string | null;
+  name?: string | null;
+  avatar_template: string | null;
+  created_at: string;
+  cooked: string;
+}
+
 /** `Topic#thumbnail_info`: the original has no max size; optimized ones do. */
 interface ExpectedThumbnail {
   max_width: number | null;
@@ -217,6 +228,7 @@ interface ExpectedTopicFields {
   pending_posts?: ExpectedPendingPost[];
   pinned?: boolean;
   pinned_at?: string | null;
+  pinned_footer_post?: ExpectedPinnedFooterPost | null;
   pinned_globally?: boolean;
   pinned_until?: string | null;
   pm_with_non_human_user?: boolean;

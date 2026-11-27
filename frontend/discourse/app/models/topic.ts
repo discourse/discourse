@@ -118,6 +118,18 @@ export interface TopicBasicUser {
 
 type TopicTimerValue = TopicTimerData | EmberObject | null;
 
+/** The post copy attached to the topic footer. */
+export interface TopicPinnedFooterPost {
+  id: number;
+  post_number: number;
+  relative_url: string;
+  username: string | null;
+  name?: string | null;
+  avatar_template: string | null;
+  created_at: string;
+  cooked: string;
+}
+
 /**
  * Core payload and client-assigned fields; extensions can augment this interface.
  * Most are optional because routes and bookmark lists create partial topics.
@@ -187,6 +199,7 @@ export interface TopicFields {
   pending_posts?: TopicPendingPost[];
   pinned?: boolean;
   pinned_at?: string | null;
+  pinned_footer_post?: TopicPinnedFooterPost | null;
   pinned_globally?: boolean;
   pinned_until?: string | null;
   pm_with_non_human_user?: boolean;

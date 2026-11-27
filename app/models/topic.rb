@@ -15,6 +15,9 @@ class Topic < ActiveRecord::Base
   extend Forwardable
 
   EXTERNAL_ID_MAX_LENGTH = 50
+  PINNED_FOOTER_POST_FIELD = "pinned_footer_post_id"
+
+  register_custom_field_type(PINNED_FOOTER_POST_FIELD, :integer)
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
@@ -26,6 +29,15 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
+
+  def pinned_footer_post
+    return if private_message?
+
+    post_id = custom_fields[PINNED_FOOTER_POST_FIELD]
+    if post_id.to_i.positive?
+      posts.includes(:user).find_by(id: post_id, hidden: false, post_type: Post.types[:regular])
+    end
+  end
 
   def self.max_fancy_title_length
     400
