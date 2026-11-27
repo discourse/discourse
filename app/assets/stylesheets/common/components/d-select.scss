@@ -95,6 +95,16 @@
   color: var(--primary-medium);
 }
 
+.d-select__caption {
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  // Alone before the caret, it grows so the caret stays pinned right.
+  &:has(+ .d-select__caret, + .d-select__pending-icon) {
+    flex-grow: 1;
+  }
+}
+
 .d-select__value {
   flex: 1 1 auto;
   min-width: 0;

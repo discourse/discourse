@@ -164,7 +164,7 @@ en:
           toggle_try_this: "Toggle three rows without closing the panel, then toggle one back off. The boxes change; the rows do not move."
           toggle_label: "Interface languages"
           static_toggle_example: "A short list of toggles"
-          static_toggle_description: "With `@variant=\"static\"` a multi-select is a short list of toggles without a search field. The trigger shows the held values as chips, and picking a row flips it and leaves the list open. Use it when every row fits on screen, so there is nothing to search for."
+          static_toggle_description: "With `@variant=\"static\"` a multi-select is a short list of toggles without a search field. The trigger shows its `caption` text and then the held values as chips, and picking a row flips it and leaves the list open. Use it when every row fits on screen, so there is nothing to search for."
           static_toggle_try_this: "Open the list, turn on two more rows and turn one off, then press Escape. The chips follow each change."
           static_toggle_label: "Email me about"
           toggle_note: "The trigger is `@variant=\"button\"` so the panel is a place you go to make several changes at once, rather than a field you are filling in."

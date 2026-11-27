@@ -2938,197 +2938,297 @@ module(
   }
 );
 
-module(
-  "Integration | ui-kit | select | DSelect (@ariaLabelledBy)",
-  function (hooks) {
-    setupRenderingTest(hooks);
+for (const drawn of [false, true]) {
+  module(
+    `Integration | ui-kit | select | DSelect (${drawn ? "caption text" : "@ariaLabelledBy"})`,
+    function (hooks) {
+      setupRenderingTest(hooks);
 
-    hooks.beforeEach(async function () {
-      this.nameOf = await loadAccessibleName();
-    });
+      hooks.beforeEach(async function () {
+        this.nameOf = await loadAccessibleName();
+      });
 
-    test("a button trigger is named by the caption, then the value", async function (assert) {
-      const held = tracked(null);
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @options={{ITEMS}}
-            @value={{held.value}}
-            @variant="button"
-          />
-        </template>
-      );
+      const labelledBy = drawn ? undefined : "fruit-caption";
+      const caption = drawn ? "Fruit" : undefined;
 
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
-      held.value = 1;
-      await settled();
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
-      assert.dom(".d-select").doesNotHaveAttribute("aria-label");
-    });
-
-    test("a static trigger is named by the caption alone, since its contents are its value", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @options={{ITEMS}}
-            @value={{1}}
-            @variant="static"
-          />
-        </template>
-      );
-
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
-      assert.dom(".d-select .d-select__value").hasText("Apple");
-      assert.dom(".d-select").doesNotHaveAttribute("aria-label");
-    });
-
-    test("a disabled static trigger is named by the caption, then the value", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @disabled={{true}}
-            @options={{ITEMS}}
-            @value={{1}}
-            @variant="static"
-          />
-        </template>
-      );
-
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
-    });
-
-    test("an icon-only static trigger is named by the caption, then the value", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @icon="gear"
-            @iconOnly={{true}}
-            @options={{ITEMS}}
-            @texts={{hash ariaLabel="Fruit"}}
-            @value={{1}}
-            @variant="static"
-          />
-        </template>
-      );
-
-      assert.dom(".d-select.--icon-only").exists();
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
-    });
-
-    test("a typeahead's input and list are named by the caption", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect @ariaLabelledBy="fruit-caption" @options={{ITEMS}} />
-        </template>
-      );
-      await click("[role='combobox']");
-
-      assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
-      assert.strictEqual(this.nameOf(find("[role='listbox']")), "Fruit");
-      assert.dom("[role='combobox']").doesNotHaveAttribute("aria-label");
-      assert.dom("[role='listbox']").doesNotHaveAttribute("aria-label");
-    });
-
-    test("a typeahead's input is named by the caption alone, since it holds the value", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @options={{ITEMS}}
-            @value={{1}}
-          />
-        </template>
-      );
-
-      assert.dom("[role='combobox']").hasValue("Apple");
-      assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
-    });
-
-    test("a searchable panel's field is named by the caption", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @options={{ITEMS}}
-            @variant="button"
-          />
-        </template>
-      );
-      await click(TRIGGER);
-
-      assert.strictEqual(this.nameOf(find(".d-select__filter")), "Fruit");
-    });
-
-    for (const mobile of [false, true]) {
-      const overlay = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
-
-      test(`the ${mobile ? "mobile modal" : "desktop panel"} is named by the caption alone`, async function (assert) {
-        if (mobile) {
-          forceMobile();
-        }
-
+      test("a button trigger is named by the caption, then the value", async function (assert) {
+        const held = tracked(null);
         await render(
           <template>
-            <span id="fruit-caption">Fruit</span>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
             <DSelect
-              @ariaLabelledBy="fruit-caption"
+              @ariaLabelledBy={{labelledBy}}
               @options={{ITEMS}}
+              @texts={{hash caption=caption}}
+              @value={{held.value}}
+              @variant="button"
+            />
+          </template>
+        );
+
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
+        if (drawn) {
+          assert
+            .dom(`${TRIGGER} .d-select__caption`)
+            .hasText("Fruit", "the trigger draws its caption");
+          assert
+            .dom(`${TRIGGER} .d-select__placeholder`)
+            .doesNotExist("the caption stands in for the placeholder");
+        }
+        held.value = 1;
+        await settled();
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+        assert.dom(".d-select").doesNotHaveAttribute("aria-label");
+      });
+
+      test("a static trigger is named by the caption alone, since its contents are its value", async function (assert) {
+        await render(
+          <template>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
               @value={{1}}
+              @variant="static"
+            />
+          </template>
+        );
+
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
+        assert.dom(".d-select .d-select__value").hasText("Apple");
+        assert.dom(".d-select").doesNotHaveAttribute("aria-label");
+      });
+
+      test("a disabled static trigger is named by the caption, then the value", async function (assert) {
+        await render(
+          <template>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @disabled={{true}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
+              @value={{1}}
+              @variant="static"
+            />
+          </template>
+        );
+
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+      });
+
+      if (!drawn) {
+        test("an icon-only static trigger is named by the caption, then the value", async function (assert) {
+          await render(
+            <template>
+              <span id="fruit-caption">Fruit</span>
+              <DSelect
+                @ariaLabelledBy="fruit-caption"
+                @icon="gear"
+                @iconOnly={{true}}
+                @options={{ITEMS}}
+                @texts={{hash ariaLabel="Fruit"}}
+                @value={{1}}
+                @variant="static"
+              />
+            </template>
+          );
+
+          assert.dom(".d-select.--icon-only").exists();
+          assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+        });
+      }
+
+      test("a typeahead's input and list are named by the caption", async function (assert) {
+        await render(
+          <template>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
+            />
+          </template>
+        );
+        if (drawn) {
+          assert
+            .dom("[role='combobox']")
+            .hasAttribute("placeholder", /./, "the input keeps its prompt");
+          await click(".d-select__caption");
+          assert
+            .dom("[role='combobox']")
+            .isFocused("the caption focuses the input, as a label does");
+        }
+        await click("[role='combobox']");
+
+        assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
+        assert.strictEqual(this.nameOf(find("[role='listbox']")), "Fruit");
+        assert.dom("[role='combobox']").doesNotHaveAttribute("aria-label");
+        assert.dom("[role='listbox']").doesNotHaveAttribute("aria-label");
+      });
+
+      test("a typeahead's input is named by the caption alone, since it holds the value", async function (assert) {
+        await render(
+          <template>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
+              @value={{1}}
+            />
+          </template>
+        );
+
+        assert.dom("[role='combobox']").hasValue("Apple");
+        assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
+      });
+
+      test("a searchable panel's field is named by the caption", async function (assert) {
+        await render(
+          <template>
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
               @variant="button"
             />
           </template>
         );
         await click(TRIGGER);
 
-        assert.strictEqual(this.nameOf(find(overlay)), "Fruit");
-        assert.dom(overlay).doesNotHaveAttribute("aria-label");
+        assert.strictEqual(this.nameOf(find(".d-select__filter")), "Fruit");
       });
-    }
 
-    test("a compact multiple trigger is named by the caption, then the count", async function (assert) {
-      await render(
-        <template>
-          <span id="fruit-caption">Fruit</span>
-          <DSelect
-            @ariaLabelledBy="fruit-caption"
-            @maxVisibleChips={{0}}
-            @multiple={{true}}
-            @options={{ITEMS}}
-            @value={{array 1 2}}
-            @variant="button"
-          />
-        </template>
-      );
+      for (const mobile of [false, true]) {
+        const overlay = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
 
-      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit 2 selected");
-    });
+        test(`the ${mobile ? "mobile modal" : "desktop panel"} is named by the caption alone`, async function (assert) {
+          if (mobile) {
+            forceMobile();
+          }
 
-    test("a caption id missing from the page warns", async function (assert) {
-      const warn = sinon.stub(console, "warn");
-      try {
+          await render(
+            <template>
+              {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+              <DSelect
+                @ariaLabelledBy={{labelledBy}}
+                @options={{ITEMS}}
+                @texts={{hash caption=caption}}
+                @value={{1}}
+                @variant="button"
+              />
+            </template>
+          );
+          await click(TRIGGER);
+
+          assert.strictEqual(this.nameOf(find(overlay)), "Fruit");
+          assert.dom(overlay).doesNotHaveAttribute("aria-label");
+        });
+      }
+
+      test("a compact multiple trigger is named by the caption, then the count", async function (assert) {
+        const held = tracked([]);
         await render(
           <template>
-            <DSelect @ariaLabelledBy="no-such-caption" @options={{ITEMS}} />
+            {{#unless drawn}}<span id="fruit-caption">Fruit</span>{{/unless}}
+            <DSelect
+              @ariaLabelledBy={{labelledBy}}
+              @maxVisibleChips={{0}}
+              @multiple={{true}}
+              @options={{ITEMS}}
+              @texts={{hash caption=caption}}
+              @value={{held.value}}
+              @variant="button"
+            />
           </template>
         );
-        assert.true(warn.calledWithMatch("no-such-caption"));
-      } finally {
-        warn.restore();
+
+        if (drawn) {
+          assert
+            .dom(`${TRIGGER} .d-select__placeholder`)
+            .doesNotExist("the caption stands in for the placeholder");
+        }
+        held.value = [1, 2];
+        await settled();
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit 2 selected");
+        if (drawn) {
+          assert
+            .dom(`${TRIGGER} .d-select__caption`)
+            .hasText("Fruit", "the caption stays beside the count");
+          assert.dom(`${TRIGGER} .d-select__chips-more`).hasText("2");
+        }
+      });
+
+      if (drawn) {
+        test("a caption asserts beside @ariaLabelledBy, which would give a second name", async function (assert) {
+          const errors = [];
+          setupOnerror((error) => errors.push(error.message));
+
+          await render(
+            <template>
+              <span id="other-caption">Other</span>
+              <DSelect
+                @ariaLabelledBy="other-caption"
+                @options={{ITEMS}}
+                @texts={{hash caption="Fruit"}}
+                @variant="button"
+              />
+            </template>
+          );
+          resetOnerror();
+
+          assert.true(
+            errors.some(
+              (m) => /Assertion Failed/.test(m) && /@ariaLabelledBy/.test(m)
+            )
+          );
+        });
+
+        test("a caption asserts on an @iconOnly trigger, which has no room for it", async function (assert) {
+          const errors = [];
+          setupOnerror((error) => errors.push(error.message));
+
+          await render(
+            <template>
+              <DSelect
+                @icon="gear"
+                @iconOnly={{true}}
+                @options={{ITEMS}}
+                @texts={{hash ariaLabel="Fruit" caption="Fruit"}}
+                @value={{1}}
+                @variant="static"
+              />
+            </template>
+          );
+          resetOnerror();
+
+          assert.true(
+            errors.some(
+              (m) => /Assertion Failed/.test(m) && /@iconOnly/.test(m)
+            )
+          );
+        });
+      } else {
+        test("a caption id missing from the page warns", async function (assert) {
+          const warn = sinon.stub(console, "warn");
+          try {
+            await render(
+              <template>
+                <DSelect @ariaLabelledBy="no-such-caption" @options={{ITEMS}} />
+              </template>
+            );
+            assert.true(warn.calledWithMatch("no-such-caption"));
+          } finally {
+            warn.restore();
+          }
+        });
       }
-    });
-  }
-);
+    }
+  );
+}
 
 function stripButton(value) {
   return find(

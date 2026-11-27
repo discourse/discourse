@@ -399,6 +399,7 @@ const USES = [
     ".d-select__input",
     "placeholder"
   ),
+  drawn("caption", "button trigger", "button", ".d-select__caption"),
   drawn("placeholder", "single button", "button", ".d-select__placeholder"),
   drawn("placeholder", "single static", "static", ".d-select__placeholder"),
   drawn(

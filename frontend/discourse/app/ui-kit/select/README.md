@@ -269,6 +269,20 @@ locked. The list sits outside the named root so disabled fields still expose the
 The chips and that list share one resolution of the held values, and the resolver joins
 requests already in flight, so the same ids are never fetched twice.
 
+## Captions
+
+The `caption` text draws a word at the start of the trigger that names the control and stays
+whatever is held: `Sort  Latest`, `Attributes  [Placeholder] [Required]`, or with
+`@maxVisibleChips={{0}}` the menu-like `Attributes  2`. It names the control the way
+`@ariaLabelledBy` does, so the trigger reads the caption and then the held value or count, and
+`ariaLabel` is not needed.
+
+- With nothing held, a trigger without an input shows the caption alone, in place of the
+  placeholder. A desktop typeahead draws it before the chips and the input, keeps the input's
+  placeholder, and focuses the input when the caption is clicked.
+- It can't be combined with `@ariaLabelledBy`, which would give the control a second name, or with
+  `@iconOnly`, which leaves no room for it. Development builds assert on both.
+
 ## Changes and picks
 
 Three callbacks report selection, each with `(value, records, change)`. A single select passes
@@ -600,6 +614,7 @@ unknown key silently.
 | Key | Default | Values | Where |
 |---|---|---|---|
 | `ariaLabel` | `d_select.label` "Options" | | Names the trigger, the list and the panel. Required |
+| `caption` | none | | Drawn at the start of the trigger, and names the control in place of `ariaLabel`. See [Captions](#captions) |
 | `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Name of a button trigger, or a disabled static one, while a value is held. A focusable static combobox exposes its value itself. Required |
 | `labelWithCount` | `d_select.label_with_count` | `label`, `count` | Compact multi trigger name. Required |
 | `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held, unless a none option shows instead |
@@ -792,8 +807,9 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   flattened into the name, and a click on it reaches the option's handler, so it runs the
   option's action. An action belongs in an action option returned by `@groupHeader` or
   `@groupFooter`.
-- **Naming the control:** use the `ariaLabel` text, or `@ariaLabelledBy` with the id of a caption already
-  on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
+- **Naming the control:** use the `ariaLabel` text, the `caption` text (drawn in the trigger, see
+  [Captions](#captions)), or `@ariaLabelledBy` with the id of a caption already on the page.
+  `ariaLabel` and `@ariaLabelledBy` are not drawn. `@ariaLabelledBy` names the trigger, its query input, the
   list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption, except on an enabled static trigger that shows its value as text, whose contents already are its value; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button

@@ -126,6 +126,7 @@ const LOCALE_KEYS = {
 /** The engine's own text keys. */
 export type SelectCoreTextKey =
   | keyof typeof LOCALE_KEYS
+  | "caption"
   | "placeholder"
   | "noResults";
 
@@ -136,6 +137,7 @@ export type SelectCoreTexts = SelectTexts<SelectCoreTextKey>;
 export const DEFAULT_SELECT_TEXTS: Readonly<
   Record<SelectCoreTextKey, SelectText>
 > = Object.freeze({
+  caption: "",
   placeholder: (_values: SelectTextValues, context: SelectTextContext) =>
     i18n(
       context.multiple ? "d_select.add_placeholder" : "d_select.placeholder"

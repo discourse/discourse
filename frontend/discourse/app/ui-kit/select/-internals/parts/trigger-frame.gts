@@ -8,6 +8,9 @@ interface TriggerFrameSignature {
     pending: boolean;
     /** The leading (decorative) trigger icon, or `undefined` for none. */
     icon?: string;
+    /** The caption drawn before the variant's middle, which names the control. */
+    caption?: string;
+    captionId: string;
     /** The already-resolved caret icon (open/closed is decided by the parent). */
     caret: string;
     /** Whether to render the caret (the parent defaults this to `true`). */
@@ -70,6 +73,9 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
   />
   {{#if @icon}}
     {{dIcon @icon class="d-select__leading-icon"}}
+  {{/if}}
+  {{#if @caption}}
+    <span class="d-select__caption" id={{@captionId}}>{{@caption}}</span>
   {{/if}}
   {{yield}}
   {{#if @showClear}}

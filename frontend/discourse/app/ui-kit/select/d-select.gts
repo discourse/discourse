@@ -806,6 +806,8 @@ export default class DSelect extends Component<DSelectSignature> {
           async context does not churn each render; a content-only skeleton shows while
           it resolves, so a bare id never flashes. }}
         <TriggerFrame
+          @caption={{this.presenter.caption}}
+          @captionId={{this.presenter.captionId}}
           @caret={{this.presenter.caretIcon}}
           @clearLabel={{this.presenter.clearLabel}}
           @icon={{this.presenter.icon}}
@@ -886,7 +888,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onInputKeydown={{this.interaction.handleInputKeydown}}
               @onPaste={{this.host.handlePaste}}
               @pending={{this.engine.pending}}
-              @placeholder={{this.presenter.placeholder}}
+              @placeholder={{this.presenter.triggerPlaceholder}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
               @resolveSelection={{this.host.resolveSingle}}

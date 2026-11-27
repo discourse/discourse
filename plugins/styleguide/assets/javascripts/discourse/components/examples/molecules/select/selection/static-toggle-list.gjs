@@ -21,7 +21,7 @@ export default class StaticToggleListSelectExample extends Component {
       @onChange={{this.onChange}}
       @options={{EMAIL_TOPICS}}
       @texts={{hash
-        ariaLabel=(i18n "styleguide.sections.select.static_toggle_label")
+        caption=(i18n "styleguide.sections.select.static_toggle_label")
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_topics"
         )

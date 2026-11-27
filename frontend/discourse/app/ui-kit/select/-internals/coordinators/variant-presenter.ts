@@ -1,3 +1,5 @@
+import { assert } from "@ember/debug";
+import { guidFor } from "@ember/object/internals";
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -397,6 +399,31 @@ export default class VariantPresenter
     return this.fallbackSelectionLabel;
   }
 
+  /** The caption the trigger draws at its start, which names the control. */
+  get caption(): string | undefined {
+    const caption = this.#engine.text("caption") || undefined;
+    if (caption) {
+      assert(
+        "DSelect: a caption text names the control, so it can't be combined with @ariaLabelledBy",
+        !super.ariaLabelledBy
+      );
+      assert(
+        "DSelect: an @iconOnly trigger has no room for a caption text",
+        !this.iconOnly
+      );
+    }
+    return caption;
+  }
+
+  get captionId(): string {
+    return `d-select-caption-${guidFor(this)}`;
+  }
+
+  /** A drawn caption names the control through the same path as `@ariaLabelledBy`. */
+  get ariaLabelledBy(): string | undefined {
+    return super.ariaLabelledBy ?? (this.caption ? this.captionId : undefined);
+  }
+
   get selectionLabel(): string | undefined {
     if (this.#getArgs().multiple && this.maxVisibleChips !== undefined) {
       const value = this.#engine.value;
@@ -505,7 +532,7 @@ export default class VariantPresenter
    */
   get queryPlaceholder(): string | undefined {
     if (!this.#engine.hasValue) {
-      return this.#engine.pending ? undefined : this.placeholder;
+      return this.#engine.pending ? undefined : this.triggerPlaceholder;
     }
     return this.fieldRendersInput
       ? (this.#addMorePlaceholder() ?? undefined)
@@ -530,6 +557,13 @@ export default class VariantPresenter
       }
     }
     return this.searchPlaceholderText;
+  }
+
+  /** The trigger's prompt while nothing is held. A drawn caption replaces it outside an input. */
+  get triggerPlaceholder(): string | undefined {
+    return this.caption && !this.fieldRendersInput
+      ? undefined
+      : this.placeholder;
   }
 
   /** The filter input's prompt. */
