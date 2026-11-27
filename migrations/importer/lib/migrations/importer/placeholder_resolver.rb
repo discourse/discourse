@@ -184,11 +184,12 @@ module Migrations
       end
 
       # A snippet that is nothing but a destination — a reference definition's
-      # URL, or a full URL core linkified on its own — has to come back as a URL
-      # in the source's own spelling: image markdown would break the definition
-      # and turn the prose link into an image. Only a definition can hold a bare
-      # `upload://`, because core doesn't tokenize one in prose, which is also
-      # why a full URL can't be answered with the short form.
+      # URL, a raw tag's source, or a full URL core linkified on its own — has
+      # to come back as a URL in the source's own spelling: image markdown would
+      # break the definition and turn the prose link into an image. A bare
+      # `upload://` reaches here from a definition or a tag only, because core
+      # doesn't tokenize one in prose, which is also why a full URL can't be
+      # answered with the short form.
       def render_upload(row)
         snippet = row[:original_markdown].to_s
         if snippet.empty? || snippet.start_with?("![", "[")

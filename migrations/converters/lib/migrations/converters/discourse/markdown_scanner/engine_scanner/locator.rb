@@ -249,16 +249,23 @@ module Migrations
             # upload constructs answer for it and only the destination is
             # replaced: the `![alt][id]` that uses a definition keeps its own
             # syntax, and so does a `[![…](upload://x)](upload://x)` lightbox
-            # link, whose label no grammar takes whole. The two look-backs name
+            # link, whose label no grammar takes whole. The look-backs name
             # which construct the occurrence belongs to, nothing about how many
             # occurrences are live.
             def destination_upload_node(occurrence, raw_spelling)
-              unless link_destination_before?(@input, occurrence.offset) ||
-                       definition_destination_before?(@input, occurrence.offset)
-                return nil
-              end
+              return nil unless upload_destination_before?(occurrence.offset, raw_spelling)
 
               @scanner.upload_node(raw_spelling)
+            end
+
+            # The third shape is a raw tag's attribute value. Core rewrites an
+            # upload source there only in the `upload://` spelling, so a full
+            # upload URL inside a tag stays the link it is elsewhere.
+            def upload_destination_before?(offset, raw_spelling)
+              return true if link_destination_before?(@input, offset)
+              return true if definition_destination_before?(@input, offset)
+
+              raw_spelling.start_with?("upload://") && attribute_value_before?(@input, offset)
             end
 
             # The confirmation already answered "is this really a link here?",
