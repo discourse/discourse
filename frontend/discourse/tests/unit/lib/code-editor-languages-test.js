@@ -11,6 +11,7 @@ const BUILT_IN = [
   "html",
   "javascript",
   "json",
+  "liquid",
   "scss",
   "sql",
   "text",

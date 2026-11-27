@@ -10,7 +10,11 @@ import {
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
-import { currentCompletions, startCompletion } from "@codemirror/autocomplete";
+import {
+  acceptCompletion,
+  currentCompletions,
+  startCompletion,
+} from "@codemirror/autocomplete";
 import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
@@ -114,6 +118,71 @@ module("Integration | Component | code-editor", function (hooks) {
     );
 
     assert.false(highlightedTokens().includes("select"), "re-tokenized");
+  });
+
+  test("highlights Liquid tags and the HTML around them", async function (assert) {
+    const value = "<p>{% if site %}{{ site.title }}{% endif %}</p>";
+
+    await render(
+      <template><CodeEditor @language="liquid" @value={{value}} /></template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    const tokens = highlightedTokens();
+    assert.true(tokens.includes("if"), "the Liquid tag");
+    assert.true(tokens.includes("endif"), "its closing tag");
+    assert.true(tokens.includes("p"), "the surrounding HTML");
+  });
+
+  test("leaves the text around Liquid tags alone on a text base", async function (assert) {
+    const languageOptions = { base: "text" };
+    const value = "<p>{{ site.title }}</p>";
+
+    await render(
+      <template>
+        <CodeEditor
+          @language="liquid"
+          @languageOptions={{languageOptions}}
+          @value={{value}}
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    const tokens = highlightedTokens();
+    assert.true(tokens.includes("site"), "the Liquid output");
+    assert.false(tokens.includes("p"), "no markup");
+  });
+
+  test("completes the paths of the render context it is given", async function (assert) {
+    const languageOptions = { scope: { site: { title: "Example" } } };
+    const value = "{{ si";
+
+    await render(
+      <template>
+        <CodeEditor
+          @language="liquid"
+          @languageOptions={{languageOptions}}
+          @value={{value}}
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+    const view = codeEditorView();
+    await openCompletions(view);
+
+    assert.deepEqual(completionLabels(), ["site"]);
+
+    // Picking is ignored for a moment after the list opens.
+    await waitUntil(() => acceptCompletion(view));
+    await waitUntil(() => completionLabels().includes("title"));
+
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "{{ site.",
+      "an object is picked with its dot"
+    );
+    assert.deepEqual(completionLabels(), ["title"], "and opens its properties");
   });
 
   test("localizes the editor's UI", async function (assert) {
