@@ -52,6 +52,32 @@ module("Unit | lib | discourse-workflows | referencePickerData", function () {
     assert.true(data.properties.some((p) => p.name === "a.b"));
   });
 
+  test("lists properties by name, and indexes in number order", function (assert) {
+    const unsorted = {
+      $vars: {
+        topic: { zeta: 1, Alpha: 2, beta: 3 },
+        items: Array.from({ length: 11 }, (_, index) => index),
+      },
+    };
+    const names = (expression) =>
+      referencePickerData(unsorted, expression).properties.map((p) => p.name);
+
+    assert.deepEqual(names("$vars.topic"), ["Alpha", "beta", "zeta"]);
+    assert.deepEqual(names("$vars.items"), [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+    ]);
+  });
+
   test("returns null when nothing can be picked", function (assert) {
     assert.strictEqual(referencePickerData(scope, ""), null);
     // No accessor and no resolvable object: nothing to drill or switch.

@@ -152,7 +152,13 @@ module(
     test("keeps today's picker without new select controls", async function (assert) {
       await openPicker(this);
 
-      assert.dom(`${PICKER}__filter`).exists();
+      assert
+        .dom(`${PICKER}__filter`)
+        .hasAria(
+          "label",
+          i18n("discourse_workflows.reference_pill.properties"),
+          "the search is named by what it lists, not by its placeholder"
+        );
       assert.dom(`${PICKER} .d-select.--list`).doesNotExist();
     });
 
@@ -183,7 +189,14 @@ module(
           ),
           ["raw", "title"]
         );
-        assert.dom(`${PICKER} .d-select__input`).isFocused();
+        assert
+          .dom(`${PICKER} .d-select__input`)
+          .isFocused()
+          .hasAria(
+            "label",
+            i18n("discourse_workflows.reference_pill.properties"),
+            "the search is named by what it lists, not by its placeholder"
+          );
         assert
           .dom(`${PICKER} [role='option'].--active`)
           .hasAttribute("data-name", "raw", "the current property is active");

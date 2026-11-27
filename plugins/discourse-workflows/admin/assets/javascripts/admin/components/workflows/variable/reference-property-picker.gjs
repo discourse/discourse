@@ -131,9 +131,7 @@ export default class ReferencePropertyPicker extends Component {
             @onSelect={{this.select}}
             @options={{@data.properties}}
             @texts={{hash
-              ariaLabel=(i18n
-                "discourse_workflows.reference_pill.filter_placeholder"
-              )
+              ariaLabel=(i18n "discourse_workflows.reference_pill.properties")
               searchPlaceholder=(i18n
                 "discourse_workflows.reference_pill.filter_placeholder"
               )
@@ -165,7 +163,7 @@ export default class ReferencePropertyPicker extends Component {
           {{#if this.hasProperties}}
             <input
               aria-label={{i18n
-                "discourse_workflows.reference_pill.filter_placeholder"
+                "discourse_workflows.reference_pill.properties"
               }}
               class="workflows-reference-picker__filter"
               placeholder={{i18n

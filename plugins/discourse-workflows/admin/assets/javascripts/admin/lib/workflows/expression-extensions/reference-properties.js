@@ -82,6 +82,13 @@ function splitLastAccessor(expression) {
   return { parent, current: key };
 }
 
+/** Sorts by name for scanning, with array indexes in number order. */
+function byName(properties) {
+  return properties.sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { numeric: true })
+  );
+}
+
 export function referencePickerData(scope, expression) {
   const inner = (expression || "").trim();
   if (!inner) {
@@ -90,7 +97,7 @@ export function referencePickerData(scope, expression) {
 
   const own = listReferenceProperties(scope, inner);
   if (own.length) {
-    return { baseExpr: inner, properties: own, current: null };
+    return { baseExpr: inner, properties: byName(own), current: null };
   }
 
   const split = splitLastAccessor(inner);
@@ -101,7 +108,7 @@ export function referencePickerData(scope, expression) {
   if (siblings.length) {
     return {
       baseExpr: split.parent,
-      properties: siblings,
+      properties: byName(siblings),
       current: split.current,
     };
   }
