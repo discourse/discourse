@@ -5192,6 +5192,15 @@ en:
         actions: "Bulk actions"
 
     post:
+      readers_report:
+        title: "See post readers"
+        reader: "Reader"
+        last_topic_visit: "Last topic visit"
+        no_topic_visit: "No visit recorded"
+        empty: "No signed-in readers have recorded viewing time for this post."
+        truncated:
+          one: "Showing the %{count} most recent reader."
+          other: "Showing the %{count} most recent readers."
       accessible_heading: "post by %{username} %{date}"
       accessible_reply_heading: "post by %{username} %{date}, replying to post #%{replyTo}"
       ai_generated: "AI"
