@@ -251,6 +251,34 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
     after { user.clear_last_seen_cache!(@orig) }
 
+    it "authenticates a seen browser token and resolves the user's theme in one query" do
+      theme = Fabricate(:theme, user_selectable: true)
+      user.user_option.update!(theme_ids: [theme.id])
+      # Warm the theme registry independently of loading the current user's preferences.
+      user.guardian.allow_themes?([theme.id])
+      token = UserAuthToken.generate!(user_id: user.id)
+      token.update!(auth_token_seen: true)
+      auth_cookie = create_auth_cookie(token: token.unhashed_auth_token, user_id: user.id)
+      browser =
+        provider(
+          "/",
+          "HTTP_COOKIE" => "_t=#{auth_cookie}",
+          "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+        )
+      request = ActionDispatch::Request.new(browser.env)
+
+      queries =
+        track_sql_queries do
+          current_user = browser.current_user
+          expect(current_user).to eq(user)
+          expect(
+            ThemeResolver.resolve_theme_id(request, current_user.guardian, current_user),
+          ).to eq(theme.id)
+        end
+
+      expect(queries.size).to eq(1)
+    end
+
     it "records the visit as mobile for a mobile user agent" do
       provider(
         "/",

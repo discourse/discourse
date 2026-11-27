@@ -47,12 +47,18 @@ class UserAuthToken < ActiveRecord::Base
     impersonated_user || acting_user
   end
 
+  def login_id
+    return self[:login_id] if has_attribute?(:login_id)
+    return anonymous_mode_session&.id || id if association(:anonymous_mode_session).loaded?
+    raise ActiveModel::MissingAttributeError, "missing attribute 'login_id' for #{self.class}"
+  end
+
   def impersonated_user
     return if impersonated_user_id.blank?
     return if impersonation_expires_at.blank? || impersonation_expires_at.past?
 
     guardian = Guardian.new(acting_user)
-    puppet = User.find_by(id: impersonated_user_id)
+    puppet = User.eager_load(:user_option).find_by(id: impersonated_user_id)
 
     return if !guardian.can_impersonate?(puppet)
 
@@ -189,17 +195,21 @@ class UserAuthToken < ActiveRecord::Base
     unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token_hash)
   end
 
+  LOOKUP_QUERY =
+    SingularJoin.compile(self, with: [:anonymous_mode_session, { user: :user_option }]) do
+      where("rotated_at > :cutoff AND (auth_token = :token OR prev_auth_token = :token)").order(
+        :id,
+      ).limit(1)
+    end
+  private_constant :LOOKUP_QUERY
+
   def self.lookup(unhashed_token, opts = nil)
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)
-    user_token = matching_token_hash(token).with_login_id
-
-    if SiteSetting.verbose_auth_token_logging && path = opts&.dig(:path)
-      user_token = user_token.annotate("path:#{path}")
-    end
-
-    user_token = user_token.first
+    comment = "path:#{opts[:path]}" if SiteSetting.verbose_auth_token_logging && opts&.dig(:path)
+    user_token =
+      LOOKUP_QUERY.first(cutoff: SiteSetting.maximum_session_age.hours.ago, token:, comment:)
 
     if !user_token
       log_verbose(

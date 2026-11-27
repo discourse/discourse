@@ -131,6 +131,13 @@ class TopicView
     @custom_default_scopes = nil
   end
 
+  def self.find_topic_query
+    @find_topic_query ||=
+      SingularJoin.compile(Topic, with: %i[category shared_draft user last_poster nested_topic]) do
+        with_deleted.where("id = :id").limit(1)
+      end
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -1086,18 +1093,28 @@ class TopicView
     end
 
     # with_deleted covered in #check_and_raise_exceptions
-    tags_include =
-      if SiteSetting.tagging_enabled && SiteSetting.content_localization_enabled
-        { tags: :localizations }
-      elsif SiteSetting.tagging_enabled
-        :tags
+    id_type = Topic.type_for_attribute("id")
+    topic_id =
+      begin
+        id_type.serialize(id_type.cast(topic_or_topic_id))
+      rescue ActiveModel::RangeError
+        return nil
       end
-    nested_topic_include = :nested_topic if SiteSetting.nested_replies_enabled
-    localizations_include = :localizations if SiteSetting.content_localization_enabled
-    Topic
-      .with_deleted
-      .includes(:category, nested_topic_include, tags_include, localizations_include)
-      .find_by(id: topic_or_topic_id)
+    return nil if topic_id.nil?
+
+    topic = TopicView.find_topic_query.first(id: topic_id)
+    return nil if !topic
+
+    preloads = []
+    if SiteSetting.tagging_enabled
+      preloads << (SiteSetting.content_localization_enabled ? { tags: :localizations } : :tags)
+    end
+    preloads << :localizations if SiteSetting.content_localization_enabled
+    if preloads.any?
+      ActiveRecord::Associations::Preloader.new(records: [topic], associations: preloads).call
+    end
+
+    topic
   end
 
   def find_post_replies_ids(post_id)

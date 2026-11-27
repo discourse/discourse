@@ -1622,4 +1622,37 @@ RSpec.describe TopicView do
       expect(localized_oneboxes_for(source_post)).to be_blank
     end
   end
+
+  describe "#find_topic" do
+    it "loads the topic and its singular associations in one query" do
+      SiteSetting.tagging_enabled = false
+      SiteSetting.content_localization_enabled = false
+      reply_user = Fabricate(:user)
+      nested_record = Fabricate(:topic, user: first_poster, last_post_user_id: reply_user.id)
+      nested = Fabricate(:nested_topic, topic: nested_record)
+      shared_draft = Fabricate(:shared_draft, topic: nested_record)
+
+      tv = TopicView.allocate
+      queries =
+        track_sql_queries do
+          found = tv.send(:find_topic, nested_record.id.to_s)
+          expect(found).to eq(nested_record)
+          expect(found.category).to eq(nested_record.category)
+          expect(found.shared_draft).to eq(shared_draft)
+          expect(found.user).to eq(first_poster)
+          expect(found.last_poster).to eq(reply_user)
+          expect(found.nested_topic).to eq(nested)
+        end
+
+      expect(queries.size).to eq(1)
+    end
+
+    it "handles non-numeric, blank, and out-of-range topic IDs without database errors" do
+      tv = TopicView.allocate
+      expect(tv.send(:find_topic, nil)).to be_nil
+      expect(tv.send(:find_topic, "")).to be_nil
+      expect(tv.send(:find_topic, "not-an-id")).to be_nil
+      expect(tv.send(:find_topic, "999999999999999999999")).to be_nil
+    end
+  end
 end
