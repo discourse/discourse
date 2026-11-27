@@ -15,6 +15,10 @@ import {
   checkPersonalEvents,
   knownPersonalEvents,
 } from "../lib/personal-events-check.js";
+import {
+  canCreateRegistrationForm,
+  registrationFormManagementUrl,
+} from "../lib/registration-forms.js";
 import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 import FullCalendar from "./full-calendar.gjs";
 
@@ -249,6 +253,15 @@ export default class UpcomingEventsCalendar extends Component {
       </MobileTabBarViews>
     {{/if}}
     <div id="upcoming-events-calendar">
+      {{#if
+        (and
+          @mine (canCreateRegistrationForm this.currentUser this.siteSettings)
+        )
+      }}
+        <a href={{registrationFormManagementUrl this.currentUser}}>{{i18n
+            "event_registration.library.manage"
+          }}</a>
+      {{/if}}
       <FullCalendar
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @customButtons={{this.customButtons}}

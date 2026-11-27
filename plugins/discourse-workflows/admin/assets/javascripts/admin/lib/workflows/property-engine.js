@@ -295,6 +295,27 @@ export function fixedCollectionGroupMultiple(group = {}, schema = {}) {
   return true;
 }
 
+function hasNonDefaultValue(item, field) {
+  const value = item[field.name];
+  if (field.type === "boolean") {
+    return value === true;
+  }
+  return value !== undefined && value !== null && value !== "";
+}
+
+export function isExtraFieldShown(field, item, explicit) {
+  if (!fieldVisible(field, item)) {
+    return false;
+  }
+  if (field.display_options?.show) {
+    return true;
+  }
+  if (explicit?.has(field.name)) {
+    return true;
+  }
+  return hasNonDefaultValue(item, field);
+}
+
 export function fixedCollectionRows(value, groupName = "values") {
   if (Array.isArray(value)) {
     return value;

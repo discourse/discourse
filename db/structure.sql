@@ -5103,6 +5103,40 @@ ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public
 
 
 --
+-- Name: discourse_event_registration_forms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_event_registration_forms (
+    id bigint NOT NULL,
+    definition jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created_by_id integer,
+    deleted_at timestamp(6) without time zone,
+    deleted_by_id integer
+);
+
+
+--
+-- Name: discourse_event_registration_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_event_registration_forms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_event_registration_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_event_registration_forms_id_seq OWNED BY public.discourse_event_registration_forms.id;
+
+
+--
 -- Name: discourse_event_registrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5375,7 +5409,8 @@ CREATE TABLE public.discourse_post_event_events (
     recording_url character varying(1000),
     allow_anonymous_livestream boolean DEFAULT false NOT NULL,
     registration_form jsonb,
-    registration_topic_id bigint
+    registration_topic_id bigint,
+    registration_form_id bigint
 );
 
 
@@ -15392,6 +15427,13 @@ ALTER TABLE ONLY public.discourse_calendar_post_event_dates ALTER COLUMN id SET 
 
 
 --
+-- Name: discourse_event_registration_forms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_registration_forms ALTER COLUMN id SET DEFAULT nextval('public.discourse_event_registration_forms_id_seq'::regclass);
+
+
+--
 -- Name: discourse_event_registrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18149,6 +18191,14 @@ ALTER TABLE ONLY public.discourse_calendar_disabled_holidays
 
 ALTER TABLE ONLY public.discourse_calendar_post_event_dates
     ADD CONSTRAINT discourse_calendar_post_event_dates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_event_registration_forms discourse_event_registration_forms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_registration_forms
+    ADD CONSTRAINT discourse_event_registration_forms_pkey PRIMARY KEY (id);
 
 
 --
@@ -21356,6 +21406,13 @@ CREATE UNIQUE INDEX idx_unique_sidebar_section_links ON public.sidebar_section_l
 
 
 --
+-- Name: idx_unreported_event_registrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_unreported_event_registrations ON public.discourse_event_registrations USING btree (event_id) WHERE (report_post_id IS NULL);
+
+
+--
 -- Name: idx_upcoming_change_events_unique_once_off; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22805,6 +22862,13 @@ CREATE INDEX index_discourse_calendar_post_event_dates_on_finished_at ON public.
 
 
 --
+-- Name: index_discourse_event_registrations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_event_registrations_on_user_id ON public.discourse_event_registrations USING btree (user_id);
+
+
+--
 -- Name: index_discourse_kanban_board_histories_on_acting_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22872,6 +22936,13 @@ CREATE UNIQUE INDEX index_discourse_kanban_card_histories_one_view_per_user_day 
 --
 
 CREATE INDEX index_discourse_post_event_events_on_image_upload_id ON public.discourse_post_event_events USING btree (image_upload_id);
+
+
+--
+-- Name: index_discourse_post_event_events_on_registration_form_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_post_event_events_on_registration_form_id ON public.discourse_post_event_events USING btree (registration_form_id) WHERE ((registration_form_id IS NOT NULL) AND (deleted_at IS NULL));
 
 
 --
@@ -27046,8 +27117,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261123011248'),
 ('20261122235552'),
 ('20261121231304'),
+('20261120201831'),
+('20261120193901'),
 ('20261120183731'),
+('20261120175420'),
+('20261120172930'),
+('20261120151808'),
 ('20261120090013'),
+('20261119205638'),
 ('20261119201221'),
 ('20261119190450'),
 ('20261119153028'),

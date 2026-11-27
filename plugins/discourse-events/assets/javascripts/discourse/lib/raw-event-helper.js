@@ -1,5 +1,6 @@
 import { camelize } from "@ember/string";
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
+import { ACCOUNT_ONLY, accountOnlyForm } from "./registration-forms.js";
 
 let lastSetting;
 let lastHosts;
@@ -325,10 +326,16 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
-  if (event.registrationForm && event.status !== "standalone") {
-    params.registrationForm = encodeURIComponent(
-      JSON.stringify(event.registrationForm)
-    ).replaceAll("'", "%27");
+  if (event.registrationFormId && event.status !== "standalone") {
+    params.registrationFormId = String(event.registrationFormId);
+  } else if (event.registrationForm && event.status !== "standalone") {
+    params.registrationForm =
+      event.registrationForm.builtin === ACCOUNT_ONLY
+        ? ACCOUNT_ONLY
+        : encodeURIComponent(JSON.stringify(event.registrationForm)).replaceAll(
+            "'",
+            "%27"
+          );
   }
 
   const hosts = (event.hosts || [])
@@ -473,6 +480,7 @@ export function defaultEventState() {
     customFields: {},
     hosts: null,
     registrationForm: null,
+    registrationFormId: null,
   };
 }
 
@@ -516,10 +524,16 @@ export function parseEventAttrs(
     customFields,
     hosts: attrs.hosts || null,
     registrationForm: decodeRegistrationForm(attrs.registrationForm),
+    registrationFormId: attrs.registrationFormId
+      ? Number(attrs.registrationFormId)
+      : null,
   };
 }
 
 function decodeRegistrationForm(value) {
+  if (value === ACCOUNT_ONLY) {
+    return accountOnlyForm();
+  }
   if (!value) {
     return null;
   }
@@ -553,6 +567,7 @@ export function stateToEventInput(state) {
     imageUpload: state.image ? { url: state.image } : null,
     customFields: state.customFields,
     registrationForm: state.registrationForm,
+    registrationFormId: state.registrationFormId,
     hosts: state.hosts ? state.hosts.split(",") : [],
   };
 }

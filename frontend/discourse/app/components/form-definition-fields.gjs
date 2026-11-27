@@ -1,21 +1,17 @@
-import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
+import FKText from "discourse/form-kit/components/fk/text";
 import { settingDefinitionFor } from "discourse/lib/form-definition";
 
-export default class FormDefinitionFields extends Component {
-  @cached
-  get definitions() {
-    return this.args.fields.map(settingDefinitionFor);
-  }
-
-  <template>
-    {{#each this.definitions key="key" as |definition|}}
+export default <template>
+  {{#each @fields key="id" as |field|}}
+    {{#if (eq field.type "display_text")}}
+      <FKText class="form-definition-fields__text">{{field.content}}</FKText>
+    {{else}}
       <SettingDefinitionField
-        @definition={{definition}}
+        @definition={{settingDefinitionFor field}}
         @form={{@form}}
         @format="full"
       />
-    {{/each}}
-  </template>
-}
+    {{/if}}
+  {{/each}}
+</template>

@@ -14,7 +14,7 @@ export default class DEditorPreview extends Component {
       return;
     }
 
-    if (wantsNewWindow(event)) {
+    if (wantsNewWindow(event, event.target.closest("a"))) {
       return;
     }
 

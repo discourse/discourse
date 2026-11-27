@@ -14,6 +14,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import addEventToCalendar from "../../lib/add-event-to-calendar.js";
 import { buildParams, replaceRaw } from "../../lib/raw-event-helper.js";
+import { downloadRegistrationSubmissions } from "../../lib/registration-forms.js";
 import { showPostEventEditor } from "../../lib/show-post-event-editor.js";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite.gjs";
 import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group.gjs";
@@ -141,12 +142,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
   @action
   async exportRegistrations() {
     this.menuApi.close();
-    try {
-      await exportEntity("event_registrations", { id: this.args.event.id });
-      this.dialog.alert(i18n("event_registration.export_queued"));
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    await downloadRegistrationSubmissions(this.args.event.id, this.dialog);
   }
 
   @action

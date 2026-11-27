@@ -40,6 +40,7 @@ register_asset "stylesheets/common/livestream.scss"
 register_asset "stylesheets/desktop/livestream.scss", :desktop
 register_asset "stylesheets/mobile/livestream.scss", :mobile
 register_svg_icon "calendar-day"
+register_svg_icon "clipboard-list"
 register_svg_icon "clock"
 register_svg_icon "file-csv"
 register_svg_icon "star"
@@ -307,7 +308,7 @@ after_initialize do
   # DISCOURSE POST EVENT
 
   require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
-  require_relative "jobs/regular/report_event_registrations"
+  require_relative "jobs/onceoff/redact_event_registration_report_emails"
   Rails.application.config.filter_parameters += ["invitee.registration"]
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
@@ -643,6 +644,8 @@ after_initialize do
   require_relative "jobs/scheduled/create_holiday_events"
   require_relative "jobs/scheduled/delete_expired_event_posts"
   require_relative "jobs/scheduled/monitor_event_dates"
+  reloadable_patch { Jobs::RetryEventRegistrationReports }
+  reloadable_patch { Jobs::RetryEventRegistrationErasures }
   require_relative "jobs/scheduled/update_holiday_usernames"
 
   register_post_custom_field_type(DiscourseEvents::CALENDAR_CUSTOM_FIELD, :string)
@@ -875,6 +878,14 @@ after_initialize do
     DiscourseEvents::Events::Invitee.where(user_id: user.id).destroy_all
     DiscourseEvents::Events::EventHost.where(user_id: user.id).delete_all
   end
+
+  # Stored registration data must be erased even if the site has since disabled events.
+  # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+  DiscourseEvent.on(:user_destroyed) { |user| Jobs::EraseEventRegistrations.enqueue_for(user.id) }
+  DiscourseEvent.on(:user_anonymized) do |user:, **|
+    Jobs::EraseEventRegistrations.enqueue_for(user.id)
+  end
+  # rubocop:enable Discourse/Plugins/UsePluginInstanceOn
 
   on(:user_removed_from_group) do |user, group|
     DiscourseEvents::Events::Event
