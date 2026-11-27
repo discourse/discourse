@@ -81,9 +81,88 @@ RSpec.describe "Assignment detail tracking visibility", type: :request do
   it_behaves_like "restricted detail tracking", "details_change", :hidden
   it_behaves_like "restricted detail tracking", "details_change", :moved
 
+  it_behaves_like "restricted detail tracking", "note_change", :trashed
+  it_behaves_like "restricted detail tracking", "status_change", :trashed
+  it_behaves_like "restricted detail tracking", "details_change", :trashed
+
+  it "removes soft-deleted tracking posts when their target is deleted" do
+    tracking = historical_tracking_post(deleted_at: 1.minute.ago)
+
+    sign_in(admin)
+    delete "/posts/#{target.id}.json"
+    expect(response.status).to eq(200)
+    expect(target.reload).to be_trashed
+    expect(Post.with_deleted.exists?(tracking.id)).to eq(false)
+    expect(PostCustomField.exists?(post_id: tracking.id)).to eq(false)
+  end
+
+  it "does not expose historical tracking when it is recovered while its target is trashed" do
+    target.trash!(admin)
+    tracking = historical_tracking_post(deleted_at: 1.minute.ago)
+
+    sign_in(admin)
+    put "/posts/#{tracking.id}/recover.json"
+    # Reconciliation permanently removes unsafe history, so there is no post to render.
+    expect(response.status).to eq(404)
+
+    expect_tracking_restricted(tracking, :trashed)
+  end
+
+  it "preserves recovery of tracking posts for visible targets" do
+    tracking = historical_tracking_post(deleted_at: 1.minute.ago)
+
+    sign_in(admin)
+    put "/posts/#{tracking.id}/recover.json"
+    expect(response.status).to eq(200)
+    expect(tracking.reload).not_to be_trashed
+
+    sign_in(reader)
+    get "/t/#{topic.id}.json"
+    expect(response.status).to eq(200)
+    expect(stream_ids).to include(tracking.id)
+  end
+
+  it "reconciles historical tracking when a hidden target is recovered" do
+    target.update!(hidden: true)
+    target.trash!(admin)
+    tracking = historical_tracking_post
+
+    sign_in(admin)
+    put "/posts/#{target.id}/recover.json"
+    expect(response.status).to eq(200)
+    expect(target.reload).not_to be_trashed
+
+    expect_tracking_restricted(tracking, :hidden)
+  end
+
+  def historical_tracking_post(**attributes)
+    Fabricate(
+      :post,
+      topic:,
+      user: admin,
+      raw: "historical confidential assignment note",
+      post_type: Post.types[:small_action],
+      action_code: "note_change",
+      custom_fields: {
+        "action_code_post_id" => target.id,
+        "action_code_path" => "/p/#{target.id}",
+      },
+      **attributes,
+    )
+  end
+
   def restrict_target(transition, callbacks: true)
+    if transition == :trashed && callbacks
+      sign_in(admin)
+      delete "/posts/#{target.id}.json"
+      expect(response.status).to eq(200)
+      return
+    end
+
     attributes =
       case transition
+      when :trashed
+        { deleted_at: 1.minute.ago }
       when :whisper
         { post_type: Post.types[:whisper] }
       when :hidden

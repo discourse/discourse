@@ -926,6 +926,8 @@ after_initialize do
   end
 
   on(:post_destroyed) do |post|
+    DiscourseAssign::TrackingPostVisibility.reconcile_for(post)
+
     if Assignment.active.exists?(target: post)
       post.assignment.deactivate!
       MessageBus.publish(
@@ -950,6 +952,8 @@ after_initialize do
   end
 
   on(:post_recovered) do |post|
+    DiscourseAssign::TrackingPostVisibility.reconcile_for(post)
+
     if SiteSetting.reassign_on_open && Assignment.inactive.exists?(target: post)
       post.assignment.reactivate!
       MessageBus.publish(
