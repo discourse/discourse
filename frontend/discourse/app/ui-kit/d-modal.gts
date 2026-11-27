@@ -680,7 +680,6 @@ export default class DModal extends Component<DModalSignature> {
 
           <DFlashMessage
             id="modal-alert"
-            role="alert"
             @flash={{@flash}}
             @type={{@flashType}}
           />

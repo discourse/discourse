@@ -29,6 +29,6 @@ export default class BlockOutletInlineError extends Component<BlockOutletInlineE
   }
 
   <template>
-    <DFlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+    <DFlashMessage @flash={{this.errorMessage}} @type="error" />
   </template>
 }
