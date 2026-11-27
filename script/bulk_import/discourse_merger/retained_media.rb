@@ -23,7 +23,7 @@ module BulkImport::DiscourseMerge
 
     def initialize(source, target)
       prefix = target.dig("read_prefixes", "destination")
-      raise Error, "Set the retained destination S3 prefix" unless prefix.present?
+      raise Error, "Set the retained destination S3 prefix" if prefix.blank?
       uri = URI.parse(prefix)
       bucket = Regexp.escape(uri.host)
       folder = Regexp.escape(uri.path.delete_suffix("/"))

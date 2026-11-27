@@ -104,6 +104,55 @@ RSpec.describe BulkImport::NativeUploadStore do
       end
     end
 
+    it "rejects a changed guided access policy even when both storage prefixes still match" do
+      Dir.mktmpdir do |dir|
+        reviewed =
+          described_class.resolve_target(settings, read_prefixes: { destination: retained })
+        config =
+          BulkImport::DiscourseMerge::Configuration.new(
+            dir,
+            contents: project.merge("reviewed_upload_target" => reviewed).to_yaml,
+          )
+        changed =
+          described_class.resolve_target(
+            settings.merge(s3_use_acls: true),
+            read_prefixes: {
+              destination: retained,
+            },
+          )
+        expect { config.check_preupload_locations!(changed) }.to raise_error(/confirmed at setup/)
+      end
+    end
+
+    it "checks the workbook before creating receipts or transferring an object" do
+      allow(Aws::S3::Client).to receive(:new).and_return(client)
+      Dir.mktmpdir do |dir|
+        directory = Pathname(dir)
+        directory.join("merge.yml").write(project.to_yaml)
+        directory.join("mappings.xlsx").write("unreviewed")
+        directory.join("uploader.yml").write(uploader.to_yaml)
+        allow(BulkImport::DiscourseMerge::Workbook).to receive(:validate!).and_raise(
+          BulkImport::DiscourseMerge::Error,
+          "Workbook belongs to another source/destination project",
+        )
+        expect {
+          expect(
+            BulkImport::DiscourseMerge::CLI.run(
+              [
+                "prepare-uploads",
+                "--directory",
+                dir,
+                "--settings",
+                directory.join("uploader.yml").to_s,
+              ],
+            ),
+          ).to eq(1)
+        }.to output(/Workbook belongs to another/).to_stderr
+        expect(client.api_requests).to be_empty
+        expect(directory.join("prepared-uploads.sqlite3")).not_to exist
+      end
+    end
+
     it "resolves explicit and inherited access controls for preparation" do
       allow(Aws::S3::Client).to receive(:new).and_return(client)
       allow(SiteSetting).to receive(:s3_use_acls).and_return(true)

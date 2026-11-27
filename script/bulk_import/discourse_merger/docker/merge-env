@@ -2,6 +2,8 @@
 """Host-side preparation for the all-in-one Discourse merger."""
 import argparse
 import fcntl
+import gzip
+import hashlib
 import json
 import os
 import re
@@ -11,12 +13,16 @@ import shutil
 import socket
 import subprocess
 import sys
+import tarfile
+import tempfile
 import time
+import zlib
 from pathlib import Path
 from urllib.parse import urlsplit
 
 LABEL = "org.discourse.merge.run"
 PROJECT = "/shared/merge-project"
+SETTINGS = "/shared/private/hosted-review-uploads.yml"
 CLI = "script/bulk_import/discourse_merger/cli.rb"
 ROLES = ("source", "destination")
 TEMPLATES = ["postgres", "redis", "web", "web.ratelimited"]
@@ -125,6 +131,53 @@ def inspect_backup(value):
     s = p.stat()
     return dict(path=str(p), schema=version[1] if version else None, size=s.st_size,
                 mtime=s.st_mtime_ns, inode=s.st_ino, dev=s.st_dev)
+
+
+def archive_roles(mode, backups):
+    return [role for role in ROLES if mode == "preuploaded" and backups[role]["path"].endswith(".tar.gz")]
+
+
+def unpack_archive(archive, dump, media):
+    site = None
+    media.mkdir()
+    try:
+        with gzip.open(archive, "rb") as stream, tarfile.open(fileobj=stream, mode="r|") as tar:
+            for entry in tar:
+                path = Path(entry.name)
+                require(not path.is_absolute() and ".." not in path.parts, "Unsafe path in backup archive")
+                parts = path.parts
+                if parts == ("dump.sql.gz",):
+                    require(entry.isfile() and not dump.exists(), "Expected one regular dump.sql.gz")
+                    target = dump
+                elif len(parts) >= 2 and parts[0] == "uploads":
+                    require(site in (None, parts[1]), "Backup archive contains multiple site upload trees")
+                    site = parts[1]
+                    if len(parts) == 2:
+                        require(entry.isdir(), "Expected a site upload directory in the backup archive")
+                        continue
+                    if parts[2] not in ("original", "optimized"):
+                        continue
+                    require(entry.isdir() or entry.isfile(), "Expected regular files or directories in archived uploads")
+                    target = media.joinpath(*parts[2:])
+                    directory = target if entry.isdir() else target.parent
+                    directory.mkdir(parents=True, exist_ok=True)
+                    if entry.isdir():
+                        continue
+                else:
+                    continue
+                with target.open("xb") as out, tar.extractfile(entry) as src:
+                    shutil.copyfileobj(src, out)
+                if target != dump:
+                    target.chmod(0o644)
+            while stream.read(1024 * 1024):  # Check the gzip trailer before publishing.
+                pass
+    except (tarfile.TarError, EOFError, gzip.BadGzipFile, zlib.error) as error:
+        raise ValueError(f"Could not read backup archive: {error}") from error
+    require(dump.is_file(), "Backup archive is missing dump.sql.gz")
+    require((media / "original").is_dir(), "Supply a backup archive containing uploads/<site>/original/")
+    # The run stays private on the host. The container user must traverse its bind mount.
+    for directory, _, _ in os.walk(media):
+        os.chmod(directory, 0o755)
 
 
 class Run:
@@ -297,13 +350,39 @@ class Run:
             directory = url.rsplit("/", 1)[1].removesuffix(".git")
             require(output(*git, f"{repo}/plugins/{directory}", "rev-parse", "HEAD") == commit,
                     f"{role} image has a different revision of plugin {directory}")
-        call("docker", "exec", "-u", "discourse", "-w", repo, cid, "bundle", "exec", "ruby",
-             "-rrubyXL", CLI, "--help", stdout=subprocess.DEVNULL)
+        help_text = output("docker", "exec", "-u", "discourse", "-w", repo, cid, "bundle", "exec", "ruby",
+                           "-rrubyXL", CLI, "--help")
+        if self.data.get("guided_setup"):
+            require("--workbook" in help_text and "inspect-uploads" in help_text,
+                    "Select a pushed Discourse revision containing the updated guided merger")
+
+    def stage_archive(self, role):
+        item = self.data["backups"][role]
+        archive = Path(item["path"])
+        require(inspect_backup(archive) == item, f"{role} archive has changed. Start a fresh run.")
+        staging = self.runtime / f"{role}-input"
+        partial = staging.with_suffix(".part")
+        # A process can stop just after rename and before the stage is checkpointed.
+        for directory in (partial, staging):
+            if directory.exists():
+                safe_tree(directory, containers())
+                shutil.rmtree(directory)
+        partial.mkdir(mode=0o700)
+        name = archive.name.removesuffix(".tar.gz") + ".sql.gz"
+        unpack_archive(archive, partial / name, partial / "uploads")
+        inspect_backup(partial / name)
+        require(inspect_backup(archive) == item, f"{role} archive changed during staging. Start a fresh run.")
+        partial.rename(staging)
+        self.data[f"staged_{role}"] = inspect_backup(staging / name)
+        print(f"Prepared {name} and {role} uploads for /mnt/{role}-uploads", flush=True)
+
+    def restore_input(self, role):
+        return self.data.get(f"staged_{role}", self.data["backups"][role])
 
     def restore(self, role, cid):
         st = (self.runtime / role).stat()
         self.data.setdefault("storage", {})[role] = [st.st_dev, st.st_ino]
-        item = self.data["backups"][role]
+        item = self.restore_input(role)
         p = Path(item["path"])
         require(inspect_backup(p) == item, f"{role} backup has changed. Start a fresh run.")
         exe = ["docker", "exec", cid]
@@ -326,6 +405,8 @@ class Run:
         self.verify_runtime()
         require(self.runtime.is_dir(), "Run storage is missing")
         self.stage("bootstrap", self.build)
+        for role in archive_roles(self.data["mode"], self.data["backups"]):
+            self.stage(f"stage-{role}-archive", self.stage_archive, role)
         ids = {}
         for role in ROLES:
             rows = containers()
@@ -347,8 +428,7 @@ class Run:
             if role == "destination" and self.data.get("active") == "prepare-source":
                 call("docker", "stop", cid, stdout=subprocess.DEVNULL)
             call("docker", "start", cid, stdout=subprocess.DEVNULL)
-            exe = ["docker", "exec", cid]
-            call(*exe, "sh", "-ec", 'for i in $(seq 120); do pg_isready -q -h /var/run/postgresql -U discourse -d discourse && test "$(redis-cli ping)" = PONG && exit 0; sleep 1; done; exit 1')
+            self.ready(cid)
             self.check_build(cid, role)
             self.stage(step, self.restore, role, cid)
         src, dst = ids["source"], ids["destination"]
@@ -363,11 +443,12 @@ class Run:
         cmd = ["docker", "exec", "-it", "-u", "discourse", "-w", "/var/www/discourse",
                self.name, "bundle", "exec", "ruby", CLI]
         if self.data["mode"] == "preuploaded":
-            print("Confirm preupload_locations in merge.yml and stage the private uploader settings.")
-            cmd.extend(["prepare-uploads", "--settings", "/path/to/private/uploads_importer.yml"])
+            if not self.data.get("settings_path"):
+                print("Stage the private uploader settings at " + SETTINGS + " (see Prepare hosted uploads).")
+            cmd.extend(["prepare-uploads", "--settings", SETTINGS])
         else:
             cmd.append("plan")
-        print(f"Edit {workbook}\nNext after review: {shlex.join(cmd + ['--directory', PROJECT])}")
+        print(f"Open Start Here in {workbook}\nNext after review: {shlex.join(cmd + ['--directory', PROJECT])}")
 
     @staticmethod
     def identify(cid, db):
@@ -400,9 +481,68 @@ class Run:
         sites = {role: self.identify(ids[role], "discourse") for role in ROLES}
         for role, site in sites.items():
             print(f"{role}: {site['title']!r}, {site['topics']} topics")
+        if self.data.get("guided_setup") and not (self.project / "merge.yml").exists():
+            saved = self.data.get("decisions", {})
+            url = saved.get("destination_url", self.data["urls"]["destination"])
+            url = input(f"Destination URL for rewritten links [{url}]: ").strip() or url
+            origin(url)
+            namespace = input(f"Imported ID namespace [{saved.get('namespace', 'incoming')}]: ").strip()
+            namespace = namespace or saved.get("namespace")
+            decisions = dict(destination_url=url)
+            if namespace:
+                require(re.fullmatch("[a-z][a-z0-9_]*", namespace), "Use a lowercase namespace starting with a letter")
+                decisions["namespace"] = namespace
+            if self.data["mode"] == "preuploaded":
+                decisions.update(self.upload_decisions(ids["destination"], saved))
+            self.data["decisions"] = decisions
+            self.save()
+            print(f"Rewritten links: {url}   Imported IDs: {namespace or 'incoming (default)'}")
+        elif (self.project / "merge.yml").exists():
+            if self.data.get("settings_path") and self.data["mode"] == "preuploaded":
+                self.stage_settings(ids["destination"])
+            print(f"Using the existing configuration in {self.project / 'merge.yml'}")
         require(input("Are these the intended source and destination? [y/N] ").lower() in ("yes", "y"),
                 "Stopped before mappings. Resume to confirm, or clean up and use corrected inputs.")
         self.data["sites"] = sites
+
+    def stage_settings(self, cid):
+        host_path = self.data.get("settings_path") or input("Private uploader YAML on the Docker host: ").strip()
+        require(host_path and Path(host_path).is_file(), "Supply a readable private uploader YAML file")
+        exe = ["docker", "exec", cid]
+        call(*exe, "install", "-d", "-m", "0700", "-o", "discourse", "/shared/private")
+        with Path(host_path).open("rb") as stream:
+            call("docker", "exec", "-i", "-u", "discourse", cid, "sh", "-ec",
+                 'umask 077; cat > "$1.part"; mv "$1.part" "$1"; test -r "$1"', "sh", SETTINGS, stdin=stream)
+        self.data["settings_path"] = str(Path(host_path).resolve())
+
+    def upload_decisions(self, cid, saved):
+        self.stage_settings(cid)
+        # The native resolver returns storage metadata only and never opens an S3 client.
+        result = output("docker", "exec", "-u", "discourse", "-w", "/var/www/discourse", cid,
+                        "bundle", "exec", "ruby", "script/bulk_import/discourse_merger/docker/upload-target.rb", SETTINGS)
+        target = json.loads(result.splitlines()[-1])
+        reads = target.get("read_prefixes", {})
+        write = ("s3://" + target["bucket"] + "/" + target["prefix"]).rstrip("/")
+        default = "yes" if saved.get("preserve_destination_uploads") else "no"
+        choice = input(f"Keep existing public destination uploads in place? yes/no [{default}]: ").strip()
+        require((choice or default) in ("yes", "no"), "Answer yes or no")
+        retain = (choice or default) == "yes"
+        require(not retain or "destination" in reads, "Set preupload_read_prefixes.destination in the private settings, then resume")
+        for role in ROLES:
+            sources = []
+            if role in self.data["media"]:
+                sources.append(f"/mnt/{role}-uploads")
+            if role in reads:
+                sources.append(reads[role])
+            action = "prepare from " + " or ".join(sources) if sources else "verify objects already at write target"
+            if role == "destination" and retain:
+                action = "retain public files at " + reads[role]
+            print(f"{role}: {action}")
+        print(f"Write: {write}   Region: {target['region']}   CDN: {target['cdn'] or '(none)'}")
+        acl, tags, key, public, private = target["access"]
+        print(f"ACLs: {acl}   Access tags: {tags} ({key}, public={public}, private={private})")
+        return dict(preserve_destination_uploads=retain, reviewed_upload_target=target,
+                    preupload_locations=dict(write=write, read_prefixes=reads))
 
     def workbook(self, dst):
         # Existing init handles partial configuration and published mapping templates.
@@ -413,6 +553,7 @@ for svc in /etc/service/unicorn /etc/service/pitchfork /etc/service/sidekiq; do
   (cd "$svc/supervise"; chgrp discourse . status ok; chmod g+x .; chmod g+r status; chmod g+w ok)
 done
 chown discourse:discourse /shared/merge-project
+test -d /shared/tmp/backups || install -d -m 0700 -o discourse /shared/tmp/backups
 """)
         if not (self.project / "merge.yml").exists():
             cfg = dict(upload_mode=self.data["mode"], include_private_messages=self.data["pms"],
@@ -424,14 +565,103 @@ chown discourse:discourse /shared/merge-project
                     cfg[role + "_upload_root"] = "/mnt/" + role + "-uploads"
             if cfg["upload_mode"] == "copy":
                 cfg.update(source_upload_root="/shared/incoming-uploads", destination_upload_root="/shared/uploads/default")
+            cfg.update(self.data.get("decisions", {}))
             call("docker", "exec", "-i", "-u", "discourse", dst, "sh", "-ec",
                  'cd /shared/merge-project; umask 077; cat > merge.yml.part; mv merge.yml.part merge.yml',
                  input=json.dumps(cfg).encode())
         cli = ["docker", "exec", "-i", "-u", "discourse", "-w", "/var/www/discourse", dst,
                "flock", PROJECT + "/setup.lock", "bundle", "exec", "ruby", CLI]
-        call(*cli, "init", "--directory", PROJECT, input=b"\n\n")
+        if self.data.get("guided_setup"):
+            call(*cli, "init", "--workbook", "--directory", PROJECT)
+        else:
+            call(*cli, "init", "--directory", PROJECT, input=b"\n\n")
         if not (self.project / "mappings.xlsx").exists():
             call(*cli, "export-workbook", "--directory", PROJECT)
+
+    def baseline(self, digest, recover=False):
+        require(re.fullmatch("[0-9a-f]{64}", digest), "Supply the reviewed plan SHA-256")
+        self.verify_runtime()
+        require("workbook" in self.data["done"] and not self.data.get("retiring"), "Select an active review run")
+        rows = containers()
+        row = next((r for r in rows if r[1] == self.name), None)
+        require(row is not None, "Destination container is missing")
+        cid = self.check_role("destination", row)
+        destination = self.runtime / "destination"
+        sources = {"destination": destination, "project": self.project}
+        for directory in sources.values():
+            safe_tree(directory, [r for r in rows if r[0] != cid])
+        snapshot = self.path / ("snapshot-" + digest)
+        if recover:
+            require(snapshot.is_dir(), "Reviewed snapshot is missing")
+        else:
+            require(not snapshot.exists(), "Snapshot already exists for this reviewed plan")
+            require(not (self.project / "active-run.json").exists(), "Snapshot must precede apply")
+        plan = (snapshot / "project" if recover else self.project) / "plan.json"
+        require(hashlib.sha256(plan.read_bytes()).hexdigest() == digest, "Snapshot plan checksum mismatch")
+        if recover and self.data.get("recovery_work"):
+            self.recover_baseline(snapshot, sources, cid)
+            return
+        call("docker", "exec", "-u", "discourse", cid, "touch", PROJECT + "/workflow.lock")
+        with (self.project / "workflow.lock").open("r+b") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            if recover:
+                self.recover_baseline(snapshot, sources, cid)
+            else:
+                require(not (self.project / "active-run.json").exists(), "Apply already started")
+                self.copy_baseline(snapshot, sources, cid, digest)
+        print(f"Reviewed snapshot: {snapshot}", flush=True)
+
+    def copy_baseline(self, snapshot, sources, cid, digest):
+        try:
+            call("docker", "exec", cid, "sh", "-ec",
+                 'for name in unicorn pitchfork sidekiq; do d=/etc/service/$name; test -d "$d" || continue; '
+                 'case "$(sv status "$d")" in down:*) ;; *) exit 1 ;; esac; done; '
+                 'test "$(redis-cli --raw SAVE)" = OK; sv -w 120 stop /etc/service/postgres /etc/service/redis')
+            with tempfile.TemporaryDirectory(dir=self.path, prefix=".snapshot-") as temp:
+                stage = Path(temp) / "snapshot"
+                stage.mkdir()
+                for key, directory in sources.items():
+                    call("cp", "-a", "--reflink=auto", directory, stage / key)
+                require(hashlib.sha256((stage / "project/plan.json").read_bytes()).hexdigest() == digest,
+                        "Copied plan checksum differs")
+                stage.rename(snapshot)
+        finally:
+            call("docker", "exec", cid, "sv", "up", "/etc/service/postgres", "/etc/service/redis")
+            self.ready(cid)
+
+    @staticmethod
+    def ready(cid):
+        call("docker", "exec", cid, "sh", "-ec",
+             'for i in $(seq 120); do pg_isready -q -h /var/run/postgresql -U discourse -d discourse && test "$(redis-cli ping)" = PONG && exit 0; sleep 1; done; exit 1')
+
+    def recover_baseline(self, snapshot, sources, cid):
+        # Preserve the failed database and project together, including their logs.
+        # A persisted working path makes interrupted swaps retryable with the container down.
+        work = Path(self.data.get("recovery_work") or tempfile.mkdtemp(dir=self.path, prefix="before-recovery-"))
+        if "recovery_work" not in self.data:
+            try:
+                for key in sources:
+                    call("cp", "-a", "--reflink=auto", snapshot / key, work / ("new-" + key))
+            except (OSError, subprocess.SubprocessError, KeyboardInterrupt):
+                shutil.rmtree(work)
+                raise
+            self.data.update(recovery_work=str(work), recovery_snapshot=str(snapshot))
+            self.save()
+        require(str(snapshot) == self.data["recovery_snapshot"], "Resume recovery with the same snapshot")
+        call("docker", "stop", cid, stdout=subprocess.DEVNULL)
+        for key, directory in sources.items():
+            if not (work / key).exists():
+                directory.rename(work / key)
+            if (work / ("new-" + key)).exists():
+                (work / ("new-" + key)).rename(directory)
+        st = sources["destination"].stat()
+        self.data["storage"]["destination"] = [st.st_dev, st.st_ino]
+        self.save()
+        call("docker", "start", cid, stdout=subprocess.DEVNULL)
+        self.ready(cid)
+        del self.data["recovery_work"], self.data["recovery_snapshot"]
+        self.save()
+        print(f"Recovered reviewed baseline. Previous storage and logs: {work}")
 
     def cleanup(self, yes):
         if self.data.get("cleaned"):
@@ -456,7 +686,7 @@ chown discourse:discourse /shared/merge-project
         remove_tag = image and image[1] == self.owner and image[0] == self.data.get("image", image[0])
         for role in ROLES:
             backups = self.runtime / role / "backups/default"
-            original = Path(self.data["backups"][role]["path"]).name
+            original = Path(self.restore_input(role)["path"]).name
             if backups.is_dir():
                 for backup in backups.iterdir():
                     if backup.name.endswith((".tar.gz", ".sql.gz")) and backup.name != original:
@@ -505,9 +735,17 @@ def new_run(args, root):
         require(re.fullmatch(r"https://[\w.-]+/(?:[\w-]+/)+[\w-]+(?:\.git)?", url)
                 and re.fullmatch("[0-9a-f]{40}", rev), "Specify each plugin as HTTPS-repository@full-commit")
         plugins.append((url, rev))
+    settings = getattr(args, "settings", None)
+    if settings:
+        require(args.mode == "preuploaded" and settings.is_file(), "Supply a private uploader file for preuploaded mode")
+    archives = archive_roles(args.mode, backups)
     media = {}
     for role in ROLES:
         value = getattr(args, role + "_media")
+        if role in archives:
+            require(not value, f"The {role} archive supplies uploads. Omit --{role}-media or supply a .sql.gz {role}.")
+            require(backups[role]["schema"], f"Keep the native schema version suffix on the {role} archive")
+            continue
         if value:
             directory = value.resolve(strict=True)
             require(args.mode == "preuploaded" and (directory / "original").is_dir()
@@ -539,9 +777,12 @@ def new_run(args, root):
     path.mkdir()
     run = Run(path, dict(owner=secrets.token_hex(16), backups=backups, launcher=str(launcher),
                          revision=args.revision, plugins=plugins, port=port, mode=args.mode, media=media,
+                         guided_setup=True, settings_path=str(settings.resolve()) if settings else None,
                          pms=not args.exclude_pms, tags=not args.exclude_tags, done=[],
                          urls=dict(source=args.source_url, destination=f"http://{args.review_host}:{port}")))
     run.runtime.mkdir()
+    for role in archives:
+        media[role] = str(run.runtime / f"{role}-input/uploads")
     st = run.runtime.stat()
     run.data["storage_id"] = [st.st_dev, st.st_ino]
     run.data["resources"] = {role: dict(name=run.name_for(role),
@@ -559,6 +800,7 @@ def main():
     setup.add_argument("--launcher", type=Path, default=Path("/var/discourse"))
     for k in ("source", "destination", "source-url", "revision"):
         setup.add_argument("--" + k, required=True)
+    setup.add_argument("--settings", type=Path, help="Private uploader YAML on the Docker host")
     setup.add_argument("--review-host", default="merge.example.test")
     setup.add_argument("--port", type=int, default=0, help="Loopback port (default: allocate)")
     setup.add_argument("--mode", choices=("copy", "preserve_remote", "preuploaded"), default="copy")
@@ -570,6 +812,12 @@ def main():
     setup.add_argument("--exclude-tags", action="store_true")
     subs.add_parser("list", help="List run IDs and stages")
     subs.add_parser("resume").add_argument("run")
+    for action in ("snapshot", "recover"):
+        baseline = subs.add_parser(action, help="Save or recover a reviewed destination baseline")
+        baseline.add_argument("run")
+        baseline.add_argument("--plan-sha256", required=True)
+        if action == "recover":
+            baseline.add_argument("--yes", action="store_true", required=True, help="Restore the reviewed snapshot")
     cleanup = subs.add_parser("cleanup", help="Preview owned resources, then confirm with --yes")
     cleanup.add_argument("run")
     cleanup.add_argument("--yes", action="store_true")
@@ -609,7 +857,11 @@ def main():
         run.data = json.loads((run.path / "state.json").read_text())
         cmd = shlex.join([sys.argv[0], "--root", str(root)])
         print(f"Run {run.name}. Resume: {cmd} resume {run.name}\nCleanup preview: {cmd} cleanup {run.name}", flush=True)
-        if args.command == "cleanup":
+        if run.data.get("recovery_work"):
+            require(args.command == "recover", "Complete the interrupted recovery first")
+        if args.command in ("snapshot", "recover"):
+            run.baseline(args.plan_sha256, recover=args.command == "recover")
+        elif args.command == "cleanup":
             run.cleanup(args.yes)
         else:
             try:

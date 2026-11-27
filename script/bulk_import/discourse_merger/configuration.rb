@@ -38,6 +38,7 @@ module BulkImport
           upload_mode
           preserve_destination_uploads
           preupload_locations
+          reviewed_upload_target
           preserved_broken_post_uploads
           preserved_broken_revision_uploads
           import_tags
@@ -81,6 +82,10 @@ module BulkImport
       end
 
       def check_preupload_locations!(target)
+        if data.key?("reviewed_upload_target") && data.fetch("reviewed_upload_target") != target
+          raise Error,
+                "Uploader settings differ from the target confirmed at setup; review the changed settings"
+        end
         locations = data["preupload_locations"]
         unless locations.is_a?(Hash) && locations["write"].is_a?(String)
           raise Error,

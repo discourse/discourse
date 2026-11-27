@@ -531,7 +531,8 @@ module BulkImport::DiscourseMerge
           .fetch("upload_policy")
           .fetch("reuse")
           .to_h { |pair| pair.values_at("source_upload_id", "destination_upload_id") }
-      existing = Upload.unscoped.where(id: reuse.values).or(Upload.unscoped.where("id < 0")).index_by(&:id)
+      existing =
+        Upload.unscoped.where(id: reuse.values).or(Upload.unscoped.where("id < 0")).index_by(&:id)
       last = last_id(Upload)
       @raw_connection.copy_data(copy_sql(Upload), @encoder) do
         SourceRows.each(source_raw_connection, "SELECT * FROM uploads ORDER BY id") do |row|
@@ -545,7 +546,8 @@ module BulkImport::DiscourseMerge
                 raise Error, "Reviewed destination upload is missing for #{original}"
               end
             end
-          prepared = @prepared_media&.source_result("uploads", original, reused&.id) if original.positive?
+          prepared =
+            @prepared_media&.source_result("uploads", original, reused&.id) if original.positive?
           if reused
             if original < 0
               raise Error, "Built-in upload differs: #{original}" unless reused.url == source_url

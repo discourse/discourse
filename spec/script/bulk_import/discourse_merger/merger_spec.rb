@@ -285,6 +285,8 @@ RSpec.describe BulkImport::DiscourseMerge::Merger do
       map = (original.values + incoming.values).grep(Integer).index_with(&:itself)
       merger =
         build_merger(
+          plan:
+            instance_double(BulkImport::DiscourseMerge::Plan, data: { "matched_avatars" => [] }),
           source_raw_connection: raw_source,
           raw_connection: ActiveRecord::Base.connection.raw_connection,
           encoder: PG::TextEncoder::CopyRow.new,

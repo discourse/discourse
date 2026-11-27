@@ -615,9 +615,13 @@ module BulkImport::DiscourseMerge
       preserve = policy["preserve_destination_uploads"]
       if preserve
         check("retained_media_ids") do
-          policy.fetch("retained_ids").all? do |kind, ids|
-            ids.all? { |source_id, dest_id| @maps.fetch(kind.to_sym)[Integer(source_id)] == dest_id }
-          end
+          policy
+            .fetch("retained_ids")
+            .all? do |kind, ids|
+              ids.all? do |source_id, dest_id|
+                @maps.fetch(kind.to_sym)[Integer(source_id)] == dest_id
+              end
+            end
         end
       end
       PreuploadedMedia.open(@plan.data, @run_dir) do |media|
@@ -633,7 +637,8 @@ module BulkImport::DiscourseMerge
               .each do |(_, original, input, result), id|
                 record = records.fetch(id)
                 expected_result = result
-                if !preserve && side == "source" && (kind == "optimized_images" || reuse.key?(original))
+                if !preserve && side == "source" &&
+                     (kind == "optimized_images" || reuse.key?(original))
                   destination = media.destination_receipt(kind, id)
                   expected_result = destination if destination
                 end

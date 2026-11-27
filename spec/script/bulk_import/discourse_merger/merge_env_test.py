@@ -6,9 +6,11 @@ import importlib.machinery
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
+import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -73,6 +75,205 @@ class HostEnvironmentTest(unittest.TestCase):
 
     def start(self):
         return env.new_run(self.args, self.root)
+
+    def backup_archive(self, role, entries):
+        archive = self.tmp / f"{role}-v20260101000000.tar.gz"
+        with tarfile.open(archive, "w:gz") as tar:
+            for name, data in entries:
+                item = tarfile.TarInfo(name)
+                if data is None:
+                    item.type = tarfile.SYMTYPE
+                    item.linkname = "/tmp"
+                    tar.addfile(item)
+                else:
+                    item.size = len(data)
+                    tar.addfile(item, io.BytesIO(data))
+        setattr(self.args, role, str(archive))
+        setattr(self.args, role + "_media", None)
+        return archive
+
+    def test_setup_stages_source_archive_and_cleanup_protects_exports(self):
+        sql = gzip.compress(b"source SQL")
+        archive = self.backup_archive("source", [("./dump.sql.gz", sql), ("uploads/forum/original/1X/a", b"original"),
+                                       ("uploads/forum/optimized/1X/a", b"thumbnail")])
+        destination = Path(self.args.destination)
+        originals = archive.read_bytes(), destination.read_bytes()
+        run = self.start()
+        run.data["done"].append("bootstrap")
+        old_mask = os.umask(0o077)
+        try:
+            with patch.object(run, "create", side_effect=InterruptedError), self.assertRaises(InterruptedError):
+                run.setup()
+        finally:
+            os.umask(old_mask)
+        run = env.Run(run.path, json.loads((run.path / "state.json").read_text()))
+        self.assertIn("stage-source-archive", run.data["done"])
+        dump = Path(run.restore_input("source")["path"])
+        self.assertEqual(dump.name, "source-v20260101000000.sql.gz")
+        self.assertEqual(dump.read_bytes(), sql)
+        self.assertEqual(run.restore_input("destination")["path"], str(destination))
+        media, writable = run.mounts("destination")["/mnt/source-uploads"]
+        self.assertFalse(writable)
+        self.assertEqual((media / "optimized/1X/a").read_bytes(), b"thumbnail")
+        self.assertEqual((media / "original/1X/a").read_bytes(), b"original")
+        for directory in (media, media / "original", media / "original/1X"):
+            self.assertEqual(directory.stat().st_mode & 0o005, 0o005)
+        self.assertTrue((media / "original/1X/a").stat().st_mode & 0o004)
+        restored = run.runtime / "source/backups/default"
+        restored.mkdir(parents=True)
+        (restored / dump.name).write_bytes(sql)
+        exported = restored / "merged-v20260202000000.sql.gz"
+        exported.touch()
+        with self.assertRaisesRegex(ValueError, "Move exported backup"):
+            run.cleanup(True)
+        exported.rename(run.path / exported.name)
+        run.cleanup(True)
+        self.assertEqual((archive.read_bytes(), destination.read_bytes()), originals)
+
+    def test_archive_staging_resumes_after_interruption(self):
+        self.backup_archive("source", [("dump.sql.gz", gzip.compress(b"sql")), ("uploads/site/original/a", b"a")])
+        run = self.start()
+        def interrupt(archive, dump, media):
+            dump.write_bytes(b"partial")
+            raise InterruptedError
+        with patch.object(env, "unpack_archive", side_effect=interrupt), self.assertRaises(InterruptedError):
+            run.stage("stage-source-archive", run.stage_archive, "source")
+        self.assertFalse((run.runtime / "source-input").exists())
+        run = env.Run(run.path, json.loads((run.path / "state.json").read_text()))
+        run.stage("stage-source-archive", run.stage_archive, "source")
+        self.assertEqual(gzip.decompress(Path(run.restore_input("source")["path"]).read_bytes()), b"sql")
+
+    def test_two_archives_resume_and_restore_each_sites_own_files(self):
+        inputs = {}
+        for role in env.ROLES:
+            data = role.encode()
+            archive = self.backup_archive(role, [("dump.sql.gz", gzip.compress(data)),
+                                                 ("uploads/default/original/1X/a", data)])
+            inputs[archive] = archive.read_bytes()
+        run = self.start()
+        run.data["done"].append("bootstrap")
+        unpack = env.unpack_archive
+        def interrupt_destination(archive, dump, media):
+            if archive == Path(self.args.destination):
+                dump.write_bytes(b"partial")
+                raise InterruptedError
+            unpack(archive, dump, media)
+        with patch.object(env, "unpack_archive", side_effect=interrupt_destination), self.assertRaises(InterruptedError):
+            run.setup()
+        run = env.Run(run.path, json.loads((run.path / "state.json").read_text()))
+        self.assertEqual(run.data["active"], "stage-destination-archive")
+        with patch.object(env, "unpack_archive", wraps=unpack) as retry, patch.object(
+            run, "create", side_effect=InterruptedError
+        ), self.assertRaises(InterruptedError):
+            run.setup()
+        self.assertEqual([c.args[0] for c in retry.call_args_list], [Path(self.args.destination)])
+
+        for role in env.ROLES:
+            dump = Path(run.restore_input(role)["path"])
+            self.assertEqual(gzip.decompress(dump.read_bytes()), role.encode())
+            media, writable = run.mounts("destination")[f"/mnt/{role}-uploads"]
+            self.assertFalse(writable)
+            self.assertEqual((media / "original/1X/a").read_bytes(), role.encode())
+            restored = run.runtime / role / "backups/default"
+            restored.mkdir(parents=True)
+            (restored / dump.name).write_bytes(dump.read_bytes())
+        exported = run.runtime / "destination/backups/default/merged-v20260202000000.sql.gz"
+        exported.touch()
+        with self.assertRaisesRegex(ValueError, "Move exported backup"):
+            run.cleanup(True)
+        exported.rename(run.path / exported.name)
+        run.cleanup(True)
+        for archive, original in inputs.items():
+            self.assertEqual(archive.read_bytes(), original)
+
+    def test_destination_archive_with_sql_source_and_external_media(self):
+        self.backup_archive("destination", [("dump.sql.gz", gzip.compress(b"destination")),
+                                            ("uploads/forum/original/a", b"a")])
+        self.args.destination_media = self.media
+        with self.assertRaisesRegex(ValueError, "Omit --destination-media"):
+            self.start()
+        self.args.destination_media = None
+        run = self.start()
+        run.data["done"].append("bootstrap")
+        with patch.object(run, "create", side_effect=InterruptedError), self.assertRaises(InterruptedError):
+            run.setup()
+        self.assertEqual(run.restore_input("source")["path"], self.args.source)
+        self.assertEqual(run.mounts("destination")["/mnt/source-uploads"], (self.media, False))
+        self.assertIn("stage-destination-archive", run.data["done"])
+        self.assertNotIn("stage-source-archive", run.data["done"])
+
+    def test_invalid_source_archives(self):
+        dump = ("dump.sql.gz", gzip.compress(b"sql"))
+        original = ("uploads/site/original/a", b"a")
+        for entries, error in [
+            ([original], "missing dump"), ([dump], "original/"), ([dump, dump], "one regular dump"),
+            ([dump, original, ("uploads/other/original/a", b"a")], "multiple site"),
+            ([dump, ("uploads/site/original/../../escape", b"a")], "Unsafe path"),
+            ([dump, ("uploads/site/original/link", None)], "regular files"),
+        ]:
+            with self.subTest(error=error):
+                self.backup_archive("source", entries)
+                run = self.start()
+                with self.assertRaisesRegex(ValueError, error):
+                    run.stage_archive("source")
+                self.assertFalse((run.runtime / "source-input").exists())
+        self.args.source_media = self.media
+        with self.assertRaisesRegex(ValueError, "Omit --source-media"):
+            self.start()
+
+    def test_guided_setup_records_the_reviewed_target_and_writes_private_configuration(self):
+        run = self.start()
+        target = dict(bucket="review", prefix="incoming", cdn="", region="eu-west-1",
+                      read_prefixes=dict(destination="s3://production/retained"), access=[False, True, "acl", "public", "private"])
+        private = self.tmp / "settings.yml"
+        private.write_bytes(b"private settings fixture")
+        run.data["settings_path"] = str(private)
+        configs = []
+        def capture(*args, **kwargs):
+            if "stdin" in kwargs:
+                self.assertEqual(kwargs["stdin"].read(), private.read_bytes())
+            if kwargs.get("input"):
+                configs.append(json.loads(kwargs["input"]))
+        with patch.object(run, "identify", return_value=dict(title="Forum", topics=10)), patch.object(
+            env, "output", return_value=json.dumps(target)
+        ), patch.object(env, "call", side_effect=capture), patch("builtins.input", side_effect=[
+            "https://review.example", "incoming_site", "yes", "y"
+        ]):
+            run.confirm(dict(source="src", destination="dst"))
+            run.workbook("dst")
+        self.assertEqual(configs[0]["preupload_locations"], dict(write="s3://review/incoming", read_prefixes=target["read_prefixes"]))
+        self.assertEqual(configs[0]["destination_url"], "https://review.example")
+        self.assertEqual(configs[0]["namespace"], "incoming_site")
+        self.assertTrue(configs[0]["preserve_destination_uploads"])
+        self.assertNotIn("private settings fixture", (run.path / "state.json").read_text())
+
+    def test_recovery_uses_both_cold_copies_and_preserves_failed_storage(self):
+        run = self.start()
+        self.runtime(run, "destination")
+        run.data["storage"] = {}
+        run.data["done"].append("workbook")
+        root = run.runtime / "destination"
+        markers = [root / "postgres", root / "redis", root / "media", run.project / "plan.json"]
+        for path in markers:
+            path.write_bytes(b"reviewed")
+        (run.project / "workflow.lock").touch()
+        digest = env.hashlib.sha256(b"reviewed").hexdigest()
+        calls = []
+        def simulated(*args, **kwargs):
+            if args[0] == "cp":
+                return subprocess.run(args, check=True)
+            calls.append(args)
+        with patch.object(env, "call", side_effect=simulated):
+            run.baseline(digest)
+            for path in markers:
+                path.write_bytes(b"failed")
+            run.baseline(digest, recover=True)
+        for path in markers:
+            self.assertEqual(path.read_bytes(), b"reviewed")
+        previous = next(run.path.glob("before-recovery-*"))
+        self.assertEqual((previous / "project/plan.json").read_bytes(), b"failed")
+        self.assertIn(("docker", "stop", "destination"), calls)
+        self.assertIn(("docker", "start", "destination"), calls)
 
     def runtime(self, run, role):
         mounts = [{"Destination": dst, "Source": str(src), "RW": rw}

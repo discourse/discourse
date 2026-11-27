@@ -95,67 +95,12 @@ module BulkImport::DiscourseMerge
       label.to_s.strip.split(/\s*>\s*/, -1).map(&:strip).join(" > ")
     end
 
-    def build
+    def build(mappings_only: false)
       inputs = self.class.input_hashes(@configuration.directory)
       unless inputs.fetch("merge.yml") == @configuration.sha256
         raise Error, "Configuration changed while planning; run the command again"
       end
       source, destination = @inventory.values_at("source", "destination")
-      if @configuration.preuploaded?
-        receipt_path = PreparedUploads.path_for(@configuration)
-        retained = nil
-        prepared_target =
-          PreparedUploads.open(receipt_path) do |state|
-            target = state.validate!(
-              @inventory,
-              origins: @configuration.data.values_at("source_url", "destination_url"),
-              configuration: @configuration,
-            )
-            retained = state.retained
-            target
-          end
-        prepared_hash = Digest::SHA256.file(receipt_path).hexdigest
-      end
-      if !@configuration.preuploaded? &&
-           source.fetch("uploads", []).any? { |upload| [true, "t"].include?(upload["secure"]) }
-        raise Error,
-              "Secure source uploads require a secure-compatible transfer adapter; cross-site authentication cannot be preserved"
-      end
-      if @configuration.preserve_remote?
-        (source.fetch("uploads", []) + source.fetch("optimized_images", [])).each do |row|
-          Media.remote_url(row.fetch("url"), @configuration.data.fetch("source_url"))
-        end
-      end
-      reuse = []
-      if retained
-        reuse = retained.reuse.fetch("uploads").filter_map do |id, dest|
-          { "source_upload_id" => id, "destination_upload_id" => dest } if id.positive?
-        end
-      elsif @configuration.preserve_remote? || @configuration.preuploaded?
-        existing_uploads =
-          destination
-            .fetch("uploads", [])
-            .reject { |row| row["sha1"].nil? }
-            .index_by { |row| row["sha1"] }
-        source
-          .fetch("uploads", [])
-          .each do |row|
-            next if row.fetch("id").to_i < 0
-            target_upload = existing_uploads[row["sha1"]]
-            next unless target_upload
-            if @configuration.preuploaded? &&
-                 [row, target_upload].any? { |upload|
-                   upload["secure"] == "t" || upload["access_control_post_id"]
-                 }
-              raise Error, "Cannot reuse upload #{row["id"]} across access-control contexts"
-            end
-            Media.validate_reuse!(row, target_upload)
-            reuse << {
-              "source_upload_id" => row.fetch("id").to_i,
-              "destination_upload_id" => target_upload.fetch("id").to_i,
-            }
-          end
-      end
       source_categories = source.fetch("categories").index_by { |row| row.fetch("id").to_i }
       source_category_paths =
         source_categories.to_h do |id, row|
@@ -468,7 +413,73 @@ module BulkImport::DiscourseMerge
             {}
           end
         )
-      if prepared_hash && !retained && content.fetch("custom_emojis", []).any? { |row| row["render"] }
+      GroupMapping.validate_exclusions!(@inventory, groups, categories, topics) do |id|
+        group_location(id)
+      end
+      return true if mappings_only
+
+      if @configuration.preuploaded?
+        receipt_path = PreparedUploads.path_for(@configuration)
+        retained = nil
+        prepared_target =
+          PreparedUploads.open(receipt_path) do |state|
+            target =
+              state.validate!(
+                @inventory,
+                origins: @configuration.data.values_at("source_url", "destination_url"),
+                configuration: @configuration,
+              )
+            retained = state.retained
+            target
+          end
+        prepared_hash = Digest::SHA256.file(receipt_path).hexdigest
+      end
+      if !@configuration.preuploaded? &&
+           source.fetch("uploads", []).any? { |upload| [true, "t"].include?(upload["secure"]) }
+        raise Error,
+              "Secure source uploads require a secure-compatible transfer adapter; cross-site authentication cannot be preserved"
+      end
+      if @configuration.preserve_remote?
+        (source.fetch("uploads", []) + source.fetch("optimized_images", [])).each do |row|
+          Media.remote_url(row.fetch("url"), @configuration.data.fetch("source_url"))
+        end
+      end
+      reuse = []
+      if retained
+        reuse =
+          retained
+            .reuse
+            .fetch("uploads")
+            .filter_map do |id, dest|
+              { "source_upload_id" => id, "destination_upload_id" => dest } if id.positive?
+            end
+      elsif @configuration.preserve_remote? || @configuration.preuploaded?
+        existing_uploads =
+          destination
+            .fetch("uploads", [])
+            .reject { |row| row["sha1"].nil? }
+            .index_by { |row| row["sha1"] }
+        source
+          .fetch("uploads", [])
+          .each do |row|
+            next if row.fetch("id").to_i < 0
+            target_upload = existing_uploads[row["sha1"]]
+            next unless target_upload
+            if @configuration.preuploaded? &&
+                 [row, target_upload].any? { |upload|
+                   upload["secure"] == "t" || upload["access_control_post_id"]
+                 }
+              raise Error, "Cannot reuse upload #{row["id"]} across access-control contexts"
+            end
+            Media.validate_reuse!(row, target_upload)
+            reuse << {
+              "source_upload_id" => row.fetch("id").to_i,
+              "destination_upload_id" => target_upload.fetch("id").to_i,
+            }
+          end
+      end
+      if prepared_hash && !retained &&
+           content.fetch("custom_emojis", []).any? { |row| row["render"] }
         emojis = destination.fetch("content").fetch("custom_emojis").index_by { |r| r["name"] }
         PreparedUploads.open(receipt_path) do |state|
           content
@@ -484,9 +495,6 @@ module BulkImport::DiscourseMerge
               ) if result
             end
         end
-      end
-      GroupMapping.validate_exclusions!(@inventory, groups, categories, topics) do |id|
-        group_location(id)
       end
       if @configuration.preuploaded?
         included =
@@ -605,11 +613,18 @@ module BulkImport::DiscourseMerge
               .any? do |upload|
                 upload.fetch("id").to_i.positive? && upload.fetch("url").start_with?("/uploads/")
               end,
-          **(retained ? {
-            "preserve_destination_uploads" => true,
-            "retained_media" => retained.summary,
-            "retained_ids" => retained.reuse.transform_values { |ids| ids.transform_keys(&:to_s) },
-          } : {}),
+          **(
+            if retained
+              {
+                "preserve_destination_uploads" => true,
+                "retained_media" => retained.summary,
+                "retained_ids" =>
+                  retained.reuse.transform_values { |ids| ids.transform_keys(&:to_s) },
+              }
+            else
+              {}
+            end
+          ),
           "reuse" => reuse,
           "source_upload_root" => @configuration.data["source_upload_root"],
           "destination_upload_root" => @configuration.data["destination_upload_root"],

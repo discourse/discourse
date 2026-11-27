@@ -332,7 +332,7 @@ module BulkImport::DiscourseMerge
     end
 
     def inactive_chat_tables(connection, counts)
-      return [] unless counts.fetch("chat_messages", 0).zero?
+      return [] if counts.fetch("chat_messages", 0).nonzero?
 
       omitted = %w[chat_channels user_chat_channel_memberships]
       # Empty message tables can leave thread records and memberships behind.

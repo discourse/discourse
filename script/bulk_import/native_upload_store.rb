@@ -3,7 +3,6 @@
 require "aws-sdk-s3"
 require "base64"
 require "digest"
-require "set"
 require "tempfile"
 require "uri"
 
@@ -34,7 +33,7 @@ module BulkImport
       store
     end
 
-    def initialize(settings, client: nil, read_prefixes: {})
+    def self.resolve_target(settings, read_prefixes: {})
       bucket, folder = S3Helper.get_bucket_and_folder_path(settings.fetch(:s3_upload_bucket))
       region = settings.fetch(:s3_region)
       raise ArgumentError, "Set enable_s3_uploads: true" unless settings[:enable_s3_uploads] == true
@@ -71,7 +70,7 @@ module BulkImport
              .then { |u| u.is_a?(URI::HTTPS) && u.host && !u.userinfo && !u.query && !u.fragment }
         raise ArgumentError, "Invalid HTTPS s3_cdn_url"
       end
-      @target = {
+      target = {
         "bucket" => bucket,
         "prefix" => parts.join("/"),
         "region" => region,
@@ -79,15 +78,14 @@ module BulkImport
         "origin" => "//#{bucket}.#{suffix}",
         "cdn" => cdn,
       }
-      @acl =
+      acl =
         settings.fetch(:s3_use_acls) do
           settings[:s3_enable_access_control_tags] == true ? false : SiteSetting.s3_use_acls
         end
-      @tags =
+      tags =
         settings.fetch(:s3_enable_access_control_tags) { SiteSetting.s3_enable_access_control_tags }
-      @tag_key =
-        settings.fetch(:s3_access_control_tag_key) { SiteSetting.s3_access_control_tag_key }
-      @visibility = [
+      tag_key = settings.fetch(:s3_access_control_tag_key) { SiteSetting.s3_access_control_tag_key }
+      visibility = [
         settings.fetch(:s3_access_control_tag_public_value) do
           SiteSetting.s3_access_control_tag_public_value
         end,
@@ -96,7 +94,7 @@ module BulkImport
         end,
       ]
       if read_prefixes.present?
-        @target["read_prefixes"] = read_prefixes.to_h do |side, path|
+        target["read_prefixes"] = read_prefixes.to_h do |side, path|
           uri = URI.parse(path)
           unless %w[source destination].include?(side.to_s) && uri.scheme == "s3" &&
                    uri.host&.match?(/\A[a-z0-9][a-z0-9.-]+\z/) && !uri.userinfo && !uri.query &&
@@ -110,16 +108,22 @@ module BulkImport
           [side.to_s, path.delete_suffix("/")]
         end
       end
-      @target["access"] = [@acl, @tags, @tag_key, *@visibility]
+      target["access"] = [acl, tags, tag_key, *visibility]
       if settings[:s3_endpoint].present?
         raise ArgumentError, "Native preparation requires an AWS S3 bucket"
       end
-      if [@acl, @tags].any? { |value| ![true, false].include?(value) } ||
-           (@tags && ([@tag_key, *@visibility].any?(&:blank?) || @visibility.uniq.size != 2))
+      if [acl, tags].any? { |value| ![true, false].include?(value) } ||
+           (tags && ([tag_key, *visibility].any?(&:blank?) || visibility.uniq.size != 2))
         raise ArgumentError, "Check the hosted site's S3 ACL and access-control tag settings"
       end
+      target
+    end
+
+    def initialize(settings, client: nil, read_prefixes: {})
+      @target = self.class.resolve_target(settings, read_prefixes: read_prefixes)
+      @acl, @tags, @tag_key, *@visibility = @target.fetch("access")
       @max_age = SiteSetting.s3_max_age
-      options = { region: region }
+      options = { region: @target.fetch("region") }
       if settings[:s3_access_key_id].present? || settings[:s3_secret_access_key].present?
         options[:credentials] = Aws::Credentials.new(
           settings.fetch(:s3_access_key_id),

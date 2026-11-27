@@ -25,7 +25,7 @@ module BulkImport::DiscourseMerge
       answer.empty? ? default : answer
     end
 
-    def run
+    def run(workbook: false)
       @directory.mkpath
       File.chmod(0o700, @directory)
       path = @directory.join("merge.yml")
@@ -47,6 +47,14 @@ module BulkImport::DiscourseMerge
       Runner.new(configuration, progress: @progress).preflight(setup_only: true)
       if @directory.join("mappings").exist? || @directory.join("mappings.xlsx").exist?
         @progress.say("Existing mapping decisions preserved in #{@directory}")
+        return
+      end
+      if workbook
+        @progress.say(
+          "Workbook defaults keep category paths and include all categories for review.",
+        )
+        inventory = Inventory.new(configuration, progress: @progress).capture
+        TemplateExporter.new(configuration, inventory).export
         return
       end
       @output.puts("Check the site titles and topic counts above against the backups you restored.")

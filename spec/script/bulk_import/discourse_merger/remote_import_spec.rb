@@ -10,7 +10,7 @@ RSpec.describe BulkImport::DiscourseMerge::Merger do
     allow(source).to receive(:exec) { |sql| tables.fetch(sql[/FROM\s+(\w+)/i, 1], []) }
     allow(BulkImport::DiscourseMerge::SourceRows).to receive(:each).with(
       source,
-      anything,
+      /\ASELECT /,
     ) do |connection, sql, &block|
       connection.exec(sql).each(&block)
     end

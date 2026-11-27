@@ -127,7 +127,8 @@ module BulkImport::DiscourseMerge
           )
         @progress.start("pausing background jobs")
         Sidekiq.pause!("Discourse merge")
-        if plan.dig("upload_policy", "mode") == "preuploaded" && !plan.dig("upload_policy", "preserve_destination_uploads")
+        if plan.dig("upload_policy", "mode") == "preuploaded" &&
+             !plan.dig("upload_policy", "preserve_destination_uploads")
           PreuploadedMedia.open(plan, run) do |media|
             media.update_destination!
             Configuration.write(run.join("prepared-baseline.json"), fingerprints)
@@ -502,7 +503,10 @@ module BulkImport::DiscourseMerge
 
     def fingerprints(baseline = nil, adopted_avatar_ids: [])
       tables = %w[users user_profiles user_options topics posts uploads] + ContentPolicy::TABLES
-      tables += %w[optimized_images upload_references] if @configuration.preserve_destination_uploads?
+      tables += %w[
+        optimized_images
+        upload_references
+      ] if @configuration.preserve_destination_uploads?
       tables &= baseline.keys if baseline
       tables.to_h do |table|
         column = %w[user_profiles user_options].include?(table) ? "user_id" : "id"
@@ -576,7 +580,8 @@ module BulkImport::DiscourseMerge
           @progress.start("source and destination fingerprint verification")
           baseline_file =
             (
-              if plan.data.dig("upload_policy", "mode") == "preuploaded" && !plan.data.dig("upload_policy", "preserve_destination_uploads")
+              if plan.data.dig("upload_policy", "mode") == "preuploaded" &&
+                   !plan.data.dig("upload_policy", "preserve_destination_uploads")
                 "prepared-baseline.json"
               else
                 "baseline.json"

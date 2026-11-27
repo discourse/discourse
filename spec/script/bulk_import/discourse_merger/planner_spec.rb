@@ -145,27 +145,46 @@ RSpec.describe BulkImport::DiscourseMerge::Planner do
 
   it "previews retained SQL records and counts only incoming files needing target receipts" do
     dir = @configuration.directory
-    dir.join("merge.yml").write(@configuration.data.except("source_upload_root").merge(
-      "upload_mode" => "preuploaded", "preserve_destination_uploads" => true,
-    ).to_yaml)
+    dir.join("merge.yml").write(
+      @configuration
+        .data
+        .except("source_upload_root")
+        .merge("upload_mode" => "preuploaded", "preserve_destination_uploads" => true)
+        .to_yaml,
+    )
     config = BulkImport::DiscourseMerge::Configuration.new(dir)
     source = {
-      "id" => "3", "url" => "/uploads/default/original/1X/shared.png", "sha1" => "a" * 40,
-      "filesize" => "10", "secure" => "f",
+      "id" => "3",
+      "url" => "/uploads/default/original/1X/shared.png",
+      "sha1" => "a" * 40,
+      "filesize" => "10",
+      "secure" => "f",
     }
-    dest = source.merge("id" => "2", "url" => "//bucket.s3.amazonaws.com/production-tenant/original/1X/shared.png")
+    dest =
+      source.merge(
+        "id" => "2",
+        "url" => "//bucket.s3.amazonaws.com/production-tenant/original/1X/shared.png",
+      )
     @inventory.fetch("source").merge!("uploads" => [source], "optimized_images" => [])
     @inventory.fetch("destination").merge!("uploads" => [dest], "optimized_images" => [])
     target = {
-      "bucket" => "bucket", "prefix" => "review-tenant",
-      "read_prefixes" => { "destination" => "s3://bucket/production-tenant" },
+      "bucket" => "bucket",
+      "prefix" => "review-tenant",
+      "read_prefixes" => {
+        "destination" => "s3://bucket/production-tenant",
+      },
     }
     store = double(target: target, check!: true)
     snapshot = instance_double(BulkImport::DiscourseMerge::Inventory)
     allow(snapshot).to receive(:connect) do |side, &block|
       pg = instance_double(PG::Connection, exec: nil)
-      allow(pg).to receive(:exec).with(/SELECT .* FROM/) { |sql| @inventory[side].fetch(sql[/FROM (\w+)/, 1]) }
-      allow(BulkImport::DiscourseMerge::SourceRows).to receive(:each).with(pg, anything) do |_, sql, &consume|
+      allow(pg).to receive(:exec).with(/SELECT .* FROM/) { |sql|
+        @inventory[side].fetch(sql[/FROM (\w+)/, 1])
+      }
+      allow(BulkImport::DiscourseMerge::SourceRows).to receive(:each).with(
+        pg,
+        /\ASELECT /,
+      ) do |_, sql, &consume|
         @inventory[side].fetch(sql[/FROM (\w+)/, 1]).each(&consume)
       end
       block.call(pg)
@@ -178,11 +197,20 @@ RSpec.describe BulkImport::DiscourseMerge::Planner do
     planner = described_class.new(config, @inventory)
     plan = planner.build
     expect(plan.dig("upload_policy", "retained_ids", "uploads")).to eq("3" => 2)
-    expect(plan.dig("upload_policy", "receipt_sha256")).to eq(Digest::SHA256.file(receipts.path_for(config)).hexdigest)
+    expect(plan.dig("upload_policy", "receipt_sha256")).to eq(
+      Digest::SHA256.file(receipts.path_for(config)).hexdigest,
+    )
     planner.write(plan)
-    expect(dir.join("preview.md").read).to include("Retained 1 destination originals", "Verified 0 incoming originals", "s3://bucket/production-tenant", "s3://bucket/review-tenant")
+    expect(dir.join("preview.md").read).to include(
+      "Retained 1 destination originals",
+      "Verified 0 incoming originals",
+      "s3://bucket/production-tenant",
+      "s3://bucket/review-tenant",
+    )
     expect(dir.join(receipts::FILE).read).to eq("old two-sided receipts")
-    @inventory["destination"]["uploads"].first["url"] = "//bucket.s3.amazonaws.com/wrong/original/1X/shared.png"
+    @inventory["destination"]["uploads"].first[
+      "url"
+    ] = "//bucket.s3.amazonaws.com/wrong/original/1X/shared.png"
     expect { planner.build }.to raise_error(/Unexpected retained destination URL/)
   end
 

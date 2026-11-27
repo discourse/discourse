@@ -52,7 +52,7 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
       }
       allow(BulkImport::DiscourseMerge::SourceRows).to receive(:each_batch).with(
         pg,
-        anything,
+        /\ASELECT /,
       ) do |_, sql, &consume|
         rows.fetch(side).fetch(sql[/FROM (\w+)/, 1]).each_slice(1000, &consume)
       end
@@ -114,6 +114,7 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
 
   context "when destination uploads are retained" do
     let(:production) { "//hosted.s3.dualstack.us-west-2.amazonaws.com/production-tenant" }
+
     before do
       configuration.data["preserve_destination_uploads"] = true
       target["read_prefixes"] = { "destination" => "s3://hosted/production-tenant" }
@@ -143,7 +144,7 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
     end
 
     it "checks and prepares only incoming keys, and validates retained IDs and URLs offline" do
-      expect(store).not_to receive(:read_backup)
+      allow(store).to receive(:read_backup)
       shared = shared_original
       match = variant(12, 10)
       extra = variant(13, 20)
@@ -221,6 +222,7 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
           )
         }.to raise_error(/inventory changed/)
       end
+      expect(store).not_to have_received(:read_backup)
     end
 
     it "reuses an absent archive duplicate and rejects changed incoming bytes before target access" do
@@ -427,7 +429,6 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
   end
 
   it "remaps local and CDN avatars using destination account and upload IDs" do
-    stub_const("OptimizedImage::VERSION", 5)
     users = class_double("User").as_stubbed_const
     avatar_user = instance_double("User", encoded_username: "merged")
     allow(users).to receive(:unscoped).and_return(users)
@@ -460,7 +461,9 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
       //old-bucket.s3.example/avatars/7/48/4_3.png
     ]
     expect(urls.map { |url| refs.rewrite(url, cooked: true) }.uniq).to eq(
-      ["https://hosted.example/user_avatar/hosted.example/merged/48/19_5.png"],
+      [
+        "https://hosted.example/user_avatar/hosted.example/merged/48/19_#{OptimizedImage::VERSION}.png",
+      ],
     )
   end
 
@@ -624,7 +627,6 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
       "url" => "/uploads/default/#{thumbnail}",
     }
     stub_const("OptimizedImage", Class.new) unless defined?(OptimizedImage)
-    stub_const("DiscourseVips::WorkerUnavailable", Class.new(StandardError))
     attempts = 0
     allow(OptimizedImage).to receive(:resize) do |input, output, width, height, **options|
       expect(File.extname(input)).to eq(".gif")
@@ -655,11 +657,8 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
       "url" => "/uploads/default/#{image}",
     }
     stub_const("OptimizedImage", Class.new) unless defined?(OptimizedImage)
-    stub_const("DiscourseVips::InvalidImage", Class.new(StandardError))
     allow(OptimizedImage).to receive(:resize).and_raise(DiscourseVips::InvalidImage)
-    expect(OptimizedImage).to receive(
-      :optimize,
-    ).once do |operation, input, output, dimensions, options|
+    allow(OptimizedImage).to receive(:optimize) do |operation, input, output, dimensions, options|
       expect(operation).to eq(:optimized_image_resize)
       expect(File.binread(input)).to eq("archival JPEG")
       expect(dimensions).to eq("30x20")
@@ -667,6 +666,7 @@ RSpec.describe BulkImport::DiscourseMerge::PreparedUploads do
       File.binwrite(output, "JPEG thumbnail")
     end
     prepare
+    expect(OptimizedImage).to have_received(:optimize).once
     expect(bytes.fetch(image)).to eq("JPEG thumbnail")
   end
 end

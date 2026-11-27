@@ -48,6 +48,9 @@ module BulkImport
         if directory.join("active-run.json").exist?
           raise DiscourseMerge::Error, "Use a fresh project after apply"
         end
+        if directory.join("mappings.xlsx").exist? || directory.join("setup.lock").exist?
+          DiscourseMerge::Workbook.validate!(configuration, progress)
+        end
         DiscourseMerge::PreparedUploads.open(
           DiscourseMerge::PreparedUploads.path_for(configuration),
           readonly: false,

@@ -65,7 +65,6 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
   end
 
   it "uses the mapped upload for a new account whose username collides with a matched destination name" do
-    stub_const("OptimizedImage::VERSION", 5)
     references =
       BulkImport::DiscourseMerge::References.new(
         source_host: "incoming.example",
@@ -82,12 +81,11 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
         upload_mode: "preuploaded",
       )
     expect(references.rewrite("/user_avatar/incoming.example/Merged/40/4.png")).to eq(
-      "https://hosted.example/user_avatar/hosted.example/Merged_1/40/104_5.png",
+      "https://hosted.example/user_avatar/hosted.example/Merged_1/40/104_#{OptimizedImage::VERSION}.png",
     )
   end
 
   it "rewrites embedded letters using the adjacent source member and preserves unidentified letters" do
-    stub_const("OptimizedImage::VERSION", 5)
     refs =
       BulkImport::DiscourseMerge::References.new(
         source_host: "incoming.example",
@@ -103,7 +101,8 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
         },
       )
     letter = "/letter_avatar_proxy/v4/letter/o/ababab/50.png"
-    photo = "https://hosted.example/user_avatar/hosted.example/merged/50/103_5.png"
+    photo =
+      "https://hosted.example/user_avatar/hosted.example/merged/50/103_#{OptimizedImage::VERSION}.png"
     raw = "![avatar|25x25](#{letter}) @Old"
     expect(refs.rewrite(raw)).to eq("![avatar|25x25](#{photo}) @Merged")
     expect(refs.rewrite("[![avatar](#{letter})](/u/old)")).to eq(
@@ -130,7 +129,6 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
   end
 
   it "resolves a member avatar once when the two forums share an origin" do
-    stub_const("OptimizedImage::VERSION", 5)
     refs =
       BulkImport::DiscourseMerge::References.new(
         source_host: "same.example",
@@ -147,7 +145,8 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
         upload_mode: "preuploaded",
       )
     image = "/letter_avatar_proxy/v4/letter/o/ababab/50.png"
-    result = "https://same.example/user_avatar/same.example/merged/50/103_5.png"
+    result =
+      "https://same.example/user_avatar/same.example/merged/50/103_#{OptimizedImage::VERSION}.png"
     raw = "![avatar|25x25](#{image}) @Old"
     expect(refs.rewrite(raw)).to eq("![avatar|25x25](#{result}) @Merged")
     html = %(<img src="#{image}"> <a href="/u/old">@Old</a>)
@@ -183,10 +182,10 @@ RSpec.describe BulkImport::DiscourseMerge::MatchedAvatars do
   end
 
   it "rewrites renamed members' historical avatar links in all storage modes" do
-    stub_const("OptimizedImage::VERSION", 5)
     link = "https://incoming.example/user_avatar/incoming.example/Old/50/999_1.png"
     cdn = "//cdn.example/avatars/8/50/999_1.png"
-    image = "https://hosted.example/user_avatar/hosted.example/merged/50/103_5.png"
+    image =
+      "https://hosted.example/user_avatar/hosted.example/merged/50/103_#{OptimizedImage::VERSION}.png"
     %w[copy preserve_remote preuploaded].each do |mode|
       references =
         BulkImport::DiscourseMerge::References.new(

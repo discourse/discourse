@@ -12,6 +12,9 @@ module BulkImport::DiscourseMerge
       init
       export
       export-workbook
+      validate-workbook
+      inspect-uploads
+      approve-original
       prepare-uploads
       preflight
       plan
@@ -33,6 +36,16 @@ module BulkImport::DiscourseMerge
             "--settings PATH",
             "Private uploads importer YAML for prepare-uploads",
           ) { |value| options[:settings] = value }
+          flags.on("--side SIDE", %w[source destination], "Forum for local media inspection") do |v|
+            options[:side] = v
+          end
+          flags.on("--id ID", Integer, "Local media ID") { |v| options[:id] = v }
+          flags.on("--sha256 HASH", "Reviewed original bytes for approval") do |v|
+            options[:sha256] = v
+          end
+          flags.on("--workbook", "Use the guided workbook setup defaults") do
+            options[:workbook] = true
+          end
           flags.on("--setup-only", "Preflight prepared environments before mappings exist") do
             options[:setup_only] = true
           end
@@ -63,6 +76,13 @@ module BulkImport::DiscourseMerge
       if (command == "prepare-uploads") != !!options[:settings]
         raise Error, "prepare-uploads requires --settings PATH"
       end
+      raise Error, "--workbook is available with init" if options[:workbook] && command != "init"
+      if (options[:side] || options[:id]) && !%w[inspect-uploads approve-original].include?(command)
+        raise Error, "--side and --id are available for local media review"
+      end
+      if options[:sha256] && command != "approve-original"
+        raise Error, "--sha256 is for approve-original"
+      end
       if options[:setup_only] && command != "preflight"
         raise Error, "--setup-only is available with preflight"
       end
@@ -76,10 +96,13 @@ module BulkImport::DiscourseMerge
         directory.mkpath
         File.chmod(0o700, directory)
         progress.open_log(directory, command)
-        Initializer.new(directory, progress: progress).run
+        Initializer.new(directory, progress: progress).run(workbook: options[:workbook])
+        return 0 if options[:workbook]
         configuration = Configuration.new(directory)
         if configuration.preuploaded?
-          progress.say("Review preupload_locations in merge.yml against the hosting configuration before preparing uploads.")
+          progress.say(
+            "Review preupload_locations in merge.yml against the hosting configuration before preparing uploads.",
+          )
         end
         progress.say("Next after editing mappings: #{after_mappings(configuration)}")
         return 0
@@ -96,13 +119,37 @@ module BulkImport::DiscourseMerge
         if report.account_csv_path
           progress.say("Account outcomes: #{report.account_csv_path}")
         else
-          progress.say("Account CSV unavailable for this run: incomplete verified account evidence.")
+          progress.say(
+            "Account CSV unavailable for this run: incomplete verified account evidence.",
+          )
         end
         return 0
       end
       progress.start("project configuration")
       configuration = Configuration.new(directory)
       case command
+      when "inspect-uploads", "approve-original"
+        raise Error, "Set upload_mode: preuploaded" unless configuration.preuploaded?
+        side = options.fetch(:side) { raise Error, "Supply --side source or destination" }
+        id = options[:id]
+        raise Error, "Supply a positive media ID" if id && id <= 0
+        diagnostics = UploadDiagnostics.new(configuration)
+        if command == "inspect-uploads"
+          count = 0
+          diagnostics.each(side, id) do |row|
+            progress.say(JSON.generate(row))
+            count += 1
+          end
+          progress.say("Local media rows reported: #{count}")
+        else
+          raise Error, "Supply --id and the reviewed --sha256" unless id && options[:sha256]
+          diagnostics.approve(side, id, options[:sha256])
+          progress.say("Original approval saved; rerun prepare-uploads")
+        end
+      when "validate-workbook"
+        require_relative "../../../config/environment"
+        Workbook.validate!(configuration, progress)
+        progress.say("Workbook matches this project's settings and inventory")
       when "prepare-uploads"
         raise Error, "Set upload_mode: preuploaded in merge.yml" unless configuration.preuploaded?
         require_relative "../uploads_importer"
@@ -136,7 +183,7 @@ module BulkImport::DiscourseMerge
             end
           )
         Workbook.new(configuration, inventory).export(path)
-        progress.say("Edit #{path}, then run #{after_mappings(configuration)}")
+        progress.say("Edit #{path}, starting on the Start Here tab")
       when "plan", "apply", "verify", "preflight"
         require_relative "runner"
         runner = Runner.new(configuration, progress: progress)
@@ -190,9 +237,13 @@ module BulkImport::DiscourseMerge
       if plan.dig("upload_policy", "mode") == "preuploaded"
         command += " --sql-only"
         if plan.dig("upload_policy", "preserve_destination_uploads")
-          progress.say("The SQL-only backup retains destination media and references the prepared incoming files. Restore-test both prefixes.")
+          progress.say(
+            "The SQL-only backup retains destination media and references the prepared incoming files. Restore-test both prefixes.",
+          )
         else
-          progress.say("Both media inventories were prepared for hosted storage. Restore-test this SQL-only backup.")
+          progress.say(
+            "Both media inventories were prepared for hosted storage. Restore-test this SQL-only backup.",
+          )
         end
       elsif plan.dig("upload_policy", "mode") == "preserve_remote" &&
             !plan.dig("upload_policy", "destination_has_local_uploads")

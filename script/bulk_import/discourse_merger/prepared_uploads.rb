@@ -5,10 +5,13 @@ require "concurrent/atomic/semaphore"
 require_relative "inventory"
 require_relative "support"
 require_relative "retained_media"
+require_relative "upload_diagnostics"
 
 module BulkImport::DiscourseMerge
   # A closed SQLite database (with rollback journaling) is also the portable plan input.
   class PreparedUploads
+    include LocalUploadFiles
+
     FILE = "prepared-uploads.sqlite3"
     def self.path_for(configuration)
       name =
@@ -134,11 +137,13 @@ module BulkImport::DiscourseMerge
       generation = SecureRandom.uuid
       if preserve
         @retained = RetainedMedia.scan(inventory, store.target)
+        progress.start("local upload verification") if progress.respond_to?(:start)
         verify_retained_inputs!(configuration, approvals)
         progress.say(
           "Destination records retained from SQL: #{@retained.summary.fetch("destination")}",
         )
       end
+      progress.start("hosted upload verification and transfer") if progress.respond_to?(:start)
       store.check!
       failures = 0
       counts = Hash.new(0)
@@ -429,10 +434,10 @@ module BulkImport::DiscourseMerge
             file = Artifacts.upload_path(root, relative, existing: false) if root
             next unless file&.file?
             digest = approved ? Digest::SHA256 : Digest::SHA1
-            unless (!size || file.size == size) &&
-                     digest.file(file).hexdigest == (approved || expected)
-              raise Error, "Source #{table} #{id} differs from recorded digest or size"
-            end
+            size_matches = size.nil? || file.size == size
+            next if size_matches && digest.file(file).hexdigest == (approved || expected)
+            raise Error,
+                  "Source #{table} #{id} differs from recorded digest or size; run inspect-uploads --side source --id #{id}"
           end
       end
     end
@@ -452,14 +457,6 @@ module BulkImport::DiscourseMerge
         "relative" => relative,
         "sha1" => (row["original_sha1"].presence || row.fetch("sha1")).delete_prefix("_"),
       }
-    end
-
-    def relative_path(url, table)
-      uri = URI.parse(url)
-      type = table == "uploads" ? "original" : "optimized"
-      relative = uri.path[%r{(?:\A|/)(#{type}/\d+X/(?:[a-f\d]/)*[\w-][\w.-]*)\z}, 1]
-      raise Error, "Unsupported #{type} storage path #{uri.path.inspect}" unless relative
-      relative
     end
 
     def check_hosted_key!(url, table, target)
@@ -504,8 +501,8 @@ module BulkImport::DiscourseMerge
       elsif info
         sha1, sha256 = store.digests(params)
       end
-      recorded = ->(sha1, sha256, size) do
-        (approved ? sha256 == approved : sha1 == expected) &&
+      recorded = ->(actual_sha1, actual_sha256, size) do
+        (approved ? actual_sha256 == approved : actual_sha1 == expected) &&
           (!expected_size || size == expected_size)
       end
       verified = info && (generated || recorded.call(sha1, sha256, info.content_length))
@@ -514,7 +511,8 @@ module BulkImport::DiscourseMerge
         with_file(store, root, read_prefix, secure, relative, parent, row) do |file, regenerated|
           file_sha1, file_sha256 = file_digests(file)
           if !regenerated && !recorded.call(file_sha1, file_sha256, file.size)
-            raise Error, "Supplied file differs from recorded digest or size: #{relative}"
+            raise Error,
+                  "Supplied file differs from recorded digest or size: #{relative}; run inspect-uploads --side #{side} --id #{row.fetch("id")}"
           end
           if info
             # A previous process can have written a regenerated thumbnail just before
@@ -563,18 +561,6 @@ module BulkImport::DiscourseMerge
         },
         status,
       ]
-    end
-
-    def file_digests(file)
-      sha1 = Digest::SHA1.new
-      sha256 = Digest::SHA256.new
-      File.open(file, "rb") do |input|
-        while (chunk = input.read(1024 * 1024))
-          sha1 << chunk
-          sha256 << chunk
-        end
-      end
-      [sha1.hexdigest, sha256.hexdigest]
     end
 
     def with_file(store, root, read_prefix, secure, relative, parent, row)

@@ -550,6 +550,14 @@ module BulkImport::DiscourseMerge
       Artifacts.write(path, @book.stream.string, replace: false)
     end
 
+    def self.validate!(configuration, progress)
+      progress.start("workbook validation")
+      path = configuration.directory.join("mappings.xlsx")
+      raise Error, "Missing workbook #{path}" unless path.file?
+      inventory = Inventory.new(configuration, progress: progress).capture
+      Planner.new(configuration, inventory).build(mappings_only: true)
+    end
+
     def read(path)
       library!
       @path = path
@@ -584,7 +592,12 @@ module BulkImport::DiscourseMerge
       raise Error, "Invalid workbook binding" unless actual.is_a?(Hash)
       expected = binding.merge("version" => actual["version"])
       unless [1, 2, 3].include?(actual["version"]) && actual == expected
-        raise Error, "Workbook belongs to another source/destination project"
+        fields =
+          (expected.keys | actual.keys).select do |key|
+            expected.fetch(key, :missing) != actual.fetch(key, :missing)
+          end
+        raise Error,
+              "Workbook belongs to another source/destination project; check #{(fields.presence || ["version"]).join(", ")}"
       end
       if actual["version"] >= 2 && !@book["Group Mapping"]
         raise Error, "Group Mapping sheet is required"

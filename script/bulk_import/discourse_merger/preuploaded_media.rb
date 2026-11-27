@@ -99,7 +99,12 @@ module BulkImport::DiscourseMerge
       end
       delivery =
         if result
-          Media.delivery_url(final_url, result.fetch("secure"), @target, @plan.dig("policy", "destination_url"))
+          Media.delivery_url(
+            final_url,
+            result.fetch("secure"),
+            @target,
+            @plan.dig("policy", "destination_url"),
+          )
         else
           final_url
         end

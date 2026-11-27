@@ -248,10 +248,11 @@ if ENV["IMPORT"] == "1"
   gem "csv"
 end
 
+# The core test suite exercises the importer with real workbooks and SQLite receipts.
 group :generic_import, optional: true do
-  gem "rubyXL", "~> 3.4.38", require: false
-  gem "sqlite3"
-  gem "redcarpet"
+  gem "rubyXL", "~> 3.4.38", group: :test, require: false
+  gem "sqlite3", group: :test, require: false
+  gem "redcarpet", group: :test, require: false
 end
 
 gem "web-push"

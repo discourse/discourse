@@ -14,7 +14,7 @@ flowchart TD
     s3 --> plan
     plan --> snapshot["Take a recovery snapshot"]
     snapshot --> apply["Apply the approved plan and verify the merge"]
-    apply --> test["Export a backup and restore-test it separately"]
+    apply --> export["Export and hand off the verified site backup"]
 ```
 
 ## What happens to the content?
