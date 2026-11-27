@@ -183,6 +183,9 @@ branding:
     default: ""
     client: true
     type: upload
+  use_small_logo_on_mobile:
+    default: false
+    client: true
   large_icon:
     default: ""
     client: true

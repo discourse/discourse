@@ -42,6 +42,7 @@ class Admin::Config::LogoController < Admin::AdminController
         logo_small_dark
         mobile_logo
         mobile_logo_dark
+        use_small_logo_on_mobile
         manifest_icon
         manifest_screenshots
         apple_touch_icon
@@ -51,6 +52,7 @@ class Admin::Config::LogoController < Admin::AdminController
         x_summary_large_image
       ].filter_map do |setting|
         next if SiteSetting.hidden_settings.include?(setting)
+        next if setting == :use_small_logo_on_mobile && !params.key?(setting)
         { setting_name: setting, value: params[setting] }
       end
 
