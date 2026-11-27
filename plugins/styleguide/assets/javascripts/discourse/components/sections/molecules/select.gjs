@@ -60,6 +60,8 @@ import PanelChipsSelectExample from "../../examples/molecules/select/selection/p
 import panelChipsSelectSource from "../../examples/molecules/select/selection/panel-chips?source=file";
 import ReadonlySelectExample from "../../examples/molecules/select/selection/readonly.gjs";
 import readonlySelectSource from "../../examples/molecules/select/selection/readonly?source=file";
+import StaticToggleListSelectExample from "../../examples/molecules/select/selection/static-toggle-list.gjs";
+import staticToggleListSelectSource from "../../examples/molecules/select/selection/static-toggle-list?source=file";
 import ToggleListSelectExample from "../../examples/molecules/select/selection/toggle-list.gjs";
 import toggleListSelectSource from "../../examples/molecules/select/selection/toggle-list?source=file";
 import DefaultSelectExample from "../../examples/molecules/select/start/default.gjs";
@@ -377,6 +379,18 @@ export default class Select extends Component {
           <:note>
             {{~i18n "styleguide.sections.select.toggle_note"~}}
           </:note>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{staticToggleListSelectSource}}
+          @description={{i18n
+            "styleguide.sections.select.static_toggle_description"
+          }}
+          @title={{i18n "styleguide.sections.select.static_toggle_example"}}
+          @tryThis={{i18n "styleguide.sections.select.static_toggle_try_this"}}
+        >
+          <div class="select-examples__control">
+            <StaticToggleListSelectExample />
+          </div>
         </StyleguideExample>
         <StyleguideExample
           @code={{panelChipsSelectSource}}

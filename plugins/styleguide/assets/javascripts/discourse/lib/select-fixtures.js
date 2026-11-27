@@ -814,6 +814,14 @@ export const ACTIVITY_FILTERS = [
   { id: "unread", name: "Unread topics" },
 ];
 
+export const EMAIL_TOPICS = [
+  { id: "replies", name: "Replies" },
+  { id: "mentions", name: "Mentions" },
+  { id: "messages", name: "Personal messages" },
+  { id: "badges", name: "New badges" },
+  { id: "digest", name: "Activity summary" },
+];
+
 export const activityFilterApi = createDataSource({
   items: ACTIVITY_FILTERS,
   report: "none",
