@@ -5121,9 +5121,23 @@ RSpec.describe UsersController do
     context "when username does not exist" do
       it "does not send an activation email" do
         post "/u/action/send_activation_email.json", params: { username: "nopenopenopenope" }
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
+    end
+
+    it "does not reveal whether an email address belongs to an account" do
+      SiteSetting.hide_email_address_taken = true
+
+      responses =
+        [user.email, "nobody@example.com"].map do |email|
+          post "/u/action/send_activation_email.json", params: { username: email }
+          [response.status, response.parsed_body]
+        end
+
+      expect(responses.map(&:first)).to eq([403, 403])
+      expect(responses.map(&:last).uniq.size).to eq(1)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
     end
   end
 
