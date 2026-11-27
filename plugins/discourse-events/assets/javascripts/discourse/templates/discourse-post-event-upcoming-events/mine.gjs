@@ -5,7 +5,14 @@ export default <template>
   <div
     class={{dConcatClass
       "discourse-post-event-upcoming-events"
-      (if (eq @controller.initialView "year") "--agenda")
+      (if
+        (or
+          (eq @controller.initialView "year")
+          (eq @controller.initialView "listYear")
+          (eq @controller.initialView "listNextYear")
+        )
+        "--agenda"
+      )
     }}
   >
     <UpcomingEventsCalendar

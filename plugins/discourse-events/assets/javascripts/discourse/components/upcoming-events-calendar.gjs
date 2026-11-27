@@ -63,6 +63,12 @@ export default class UpcomingEventsCalendar extends Component {
     return ["year", "listYear", "listNextYear"].includes(this.args.initialView);
   }
 
+  get agendaInitialDate() {
+    return this.args.initialDate
+      ? moment(this.args.initialDate).format("YYYY-MM-DD")
+      : undefined;
+  }
+
   get composerCategory() {
     if (this.args.categoryId) {
       return Category.findById(this.args.categoryId) ?? null;
@@ -192,9 +198,12 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    const localDate = moment(info.view.currentStart)
-      .clone()
-      .tz(this.currentUser?.user_option?.timezone ?? moment.tz.guess());
+    const localDate =
+      info.view.type === "listYear"
+        ? moment.parseZone(info.startStr)
+        : moment(info.view.currentStart)
+            .clone()
+            .tz(this.currentUser?.user_option?.timezone ?? moment.tz.guess());
 
     this.router.replaceWith(
       this.router.currentRouteName,
@@ -260,7 +269,7 @@ export default class UpcomingEventsCalendar extends Component {
           @centerHeaderToolbar={{this.centerHeaderToolbar}}
           @customButtons={{this.customButtons}}
           @includeSubcategories={{@includeSubcategories}}
-          @initialDate={{@initialDate}}
+          @initialDate={{this.agendaInitialDate}}
           @leftHeaderToolbar={{this.leftHeaderToolbar}}
           @mine={{@mine}}
           @onDatesChange={{this.onDatesChange}}

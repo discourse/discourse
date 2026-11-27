@@ -8,6 +8,50 @@ import UpcomingEventsCalendar from "discourse/plugins/discourse-events/discourse
 module("Integration | Component | UpcomingEventsAgenda", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
+  for (const timezone of ["America/New_York", "Pacific/Auckland"]) {
+    test(`preserves the selected year in ${timezone}`, async function (assert) {
+      this.currentUser.user_option.timezone = timezone;
+      const routes = [];
+      this.owner.lookup("service:router").replaceWith = (...args) =>
+        routes.push(args);
+      pretender.get("/discourse-post-event/events/agenda", () =>
+        response({
+          events: [],
+          has_earlier: false,
+          has_later: false,
+        })
+      );
+      const initialDate = Date.parse("2026/1/1");
+
+      await render(
+        <template>
+          <UpcomingEventsCalendar
+            @initialDate={{initialDate}}
+            @initialView="year"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".fc-toolbar-title")
+        .hasText("2026", "opens the requested calendar year");
+      assert.deepEqual(
+        routes.at(-1).slice(1),
+        ["year", 2026, 1, 1],
+        "keeps the calendar date in the route"
+      );
+      await click(".fc-next-button");
+      assert
+        .dom(".fc-toolbar-title")
+        .hasText("2027", "advances exactly one year");
+      assert.deepEqual(
+        routes.at(-1).slice(1),
+        ["year", 2027, 1, 1],
+        "routes to the next year"
+      );
+    });
+  }
+
   test("keeps year navigation and hides controls for an empty year", async function (assert) {
     const requests = [];
     pretender.get("/discourse-post-event/events/agenda", ({ queryParams }) => {

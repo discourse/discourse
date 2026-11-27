@@ -29,6 +29,8 @@ module DiscourseEvents
         if params[:timezone].present? && !@timezone
           raise Discourse::InvalidParameters.new(:timezone)
         end
+        @after_time = civil_time(@after)
+        @before_time = civil_time(@before)
         @anchor_time = civil_time(@anchor)
         @cursor_time = Finder.time_param(params[:cursor_time], :cursor_time)&.to_time
         @cursor_id = Integer(params[:cursor_id], exception: false)
@@ -36,7 +38,15 @@ module DiscourseEvents
              (!@cursor_time || !@cursor_id || @cursor_id < 1)
           raise Discourse::InvalidParameters.new(:cursor_id)
         end
-        @events = Finder.search(user, params.merge(include_ongoing: true)).limit(nil).reorder(nil)
+        # Floating and all-day dates can lie outside the viewer's UTC year boundaries.
+        @events =
+          Finder
+            .search(
+              user,
+              params.merge(after: @after - 2.days, before: @before + 2.days, include_ongoing: true),
+            )
+            .limit(nil)
+            .reorder(nil)
       end
 
       def search
@@ -126,14 +136,14 @@ module DiscourseEvents
           "CASE WHEN recurrence IS NULL THEN original_starts_at ELSE COALESCE(latest_event_dates.starts_at, original_starts_at) END"
         ends =
           "CASE WHEN recurrence IS NULL THEN original_ends_at ELSE COALESCE(latest_event_dates.ends_at, original_ends_at) END"
-        scope =
-          scope.where(
-            "recurrence IS NULL OR ((#{starts}) >= ? AND (#{starts}) < ?)",
-            @after,
-            @before,
-          )
         sort_time = display_sql(starts)
         end_time = display_sql(ends)
+        scope =
+          scope.where(
+            "#{sort_time} < :before AND (#{sort_time} >= :after OR (recurrence IS NULL AND #{end_time} >= :after))",
+            after: @after_time,
+            before: @before_time,
+          )
         upcoming = "(#{sort_time} >= :anchor OR COALESCE(#{end_time} >= :anchor, FALSE))"
         scope = scope.where(later? ? upcoming : "NOT #{upcoming}", anchor: @anchor_time)
         if @cursor_time
@@ -175,21 +185,23 @@ module DiscourseEvents
 
       def recurring_occurrences(event)
         Enumerator.new do |output|
+          after = instant(event, @after_time)
+          before = instant(event, @before_time)
           bound = instant(event, @cursor_time || @anchor_time)
           if later?
             duration =
               event.original_ends_at ? event.original_ends_at - event.original_starts_at : 0
             # Civil cursors can fall in a DST gap or repeated hour.
-            from = [@after, (@cursor_time ? bound : bound - duration) - 1.day].max
-            event.each_recurring_occurrence(after: from, before: @before) do |date|
+            from = [after, (@cursor_time ? bound : bound - duration) - 1.day].max
+            event.each_recurring_occurrence(after: from, before: before) do |date|
               item = occurrence(event, date[:starts_at], date[:ends_at])
               output << item if eligible?(item)
             end
           else
-            finish = [@before, bound + 1.day].min
+            finish = [before, bound + 1.day].min
             days = 7
-            while finish > @after
-              from = [@after, finish - days.days].max
+            while finish > after
+              from = [after, finish - days.days].max
               dates = event.each_recurring_occurrence(after: from, before: finish).to_a
               dates.reverse_each do |date|
                 item = occurrence(event, date[:starts_at], date[:ends_at])

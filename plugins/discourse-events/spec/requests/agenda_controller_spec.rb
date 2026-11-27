@@ -8,6 +8,47 @@ RSpec.describe DiscourseEvents::EventsController do
   end
 
   describe "#agenda" do
+    it "uses displayed dates at both year boundaries for all-day and floating events" do
+      events =
+        [Time.utc(2026, 1, 1), Time.utc(2026, 12, 31), Time.utc(2027, 1, 1)].flat_map do |date|
+          [
+            Fabricate(:event, original_starts_at: date, original_ends_at: nil, all_day: true),
+            Fabricate(
+              :event,
+              original_starts_at: date - 14.hours,
+              original_ends_at: nil,
+              timezone: "Pacific/Kiritimati",
+              show_local_time: true,
+            ),
+            Fabricate(
+              :event,
+              original_starts_at: date,
+              original_ends_at: nil,
+              all_day: true,
+              recurrence: "every_week",
+              recurrence_until: date + 1.day,
+            ),
+          ]
+        end
+
+      %w[-03:00 +13:00].each do |offset|
+        [2026, 2027].each do |year|
+          get "/discourse-post-event/events/agenda.json",
+              params: {
+                after: "#{year}-01-01T00:00:00#{offset}",
+                before: "#{year + 1}-01-01T00:00:00#{offset}",
+              }
+
+          expect(response.status).to eq(200)
+          expected = year == 2026 ? events.first(6) : events.last(3)
+          expect(response.parsed_body["events"].map { |event| event["id"] }).to contain_exactly(
+            *expected.map(&:id),
+          )
+          expect(response.parsed_body["has_later"]).to eq(false)
+        end
+      end
+    end
+
     it "keeps today's all-day and floating-time events on the upcoming side in both UTC offsets" do
       all_day =
         Fabricate(
