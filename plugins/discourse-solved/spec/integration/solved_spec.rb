@@ -949,6 +949,25 @@ RSpec.describe "Managing Posts solved status" do
           guardian: user.guardian,
         ).map(&:post_id),
       ).to contain_exactly p3.id
+
+      t2.topic_allowed_users.find_or_create_by!(user:)
+      UserAction.create!(
+        action_type: UserAction::REPLY,
+        user:,
+        acting_user: user,
+        target_topic: t2,
+        target_post: p2,
+      )
+
+      expect(
+        UserAction
+          .stream(
+            user_id: user.id,
+            action_types: [UserAction::SOLVED, UserAction::REPLY],
+            guardian: user.guardian,
+          )
+          .map { |action| [action.action_type, action.post_id] },
+      ).to contain_exactly([UserAction::SOLVED, p3.id], [UserAction::REPLY, p2.id])
     end
 
     it "only lists most recent solution in topic" do

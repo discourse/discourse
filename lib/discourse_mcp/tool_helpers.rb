@@ -28,6 +28,10 @@ module DiscourseMcp
       }
     end
 
+    def topic_plugin_data(topics, request_context)
+      DiscoursePluginRegistry.apply_modifier(:mcp_topic_plugin_data, {}, topics, request_context)
+    end
+
     def topic_json(topic, guardian, visible_tag_ids: nil)
       visible_tag_ids ||= self.visible_tag_ids([topic], guardian)
 

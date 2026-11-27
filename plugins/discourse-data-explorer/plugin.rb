@@ -106,6 +106,101 @@ after_initialize do
     availability: -> { SiteSetting.data_explorer_enabled },
   )
 
+  query_properties = {
+    name: {
+      type: "string",
+      minLength: 1,
+      maxLength: 255,
+      pattern: "\\S",
+    },
+    sql: {
+      type: "string",
+      minLength: 1,
+      maxLength: 100_000,
+      pattern: "\\S",
+    },
+    description: {
+      type: "string",
+      maxLength: 10_000,
+    },
+    group_ids: {
+      type: "array",
+      maxItems: 100,
+      uniqueItems: true,
+      items: {
+        type: "integer",
+        minimum: 0,
+      },
+    },
+    confirm_save: {
+      const: true,
+    },
+  }
+  {
+    "discourse_create_query" => {
+      title: "Create Data Explorer query",
+      description:
+        "Saves a query without running its SQL. Group access allows members to run the query and read its results. Requires an admin account and explicit confirmation.",
+      implementation: DiscourseDataExplorer::McpTools::CreateQuery,
+      properties: query_properties,
+      required: %w[name sql confirm_save],
+      destructive: false,
+      idempotent: false,
+    },
+    "discourse_update_query" => {
+      title: "Update Data Explorer query",
+      description:
+        "Updates only supplied fields without running SQL. Group access allows members to read query results; an empty group_ids array removes group access. Requires an admin account and explicit confirmation.",
+      implementation: DiscourseDataExplorer::McpTools::UpdateQuery,
+      properties: query_properties.merge(id: { type: "integer", minimum: 1 }),
+      required: %w[id confirm_save],
+      destructive: true,
+      idempotent: true,
+    },
+    "discourse_delete_query" => {
+      title: "Delete Data Explorer query",
+      description:
+        "Hides a saved query and removes it from the admin dashboard. Requires an admin account and explicit confirmation.",
+      implementation: DiscourseDataExplorer::McpTools::DeleteQuery,
+      properties: {
+        id: {
+          type: "integer",
+          minimum: 1,
+        },
+        confirm_delete: {
+          const: true,
+        },
+      },
+      required: %w[id confirm_delete],
+      destructive: true,
+      idempotent: false,
+    },
+  }.each do |identifier, config|
+    implementation = config.fetch(:implementation)
+    register_mcp_tool(
+      identifier,
+      title: config.fetch(:title),
+      description: config.fetch(:description),
+      implementation:,
+      input_schema: {
+        type: "object",
+        properties: config.fetch(:properties),
+        required: config.fetch(:required),
+        additionalProperties: false,
+      },
+      output_schema: implementation::OUTPUT_SCHEMA,
+      required_scopes: implementation::REQUIRED_SCOPES,
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: config.fetch(:destructive),
+        idempotentHint: config.fetch(:idempotent),
+        openWorldHint: false,
+      },
+      risk: :administration,
+      availability: -> { SiteSetting.data_explorer_enabled },
+    )
+  end
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:

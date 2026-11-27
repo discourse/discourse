@@ -25,6 +25,15 @@ require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
+  register_modifier(:mcp_topic_plugin_data) do |data, topics, request_context|
+    DiscourseAssign::McpTopicAssignments
+      .for_topics(topics, guardian: request_context.guardian)
+      .each do |topic_id, assignments|
+        data[topic_id] = data.fetch(topic_id, {}).merge("discourse-assign" => assignments)
+      end
+    data
+  end
+
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
       [
