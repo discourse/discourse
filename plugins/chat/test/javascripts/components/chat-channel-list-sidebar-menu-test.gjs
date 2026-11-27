@@ -491,7 +491,7 @@ module(
         .isFocused("focus returns to the trigger after the modals close");
     });
 
-    test("Escape and keyboard selection close the menu tree", async function (assert) {
+    test("Escape closes one menu at a time, and keyboard selection closes the menu tree", async function (assert) {
       const preferences = getOwner(this).lookup(
         "service:chat-channel-list-preferences"
       );
@@ -518,7 +518,16 @@ module(
         .doesNotExist("Escape dismisses the submenu");
       assert
         .dom(".chat-channel-list-options-menu")
-        .doesNotExist("Escape dismisses the parent menu too");
+        .exists("the parent menu stays open");
+      assert
+        .dom('[data-menu-option-id="filterChannels"]')
+        .isFocused("focus returns to the item that opened the submenu");
+
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+      assert
+        .dom(".chat-channel-list-options-menu")
+        .doesNotExist("the next Escape dismisses the parent menu");
       assert
         .dom(".menu-trigger")
         .isFocused("focus returns to the outer trigger");
