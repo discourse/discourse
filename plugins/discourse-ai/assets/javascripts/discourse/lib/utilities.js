@@ -2,12 +2,11 @@ import { trustHTML } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 
 /**
- * Converts Immer proxy objects to plain JavaScript objects.
- * FormKit uses Immer proxies which can cause issues when passed to certain handlers
- * (like upload handlers). This function creates a deep clone without proxy wrappers.
+ * Deep-clones JSON-compatible data. FormKit deep-freezes its `@data` and every value
+ * passed to `set`, so clone anything that must stay mutable elsewhere.
  *
- * @param {any} obj - The object to convert (can be null/undefined)
- * @returns {any} A plain JavaScript object without proxy wrappers
+ * @param {any} obj - The object to clone (can be null/undefined)
+ * @returns {any} A deep, unfrozen copy
  */
 export function toPlainObject(obj) {
   if (!obj) {

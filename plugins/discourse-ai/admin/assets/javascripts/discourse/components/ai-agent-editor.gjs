@@ -34,7 +34,6 @@ import AiAgentResponseFormatEditor from "discourse/plugins/discourse-ai/discours
 import RagDocumentSources from "discourse/plugins/discourse-ai/discourse/components/rag-document-sources";
 import RagOptionsFk from "discourse/plugins/discourse-ai/discourse/components/rag-options-fk";
 import RagUploader from "discourse/plugins/discourse-ai/discourse/components/rag-uploader";
-import { toPlainObject } from "discourse/plugins/discourse-ai/discourse/lib/utilities";
 
 const TOOL_TOKEN_LOW_THRESHOLD = 2000;
 const TOOL_TOKEN_HIGH_THRESHOLD = 4000;
@@ -306,10 +305,7 @@ export default class AgentEditor extends Component {
 
   @action
   updateUploads(form, newUploads) {
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
-    const plainUploads = toPlainObject(newUploads);
-    form.set("rag_uploads", plainUploads);
+    form.set("rag_uploads", newUploads);
   }
 
   @action

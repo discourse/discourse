@@ -1,30 +1,19 @@
-/* eslint-disable ember/no-classic-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component, { Input } from "@ember/component";
+import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import { ajax } from "discourse/lib/ajax";
-import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseDebounce from "discourse/lib/debounce";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress.gjs";
 
-@tagName("")
 export default class RagUploader extends Component {
-  @service appEvents;
-
   @tracked term = null;
-  @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @autoTrackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(this, {
     id: "discourse-ai-rag-uploader",
@@ -37,52 +26,51 @@ export default class RagUploader extends Component {
       const newUpload = uploadedFile.upload;
       newUpload.status = "uploaded";
       newUpload.statusText = i18n("discourse_ai.rag.uploads.uploaded");
-      this.ragUploads.push(newUpload);
-      this.debouncedSearch();
+      this.args.updateUploads([...this.ragUploads, newUpload]);
     },
   });
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off(
-      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
-      this,
-      "_updateTargetWithUploads"
-    );
+  setupUploader = modifier((element) => {
+    this.uppyUpload.setup(element);
+  });
+
+  constructor() {
+    super(...arguments);
+
+    const targetId = this.args.target?.id;
+    if (!targetId || !this.ragUploads.length) {
+      return;
+    }
+
+    ajax(
+      `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.args.targetName}&target_id=${targetId}`
+    ).then((statuses) => {
+      this.ragIndexingStatuses = statuses;
+    });
   }
 
   get acceptedFileTypes() {
-    if (this.args?.allowImages) {
+    if (this.args.allowImages) {
       return ".txt,.md,.png,.jpg,.jpeg";
     } else {
       return ".txt,.md,.pdf";
     }
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this.uppyUpload.inProgressUploads?.length > 0) {
-      this.uppyUpload.cancelAllUploads();
+  get filteredUploads() {
+    if (!this.term) {
+      return this.ragUploads;
     }
 
-    this.ragUploads = this.target?.rag_uploads?.slice() || [];
-    this.filteredUploads = this.ragUploads;
+    return this.ragUploads.filter((u) => {
+      return (
+        u.original_filename.toUpperCase().indexOf(this.term.toUpperCase()) > -1
+      );
+    });
+  }
 
-    const targetName = this.targetName || this.target?.constructor?.name;
-    if (this.ragUploads?.length && this.target?.id) {
-      ajax(
-        `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${targetName}&target_id=${this.target.id}`
-      ).then((statuses) => {
-        this.ragIndexingStatuses = statuses;
-      });
-    }
-
-    this.appEvents.on(
-      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
-      this,
-      "_updateTargetWithUploads"
-    );
+  get ragUploads() {
+    return this.args.target?.rag_uploads ?? [];
   }
 
   @action
@@ -95,37 +83,6 @@ export default class RagUploader extends Component {
     this.uppyUpload.cancelSingleUpload({
       fileId: upload.id,
     });
-  }
-
-  @action
-  search() {
-    if (this.term) {
-      this.filteredUploads = this.ragUploads.filter((u) => {
-        return (
-          u.original_filename.toUpperCase().indexOf(this.term.toUpperCase()) >
-          -1
-        );
-      });
-    } else {
-      this.filteredUploads = this.ragUploads;
-    }
-  }
-
-  @action
-  debouncedSearch() {
-    discourseDebounce(this, this.search, 100);
-  }
-
-  @action
-  removeUpload(upload) {
-    removeValueFromArray(this.ragUploads, upload);
-    this.onRemove(upload);
-
-    this.debouncedSearch();
-  }
-
-  _updateTargetWithUploads() {
-    this.updateUploads(this.ragUploads);
   }
 
   <template>
@@ -147,7 +104,6 @@ export default class RagUploader extends Component {
               class="rag-uploader__search-input__input"
               placeholder={{i18n "discourse_ai.rag.uploads.filter"}}
               @value={{this.term}}
-              {{on "keyup" this.debouncedSearch}}
             />
           </div>
         </div>
@@ -155,7 +111,7 @@ export default class RagUploader extends Component {
 
       <table class="rag-uploader__uploads-list">
         <tbody>
-          {{#each this.filteredUploads as |upload|}}
+          {{#each this.filteredUploads key="id" as |upload|}}
             <tr>
               <td>
                 <span class="rag-uploader__rag-file-icon">{{dIcon
@@ -170,7 +126,7 @@ export default class RagUploader extends Component {
               <td class="rag-uploader__remove-file">
                 <DButton
                   class="btn-flat"
-                  @action={{fn this.removeUpload upload}}
+                  @action={{fn @onRemove upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
                 />
@@ -182,11 +138,11 @@ export default class RagUploader extends Component {
               <td><span class="rag-uploader__rag-file-icon">{{dIcon
                     "file"
                   }}</span>
-                {{upload.original_filename}}</td>
+                {{upload.fileName}}</td>
               <td class="rag-uploader__upload-status">
                 <div class="spinner small"></div>
                 <span>{{i18n "discourse_ai.rag.uploads.uploading"}}
-                  {{upload.uploadProgress}}%</span>
+                  {{upload.progress}}%</span>
               </td>
               <td class="rag-uploader__remove-file">
                 <DButton
@@ -204,10 +160,9 @@ export default class RagUploader extends Component {
       <input
         accept={{this.acceptedFileTypes}}
         class="hidden-upload-field"
-        disabled={{this.uploading}}
         multiple="multiple"
         type="file"
-        {{didInsert this.uppyUpload.setup}}
+        {{this.setupUploader}}
       />
       <DButton
         class="btn-default"

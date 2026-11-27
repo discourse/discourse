@@ -200,8 +200,7 @@ export default class AiAgent extends RestModel {
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];
     attrs.rag_document_sources = attrs.rag_document_sources || [];
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
+    // FormKit deep-freezes @data; copy so the model's own uploads stay mutable
     if (attrs.rag_uploads?.length > 0) {
       attrs.rag_uploads = toPlainObject(attrs.rag_uploads);
     }
