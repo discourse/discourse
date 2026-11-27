@@ -1425,6 +1425,59 @@ RSpec.describe TopicsController do
   end
 
   describe "#status" do
+    it "preserves a category group moderator's permission to reply at TL4" do
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.tl4_can_post_in_closed_topics = false
+      group = Fabricate(:group, users: [trust_level_4])
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      topic.update!(closed: true)
+      sign_in(trust_level_4)
+
+      post "/posts.json", params: { topic_id: topic.id, raw: "A group moderator's reply" }
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "records the closure and restricts replies when closed topic posting for TL4 is disabled" do
+      Fabricate(:post, topic:)
+      sign_in(trust_level_4)
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload.posts.last.action_code).to eq("closed.enabled")
+
+      get "/t/#{topic.id}.json"
+      expect(response.parsed_body.dig("details", "can_create_post")).to eq(true)
+
+      SiteSetting.tl4_can_post_in_closed_topics = false
+      get "/t/#{topic.id}.json"
+      expect(response.parsed_body.dig("details", "can_create_post")).to be_falsey
+
+      expect do
+        post "/posts.json", params: { topic_id: topic.id, raw: "Replying to a closed topic" }
+      end.not_to change { topic.posts.count }
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+      expect(response).to have_http_status(:ok)
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload).to be_closed
+      expect(topic.posts.last).to have_attributes(
+        action_code: "closed.enabled",
+        user: trust_level_4,
+      )
+
+      sign_in(moderator)
+      post "/posts.json",
+           params: {
+             topic_id: topic.id,
+             raw: "A moderator's reply to a closed topic",
+           }
+      expect(response).to have_http_status(:ok)
+    end
+
     it "needs you to be logged in" do
       put "/t/1/status.json", params: { status: "visible", enabled: true }
       expect(response.status).to eq(403)
