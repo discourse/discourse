@@ -8639,6 +8639,74 @@ RSpec.describe UsersController do
   describe "#email_login" do
     before { SiteSetting.enable_local_logins_via_email = true }
 
+    it "applies the same per-login limits to known and unknown emails across IP addresses" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      freeze_time
+
+      7.times do |attempt|
+        responses =
+          [user1.email, "unknown@example.com"].map do |login|
+            post "/u/email-login.json",
+                 params: {
+                   login: attempt.odd? ? login.upcase : login,
+                 },
+                 headers: {
+                   "REMOTE_ADDR" => "10.0.0.#{attempt + 1}",
+                 }
+            [response.status, response.parsed_body]
+          end
+
+        expect(responses.first).to eq(responses.last)
+        expect(response.status).to eq([3, 6].include?(attempt) ? 422 : 200)
+        freeze_time 61.seconds.from_now if attempt == 3
+      end
+    end
+
+    it "silently limits account delivery across different logins when account existence is hidden" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      secondary_email = Fabricate(:secondary_email, user: user1).email
+      freeze_time
+
+      [["min", 3, 1.minute], ["hour", 6, 1.hour]].each do |period, max, duration|
+        freeze_time 61.minutes.from_now
+        limit = RateLimiter.new(nil, "email-login-#{period}-#{user1.id}", max, duration)
+        max.times { limit.performed! }
+
+        post "/u/email-login.json", params: { login: secondary_email }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK", "hide_taken" => true)
+        expect(Jobs::CriticalUserEmail.jobs).to be_empty
+      end
+    end
+
+    it "delivers login mail during Redis read-only failover" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      allow(RateLimiter::PERFORM_LUA).to receive(:eval).and_raise(Redis::ReadOnlyError)
+
+      expect_enqueued_with(job: :critical_user_email, args: { type: "email_login" }) do
+        post "/u/email-login.json", params: { login: user1.email }
+      end
+      expect(response.status).to eq(200)
+    end
+
+    it "returns an account-limit error when account existence is visible" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = false
+      secondary_email = Fabricate(:secondary_email, user: user1).email
+      freeze_time
+
+      limit = RateLimiter.new(nil, "email-login-min-#{user1.id}", 3, 1.minute)
+      limit.max.times { limit.performed! }
+
+      post "/u/email-login.json", params: { login: secondary_email }
+      expect(response.status).to eq(422)
+      expect(Jobs::CriticalUserEmail.jobs).to be_empty
+    end
+
     it "enqueues the right email" do
       post "/u/email-login.json", params: { login: user1.email }
 
