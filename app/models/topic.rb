@@ -1265,6 +1265,15 @@ class Topic < ActiveRecord::Base
   def add_moderator_post(user, text, opts = nil)
     opts ||= {}
     new_post = nil
+    # A reply restriction must still allow the moderation post recording the closure.
+    skip_guardian =
+      opts.fetch(:skip_guardian) do
+        if closed? && !SiteSetting.category_group_moderators_can_post_in_closed_topics && user
+          guardian = user.guardian
+          guardian.category_group_moderator_closed_topic_reply_restricted?(self) &&
+            guardian.can_create_moderator_post_on_topic?(self)
+        end
+      end
     creator =
       PostCreator.new(
         user,
@@ -1275,7 +1284,7 @@ class Topic < ActiveRecord::Base
         topic_id: id,
         silent: opts[:silent],
         skip_validations: true,
-        skip_guardian: opts[:skip_guardian],
+        skip_guardian: skip_guardian,
         custom_fields: opts[:custom_fields],
         import_mode: opts[:import_mode],
       )

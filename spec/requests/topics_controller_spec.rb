@@ -1496,6 +1496,33 @@ RSpec.describe TopicsController do
         SiteSetting.enable_category_group_moderation = true
       end
 
+      it "can close topics while restricted from replying to closed topics" do
+        Fabricate(:post, topic:)
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload.posts.last.action_code).to eq("closed.enabled")
+
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body.dig("details", "can_create_post")).to eq(true)
+
+        SiteSetting.category_group_moderators_can_post_in_closed_topics = false
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body.dig("details", "can_create_post")).to be_falsey
+
+        expect do
+          post "/posts.json", params: { topic_id: topic.id, raw: "Replying to a closed topic" }
+        end.not_to change { topic.posts.count }
+        expect(response).to have_http_status(:unprocessable_entity)
+
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+        expect(response).to have_http_status(:ok)
+
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_closed
+        expect(topic.posts.last).to have_attributes(action_code: "closed.enabled", user:)
+      end
+
       it "allows a group moderator to toggle topic statuses" do
         put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: "true" }
 
