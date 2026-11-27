@@ -36,10 +36,13 @@ Discourse::Application.routes.draw do
         relationship: "cached-result",
       }
   get "/api/data-explorer/queries/:id/relationships/groups" =>
-        "discourse_data_explorer/query_relationships#show",
-      :defaults => {
-        relationship: "groups",
-      }
+        "discourse_data_explorer/query_group_relationships#show"
+  post "/api/data-explorer/queries/:id/relationships/groups" =>
+         "discourse_data_explorer/query_group_relationships#create"
+  patch "/api/data-explorer/queries/:id/relationships/groups" =>
+          "discourse_data_explorer/query_group_relationships#update"
+  delete "/api/data-explorer/queries/:id/relationships/groups" =>
+           "discourse_data_explorer/query_group_relationships#destroy"
   get "/api/data-explorer/queries/:id/groups" =>
         "discourse_data_explorer/query_related_resources#index",
       :defaults => {
