@@ -180,3 +180,7 @@ discourse_events:
   livestream_enable_modal_chat_on_mobile:
     default: true
     client: true
+  events_allow_switching_editor:
+    default: true
+    client: true
+    type: boolean
