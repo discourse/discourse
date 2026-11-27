@@ -1769,6 +1769,8 @@ sw:
         %{base_url}/u/activate-akaunti/%{email_token}
 
         Kama kiungo cha juu hakibonyezeki, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao kwenye kivinjari.
+  page_forbidden:
+    page_title: "Ufikivu Umekataliwa"
   page_not_found:
     page_title: "Ukurasa Haujapatikana"
     title: "Samahani! Ukurasa huu haupo au ni wa siri."

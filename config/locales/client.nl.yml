@@ -1938,9 +1938,6 @@ nl:
         show_key_description: "Voer handmatig in"
         short_description: |
           Bescherm je account met eenmalige beveiligingscodes of fysieke beveiligingssleutels.
-        extended_description: |
-          Tweeledige verificatie voegt extra beveiliging toe aan je account door naast je wachtwoord een eenmalige code te vereisen. Tokens kunnen worden gegenereerd op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> -apparaten.
-        oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra tweeledige verificatie is ingeschakeld op je account."
         use: "Authenticator-app gebruiken"
         enforced_with_oauth_notice: "Je moet tweeledige verificatie inschakelen. Je wordt alleen gevraagd dit te gebruiken als je je aanmeldt met een wachtwoord, in plaats van externe verificatie of sociale aanmeldmethoden."
         enforced_notice: "Je moet tweeledige verificatie inschakelen voordat je deze website bezoekt."
@@ -2761,7 +2758,6 @@ nl:
       not_allowed_from_ip_address: "Je kunt je niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "Je kunt je niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activerings-e-mail opnieuw te sturen."
-      omniauth_disallow_totp: "Tweeledige verificatie is ingeschakeld voor je account. Meld je aan met je wachtwoord."
       works_with: "Werkt met"
       activate_account: "Account activeren"
       resend_title: "Activerings-e-mail opnieuw sturen"

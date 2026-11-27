@@ -210,9 +210,7 @@ gl:
       s3_backup_requires_s3_settings: "Non se pode utilizar S3 como localización da copia de seguranza a menos que proporcionara '%{setting_name}'."
       s3_bucket_reused: "Non pode utilizar o mesmo contedor (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixa un contedor diferente ou utilice un camiño distinto para cada un deles."
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Non pode aplicar 2FA se os inicios de sesión locais están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non pode forzar 2FA se DiscourseConnect está activado."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Non pode desactivar o inicio de sesión local se se aplica 2FA. Deshabilite 2FA antes de deshabilitar os inicios de sesión locais."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non pode activar as cargas S3 porque xa están habilitadas globalmente e habilitar este nivel de sitio podería provocar problemas moi graves coas cargas"
       cors_origins_should_not_have_trailing_slash: "Non debe engadir a barra final (/) ás orixes de CORS."
     conflicting_google_user_id: 'O ID de conta de Google desta conta cambiou; requírese a intervención do equipo por razóns de seguranza. Contacte con el e envíelle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -3004,6 +3002,7 @@ gl:
     post_approved:
       title: "A súa publicación foi aprobada"
   page_forbidden:
+    page_title: "Acceso denegado"
     title: "Oopa! Esta páxina é privada."
   page_not_found:
     page_title: "Páxina non atopada"

@@ -39,6 +39,7 @@ sw:
           title: kichwa cha Habari
           body: mwili
           tags: lebo
+        settings_button: Mipangilio
       review:
         copy: Nakili
         open: Fungua

@@ -46,6 +46,7 @@ ur:
           title: عنوان
           body: متن
           tags: ٹیگز
+        settings_button: سیٹِنگ
       review:
         label: عنوان
         create: رابطہ بنائیں
@@ -69,5 +70,7 @@ ur:
       drafts: مسودات
       pages: صفحات
       preview: جھلک دیکھیں
+      article_settings:
+        kind_page: صفحه
       unpublish: اشاعت نہ کریں
       appearance_link: ظاہری شکل

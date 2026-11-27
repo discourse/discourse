@@ -2080,9 +2080,6 @@ zh_CN:
         show_key_description: "手动输入"
         short_description: |
           使用一次性安全代码或实体安全密钥保护您的帐户。
-        extended_description: |
-          双重身份验证会要求您提供除密码之外的一次性令牌，从而为您的帐户增加额外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 设备上生成令牌。
-        oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
         use: "使用身份验证器应用"
         enforced_with_oauth_notice: "您需要启用双重身份验证。只有在使用密码登录时，您才会被提示使用此验证方式，而使用外部身份验证或社交登录方式时则不需要。"
         enforced_notice: "您需要启用双重身份验证才能访问此网站。"
@@ -2931,7 +2928,6 @@ zh_CN:
       not_allowed_from_ip_address: "您无法从该 IP 地址登录。"
       admin_not_allowed_from_ip_address: "您无法从该 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活电子邮件。"
-      omniauth_disallow_totp: "您的帐户已启用双重身份验证。请使用您的密码登录。"
       works_with: "支持"
       activate_account: "激活帐户"
       resend_title: "重新发送激活电子邮件"

@@ -189,9 +189,7 @@ te:
       s3_backup_requires_s3_settings: "మీరు '%{setting_name}'ని అందించకపోతే S3ని బ్యాకప్ స్థానంగా ఉపయోగించలేరు."
       s3_bucket_reused: "మీరు 's3_upload_bucket' మరియు 's3_backup_bucket' కోసం ఒకే బకెట్‌ని ఉపయోగించలేరు. వేరొక బకెట్‌ని ఎంచుకోండి లేదా ప్రతి బకెట్‌కు వేరే మార్గాన్ని ఉపయోగించండి."
       share_quote_facebook_requirements: "Facebook కోసం కోట్ షేరింగ్‌ని ప్రారంభించడానికి మీరు తప్పనిసరిగా Facebook యాప్ ఐడిని సెట్ చేయాలి."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "స్థానిక లాగిన్‌లు నిలిపివేయబడినట్లయితే మీరు 2FAని అమలు చేయలేరు."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "డిస్కోర్సెకనెక్ట్ ప్రారంభించబడితే మీరు 2FA ను అమలు చేయలేరు."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "2FA అమలు చేయబడితే మీరు స్థానిక లాగిన్‌ని నిలిపివేయలేరు. స్థానిక లాగిన్‌లను నిలిపివేయడానికి ముందు అమలు చేయబడిన 2FAని నిలిపివేయండి."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 అప్‌లోడ్‌లు ఇప్పటికే ప్రపంచవ్యాప్తంగా ప్రారంభించబడినందున మీరు S3 అప్‌లోడ్‌లను ప్రారంభించలేరు మరియు ఈ సైట్-స్థాయిని ప్రారంభించడం వలన అప్‌లోడ్‌లతో క్లిష్టమైన సమస్యలు ఏర్పడవచ్చు"
       cors_origins_should_not_have_trailing_slash: "మీరు CORS మూలాలకు వెనుకబడిన స్లాష్ (/)ని జోడించకూడదు."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "చట్టబద్ధమైన వినియోగదారులను ప్రమాదవశాత్తూ రేట్-పరిమితం చేయడాన్ని నివారించడానికి వినియోగదారు ఏజెంట్‌లు తప్పనిసరిగా కనీసం 3 అక్షరాల పొడవు ఉండాలి."
@@ -2101,6 +2099,8 @@ te:
     post_approved:
       title: "మీ పోస్ట్ ఆమోదించబడింది"
       subject_template: "[%{site_name}] మీ పోస్ట్ ఆమోదించబడింది"
+  page_forbidden:
+    page_title: "అనుమతి నిరాకరించబడింది"
   site_setting_missing: "`%{name}` సైట్ సెట్టింగ్‌ని సెట్ చేయాలి."
   page_not_found:
     page_title: "పేజీ కనుగొనబడలేదు"

@@ -29,6 +29,7 @@ sr:
         change:
           title: naslov
           tags: tagovi
+        settings_button: Podešavanje
       review:
         create: Napravi link
         copy: Kopija

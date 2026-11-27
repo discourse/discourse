@@ -990,6 +990,8 @@ bs_BA:
       subject_template: "You've been approved on %{site_name}!"
     post_approved:
       title: "Vaš post je odobren"
+  page_forbidden:
+    page_title: "Pristup Nedostupan"
   page_not_found:
     page_title: "Stranica nije pronađena"
     see_more: "Više"

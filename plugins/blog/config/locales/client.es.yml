@@ -49,6 +49,7 @@ es:
           title: título
           body: cuerpo
           tags: etiquetas
+        settings_button: Ajustes
       review:
         create: Crear enlace
         copy: Copiar
@@ -71,5 +72,7 @@ es:
       drafts: Borradores
       pages: Páginas
       preview: Vista previa
+      article_settings:
+        kind_page: Página
       unpublish: Despublicar
       appearance_link: Aspecto

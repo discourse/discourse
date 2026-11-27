@@ -1592,9 +1592,6 @@ da:
           Scan denne QR-kode i en understøttet app ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>), og indtast din godkendelseskode.
         disable_description: "Indtast godkendelseskoden fra din app"
         show_key_description: "Indtast manuelt"
-        extended_description: |
-          To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit adgangskode. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
-        oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
         use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
@@ -2267,7 +2264,6 @@ da:
       not_allowed_from_ip_address: "Du kan ikke logge ind fra den IP adresse."
       admin_not_allowed_from_ip_address: "Du kan ikke logge på som administrator fra denne IP adresse."
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
-      omniauth_disallow_totp: "Din konto har tofaktorgodkendelse aktiveret. Log venligst ind med dit kodeord."
       activate_account: "Aktivér konto"
       resend_title: "Gensend Aktiverings-e-mail"
       change_email: "Skift e-mailadresse"

@@ -31,6 +31,7 @@ be:
           title: загаловак
           body: тэкст
           tags: цэтлікі
+        settings_button: Налады
       review:
         copy: Капіраваць
         status:

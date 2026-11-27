@@ -48,6 +48,7 @@ ja:
           title: タイトル
           body: 本文
           tags: タグ
+        settings_button: 設定
       review:
         create: リンクを作成
         copy: コピー

@@ -42,6 +42,7 @@ gl:
           title: título
           body: mensaxe
           tags: etiquetas
+        settings_button: Configuración
       review:
         copy: Copiar
         open: Abrir

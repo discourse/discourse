@@ -1956,9 +1956,6 @@ zh_TW:
         show_key_description: "手動輸入"
         short_description: |
           使用一次性安全碼或實體安全密鑰保護您的帳戶。
-        extended_description: |
-          雙重身份驗證會要求您提供除密碼之外的一次性令牌，從而為您的帳戶增加額外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 設備上生成令牌。
-        oauth_enabled_warning: "請注意，一旦您為帳戶啟用雙重身份驗證，社交登入將被禁用。"
         use: "使用身份驗證器應用"
         enforced_with_oauth_notice: "您需要啟用雙重身份驗證。只有在使用密碼登入時，您才會被提示使用此驗證方式，而使用外部身份驗證或社交登入方式時則不需要。"
         enforced_notice: "您需要啟用雙重身份驗證才能訪問此網站。"
@@ -2791,7 +2788,6 @@ zh_TW:
       not_allowed_from_ip_address: "您無法從該 IP 位址登入。"
       admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
       resend_activation_email: "按這裡重新寄出啟用帳號的電子郵件。"
-      omniauth_disallow_totp: "您的帳戶已啟用二次認證。請使用您的密碼登入。"
       works_with: "適用於"
       activate_account: "啟用帳號"
       resend_title: "重新寄出認證信"

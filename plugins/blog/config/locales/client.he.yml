@@ -50,6 +50,7 @@ he:
           title: כותרת
           body: body
           tags: תגיות
+        settings_button: הגדרות
       review:
         create: יצירת קישור
         copy: העתקה
@@ -72,5 +73,7 @@ he:
       drafts: טיוטות
       pages: עמודים
       preview: תצוגה מקדימה
+      article_settings:
+        kind_page: עמוד
       unpublish: משיכת הפרסום
       appearance_link: מראה

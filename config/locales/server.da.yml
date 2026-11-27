@@ -226,9 +226,7 @@ da:
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
       s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan ikke gennemtvinge 2FA, hvis lokale logins er deaktiveret."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan ikke gennemtvinge 2FA, hvis DiscourseConnect er aktiveret."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan ikke deaktivere lokalt login, hvis 2FA gennemtvinges. Deaktiver gennemtvunget 2FA, før du deaktiverer lokale logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan ikke aktivere S3-overførsler, fordi S3-overførsler allerede er aktiveret globalt, og aktivering af dette på webstedsniveau kan forårsage kritiske problemer med overførsler"
       cors_origins_should_not_have_trailing_slash: "Du skal ikke tilføje den efterfølgende skråstreg (/) til CORS adresser."
     conflicting_google_user_id: 'Google-konto-id''et for denne konto er ændret. Personalets indgriben er påkrævet af sikkerhedsmæssige årsager. Kontakt venligst personalet og send dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -2739,6 +2737,8 @@ da:
         Hvis ovenstående link ikke kan klikkes på, kan du prøve at kopiere og indsætte det i adresselinjen i din webbrowser.
     post_approved:
       title: "Dit indlæg blev godkendt"
+  page_forbidden:
+    page_title: "Adgang nægtet"
   page_not_found:
     page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."

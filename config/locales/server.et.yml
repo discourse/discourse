@@ -952,6 +952,8 @@ et:
       subject_template_improved: "Sisselogimine"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
+  page_forbidden:
+    page_title: "Juurdepääsust keelduti"
   page_not_found:
     page_title: "Lehekülge ei leitud"
     title: "Oih! Soovitud lehte ei ole või on see privaatne."

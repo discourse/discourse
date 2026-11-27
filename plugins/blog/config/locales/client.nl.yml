@@ -49,6 +49,7 @@ nl:
           title: titel
           body: inhoud
           tags: tags
+        settings_button: Instellingen
       review:
         create: Link maken
         copy: Kopiëren
@@ -71,5 +72,7 @@ nl:
       drafts: Concepten
       pages: Pagina's
       preview: Voorbeeld
+      article_settings:
+        kind_page: Pagina
       unpublish: Depubliceren
       appearance_link: Vormgeving

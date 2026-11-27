@@ -50,6 +50,7 @@ ar:
           title: العنوان
           body: النص الأساسي
           tags: الوسوم
+        settings_button: الإعدادان
       review:
         create: إنشاء رابط
         copy: نسخ
@@ -72,5 +73,7 @@ ar:
       drafts: المسودات
       pages: صفحتان
       preview: معاينة
+      article_settings:
+        kind_page: صفحة
       unpublish: إلغاء النشر
       appearance_link: المظهر

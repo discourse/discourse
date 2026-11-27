@@ -38,6 +38,7 @@ bg:
           title: заглавие
           body: тяло
           tags: етикети
+        settings_button: Настройки
       review:
         copy: Копирай
         open: Отвори

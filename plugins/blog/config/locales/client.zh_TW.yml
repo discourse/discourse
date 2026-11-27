@@ -49,6 +49,7 @@ zh_TW:
           title: 標題
           body: 內文
           tags: 標簽
+        settings_button: 設置
       review:
         label: 標籤
         create: 建立連結

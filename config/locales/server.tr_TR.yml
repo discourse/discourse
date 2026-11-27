@@ -373,9 +373,7 @@ tr_TR:
       s3_bucket_reused: "\"s3_upload_bucket\" ve \"s3_backup_bucket\" için aynı kovayı kullanamazsınız. Farklı bir kova seçin veya her kova için farklı bir yol kullanın."
       secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri etkinleştirilmeli."
       share_quote_facebook_requirements: "Facebook için alıntı paylaşımını etkinleştirmek üzere bir Facebook uygulama kimliği belirlemeniz gerekiyor."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2 adımlı kimlik doğrulamayı zorlayamazsınız."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect etkinleştirilmişse 2 adımlı kimlik doğrulamayı zorlayamazsınız."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorlanmışsa yerel girişi devre dışı bırakamazsınız. Yerel girişleri devre dışı bırakmadan önce zorunlu 2 adımlı kimlik doğrulamayı devre dışı bırakın."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemelerini etkinleştiremezsiniz çünkü S3 yüklemeleri zaten genel olarak etkindir ve bu site seviyesini etkinleştirmek yüklemelerle ilgili kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Kullanıcı aracıları, geçerli kullanıcıların yanlışlıkla sınırlandırılmasını önlemek için en az 3 karakter uzunluğunda olmalıdır."
@@ -4284,6 +4282,7 @@ tr_TR:
 
         Bu, [gönderinizin](%{base_url}%{post_url}) onaylandığını bildirmek için %{site_name} tarafından gelen otomatik bir mesajdır.
   page_forbidden:
+    page_title: "Erişim Reddedildi"
     title: "Hay aksi! O sayfa özel."
   site_setting_missing: "\"%{name}\" site ayarı yapılmalıdır."
   page_not_found:

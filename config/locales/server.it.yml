@@ -364,9 +364,7 @@ it:
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
       secure_uploads_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i caricamenti sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare l'autenticazione a due fattori se gli accessi locali sono disabilitati."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non è possibile attivare l'autenticazione a due fattori quando DiscourseConnect è abilitato."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Gli user agent devono essere lunghi almeno 3 caratteri per evitare di limitare accidentalmente le richieste degli utenti legittimi."
@@ -3853,6 +3851,7 @@ it:
 
         Questo è un messaggio automatico da %{site_name} per farti sapere che [il tuo messaggio](%{base_url}%{post_url}) è stato approvato.
   page_forbidden:
+    page_title: "Accesso Negato"
     title: "Ops! Quella pagina è privata."
   site_setting_missing: "L'impostazione del sito `%{name}` deve essere definita."
   page_not_found:

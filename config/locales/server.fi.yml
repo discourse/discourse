@@ -364,9 +364,7 @@ fi:
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
       secure_uploads_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Et voi poistaa paikallista kirjautumista käytöstä, jos kaksivaiheinen tunnistus on pakollinen. Kun poistat kaksivaiheisen tunnistuksen pakollisuuden, voit ottaa käyttöön paikallisen kirjautumisen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Et voi ottaa S3-latauksia käyttöön, koska S3-lataukset ovat käytössä globaalisti, ja käyttöönotto sivustonlaajuisesti voi aiheuttaa kriittisiä latauksiin liittyviä ongelmia"
       cors_origins_should_not_have_trailing_slash: "CORS-poluissa ei tulisi olla kauttaviivaa (/) lopussa."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien pyyntöjen virheellisen rajoittamisen välttämiseksi."
@@ -3991,6 +3989,7 @@ fi:
 
         Tämä on automaattinen viesti sivustolta %{site_name}, joka ilmoittaa sinulle, että [viestisi](%{base_url}%{post_url}) on hyväksytty.
   page_forbidden:
+    page_title: "Pääsy estetty"
     title: "Hups! Tämä sivu on yksityinen."
   site_setting_missing: "Asetus \"%{name}\" on pakollinen."
   page_not_found:

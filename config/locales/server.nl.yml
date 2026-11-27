@@ -373,9 +373,7 @@ nl:
       s3_bucket_reused: "Je kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
       secure_uploads_requirements: "S3-uploads moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
       share_quote_facebook_requirements: "Je moet een Facebook-app-ID instellen om het delen van citaten in te schakelen voor Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Je kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Je kunt 2FA niet afdwingen als DiscourseConnect is ingeschakeld."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Je kunt lokale aanmelding niet uitschakelen als 2FA wordt afgedwongen. Schakel afgedwongen 2FA uit voordat je lokale aanmeldingen uitschakelt."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Je kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
       cors_origins_should_not_have_trailing_slash: "Voeg geen schuine streep (/) toe aan CORS-oorsprongen."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents moeten minimaal 3 tekens lang zijn om te voorkomen dat de snelheid van legitieme gebruikers per ongeluk wordt beperkt."
@@ -4324,6 +4322,7 @@ nl:
 
         Dit is een automatisch bericht van %{site_name} om je te laten weten dat [je bericht](%{base_url}%{post_url}) is goedgekeurd.
   page_forbidden:
+    page_title: "Toegang geweigerd"
     title: "Oeps! Die pagina is privé."
   site_setting_missing: "Website-instelling '%{name}' moet worden ingesteld."
   page_not_found:

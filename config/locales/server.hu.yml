@@ -369,9 +369,7 @@ hu:
       s3_bucket_reused: "Nem használhatja ugyanazt a tárolót az „s3_upload_bucket” és az „s3_backup_bucket” számára. Válasszon másik gyűjtőzónát, vagy használjon más útvonalat minden egyes csoporthoz."
       secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltést."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nem engedélyezheti az S3 feltöltést, mivel az S3 feltöltés már globálisan engedélyezve van, és a helyszintű engedélyezés kritikus problémákat okozna a feltöltésekkel kapcsolatban."
       cors_origins_should_not_have_trailing_slash: "A CORS-eredethez nem szabad hozzáadni az utolsóként használt perjelet (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakter hosszúaknak kell lenniük, hogy elkerüljék a jogos felhasználók véletlen sebességkorlátozását."
@@ -4083,6 +4081,7 @@ hu:
 
         Ez egy automatikus üzenet a %{site_name} feladótól, amelyben tudatjuk, hogy a bejegyzése (%{base_url}%{post_url}) jóváhagyásra került.
   page_forbidden:
+    page_title: "Hozzáférés megtagadva"
     title: "Hoppá! Az az oldal magánjellegű."
   site_setting_missing: "`%{name}` webhelybeállítást kell beállítani."
   page_not_found:

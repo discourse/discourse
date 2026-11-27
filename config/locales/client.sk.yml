@@ -1865,9 +1865,6 @@ sk:
         show_key_description: "Vložiť ručne"
         short_description: |
           Chráňte svoje konto pomocou jednorazových bezpečnostných kódov alebo fyzických bezpečnostných kľúčov.
-        extended_description: |
-          Dvojfaktorové overenie zvyšuje bezpečnosť vášho účtu tým, že okrem hesla vyžaduje aj jednorazový token. Tokeny je možné generovať na zariadeniach <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
-        oauth_enabled_warning: "Upozorňujeme, že prihlásenia do sociálnych sietí budú po povolení dvojfaktorovej autentifikácie vo vašom účte zakázané."
         use: "Použite aplikáciu Authenticator"
         enforced_with_oauth_notice: "Je potrebné povoliť dvojfaktorové overovanie. Výzva na jeho použitie sa zobrazí len pri prihlasovaní pomocou hesla, nie pri externom overovaní alebo pri prihlasovaní pomocou sociálnych sietí."
         enforced_notice: "Pred prístupom na túto stránku musíte povoliť dvojfaktorovú autentifikáciu."
@@ -2733,7 +2730,6 @@ sk:
       not_allowed_from_ip_address: "Z tejto IP adresy sa nemôžete prihlásiť."
       admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
       resend_activation_email: "Kliknite sem pre opätovné odoslanie aktivačného emailu."
-      omniauth_disallow_totp: "Vaše konto má povolené dvojfaktorové overovanie. Prihláste sa pomocou svojho hesla."
       activate_account: "Aktivovať účet"
       resend_title: "Znova poslať aktivačný email."
       change_email: "Zmeniť emailovú adresu"

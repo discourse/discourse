@@ -40,6 +40,7 @@ ro:
           title: titlu
           body: corp
           tags: etichete
+        settings_button: Setări
       review:
         create: Creează legătură
         copy: Copiază
@@ -61,4 +62,6 @@ ro:
       drafts: Ciorne
       pages: Pagini
       preview: Previzualizează
+      article_settings:
+        kind_page: Pagină
       appearance_link: Aspect

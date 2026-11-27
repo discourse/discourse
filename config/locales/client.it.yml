@@ -1769,9 +1769,6 @@ it:
         show_key_description: "Inserisci manualmente"
         short_description: |
           Proteggi il tuo account con codici di sicurezza monouso o chiavi di sicurezza fisiche.
-        extended_description: |
-          L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account richiedendo un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
-        oauth_enabled_warning: "Tieni presente che gli accessi ai social saranno disabilitati dopo aver attivato l'autenticazione a due fattori sul tuo account."
         use: "Usa l'app Authenticator"
         enforced_with_oauth_notice: "È necessario abilitare l'autenticazione a due fattori. Ti verrà richiesta solo quando effettui l'accesso con password, non con metodi di accesso social o tramite autenticazione esterna."
         enforced_notice: "È necessario abilitare l'autenticazione a due fattori prima di accedere a questo sito."
@@ -2579,7 +2576,6 @@ it:
       not_allowed_from_ip_address: "Non puoi accedere da quell'indirizzo IP."
       admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
-      omniauth_disallow_totp: "Il tuo account ha l'autenticazione a due fattori abilitata. Accedi con la tua password."
       activate_account: "Attiva account"
       resend_title: "Invia Nuovamente Email Attivazione"
       change_email: "Cambia Indirizzo Email"

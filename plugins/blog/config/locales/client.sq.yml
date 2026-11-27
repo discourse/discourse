@@ -37,6 +37,7 @@ sq:
           title: titulli
           body: trupi
           tags: etiketat
+        settings_button: Rregullimet
       review:
         create: Krijoni lidhje
         copy: Kopjo
