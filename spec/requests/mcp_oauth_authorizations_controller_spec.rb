@@ -116,6 +116,31 @@ describe McpOauthAuthorizationsController do
     expect(labels).to include(I18n.t("mcp.oauth.resource"))
   end
 
+  it "warns that a dynamically registered app's name isn't verified" do
+    sign_in(admin)
+    registration =
+      DiscourseMcp::OAuth::ClientRegistration.register!(
+        "client_name" => "Totally Claude",
+        "redirect_uris" => ["https://agent.example.com/callback"],
+      )
+
+    get "/oauth2/mcp/authorize",
+        params: {
+          client_id: registration[:client_id],
+          redirect_uri: "https://agent.example.com/callback",
+          response_type: "code",
+          code_challenge: "a" * 43,
+          code_challenge_method: "S256",
+          resource: DiscourseMcp.resource_url,
+          scope: "mcp:profile:read",
+        }
+
+    expect(response.status).to eq(200)
+    expect(Nokogiri.HTML5(response.body).at_css(".mcp-consent__unverified").text).to eq(
+      I18n.t("mcp.oauth.unverified_client", client_name: "Totally Claude"),
+    )
+  end
+
   it "prevents the authorization page from being framed when site embedding is enabled" do
     sign_in(admin)
     SiteSetting.allow_embedding_site_in_an_iframe = true

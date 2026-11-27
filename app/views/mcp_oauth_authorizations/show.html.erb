@@ -9,6 +9,10 @@
     <span class="authorize-api-key__username"><%= current_user.username %></span>
   </div>
 
+  <% if @client.registration_type == "dcr" %>
+    <div class="alert alert-warning mcp-consent__unverified"><%= t("mcp.oauth.unverified_client", client_name: @client_name) %></div>
+  <% end %>
+
   <div class="authorize-api-key__summary">
     <div class="authorize-api-key__permissions">
       <p class="authorize-api-key__permissions-header"><%= t("mcp.oauth.permissions_header_html", client_name: tag.bdi(@client_name)) %></p>

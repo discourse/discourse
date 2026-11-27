@@ -10,7 +10,7 @@ class Admin::McpController < Admin::AdminController
       end
     enabled = SiteSetting.mcp_server_enabled
     metrics = {
-      approved_oauth_clients: McpOauthClient.where(trust_state: "approved").count,
+      approved_oauth_clients: approved_oauth_client_count,
       authorizations: McpOauthAuthorization.active.count,
       tokens: McpOauthAccessToken.usable.count,
       errors:
@@ -89,6 +89,23 @@ class Admin::McpController < Admin::AdminController
   end
 
   private
+
+  def approved_oauth_client_count
+    approved = McpOauthClient.where(trust_state: "approved")
+    non_dcr = approved.where.not(registration_type: "dcr")
+    return non_dcr.count if !DiscourseMcp::OAuth::ClientRegistration.allowed?
+
+    dcr =
+      approved
+        .where(registration_type: "dcr")
+        .where(admin_managed: true)
+        .or(
+          approved.where(registration_type: "dcr").where(
+            id: McpOauthAuthorization.select(:mcp_oauth_client_id),
+          ),
+        )
+    non_dcr.or(dcr).count
+  end
 
   def primitives_payload
     primitive_records = McpPrimitive.all.index_by { |record| [record.kind, record.identifier] }

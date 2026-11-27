@@ -103,6 +103,90 @@ describe DiscourseMcp::OAuth do
     end
   end
 
+  describe "dynamically registered clients" do
+    let(:registered_client) do
+      registration =
+        described_class::ClientRegistration.register!(
+          "client_name" => "Registered agent",
+          "redirect_uris" => ["https://agent.example.com/callback"],
+        )
+      McpOauthClient.find_by!(client_id: registration[:client_id])
+    end
+
+    def grant(client)
+      described_class::AuthorizationGrant.create!(
+        user:,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: granted_scopes,
+      )
+    end
+
+    it "resolves them only while registration is allowed" do
+      expect(described_class::ClientResolver.resolve!(registered_client.client_id, user:)).to eq(
+        registered_client,
+      )
+
+      SiteSetting.mcp_oauth_dynamic_client_registration = false
+
+      expect {
+        described_class::ClientResolver.resolve!(registered_client.client_id, user:)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    def expect_consent_required_only_for_registered_client
+      registered_grant = grant(registered_client)
+      other_grant = grant(client)
+      access_token = McpOauthAccessToken.issue!(authorization: registered_grant)
+      refresh_token, refresh_record = McpOauthRefreshToken.issue!(authorization: registered_grant)
+      request = Struct.new(:authorization).new("Bearer #{access_token}")
+
+      yield
+
+      expect(registered_grant.reload.status).to eq("consent_required")
+      expect(other_grant.reload.status).to eq("active")
+      expect(
+        DiscourseMcp::AuthorizationStatus.for([registered_grant]).fetch(registered_grant.id),
+      ).to eq("consent_required")
+      expect(
+        McpOauthAccessToken.find_by(
+          token_hash: McpOauthAccessToken.digest(access_token),
+        ).revoked_at,
+      ).to be_present
+      expect(refresh_record.reload.revoked_at).to be_present
+      expect { DiscourseMcp::Authenticator.new(request).authenticate! }.to raise_error(
+        DiscourseMcp::AuthenticationError,
+      )
+      expect do
+        described_class::TokenIssuer.refresh!(
+          refresh_token:,
+          client_id: registered_client.client_id,
+          resource: DiscourseMcp.resource_url,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "asks for consent again once registration is turned off" do
+      expect_consent_required_only_for_registered_client do
+        SiteSetting.mcp_oauth_dynamic_client_registration = false
+      end
+    end
+
+    it "asks for consent again once only approved domains may identify a client" do
+      expect_consent_required_only_for_registered_client do
+        SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
+      end
+    end
+
+    it "leaves other apps' grants alone when no app has registered" do
+      other_grant = grant(client)
+
+      SiteSetting.mcp_oauth_dynamic_client_registration = false
+
+      expect(other_grant.reload.status).to eq("active")
+    end
+  end
+
   it "rejects an unapproved metadata domain before registering the client" do
     client_id = "https://unapproved.example.com/oauth/client.json"
     SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"

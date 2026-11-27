@@ -2,6 +2,172 @@
 
 module DiscourseMcp
   module OAuth
+    # Dynamic client registration (RFC 7591), for apps that can't identify
+    # themselves with a Client ID Metadata Document. Every client it registers
+    # is public: it proves itself with PKCE rather than a secret, and nothing
+    # it says about itself is verified.
+    class ClientRegistration
+      CLIENT_ID_PREFIX = "mcp-dcr-"
+      MAX_REDIRECT_URIS = 20
+      MAX_NAME_LENGTH = 255
+      MAX_VALUE_LENGTH = 1_000
+      # Methods that only prove a shared secret. RFC 7591 lets the server
+      # replace a requested method, and such an app gets a public client.
+      PUBLIC_AUTH_METHODS = %w[none client_secret_basic client_secret_post].freeze
+      GRANT_TYPES = %w[authorization_code refresh_token].freeze
+      RECORDED_FIELDS = %w[
+        client_name
+        redirect_uris
+        token_endpoint_auth_method
+        grant_types
+        response_types
+        scope
+        client_uri
+        software_id
+        software_version
+      ].freeze
+      # Registrations nobody authorized, edited, or blocked are removed after this long.
+      UNUSED_LIFETIME = 1.day
+
+      class Error < StandardError
+        attr_reader :code
+
+        def initialize(code, description)
+          @code = code
+          super(description)
+        end
+      end
+
+      # A registered client can't be tied to a domain, so registration follows
+      # the metadata policy that lets any domain identify a client.
+      def self.allowed?
+        SiteSetting.mcp_oauth_dynamic_client_registration &&
+          SiteSetting.mcp_oauth_client_id_metadata_policy == "any_domain"
+      end
+
+      def self.register!(metadata)
+        if !metadata.is_a?(Hash)
+          raise Error.new("invalid_client_metadata", "The request must be a JSON object.")
+        end
+
+        redirect_uris = redirect_uris(metadata["redirect_uris"])
+        validate_authentication!(metadata)
+        validate_flows!(metadata)
+        recorded = recorded_metadata(metadata)
+        name = client_name(metadata["client_name"], redirect_uris)
+
+        yield if block_given?
+
+        client =
+          McpOauthClient.create!(
+            client_id: "#{CLIENT_ID_PREFIX}#{SecureRandom.hex(16)}",
+            name:,
+            registration_type: "dcr",
+            trust_state: "approved",
+            redirect_uris:,
+            metadata: recorded,
+            metadata_hash: Digest::SHA256.hexdigest(JSON.generate(recorded)),
+            last_seen_at: Time.zone.now,
+          )
+
+        {
+          client_id: client.client_id,
+          client_id_issued_at: client.created_at.to_i,
+          client_name: client.name,
+          redirect_uris: client.redirect_uris,
+          grant_types: GRANT_TYPES,
+          response_types: ["code"],
+          token_endpoint_auth_method: "none",
+        }
+      end
+
+      def self.unused
+        McpOauthClient
+          .where(registration_type: "dcr", admin_managed: false)
+          .where.not(trust_state: "blocked")
+          .where("created_at < ?", UNUSED_LIFETIME.ago)
+          .where.not(id: McpOauthAuthorization.select(:mcp_oauth_client_id))
+      end
+
+      def self.redirect_uris(value)
+        valid =
+          value.is_a?(Array) && value.length.between?(1, MAX_REDIRECT_URIS) &&
+            value.all? do |uri|
+              uri.is_a?(String) && uri.length <= MAX_VALUE_LENGTH &&
+                McpOauthClient.valid_redirect_uri?(uri)
+            end
+        if !valid
+          raise Error.new(
+                  "invalid_redirect_uri",
+                  "Provide 1 to #{MAX_REDIRECT_URIS} redirect URIs that use HTTPS, or HTTP on a loopback address.",
+                )
+        end
+
+        value.uniq
+      end
+      private_class_method :redirect_uris
+
+      def self.validate_authentication!(metadata)
+        method = metadata["token_endpoint_auth_method"]
+        method = "none" if method.nil?
+        if PUBLIC_AUTH_METHODS.exclude?(method) || !metadata["client_secret"].nil?
+          raise Error.new(
+                  "invalid_client_metadata",
+                  "Only public clients can register. They use PKCE instead of a client secret.",
+                )
+        end
+      end
+      private_class_method :validate_authentication!
+
+      def self.validate_flows!(metadata)
+        grant_types = metadata["grant_types"]
+        grant_types = ["authorization_code"] if grant_types.nil?
+        response_types = metadata["response_types"]
+        response_types = ["code"] if response_types.nil?
+        if !grant_types.is_a?(Array) || grant_types.exclude?("authorization_code") ||
+             !response_types.is_a?(Array) || response_types.exclude?("code")
+          raise Error.new(
+                  "invalid_client_metadata",
+                  "Clients must use the authorization code flow with PKCE.",
+                )
+        end
+      end
+      private_class_method :validate_flows!
+
+      # Keeps what an admin might want to see, bounded, and drops the rest.
+      def self.recorded_metadata(metadata)
+        metadata
+          .slice(*RECORDED_FIELDS)
+          .filter_map do |key, value|
+            case value
+            when String
+              reject_null_bytes!(value)
+              [key, value.truncate(MAX_VALUE_LENGTH)]
+            when Array
+              strings = value.grep(String).first(MAX_REDIRECT_URIS)
+              strings.each { |item| reject_null_bytes!(item) }
+              [key, strings.map { |item| item.truncate(MAX_VALUE_LENGTH) }]
+            end
+          end
+          .to_h
+      end
+      private_class_method :recorded_metadata
+
+      def self.reject_null_bytes!(value)
+        if value.include?("\u0000")
+          raise Error.new("invalid_client_metadata", "Metadata values must not contain null bytes.")
+        end
+      end
+      private_class_method :reject_null_bytes!
+
+      def self.client_name(value, redirect_uris)
+        name = value.is_a?(String) ? value.strip : ""
+        name = URI.parse(redirect_uris.first).host if name.blank?
+        name.truncate(MAX_NAME_LENGTH)
+      end
+      private_class_method :client_name
+    end
+
     class ClientResolver
       MAX_METADATA_BYTES = 64.kilobytes
       METADATA_CACHE_TTL = 1.hour
@@ -12,6 +178,10 @@ module DiscourseMcp
         existing = McpOauthClient.find_by(client_id: client_id)
         raise Discourse::InvalidAccess if existing&.blocked?
         return existing if existing&.registration_type == "pre_registered" && existing.approved?
+        if existing&.registration_type == "dcr"
+          raise Discourse::InvalidAccess if !allowed_by_current_policy?(existing)
+          return existing
+        end
         if SiteSetting.mcp_oauth_client_id_metadata_policy == "disabled"
           raise Discourse::InvalidAccess
         end
@@ -78,6 +248,7 @@ module DiscourseMcp
 
       def self.allowed_by_current_policy?(client)
         return client.approved? if client.registration_type == "pre_registered"
+        return client.approved? && ClientRegistration.allowed? if client.registration_type == "dcr"
         return false if client.registration_type != "cimd" || !client.approved?
 
         case SiteSetting.mcp_oauth_client_id_metadata_policy
@@ -107,6 +278,14 @@ module DiscourseMcp
                 updated_at: Time.zone.now,
               )
             end
+          end
+
+        return if ClientRegistration.allowed?
+
+        McpOauthClient
+          .where(registration_type: "dcr")
+          .in_batches do |clients|
+            McpOauthAuthorization.require_consent!(client_ids: clients.pluck(:id))
           end
       end
 

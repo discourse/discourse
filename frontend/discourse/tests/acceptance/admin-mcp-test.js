@@ -656,6 +656,29 @@ acceptance("Admin - MCP", function (needs) {
       .includesText("https://client.example.com/new");
   });
 
+  test("displays dynamic registration copy for unmanaged DCR clients", async function (assert) {
+    editableClient.registration_type = "dcr";
+    editableClient.admin_managed = false;
+
+    await visit("/admin/config/mcp/clients/8");
+
+    assert
+      .dom(".admin-mcp__detail-list")
+      .includesText(
+        i18n("admin.config.mcp.clients.dynamic"),
+        "detail page shows dynamic registration management label"
+      );
+
+    await click(".admin-mcp__edit-client");
+
+    assert
+      .dom(".admin-config-area-card__content p")
+      .includesText(
+        i18n("admin.config.mcp.clients.dynamic_description"),
+        "edit page explains switching a dynamically registered client to admin management"
+      );
+  });
+
   test("prefills known OAuth client applications", async function (assert) {
     await visit("/admin/config/mcp/clients/new");
 

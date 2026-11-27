@@ -211,6 +211,7 @@ en:
       page_title: 'Authorize "%{client_name}" - %{site_name}'
       authorize_title_html: 'Authorize "%{client_name}"'
       logged_in_as: "Logged in as"
+      unverified_client: '"%{client_name}" registered itself when it connected, so its name isn''t verified. Only authorize it if you just asked an app to connect to this site.'
       permissions_header_html: 'This will allow "%{client_name}" to:'
       scope_sections:
         member: "Use the site as you"
@@ -3218,6 +3219,7 @@ en:
     mcp_cache_ttl_ms: "How long MCP clients may consider a cacheable response fresh, in milliseconds. Set to 0 to make responses immediately stale."
     mcp_oauth_client_id_metadata_policy: "Choose whether OAuth clients can register using Client ID Metadata Documents (CIMD). Admin-registered clients are always allowed. Users must still approve requested access."
     mcp_oauth_client_id_metadata_domains: "Hosts allowed to provide Client ID Metadata Documents when {{setting:mcp_oauth_client_id_metadata_policy}} is set to approved domains. Subdomains are not included unless listed separately."
+    mcp_oauth_dynamic_client_registration: "Let apps register themselves through OAuth dynamic client registration when they first connect. Some AI apps need this because they can't use a Client ID Metadata Document. An app that registers this way isn't verified, so the approval page says so. Only applies when {{setting:mcp_oauth_client_id_metadata_policy}} allows any domain."
     mcp_access_token_lifetime_minutes: "How long an MCP access token remains valid, in minutes."
     mcp_refresh_token_lifetime_days: "How long an MCP refresh token family remains valid, in days."
     mcp_authorization_code_lifetime_seconds: "How long a single-use MCP OAuth authorization code remains valid, in seconds."
