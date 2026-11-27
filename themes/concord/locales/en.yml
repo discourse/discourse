@@ -1,0 +1,109 @@
+en:
+  theme_metadata:
+    description: "Replaces the sidebar with a single channel list made of categories, chat channels and voice rooms."
+    settings:
+      include_tags: "List the user's sidebar tags as channels. Off by default for now."
+      include_chat_channels: "List chat channels as text channels: every open one the user can see, joined or not (requires chat)."
+      show_logo: "Show the site logo in place of the site name at the top of the channel list. The name is still shown if no logo is set."
+      home_link: "Add a link to the homepage at the top of the server name's menu."
+      ai_conversations_link: "Link to AI bot conversations beside the server name, for people who can start one (requires Discourse AI)."
+      remember_last_channel: "Reopen the channel someone was last in when they come back to the site's address. Links to other pages, and the home link, aren't affected. Signed-in people only."
+      sidebar_sections:
+        description: "Headed sections the channel list is split into, and the channels in each. The create-channel modal adds to these; channels in no section are listed at the top, without a heading."
+        schema:
+          properties:
+            name:
+              label: "Name"
+            channels:
+              label: "Channels"
+              schema:
+                properties:
+                  type:
+                    label: "Type"
+                  id:
+                    label: "ID"
+                    description: "Category ID for forum, chat channel ID for text, room ID for voice, tag ID for tag."
+      member_list_roles: "Groups shown as roles in the member list, in this order. Their online members get a section each, above everyone else."
+      chat_container_category: "Slug of the category that holds the categories backing chat channels made from the create-channel modal. It's created if missing, and hidden from the channel list."
+  create_channel:
+    action: "Create channel"
+    title: "Create channel"
+    type: "Channel type"
+    types:
+      text:
+        title: "Text"
+        description: "Send messages, images, GIFs, emoji and opinions"
+      voice:
+        title: "Voice"
+        description: "Hang out together with voice, video and screen share"
+      forum:
+        title: "Forum"
+        description: "Create a space for organized discussions"
+    section: "Section"
+    no_section: "No section"
+    section_description: "Pick a section for the channel, or type a new name to create one."
+    name: "Channel name"
+    name_placeholder: "new-channel"
+    private: "Private channel"
+    private_description: "Only the selected groups will be able to view this channel."
+    groups: "Who can access this channel"
+    groups_required: "Pick at least one group for a private channel."
+    voice_groups_note: "Voice channels add the current members of these groups. People who join a group later won't get access automatically."
+    voice_members_capped: "Only the first %{count} members were added to the voice channel."
+    container_name: "Chat channels"
+    submit: "Create channel"
+  channel_menu:
+    title: "Channel options"
+    section_title: "Section options"
+    name: "Name"
+    rename: "Rename"
+    rename_section: "Rename section"
+    move_up: "Move up"
+    move_down: "Move down"
+    delete: "Delete"
+    delete_section: "Delete section"
+    delete_section_confirm: "Delete the %{name} section? Its channels stay, and move to the top of the list."
+    delete_confirm: "Delete %{name}? This can't be undone."
+    mark_read: "Mark as read"
+    notifications: "Notifications"
+    all_posts: "All posts"
+    default: "Default"
+    all_messages: "All messages"
+    mentions_only: "Only mentions"
+    nothing: "Nothing"
+    mute: "Mute"
+    copy_link: "Copy link"
+    link_copied: "Link copied"
+    move_to_section: "Move to section"
+    no_section: "No section"
+    close_dm: "Close conversation"
+    privacy: "Privacy"
+    new_section: "New section…"
+    create_section: "Create section"
+  channel_privacy:
+    title: "Privacy for %{name}"
+    shared: "This channel takes who can see it from the %{category} category, which its forum channel uses too. Change it in that category's security settings."
+    open_category: "Open category security"
+    voice_groups: "Add members of these groups"
+    required_groups: "Always included, since its subcategories use them: %{groups}"
+    public_subcategory: "Can't be private while its %{name} subcategory is open to everyone."
+    private_parent: "Stays private, since its %{name} parent category is private."
+    parent_groups: "Only groups that can see %{name} can be added: %{groups}."
+    voice_note: "Adds their current members. People who join a group later won't get access, and to remove someone use the room's member list."
+  ai_conversations: "AI conversations"
+  back_to_channels: "Back to all channels"
+  direct_messages:
+    title: "Direct messages"
+    new: "New DM or group chat"
+  channel_header:
+    back: "Back to %{name}"
+    more: "More"
+    threads: "Threads"
+    pins: "Pinned messages"
+    member_list: "Member list"
+    settings: "Channel settings"
+    exit_admin: "Exit admin"
+  member_list:
+    title: "Members"
+    online: "Online"
+    offline: "Offline"

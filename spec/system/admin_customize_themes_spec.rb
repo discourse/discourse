@@ -296,7 +296,7 @@ describe "Admin Customize Themes" do
       )
       theme_page.click_add_all_themes_button
       expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
-        "#{theme.name}, Foundation, Horizon",
+        "Concord, #{theme.name}, Foundation, Horizon",
       )
     end
 

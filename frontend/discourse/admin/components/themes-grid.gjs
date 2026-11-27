@@ -20,6 +20,9 @@ export default class ThemesGrid extends Component {
       } else if (b.get("default")) {
         return 1;
       }
+      if (a.id < 0 && b.id < 0) {
+        return a.id - b.id;
+      }
       if (a.id < 0) {
         return a.id;
       }
@@ -38,11 +41,10 @@ export default class ThemesGrid extends Component {
   }
 
   get showInstallMoreThemesCard() {
-    if (this.args.themes.length !== 2) {
-      return false;
-    }
-
-    return this.args.themes.every((theme) => theme.system);
+    return (
+      this.args.themes.length > 0 &&
+      this.args.themes.every((theme) => theme.system)
+    );
   }
 
   get dropdownOptions() {

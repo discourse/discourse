@@ -46,6 +46,7 @@
     { "path": "plugins/poll" },
     { "path": "plugins/spoiler-alert" },
     { "path": "plugins/styleguide" },
+    { "path": "themes/concord" },
     { "path": "themes/horizon" }
   ],
   "include": []

@@ -8,6 +8,5 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
   filter_arg = args[:filter] || ENV["FILTER"]
   cmd += ["--filter", filter_arg] if filter_arg
 
-  system(ENV, *cmd, chdir: Rails.root)
-  exit $?.exitstatus
+  exit $?.exitstatus unless system(ENV, *cmd, chdir: Rails.root)
 end

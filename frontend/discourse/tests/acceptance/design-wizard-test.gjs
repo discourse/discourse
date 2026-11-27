@@ -14,6 +14,7 @@ import {
   restoreColorSchemeLinks,
 } from "discourse/admin/lib/color-scheme-manager";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { CONCORD_THEME_ID } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
 import DesignWizardService from "discourse/services/design-wizard";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -60,8 +61,6 @@ const designWizardData = () => ({
 acceptance("Design wizard - admin launch", function (needs) {
   let savedPayloads = [];
   let wizardData;
-  let importRequests;
-  let importFails;
   let docked;
 
   needs.user({
@@ -73,8 +72,6 @@ acceptance("Design wizard - admin launch", function (needs) {
   needs.hooks.beforeEach(function () {
     savedPayloads = [];
     wizardData = designWizardData();
-    importRequests = [];
-    importFails = false;
     this.originalSchemeLinks = captureColorSchemeLinks();
 
     // docking follows the viewport, which the test runner doesn't control
@@ -95,13 +92,6 @@ acceptance("Design wizard - admin launch", function (needs) {
     server.get("/admin/config/design-wizard.json", () =>
       helper.response(200, wizardData)
     );
-
-    server.post("/admin/themes/import", (request) => {
-      importRequests.push(helper.parsePostData(request.requestBody));
-      return importFails
-        ? helper.response(422, { errors: ["Unable to install theme"] })
-        : helper.response(201, { theme: { id: 42, name: "Concord" } });
-    });
 
     server.put("/admin/config/design-wizard.json", (request) => {
       savedPayloads.push(helper.parsePostData(request.requestBody));
@@ -609,48 +599,10 @@ acceptance("Design wizard - admin launch", function (needs) {
     }
   });
 
-  test("installs a remote theme before navigating to its preview", async function (assert) {
-    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
-    wizardData.themes.push({
-      id: "concord",
-      name: "Concord",
-      remote_url: remoteUrl,
-      palette_pairs: [],
-    });
-    const redirect = sinon.stub(DiscourseURL, "redirectTo");
-
-    await visit("/admin");
-    await click(APPEARANCE_LAUNCH_BUTTON);
-    await click('[data-theme-id="concord"] input');
-
-    assert.deepEqual(
-      importRequests,
-      [{ remote: remoteUrl }],
-      "imports the offered repository once"
-    );
-    assert.true(
-      redirect.calledWith("/?preview_theme_id=42"),
-      "previews the installed theme ID"
-    );
-    const stored = JSON.parse(
-      this.owner
-        .lookup("service:key-value-store")
-        .get("design_wizard_panel_state")
-    );
-    assert.strictEqual(
-      stored.themeId,
-      42,
-      "the installed ID survives the preview reload"
-    );
-    await click(".design-wizard__close");
-  });
-
   test("switches to Concord's default chat homepage", async function (assert) {
-    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
     wizardData.themes.push({
-      id: "concord",
+      id: CONCORD_THEME_ID,
       name: "Concord",
-      remote_url: remoteUrl,
       default_homepage: "chat",
       palette_pairs: [],
     });
@@ -667,11 +619,11 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click('[data-theme-id="concord"] input');
+    await click('[data-theme-id="-3"] input');
 
     assert.true(
-      redirect.calledWith("/chat?preview_theme_id=42"),
-      "previews the installed theme on the chat homepage"
+      redirect.calledWith("/chat?preview_theme_id=-3"),
+      "previews the bundled theme on the chat homepage"
     );
     const stored = JSON.parse(
       this.owner
@@ -685,13 +637,6 @@ acceptance("Design wizard - admin launch", function (needs) {
       "uses the General channel"
     );
 
-    // the preview reload now reports the installed theme
-    wizardData.themes[1] = {
-      id: 42,
-      name: "Concord",
-      default_homepage: "chat",
-      palette_pairs: [],
-    };
     const wizard = this.owner.lookup("service:design-wizard");
     wizard.applyingTheme = false;
     await wizard.start({ resuming: true });
@@ -721,8 +666,8 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
     assert.strictEqual(
       savedPayloads.at(-1).theme_id,
-      "42",
-      "saves the installed theme"
+      "-3",
+      "saves the bundled theme"
     );
     await click(".design-wizard__close");
     await click(".dialog-footer .btn-primary");
@@ -829,41 +774,6 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
     await click(".design-wizard__close");
     await click(".dialog-footer .btn-primary");
-  });
-
-  test("a failed theme install restores the selection and allows retrying", async function (assert) {
-    wizardData.themes.push({
-      id: "concord",
-      name: "Concord",
-      remote_url: "https://github.com/discourse/discourse-concord-theme",
-      palette_pairs: [],
-    });
-    importFails = true;
-    const redirect = sinon.stub(DiscourseURL, "redirectTo");
-
-    await visit("/admin");
-    await click(APPEARANCE_LAUNCH_BUTTON);
-    await click('[data-theme-id="concord"] input');
-
-    assert
-      .dom(".dialog-body")
-      .includesText("Unable to install theme", "shows the installation error");
-    assert
-      .dom('[data-theme-id="-1"] input')
-      .isChecked("restores the previous selection");
-    assert
-      .dom('[data-theme-id="concord"] input')
-      .isNotDisabled("allows another attempt");
-    assert.false(redirect.called, "does not navigate to a missing theme");
-
-    await click(".dialog-footer .btn-primary");
-    importFails = false;
-    await click('[data-theme-id="concord"] input');
-    assert.true(
-      redirect.calledWith("/?preview_theme_id=42"),
-      "a successful retry opens the preview"
-    );
-    await click(".design-wizard__close");
   });
 
   test("previews and saves an additional homepage without a destination picker", async function (assert) {

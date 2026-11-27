@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
+  CORE_THEMES = { "foundation" => -1, "horizon" => -2, "concord" => -3 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id

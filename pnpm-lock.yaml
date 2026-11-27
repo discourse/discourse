@@ -1188,6 +1188,12 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
+  themes/concord:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
   themes/horizon:
     dependencies:
       discourse:

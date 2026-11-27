@@ -69,7 +69,7 @@ jobs:
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       EMBER_ENV: development
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && '1' || '' }}
-      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat' || (matrix.target == 'themes' && matrix.build_type == 'system')) && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
@@ -166,7 +166,7 @@ jobs:
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'plugins' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        if: env.LOAD_PLUGINS == '1'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")

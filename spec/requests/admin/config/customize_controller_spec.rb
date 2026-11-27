@@ -60,11 +60,7 @@ RSpec.describe Admin::Config::CustomizeController do
 
       expect(response.status).to eq(200)
       popular = response.parsed_body["popular_themes"]
-      expect(popular.map { |entry| entry["name"] }).to include(
-        "Graceful",
-        "Concord",
-        "Brand Header",
-      )
+      expect(popular.map { |entry| entry["name"] }).to include("Graceful", "Brand Header")
       expect(popular.find { |entry| entry["id"] == "graceful" }).to include(
         "remote_url" => "https://github.com/discourse/graceful",
         "description" => I18n.t("popular_themes.graceful.description"),

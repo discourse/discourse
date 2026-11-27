@@ -116,6 +116,9 @@ files:
     destination_path: plugins/automation/server.yml
     label: automation
 
+  - source_path: themes/concord/locales/en.yml
+    destination_path: themes/concord.yml
+    label: theme
   - source_path: themes/foundation/locales/en.yml
     destination_path: themes/foundation.yml
     label: theme

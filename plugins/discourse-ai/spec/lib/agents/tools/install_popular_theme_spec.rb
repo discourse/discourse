@@ -56,8 +56,8 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
   it "offers only full themes from the popular list" do
     parameter = described_class.signature[:parameters].sole
 
-    expect(parameter[:enum]).to include("graceful", "mint", "concord")
-    expect(parameter[:enum]).not_to include("brand_header")
+    expect(parameter[:enum]).to include("graceful", "mint")
+    expect(parameter[:enum]).not_to include("brand_header", "concord")
     expect(described_class.signature[:description]).to include(
       "- mint: Mint. #{I18n.t("popular_themes.mint.description")}",
     )

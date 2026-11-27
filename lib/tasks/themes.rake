@@ -535,5 +535,6 @@ task "themes:qunit_all_official" => :environment do |task, args|
   Rake::Task["themes:qunit"].invoke("ids", official_theme_ids_with_qunit_tests.join("|"))
 
   ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
+  Rake::Task["themes:qunit"].reenable
   Rake::Task["themes:qunit"].invoke("ids", core_theme_ids_with_qunit_tests.join("|"))
 end

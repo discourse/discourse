@@ -41,13 +41,6 @@ module PopularThemes
       meta_url: "https://meta.discourse.org/t/sams-simple-theme/23552",
     },
     {
-      id: "concord",
-      name: DesignWizard::Themes::CONCORD[:name],
-      remote_url: DesignWizard::Themes::CONCORD[:remote_url],
-      screenshot_url: DesignWizard::Themes::CONCORD[:screenshot_light_url],
-      description_key: DesignWizard::Themes::CONCORD[:description_key],
-    },
-    {
       id: "brand_header",
       name: "Brand Header",
       remote_url: "https://github.com/discourse/discourse-brand-header",

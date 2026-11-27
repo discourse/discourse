@@ -30,7 +30,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.map { |theme| theme["id"] }).to contain_exactly(
           Theme::CORE_THEMES["foundation"],
           Theme::CORE_THEMES["horizon"],
-          "concord",
+          Theme::CORE_THEMES["concord"],
         )
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
@@ -61,19 +61,19 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(dracula["dark"]["name"]).to eq("Dracula")
       end
 
-      it "offers Concord for installation by default without creating a theme" do
-        expect { get "/admin/config/design-wizard.json" }.not_to change { Theme.count }
+      it "offers bundled Concord with its chat homepage and screenshots" do
+        get "/admin/config/design-wizard.json"
 
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["themes"].find { |theme| theme["id"] == "concord" }).to include(
+        concord =
+          response.parsed_body["themes"].find { |theme| theme["id"] == Theme.concord_theme.id }
+        expect(concord).to include(
           "default_homepage" => "chat",
           "name" => "Concord",
-          "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
-          "palette_pairs" => [],
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
+        expect(concord).not_to have_key("remote_url")
       end
 
       it "limits choices to core themes and Concord when other themes are installed" do
@@ -98,11 +98,10 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
           *Theme::CORE_THEMES.values,
-          "concord",
         )
       end
 
-      it "hides installation choices when repository imports are restricted" do
+      it "offers bundled themes when repository imports are restricted" do
         global_setting :allowed_theme_repos, "https://github.com/discourse/other-theme"
 
         get "/admin/config/design-wizard.json"
@@ -112,7 +111,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
       end
 
-      it "hides installation choices when theme creation is disabled" do
+      it "offers bundled themes when theme creation is disabled" do
         plugin = Plugin::Instance.new
         modifier = ->(*) { false }
         DiscoursePluginRegistry.register_modifier(
@@ -152,7 +151,8 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         themes = response.parsed_body["themes"]
         expect(themes.map { |theme| theme["id"] }).to contain_exactly(
-          *Theme::CORE_THEMES.values,
+          Theme.foundation_theme.id,
+          Theme.horizon_theme.id,
           concord.id,
         )
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(

@@ -7,7 +7,10 @@ Rails.application.config.after_initialize do |config|
     class Watcher
       def watch
         listener =
-          Listen.to("#{Rails.root.join("themes")}") do |modified, added, removed|
+          Listen.to(
+            Rails.root.join("themes").to_s,
+            ignore: %r{(?:\A|/)node_modules(?:/|\z)},
+          ) do |modified, added, removed|
             filepath = modified.first || added.first || removed.first
             theme_name = filepath.gsub("#{Rails.root.join("themes/")}", "").split("/").first
             theme = Theme.find(Theme::CORE_THEMES[theme_name])
