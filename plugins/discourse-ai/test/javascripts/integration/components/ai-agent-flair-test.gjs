@@ -6,6 +6,47 @@ import AiAgentFlair from "discourse/plugins/discourse-ai/discourse/components/po
 module("Integration | Component | AiAgentFlair", function (hooks) {
   setupRenderingTest(hooks);
 
+  for (const hasAgent of [true, false]) {
+    test(`hides the model label while preserving ${hasAgent ? "agent" : "legacy author"} attribution`, async function (assert) {
+      this.siteSettings.ai_bot_show_model_name = false;
+      this.outletArgs = {
+        post: {
+          ai_agent_id: hasAgent ? -7 : undefined,
+          ai_agent_name: hasAgent ? "Forum helper" : undefined,
+          llm_name: "Model snapshot",
+          topic: {},
+        },
+        user: { username: "forum_helper_bot" },
+      };
+
+      await render(
+        <template>
+          <AiAgentFlair @outletArgs={{this.outletArgs}}>
+            <span class="technical-name">Historical author</span>
+          </AiAgentFlair>
+        </template>
+      );
+
+      assert
+        .dom(".agent-flair__model")
+        .doesNotExist("the model label is hidden");
+      if (hasAgent) {
+        assert
+          .dom(".agent-flair a")
+          .hasText("Forum helper", "the agent remains visible");
+      } else {
+        assert
+          .dom(".technical-name")
+          .hasText("Historical author", "the original author remains visible");
+      }
+      assert.strictEqual(
+        this.outletArgs.post.llm_name,
+        "Model snapshot",
+        "the model metadata is preserved"
+      );
+    });
+  }
+
   test("replaces the technical username with agent and model attribution", async function (assert) {
     this.outletArgs = {
       post: {
