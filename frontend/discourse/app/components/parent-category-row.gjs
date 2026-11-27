@@ -1,5 +1,6 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
@@ -17,6 +18,8 @@ import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
+  @service site;
+
   get hiddenSubcategoryCount() {
     return (
       (this.category.subcategory_count ?? 0) -
@@ -70,7 +73,7 @@ export default class ParentCategoryRow extends CategoryListItem {
                 </tr>
               {{/if}}
               {{#unless this.isMuted}}
-                {{#if this.showTopics}}
+                {{#if @showTopics}}
                   {{#each this.category.featuredTopics as |t|}}
                     <MobileCategoryTopic @topic={{t}} />
                   {{/each}}
@@ -236,11 +239,11 @@ export default class ParentCategoryRow extends CategoryListItem {
             @name="category-list-latest-wrapper"
             @outletArgs={{lazyHash
               category=this.category
-              showTopics=this.showTopics
+              showTopics=@showTopics
             }}
           >
             {{#unless this.isMuted}}
-              {{#if this.showTopics}}
+              {{#if @showTopics}}
                 <td class="latest">
                   {{#each this.category.featuredTopics as |t|}}
                     <FeaturedTopic @topic={{t}} />

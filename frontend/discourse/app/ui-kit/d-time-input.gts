@@ -1,16 +1,55 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { trustHTML } from "@ember/template";
+import { action } from "@ember/object";
+import { type TrustedHTML, trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
-import ComboBox from "discourse/select-kit/components/combo-box";
+import type { ComponentLike } from "@glint/template";
+import ComboBoxUntyped from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
 const AM_PM_REGEX = /^\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*$/i;
 
-function convertMinutes(num) {
+/**
+ * A date as a moment, typed by the methods this component calls so that the published
+ * declarations don't import the moment types.
+ */
+export interface DTimeInputDate {
+  hours(): number;
+  minutes(): number;
+  // `object`, because moment's own parameter type rejects this interface
+  isSame(other: object, granularity: "day"): boolean;
+  clone(): DTimeInputDate;
+  startOf(unit: "day"): DTimeInputDate;
+  add(amount: number, unit: "minutes"): DTimeInputDate;
+  diff(other: object, unit: "minutes"): number;
+}
+
+/** A time of day. */
+export interface DTimeInputTime {
+  hours: number;
+  minutes: number;
+}
+
+interface TimeOption {
+  id: number;
+  name: string;
+  label: TrustedHTML | undefined;
+  title: string;
+}
+
+// TODO(typescript-pending): drop once ComboBox is authored in .gts with a real
+// Signature, then import it directly. Untyped .js today, so no arg/block/attr types.
+const ComboBox = ComboBoxUntyped as unknown as ComponentLike<{
+  Args: {
+    content: TimeOption[];
+    onChange: (value: number | string | null | undefined) => void;
+    options: Record<string, unknown>;
+    value: number | undefined;
+  };
+}>;
+
+function convertMinutes(num: number) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
 }
 
@@ -22,7 +61,7 @@ function uses12HourTime() {
   return I18n.currentLocale()?.startsWith("en");
 }
 
-function convertMinutesToString(n) {
+function convertMinutesToString(n: number) {
   const { hours, minutes } = convertMinutes(n);
   if (uses12HourTime()) {
     const period = hours >= 12 ? "PM" : "AM";
@@ -34,7 +73,7 @@ function convertMinutesToString(n) {
     .padStart(2, "0")}`;
 }
 
-function convertMinutesToDurationString(n) {
+function convertMinutesToDurationString(n: number) {
   const hoursAndMinutes = convertMinutes(n);
 
   let output;
@@ -52,38 +91,69 @@ function convertMinutesToDurationString(n) {
   return output;
 }
 
-@tagName("")
-export default class DTimeInput extends Component {
-  /** @type {number | string | null | undefined} */
-  hours = null;
+interface DTimeInputSignature {
+  Args: {
+    /**
+     * The selected date; the input shows its time of day. Takes precedence over `@hours`
+     * and `@minutes`.
+     */
+    date?: DTimeInputDate | null;
 
-  /** @type {number | string | null | undefined} */
-  minutes = null;
+    /** The hour of the selected time, used when no `@date` is given. */
+    hours?: number | string | null;
 
-  /** @type {import("moment").Moment | null | undefined} */
-  relativeDate = null;
+    /** The minute of the selected time, used when no `@date` is given. */
+    minutes?: number | string | null;
 
-  @computed("relativeDate", "date")
+    /** Earlier times on its day are left out, and later ones show the time since it. */
+    relativeDate?: DTimeInputDate | null;
+
+    /** Called with the picked or typed time. */
+    onChange?: (time: DTimeInputTime) => void;
+  };
+  Element: HTMLDivElement;
+}
+
+/**
+ * A dropdown for picking a time of day in 15-minute steps, which also accepts a typed
+ * time such as `14:30` or `2:30 pm`.
+ */
+export default class DTimeInput extends Component<DTimeInputSignature> {
+  get hours() {
+    return isPresent(this.args.date) ? this.args.date.hours() : this.args.hours;
+  }
+
+  get minutes() {
+    return isPresent(this.args.date)
+      ? this.args.date.minutes()
+      : this.args.minutes;
+  }
+
+  @cached
   get minimumTime() {
-    if (this.relativeDate) {
-      if (this.date) {
-        if (!this.date.isSame(this.relativeDate, "day")) {
+    if (this.args.relativeDate) {
+      if (this.args.date) {
+        if (!this.args.date.isSame(this.args.relativeDate, "day")) {
           return 0;
         } else {
-          return this.relativeDate.hours() * 60 + this.relativeDate.minutes();
+          return (
+            this.args.relativeDate.hours() * 60 +
+            this.args.relativeDate.minutes()
+          );
         }
       } else {
-        return this.relativeDate.hours() * 60 + this.relativeDate.minutes();
+        return (
+          this.args.relativeDate.hours() * 60 + this.args.relativeDate.minutes()
+        );
       }
     }
   }
 
-  @computed("minimumTime", "hours", "minutes")
   get timeOptions() {
     let options = [];
 
     const start = this.minimumTime
-      ? this.minimumTime > this.time
+      ? this.time !== undefined && this.minimumTime > this.time
         ? this.time
         : this.minimumTime
       : 0;
@@ -114,15 +184,15 @@ export default class DTimeInput extends Component {
     options = options.sort((a, b) => a - b);
 
     return options.map((opt) => {
-      let name = convertMinutesToString(opt);
+      const name = convertMinutesToString(opt);
       let label;
 
-      if (this.date && this.relativeDate) {
-        const diff = this.date
+      if (this.args.date && this.args.relativeDate) {
+        const diff = this.args.date
           .clone()
           .startOf("day")
           .add(opt, "minutes")
-          .diff(this.relativeDate, "minutes");
+          .diff(this.args.relativeDate, "minutes");
 
         if (diff < 1440) {
           label = trustHTML(
@@ -140,45 +210,25 @@ export default class DTimeInput extends Component {
     });
   }
 
-  @computed("minimumTime", "hours", "minutes")
   get time() {
     if (isPresent(this.hours) && isPresent(this.minutes)) {
-      return parseInt(this.hours, 10) * 60 + parseInt(this.minutes, 10);
-    }
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (isPresent(this.date)) {
-      this.setProperties({
-        hours: this.date.hours(),
-        minutes: this.date.minutes(),
-      });
-    }
-
-    if (
-      !isPresent(this.date) &&
-      !isPresent(this.hours) &&
-      !isPresent(this.minutes)
-    ) {
-      this.setProperties({
-        hours: null,
-        minutes: null,
-      });
+      return (
+        parseInt(String(this.hours), 10) * 60 +
+        parseInt(String(this.minutes), 10)
+      );
     }
   }
 
   @action
-  onFocusIn(value, event) {
+  onFocusIn(value: unknown, event: FocusEvent) {
     if (value && event.target) {
-      event.target.select();
+      (event.target as HTMLInputElement).select();
     }
   }
 
   @action
-  onChangeTime(time) {
-    if (!isPresent(time) || !this.onChange) {
+  onChangeTime(time: number | string | null | undefined) {
+    if (!isPresent(time) || !this.args.onChange) {
       return;
     }
 
@@ -211,13 +261,13 @@ export default class DTimeInput extends Component {
 
       hours = Math.max(0, Math.min(23, hours));
       minutes = Math.max(0, Math.min(59, minutes));
-      this.onChange({ hours, minutes });
+      this.args.onChange({ hours, minutes });
       return;
     }
 
-    this.onChange({
-      hours: convertMinutes(time).hours,
-      minutes: convertMinutes(time).minutes,
+    this.args.onChange({
+      hours: convertMinutes(time as number).hours,
+      minutes: convertMinutes(time as number).minutes,
     });
   }
 

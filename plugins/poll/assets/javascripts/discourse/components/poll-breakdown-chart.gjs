@@ -1,9 +1,6 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { next } from "@ember/runloop";
-import { trustHTML } from "@ember/template";
-import { classNames } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import loadChartJS, {
   loadChartJSDatalabels,
 } from "discourse/lib/load-chart-js";
@@ -11,26 +8,26 @@ import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
 
-@classNames("poll-breakdown-chart-container")
 export default class PollBreakdownChart extends Component {
-  // Arguments:
-  group = null;
-  options = null;
-  displayMode = null;
-  highlightedOption = null;
-  setHighlightedOption = null;
+  setupChart = modifier((canvas) => {
+    this.#createChart(canvas);
+  });
+  updateChart = modifier(() => {
+    // Read before the check, so this re-runs on changes made while the chart loads
+    const { displayMode, highlightedOption } = this.args;
 
-  _optionToSlice = null;
-  _previousHighlightedSliceIndex = null;
+    if (this._chart) {
+      this.#updateDisplayMode(displayMode);
+      this.#updateHighlight(highlightedOption);
+    }
+  });
+
+  _optionToSlice = {};
+
   _previousDisplayMode = null;
 
   /** @type {import("chart.js").Chart | null} */
   _chart = null;
-
-  init() {
-    super.init(...arguments);
-    this._optionToSlice = {};
-  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -40,20 +37,13 @@ export default class PollBreakdownChart extends Component {
     }
   }
 
-  @computed("options.@each.votes")
   get data() {
-    return this.options?.map?.((item) => item.votes) ?? [];
+    return this.args.options?.map?.((item) => item.votes) ?? [];
   }
 
-  @computed("optionColors", "index")
-  get colorStyle() {
-    return trustHTML(`background: ${this.optionColors[this.index]};`);
-  }
-
-  @computed("data", "displayMode")
   get chartConfig() {
     const data = this.data;
-    const displayMode = this.displayMode;
+    const displayMode = this.args.displayMode;
     const transformedData = [];
     let counter = 0;
 
@@ -124,7 +114,7 @@ export default class PollBreakdownChart extends Component {
         onHover: (event, activeElements) => {
           if (!activeElements.length) {
             next(() => {
-              this.setHighlightedOption(null);
+              this.args.setHighlightedOption(null);
             });
             return;
           }
@@ -135,18 +125,14 @@ export default class PollBreakdownChart extends Component {
           );
 
           next(() => {
-            this.setHighlightedOption(Number(optionIndex));
+            this.args.setHighlightedOption(Number(optionIndex));
           });
         },
       },
     };
   }
 
-  async didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    const canvas = this.element.querySelector("canvas");
-
+  async #createChart(canvas) {
     const [Chart, ChartDataLabelsPlugin] = await Promise.all([
       loadChartJS(),
       loadChartJSDatalabels(),
@@ -157,31 +143,22 @@ export default class PollBreakdownChart extends Component {
     });
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this._chart) {
-      this._updateDisplayMode();
-      this._updateHighlight();
-    }
-  }
-
-  _updateDisplayMode() {
-    if (this.displayMode !== this._previousDisplayMode) {
+  #updateDisplayMode(displayMode) {
+    if (displayMode !== this._previousDisplayMode) {
       const config = this.chartConfig;
       this._chart.data.datasets = config.data.datasets;
       this._chart.options = config.options;
 
       this._chart.update();
-      this._previousDisplayMode = this.displayMode;
+      this._previousDisplayMode = displayMode;
     }
   }
 
-  _updateHighlight() {
+  #updateHighlight(highlightedOption) {
     const activeElements = [];
 
-    if (this.highlightedOption) {
-      const index = this._optionToSlice[this.highlightedOption];
+    if (highlightedOption != null) {
+      const index = this._optionToSlice[highlightedOption];
 
       if (index !== undefined) {
         activeElements.push({ datasetIndex: 0, index });
@@ -193,7 +170,13 @@ export default class PollBreakdownChart extends Component {
   }
 
   <template>
-    <label class="poll-breakdown-chart-label">{{@group}}</label>
-    <canvas class="poll-breakdown-chart-chart"></canvas>
+    <div class="poll-breakdown-chart-container" ...attributes>
+      <label class="poll-breakdown-chart-label">{{@group}}</label>
+      <canvas
+        class="poll-breakdown-chart-chart"
+        {{this.setupChart}}
+        {{this.updateChart}}
+      ></canvas>
+    </div>
   </template>
 }

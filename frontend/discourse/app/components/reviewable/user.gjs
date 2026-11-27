@@ -1,9 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
@@ -14,29 +12,25 @@ import { longDate } from "discourse/lib/formatter";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class ReviewableUser extends Component {
   @service modal;
+  @service site;
   @service store;
 
-  @computed("reviewable.user_fields")
   get userFields() {
-    return this.site.collectUserFields(this.reviewable?.user_fields);
+    return this.site.collectUserFields(this.args.reviewable?.user_fields);
   }
 
-  @computed("reviewable.payload")
   get isScrubbed() {
-    return !!this.reviewable?.payload?.scrubbed_by;
+    return !!this.args.reviewable?.payload?.scrubbed_by;
   }
 
-  @computed("reviewable.target_user.silenced_till")
   get silencedTill() {
-    return this.penaltyDate(this.reviewable?.target_user?.silenced_till);
+    return this.penaltyDate(this.args.reviewable?.target_user?.silenced_till);
   }
 
-  @computed("reviewable.target_user.suspended_till")
   get suspendedTill() {
-    return this.penaltyDate(this.reviewable?.target_user?.suspended_till);
+    return this.penaltyDate(this.args.reviewable?.target_user?.suspended_till);
   }
 
   penaltyDate(date) {
@@ -62,11 +56,11 @@ export default class ReviewableUser extends Component {
   async scrubRejectedUser(reason) {
     try {
       await ajax({
-        url: `/review/${this.reviewable.id}/scrub`,
+        url: `/review/${this.args.reviewable.id}/scrub`,
         type: "PUT",
         data: { reason },
       });
-      this.store.find("reviewable", this.reviewable.id);
+      this.store.find("reviewable", this.args.reviewable.id);
     } catch (e) {
       popupAjaxError(e);
     }
@@ -80,49 +74,49 @@ export default class ReviewableUser extends Component {
             <ReviewableField
               @classes="reviewable-user-details reject-reason"
               @name={{i18n "review.user.scrubbed_reject_reason"}}
-              @value={{this.reviewable.reject_reason}}
+              @value={{@reviewable.reject_reason}}
             />
 
             <ReviewableField
               @classes="reviewable-user-details scrubbed-by"
               @name={{i18n "review.user.scrubbed_by"}}
-              @value={{this.reviewable.payload.scrubbed_by}}
+              @value={{@reviewable.payload.scrubbed_by}}
             />
 
             <ReviewableField
               @classes="reviewable-user-details scrubbed-reason"
               @name={{i18n "review.user.scrubbed_reason"}}
-              @value={{this.reviewable.payload.scrubbed_reason}}
+              @value={{@reviewable.payload.scrubbed_reason}}
             />
 
             <ReviewableField
               @classes="reviewable-user-details scrubbed-at"
               @name={{i18n "review.user.scrubbed_at"}}
-              @value={{rawDate this.reviewable.payload.scrubbed_at}}
+              @value={{rawDate @reviewable.payload.scrubbed_at}}
             />
           {{else}}
             <div class="reviewable-user-details username">
               <div class="name">{{i18n "review.user.username"}}</div>
               <div class="value">
-                {{#if this.reviewable.link_admin}}
+                {{#if @reviewable.link_admin}}
                   <a
                     href={{getUrl
                       (concat
                         "/admin/users/"
-                        this.reviewable.user.id
+                        @reviewable.user.id
                         "/"
-                        this.reviewable.payload.username
+                        @reviewable.payload.username
                       )
                     }}
                   >
-                    {{this.reviewable.payload.username}}
+                    {{@reviewable.payload.username}}
                   </a>
                 {{else}}
-                  {{this.reviewable.payload.username}}
+                  {{@reviewable.payload.username}}
                 {{/if}}
               </div>
             </div>
-            {{#if this.reviewable.target_user.silenced_till}}
+            {{#if @reviewable.target_user.silenced_till}}
               <ReviewableField
                 @classes="reviewable-user-details silenced-till"
                 @name={{i18n "review.user.silenced_until"}}
@@ -131,11 +125,11 @@ export default class ReviewableUser extends Component {
               <ReviewableField
                 @classes="reviewable-user-details silence-reason"
                 @name={{i18n "review.user.silence_reason"}}
-                @value={{this.reviewable.target_user.silence_reason}}
+                @value={{@reviewable.target_user.silence_reason}}
               />
             {{/if}}
 
-            {{#if this.reviewable.target_user.suspended_till}}
+            {{#if @reviewable.target_user.suspended_till}}
               <ReviewableField
                 @classes="reviewable-user-details suspended-till"
                 @name={{i18n "review.user.suspended_until"}}
@@ -144,11 +138,11 @@ export default class ReviewableUser extends Component {
               <ReviewableField
                 @classes="reviewable-user-details suspend-reason"
                 @name={{i18n "review.user.suspend_reason"}}
-                @value={{this.reviewable.target_user.suspend_reason}}
+                @value={{@reviewable.target_user.suspend_reason}}
               />
             {{/if}}
 
-            {{#if this.reviewable.payload.avatar_url}}
+            {{#if @reviewable.payload.avatar_url}}
               <div class="reviewable-user-details avatar">
                 <div class="name">{{i18n "review.user.avatar"}}</div>
                 <div class="value">
@@ -156,7 +150,7 @@ export default class ReviewableUser extends Component {
                     alt={{i18n "review.user.avatar"}}
                     class="reviewable-user-avatar"
                     loading="lazy"
-                    src={{this.reviewable.payload.avatar_url}}
+                    src={{@reviewable.payload.avatar_url}}
                   />
                 </div>
               </div>
@@ -165,30 +159,30 @@ export default class ReviewableUser extends Component {
             <ReviewableField
               @classes="reviewable-user-details name"
               @name={{i18n "review.user.name"}}
-              @value={{this.reviewable.payload.name}}
+              @value={{@reviewable.payload.name}}
             />
 
             <ReviewableField
               @classes="reviewable-user-details email"
               @name={{i18n "review.user.email"}}
-              @value={{this.reviewable.payload.email}}
+              @value={{@reviewable.payload.email}}
             />
 
             <ReviewableField
               @classes="reviewable-user-details bio"
               @name={{i18n "review.user.bio"}}
-              @value={{this.reviewable.payload.bio}}
+              @value={{@reviewable.payload.bio}}
             />
 
-            {{#if this.reviewable.payload.website}}
+            {{#if @reviewable.payload.website}}
               <div class="reviewable-user-details website">
                 <div class="name">{{i18n "review.user.website"}}</div>
                 <div class="value">
                   <a
-                    href={{this.reviewable.payload.website}}
+                    href={{@reviewable.payload.website}}
                     rel="noopener noreferrer"
                     target="_blank"
-                  >{{this.reviewable.payload.website}}</a>
+                  >{{@reviewable.payload.website}}</a>
                 </div>
               </div>
             {{/if}}
@@ -196,7 +190,7 @@ export default class ReviewableUser extends Component {
             <ReviewableField
               @classes="reviewable-user-details reject-reason"
               @name={{i18n "review.user.reject_reason"}}
-              @value={{this.reviewable.reject_reason}}
+              @value={{@reviewable.reject_reason}}
             />
 
             {{#each this.userFields as |f|}}

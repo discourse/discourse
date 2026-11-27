@@ -1,8 +1,9 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ShareSource from "discourse/components/share-source";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -17,29 +18,35 @@ import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class ShareTopicModal extends Component {
-  @computed("model.topic")
+  @service site;
+  @service siteSettings;
+
+  @tracked flash;
+  @tracked flashType;
+
+  constructor() {
+    super(...arguments);
+    this._showRestrictedGroupWarning();
+    this._selectUrl();
+  }
+
   get topic() {
-    return this.model?.topic;
+    return this.args.model?.topic;
   }
 
-  @computed("model.post")
   get post() {
-    return this.model?.post;
+    return this.args.model?.post;
   }
 
-  @computed("model.category")
   get category() {
-    return this.model?.category;
+    return this.args.model?.category;
   }
 
-  @computed("model.allowInvites")
   get allowInvites() {
-    return this.model?.allowInvites;
+    return this.args.model?.allowInvites;
   }
 
-  @computed("post.shareUrl", "topic.shareUrl")
   get url() {
     if (this.post?.shareUrl) {
       return getAbsoluteURL(this.post?.shareUrl);
@@ -48,7 +55,6 @@ export default class ShareTopicModal extends Component {
     }
   }
 
-  @computed("post.created_at", "post.wiki", "post.last_wiki_edit")
   get displayDate() {
     const date =
       this.post?.wiki && this.post?.last_wiki_edit
@@ -57,7 +63,6 @@ export default class ShareTopicModal extends Component {
     return longDateNoYear(new Date(date));
   }
 
-  @computed("topic.{isPrivateMessage,invisible,category.read_restricted}")
   get sources() {
     const privateContext =
       this.siteSettings.login_required ||
@@ -66,12 +71,6 @@ export default class ShareTopicModal extends Component {
       this.topic?.category?.read_restricted;
 
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
-  }
-
-  didInsertElement() {
-    this._showRestrictedGroupWarning();
-    this._selectUrl();
-    super.didInsertElement();
   }
 
   @action
@@ -99,7 +98,7 @@ export default class ShareTopicModal extends Component {
     const post = this.post || (await this.topic.firstPost());
     const topicController = getOwner(this).lookup("controller:topic");
     topicController.actions.replyAsNewTopic.call(topicController, post);
-    this.closeModal();
+    this.args.closeModal();
   }
 
   @afterRender
@@ -110,13 +109,11 @@ export default class ShareTopicModal extends Component {
 
     Category.fetchVisibleGroups(this.category.id).then((result) => {
       if (result.groups.length > 0) {
-        this.setProperties({
-          flash: i18n("topic.share.restricted_groups", {
-            count: result.groups.length,
-            groupNames: result.groups.join(", "),
-          }),
-          flashType: "warning",
+        this.flash = i18n("topic.share.restricted_groups", {
+          count: result.groups.length,
+          groupNames: result.groups.join(", "),
         });
+        this.flashType = "warning";
       }
     });
   }
