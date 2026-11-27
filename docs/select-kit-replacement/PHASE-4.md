@@ -93,6 +93,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       `chat-channel-list-sort-choice.gjs`), a channel's notification level
       (`chat-channel-sidebar-context-notification-submenu.gjs`) and the search sort
       (`chat-search.gjs`).
+      - ☑ Search sort. A static `DSelect` that can't be emptied, named "Sort by", showing the
+        current sort with the filter controls' sort icon, and a check on the current one. The old
+        button was named only by the current sort, "Relevance". No spec or theme targets the old
+        menu, so it takes a BEM class, `chat-search__sort`.
     - ☑ discourse-ai: the gist toggle (`ai-gist-toggle.gjs`) and the agent list layout
       (`ai-agent-list-editor.gjs`).
       - ☑ Gist toggle. A static `DSelect` that can't be emptied, named "Layout", showing only the

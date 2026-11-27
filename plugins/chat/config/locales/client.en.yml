@@ -655,6 +655,7 @@ en:
         aria_label: "Switch to chat search"
         channel_aria_label: "Search this channel"
         no_results: "No results found"
+        sort_label: "Sort by"
         sort:
           relevance: "Relevance"
           latest: "Latest"

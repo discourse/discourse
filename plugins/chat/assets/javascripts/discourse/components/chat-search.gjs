@@ -20,6 +20,8 @@ import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import dTabToSibling from "discourse/ui-kit/modifiers/d-tab-to-sibling";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ChatMessageComponent from "discourse/plugins/chat/discourse/components/chat-message";
@@ -28,10 +30,12 @@ import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const LIMIT = 20;
+const SORTS = ["relevance", "latest"];
 
 export default class ChatSearch extends Component {
   @service chatSearchQuery;
   @service router;
+  @service siteSettings;
 
   @tracked currentSort = "relevance";
   @tracked messages = [];
@@ -42,6 +46,13 @@ export default class ChatSearch extends Component {
 
   get enableQueryParams() {
     return this.args.enableQueryParams ?? true;
+  }
+
+  /** The sorts as options, named by their translated labels. */
+  get sortOptions() {
+    return SORTS.map((sort) =>
+      selectOption({ id: sort }, { label: this.sortLabel(sort) })
+    );
   }
 
   @bind
@@ -95,6 +106,12 @@ export default class ChatSearch extends Component {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  @action
+  changeSort(sort) {
+    this.currentSort = sort;
+    this.searchMessages(true);
   }
 
   @action
@@ -191,30 +208,45 @@ export default class ChatSearch extends Component {
           {{dAutoFocus}}
         />
 
-        <DMenu
-          @icon="sort"
-          @identifier="search-sort-options"
-          @label={{this.sortLabel this.currentSort}}
-        >
-          <:content as |menu|>
-            <DDropdownMenu as |dropdown|>
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent"
-                  @action={{fn this.setCurrentSorting "relevance" menu.close}}
-                  @translatedLabel={{this.sortLabel "relevance"}}
-                />
-              </dropdown.item>
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent"
-                  @action={{fn this.setCurrentSorting "latest" menu.close}}
-                  @translatedLabel={{this.sortLabel "latest"}}
-                />
-              </dropdown.item>
-            </DDropdownMenu>
-          </:content>
-        </DMenu>
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelect
+            class="chat-search__sort"
+            @clearMode="never"
+            @icon="arrow-down-wide-short"
+            @onChange={{this.changeSort}}
+            @options={{this.sortOptions}}
+            @selectedIcon="check"
+            @texts={{hash ariaLabel=(i18n "chat.search.sort_label")}}
+            @value={{this.currentSort}}
+            @variant="static"
+          />
+        {{else}}
+          <DMenu
+            @icon="sort"
+            @identifier="search-sort-options"
+            @label={{this.sortLabel this.currentSort}}
+          >
+            <:content as |menu|>
+              <DDropdownMenu as |dropdown|>
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent"
+                    @action={{fn this.setCurrentSorting "relevance" menu.close}}
+                    @translatedLabel={{this.sortLabel "relevance"}}
+                  />
+                </dropdown.item>
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent"
+                    @action={{fn this.setCurrentSorting "latest" menu.close}}
+                    @translatedLabel={{this.sortLabel "latest"}}
+                  />
+                </dropdown.item>
+              </DDropdownMenu>
+            </:content>
+          </DMenu>
+        {{/if}}
       </div>
 
       {{#if @query.length}}
