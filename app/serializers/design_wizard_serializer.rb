@@ -21,7 +21,7 @@ class DesignWizardSerializer < ApplicationSerializer
   def themes
     @options[:themes].map do |theme|
       DesignWizardThemeSerializer.new(theme, scope:, root: false).as_json
-    end + DesignWizard::Themes.available_to_install(@options[:themes], guardian: scope)
+    end
   end
 
   def current_theme

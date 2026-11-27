@@ -1,0 +1,979 @@
+@use "lib/viewport";
+
+#main-outlet-wrapper.wrap {
+  margin: 0;
+}
+
+.sidebar-wrapper .sidebar-sections {
+  padding-left: 0;
+}
+
+body.has-sidebar-page .wrap {
+  max-width: unset;
+}
+
+// The channel list: quiet grey rows that light up when there's
+// something new, with a pill on the left edge marking unread channels.
+.sidebar-section[data-section-name^="concord-"] {
+  // Inset like the channel rows below, so the caret sits over their icons.
+  .sidebar-section-header-wrapper {
+    padding-left: 1em;
+  }
+
+  .sidebar-section-header-text {
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--primary-medium);
+  }
+
+  .sidebar-section-link-wrapper {
+    position: relative;
+  }
+
+  // A long press opens the channel's menu, not the browser's link preview.
+  .sidebar-section-link {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .concord-channel {
+    // Shrinks to the row, so long names are cut off rather than widening it.
+    min-width: 0;
+    margin: 1px 0.5em;
+    padding-inline: 0.5em;
+    border-radius: var(--d-border-radius);
+    color: var(--primary-700);
+
+    .sidebar-section-link-prefix .prefix-icon {
+      color: var(--primary-500);
+    }
+
+    &:hover {
+      background: var(--primary-very-low);
+      color: var(--primary-high);
+    }
+
+    &.active,
+    &.sidebar-section-link--active {
+      background: var(--primary-low);
+      color: var(--primary);
+
+      .sidebar-section-link-prefix .prefix-icon {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .concord-channel--unread {
+    color: var(--primary);
+    font-weight: 600;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 4px;
+      height: 8px;
+      border-radius: 0 4px 4px 0;
+      background: var(--primary);
+      transform: translateY(-50%);
+    }
+
+    // The pill already says it, so the dot would be noise.
+    .sidebar-section-link-suffix.unread {
+      display: none;
+    }
+  }
+
+  // White on red on every row, the active one included.
+  .concord-channel .sidebar-section-link-content-badge {
+    min-width: 1.4em;
+    padding: 0 0.4em;
+    border-radius: 1em;
+    background: var(--danger);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .sidebar-section-link--muted {
+    opacity: 0.5;
+  }
+}
+
+.concord-channel--dm .sidebar-section-link-prefix.image img {
+  width: 1.25em;
+  height: 1.25em;
+  border-radius: 50%;
+}
+
+.concord-channel--connecting {
+  opacity: 0.7;
+}
+
+.concord-dm-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4) var(--space-1);
+
+  // Discourse AI pads its own back link while its page is open, which it
+  // still is when the DM button is pressed from there.
+  & .sidebar-sections__back-to-forum.concord-dm-header__back {
+    order: 0;
+    align-self: flex-start;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--primary);
+    }
+  }
+
+  &__new {
+    width: 100%;
+  }
+}
+
+// Channel types as stacked cards.
+.concord-create-channel-modal {
+  .form-kit__control-radio-group,
+  .form-kit__field-radio {
+    width: 100%;
+  }
+
+  // The private switch: its title over its description, the switch beside
+  // both, rather than all three in a row. A switch is always on or off, so
+  // it isn't "optional".
+  .form-kit__field-toggle {
+    display: grid;
+    grid-template-areas:
+      "title control"
+      "description control";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1em;
+    width: 100%;
+
+    .form-kit__container-title {
+      grid-area: title;
+    }
+
+    .form-kit__container-optional {
+      display: none;
+    }
+
+    .form-kit__container-description {
+      grid-area: description;
+    }
+
+    .form-kit__container-content {
+      grid-area: control;
+    }
+  }
+
+  .form-kit__control-radio-label {
+    width: 100%;
+    padding: 0.75em 1em;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:has(.form-kit__control-radio:checked) {
+      background: var(--primary-low);
+    }
+  }
+
+  .form-kit__control-radio-title {
+    display: flex;
+    gap: 0.25em;
+    align-items: center;
+    font-weight: 600;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+.concord-server-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75em 1em;
+  border-bottom: 1px solid var(--primary-low);
+  font-weight: 700;
+
+  &__name {
+    position: relative;
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: 0.35em;
+    min-width: 0;
+    margin: -0.25em 0.5em -0.25em -0.5em;
+    padding: 0.25em 0.5em;
+    border-radius: var(--d-border-radius);
+    font-weight: 700;
+
+    // The site name's colours, rather than a link's, even while its menu has
+    // focus.
+    --d-button-transparent-text-color--hover: var(--primary);
+    --d-button-transparent-icon-color: var(--primary-medium);
+    --d-button-transparent-icon-color--hover: var(--primary-medium);
+
+    &.btn-transparent:hover,
+    &.btn-transparent:focus-visible {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // The logo stands in for the name at the name's height, however wide, or
+  // however much room the buttons beside it leave. Core sizes its logo from
+  // --d-logo-height (by id, so it outranks a class), so that's what's set.
+  &__logo {
+    --d-logo-height: 1.5em;
+    display: flex;
+    min-width: 0;
+
+    img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: var(--d-logo-height);
+      object-fit: contain;
+      object-position: left center;
+    }
+  }
+
+  // The buttons after the name: all one size, whatever their icon.
+  &__ai,
+  &__dms,
+  &__create {
+    flex-shrink: 0;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    margin: -0.25em 0 -0.25em 0.25em;
+    padding: 0;
+  }
+
+  // The first of them pushes them all to the right, the name staying left.
+  &__name + .btn {
+    margin-left: auto;
+  }
+
+  &__ai,
+  &__dms {
+    position: relative;
+
+    &.--active {
+      background: var(--primary-low);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  // Over the button's corner, so it doesn't move or resize anything.
+  &__review-badge {
+    position: absolute;
+    top: -0.35em;
+    right: -0.5em;
+    min-width: 1.4em;
+    padding: 0 0.35em;
+    box-sizing: border-box;
+    border-radius: 1em;
+    background: var(--danger);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  &__dms-badge {
+    position: absolute;
+    top: -0.25em;
+    right: -0.25em;
+    min-width: 1.4em;
+    padding: 0 0.35em;
+    box-sizing: border-box;
+    border-radius: 1em;
+    background: var(--danger);
+    color: var(--secondary);
+    font-size: var(--font-down-3);
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+  }
+}
+
+.concord-action-menu {
+  // The same as the user menu's icons.
+  --d-button-transparent-icon-color: var(--primary-500);
+
+  .btn .d-icon {
+    font-size: var(--font-down-1);
+  }
+
+  // Clicks land on the button, so a submenu lines up with the whole row
+  // rather than the label inside it.
+  .btn > * {
+    pointer-events: none;
+  }
+
+  &__badge {
+    margin-left: auto;
+    padding-left: 1em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .btn.--danger {
+    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  // An icon-sized gap, so items without one line up with those beside them in
+  // the dropdown and the phone sheet alike.
+  .btn.--no-icon::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1.5em;
+  }
+}
+
+// Chat is always full page; the button to shrink it into the drawer goes.
+.c-navbar__open-drawer-button {
+  display: none;
+}
+
+// The channel header row replaces core's header contents at every width, rendered
+// inside core's header so everything sized from it keeps working.
+body.concord-header .d-header > .wrap {
+  display: none;
+}
+
+.concord-channel-header {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid var(--primary-low);
+}
+
+// Chat's message search, under the header row: a search icon over the
+// messages' avatars and the typed text in line with theirs. Chat's messages
+// are inset 1rem, with avatars 28px wide in a --message-left-width column.
+.chat-channel__filter-bar {
+  --concord-filter-inset: 0.5rem;
+  padding-left: var(--concord-filter-inset);
+
+  .filter-input-container {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: calc(1rem + 14px - var(--concord-filter-inset) - 1px - 0.5em);
+      width: 1em;
+      height: 1em;
+      background: var(--primary-medium);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+      pointer-events: none;
+    }
+
+    // Opened from the header row's search button, chat focuses this before
+    // the input's own focus tracking starts, so it never gets its focus ring.
+    &:focus-within {
+      border-color: var(--d-input-focused-color);
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
+    }
+  }
+
+  .filter-input {
+    padding-left: calc(
+      1rem + var(--message-left-width) - var(--concord-filter-inset) - 1px
+    );
+  }
+}
+
+// A channel with a backing category is deleted from its menu in the channel
+// list, which takes the category too; chat's own delete would leave it behind.
+body.concord-backed-channel
+  .c-channel-settings
+  :is(.chat-form__row, .c-channel-settings__danger-action):has(.delete-btn) {
+  display: none;
+}
+
+// Chat draws a line down its right edge, which beside the member list's own
+// reads as a doubled border; the member list (or the window) marks the edge.
+.has-full-page-chat .full-page-chat {
+  border-right: 0;
+}
+
+// Chat's own channel bar; the row above covers it. Thread and pin panes keep
+// theirs.
+.c-routes.--channel {
+  // Chat sizes the channel to the window minus this bar's height.
+  --chat-header-offset: 0px;
+
+  > .c-navbar-container {
+    display: none;
+  }
+}
+
+// Below md, core opens the sidebar as a slide-in panel from inside its
+// header, so the header's contents stay but only that panel (and the cloak
+// behind it) shows. Both are fixed, so they escape the collapsed wrapper.
+@include viewport.until(md) {
+  body.concord-header .d-header > .wrap {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+
+    .contents > :not(.panel),
+    .panel
+      > :not(
+        .hamburger-dropdown-wrapper,
+        .user-menu-dropdown-wrapper,
+        .header-cloak
+      ) {
+      display: none;
+    }
+  }
+
+  .concord-channel-header {
+    > .concord-server-header,
+    .concord-channel-header__description {
+      display: none;
+    }
+  }
+
+  // The server name (and its DM and create buttons) stays at the top while
+  // the channels scroll under it.
+  .sidebar-hamburger-dropdown .concord-server-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--d-sidebar-background);
+  }
+
+  // The slide-in panel's own footer, like the sidebar's. The user panel's
+  // job is done by the avatar in the header row, except for signing in.
+  .sidebar-hamburger-dropdown {
+    .sidebar-footer-wrapper,
+    .concord-user-panel:has(.concord-user-panel__me) {
+      display: none;
+    }
+  }
+
+  // Core lays the slide-in panel's links in two columns from sm up; channels
+  // stay one per row.
+  .hamburger-panel
+    .sidebar-section-wrapper.sidebar-section[data-section-name^="concord-"]
+    .sidebar-section-content {
+    display: block;
+  }
+}
+
+.concord-channel-header__menu,
+.concord-channel-header__user,
+.concord-channel-header__more {
+  @include viewport.from(md) {
+    display: none;
+  }
+}
+
+.concord-channel-header__actions .--collapsible {
+  @include viewport.until(md) {
+    display: none;
+  }
+}
+
+.concord-channel-header__user {
+  --concord-user-padding: 0.25em;
+  position: relative;
+  padding: 0 var(--concord-user-padding);
+
+  .avatar {
+    width: 1.75em;
+    height: 1.75em;
+  }
+}
+
+// Core only places the status emoji on the avatar in its own header.
+.concord-channel-header__user,
+.concord-user-panel__avatar {
+  .user-status-background {
+    position: absolute;
+    right: calc(var(--concord-user-padding, 0px) - 3px);
+    bottom: -1px;
+  }
+}
+
+@include viewport.from(md) {
+  // Fill the window. Core works out the page width and the
+  // composer's position from this, so it's set rather than removed.
+  :root {
+    --d-max-width: calc(100vw - var(--d-sidebar-width));
+  }
+
+  // Flush to the left edge, so the sidebar lines up with the server name
+  // above it and the page starts where the header row's channel name does.
+  body.has-sidebar-page #main-outlet-wrapper {
+    --d-main-content-gap: 1em;
+    padding-left: 0;
+  }
+
+  .concord-channel-header > .concord-server-header {
+    width: var(--d-sidebar-width);
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border-bottom: none;
+    border-right: 1px solid var(--d-sidebar-border-color);
+  }
+
+  // The copy at the top of the sidebar is for narrow screens.
+  .sidebar-wrapper .concord-server-header {
+    display: none;
+  }
+}
+
+.concord-channel-header__channel {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+  padding-inline: 1em;
+}
+
+.concord-channel-header__icon {
+  flex-shrink: 0;
+  color: var(--primary-medium);
+}
+
+.concord-channel-header__back {
+  display: flex;
+  margin: -0.35em;
+  padding: 0.35em;
+  border-radius: var(--d-border-radius);
+
+  &:hover {
+    background: var(--primary-very-low);
+    color: var(--primary);
+  }
+}
+
+// Links in the row read as the row's text until hovered.
+.concord-channel-header__name a,
+.concord-channel-header__description a {
+  color: inherit;
+
+  &:hover {
+    color: var(--tertiary);
+  }
+}
+
+// A long name (a topic title, say) is cut off rather than pushing the actions
+// off the row, but only once there's no description left to cut.
+.concord-channel-header__name {
+  flex: 0 1 auto;
+  min-width: 3em;
+  overflow: hidden;
+  margin: 0;
+  font-size: var(--font-0);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Takes only the room the name leaves.
+.concord-channel-header__description {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  padding-left: 0.75em;
+  border-left: 1px solid var(--primary-low);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.concord-channel-header__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin-left: auto;
+}
+
+// Core styles its language switcher only among its own header icons, so the
+// look is repeated here: the language code and a small caret.
+.concord-channel-header__language {
+  display: flex;
+  align-items: center;
+
+  .language-switcher-trigger {
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--primary-low-mid);
+
+    .d-icon {
+      width: 1em;
+      font-size: var(--font-down-2);
+    }
+  }
+
+  .language-switcher__locale {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+}
+
+// Core's header search panel, in a popover rather than hanging off the header.
+.concord-search-panel.menu-panel {
+  position: static;
+
+  // Core's header search width; the menu around it allows up to 600px.
+  width: min(550px, calc(100vw - 2em));
+  max-height: 70vh;
+  border: none;
+  box-shadow: none;
+}
+
+.concord-user-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding: 0.5em;
+  border-top: 1px solid var(--d-sidebar-border-color);
+  background: var(--d-sidebar-background);
+
+  &__me {
+    // Plain text colours, rather than a link's, even while its menu has focus.
+    --d-button-transparent-text-color--hover: var(--primary);
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 0;
+    padding: 0.25em;
+    border-radius: var(--d-border-radius);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__avatar {
+    position: relative;
+
+    .avatar {
+      width: 2em;
+      height: 2em;
+    }
+  }
+
+  &__names {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+  }
+
+  &__name {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // The bell carries the unread badge, so the avatar doesn't.
+  &__avatar .badge-notification {
+    display: none;
+  }
+
+  &__notifications {
+    position: relative;
+
+    .badge-notification {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 0.6em;
+      padding: 0.1em 0.35em;
+      background: var(--tertiary);
+      color: var(--secondary);
+      font-size: var(--font-down-3);
+    }
+  }
+
+  &__subtitle {
+    overflow: hidden;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Core's footer moves out of the way of the user panel; its keyboard
+// shortcut and colour scheme buttons are reachable elsewhere.
+.sidebar-wrapper .sidebar-footer-wrapper {
+  display: none;
+}
+
+// The user menu normally hangs off the header, so it's absolutely placed.
+// The user panel sits in the fixed sidebar, so its menus are placed against
+// the viewport. Fixed from the first frame, too: core's user menu focuses its
+// active tab as soon as it renders, before float-kit has placed it, and a menu
+// still at the top of the document would scroll the page up to it.
+.fk-d-menu[data-identifier="concord-user-menu"],
+.fk-d-menu[data-identifier="concord-profile-menu"] {
+  position: fixed;
+}
+
+.concord-user-menu .user-menu.revamped,
+.concord-profile-menu .user-menu.revamped {
+  position: static;
+  border: none;
+  box-shadow: none;
+}
+
+.concord-user-menu .user-menu.revamped {
+  height: min(32em, 70vh);
+
+  // The user's name in the user panel opens the profile tab.
+  .bottom-tabs {
+    display: none;
+  }
+
+  // Tabs on the left, nearer the bell at the left of the screen.
+  .panel-body-contents {
+    flex-direction: row;
+  }
+
+  .quick-access-panel {
+    border-right: none;
+    border-left: var(--user-menu-border-width) solid var(--content-border-color);
+  }
+}
+
+.concord-profile-menu .user-menu.revamped {
+  height: auto;
+  max-height: 70vh;
+
+  .quick-access-panel {
+    border-right: none;
+  }
+}
+
+// Lets the list take its place in the main grid as if unwrapped.
+.concord-member-list-host {
+  display: contents;
+}
+
+// The member list: a third column on the main grid, or on small
+// screens a panel sliding in from the right over a shade, like core's menus.
+.concord-member-list {
+  display: none;
+
+  &.--slide-in {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: z("header") + 2;
+    width: min(18em, 85vw);
+    overflow-y: auto;
+    padding: 0.5em;
+    padding-top: calc(0.5em + env(safe-area-inset-top, 0px));
+    box-sizing: border-box;
+    background: var(--d-sidebar-background);
+    box-shadow: 0 0 30px -2px rgb(0, 0, 0, 0.5);
+
+    @include d-animation(concord-slide-in-right, 250ms, ease-out);
+  }
+}
+
+@keyframes concord-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.concord-member-list__cloak {
+  position: fixed;
+  inset: 0;
+  z-index: z("header") + 1;
+  background: rgb(0, 0, 0, 0.3);
+}
+
+@include viewport.from(md) {
+  body.has-sidebar-page.concord-member-list-open #main-outlet-wrapper {
+    grid-template-areas:
+      "sidebar content members"
+      "sidebar below-content members";
+    grid-template-columns:
+      var(--d-sidebar-width) minmax(0, 1fr)
+      var(--concord-member-list-width);
+  }
+
+  .concord-member-list {
+    display: block;
+    grid-area: members;
+    position: sticky;
+    top: var(--main-outlet-offset);
+    height: calc(var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset));
+    overflow-y: auto;
+    padding: 0.5em;
+    box-sizing: border-box;
+    border-left: 1px solid var(--d-sidebar-border-color);
+    background: var(--d-sidebar-background);
+  }
+}
+
+:root {
+  --concord-member-list-width: 15em;
+}
+
+.concord-member-list__heading {
+  display: flex;
+  gap: 0.35em;
+  align-items: center;
+  margin: 1em 0.5em 0.25em;
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.concord-member-list__member {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0.5em;
+  border-radius: var(--d-border-radius);
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+
+  &.--offline {
+    opacity: 0.45;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.concord-member-list__avatar {
+  position: relative;
+  display: flex;
+}
+
+.concord-member-list__presence {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 0.6em;
+  height: 0.6em;
+  border: 2px solid var(--d-sidebar-background);
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.concord-member-list__name {
+  overflow: hidden;
+  color: var(--primary-high);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.concord-channel-header__actions .btn.--active .d-icon {
+  color: var(--primary);
+}
+
+// A topic is centred in the space beside the channel list rather than
+// hugging its left edge: the posts at core's width, then the timeline. The
+// outlet keeps its full width and pads the topic in, so it still fills
+// narrower screens. The composer, fixed to the window, starts where the topic
+// does (measured by the TopicLayout component).
+body.concord-topic {
+  --concord-topic-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      (var(--topic-body-width-padding) * 2) + 1em + 10em
+  );
+
+  #main-outlet {
+    padding-inline: max(0px, calc((100% - var(--concord-topic-width)) / 2));
+  }
+
+  @include viewport.from(md) {
+    &.has-sidebar-page #reply-control:not(.fullscreen).hide-preview {
+      left: 0;
+      margin-left: var(--concord-topic-left, var(--d-sidebar-width));
+    }
+  }
+}
+
+// The channel list and header row already say where you are, a channel's
+// notifications are in its menu, and its settings are in the header row.
+// Topic, group and chat bells share the button's class, so only the list
+// controls' one goes.
+.list-controls {
+  .category-breadcrumb,
+  .notifications-tracking-trigger-btn,
+  .edit-category {
+    display: none;
+  }
+}
+
+// The header row titles the server menu's pages, so their own titles go.
+.badges > h1,
+.show-badge > h1,
+.group-info-names .group-info-details {
+  display: none;
+}
+
+.concord-channel-privacy-modal__shared {
+  margin-top: 0;
+}

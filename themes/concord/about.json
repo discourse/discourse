@@ -1,0 +1,14 @@
+{
+  "name": "Concord",
+  "component": false,
+  "authors": "Discourse",
+  "about_url": null,
+  "license_url": null,
+  "learn_more": null,
+  "theme_version": "0.0.1",
+  "minimum_discourse_version": "2026.10.0-latest",
+  "maximum_discourse_version": null,
+  "assets": {},
+  "screenshots": ["screenshots/light.webp", "screenshots/dark.webp"],
+  "modifiers": {}
+}

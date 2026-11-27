@@ -397,37 +397,16 @@ export default class DesignWizardService extends Service {
     this.start({ onComplete, resuming: true });
   }
 
-  async selectTheme(themeId) {
+  selectTheme(themeId) {
     if (themeId === this.themeId || this.applyingTheme) {
       return;
     }
 
     this.applyingTheme = true;
-    const previousThemeId = this.themeId;
     const theme = this.data.themes.find(
       (candidate) => candidate.id === themeId
     );
     this.themeId = themeId;
-
-    if (theme?.remote_url) {
-      try {
-        const result = await ajax("/admin/themes/import", {
-          type: "POST",
-          data: { remote: theme.remote_url },
-        });
-        if (!this.active) {
-          this.applyingTheme = false;
-          return;
-        }
-        themeId = result.theme.id;
-        this.themeId = themeId;
-      } catch (error) {
-        this.themeId = previousThemeId;
-        this.applyingTheme = false;
-        popupAjaxError(error);
-        return;
-      }
-    }
 
     const themeHomepage = theme?.default_homepage;
     let previewPath = "/";

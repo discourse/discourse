@@ -12,8 +12,8 @@ describe "Admin Customize Themes default grid" do
   it "shows an install themes CTA when only the default themes are installed" do
     config_area.visit
 
-    expect(config_area).to have_themes(["Foundation", "Horizon", "Install more themes"])
-    expect(config_area).to have_theme_cards(count: 3)
+    expect(config_area).to have_themes(["Foundation", "Concord", "Horizon", "Install more themes"])
+    expect(config_area).to have_theme_cards(count: 4)
     expect(config_area).to have_install_more_themes_card
 
     install_modal = config_area.click_install_more_themes

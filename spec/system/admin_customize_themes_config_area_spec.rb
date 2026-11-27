@@ -46,7 +46,9 @@ describe "Admin Customize Themes Config Area Page" do
 
     expect(config_area).to have_disabled_delete_button(horizon_theme)
 
-    expect(config_area).to have_themes(["First theme", "Horizon", "Foundation", "Second theme"])
+    expect(config_area).to have_themes(
+      ["First theme", "Concord", "Horizon", "Foundation", "Second theme"],
+    )
     config_area.delete_theme(theme_2)
     expect(config_area).to have_no_theme("Second theme")
   end

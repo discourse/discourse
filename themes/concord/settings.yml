@@ -1,0 +1,51 @@
+include_tags:
+  type: bool
+  default: false
+include_chat_channels:
+  type: bool
+  default: true
+show_logo:
+  type: bool
+  default: true
+home_link:
+  type: bool
+  default: true
+ai_conversations_link:
+  type: bool
+  default: true
+remember_last_channel:
+  type: bool
+  default: true
+chat_container_category:
+  type: string
+  default: "chat-channels"
+sidebar_sections:
+  type: objects
+  default: []
+  schema:
+    name: section
+    properties:
+      name:
+        type: string
+        required: true
+        max_length: 100
+      channels:
+        type: objects
+        schema:
+          name: channel
+          properties:
+            type:
+              type: enum
+              required: true
+              choices:
+                - text
+                - voice
+                - forum
+                - tag
+            id:
+              type: integer
+              required: true
+member_list_roles:
+  type: list
+  list_type: group
+  default: "1|2"

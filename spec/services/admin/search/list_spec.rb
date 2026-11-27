@@ -83,7 +83,7 @@ RSpec.describe Admin::Search::List do
           :min_topic_title_length,
         )
         expect(result.themes_and_components.map { |theme| theme[:name] }).to eq(
-          ["Alpha Theme", "Beta Component", "Foundation", "Horizon"],
+          ["Alpha Theme", "Beta Component", "Concord", "Foundation", "Horizon"],
         )
         expect(result.reports.length).to eq(Reports::ListQuery.call(guardian: guardian).length)
         expect(result.upcoming_changes.length).to be > 0

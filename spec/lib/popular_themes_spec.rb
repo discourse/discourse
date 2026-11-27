@@ -7,28 +7,14 @@ RSpec.describe PopularThemes do
         be_present.and(satisfy { |description| !description.include?("translation missing") }),
       )
     end
-
-    it "offers Concord, with its screenshot under the base path" do
-      set_subfolder "/forum"
-
-      concord = described_class.all.find { |entry| entry[:id] == "concord" }
-
-      expect(concord).to include(
-        name: "Concord",
-        remote_url: DesignWizard::Themes::CONCORD[:remote_url],
-        description: I18n.t(DesignWizard::Themes::CONCORD[:description_key]),
-        component: false,
-      )
-      expect(concord[:screenshot_url]).to start_with("/forum/images/")
-    end
   end
 
   describe ".themes" do
     it "leaves out components" do
-      expect(described_class.themes.map { |entry| entry[:id] }).to include(
-        "graceful",
-        "concord",
-      ).and exclude("brand_header")
+      expect(described_class.themes.map { |entry| entry[:id] }).to include("graceful").and exclude(
+              "brand_header",
+              "concord",
+            )
     end
   end
 
