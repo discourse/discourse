@@ -154,6 +154,111 @@ RSpec.describe UserAuthToken do
     expect(lookup_token).to eq(nil)
   end
 
+  describe ".lookup" do
+    it "loads the token, login ID, user, and options in one query" do
+      token = described_class.generate!(user_id: user.id)
+
+      queries =
+        track_sql_queries do
+          found = described_class.lookup(token.unhashed_auth_token)
+          expect(found).to eq(token)
+          expect(found.login_id).to eq(token.id)
+          expect(found.user).to eq(user)
+          expect(found.user.user_option.user_id).to eq(user.id)
+          expect(found.user.user_option.user).to equal(found.user)
+        end
+
+      expect(queries.size).to eq(1)
+    end
+
+    it "preserves the anonymous login ID and user from the lookup snapshot after another exchange" do
+      original = described_class.generate!(user_id: admin.id)
+      shadow_token = described_class.generate!(user_id: user.id)
+      session =
+        admin.with_credential_lock do
+          original.lock!
+          AnonymousModeSession.exchange!(original, shadow_token, master: admin)
+        end
+
+      found = nil
+      queries =
+        track_sql_queries do
+          found = described_class.lookup(shadow_token.unhashed_auth_token)
+          expect(found.user).to eq(user)
+          expect(found.login_id).to eq(session.id)
+        end
+      expect(queries.size).to eq(1)
+
+      successor = described_class.generate!(user_id: admin.id)
+      admin.with_credential_lock do
+        shadow_token.lock!
+        AnonymousModeSession.exchange!(shadow_token, successor, master: admin)
+      end
+
+      expect(session.reload.user_auth_token_id).to eq(successor.id)
+      expect(described_class.exists?(shadow_token.id)).to be(false)
+      expect(found.login_id).to eq(session.id)
+      expect(found.user).to eq(user)
+    end
+
+    it "raises when reading login_id without loading it in the snapshot" do
+      token = described_class.generate!(user_id: user.id)
+      expect { described_class.find(token.id).login_id }.to raise_error(
+        ActiveModel::MissingAttributeError,
+      )
+    end
+
+    it "loads the acting user and the impersonated user's own options separately" do
+      GlobalSetting.stubs(:allow_impersonation).returns(true)
+      UserOption.where(user_id: admin.id).update_all(theme_ids: [1])
+      UserOption.where(user_id: user.id).update_all(theme_ids: [2])
+      token = described_class.generate!(user_id: admin.id)
+      token.update!(impersonated_user_id: user.id, impersonation_expires_at: 15.minutes.from_now)
+
+      found = described_class.lookup(token.unhashed_auth_token)
+
+      expect(
+        track_sql_queries do
+          expect(found.acting_user).to eq(admin)
+          expect(found.acting_user.user_option.theme_ids).to eq([1])
+        end,
+      ).to be_empty
+
+      queries =
+        track_sql_queries do
+          puppet = found.user
+          expect(puppet).to eq(user)
+          expect(puppet.is_impersonating).to be(true)
+          expect(puppet.user_option.theme_ids).to eq([2])
+        end
+      expect(queries.size).to eq(1)
+    end
+
+    it "takes the lowest token ID when both a current and a previous hash match" do
+      first = described_class.generate!(user_id: user.id)
+      second = described_class.generate!(user_id: admin.id)
+      second.update!(prev_auth_token: described_class.hash_token(SecureRandom.hex(16)))
+      first.update!(prev_auth_token: second.auth_token)
+
+      expect(described_class.lookup(second.unhashed_auth_token)).to eq(first)
+    end
+
+    it "appends a sanitized SQL path comment with verbose logging while staying on one query" do
+      SiteSetting.verbose_auth_token_logging = true
+      token = described_class.generate!(user_id: user.id)
+
+      queries =
+        track_sql_queries do
+          found = described_class.lookup(token.unhashed_auth_token, path: "/latest */ /*\nfoo")
+          expect(found).to eq(token)
+          expect(found.user.user_option.user_id).to eq(user.id)
+        end
+
+      expect(queries.size).to eq(1)
+      expect(queries.first).to include("/* path:/latest * / / * foo */")
+    end
+  end
+
   it "can validate token was seen at lookup time" do
     user_token =
       UserAuthToken.generate!(
