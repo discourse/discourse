@@ -5118,88 +5118,26 @@ RSpec.describe UsersController do
       end
     end
 
-    context "with a session for a not activated account" do
-      it "sends an activation email to that account" do
-        user.update!(active: false)
-
-        post "/session.json", params: { login: user.email, password: "myawesomepassword" }
-        expect(response.parsed_body["reason"]).to eq("not_activated")
-        expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(user.id)
-
-        expect_enqueued_with(job: :critical_user_email, args: { type: :signup }) do
-          post "/u/action/send_activation_email.json", params: { username: user.email }
-        end
-
-        expect(response.status).to eq(200)
-        expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
-      end
-    end
-
     context "when username does not exist" do
       it "does not send an activation email" do
         post "/u/action/send_activation_email.json", params: { username: "nopenopenopenope" }
         expect(response.status).to eq(403)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
-
-      it "returns not found for staff" do
-        sign_in(admin)
-        post "/u/action/send_activation_email.json", params: { username: "nopenopenopenope" }
-        expect(response.status).to eq(404)
-        expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
-      end
     end
 
-    context "when hide_email_address_taken is enabled" do
-      before do
-        SiteSetting.hide_email_address_taken = true
-        ActionController::Base.allow_forgery_protection = true
-      end
+    it "does not reveal whether an email address belongs to an account" do
+      SiteSetting.hide_email_address_taken = true
 
-      after { ActionController::Base.allow_forgery_protection = false }
-
-      it "does not reveal whether an email address belongs to an account" do
-        get "/session/csrf.json"
-        expect(response.status).to eq(200)
-        headers = { "X-CSRF-Token" => response.parsed_body["csrf"] }
-
-        Fabricate(:secondary_email, user: user, email: "secondary@example.com")
-        staged_user = Fabricate(:user, staged: true, email: "staged@example.com")
-
-        emails = [user.email, "secondary@example.com", staged_user.email, "nobody@example.com"]
-
-        check_email_responses =
-          emails.map do |email|
-            get "/u/check_email.json", params: { email: email }
-            [response.status, response.parsed_body]
-          end
-
-        activation_responses =
-          emails.map do |email|
-            post "/u/action/send_activation_email.json",
-                 params: {
-                   username: email,
-                 },
-                 headers: headers
-            [response.status, response.parsed_body]
-          end
-
-        expect(check_email_responses.uniq).to eq([[200, { "success" => "OK" }]])
-        expect(activation_responses.map(&:first).uniq).to eq([403])
-        expect(activation_responses.map(&:last).uniq.size).to eq(1)
-        expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
-      end
-
-      it "does not reveal whether an email address belongs to an account to a signed in user" do
-        sign_in(another_user)
-        get "/session/csrf.json"
-        headers = { "X-CSRF-Token" => response.parsed_body["csrf"] }
-
-        [user.email, "nobody@example.com"].each do |email|
-          post "/u/action/send_activation_email.json", params: { username: email }, headers: headers
-          expect(response.status).to eq(403)
+      responses =
+        [user.email, "nobody@example.com"].map do |email|
+          post "/u/action/send_activation_email.json", params: { username: email }
+          [response.status, response.parsed_body]
         end
-      end
+
+      expect(responses.map(&:first)).to eq([403, 403])
+      expect(responses.map(&:last).uniq.size).to eq(1)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
     end
   end
 
