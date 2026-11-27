@@ -36,6 +36,12 @@
             ],
             "format": "date-time"
           },
+          "recurrence_anchor_starts_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "starts_at": {
             "type": [
               "string",

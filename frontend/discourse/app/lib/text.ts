@@ -12,7 +12,7 @@ import { helperContext } from "discourse/lib/helpers";
 import type { LinkMatcher } from "discourse/lib/link-matcher";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { i18n } from "discourse-i18n";
-import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
+import { serializeBBCodeAttr as serializeBBCodeAttrFromParser } from "discourse-markdown-it/features/bbcode-block";
 
 export { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
 
@@ -335,10 +335,6 @@ export function humanizeList<T>(
   }
 }
 
-// Characters that require quoting in BBCode attribute values
-// Based on the BBCode parser regex: [^\s\]]+ for unquoted values
-const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
-
 /**
  * Serializes a value for use in a BBCode attribute.
  *
@@ -361,26 +357,7 @@ const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
  * ```
  */
 export function serializeBBCodeAttr(value: unknown, name: string): string {
-  if (!value) {
-    return "";
-  }
-
-  const stringValue = String(value);
-  const needsQuotes = BBCODE_REQUIRES_QUOTES_PATTERN.test(stringValue);
-
-  if (!needsQuotes) {
-    return ` ${name}=${stringValue}`;
-  }
-
-  for (const pair of QUOTATION_MARKS) {
-    const [open, close] = pair;
-    if (!stringValue.includes(open) && !stringValue.includes(close)) {
-      return ` ${name}=${open}${stringValue}${close}`;
-    }
-  }
-
-  // Unreachable in practice - would require all 18 quote characters in value
-  return ` ${name}="${stringValue.replaceAll('"', "")}"`;
+  return serializeBBCodeAttrFromParser(value, name);
 }
 
 /**

@@ -14,6 +14,11 @@ module Jobs
             trigger_events(event_date)
             open_livestream_chat(event_date)
             finish(event_date)
+          rescue StandardError => e
+            Discourse.warn_exception(
+              e,
+              message: "Failed to process Discourse event date #{event_date.id}",
+            )
           end
       end
 
@@ -68,26 +73,73 @@ module Jobs
         event_date.event.with_lock do
           event_date.reload
           next if event_date.finished_at || !event_date.ended?
+
+          event = event_date.event
+          # Preserve the pre-rollover state; archival removes recurrence.
+          was_recurring = event.recurring?
+          create_successor_topic =
+            was_recurring && event.post.topic.archetype == Archetype.default &&
+              SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
+
+          if create_successor_topic &&
+               !DiscourseEvents::Events::Event::CreateSuccessorTopic.rollover_allowed?(event)
+            log_deferred_successor_rollover(event_date)
+            next
+          end
+
           event_date.update!(finished_at: Time.current)
 
-          recurring = event_date.event.recurring?
-          event_date.event.set_next_recurrent_event_date if recurring
+          if create_successor_topic
+            successor_result =
+              DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+                params: {
+                  event_date_id: event_date.id,
+                },
+              )
+
+            unless successor_result.success?
+              if (exception = successor_result["result.try.default"]&.exception)
+                raise exception
+              end
+
+              raise ActiveRecord::RecordNotSaved,
+                    "Failed successor rollover for event date #{event_date.id}: " \
+                      "#{successor_result.inspect_steps}"
+            end
+          elsif was_recurring
+            event.set_next_recurrent_event_date
+          end
 
           DB.after_commit do
-            # The event now points to its successor, so pass the finished occurrence explicitly.
-            DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
+            # Keep the captured Event's series metadata when rollover archives it as one-off.
+            DiscourseEvent.trigger(:discourse_post_event_event_ended, event, event_date)
             MessageBus.publish(
-              "/topic/#{event_date.event.post.topic_id}",
+              "/topic/#{event.post.topic_id}",
               { reload_topic: true, refresh_stream: true },
-              event_date.event.post.topic.secure_audience_publish_messages,
+              event.post.topic.secure_audience_publish_messages,
             )
 
-            if recurring
-              TopicTrackingState.publish_latest(event_date.event.post.topic)
-              event_date.event.set_topic_bump
+            if was_recurring && !create_successor_topic
+              TopicTrackingState.publish_latest(event.post.topic)
+              event.set_topic_bump
             end
           end
         end
+      end
+
+      def log_deferred_successor_rollover(event_date)
+        key = "discourse-events:successor-rollover-deferred:#{event_date.id}"
+        return unless Discourse.redis.set(key, "1", nx: true, ex: 1.day.to_i)
+
+        topic_id = event_date.event&.post&.topic_id
+
+        Rails.logger.warn(
+          [
+            "Discourse Events: successor rollover deferred for event date #{event_date.id},",
+            "topic #{topic_id || "unknown"}; check author moderation status, topic visibility,",
+            "and cross-user post edits",
+          ].join(" "),
+        )
       end
 
       def due_reminders(event_date)

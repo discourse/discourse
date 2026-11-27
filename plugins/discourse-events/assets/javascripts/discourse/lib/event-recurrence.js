@@ -4,10 +4,12 @@ import { eventDateInTimezone } from "./raw-event-helper.js";
 const ORDINALS = ["first", "second", "third", "fourth"];
 
 export function recurrenceRef(event) {
+  const anchor = event.recurrenceAnchorStartsAt || event.startsAt;
+
   if (event.allDay) {
-    return moment(event.startsAt, "YYYY-MM-DD");
+    return moment(anchor, "YYYY-MM-DD");
   }
-  return eventDateInTimezone(event.startsAt, event.timezone);
+  return eventDateInTimezone(anchor, event.timezone);
 }
 
 export function recurrenceContext(ref) {
