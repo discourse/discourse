@@ -230,6 +230,36 @@ export default class Revisions extends Component {
           {{trustHTML @bodyDiff}}
         </LinksRedirect>
       {{/if}}
+      {{#if @model.public_current_comparison}}
+        <section class="revision__public-current-comparison">
+          <p class="alert alert-info">
+            {{i18n
+              "post.revisions.public_current_comparison"
+              from=@model.public_current_comparison.from_version
+              to=@model.public_current_comparison.to_version
+            }}
+          </p>
+          {{#if @model.public_current_comparison.diff_error}}
+            <div class="alert alert-error">
+              {{i18n "post.revisions.diff_too_complex"}}
+            </div>
+          {{else}}
+            <LinksRedirect
+              class="row body-diff"
+              {{didInsert
+                @calculatePublicCurrentBodyDiff
+                @publicCurrentBodyDiffHTML
+              }}
+              {{didUpdate
+                @calculatePublicCurrentBodyDiff
+                @publicCurrentBodyDiffHTML
+              }}
+            >
+              {{trustHTML @publicCurrentBodyDiff}}
+            </LinksRedirect>
+          {{/if}}
+        </section>
+      {{/if}}
     </div>
   </template>
 }

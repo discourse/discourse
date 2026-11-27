@@ -32,7 +32,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :tags_changes,
              :category_id_changes,
              :can_edit,
-             :diff_error
+             :diff_error,
+             :public_current_comparison
 
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
@@ -261,7 +262,49 @@ class PostRevisionSerializer < ApplicationSerializer
     { previous: prev, current: cur }
   end
 
+  def public_current_comparison
+    return @public_current_comparison if defined?(@public_current_comparison)
+
+    baseline = public_current_baseline
+    return unless baseline
+
+    comparison = { from_version: baseline["revision"] - 1, to_version: post.version }
+    begin
+      cooked_diff = DiscourseDiff.new(baseline["cooked"], post.cooked)
+      raw_diff = DiscourseDiff.new(baseline["raw"], post.raw)
+      comparison[:body_changes] = {
+        inline: cooked_diff.inline_html,
+        side_by_side: cooked_diff.side_by_side_html,
+        side_by_side_markdown: raw_diff.side_by_side_markdown,
+      }
+    rescue ONPDiff::DiffLimitExceeded
+      comparison[:diff_error] = true
+    end
+    @public_current_comparison = comparison
+  end
+
+  def include_public_current_comparison?
+    public_current_baseline.present?
+  end
+
   protected
+
+  def public_current_baseline
+    return @public_current_baseline if defined?(@public_current_baseline)
+
+    @public_current_baseline = nil
+    return if scope.can_view_hidden_post_revisions? || post.hidden || post.deleted_at
+    return unless scope.can_view_edit_history?(post) && scope.can_see?(post)
+    return unless current_revision == last_revision && suppress_hidden_diffs?
+
+    # Entries store the state before their edit. Only the first hidden entry's
+    # prior state can be accessible; later visible entries do not restore access.
+    baseline = all_revisions.find { |revision| revision["hidden"] }
+    return unless baseline && baseline["raw"] && baseline["cooked"]
+    return unless scope.can_view_post_version?(post, baseline["revision"] - 1)
+
+    @public_current_baseline = baseline
+  end
 
   def post
     @post ||= object.post

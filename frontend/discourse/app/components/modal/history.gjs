@@ -55,6 +55,7 @@ export default class History extends Component {
   @tracked postRevision;
   @tracked viewMode = this.site.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
+  @tracked publicCurrentBodyDiff;
   @tracked initialLoad = true;
   @tracked error;
   @tracked includeUnlisted = false;
@@ -139,6 +140,12 @@ export default class History extends Component {
 
   get bodyDiffHTML() {
     return this.postRevision?.body_changes?.[this.viewMode];
+  }
+
+  get publicCurrentBodyDiffHTML() {
+    return this.postRevision?.public_current_comparison?.body_changes?.[
+      this.viewMode
+    ];
   }
 
   get diffHidden() {
@@ -258,18 +265,12 @@ export default class History extends Component {
 
   @action
   async calculateBodyDiff(_, [bodyDiff]) {
-    let html = bodyDiff;
-    if (this.viewMode !== "side_by_side_markdown") {
-      const opts = {
-        features: { editHistory: true, historyOneboxes: true },
-        allowListed: {
-          editHistory: { custom: (tag, attr) => attr === "class" },
-          historyOneboxes: ["header", "article", "div[style]"],
-        },
-      };
-      html = await sanitizeAsync(html, opts);
-    }
-    this.bodyDiff = html;
+    this.bodyDiff = await this.#sanitizeBodyDiff(bodyDiff);
+  }
+
+  @action
+  async calculatePublicCurrentBodyDiff(_, [bodyDiff]) {
+    this.publicCurrentBodyDiff = await this.#sanitizeBodyDiff(bodyDiff);
   }
 
   async refresh(postId, postVersion) {
@@ -432,6 +433,21 @@ export default class History extends Component {
     this.revert(this.args.model.post, this.postRevision?.current_revision);
   }
 
+  async #sanitizeBodyDiff(bodyDiff) {
+    let html = bodyDiff;
+    if (this.viewMode !== "side_by_side_markdown") {
+      const opts = {
+        features: { editHistory: true, historyOneboxes: true },
+        allowListed: {
+          editHistory: { custom: (tag, attr) => attr === "class" },
+          historyOneboxes: ["header", "article", "div[style]"],
+        },
+      };
+      html = await sanitizeAsync(html, opts);
+    }
+    return html;
+  }
+
   <template>
     <DModal
       class="history-modal --max
@@ -458,6 +474,7 @@ export default class History extends Component {
               @bodyDiff={{this.bodyDiff}}
               @bodyDiffHTML={{this.bodyDiffHTML}}
               @calculateBodyDiff={{this.calculateBodyDiff}}
+              @calculatePublicCurrentBodyDiff={{this.calculatePublicCurrentBodyDiff}}
               @currentCategory={{this.currentCategory}}
               @currentTagChanges={{this.currentTagChanges}}
               @diffHidden={{this.diffHidden}}
@@ -466,6 +483,8 @@ export default class History extends Component {
               @model={{this.postRevision}}
               @previousCategory={{this.previousCategory}}
               @previousTagChanges={{this.previousTagChanges}}
+              @publicCurrentBodyDiff={{this.publicCurrentBodyDiff}}
+              @publicCurrentBodyDiffHTML={{this.publicCurrentBodyDiffHTML}}
               @titleDiff={{this.titleDiff}}
               @userChanges={{this.user_changes}}
               @viewMode={{this.viewMode}}
