@@ -114,9 +114,7 @@ module Chat
     end
 
     def normalize(mentions)
-      mentions.reduce([]) do |memo, mention|
-        %w[@here @all].include?(mention.downcase) ? memo : (memo << mention[1..-1].downcase)
-      end
+      mentions.map { |mention| mention[1..].downcase }.uniq.excluding("here", "all")
     end
   end
 end

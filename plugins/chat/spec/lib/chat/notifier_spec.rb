@@ -401,6 +401,16 @@ describe Chat::Notifier do
         expect(to_notify[group.name]).to be_nil
       end
 
+      it "counts repeated mentions of a user once toward the 'max_mentions_per_chat_message' setting" do
+        SiteSetting.max_mentions_per_chat_message = 1
+
+        msg = build_cooked_msg("Hello @#{user_2.username} and @#{user_2.username}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+      end
+
       it "respects the max mentions setting and skips notifications when mixing users and groups" do
         SiteSetting.max_mentions_per_chat_message = 1
 
