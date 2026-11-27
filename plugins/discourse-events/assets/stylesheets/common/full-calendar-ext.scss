@@ -103,6 +103,20 @@
   }
 }
 
+.upcoming-events-agenda {
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    padding-block: 0.75rem;
+  }
+
+  .fc-header-toolbar > .fc-toolbar-chunk {
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+}
+
 #upcoming-events-calendar {
   height: 100%;
 

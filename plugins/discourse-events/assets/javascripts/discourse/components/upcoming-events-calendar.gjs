@@ -17,6 +17,7 @@ import {
 } from "../lib/personal-events-check.js";
 import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 import FullCalendar from "./full-calendar.gjs";
+import UpcomingEventsAgenda from "./upcoming-events-agenda.gjs";
 
 const eventViews = [
   {
@@ -56,6 +57,16 @@ export default class UpcomingEventsCalendar extends Component {
       this.currentUser.can_create_discourse_post_event &&
       this.currentUser.can_create_topic
     );
+  }
+
+  get isAgenda() {
+    return ["year", "listYear", "listNextYear"].includes(this.args.initialView);
+  }
+
+  get agendaInitialDate() {
+    return this.args.initialDate
+      ? moment(this.args.initialDate).format("YYYY-MM-DD")
+      : undefined;
   }
 
   get composerCategory() {
@@ -187,9 +198,12 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    const localDate = moment(info.view.currentStart)
-      .clone()
-      .tz(this.currentUser?.user_option?.timezone ?? moment.tz.guess());
+    const localDate =
+      info.view.type === "listYear"
+        ? moment.parseZone(info.startStr)
+        : moment(info.view.currentStart)
+            .clone()
+            .tz(this.currentUser?.user_option?.timezone ?? moment.tz.guess());
 
     this.router.replaceWith(
       this.router.currentRouteName,
@@ -249,18 +263,32 @@ export default class UpcomingEventsCalendar extends Component {
       </MobileTabBarViews>
     {{/if}}
     <div id="upcoming-events-calendar">
-      <FullCalendar
-        @centerHeaderToolbar={{this.centerHeaderToolbar}}
-        @customButtons={{this.customButtons}}
-        @initialDate={{@initialDate}}
-        @initialView={{@initialView}}
-        @leftHeaderToolbar={{this.leftHeaderToolbar}}
-        @onDateClick={{if this.canCreateEvent this.onDateClick}}
-        @onDatesChange={{this.onDatesChange}}
-        @onLoadEvents={{this.loadEvents}}
-        @refreshKey={{this.refreshKey}}
-        @rightHeaderToolbar={{this.rightHeaderToolbar}}
-      />
+      {{#if this.isAgenda}}
+        <UpcomingEventsAgenda
+          @categoryId={{@categoryId}}
+          @centerHeaderToolbar={{this.centerHeaderToolbar}}
+          @customButtons={{this.customButtons}}
+          @includeSubcategories={{@includeSubcategories}}
+          @initialDate={{this.agendaInitialDate}}
+          @leftHeaderToolbar={{this.leftHeaderToolbar}}
+          @mine={{@mine}}
+          @onDatesChange={{this.onDatesChange}}
+          @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        />
+      {{else}}
+        <FullCalendar
+          @centerHeaderToolbar={{this.centerHeaderToolbar}}
+          @customButtons={{this.customButtons}}
+          @initialDate={{@initialDate}}
+          @initialView={{@initialView}}
+          @leftHeaderToolbar={{this.leftHeaderToolbar}}
+          @onDateClick={{if this.canCreateEvent this.onDateClick}}
+          @onDatesChange={{this.onDatesChange}}
+          @onLoadEvents={{this.loadEvents}}
+          @refreshKey={{this.refreshKey}}
+          @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        />
+      {{/if}}
     </div>
   </template>
 }

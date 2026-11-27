@@ -220,6 +220,10 @@ a.holiday {
         0px
       ) - var(--below-topic-margin)
   );
+
+  &.--agenda {
+    height: auto;
+  }
 }
 
 .discourse-calendar-wrap {

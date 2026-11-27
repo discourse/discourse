@@ -2,7 +2,7 @@
 
 module DiscourseEvents
   class EventsController < BaseController
-    requires_login except: %i[index show]
+    requires_login except: %i[index show agenda]
     skip_before_action :check_xhr, only: [:index], if: :ics_request?
 
     def index
@@ -106,6 +106,38 @@ module DiscourseEvents
           render json: { events: serialized_events }
         end
       end
+    end
+
+    def agenda
+      rate_limit_key = current_user ? "events-agenda" : "events-agenda-#{request.remote_ip}"
+      RateLimiter.new(current_user, rate_limit_key, 30, 1.minute).performed!
+
+      result =
+        Events::Agenda.search(
+          current_user,
+          filtered_events_params.to_h.merge(
+            params.permit(:anchor, :direction, :cursor_time, :cursor_id, :timezone).to_h,
+          ),
+        )
+      events =
+        result[:occurrences]
+          .group_by { |occurrence| occurrence[:event] }
+          .map do |event, occurrences|
+            Events::BasicEventSerializer.new(
+              event,
+              scope: guardian,
+              root: false,
+              include_occurrences: true,
+              occurrences:
+                occurrences.map do |occurrence|
+                  {
+                    starts_at: format_time(event, occurrence[:starts_at]),
+                    ends_at: format_time(event, occurrence[:ends_at]),
+                  }
+                end,
+            ).as_json
+          end
+      render json: { events:, **result.slice(:next_cursor, :has_earlier, :has_later) }
     end
 
     def invite
