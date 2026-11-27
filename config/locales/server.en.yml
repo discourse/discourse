@@ -5642,7 +5642,6 @@ en:
 
         This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
-    page_title: "Access Denied"
     title: "Oops! That page is private."
 
   site_setting_missing: "`%{name}` site setting has to be set."
