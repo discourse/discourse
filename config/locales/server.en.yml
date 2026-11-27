@@ -3183,6 +3183,8 @@ en:
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
+    show_external_post_link_indicators: "Mark links in posts that lead to another site."
+    external_post_link_internal_hosts: "Treat these exact hostnames as internal when marking links in posts."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_enable_smart_lists: "Enable smart lists when typing in the composer by default."
     default_other_enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode by default."

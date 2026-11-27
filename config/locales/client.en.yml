@@ -5192,6 +5192,7 @@ en:
         actions: "Bulk actions"
 
     post:
+      external_link_indicator: "External link"
       accessible_heading: "post by %{username} %{date}"
       accessible_reply_heading: "post by %{username} %{date}, replying to post #%{replyTo}"
       ai_generated: "AI"
