@@ -453,7 +453,9 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def valid_flag_applies_to_types
-    Flag.valid_applies_to_types
+    types = Flag.valid_applies_to_types
+    types.delete("UserProfile") unless UpcomingChanges.enabled?(:flaggable_user_profiles)
+    types
   end
 
   def include_valid_flag_applies_to_types?

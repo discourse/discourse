@@ -160,7 +160,13 @@ export default class ReviewIndexController extends Controller {
   }
 
   @action
-  updateStatuses(updates) {
+  updateStatuses(updates, removedIds) {
+    const hiddenIds = removedIds?.filter(
+      (id) => this.status === "pending" || !updates[id]
+    );
+    if (hiddenIds?.length) {
+      this.remove(hiddenIds);
+    }
     this.reviewables.content.forEach((reviewable) => {
       const update = updates[reviewable.id];
 

@@ -2,6 +2,8 @@
 
 # Responsible for destroying a User record
 class UserDestroyer
+  attr_reader :removed_reviewable_ids
+
   class PostsExistError < RuntimeError
   end
 
@@ -29,9 +31,7 @@ class UserDestroyer
       UserSecurityKey.where(user_id: user.id).delete_all
       Bookmark.where(user_id: user.id).delete_all
       Draft.where(user_id: user.id).delete_all
-      reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
-      ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-      Reviewable.where(id: reviewable_ids).delete_all
+      @removed_reviewable_ids = Reviewable.delete_all_created_solely_by(user)
       ReviewableClaimedTopic.where(user_id: user.id).delete_all
 
       category_topic_ids = Category.where.not(topic_id: nil).pluck(:topic_id)
@@ -171,16 +171,12 @@ class UserDestroyer
   end
 
   def resolve_reviewables_targeting(user)
+    # The profile's destroy callback closes its report and clears the captured profile together.
     Reviewable
       .pending
       .where(target_created_by: user)
-      .find_each do |reviewable|
-        reviewable.reviewable_notes.create!(
-          user: Discourse.system_user,
-          content: I18n.t("reviewables.target_user_deleted"),
-        )
-        reviewable.transition_to(:ignored, Discourse.system_user)
-      end
+      .where.not(type: ReviewableFlaggedProfile.sti_name)
+      .find_each { |reviewable| reviewable.ignore_with_note("reviewables.target_user_deleted") }
   end
 
   def delete_posts(user, category_topic_ids, opts)

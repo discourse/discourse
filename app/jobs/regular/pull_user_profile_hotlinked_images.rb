@@ -9,6 +9,7 @@ module Jobs
       user_profile = UserProfile.find_by(user_id: @user_id)
       return if user_profile.blank? || user_profile.bio_cooked.nil?
 
+      original_bio = user_profile.bio_raw
       large_image_urls = []
       broken_image_urls = []
       downloaded_images = {}
@@ -45,14 +46,21 @@ module Jobs
         )
       end
 
-      user_profile.bio_raw =
-        InlineUploads.replace_hotlinked_image_urls(raw: user_profile.bio_raw) do |match_src|
+      updated_bio =
+        InlineUploads.replace_hotlinked_image_urls(raw: original_bio) do |match_src|
           normalized_match_src = PostHotlinkedMedia.normalize_src(match_src)
           downloaded_images[normalized_match_src]
         end
 
-      user_profile.skip_pull_hotlinked_image = true
-      user_profile.save!
+      return if updated_bio == original_bio
+
+      UserProfile.transaction do
+        profile = UserProfile.lock.find_by(user_id: @user_id, bio_raw: original_bio)
+        next unless profile
+
+        profile.skip_pull_hotlinked_image = true
+        profile.update!(bio_raw: updated_bio)
+      end
     end
   end
 end

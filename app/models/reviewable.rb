@@ -101,7 +101,13 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.types
-    [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
+    [
+      ReviewableFlaggedPost,
+      ReviewableFlaggedProfile,
+      ReviewableQueuedPost,
+      ReviewableUser,
+      ReviewablePost,
+    ]
   end
 
   def self.scrubbable_types
@@ -172,6 +178,10 @@ class Reviewable < ActiveRecord::Base
         topic_id ? "js.review.topics.deleted" : "js.review.title",
         locale: user.effective_locale,
       )
+  end
+
+  def scores_for_decision
+    reviewable_scores
   end
 
   def created_new!
@@ -515,6 +525,14 @@ class Reviewable < ActiveRecord::Base
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
+  def ignore_with_note(note_key)
+    reviewable_notes.create!(
+      user: Discourse.system_user,
+      content: I18n.t(note_key, locale: SiteSetting.default_locale),
+    )
+    transition_to(:ignored, Discourse.system_user)
+  end
+
   def transition_to(status_symbol, performed_by)
     # Claims are held per topic, so one left behind would claim the topic's next reviewable.
     # Released while still pending so the unclaim is recorded on this reviewable's timeline.
@@ -644,9 +662,51 @@ class Reviewable < ActiveRecord::Base
   private_class_method :exclude_private_messages_hidden_from
 
   def self.created_solely_by(user)
-    where(created_by_id: user.id).where.not(
-      id: ReviewableScore.pending.where.not(user_id: user.id).select(:reviewable_id),
+    reporter_deletion_candidates(user).where(
+      <<~SQL,
+        NOT EXISTS (
+          SELECT 1 FROM reviewable_scores AS score
+          WHERE score.reviewable_id = reviewables.id AND score.user_id <> :user_id
+            AND (score.status = :pending_score OR reviewables.type = :profile_type)
+        ) AND NOT EXISTS (
+          SELECT 1 FROM dsa_statement_of_records AS statement
+          WHERE statement.reviewable_id = reviewables.id AND statement.status = :pending_statement
+        )
+      SQL
+      user_id: user.id,
+      pending_score: ReviewableScore.statuses[:pending],
+      profile_type: ReviewableFlaggedProfile.sti_name,
+      pending_statement: DsaStatementOfRecord.statuses[:pending],
     )
+  end
+
+  def self.reporter_deletion_candidates(user)
+    flagged_profiles =
+      ReviewableFlaggedProfile.pending.where(
+        id: user.reviewable_scores.pending.select(:reviewable_id),
+      )
+    where(created_by_id: user.id).or(where(id: flagged_profiles.select(:id)))
+  end
+  private_class_method :reporter_deletion_candidates
+
+  def self.delete_all_created_solely_by(user)
+    transaction do
+      # Recheck the remaining reporters and statements after concurrent flags or decisions finish.
+      locked_ids = reporter_deletion_candidates(user).order(:id).lock.pluck(:id)
+      ids = created_solely_by(user).where(id: locked_ids).pluck(:id)
+      UploadReference.where(target_type: polymorphic_name, target_id: ids).delete_all
+      ReviewableNote.where(reviewable_id: ids).delete_all
+      where(id: ids).delete_all
+
+      ReviewableFlaggedProfile
+        .pending
+        .where(id: locked_ids - ids)
+        .find_each do |report|
+          report.remove_pending_flags_by!(user)
+          ids << report.id if report.ignored?
+        end
+      ids
+    end
   end
 
   def self.pending_count(user)
@@ -866,6 +926,7 @@ class Reviewable < ActiveRecord::Base
     end
 
     data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
+    data[:reviewable_id] = id
 
     MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
   end
@@ -1273,11 +1334,11 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def update_flag_stats(status:, user_ids:)
+  def update_flag_stats(status:, user_ids:, flagged_user_id: post&.user_id)
     return if %i[agreed disagreed ignored].exclude?(status)
 
     # Don't count self-flags
-    user_ids -= [post&.user_id]
+    user_ids -= [flagged_user_id]
     return if user_ids.blank?
 
     result = DB.query(<<~SQL, user_ids: user_ids)

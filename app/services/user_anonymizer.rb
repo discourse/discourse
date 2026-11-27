@@ -54,6 +54,7 @@ class UserAnonymizer
       options.save!
 
       if profile = @user.user_profile
+        profile.lock!
         profile.update!(
           location: nil,
           website: nil,
@@ -62,6 +63,9 @@ class UserAnonymizer
           profile_background_upload: nil,
           card_background_upload: nil,
         )
+        # A new report can snapshot public fields before the background anonymization job runs.
+        @user.clear_public_profile_fields!
+        profile.clear_flagged_profile_report!("reviewables.target_user_anonymized")
       end
 
       @user.clear_status!

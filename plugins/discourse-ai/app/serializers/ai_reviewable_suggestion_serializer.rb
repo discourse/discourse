@@ -43,7 +43,7 @@ class AiReviewableSuggestionSerializer < ApplicationSerializer
 
   def reasons
     object
-      .reviewable_scores
+      .scores_for_decision
       .map(&:reviewable_score_type)
       .uniq
       .filter_map { |type| ReviewableScore.type_title(ReviewableScore.types.key(type)) }

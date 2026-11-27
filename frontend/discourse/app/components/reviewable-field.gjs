@@ -3,7 +3,9 @@ const ReviewableField = <template>
     {{#if @value}}
       <div class={{@classes}}>
         <div class="name">{{@name}}</div>
-        <div class="value">{{@value}}</div>
+        <div class="value">
+          {{#if (has-block)}}{{yield @value}}{{else}}{{@value}}{{/if}}
+        </div>
       </div>
     {{/if}}
   </div>

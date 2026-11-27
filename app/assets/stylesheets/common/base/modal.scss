@@ -166,6 +166,10 @@ html:not(.keyboard-visible).mobile-device {
       display: none;
     }
 
+    > p:first-child {
+      margin-block-start: 0;
+    }
+
     input:where(:not(.form-kit__control-input)) {
       width: auto;
 

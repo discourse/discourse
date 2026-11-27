@@ -4,6 +4,14 @@ module Jobs
   class SuggestReviewableAction < ::Jobs::Base
     FEATURE_NAME = "reviewable_action"
 
+    def self.enqueue_for(reviewable)
+      if reviewable.pending? && SiteSetting.discourse_ai_enabled &&
+           SiteSetting.ai_reviewable_action_suggestions_enabled &&
+           SiteSetting.ai_reviewable_action_decision_model.present?
+        Jobs.enqueue(self, reviewable_id: reviewable.id)
+      end
+    end
+
     def execute(args)
       unless SiteSetting.discourse_ai_enabled &&
                SiteSetting.ai_reviewable_action_suggestions_enabled
@@ -51,8 +59,9 @@ module Jobs
     private
 
     def record_suggestion(reviewable, model:, action_name:, confidence:, user: nil)
+      version = reviewable.version
       reviewable.with_lock do
-        next unless reviewable.pending?
+        next unless reviewable.pending? && reviewable.version == version
         next if action_name.present? && !available_actions(reviewable, user).key?(action_name)
 
         AiReviewableSuggestion.find_or_create_by!(reviewable_id: reviewable.id) do |suggestion|
@@ -142,7 +151,7 @@ module Jobs
         post: post&.raw&.truncate(8000),
         item: payload.transform_values { |value| value.to_s.truncate(8000) },
         flags:
-          reviewable.reviewable_scores.map do |score|
+          reviewable.scores_for_decision.map do |score|
             {
               type: ReviewableScore.types.key(score.reviewable_score_type),
               reason: score.reason,

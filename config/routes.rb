@@ -1014,6 +1014,10 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      post "#{root_path}/:username/profile-flags" => "user_profile_flags#create",
+           :constraints => {
+             username: RouteFormat.username,
+           }
       put "#{root_path}/:username/notification_level" => "users#notification_level",
           :constraints => {
             username: RouteFormat.username,

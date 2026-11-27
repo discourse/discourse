@@ -3291,6 +3291,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
+    flaggable_user_profiles: "Let members flag profiles for moderator review and visitors report illegal content on public profiles when anonymous reporting is enabled."
     review_queue_consistent_answers: 'Use “Approve” and “Deny” for signups, queued posts, and reviews of published posts. Flags and review history show whether a problem was found.'
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
@@ -6440,6 +6441,8 @@ en:
     post_deleted_by_author_after_penalty: >-
       Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     target_user_deleted: "Automatically ignored because the user account was deleted."
+    target_user_anonymized: "Automatically ignored because the user account was anonymized."
+    last_reporter_deleted: "Automatically ignored because the last member with a pending profile flag was deleted."
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6489,6 +6492,20 @@ en:
         title: "No"
       agree:
         title: "Yes"
+      agree_profile_flag:
+        title: "Keep profile"
+        description: "Agree with the flag and keep the profile as it is."
+        complete: "Profile kept unchanged."
+      remove_profile_content:
+        title: "Remove profile content"
+        description: "Agree with the flag and remove the current bio, website, avatar, profile header, user card background, and public profile fields."
+        confirm: "Clear the current bio, website, profile header, user card background, and public profile fields, and reset the avatar to the default? This includes edits made after the report. The member keeps their name, title, and location."
+        complete: "Profile content cleared."
+        note: "Removed public profile content."
+      dismiss_profile_flag:
+        title: "Dismiss flag"
+        description: "Disagree with the flag and dismiss the report."
+        complete: "Profile flag dismissed."
       agree_and_keep:
         title: "Keep post"
         description: "Agree with flag but keep this post unchanged."

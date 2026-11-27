@@ -1066,6 +1066,19 @@ RSpec.describe User do
       )
     end
 
+    it "releases snapshot uploads when deleting the user's profile reports in a batch" do
+      profile = Fabricate(:user).user_profile
+      header = Fabricate(:upload)
+      profile.update!(profile_background_upload: header)
+      report = Fabricate(:reviewable_flagged_profile, created_by: user, target: profile)
+      reference = report.upload_references.find_by!(upload: header)
+
+      user.delete_posts_in_batches(guardian, 1)
+
+      expect(Reviewable.exists?(report.id)).to be(false)
+      expect(UploadReference.exists?(reference.id)).to be(false)
+    end
+
     it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 

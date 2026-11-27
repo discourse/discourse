@@ -17,6 +17,9 @@ class WebHookUserSerializer < UserSerializer
     can_edit_name
     can_send_private_messages
     can_send_private_message_to_user
+    available_profile_flag_ids
+    can_report_profile_by_email
+    can_submit_profile_dsa_notice
     can_ignore_user
     can_mute_user
     ignored

@@ -808,6 +808,7 @@ RSpec.describe Reviewable, type: :model do
           created_post_id: perform_result.created_post.id,
           created_post_topic_id: perform_result.created_post_topic.id,
           remove_reviewable_ids: [reviewable.id],
+          reviewable_id: reviewable.id,
           version: 1,
           reviewable_count: 0,
           unseen_reviewable_count: 0,
@@ -835,6 +836,7 @@ RSpec.describe Reviewable, type: :model do
         {
           success: true,
           remove_reviewable_ids: [reviewable.id],
+          reviewable_id: reviewable.id,
           version: 1,
           reviewable_count: 0,
           unseen_reviewable_count: 0,
@@ -947,6 +949,17 @@ RSpec.describe Reviewable, type: :model do
       self_flag = PostActionCreator.spam(user, user_post).reviewable
       self_flag.perform(Discourse.system_user, :agree_and_keep)
       expect(user.user_stat.reload.flags_agreed).to eq(0)
+    end
+
+    it "counts a flag when the deleted post no longer identifies its author" do
+      user_post = Fabricate(:post, user: user)
+      flag = PostActionCreator.spam(user, user_post).reviewable
+      user_post.trash!
+      user_post.update_column(:user_id, nil)
+
+      described_class.find(flag.id).perform(Discourse.system_user, :ignore_and_do_nothing)
+
+      expect(user.user_stat.reload.flags_ignored).to eq(1)
     end
   end
 
@@ -1080,7 +1093,13 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "custom filters" do
-    after { Reviewable.clear_custom_filters! }
+    around do |example|
+      registered_filters = Reviewable.custom_filters.dup
+      example.run
+    ensure
+      Reviewable.clear_custom_filters!
+      Reviewable.custom_filters.concat(registered_filters)
+    end
 
     it "correctly add a new filter" do
       custom_filter = [:assigned_to, Proc.new { |results, value| results }]

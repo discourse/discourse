@@ -75,6 +75,7 @@ module ReviewableActionBuilder
       if confirm
         action.confirm_message = "#{prefix}.confirm"
         action.confirm_title = "#{prefix}.confirm_title"
+        action.confirm_destructive = true if confirm == :destructive
       end
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
@@ -124,16 +125,14 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    delete_user(target_user, delete_opts, performed_by, &)
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    delete_user(target_user, delete_options, performed_by, &)
   end
 
   def perform_delete_post(performed_by, _args)
@@ -172,6 +171,35 @@ module ReviewableActionBuilder
 
   private
 
+  def account_penalty_statement_attributes(action_id:, automated_detection:, automated_decision:)
+    return if %i[suspend_user silence_user].exclude?(action_id)
+
+    user = target_user.reload
+    decision =
+      if action_id == :suspend_user
+        {
+          decision_facts: "The reviewed account was suspended.",
+          decision_account: "DECISION_ACCOUNT_SUSPENDED",
+          end_date_account_restriction:
+            (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        }
+      else
+        {
+          decision_facts: "The reviewed account had its ability to participate restricted.",
+          decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          end_date_service_restriction:
+            (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        }
+      end
+    decision.compact.merge(
+      content_type: ["CONTENT_TYPE_OTHER"],
+      content_type_other: "User account",
+      content_date: user.created_at.to_date.iso8601,
+      automated_detection:,
+      automated_decision:,
+    )
+  end
+
   def perform_penalty(performed_by:, args:, penalty_type:)
     guardian = args[:guardian] || Guardian.new(performed_by)
     service = penalty_type == "suspend" ? User::Suspend : User::Silence
@@ -208,12 +236,20 @@ module ReviewableActionBuilder
   end
 
   def delete_user(user, delete_options, performed_by)
-    email = user.email
+    create_result(:success, :rejected, [], false) do |result|
+      if user
+        email = user.email
+        destroyer = UserDestroyer.new(performed_by)
+        destroyer.destroy(user, delete_options.merge(reviewable_id: id))
+        message = UserNotifications.account_deleted(email, self)
+        Email::Sender.new(message, :account_deleted).send
 
-    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
-
-    message = UserNotifications.account_deleted(email, self)
-    Email::Sender.new(message, :account_deleted).send
+        result.deleted_user = user
+        result.remove_reviewable_ids |= destroyer.removed_reviewable_ids
+        result.affected_reviewable_ids |= destroyer.removed_reviewable_ids - [id]
+      end
+      yield result if block_given?
+    end
   end
 
   def map_reviewable_status_to_flag_status(status)

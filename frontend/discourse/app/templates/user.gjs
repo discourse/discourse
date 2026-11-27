@@ -436,6 +436,30 @@ export default <template>
                   </li>
                 {{/if}}
 
+                {{#if
+                  (and
+                    @controller.siteSettings.flaggable_user_profiles
+                    (or
+                      @controller.model.available_profile_flag_ids.length
+                      @controller.model.can_report_profile_by_email
+                      @controller.model.can_submit_profile_dsa_notice
+                    )
+                  )
+                }}
+                  <li>
+                    <DButton
+                      class="btn-default flag-profile"
+                      @action={{@controller.flagProfile}}
+                      @icon="flag"
+                      @label="flagging_profile.action"
+                      @title={{unless
+                        @controller.currentUser
+                        "anonymous_flagging.title"
+                      }}
+                    />
+                  </li>
+                {{/if}}
+
                 {{#if @controller.canMuteOrIgnoreUser}}
                   <li>
                     <UserNotificationsDropdown

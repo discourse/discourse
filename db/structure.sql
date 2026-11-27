@@ -24036,6 +24036,13 @@ CREATE INDEX index_notifications_on_data_original_username ON public.notificatio
 
 
 --
+-- Name: index_notifications_on_data_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_data_reviewable_id ON public.notifications USING btree ((((data)::jsonb ->> 'reviewable_id'::text))) WHERE (((data)::jsonb ->> 'reviewable_id'::text) IS NOT NULL);
+
+
+--
 -- Name: index_notifications_on_data_username; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26961,6 +26968,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261127183845'),
 ('20261126120000'),
 ('20261125161827'),
 ('20261124234323'),

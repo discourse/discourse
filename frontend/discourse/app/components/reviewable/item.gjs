@@ -246,7 +246,9 @@ export default class ReviewableItem extends Component {
   }
 
   get scoreSummary() {
-    const scores = this.args.reviewable?.reviewable_scores ?? [];
+    const { reviewable } = this.args;
+    const scores =
+      reviewable?.scoresForDecision ?? reviewable?.reviewable_scores ?? [];
     const summaries = {};
 
     for (const { score_type } of scores) {
@@ -266,6 +268,10 @@ export default class ReviewableItem extends Component {
 
     if (reviewableTypeLabels[reviewable?.type]) {
       return reviewableTypeLabels[reviewable?.type];
+    }
+
+    if (reviewable?.type === "ReviewableFlaggedProfile") {
+      return "review.profile_flagged_as";
     }
 
     if (reviewable?.type === "ReviewableUser") {
@@ -630,9 +636,22 @@ export default class ReviewableItem extends Component {
   _updateStatus(data) {
     const { reviewable } = this.args;
 
-    if (data.remove_reviewable_ids?.includes(reviewable.id)) {
-      delete data.remove_reviewable_ids;
-      this._performResult(data, {}, reviewable);
+    if (!data.remove_reviewable_ids?.includes(reviewable.id)) {
+      return;
+    }
+
+    if (
+      data.reviewable_id &&
+      data.reviewable_id !== reviewable.id &&
+      this.args.updateStatuses
+    ) {
+      this.args.updateStatuses(data.reviewable_updates ?? {}, [reviewable.id]);
+    } else {
+      this._performResult(
+        { ...data, remove_reviewable_ids: undefined },
+        {},
+        reviewable
+      );
     }
   }
 
@@ -755,7 +774,10 @@ export default class ReviewableItem extends Component {
       this.args.remove(result.remove_reviewable_ids);
     } else {
       if (this.args.updateStatuses && result.reviewable_updates) {
-        this.args.updateStatuses(result.reviewable_updates);
+        this.args.updateStatuses(
+          result.reviewable_updates,
+          result.remove_reviewable_ids?.filter((id) => id !== reviewable.id)
+        );
       }
 
       return this.store.find("reviewable", reviewable.id);

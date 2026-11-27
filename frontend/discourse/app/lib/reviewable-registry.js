@@ -1,5 +1,6 @@
 import { dasherize } from "@ember/string";
 import ReviewableFlaggedPost from "discourse/components/reviewable/flagged-post";
+import ReviewableFlaggedProfile from "discourse/components/reviewable/flagged-profile";
 import ReviewablePost from "discourse/components/reviewable/post";
 import ReviewableQueuedPost from "discourse/components/reviewable/queued-post";
 import ReviewableUser from "discourse/components/reviewable/user";
@@ -8,6 +9,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 
 const coreLoaders = {
   ReviewableFlaggedPost: () => ReviewableFlaggedPost,
+  ReviewableFlaggedProfile: () => ReviewableFlaggedProfile,
   ReviewablePost: () => ReviewablePost,
   ReviewableQueuedPost: () => ReviewableQueuedPost,
   ReviewableUser: () => ReviewableUser,

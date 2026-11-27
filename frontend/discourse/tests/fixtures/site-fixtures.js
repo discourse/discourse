@@ -662,7 +662,7 @@ const siteFixtures = {
           id: 4,
           require_message: false,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
         {
           name_key: "vote",
@@ -686,7 +686,20 @@ const siteFixtures = {
           id: 8,
           require_message: false,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
+        },
+        {
+          name_key: "illegal",
+          name: "Illegal",
+          description:
+            "This post requires staff attention because I believe it contains content that is illegal.",
+          short_description: "This is illegal",
+          is_flag: true,
+          icon: null,
+          id: 10,
+          require_message: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
         {
           name_key: "notify_user",
@@ -700,7 +713,7 @@ const siteFixtures = {
           id: 6,
           require_message: true,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Chat::Message"]
         },
         {
           name_key: "notify_moderators",
@@ -713,7 +726,7 @@ const siteFixtures = {
           id: 7,
           require_message: true,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
       ],
       topic_flag_types: [
@@ -727,7 +740,7 @@ const siteFixtures = {
           id: 4,
           require_message: false,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
         {
           name_key: "spam",
@@ -739,7 +752,20 @@ const siteFixtures = {
           id: 8,
           require_message: false,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
+        },
+        {
+          name_key: "illegal",
+          name: "Illegal",
+          description:
+            "This topic requires staff attention because I believe it contains content that is illegal.",
+          short_description: "This is illegal",
+          is_flag: true,
+          icon: null,
+          id: 10,
+          require_message: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
         {
           name_key: "notify_moderators",
@@ -751,7 +777,7 @@ const siteFixtures = {
           id: 7,
           require_message: true,
           enabled: true,
-          applies_to: ["Post", "Topic", "Chat::Message"]
+          applies_to: ["Post", "Topic", "Chat::Message", "UserProfile"]
         },
       ],
       archetypes: [

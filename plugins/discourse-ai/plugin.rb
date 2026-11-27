@@ -243,10 +243,13 @@ after_initialize do
     end,
   ) { object.ai_reviewable_suggestion.action_name }
 
-  on(:reviewable_created) do |reviewable|
-    if reviewable.pending? && SiteSetting.ai_reviewable_action_suggestions_enabled &&
-         SiteSetting.ai_reviewable_action_decision_model.present?
-      Jobs.enqueue(:suggest_reviewable_action, reviewable_id: reviewable.id)
+  on(:reviewable_created) { |reviewable| Jobs::SuggestReviewableAction.enqueue_for(reviewable) }
+
+  # Invalidate even while the plugin is disabled so re-enabling it cannot expose an old decision.
+  DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    if status == :pending && reviewable.is_a?(ReviewableFlaggedProfile)
+      AiReviewableSuggestion.where(reviewable_id: reviewable.id).delete_all
+      Jobs::SuggestReviewableAction.enqueue_for(reviewable)
     end
   end
 

@@ -44,6 +44,16 @@
         "muted": {
           "type": "boolean"
         },
+        "available_profile_flag_ids": {
+          "type": "array",
+          "items": { "type": "integer" }
+        },
+        "can_report_profile_by_email": {
+          "type": "boolean"
+        },
+        "can_submit_profile_dsa_notice": {
+          "type": "boolean"
+        },
         "can_ignore_user": {
           "type": "boolean"
         },

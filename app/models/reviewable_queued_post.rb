@@ -248,31 +248,11 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    user = target_created_by
-    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
-
-    result =
-      super do |result|
-        result.deleted_user = user
-        result.remove_reviewable_ids += reviewable_ids
-      end
-
-    update_column(:target_created_by_id, nil)
-    result
+    super.tap { update_column(:target_created_by_id, nil) }
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    user = target_created_by
-    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
-
-    result =
-      super do |result|
-        result.deleted_user = user
-        result.remove_reviewable_ids += reviewable_ids
-      end
-
-    update_column(:target_created_by_id, nil)
-    result
+    super.tap { update_column(:target_created_by_id, nil) }
   end
 
   private

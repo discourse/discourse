@@ -274,34 +274,8 @@ class ReviewableUser < Reviewable
     return if !is_a_suspect_user? && !target&.approved?
 
     case action_id
-    when :suspend_user
-      user = target.reload
-
-      {
-        decision_facts: "The reviewed account was suspended.",
-        decision_account: "DECISION_ACCOUNT_SUSPENDED",
-        content_type: ["CONTENT_TYPE_OTHER"],
-        content_type_other: "User account",
-        content_date: user.created_at.to_date.iso8601,
-        end_date_account_restriction:
-          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
-        automated_detection:,
-        automated_decision:,
-      }.compact
-    when :silence_user
-      user = target.reload
-
-      {
-        decision_facts: "The reviewed account had its ability to participate restricted.",
-        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
-        content_type: ["CONTENT_TYPE_OTHER"],
-        content_type_other: "User account",
-        content_date: user.created_at.to_date.iso8601,
-        end_date_service_restriction:
-          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
-        automated_detection:,
-        automated_decision:,
-      }.compact
+    when :suspend_user, :silence_user
+      account_penalty_statement_attributes(action_id:, automated_detection:, automated_decision:)
     when :delete_user, :delete_user_block
       user = target
       return unless user&.destroyed?
