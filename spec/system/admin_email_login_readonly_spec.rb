@@ -13,7 +13,7 @@ describe "Admin email login in readonly mode" do
       page.visit "/u/admin-login"
 
       fill_in "email", with: admin.email
-      click_button "Send Email"
+      click_button I18n.t("admin_login.submit_button")
 
       expect(page).to have_content(I18n.t("admin_login.acknowledgement", email: admin.email))
 
