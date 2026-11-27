@@ -96,8 +96,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
         active; that is a separate fix (`menuitemradio` with `aria-checked`).
     - ☐ FormKit's `menu` control (`form-kit/components/fk/control/menu.gjs`). Only the
       styleguide uses it.
-    - ☐ Admin dashboard date range (`admin/components/dashboard/date-range.gjs`). Its panel
-      ends with Cancel and Apply buttons.
+    - ☑ Admin dashboard date range (`admin/components/dashboard/date-range.gjs`). Stays on
+      `DMenu`: its panel is a small form that ends with Cancel and Apply buttons, so nothing is
+      picked until Apply, and a listbox that commits on each pick doesn't fit it.
     - ☐ Grid pickers: `ui-kit/d-icon-grid-picker` and the emoji picker in value mode
       (`components/emoji-picker/index.gjs`). A grid is not a listbox, so these may stay.
   - Plugins:
@@ -129,9 +130,16 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       (#46941), so focus stays on the option just ranked.
     - ☐ live: the call submenus for devices, noise suppression, camera and layout
       (`live/call-submenu.gjs`).
-    - ☐ discourse-workflows: the reference picker (`variable/reference-property-picker.gjs`), a
-      hand-rolled filterable list with an "Edit as code" button above it; and the "Add
-      attributes" menu (`configurators/fixed-collection.gjs`), a toggle set, so `@multiple`.
+    - ☑ discourse-workflows: the reference picker (`variable/reference-property-picker.gjs`). A
+      single `DSelectList` in the menu the pill opens, opening on the current property, with the
+      properties sorted by name. Any pick closes it through `@onSelect`, a re-pick included.
+      "Edit code" stays below the list. Closing returns focus to the editor with the pill still
+      selected, and the editor is named by its field's label.
+    - ☑ discourse-workflows: the "Attributes" menu of a collection item
+      (`configurators/fixed-collection.gjs`). A static multi `DSelect` with the caption
+      "Attributes" and a count (`@maxVisibleChips={{0}}`), placed before the attribute inputs it
+      controls. Attributes a field always shows for its type are locked. `@onSelect` shows an
+      attribute's input, and `@onDeselect` hides it and resets its value.
   - Mixed, to decide (value rows beside commands): the bookmark menu's reminder times, boards'
     add-from-topic column menu, the rich editor's table menu (an alignment group among
     commands), chat's channel list menu and live's audio and video menus (commands that open
@@ -152,6 +160,26 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
 - ☐ **FormKit `select` and `DNativeSelect`:** decide between new control types and a switch inside
   the shared control; preserve value types, empty values, disabled state, labels and errors, form
   participation, and query parameters (`d-filter-controls`). Deprecate `DNativeSelect`.
+
+## To investigate
+
+- ☐ **A held value that hasn't loaded may hand Enter to row one (unverified).** A single
+  `typeahead` or desktop `static` DSelect enters with `selected-or-first`
+  (`variant-presenter.ts`, `entryFocus`). With a `@load` source that pages, the held value may be
+  on a page that hasn't loaded. The cursor would then fall back to the first row, and Enter on
+  opening would replace the held value with it. Not reproduced yet. Try a paged `@load` whose held
+  value sits past the first page (given through `@valueRecords`), open it, and check which row is
+  active and what Enter emits. If confirmed, entering with `selected-or-none` whenever a value is
+  held should fix it, which is what DSelectList already does. Pin it with a failing test first.
+
+- ☐ **Size the panel from its rows instead of a hand-picked floor.** A panel is as wide as its
+  trigger (`@matchTriggerWidth`), lifted to `--d-select-menu-min-width` (12em by default). That
+  floor doesn't know the rows, so a narrow trigger wraps long labels, and a selected row wraps
+  sooner because its label turns bold. Seven callers set their own floor (14em, 16em or 20em), and
+  the workflows attributes menu is the eighth. CSS alone can't size from the rows: a virtualized
+  list positions its rows absolutely, so `max-content` doesn't see them. Look for a way to measure
+  the widest label once per option set, in its selected weight, and size the panel from it,
+  capped by the viewport.
 
 ## Exit criteria
 
