@@ -16,6 +16,7 @@ import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordina
 import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectEngine, {
+  type SelectChangeHandler,
   type SelectEngineInit,
   type SelectHeldRow,
   type SelectLoadRequest,
@@ -70,8 +71,11 @@ export interface SelectHostArgs
       | "groupDividers"
       | "groupHeader"
       | "groupFooter"
-      | "onChange"
+      | "onSelect"
+      | "onDeselect"
     > {
+  /** Called when the value changes, with the whole next value. */
+  onChange?: SelectChangeHandler;
   /** Recipe data passed to customizations. */
   kindContext?: object;
   /** Temporary aliases for the deprecated modifySelectKit bridge and legacy CSS. */
@@ -245,6 +249,8 @@ export default class SelectHost {
       groupHeader: this.#init.getArgs().groupHeader,
       groupFooter: this.#init.getArgs().groupFooter,
       onChange: this.handleChange,
+      onSelect: (...change) => this.#init.getArgs().onSelect?.(...change),
+      onDeselect: (...change) => this.#init.getArgs().onDeselect?.(...change),
       onReconfirm: (record, origin) => this.announcer.reconfirm(record, origin),
       onBulkUnchanged: (skipped) => this.announcer.bulkUnchanged(skipped),
       onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
@@ -398,7 +404,8 @@ export default class SelectHost {
         this.#init.clearQuery();
       },
     });
-    this.#init.getArgs().onChange?.(nextValue, payload, change);
+    const { reason, config } = change;
+    this.#init.getArgs().onChange?.(nextValue, payload, { reason, config });
   }
 
   /** Consumes parsed pastes while keeping selection and query cleanup under one authority. */

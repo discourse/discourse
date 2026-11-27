@@ -269,6 +269,25 @@ locked. The list sits outside the named root so disabled fields still expose the
 The chips and that list share one resolution of the held values, and the resolver joins
 requests already in flight, so the same ids are never fetched twice.
 
+## Changes and picks
+
+Three callbacks report selection, each with `(value, records, change)`. A single select passes
+one id and its record; a multi-select passes arrays. `change` is `{ reason, config }`, and
+`reason` is `"clear"` for a clear.
+
+- `@onChange` is about the value: it gets the whole next value whenever it changes. Picking the
+  held value again changes nothing, so it isn't called.
+- `@onSelect` is about picks: it gets the values picked, a held one picked again included. A
+  pasted or `selectMany` batch is one call with every distinct value it picked, held ones
+  included and refused ones left out. The none option is no value and reports no pick.
+- `@onDeselect` gets the values that left the selection, however they left: removed, cleared,
+  or replaced by a single select's new pick.
+
+They follow the commit. A change runs `@onChange`, then `@onDeselect`, then `@onSelect`, and a
+change that `change` middleware vetoes, or that a newer one supersedes, calls none of them. A
+re-pick changes nothing, so its `@onSelect` runs at once. Picks made through the control or an
+update scope are reported like any other.
+
 ## Held values that can't be removed
 
 `@lockedValues` lists held ids of a multi-select that no change may drop, matched like any held
@@ -1560,7 +1579,7 @@ so existing arguments keep their positions:
 
 - `@options` as a function is called as `options(config)`. A zero-argument function still works.
 - `@load`, `@resolveValue` and `@resolveValues` get `config` on their second argument.
-- `@onChange` gets `config` on its third argument, `{ origin, reason, config }`.
+- `@onChange`, `@onSelect` and `@onDeselect` get `config` on their third argument, `{ reason, config }`.
 - `allowCreate`, `createOption`, `createUnresolvedRecord`, `extraOptions` (after its snapshot),
   `valueRecords` as a function, `filterBy`, `groupBy`, `groupHeader` and `groupFooter` get it
   as their last argument.
@@ -1769,7 +1788,8 @@ several independent selects inside one `DMenu`. It is multi by default: pass an 
 `@multiple={{false}}` it holds one value: `@value` is that value or `null`, a pick replaces it
 and `@onChange` receives the new value and its record, or `null` when Backspace or Delete on an
 empty search clears it. Like a group of radio buttons, it shows the held value only by its
-option, which stays marked selected; pressing that option again changes nothing. The search
+option, which stays marked selected; pressing that option again changes nothing, and
+`@onSelect` reports it. The search
 field holds no chip; it is described as "Selected Apple" instead, so a screen reader names the
 held value on arrival. Where that option can scroll away, be filtered out or be left out with
 `@hideSelected`, the page around the list shows the held value. `dSelect().remove()` rejects

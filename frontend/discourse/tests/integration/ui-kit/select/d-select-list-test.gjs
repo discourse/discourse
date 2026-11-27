@@ -2136,6 +2136,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <DSelectList
             @multiple={{false}}
             @onChange={{setHeld}}
+            @onSelect={{extra.onSelect}}
             @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
@@ -2201,13 +2202,16 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       );
     });
 
-    test("pressing the held row keeps it", async function (assert) {
+    test("pressing the held row keeps it, and reports the pick", async function (assert) {
       const held = tracked(2);
-      const changes = await renderSingle(held);
+      const picks = [];
+      const onSelect = (value, item) => picks.push([value, item?.name]);
+      const changes = await renderSingle(held, { onSelect });
 
       await click(rows()[1]);
 
       assert.deepEqual(changes, [], "nothing changes");
+      assert.deepEqual(picks, [[2, "Banana"]], "the re-pick is reported");
       assert.dom(rows()[1]).hasAria("selected", "true");
     });
 

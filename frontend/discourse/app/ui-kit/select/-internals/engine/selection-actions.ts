@@ -2,6 +2,8 @@ import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type {
+  SelectChange,
+  SelectChangeHandler,
   SelectId,
   SelectRecord,
   SelectValue,
@@ -354,12 +356,17 @@ export default class SelectionActions {
     }
     const record = entryRecord(entry);
     if (this.isSelected(entry)) {
+      const held =
+        this.#resolveOneSync(this.#args.recordValue(record)) ?? record;
       if (origin) {
-        this.#args.onReconfirm?.(
-          this.#resolveOneSync(this.#args.recordValue(record)) ?? record,
-          origin
-        );
+        this.#args.onReconfirm?.(held, origin);
       }
+      this.#report(
+        this.#args.onSelect,
+        [this.#args.recordValue(record)],
+        () => held,
+        { config: this.#getExtensionContext().config }
+      );
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
       // keystroke after opening, and leaving it inert would read as a broken control.
@@ -409,6 +416,8 @@ export default class SelectionActions {
 
     const seen = new Set<string>();
     const additions: StagedPick[] = [];
+    // Every distinct key picked, held ones included, in the order given.
+    const picked: SelectId[] = [];
     let held = 0;
     let limit = 0;
     const remaining = this.remaining;
@@ -423,6 +432,10 @@ export default class SelectionActions {
       }
       if (this.isSelected(record) || seen.has(key)) {
         held++;
+        if (!seen.has(key)) {
+          seen.add(key);
+          picked.push(this.#args.recordValue(record));
+        }
         continue;
       }
       // Refused before its key is claimed, so a later eligible input for the key still counts.
@@ -438,9 +451,17 @@ export default class SelectionActions {
         limit++;
         continue;
       }
-      additions.push(this.#pickOf(entry));
+      const pick = this.#pickOf(entry);
+      additions.push(pick);
+      picked.push(this.#args.recordValue(pick.record));
     }
     if (additions.length === 0) {
+      this.#report(
+        this.#args.onSelect,
+        picked,
+        (value) => this.#resolveOneSync(value),
+        { config: this.#getExtensionContext().config }
+      );
       if (held + limit > 0) {
         this.#args.onBulkUnchanged?.({ held, limit });
       }
@@ -456,7 +477,8 @@ export default class SelectionActions {
         bulk: { added: additions.length, held, limit },
       },
       undefined,
-      additions
+      additions,
+      picked
     );
   }
 
@@ -531,7 +553,10 @@ export default class SelectionActions {
     rawNextValue: SelectValue,
     origin?: SelectionOrigin,
     reason?: "clear",
-    picks: readonly StagedPick[] = []
+    picks: readonly StagedPick[] = [],
+    picked: readonly SelectId[] = picks.map((pick) =>
+      this.#args.recordValue(pick.record)
+    )
   ): void {
     const staged = new Map(picks.map((pick) => [pick.key, pick.record]));
     const lookUp = (value: SelectId) =>
@@ -561,12 +586,21 @@ export default class SelectionActions {
         this.#beforeEmit(origin, nextValue) &&
         !this.#args.locked
       ) {
+        const previous = makeArray(this.value) as SelectId[];
         this.#stagePicks(picks);
         this.#args.onChange?.(nextValue, payload, {
           origin,
           reason,
           config: context.config,
         });
+        const change = { reason, config: context.config };
+        this.#report(
+          this.#args.onDeselect,
+          this.removedValues(previous, makeArray(nextValue) as SelectId[]),
+          lookUp,
+          change
+        );
+        this.#report(this.#args.onSelect, picked, lookUp, change);
 
         // Legacy extensions run only after the controlled change commits.
         this.#applyLegacyOnChange(nextValue, payload);
@@ -596,6 +630,29 @@ export default class SelectionActions {
       )
     );
     return [...locked].some((key) => !nextKeys.has(key));
+  }
+
+  /**
+   * Hands a selection callback its values and their records in the select's arity. A single
+   * select reports nothing for `null`, which is no value.
+   */
+  #report(
+    callback: SelectChangeHandler | undefined,
+    values: readonly SelectId[],
+    lookUp: (value: SelectId) => SelectRecord | undefined,
+    change: SelectChange
+  ): void {
+    if (!callback) {
+      return;
+    }
+    if (this.#args.multiple) {
+      if (values.length > 0) {
+        const next = this.#coerceValue(values, lookUp) as SelectId[];
+        callback(next, this.#recordsFor(next, lookUp), change);
+      }
+    } else if (values[0] != null) {
+      callback(values[0], lookUp(values[0]) ?? null, change);
+    }
   }
 
   // Best-effort synchronous resolution of a value to its record(s), from the escape

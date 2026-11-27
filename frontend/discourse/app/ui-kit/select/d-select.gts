@@ -159,8 +159,21 @@ export interface DSelectSignature {
      * source shows its last group's footer once no more options can load.
      */
     groupFooter?: SelectEngineInit["groupFooter"];
-    /** Receives the next value, resolved records, and metadata including the resolved config. */
-    onChange?: SelectEngineInit["onChange"];
+    /**
+     * Called when the value changes, with the whole next value (every held id in a multi-select),
+     * its resolved records, and `{ reason, config }`. A re-pick of the held value is no change.
+     */
+    onChange?: SelectHostArgs["onChange"];
+    /**
+     * Called for the values picked, a held one picked again included, after `@onChange`. Takes
+     * the same arguments; a multi-select reports arrays, one call per change.
+     */
+    onSelect?: SelectHostArgs["onSelect"];
+    /**
+     * Called for the values that left the selection, by removal, clear or replacement, after
+     * `@onChange` and before `@onSelect`.
+     */
+    onDeselect?: SelectHostArgs["onDeselect"];
     /**
      * A decorative trailing icon in a search field that is not the trigger: the `button` panel's
      * field and the mobile modal's. A desktop `typeahead` trigger is its own search field and

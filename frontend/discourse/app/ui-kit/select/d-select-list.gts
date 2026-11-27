@@ -57,11 +57,11 @@ interface DSelectListSignature {
     /** Controlled held values: an array, or one value or `null` when `@multiple` is false. */
     value?: SelectValue;
     /** Receives the replacement value or values, resolved record or records and change metadata. */
-    onChange?: (
-      next: SelectValue,
-      records: SelectRecord[] | SelectRecord | null,
-      change: Parameters<NonNullable<SelectHostArgs["onChange"]>>[2]
-    ) => void;
+    onChange?: SelectHostArgs["onChange"];
+    /** Called for the values picked, a held one picked again included, after `@onChange`. */
+    onSelect?: SelectHostArgs["onSelect"];
+    /** Called for the values that left the selection, before `@onSelect`. */
+    onDeselect?: SelectHostArgs["onDeselect"];
     /** Local options (records, or records wrapped with `selectOption`), or a function of the resolved config. */
     options?: SelectHostArgs["options"];
     /** Async query source, optionally paginating with total or hasMore. */
@@ -225,7 +225,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
   host: SelectHost = new SelectHost({
     owner: getOwner(this),
     getA11y: () => this.a11y,
-    getArgs: () => ({ ...this.args, onChange: this.handleChange }),
+    getArgs: () => this.args,
     getPresenter: () => this.presenter,
     getMultiple: () => this.multiple,
     isLive: () => !this.isDestroying,
@@ -304,15 +304,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
 
   get renderOptions(): boolean {
     return !this.#needsBridgeAnchor || !!this.interaction.root;
-  }
-
-  @action
-  handleChange(
-    ...[next, records, change]: Parameters<
-      NonNullable<SelectHostArgs["onChange"]>
-    >
-  ): void {
-    this.args.onChange?.(next, records, change);
   }
 
   /** Resolves the held value to chip rows, one chip for a single held value. */

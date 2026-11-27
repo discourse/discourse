@@ -3590,15 +3590,22 @@ module(
     setupRenderingTest(hooks);
     setupLegacyBridgeCallbacks(hooks);
 
-    test("Enter on the restored selection closes without emitting a change", async function (assert) {
+    test("Enter on the restored selection closes and reports the pick without a change", async function (assert) {
       // Restoring the cursor to the selected option makes Enter the first keystroke after
       // opening. Leaving it inert (no change, no close) would read as a broken control.
       let changes = 0;
       const onChange = () => changes++;
+      const picks = [];
+      const onSelect = (value, item) => picks.push([value, item?.name]);
 
       await render(
         <template>
-          <DSelect @onChange={{onChange}} @options={{ITEMS}} @value={{2}} />
+          <DSelect
+            @onChange={{onChange}}
+            @onSelect={{onSelect}}
+            @options={{ITEMS}}
+            @value={{2}}
+          />
         </template>
       );
 
@@ -3609,6 +3616,7 @@ module(
 
       assert.dom("[role='listbox']").doesNotExist("the overlay closes");
       assert.strictEqual(changes, 0, "re-picking the same value emits nothing");
+      assert.deepEqual(picks, [[2, "Banana"]], "the re-pick is reported");
     });
 
     test("clicking the already-selected option closes without emitting a change", async function (assert) {

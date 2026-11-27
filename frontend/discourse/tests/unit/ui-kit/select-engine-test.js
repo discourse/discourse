@@ -281,6 +281,50 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "clear emits a null value"
       );
     });
+
+    test("reports what left and what was picked after the change, and a re-pick alone", function (assert) {
+      const a = { id: 1, name: "A" };
+      const b = { id: 2, name: "B" };
+      const log = [];
+      const { engine } = controlled({
+        value: 1,
+        options: [a, b],
+        getArgs: () => ({ noneOption: true }),
+        afterChange: (value) => log.push(["change", value]),
+        onSelect: (value, record) => log.push(["select", value, record]),
+        onDeselect: (value, record, change) =>
+          log.push(["deselect", value, record, change.reason]),
+      });
+
+      const none = engine.buildRows([a, b]).find((row) => row.option.none);
+      engine.select(b);
+      engine.select(b);
+      engine.select(none.option);
+      engine.select(none.option);
+
+      assert.deepEqual(log, [
+        ["change", 2],
+        ["deselect", 1, a, undefined],
+        ["select", 2, b],
+        ["select", 2, b],
+        ["change", null],
+        ["deselect", 2, b, undefined],
+      ]);
+
+      log.length = 0;
+      engine.select(a);
+      engine.clear();
+      assert.deepEqual(
+        log,
+        [
+          ["change", 1],
+          ["select", 1, a],
+          ["change", null],
+          ["deselect", 1, a, "clear"],
+        ],
+        "picking from empty deselects nothing, and a clear says so"
+      );
+    });
   });
 
   module("multi-select (controlled)", function () {
@@ -320,6 +364,34 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       engine.select({ id: 1 });
       assert.strictEqual(closed, 0, "a multi-select stays open on select");
+    });
+
+    test("reports picks and removals as arrays, one call per change", function (assert) {
+      const a = { id: 1, name: "A" };
+      const b = { id: 2, name: "B" };
+      const c = { id: 3, name: "C" };
+      const log = [];
+      const { engine } = controlled({
+        multiple: true,
+        value: [1, 2],
+        options: [a, b, c],
+        lockedValues: [1],
+        onSelect: (values, records) => log.push(["select", values, records]),
+        onDeselect: (values, records, change) =>
+          log.push(["deselect", values, records, change.reason]),
+      });
+
+      engine.select(c);
+      engine.toggle(b);
+      engine.select(b);
+      engine.clear();
+
+      assert.deepEqual(log, [
+        ["select", [3], [c]],
+        ["deselect", [2], [b], undefined],
+        ["select", [2], [b]],
+        ["deselect", [3, 2], [c, b], "clear"],
+      ]);
     });
 
     test("deselectLast drops the last value; a no-op when empty", function (assert) {
@@ -2809,10 +2881,12 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
       );
     });
     const action = sinon.spy();
+    const onSelect = sinon.spy();
     const { engine, changes } = controlled({
       multiple: true,
       value: ["1"],
       maximum: 3,
+      onSelect,
     });
     engine.control.selectMany([
       A,
@@ -2833,8 +2907,21 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
       ],
       "one batch with only eligible items"
     );
+    assert.deepEqual(
+      onSelect.args.map(([values]) => values),
+      [[1, 2, 3]],
+      "one pick report, with the held value re-picked and each key once"
+    );
     assert.strictEqual(middleware.callCount, 1, "one middleware invocation");
     assert.strictEqual(action.callCount, 0, "action options are skipped");
+
+    engine.control.selectMany([A, C]);
+    assert.strictEqual(changes.length, 1, "an all-held batch changes nothing");
+    assert.deepEqual(
+      onSelect.lastCall.args[0],
+      [1, 3],
+      "an all-held batch is still reported as picked"
+    );
     assert.strictEqual(engine.resolveSingleSync(2), B, "new items are cached");
     assert.strictEqual(
       engine.resolveSingleSync(3),
@@ -2900,7 +2987,8 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
           selects.forAll((spec) => spec.change((next) => queued.push(next)))
       );
     });
-    const own = controlled({ multiple: true });
+    const onSelect = sinon.spy();
+    const own = controlled({ multiple: true, onSelect });
     await own.engine.control.update((scope) => {
       scope.selectMany([A, B]);
       assert.true(
@@ -2908,14 +2996,21 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
         "the batch preserves its scope during middleware"
       );
     });
+    assert.false(onSelect.called, "a deferred batch is not reported early");
     queued.shift()();
     assert.deepEqual(
       own.changes.at(-1)[0],
       [1, 2],
       "a normal end preserves the deferred batch"
     );
+    assert.deepEqual(
+      onSelect.args.map(([values]) => values),
+      [[1, 2]],
+      "the batch is reported when it commits"
+    );
 
-    const stale = controlled({ multiple: true });
+    onSelect.resetHistory();
+    const stale = controlled({ multiple: true, onSelect });
     const gate = deferred();
     const done = stale.engine.control.update(async (scope) => {
       scope.selectMany([A, B]);
@@ -2930,6 +3025,11 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
       stale.changes.map(([value]) => value),
       [[3]],
       "a newer batch blocks the old deferred emit"
+    );
+    assert.deepEqual(
+      onSelect.args.map(([values]) => values),
+      [[3]],
+      "the blocked batch is never reported"
     );
   });
 });

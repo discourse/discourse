@@ -380,6 +380,24 @@ export type SelectValueRecordsBuilder = (
   config: SelectConfig
 ) => SelectRecord | SelectRecord[];
 
+/** What `onChange`, `onSelect` and `onDeselect` receive besides the values and records. */
+export interface SelectChange {
+  /** Marks a clear, which keeps any locked values, from removing a record. */
+  reason?: "clear";
+  /** The config snapshot shared with the change middleware. */
+  config: SelectConfig;
+}
+
+/**
+ * A selection callback. The values are an id or `null` and its record for a single select, and
+ * arrays for a multi-select.
+ */
+export type SelectChangeHandler = (
+  value: SelectValue,
+  records: SelectRecord | SelectRecord[] | null,
+  change: SelectChange
+) => void;
+
 export interface SelectEngineInit {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
   multiple?: boolean;
@@ -713,22 +731,26 @@ export interface SelectEngineInit {
   closeOnSelect?: boolean;
 
   /**
-   * `(nextValue, record|records, change) => void`, where `nextValue` is the id(s) and the second arg
-   * is the resolved record(s), each matching the arity. The parent applies `nextValue` to
-   * `@value`. The third argument carries origin, clear metadata, and the resolved config.
+   * Called when the value changes, with the whole next value. The parent applies `nextValue` to
+   * `@value`. The engine also passes the change's `origin`, which the component keeps to itself.
    */
   onChange?: (
     nextValue: SelectValue,
     records: SelectRecord | SelectRecord[] | null,
-    change: {
+    change: SelectChange & {
       /** The programmatic intent behind this change, absent for hand picks. */
       origin?: SelectionOrigin;
-      /** Marks a clear, which keeps any locked values, from removing a record. */
-      reason?: "clear";
-      /** The config snapshot shared with the change middleware. */
-      config: SelectConfig;
     }
   ) => void;
+
+  /**
+   * Called for the values picked, including a held value picked again, once the pick commits
+   * and after `onChange`. A re-pick changes nothing, so it is reported at once.
+   */
+  onSelect?: SelectChangeHandler;
+
+  /** Called for the values that left the selection, after `onChange` and before `onSelect`. */
+  onDeselect?: SelectChangeHandler;
 
   /** Called when a programmatic pick confirms an already held record. */
   onReconfirm?: (record: SelectRecord, origin: SelectionOrigin) => void;

@@ -3639,9 +3639,18 @@ module(
           [a, b],
           "the payload contains only accepted records"
         );
-        assert.deepEqual(
-          onChange.firstCall?.args[2]?.origin?.bulk,
-          { added: 2, held: 1, limit: 1 },
+        assert.false(
+          "origin" in onChange.firstCall.args[2],
+          "the change keeps the engine's own bookkeeping to itself"
+        );
+        assert.dom("#a11y-announcements-polite").includesText(
+          i18n("d_select.bulk_add_summary", {
+            added: i18n("d_select.bulk_add_summary", {
+              added: i18n("d_select.items_added", { count: 2 }),
+              not_added: i18n("d_select.items_not_added_held", { count: 1 }),
+            }),
+            not_added: i18n("d_select.items_not_added_limit", { count: 1 }),
+          }),
           "refused inputs do not inflate held or cap counts"
         );
         assert

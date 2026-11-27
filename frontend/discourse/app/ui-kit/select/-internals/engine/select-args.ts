@@ -136,6 +136,8 @@ export default class SelectArgsView {
   #groupFooter?: SelectEngineInit["groupFooter"];
   #readCloseOnSelect: boolean | undefined;
   #onChange?: SelectEngineInit["onChange"];
+  #onSelect?: SelectEngineInit["onSelect"];
+  #onDeselect?: SelectEngineInit["onDeselect"];
   #onReconfirm?: SelectEngineInit["onReconfirm"];
   #onBulkUnchanged?: SelectEngineInit["onBulkUnchanged"];
   #onUpdateStart?: SelectEngineInit["onUpdateStart"];
@@ -209,6 +211,8 @@ export default class SelectArgsView {
     // runtime `multiple` flip flips the default close behavior with it.
     this.#readCloseOnSelect = opts.closeOnSelect;
     this.#onChange = opts.onChange;
+    this.#onSelect = opts.onSelect;
+    this.#onDeselect = opts.onDeselect;
     this.#onReconfirm = opts.onReconfirm;
     this.#onBulkUnchanged = opts.onBulkUnchanged;
     this.#onUpdateStart = opts.onUpdateStart;
@@ -446,6 +450,14 @@ export default class SelectArgsView {
 
   get onChange(): SelectEngineInit["onChange"] {
     return this.#onChange;
+  }
+
+  get onSelect(): SelectEngineInit["onSelect"] {
+    return this.#onSelect;
+  }
+
+  get onDeselect(): SelectEngineInit["onDeselect"] {
+    return this.#onDeselect;
   }
 
   get onReconfirm(): SelectEngineInit["onReconfirm"] {
