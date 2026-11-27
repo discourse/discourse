@@ -23,13 +23,11 @@ en:
       theme_setting_name: "This is a description for the setting `theme_setting_name`"
       another_theme_setting_name:
         description: "This is a description for the setting `another_theme_setting_name`"
-  sidebar:
-    welcome: "Welcome"
-    back: "back,"
-    welcome_subhead: "We're glad you're here!"
-    likes_header: "Share the Love"
-    badges_header: "Your Top Badges"
-    full_profile: "View your full profile"
+  banner:
+    welcome: "Welcome to our community"
+    subhead: "We're glad you're here!"
+    button: "Start a new topic"
+    dismiss: "Hide this banner"
 ```
 
 The `theme_metadata` block holds the theme's description and the descriptions of its settings. See [theme metadata](12-theme-metadata.md) and [theme settings](09-theme-settings.md). All other keys are yours to use in code.
@@ -38,7 +36,7 @@ Fallback works as in core. A locale file can be incomplete: any key it doesn't d
 
 ## Using translations in code
 
-Translations are stored under a namespace for each theme. Site texts shows them as `js.theme_translations.<theme_id>.<key>`, for example `js.theme_translations.12.sidebar.welcome`.
+Translations are stored under a namespace for each theme. Site texts shows them as `js.theme_translations.<theme_id>.<key>`, for example `js.theme_translations.34.banner.welcome`.
 
 Never hardcode the theme ID. Build the key with the `themePrefix` helper:
 
@@ -47,10 +45,10 @@ import { i18n } from "discourse-i18n";
 import { themePrefix } from "virtual:theme";
 
 // In JS code:
-const result = i18n(themePrefix("sidebar.welcome"));
+const result = i18n(themePrefix("banner.welcome"));
 
 // In a template tag:
-<template>{{i18n (themePrefix "sidebar.welcome")}}</template>
+<template>{{i18n (themePrefix "banner.welcome")}}</template>
 ```
 
 `i18n()` treats `%{name}` as an interpolation placeholder. If you don't pass an argument for it, the output shows `[missing %{name} value]`.
@@ -63,7 +61,7 @@ Admins can translate and customize a theme's strings on the theme's page or in S
 
 Open the theme or component in **Appearance → Themes & components**. The **Theme translations** section lists the theme's strings. Choose a language, edit a string, and select **reset** to go back to the shipped text.
 
-![Theme translations section on a component's page|690x673,50%](/assets/localizable-strings-1.png)
+![Theme translations section on a component's page|690x415](/assets/localizable-strings-1.png)
 
 When the Discourse AI plugin is enabled, **Translate** next to the language picker generates translations from the selected language into the site's content localization languages.
 
