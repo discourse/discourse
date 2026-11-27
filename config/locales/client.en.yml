@@ -5205,6 +5205,8 @@ en:
       quote_copy: "Copy Quote"
       quote_copied_to_clipboard: "Quote copied to clipboard"
       quote_share: "Share"
+      search_selection: "Search forum"
+      search_selection_title: "Search the forum for the selected text"
       edit_reason: "Reason: "
       post_number: "post %{number}"
       ignored: "Ignored content"

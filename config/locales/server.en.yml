@@ -3297,6 +3297,7 @@ en:
     gravatar_login_url: "URL relative to {{setting:gravatar_base_url}}, which provides the user with the login to the Gravatar service."
 
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
+    show_post_selection_search: "Allow users to search the forum from the toolbar shown when they select text in a post."
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
