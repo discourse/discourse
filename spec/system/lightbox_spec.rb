@@ -27,6 +27,14 @@ describe "Lightbox | Photoswipe" do
       post.update(cooked: cpp.html)
     end
 
+    it "shows an inset focus outline on the image link for keyboard users" do
+      topic_page.visit_topic(topic)
+      page.send_keys(:tab)
+      image_post.focus_lightbox_link
+
+      expect(image_post).to have_inset_lightbox_focus_outline
+    end
+
     it "lets the user inspect a single image and quote it into the composer" do
       topic_page.visit_topic(topic)
 
