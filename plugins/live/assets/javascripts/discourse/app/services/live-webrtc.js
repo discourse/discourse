@@ -145,7 +145,7 @@ export default class LiveWebrtcService extends Service {
   #iceConfig = null;
   #acquiringDeferredMicrophone = false;
   #roomHandlerCallbacks = new Map();
-  #deferredTeardownTimers = new Set();
+  #deferredTeardownTimers = new Map();
   #pendingPlaybackElements = new WeakSet();
   #cameraRestorePromise = null;
   #queuedCameraRestoreRoomId = null;
@@ -542,7 +542,7 @@ export default class LiveWebrtcService extends Service {
     });
     this.#roomHandlerCallbacks.clear();
     this.#heartbeat.stopAll();
-    this.#deferredTeardownTimers.forEach((timer) => clearTimeout(timer));
+    this.#deferredTeardownTimers.forEach((_, timer) => clearTimeout(timer));
     this.#deferredTeardownTimers.clear();
     this.#connectingRoomIds.clear();
     this.#connectingParticipantSnapshots.clear();
@@ -945,6 +945,13 @@ export default class LiveWebrtcService extends Service {
     // tone when hopping rooms) is over once a join starts.
     stopCallSounds();
 
+    // Left pending, a recent leave's teardown would wipe this join's session
+    for (const [timer, teardown] of this.#deferredTeardownTimers) {
+      clearTimeout(timer);
+      teardown();
+    }
+    this.#deferredTeardownTimers.clear();
+
     // Bump the join revision so any in-flight join for a different room
     // will detect it has been superseded and abort.
     const revision = ++this.#joinRevision;
@@ -1211,7 +1218,7 @@ export default class LiveWebrtcService extends Service {
         this.#deferredTeardownTimers.delete(timer);
         teardown();
       }, 500);
-      this.#deferredTeardownTimers.add(timer);
+      this.#deferredTeardownTimers.set(timer, teardown);
     } else {
       teardown();
     }

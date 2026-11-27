@@ -599,6 +599,18 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     );
   });
 
+  test("a quick rejoin survives the previous leave's deferred teardown", async function (assert) {
+    await this.subject.join(this.room);
+    this.subject.leave(this.room);
+    await this.subject.join(this.room);
+    await wait(600);
+
+    const toasts = this.owner.lookup("service:toasts");
+    this.rooms.emit(this.room.id, { type: "chat_disabled" });
+    await waitUntil(() => toasts.defaults.length === 1).catch(() => {});
+    assert.strictEqual(toasts.defaults.length, 1, "keeps the room handler");
+  });
+
   test("file transfer size follows the current site setting in binary MiB", function (assert) {
     this.subject.siteSettings.live_file_transfer_max_size_mb = 256;
     assert.strictEqual(
