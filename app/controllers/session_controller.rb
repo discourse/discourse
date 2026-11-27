@@ -743,6 +743,12 @@ class SessionController < ApplicationController
 
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(
+      nil,
+      "forgot-password-param-day-#{normalized_login_param}",
+      FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+      1.day,
+    ).performed!
 
     user =
       if SiteSetting.hide_email_address_taken && !current_user&.staff?
@@ -758,12 +764,6 @@ class SessionController < ApplicationController
       raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
       enqueue_password_reset_for_user(user)
     else
-      RateLimiter.new(
-        nil,
-        "forgot-password-login-hour-#{normalized_login_param}",
-        5,
-        1.hour,
-      ).performed!
       server_session.delete(:password_reset_code)
     end
 
@@ -1647,12 +1647,19 @@ class SessionController < ApplicationController
   end
 
   def enqueue_password_reset_for_user(user)
-    RateLimiter.new(
-      nil,
-      "forgot-password-login-day-#{user.username}",
-      FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
-      1.day,
-    ).performed!
+    limited =
+      RateLimiter.new(
+        nil,
+        "forgot-password-login-day-#{user.username}",
+        FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+        1.day,
+      ).performed!(raise_error: !SiteSetting.hide_email_address_taken || current_user&.staff?) ==
+        false
+
+    if limited
+      server_session.delete(:password_reset_code)
+      return
+    end
 
     if password_reset_via_code?(user)
       user
