@@ -283,7 +283,7 @@ class HealthyCache
   end
 end
 
-def redis_healthcheck(host:, port: DEFAULT_REDIS_PORT, username: nil, password: nil)
+def redis_healthcheck(host:, hostname:, port: DEFAULT_REDIS_PORT, username: nil, password: nil)
   client_opts = {
     host: host,
     port: port,
@@ -293,8 +293,14 @@ def redis_healthcheck(host:, port: DEFAULT_REDIS_PORT, username: nil, password: 
   }
   if !nilempty(ENV['DISCOURSE_REDIS_USE_SSL']).nil? then
     client_opts[:ssl] = true
+    # host is a candidate IP address, so the certificate is checked against the
+    # hostname the application connects to.
     client_opts[:ssl_params] = {
-      verify_mode: OpenSSL::SSL::VERIFY_NONE,
+      verify_hostname: false, # rubocop:disable Discourse/NoTlsVerificationBypass because verify_callback checks the hostname
+      verify_callback: lambda { |ok, store_context|
+        ok && (store_context.error_depth > 0 ||
+          OpenSSL::SSL.verify_certificate_identity(store_context.current_cert, hostname))
+      },
     }
   end
   client = Redis.new(**client_opts)
@@ -343,24 +349,28 @@ HEALTH_CHECKS = Hash.new(
   DISCOURSE_REDIS_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
+      hostname: ENV["DISCOURSE_REDIS_HOST"],
       port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_REDIS_USERNAME"],
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
   DISCOURSE_REDIS_REPLICA_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
+      hostname: ENV["DISCOURSE_REDIS_REPLICA_HOST"],
       port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_REDIS_USERNAME"],
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
   DISCOURSE_MESSAGE_BUS_REDIS_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
+      hostname: ENV["DISCOURSE_MESSAGE_BUS_REDIS_HOST"],
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_USERNAME"],
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
   DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
+      hostname: ENV["DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST"],
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_USERNAME"],
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},

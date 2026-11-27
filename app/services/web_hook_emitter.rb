@@ -23,7 +23,7 @@ class WebHookEmitter
       DiscoursePluginRegistry.apply_modifier(:web_hook_event_headers, headers, body, @webhook_event)
 
     ssl_opts = {}
-    ssl_opts[:verify] = false if !@webhook.verify_certificate
+    ssl_opts[:verify] = false if !@webhook.verify_certificate # rubocop:disable Discourse/NoTlsVerificationBypass because admins opt out per webhook
     ssl_opts =
       DiscoursePluginRegistry.apply_modifier(:web_hook_event_ssl_opts, ssl_opts, @webhook_event)
     connection_opts[:ssl] = ssl_opts if ssl_opts.present?
