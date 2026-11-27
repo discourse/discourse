@@ -1177,5 +1177,6 @@ after_initialize do
     availability: -> do
       SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
     end,
+    default_enabled: true,
   )
 end

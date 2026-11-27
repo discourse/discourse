@@ -73,4 +73,69 @@ describe McpPrimitiveUpdater do
       scopes: ["mcp:content:write"],
     )
   end
+
+  describe ".enable_defaults!" do
+    it "records a choice for every primitive and enables the defaults" do
+      described_class.enable_defaults!
+
+      expect(McpPrimitive.count).to eq(DiscourseMcp.registry.all.size)
+      expect(McpPrimitive.exposed.where(kind: "tool").pluck(:identifier)).to include(
+        "discourse_update_site_setting",
+        "discourse_create_category",
+        "discourse_delete_category",
+        "discourse_set_theme_code",
+        "discourse_install_theme",
+        "discourse_sync_remote_theme",
+        "discourse_create_topic",
+        "discourse_set_topic_pin",
+        "discourse_upload_file",
+      )
+    end
+
+    it "enables only the primitives that opt in" do
+      described_class.enable_defaults!
+
+      defaults =
+        DiscourseMcp
+          .registry
+          .all
+          .select(&:default_enabled?)
+          .map { |primitive| [primitive.kind.to_s, primitive.identifier] }
+
+      expect(defaults).to be_present
+      expect(McpPrimitive.exposed.pluck(:kind, :identifier)).to match_array(defaults)
+    end
+
+    it "keeps messaging, outbound data, member management and moderation off" do
+      described_class.enable_defaults!
+
+      expect(McpPrimitive.exposed.where(kind: "tool").pluck(:identifier)).not_to include(
+        "discourse_list_private_messages",
+        "discourse_read_private_message",
+        "discourse_create_private_message",
+        "discourse_invite_group_members",
+        "discourse_create_webhook",
+        "discourse_list_webhooks",
+        "discourse_create_user",
+        "discourse_update_user",
+        "discourse_manage_user_activation",
+        "discourse_suspend_user",
+        "discourse_silence_user",
+        "discourse_perform_reviewable_action",
+        "discourse_set_topic_closed",
+        "discourse_post_set_deleted",
+      )
+    end
+
+    it "logs the change as the system user" do
+      described_class.enable_defaults!
+
+      expect(
+        UserHistory.where(
+          acting_user_id: Discourse.system_user.id,
+          custom_type: "mcp_primitives_updated",
+        ),
+      ).to exist
+    end
+  end
 end

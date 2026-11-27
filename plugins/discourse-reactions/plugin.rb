@@ -475,5 +475,6 @@ after_initialize do
     },
     risk: :write,
     availability: -> { SiteSetting.discourse_reactions_enabled },
+    default_enabled: true,
   )
 end

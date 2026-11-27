@@ -31,7 +31,8 @@ module DiscourseMcp
       risk: :read,
       provider: :core,
       availability: nil,
-      defer: false
+      defer: false,
+      default_enabled: false
     )
       @identifier = identifier.to_s
       @kind = kind.to_sym
@@ -46,6 +47,7 @@ module DiscourseMcp
       @provider = provider.to_s
       @availability = availability
       @defer = defer
+      @default_enabled = default_enabled
       validate!
       freeze
     end
@@ -58,6 +60,12 @@ module DiscourseMcp
       @defer
     end
 
+    # Whether new sites enable this primitive before an admin has chosen. Primitives
+    # stay off unless they opt in, so nothing is enabled by default by accident.
+    def default_enabled?
+      @default_enabled
+    end
+
     def consent_relevant?
       %i[destructive moderation administration external_side_effect].include?(risk)
     end
@@ -67,6 +75,9 @@ module DiscourseMcp
     def validate!
       raise ArgumentError, "invalid MCP primitive kind" if !KINDS.include?(kind)
       raise ArgumentError, "invalid MCP primitive risk" if !RISKS.include?(risk)
+      if ![true, false].include?(@default_enabled)
+        raise ArgumentError, "invalid MCP primitive default_enabled"
+      end
       if !identifier.match?(/\A[A-Za-z0-9_.-]{1,128}\z/)
         raise ArgumentError, "invalid MCP primitive identifier"
       end

@@ -6,7 +6,10 @@ RSpec.describe DiscourseAi::Agents::McpThemeAccess do
 
   let(:admins_group_id) { Group::AUTO_GROUPS[:admins] }
 
-  before { enable_current_plugin }
+  before do
+    enable_current_plugin
+    SiteSetting.mcp_server_enabled = false
+  end
 
   def expose(*primitive_ids)
     primitive_ids.each do |primitive_id|

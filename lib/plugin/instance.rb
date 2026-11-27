@@ -1198,7 +1198,8 @@ class Plugin::Instance
   end
 
   # Register a primitive exposed through Discourse's MCP server. Registered
-  # primitives remain disabled until an admin enables them.
+  # primitives remain disabled until an admin enables them, unless they pass
+  # `default_enabled: true`, which enables them on new sites.
   def register_mcp_tool(identifier, **attributes)
     register_mcp_primitive(:tool, identifier, **attributes)
   end
