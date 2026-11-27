@@ -248,13 +248,13 @@ RSpec.describe SharedAiConversation, type: :model do
   describe "#formatted_excerpt" do
     it "uses the saved agent display name even when model labels are disabled" do
       SiteSetting.ai_bot_show_model_name = false
-      agent.update!(name: "ComparaBot")
+      agent.update!(name: "Forum helper")
       conversation = described_class.share_conversation(user, topic)
       agent.update!(name: "Renamed agent")
 
-      expect(conversation.onebox_title).to eq("AI conversation with ComparaBot")
+      expect(conversation.onebox_title).to eq("AI conversation with Forum helper")
       expect(conversation.formatted_excerpt).to eq(
-        "AI conversation with ComparaBot:\n #{conversation.excerpt}",
+        "AI conversation with Forum helper:\n #{conversation.excerpt}",
       )
       expect(conversation.to_json[:llm_name]).to eq(claude_2.display_name)
     end
