@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .user-content {
   .assign-controls {
     display: flex;
@@ -11,6 +13,55 @@
 }
 
 .assigned-to {
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    color: var(--primary-high);
+    margin-block-end: 0.65em;
+  }
+
+  &__assignments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75em 1.25em;
+
+    &.--with-notes {
+      flex-direction: column;
+    }
+  }
+
+  &__assignment {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  &__assignee {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    overflow-wrap: anywhere;
+  }
+
+  &__note {
+    display: block;
+    flex-basis: 100%;
+    margin-inline-start: 2.5em;
+    padding: 0.5em 0.75em;
+    border-inline-start: 2px solid var(--primary-low);
+    background: var(--primary-very-low);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  &__status {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
   .d-icon,
   i.fa {
     margin-right: 0.25em;
@@ -54,7 +105,8 @@
 
 .d-modal.assign {
   .d-modal__body {
-    overflow-y: unset;
+    display: flex;
+    flex-direction: column;
   }
 
   label {
@@ -83,6 +135,11 @@
       position: absolute !important;
       transform: none !important;
       max-width: 100%;
+    }
+
+    &.is-placed-above .select-kit-body {
+      top: auto !important;
+      bottom: 0;
     }
 
     &-filter.is-expanded {
@@ -145,6 +202,63 @@
       font-size: var(--font-down-1);
     }
   }
+
+  .topic-assignments-editor {
+    min-height: 0;
+
+    &__row {
+      &:not(:first-child) {
+        padding-block-start: var(--space-3);
+      }
+      padding-block-end: var(--space-3);
+      border-block-end: 1px solid var(--primary-low);
+    }
+
+    &__person {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      overflow-wrap: anywhere;
+
+      // to make group icons the same size as avatars for alignment
+      > .d-icon {
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    &__name {
+      margin-inline-end: auto;
+    }
+
+    &__note {
+      position: relative;
+      padding-inline-start: calc(24px + var(--space-2));
+
+      textarea.form-kit__control-textarea {
+        padding-inline-end: var(--space-8) !important;
+      }
+    }
+
+    &__note-delete {
+      position: absolute;
+      inset-block-start: var(--space-1);
+      inset-inline-end: var(--space-1);
+    }
+
+    .form-kit__collection {
+      gap: 0;
+      overflow-y: auto;
+    }
+
+    textarea.form-kit__control-textarea {
+      max-width: 100%;
+      min-height: var(--space-9);
+      font-size: var(--font-down-1-rem);
+      font-style: italic;
+    }
+  }
 }
 
 .topic-list-item {
@@ -154,6 +268,16 @@
 }
 
 #topic-footer-dropdown-reassign {
+  &-header {
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      .assignment-avatars .avatar {
+        border-color: var(--d-button-default-bg-color--hover);
+      }
+    }
+  }
+
   .name {
     font-weight: normal;
     display: flex;
@@ -161,14 +285,16 @@
     gap: 0.25em;
   }
 
-  .avatar {
-    width: 1.19em;
-    height: 1.19em;
-  }
+  .assignment-avatars {
+    display: flex;
 
-  .avatar.overlap {
-    z-index: 1;
-    margin-right: -0.4em;
+    .avatar {
+      border: 2px solid var(--d-button-default-bg-color);
+
+      &:not(:first-child) {
+        margin-inline-start: -8px;
+      }
+    }
   }
 
   .d-icon,

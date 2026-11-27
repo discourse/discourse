@@ -15,20 +15,25 @@ RSpec.describe Jobs::AssignNotification do
     end
 
     context "when `assignment_id` is provided" do
-      let(:assignment_id) { Fabricate(:topic_assignment).id }
-      let(:assignment) { stub("assignment").responds_like_instance_of(Assignment) }
-
-      before { Assignment.stubs(:find).with(assignment_id).returns(assignment) }
+      fab!(:topic, :topic_with_op)
+      let(:assignment_id) { assignment.id }
+      let(:assignment) { Fabricate(:topic_assignment, topic: topic) }
 
       it "creates missing notifications for the provided assignment" do
-        assignment.expects(:create_missing_notifications!)
-        execute_job
+        expect { execute_job }.to change { Notification.for_assignment(assignment_id).count }.by(1)
       end
 
       it "does not create notifications if assignment is silenced" do
-        SilencedAssignment.stubs(:exists?).with(assignment_id: assignment_id).returns(true)
-        assignment.expects(:create_missing_notifications!).never
-        execute_job
+        Fabricate(:silenced_assignment, assignment_id: assignment_id)
+
+        expect { execute_job }.not_to change { Notification.for_assignment(assignment_id).count }
+      end
+
+      it "tolerates an assignment removed before the queued job runs" do
+        assignment_id
+        assignment.destroy!
+
+        expect { execute_job }.not_to change(Notification, :count)
       end
     end
 

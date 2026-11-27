@@ -17,7 +17,22 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
 
   computeContent() {
     let options = [];
-    if (this.assignee) {
+    if (this.topic.topic_assignments !== undefined) {
+      options = this.topic.topic_assignments.map((assignment) => ({
+        id: `unassign_assignment_${assignment.id}`,
+        icon:
+          assignment.assigned_to_type === "User" ? "user-xmark" : "group-times",
+        name: i18n("discourse_assign.topic_level_menu.unassign_from_topic", {
+          username:
+            assignment.assigned_to.username || assignment.assigned_to.name,
+        }),
+      }));
+      options.push({
+        id: "reassign",
+        icon: "pencil",
+        name: i18n("discourse_assign.topic_level_menu.edit_assignments"),
+      });
+    } else if (this.assignee) {
       options = options.concat([
         {
           id: "unassign",
@@ -55,6 +70,11 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
 
   @action
   onChange(id) {
+    const assignmentId = id.match(/^unassign_assignment_(\d+)$/)?.[1];
+    if (assignmentId) {
+      this.removeAssignment(assignmentId, this.topic);
+      return;
+    }
     switch (id) {
       case "unassign":
         this.unassign(this.topic.id);

@@ -8,13 +8,18 @@ export function extendTopicModel(api) {
   api.addModelField("topic", "assignment_note");
   api.addModelField("topic", "assignment_status");
   api.addModelField("topic", "can_assign");
+  api.addModelField("topic", "topic_assignments");
   api.addModelField("topic", "indirectly_assigned_to");
 
   api.addModelMethod("topic", "assignees", function () {
     const result = [];
 
-    if (this.assigned_to_user) {
-      result.push(this.assigned_to_user);
+    if (this.topic_assignments) {
+      result.push(
+        ...this.topic_assignments.map((assignment) => assignment.assigned_to)
+      );
+    } else if (this.assigned_to_user || this.assigned_to_group) {
+      result.push(this.assigned_to_user || this.assigned_to_group);
     }
 
     const postAssignees = this.assignedPosts().map((p) => p.assigned_to);
@@ -24,7 +29,12 @@ export function extendTopicModel(api) {
 
   api.addModelMethod("topic", "uniqueAssignees", function () {
     const map = new Map();
-    this.assignees().forEach((user) => map.set(user.username, user));
+    this.assignees().forEach((user) =>
+      map.set(
+        user.username ? `user:${user.username}` : `group:${user.name}`,
+        user
+      )
+    );
     return [...map.values()];
   });
 
@@ -61,11 +71,19 @@ export function extendTopicModel(api) {
   });
 
   api.addModelMethod("topic", "isAssigned", function () {
-    return this.assigned_to_user || this.assigned_to_group;
+    return this.topic_assignments !== undefined
+      ? this.topic_assignments.length > 0
+      : this.assigned_to_user || this.assigned_to_group;
   });
 
   api.addModelMethod("topic", "isAssignedTo", function (user) {
-    return this.assigned_to_user?.username === user.username;
+    return this.topic_assignments !== undefined
+      ? this.topic_assignments.some(
+          (assignment) =>
+            assignment.assigned_to_type === "User" &&
+            assignment.assigned_to.username === user.username
+        )
+      : this.assigned_to_user?.username === user.username;
   });
 
   api.addModelMethod("topic", "hasAssignedPosts", function () {

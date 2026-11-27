@@ -20,6 +20,7 @@ module Boards
     attribute :assigned_to_group
     attribute :all_assigned_users
     attribute :assignments
+    attribute :topic_assignments
 
     def unicode_title
       Emoji.gsub_emoji_to_unicode(object.title)
@@ -77,7 +78,9 @@ module Boards
 
     def all_assigned_users
       @all_assigned_users ||=
-        topic_assignments.filter_map { |a| serialize_user(a.assigned_to) }.uniq { |u| u[:username] }
+        visible_assignments
+          .filter_map { |a| serialize_user(a.assigned_to) }
+          .uniq { |u| u[:username] }
     end
 
     def include_all_assigned_users?
@@ -85,11 +88,25 @@ module Boards
     end
 
     def assignments
-      topic_assignments.filter_map { |a| serialize_assignment(a) }
+      visible_assignments.filter_map { |a| serialize_assignment(a) }
     end
 
     def include_assignments?
       assignments.present?
+    end
+
+    def topic_assignments
+      direct_assignments =
+        visible_assignments.select { |assignment| assignment.target_type == "Topic" }
+      ActiveModel::ArraySerializer.new(
+        direct_assignments,
+        each_serializer: DiscourseAssign::AssignmentSerializer,
+        scope:,
+      ).as_json
+    end
+
+    def include_topic_assignments?
+      assignment_metadata_visible?
     end
 
     private
@@ -98,7 +115,7 @@ module Boards
       @topic_user ||= @options.fetch(:topic_users_by_topic, {})[object.id]
     end
 
-    def topic_assignments
+    def visible_assignments
       return [] if !assignment_metadata_visible?
 
       assignments =
@@ -130,7 +147,11 @@ module Boards
 
     def serialize_assignment(assignment)
       assignee = assignment.assigned_to
-      result = { target_type: assignment.target_type, target_id: assignment.target_id }
+      result = {
+        id: assignment.id,
+        target_type: assignment.target_type,
+        target_id: assignment.target_id,
+      }
 
       if assignee.is_a?(User)
         result[:username] = assignee.username

@@ -216,12 +216,16 @@ RSpec.describe DiscourseAssign do
           :notification,
           notification_type: Notification.types[:assigned],
           user: user,
+          topic: first_assignment.topic,
+          post_number: 1,
           data: { assignment_id: first_assignment.id }.to_json,
         )
         Fabricate(
           :notification,
           notification_type: Notification.types[:assigned],
           user: user,
+          topic: second_assignment.topic,
+          post_number: second_assignment.target.post_number,
           data: { assignment_id: second_assignment.id }.to_json,
         )
       end
@@ -364,12 +368,16 @@ RSpec.describe DiscourseAssign do
           :notification,
           notification_type: Notification.types[:assigned],
           user: user,
+          topic: first_assignment.topic,
+          post_number: 1,
           data: { assignment_id: first_assignment.id }.to_json,
         )
         Fabricate(
           :notification,
           notification_type: Notification.types[:assigned],
           user: user,
+          topic: second_assignment.topic,
+          post_number: second_assignment.target.post_number,
           data: { assignment_id: second_assignment.id }.to_json,
         )
       end

@@ -38,6 +38,19 @@ RSpec.describe Jobs::UnassignNotification do
         }.to change { user2.notifications.count }.by(-1)
       end
 
+      it "removes a queued notification after its source topic is soft-deleted" do
+        topic.trash!
+
+        expect {
+          described_class.new.execute(
+            topic_id: topic.id,
+            assigned_to_id: user2.id,
+            assigned_to_type: "User",
+            assignment_id: assignment.id,
+          )
+        }.to change { user2.notifications.for_assignment(assignment.id).count }.from(1).to(0)
+      end
+
       it "publishes the notification for a private message" do
         user = pm.allowed_users.first
         assign_allowed_group.add(user)
@@ -53,6 +66,40 @@ RSpec.describe Jobs::UnassignNotification do
             },
           )
         end
+      end
+    end
+
+    context "with overlapping direct and group assignments" do
+      fab!(:group)
+
+      let!(:direct_assignment) do
+        Fabricate(:topic_assignment, topic: topic, assigned_to: user2, assigned_by_user: user1)
+      end
+      let!(:group_assignment) do
+        Fabricate(:topic_assignment, topic: topic, assigned_to: group, assigned_by_user: user1)
+      end
+
+      before do
+        SiteSetting.assign_allow_multiple_topic_assignees = true
+        group.add(user2)
+        direct_assignment.create_missing_notifications!
+      end
+
+      it "preserves a read notification when the user remains responsible through the group" do
+        notification = user2.notifications.assigned.find_by!(topic: topic)
+        notification.update!(read: true)
+        direct_assignment.destroy!
+
+        described_class.new.execute(
+          topic_id: topic.id,
+          assigned_to_id: user2.id,
+          assigned_to_type: "User",
+          assignment_id: direct_assignment.id,
+        )
+
+        expect(notification.reload).to be_read
+        expect(notification.data_hash[:assignment_id]).to eq(group_assignment.id)
+        expect(user2.notifications.assigned.where(topic: topic).count).to eq(1)
       end
     end
 

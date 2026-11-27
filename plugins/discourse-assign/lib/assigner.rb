@@ -6,8 +6,6 @@ require "nokogiri"
 require_relative "discourse_assign/assignment_permissions"
 
 class ::Assigner
-  ASSIGNMENTS_PER_TOPIC_LIMIT = 5
-
   def self.backfill_auto_assign
     staff_mention =
       User
@@ -119,7 +117,7 @@ class ::Assigner
       "discourse_assign.#{reason}",
       username: name,
       group: name,
-      limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
+      limit: SiteSetting.assign_max_assignments_per_topic,
       max: SiteSetting.max_assigned_topics,
       note_max: SiteSetting.max_post_length,
     )
@@ -131,7 +129,9 @@ class ::Assigner
     end
   end
 
-  def initialize(target, user)
+  def initialize(target, user, assignment: :current, previous_recipients: nil)
+    @assignment = assignment
+    @previous_recipients = previous_recipients
     @assigned_by = user
     @target = target
   end
@@ -144,12 +144,13 @@ class ::Assigner
   def can_assign_to?(assign_to)
     return true if assign_to.is_a?(Group)
     return true if @assigned_by.id == assign_to.id
+    return true if current_assignment&.active && current_assignment.assigned_to == assign_to
 
     assigned_total =
       Assignment
         .joins_with_topics
         .where(topics: { deleted_at: nil })
-        .where(assigned_to_id: assign_to.id, active: true)
+        .where(assigned_to: assign_to, active: true)
         .count
 
     assigned_total < SiteSetting.max_assigned_topics
@@ -203,27 +204,32 @@ class ::Assigner
   end
 
   def forbidden_reasons(assign_to:, type:, note:, status:, allow_self_reassign:)
+    existing_assignee = current_assignment&.active && current_assignment.assigned_to == assign_to
     case
-    when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
+    when !existing_assignee && assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
       if topic.private_message?
         :forbidden_assignee_not_pm_participant
       else
         :forbidden_assignee_cant_see_topic
       end
-    when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
+    when !existing_assignee && assign_to.is_a?(Group) &&
+           assign_to.users.any? { |user| !can_assignee_see_target?(user) }
       if topic.private_message?
         :forbidden_group_assignee_not_pm_participant
       else
         :forbidden_group_assignee_cant_see_topic
       end
-    when !can_be_assigned?(assign_to)
+    when !existing_assignee && !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
     when note.present? && note.length > SiteSetting.max_post_length
       :assignment_note_too_long
+    when SiteSetting.enable_assign_status && status.present? &&
+           !Assignment.statuses.include?(status)
+      :invalid_assignment_status
     when !allow_self_reassign && already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
-           !reassign?
+    when Assignment.where(topic: topic, active: true).count >=
+           SiteSetting.assign_max_assignments_per_topic && !reassign?
       :too_many_assigns_for_topic
     when !can_assign_to?(assign_to)
       :too_many_assigns
@@ -232,31 +238,33 @@ class ::Assigner
 
   def update_details(assign_to, note, status, skip_small_action_post: false, should_notify: true)
     case
-    when note.present? && status.present? && @target.assignment.note != note &&
-           @target.assignment.status != status
+    when current_assignment.note != note && current_assignment.status != status
       small_action_text = <<~TEXT
-        Status: #{@target.assignment.status} → #{status}
+        Status: #{current_assignment.status} → #{status}
 
         #{note}
       TEXT
       change_type = "details"
-    when note.present? && @target.assignment.note != note
+    when current_assignment.note != note
       small_action_text = note
       change_type = "note"
-    when @target.assignment.status != status
-      small_action_text = "#{@target.assignment.status} → #{status}"
+    when current_assignment.status != status
+      small_action_text = "#{current_assignment.status} → #{status}"
       change_type = "status"
     end
 
-    @target.assignment.update!(note: note, status: status)
-    queue_notification(@target.assignment) if should_notify
-    @target.assignment.publish_topic_assignment
+    current_assignment.update!(note: note, status: status)
+    updated_assignment = current_assignment
+    ActiveRecord.after_all_transactions_commit do
+      queue_notification(updated_assignment) if should_notify
+      updated_assignment.publish_topic_assignment
 
-    # email is skipped, for now
+      # email is skipped, for now
 
-    unless skip_small_action_post
-      action_code = "#{change_type}_change"
-      add_small_action_post(action_code, assign_to, small_action_text)
+      unless skip_small_action_post
+        action_code = "#{change_type}_change"
+        add_small_action_post(action_code, assign_to, small_action_text)
+      end
     end
 
     { success: true }
@@ -268,9 +276,53 @@ class ::Assigner
     skip_small_action_post: false,
     status: nil,
     allow_self_reassign: false,
-    should_notify: true
+    should_notify: true,
+    replace: true
   )
     return { success: false, reason: :no_assignee } if assign_to.blank?
+    result = nil
+    topic.with_lock do
+      assign_to.lock! if assign_to.is_a?(User)
+      @previous_recipients ||=
+        Assignment
+          .active
+          .where(target: @target)
+          .includes(:assigned_to)
+          .flat_map(&:assigned_users)
+          .map(&:id)
+      if replace && topic_target? && Assignment.where(target: @target).count > 1
+        allow_self_reassign ||= Assignment.active.where(target: @target).count > 1
+        Assignment
+          .where(target: @target)
+          .where.not(assigned_to: assign_to)
+          .find_each { |assignment| self.class.new(@target, @assigned_by, assignment:).unassign }
+        @target.reset_assignment_cache
+      end
+      result =
+        assign_to_target(
+          assign_to,
+          note:,
+          skip_small_action_post:,
+          status:,
+          allow_self_reassign:,
+          should_notify:,
+        )
+      raise ActiveRecord::Rollback unless result[:success]
+    end
+    result
+  end
+
+  def assign_to_target(
+    assign_to,
+    note:,
+    skip_small_action_post:,
+    status:,
+    allow_self_reassign:,
+    should_notify:
+  )
+    return { success: false, reason: :no_assignee } if assign_to.blank?
+
+    status = current_assignment.status if current_assignment && status.nil?
 
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
@@ -326,19 +378,23 @@ class ::Assigner
     skip_small_action_post =
       skip_small_action_post || (!allow_self_reassign && no_assignee_change?(assign_to))
 
-    if @target.assignment
-      Jobs.enqueue(
-        :unassign_notification,
-        topic_id: topic.id,
-        assigned_to_id: @target.assignment.assigned_to_id,
-        assigned_to_type: @target.assignment.assigned_to_type,
-        assignment_id: @target.assignment.id,
-      )
-      @target.assignment.destroy!
+    if current_assignment
+      previous_assignment = current_assignment
+      ActiveRecord.after_all_transactions_commit do
+        Jobs.enqueue(
+          :unassign_notification,
+          topic_id: topic.id,
+          assigned_to_id: previous_assignment.assigned_to_id,
+          assigned_to_type: previous_assignment.assigned_to_type,
+          assignment_id: previous_assignment.id,
+        )
+      end
+      previous_assignment.destroy!
     end
 
     assignment =
-      @target.create_assignment!(
+      Assignment.create!(
+        target: @target,
         assigned_to: assign_to,
         assigned_by_user: @assigned_by,
         topic: topic,
@@ -346,153 +402,184 @@ class ::Assigner
         status: status,
       )
 
-    first_post&.publish_change_to_clients!(:revised, reload_topic: true)
-    queue_notification(assignment) if should_notify
-
-    # This assignment should never be notified
     SilencedAssignment.create!(assignment_id: assignment.id) if !should_notify
+    @target.reset_assignment_cache if topic_target?
+    @target.association(:assignment).reset if post_target?
 
-    assignment.publish_topic_assignment
+    ActiveRecord.after_all_transactions_commit do
+      first_post&.publish_change_to_clients!(:revised, reload_topic: true)
+      queue_notification(assignment) if should_notify
+      assignment.publish_topic_assignment
 
-    if assignment.assigned_to_user?
-      if !assign_to.user_option.do_nothing_when_assigned?
-        notification_level =
-          if assign_to.user_option.track_topic_when_assigned?
-            TopicUser.notification_levels[:tracking]
-          else
-            TopicUser.notification_levels[:watching]
-          end
-
-        topic_user = TopicUser.find_by(user_id: assign_to.id, topic:)
-        if !topic_user || topic_user.notification_level < notification_level
-          notifications_reason_id = TopicUser.notification_reasons[:plugin_changed]
-          TopicUser.change(assign_to.id, topic.id, notification_level:, notifications_reason_id:)
-        end
-      end
-
-      if SiteSetting.assign_mailer == AssignMailer.levels[:always] ||
-           (
-             SiteSetting.assign_mailer == AssignMailer.levels[:different_users] &&
-               @assigned_by.id != assign_to.id
-           )
-        if !topic.muted?(assign_to)
-          message = AssignMailer.send_assignment(assign_to.email, topic, @assigned_by)
-          Email::Sender.new(message, :assign_message).send
-        end
-      end
-    end
-
-    unless skip_small_action_post
-      post_action_code = moderator_post_assign_action_code(assignment, action_code)
-      add_small_action_post(post_action_code, assign_to, note)
-    end
-
-    # Create a webhook event
-    if WebHook.active_web_hooks(:assigned).exists?
-      assigned_to_type = :assigned
-      payload = {
-        type: assigned_to_type,
-        topic_id: topic.id,
-        topic_title: topic.title,
-        assigned_by_id: @assigned_by.id,
-        assigned_by_username: @assigned_by.username,
-      }
       if assignment.assigned_to_user?
-        payload.merge!({ assigned_to_id: assign_to.id, assigned_to_username: assign_to.username })
-      else
-        payload.merge!(
-          { assigned_to_group_id: assign_to.id, assigned_to_group_name: assign_to.name },
-        )
-      end
-      WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
-    end
+        if !assign_to.user_option.do_nothing_when_assigned?
+          notification_level =
+            if assign_to.user_option.track_topic_when_assigned?
+              TopicUser.notification_levels[:tracking]
+            else
+              TopicUser.notification_levels[:watching]
+            end
 
-    DiscourseEvent.trigger(:assigned, assignment, acting_user: @assigned_by)
+          topic_user = TopicUser.find_by(user_id: assign_to.id, topic:)
+          if !topic_user || topic_user.notification_level < notification_level
+            notifications_reason_id = TopicUser.notification_reasons[:plugin_changed]
+            TopicUser.change(assign_to.id, topic.id, notification_level:, notifications_reason_id:)
+          end
+        end
+
+        if !@previous_recipients.include?(assign_to.id) &&
+             (
+               SiteSetting.assign_mailer == AssignMailer.levels[:always] ||
+                 (
+                   SiteSetting.assign_mailer == AssignMailer.levels[:different_users] &&
+                     @assigned_by.id != assign_to.id
+                 )
+             )
+          if !topic.muted?(assign_to)
+            message = AssignMailer.send_assignment(assign_to.email, topic, @assigned_by)
+            Email::Sender.new(message, :assign_message).send
+          end
+        end
+      end
+
+      unless skip_small_action_post
+        post_action_code = moderator_post_assign_action_code(assignment, action_code)
+        add_small_action_post(post_action_code, assign_to, note)
+      end
+
+      # Create a webhook event
+      if WebHook.active_web_hooks(:assigned).exists?
+        assigned_to_type = :assigned
+        payload = {
+          type: assigned_to_type,
+          topic_id: topic.id,
+          topic_title: topic.title,
+          assigned_by_id: @assigned_by.id,
+          assigned_by_username: @assigned_by.username,
+        }
+        if assignment.assigned_to_user?
+          payload.merge!({ assigned_to_id: assign_to.id, assigned_to_username: assign_to.username })
+        else
+          payload.merge!(
+            { assigned_to_group_id: assign_to.id, assigned_to_group_name: assign_to.name },
+          )
+        end
+        WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
+      end
+
+      DiscourseEvent.trigger(:assigned, assignment, acting_user: @assigned_by)
+    end
 
     { success: true }
   end
 
   def unassign(silent: false, deactivate: false)
-    if assignment = @target.assignment
-      deactivate ? assignment.update!(active: false) : assignment.destroy!
+    topic.with_lock { unassign_target(silent:, deactivate:) }
+  end
 
-      return if first_post.blank?
-
-      first_post.publish_change_to_clients!(:revised, reload_topic: true)
-
-      Jobs.enqueue(
-        :unassign_notification,
-        topic_id: topic.id,
-        assigned_to_id: assignment.assigned_to.id,
-        assigned_to_type: assignment.assigned_to_type,
-        assignment_id: assignment.id,
+  def unassign_target(silent:, deactivate:)
+    if topic_target? && @assignment == :current
+      return(
+        topic.with_lock do
+          @target.assignments.reload.each do |assignment|
+            self.class.new(@target, @assigned_by, assignment:).unassign(silent:, deactivate:)
+          end
+          @target.reset_assignment_cache
+        end
       )
+    end
 
-      assigned_to = assignment.assigned_to
+    if assignment = current_assignment
+      deactivate ? assignment.update!(active: false) : assignment.destroy!
+      @target.reset_assignment_cache if topic_target?
+      @target.association(:assignment).reset if post_target?
 
-      if SiteSetting.unassign_creates_tracking_post && !silent
-        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+      ActiveRecord.after_all_transactions_commit do
+        next if first_post.blank? || !assignment.assigned_to
 
-        custom_fields = small_action_username_or_name(assigned_to)
+        first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-        if post_target?
-          custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
-          custom_fields.merge!("action_code_post_id" => @target.id)
-        end
-
-        topic.add_moderator_post(
-          @assigned_by,
-          nil,
-          bump: false,
-          post_type: post_type,
-          custom_fields: custom_fields,
-          action_code: moderator_post_unassign_action_code(assignment),
-        )
-      end
-
-      # Create a webhook event
-      if WebHook.active_web_hooks(:unassigned).exists?
-        type = :unassigned
-        payload = {
-          type: type,
+        Jobs.enqueue(
+          :unassign_notification,
           topic_id: topic.id,
-          topic_title: topic.title,
-          unassigned_by_id: @assigned_by.id,
-          unassigned_by_username: @assigned_by.username,
-        }
-        if assignment.assigned_to_user?
-          payload.merge!(
-            { unassigned_to_id: assigned_to.id, unassigned_to_username: assigned_to.username },
-          )
-        else
-          payload.merge!(
-            { unassigned_to_group_id: assigned_to.id, unassigned_to_group_name: assigned_to.name },
+          assigned_to_id: assignment.assigned_to.id,
+          assigned_to_type: assignment.assigned_to_type,
+          assignment_id: assignment.id,
+        )
+
+        assigned_to = assignment.assigned_to
+
+        if SiteSetting.unassign_creates_tracking_post && !silent
+          post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+
+          custom_fields = small_action_username_or_name(assigned_to)
+
+          if post_target?
+            custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
+            custom_fields.merge!("action_code_post_id" => @target.id)
+          end
+
+          topic.add_moderator_post(
+            @assigned_by,
+            nil,
+            bump: false,
+            post_type: post_type,
+            custom_fields: custom_fields,
+            action_code: moderator_post_unassign_action_code(assignment),
           )
         end
-        WebHook.enqueue_assign_hooks(type, payload.to_json)
-      end
 
-      DiscourseEvent.trigger(:unassigned, assignment, acting_user: @assigned_by)
-
-      if allowed_user_ids.present?
-        MessageBus.publish(
-          "/staff/topic-assignment",
-          {
-            type: "unassigned",
+        # Create a webhook event
+        if WebHook.active_web_hooks(:unassigned).exists?
+          type = :unassigned
+          payload = {
+            type: type,
             topic_id: topic.id,
-            post_id: post_target? && @target.id,
-            post_number: post_target? && @target.post_number,
-            assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
-            assignment_note: nil,
-            assignment_status: nil,
-          },
-          user_ids: allowed_user_ids,
-        )
+            topic_title: topic.title,
+            unassigned_by_id: @assigned_by.id,
+            unassigned_by_username: @assigned_by.username,
+          }
+          if assignment.assigned_to_user?
+            payload.merge!(
+              { unassigned_to_id: assigned_to.id, unassigned_to_username: assigned_to.username },
+            )
+          else
+            payload.merge!(
+              {
+                unassigned_to_group_id: assigned_to.id,
+                unassigned_to_group_name: assigned_to.name,
+              },
+            )
+          end
+          WebHook.enqueue_assign_hooks(type, payload.to_json)
+        end
+
+        DiscourseEvent.trigger(:unassigned, assignment, acting_user: @assigned_by)
+
+        if allowed_user_ids.present?
+          MessageBus.publish(
+            "/staff/topic-assignment",
+            {
+              type: "unassigned",
+              topic_id: topic.id,
+              post_id: post_target? && @target.id,
+              post_number: post_target? && @target.post_number,
+              assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
+              assignment_note: nil,
+              assignment_status: nil,
+            },
+            user_ids: allowed_user_ids,
+          )
+        end
       end
     end
   end
 
   private
+
+  def current_assignment
+    @assignment == :current ? @target.assignment : @assignment
+  end
 
   def invite_user(user)
     return if topic.all_allowed_users.exists?(id: user.id)
@@ -576,20 +663,20 @@ class ::Assigner
   end
 
   def already_assigned?(assign_to, type, note, status)
-    assignment_eq?(@target.assignment, assign_to, type, note, status)
+    assignment_eq?(current_assignment, assign_to, type, note, status)
   end
 
   def reassign?
-    Assignment.exists?(target: @target, active: true)
+    current_assignment&.active
   end
 
   def no_assignee_change?(assignee)
-    @target.assignment&.assigned_to_id == assignee.id &&
-      @target.assignment&.assigned_to_type == assignee.class.name
+    current_assignment&.assigned_to_id == assignee.id &&
+      current_assignment&.assigned_to_type == assignee.class.name
   end
 
   def details_change?(note, status)
-    note.present? || @target.assignment&.status != status
+    current_assignment&.note != note || current_assignment&.status != status
   end
 
   def assignment_eq?(assignment, assign_to, type, note, status)

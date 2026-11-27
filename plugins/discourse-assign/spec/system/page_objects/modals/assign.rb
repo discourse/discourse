@@ -30,6 +30,16 @@ module PageObjects
         find(".d-modal__footer .btn-primary").click
       end
 
+      def edit_topic_note(user, note)
+        within(".topic-assignments-editor__row", text: user.username) do
+          find("textarea").fill_in(with: note)
+        end
+      end
+
+      def has_topic_assignees?(*users)
+        users.all? { |user| has_css?(".topic-assignments-editor__row", text: user.username) }
+      end
+
       private
 
       def assignee_chooser
