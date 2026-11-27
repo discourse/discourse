@@ -1,0 +1,12 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          hamilton: "Hamilton"
+  js:
+    hamilton:
+      title: "Hamilton"
+      greeting: "Hello %{value}"
+      docs: "Documentation"
+      roadmap: "Roadmap"
