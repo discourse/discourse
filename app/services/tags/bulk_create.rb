@@ -89,7 +89,7 @@ class Tags::BulkCreate
     context[:results] = results
   end
 
-  def create_tags(validated_tags:, results:)
+  def create_tags(validated_tags:, results:, guardian:)
     tag_names = validated_tags.map { |t| t[:tag_name] }
     existing_tag_names = Tag.where(name: tag_names).pluck(:name).to_set
 
@@ -100,7 +100,7 @@ class Tags::BulkCreate
       if existing_tag_names.include?(tag_name)
         results[:existing] << tag_name
       else
-        tag = Tag.new(name: tag_name)
+        tag = Tag.new(name: tag_name, created_by: guardian.user)
         if tag.save
           results[:created] << tag_name
         else

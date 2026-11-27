@@ -36,6 +36,15 @@ module DiscourseWorkflows
           },
         )
 
+        deprecated(replaced_by: "action:unlist_topic") do |parameters|
+          if parameters.fetch("operation", "unlist_topic") == "unlist_topic"
+            {
+              type: "action:unlist_topic",
+              parameters: parameters.slice("topic_id", "actor_username"),
+            }
+          end
+        end
+
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map.with_index do |_item, item_index|

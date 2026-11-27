@@ -88,7 +88,7 @@ module DiscourseWorkflows
             )
           end
 
-          if !topic.change_category_to_id(category_id) || topic.errors.present?
+          if !topic.change_category_to_id(category_id, acting_user: actor) || topic.errors.present?
             errors = topic.errors.full_messages.presence
             raise_node_error!(
               errors&.join(", ") ||

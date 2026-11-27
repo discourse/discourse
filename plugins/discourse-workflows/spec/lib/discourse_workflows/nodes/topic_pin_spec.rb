@@ -7,6 +7,75 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
 
   let(:item) { { "json" => {} } }
 
+  describe ".upgrade" do
+    let(:shared) { { "topic_id" => "={{ $json.topic.id }}", "actor_username" => "system" } }
+    let(:notes) { ["discourse_workflows.node_upgrades.topic_pin_output"] }
+
+    it "moves pinning to Pin topic with its pin settings" do
+      pin = { "pinned_globally" => true, "pinned_until" => "2030-01-15 09:00", "timezone" => "UTC" }
+
+      expect(described_class.upgrade(shared.merge(pin, "bannered_until" => "ignored"))).to eq(
+        type: "action:pin_topic",
+        parameters: shared.merge(pin),
+        notes:,
+      )
+    end
+
+    it "treats a node without an operation or pin type as pinning" do
+      expect(described_class.upgrade(shared)).to include(type: "action:pin_topic")
+    end
+
+    it "moves unpinning to Unpin topic" do
+      expect(described_class.upgrade(shared.merge("operation" => "remove"))).to eq(
+        type: "action:unpin_topic",
+        parameters: shared,
+        notes:,
+      )
+    end
+
+    it "moves bannering to Make banner with its banner settings" do
+      banner = { "bannered_until" => "2030-01-15 09:00", "timezone" => "UTC" }
+
+      expect(
+        described_class.upgrade(
+          shared.merge(banner, "pin_type" => "banner", "pinned_globally" => true),
+        ),
+      ).to eq(type: "action:make_banner", parameters: shared.merge(banner), notes:)
+    end
+
+    it "moves removing the banner to Remove banner" do
+      expect(
+        described_class.upgrade(shared.merge("operation" => "remove", "pin_type" => "banner")),
+      ).to eq(type: "action:remove_banner", parameters: shared, notes:)
+    end
+
+    it "leaves a node whose operation or pin type is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+      expect(described_class.upgrade("pin_type" => "={{ $json.pin_type }}")).to be_nil
+    end
+
+    it "upgrades a saved node to Pin topic 1.0 with a translated note" do
+      node = {
+        "id" => "node-1",
+        "type" => "action:topic_pin",
+        "typeVersion" => "1.0",
+        "name" => "Pin",
+        "parameters" => shared,
+      }
+
+      result = DiscourseWorkflows::NodeUpgrader.call([node])
+
+      expect(result.nodes.sole).to include(
+        "type" => "action:pin_topic",
+        "typeVersion" => "1.0",
+        "parameters" => shared,
+      )
+      expect(result.upgrades.sole.notes).to eq(
+        [I18n.t("discourse_workflows.node_upgrades.topic_pin_output")],
+      )
+    end
+  end
+
   describe "#execute" do
     context "with the pin type" do
       context "with the add operation" do
@@ -139,7 +208,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
               execute_node(configuration: config, item: item, workflow: workflow)
             }.to raise_error(
               DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: 'soon'.",
+              "'pinned_until' is not a valid date and time: 'soon'. [item 0]",
             )
           end
 
@@ -154,7 +223,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
               execute_node(configuration: config, item: item, workflow: workflow)
             }.to raise_error(
               DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: '2026-13-45'.",
+              "'pinned_until' is not a valid date and time: '2026-13-45'. [item 0]",
             )
           end
         end

@@ -22,6 +22,25 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
       SiteSetting.allow_solved_on_all_topics = true
     end
 
+    context "when a concurrent request unaccepts the answer first" do
+      before do
+        DiscourseSolved::AcceptAnswer.call(params:, guardian: Discourse.system_user.guardian)
+        allow(DistributedMutex).to receive(
+          :synchronize,
+        ).and_wrap_original do |original, *args, &block|
+          DiscourseSolved::TopicAnswer.where(answer_post_id: post.id).destroy_all
+          original.call(*args, &block)
+        end
+      end
+
+      it "does nothing" do
+        events = DiscourseEvent.track_events(:unaccepted_solution) { result }
+
+        expect(result).to run_successfully
+        expect(events).to be_empty
+      end
+    end
+
     context "when contract is invalid" do
       let(:params) { {} }
 

@@ -73,44 +73,34 @@ module DiscourseWorkflows
                 none: "discourse_workflows.badge.badge_id_placeholder",
               },
             },
-            reason: {
-              type: :string,
-              required: false,
-              ui: {
-                description_key: "admin.badges.reason_help",
-              },
-              display_options: {
-                show: {
-                  operation: ["grant"],
-                },
-                hide: {
-                  badge_id: [
-                    { condition: { metadata_flag: { collection: "badges", flag: "hide_reason" } } },
-                  ],
-                },
-              },
-            },
+            reason: BadgeReason.property(display_options: { show: { operation: ["grant"] } }),
             **actor_property,
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "badges"
-            ::Badge
-              .where(enabled: true)
-              .order(:name)
-              .select(:id, :name, :system, :show_posts)
-              .filter_map do |badge|
-                if context.matches_filter?(badge.name)
-                  { id: badge.id, name: badge.name, hide_reason: reason_hidden?(badge) }
-                end
-              end
+        deprecated(replaced_by: %w[action:grant_badge action:revoke_badge]) do |parameters|
+          badge_parameters = parameters.slice("username", "badge_id", "actor_username")
+          notes = ["discourse_workflows.node_upgrades.badge_output"]
+
+          # An operation set by an expression can't be upgraded automatically.
+          case parameters.fetch("operation", "grant")
+          when "grant"
+            {
+              type: "action:grant_badge",
+              parameters: badge_parameters.merge(parameters.slice("reason")),
+              notes:,
+            }
+          when "revoke"
+            {
+              type: "action:revoke_badge",
+              parameters: badge_parameters,
+              notes: [*notes, "discourse_workflows.node_upgrades.badge_revoke_all_grants"],
+            }
           end
         end
 
-        def self.reason_hidden?(badge)
-          badge.system? && !badge.show_posts?
+        def self.load_options_context(context)
+          load_badge_options(context)
         end
 
         def execute(exec_ctx)
@@ -146,10 +136,10 @@ module DiscourseWorkflows
             BadgeGranter.revoke(user_badge, revoked_by: actor) if user_badge
             changed = user_badge.present?
           else
-            post =
-              find_reason_post(exec_ctx, item_index, guardian:) unless self.class.reason_hidden?(
-              badge,
-            )
+            if !BadgeReason.hidden?(badge)
+              reason = exec_ctx.get_node_parameter("reason", item_index)
+              post = BadgeReason.find_post(reason, guardian:)
+            end
 
             last_user_badge_id = user_badges.maximum(:id)
             BadgeGranter.grant(badge, user, granted_by: actor, post_id: post&.id)
@@ -163,29 +153,6 @@ module DiscourseWorkflows
             badge_name: badge.name,
             changed:,
           }
-        rescue BadgeGranter::InvalidReason => error
-          raise NodeError, error.message
-        end
-
-        def find_reason_post(exec_ctx, item_index, guardian:)
-          reason = exec_ctx.get_node_parameter("reason", item_index).to_s.strip
-          reference = /\A(?:(post|topic):)?([0-9]+)\z/.match(reason)
-          return BadgeGranter.post_for_reason(reason, guardian:) if !reference
-
-          type, id = reference.captures
-          if !type
-            raise NodeError,
-                  I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id:)
-          end
-
-          post = type == "post" ? ::Post.find_by(id:) : ::Post.find_by(topic_id: id, post_number: 1)
-          if !post
-            raise NodeError,
-                  I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference: reason)
-          end
-
-          guardian.ensure_can_see!(post)
-          post
         end
       end
     end

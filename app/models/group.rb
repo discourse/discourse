@@ -844,12 +844,24 @@ class Group < ActiveRecord::Base
 
     Group.transaction do
       (current_group_ids - desired_group_ids).each do |group_id|
-        GroupUser.find_by!(user_id: user.id, group_id:).destroy!
-        groups_by_id[group_id].trigger_user_removed_event(user)
+        # A concurrent refresh may have removed it already: only the one that does reports it.
+        group_user = GroupUser.find_by(user_id: user.id, group_id:)
+        next if group_user.nil?
+        begin
+          group_user.lock!
+        rescue ActiveRecord::RecordNotFound
+          next
+        end
+        group_user.destroy!
+        groups_by_id[group_id].trigger_user_removed_event(user, acting_user: Discourse.system_user)
       end
       (desired_group_ids - current_group_ids).each do |group_id|
         groups_by_id[group_id].group_users.create!(user:)
-        groups_by_id[group_id].trigger_user_added_event(user, true)
+        groups_by_id[group_id].trigger_user_added_event(
+          user,
+          true,
+          acting_user: Discourse.system_user,
+        )
       end
     end
 
@@ -860,13 +872,26 @@ class Group < ActiveRecord::Base
     desired = desired_trust_level_groups(trust_level)
     undesired = trust_group_ids - desired
 
-    GroupUser.where(group_id: undesired, user_id: user_id).delete_all
+    removed_group_ids =
+      if undesired.present?
+        DB.query_single(
+          "DELETE FROM group_users WHERE group_id IN (:undesired) AND user_id = :user_id RETURNING group_id",
+          undesired:,
+          user_id:,
+        )
+      end
+    if removed_group_ids.present?
+      user = User.find_by(id: user_id)
+      Group
+        .where(id: removed_group_ids)
+        .each { |group| group.trigger_user_removed_event(user, acting_user: Discourse.system_user) }
+    end
 
     desired.each do |id|
       if group = find_by(id: id)
         unless GroupUser.where(group_id: id, user_id: user_id).exists?
           group_user = group.group_users.create!(user_id: user_id)
-          group.trigger_user_added_event(group_user.user, true)
+          group.trigger_user_added_event(group_user.user, true, acting_user: Discourse.system_user)
         end
       else
         name = AUTO_GROUP_IDS[trust_level]
@@ -920,25 +945,27 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user, notify: false, automatic: false)
+  def add(user, notify: false, automatic: false, acting_user: nil)
     return false if user.nil?
-    added_ids = GroupManager.new(self).add([user.id], automatic:)
+    added_ids = GroupManager.new(self).add([user.id], automatic:, acting_user:)
     send_membership_notification(user) if notify && !added_ids.empty?
 
     self
   end
 
-  def remove(user)
+  def remove(user, acting_user: nil)
     return false if user.nil?
-    GroupManager.new(self).remove([user.id]).present?
+    GroupManager.new(self).remove([user.id], acting_user:).present?
   end
 
-  def trigger_user_added_event(user, automatic)
-    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+  # Listeners must accept trailing keywords (a block, |*args| or **): more
+  # may be added, and acting_user is nil when the caller didn't say who acted.
+  def trigger_user_added_event(user, automatic, acting_user: nil)
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic:, acting_user:)
   end
 
-  def trigger_user_removed_event(user)
-    DiscourseEvent.trigger(:user_removed_from_group, user, self)
+  def trigger_user_removed_event(user, acting_user: nil)
+    DiscourseEvent.trigger(:user_removed_from_group, user, self, acting_user:)
   end
 
   def add_owner(user)
@@ -958,12 +985,12 @@ class Group < ActiveRecord::Base
     ).first
   end
 
-  def bulk_add(user_ids, automatic: false)
-    GroupManager.new(self).add(user_ids, automatic:)
+  def bulk_add(user_ids, automatic: false, acting_user: nil)
+    GroupManager.new(self).add(user_ids, automatic:, acting_user:)
   end
 
-  def bulk_remove(user_ids)
-    GroupManager.new(self).remove(user_ids)
+  def bulk_remove(user_ids, acting_user: nil)
+    GroupManager.new(self).remove(user_ids, acting_user:)
   end
 
   # Bots in built-in and hand-managed groups are incidental (e.g. the system user
@@ -981,14 +1008,14 @@ class Group < ActiveRecord::Base
   end
 
   def add_automatically(user, subject: nil)
-    if users.exclude?(user) && add(user)
+    if users.exclude?(user) && add(user, acting_user: Discourse.system_user)
       logger = GroupActionLogger.new(Discourse.system_user, self)
       logger.log_add_user_to_group(user, subject)
     end
   end
 
   def remove_automatically(user, subject: nil)
-    if users.include?(user) && remove(user)
+    if users.include?(user) && remove(user, acting_user: Discourse.system_user)
       logger = GroupActionLogger.new(Discourse.system_user, self)
       logger.log_remove_user_from_group(user, subject)
     end

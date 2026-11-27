@@ -37,6 +37,22 @@ RSpec.describe DiscourseReactions::ReactionManager do
       expect(events.pluck(:params)).to eq([[post, user, nil], [post, user, "hugs"]])
     end
 
+    it "does not unlike again when staff remove a reaction excluded from likes after taking back their like" do
+      admin = Fabricate(:admin)
+      PostActionCreator.like(admin, post)
+      PostActionDestroyer.destroy(admin, post, :like)
+      described_class.new(reaction_value: "-1", user: admin, post:).toggle!
+
+      events =
+        DiscourseEvent.track_events(:like_destroyed) do
+          expect {
+            described_class.new(reaction_value: "-1", user: admin, post:).toggle!
+          }.not_to change { GivenDailyLike.find_for(admin.id, Date.today).pick(:likes_given) }
+        end
+
+      expect(events).to be_empty
+    end
+
     context "when switching to the default reaction" do
       fab!(:topic)
       fab!(:op_post) { Fabricate(:post, topic: topic) }

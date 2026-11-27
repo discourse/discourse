@@ -9,6 +9,41 @@ RSpec.describe DiscourseWorkflows::Nodes::PostReaction::V1 do
     SiteSetting.discourse_reactions_enabled_reactions = "laughing|hugs"
   end
 
+  describe ".upgrade" do
+    let(:reaction_parameters) do
+      {
+        "post_id" => "={{ $json.post.id }}",
+        "reaction" => "laughing",
+        "actor_username" => "system",
+      }
+    end
+    let(:notes) { ["discourse_reactions.discourse_workflows.node_upgrades.post_reaction_output"] }
+
+    it "moves adding to Add reaction, keeping if_exists" do
+      parameters = reaction_parameters.merge("operation" => "add", "if_exists" => "replace")
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:add_reaction",
+        parameters: reaction_parameters.merge("if_exists" => "replace"),
+        notes:,
+      )
+    end
+
+    it "moves removing to Remove reaction" do
+      parameters = reaction_parameters.merge("operation" => "remove", "if_exists" => "keep")
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:remove_reaction",
+        parameters: reaction_parameters,
+        notes:,
+      )
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+  end
+
   describe "#execute" do
     let(:configuration) do
       {

@@ -86,7 +86,7 @@ class UserDestroyer
             c.user_id = Discourse::SYSTEM_USER_ID
             c.save!
             if topic = Topic.unscoped.find_by(id: c.topic_id)
-              topic.recover!
+              topic.recover!(@actor)
               topic.user_id = Discourse::SYSTEM_USER_ID
               topic.save!
             end

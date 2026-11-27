@@ -446,6 +446,18 @@ module DiscourseWorkflows
         post
       end
 
+      def destroy_topic(user:, topic:)
+        raise Discourse::InvalidAccess if !user.guardian.can_delete_topic?(topic)
+
+        post_destroyer(user, first_post_of(topic)).destroy
+      end
+
+      def recover_topic(user:, topic:)
+        raise Discourse::InvalidAccess if !user.guardian.can_recover_topic?(topic)
+
+        post_destroyer(user, first_post_of(topic)).recover
+      end
+
       def put_execution_to_wait(
         waiting_until = nil,
         kind: "default",
@@ -566,6 +578,11 @@ module DiscourseWorkflows
           I18n.t("discourse_workflows.errors.actor.restricted.#{reason}", username: actor.username),
           item_index:,
         )
+      end
+
+      # Shares the caller's topic, which the destroyer would otherwise load again (twice when it's trashed).
+      def first_post_of(topic)
+        topic.first_post_with_deleted.tap { |post| post.topic = topic }
       end
 
       def post_destroyer(user, post)

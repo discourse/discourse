@@ -21,7 +21,7 @@ module Boards
         elsif guardian.can_create_tag?
           cleaned_name = DiscourseTagging.clean_tag(name)
           if cleaned_name.present? && !Tag.where_name([cleaned_name]).exists?
-            resolved_ids << Tag.create!(name: cleaned_name).id
+            resolved_ids << Tag.create!(name: cleaned_name, created_by: guardian.user).id
           else
             missing_names << name
           end

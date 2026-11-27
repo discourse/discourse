@@ -11,6 +11,22 @@ module DiscourseWorkflows
           user_unsilenced: "unsilenced",
         }.freeze
 
+        PENALTY_PROPERTIES = {
+          "reason" => {
+            "type" => %w[string null],
+          },
+          "message" => {
+            "type" => %w[string null],
+          },
+          "post_id" => {
+            "type" => %w[integer null],
+          },
+          "expires_at" => {
+            "type" => %w[string null],
+            "format" => "date-time",
+          },
+        }.freeze
+
         OUTPUT_SCHEMA =
           Schema.merge(
             Schema::USER_SCHEMA,
@@ -20,21 +36,17 @@ module DiscourseWorkflows
                 "type" => "string",
                 "enum" => CHANGES.values,
               },
-              "reason" => {
-                "type" => %w[string null],
-              },
-              "message" => {
-                "type" => %w[string null],
-              },
-              "post_id" => {
-                "type" => %w[integer null],
-              },
-              "expires_at" => {
-                "type" => %w[string null],
-                "format" => "date-time",
-              },
+              **PENALTY_PROPERTIES,
             ),
           ).freeze
+        PENALTY_OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema::USER_SCHEMA,
+            Schema::ACTOR_SCHEMA,
+            Schema.document(PENALTY_PROPERTIES),
+          ).freeze
+        # Lifting a penalty has no reason, message, post or end.
+        LIFT_OUTPUT_SCHEMA = Schema.merge(Schema::USER_SCHEMA, Schema::ACTOR_SCHEMA).freeze
 
         description(
           name: "trigger:user_moderation_changed",
@@ -44,6 +56,7 @@ module DiscourseWorkflows
             color: "red",
           },
           group: "discourse_triggers",
+          palette_visible: false,
           event: CHANGES.keys,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
@@ -58,6 +71,23 @@ module DiscourseWorkflows
             provides_current_user: true,
           },
         )
+
+        def self.description_for_change(change, icon:, output_schema:)
+          description.merge(
+            name: "trigger:user_#{change}",
+            version: "1.0",
+            palette_visible: true,
+            defaults: {
+              icon:,
+              color: "red",
+            },
+            event: CHANGES.key(change),
+            fixed_changes: [change],
+            i18n_scope: "user_moderation_changed",
+            output_contracts: [{ schema: output_schema }],
+            properties: properties.except(:changes),
+          )
+        end
 
         def self.from_event(event_name, *args)
           new(event_name, *args)
@@ -74,7 +104,8 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @change.present? && @user.present? && @user.human?
+          @change.present? && @user.present? && @user.human? &&
+            (fixed_changes.nil? || fixed_changes.include?(@change))
         end
 
         def user_id
@@ -102,7 +133,13 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_changes?(trigger_ctx, @change)
+          fixed_changes.present? || matches_changes?(trigger_ctx, @change)
+        end
+
+        private
+
+        def fixed_changes
+          self.class.description[:fixed_changes]
         end
       end
     end

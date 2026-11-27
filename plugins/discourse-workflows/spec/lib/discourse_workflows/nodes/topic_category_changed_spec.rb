@@ -41,5 +41,17 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCategoryChanged::V1 do
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
       expect(output).to match_node_output_schema(described_class)
     end
+
+    it "outputs whoever moved the topic as actor" do
+      moderator = Fabricate(:moderator)
+      Fabricate(:post, topic:)
+
+      event =
+        DiscourseEvent.track(:topic_category_changed) do
+          PostRevisor.new(topic.first_post, topic).revise!(moderator, category_id: category.id)
+        end
+
+      expect(described_class.new(*event[:params]).output[:actor]).to include(id: moderator.id)
+    end
   end
 end

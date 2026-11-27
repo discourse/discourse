@@ -21,7 +21,11 @@ class ReviewableModerationActions
   end
 
   def hide(post_action_type_id:)
-    @reviewable.post.hide!(post_action_type_id, message_options: notice_options)
+    @reviewable.post.hide!(
+      post_action_type_id,
+      message_options: notice_options,
+      acting_user: @performed_by,
+    )
   end
 
   def delete

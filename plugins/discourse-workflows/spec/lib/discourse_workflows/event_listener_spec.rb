@@ -33,6 +33,195 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(job["args"].first["workflow_id"]).to eq(workflow.id)
   end
 
+  it "runs the hidden timer trigger and the matching per-change trigger once each" do
+    create_published_workflow("changed-trigger", "trigger:topic_timer_changed")
+    create_published_workflow("set-trigger", "trigger:topic_timer_set")
+    create_published_workflow("cleared-trigger", "trigger:topic_timer_cleared")
+
+    topic.set_or_create_timer(TopicTimer.types[:close], 24, by_user: admin)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "set-trigger")
+    expect(trigger_data_for("set-trigger")).to include("actor" => include("id" => admin.id))
+  end
+
+  it "runs the hidden like trigger and the matching per-change trigger once each" do
+    liker = Fabricate(:user)
+    post = Fabricate(:post, topic:)
+    create_published_workflow("changed-trigger", "trigger:post_like_changed", type_version: "2.0")
+    create_published_workflow("liked-trigger", "trigger:post_liked")
+    create_published_workflow("unliked-trigger", "trigger:post_unliked")
+
+    PostActionCreator.like(liker, post)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "liked-trigger")
+    expect(trigger_data_for("liked-trigger")).to include("actor" => include("id" => liker.id))
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostActionDestroyer.destroy(liker, post, :like)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "unliked-trigger")
+  end
+
+  it "runs Post locked once per lock, including the lock a staff edit makes, and Post unlocked on unlock" do
+    moderator = Fabricate(:moderator)
+    post = Fabricate(:post, topic:, user:)
+    create_published_workflow("locked-trigger", "trigger:post_locked")
+    create_published_workflow("unlocked-trigger", "trigger:post_unlocked")
+    create_published_workflow("edited-trigger", "trigger:post_edited", type_version: "2.0")
+    SiteSetting.staff_edit_locks_post = true
+
+    PostRevisor.new(post).revise!(moderator, { raw: "#{post.raw} with an edit by a moderator" })
+    PostLocker.new(post.reload, admin).lock
+
+    expect(enqueued_trigger_node_ids).to eq(%w[locked-trigger edited-trigger])
+    expect(trigger_data_for("locked-trigger")).to include("actor" => include("id" => moderator.id))
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostLocker.new(post, admin).unlock
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unlocked-trigger")
+    expect(trigger_data_for("unlocked-trigger")).to include("actor" => include("id" => admin.id))
+  end
+
+  it "runs User suspended and the hidden moderation trigger once each for an admin suspension" do
+    create_published_workflow("changed-trigger", "trigger:user_moderation_changed")
+    create_published_workflow("suspended-trigger", "trigger:user_suspended")
+    create_published_workflow("silenced-trigger", "trigger:user_silenced")
+
+    User::Suspend.call(
+      guardian: admin.guardian,
+      params: {
+        user_id: user.id,
+        reason: "Spam",
+        suspend_until: 1.day.from_now,
+      },
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "suspended-trigger")
+    expect(trigger_data_for("suspended-trigger")).to include(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => admin.id),
+      "reason" => "Spam",
+    )
+  end
+
+  it "runs User silenced as the reviewer for review queue silences, as system for automatic ones" do
+    moderator = Fabricate(:moderator)
+    flagged = Fabricate(:reviewable_flagged_post)
+    create_published_workflow("silenced-trigger", "trigger:user_silenced")
+
+    flagged.perform(
+      moderator,
+      :agree_and_silence,
+      reason: "Spam",
+      silenced_till: 1.day.from_now.iso8601,
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("silenced-trigger")
+    expect(trigger_data_for("silenced-trigger")).to include(
+      "user" => include("id" => flagged.target_created_by_id),
+      "actor" => include("id" => moderator.id),
+    )
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    SpamRule::AutoSilence.new(user).silence_user
+
+    expect(trigger_data_for("silenced-trigger")).to include(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs User unsuspended as the system user when a suspension expires" do
+    create_published_workflow("unsuspended-trigger", "trigger:user_unsuspended")
+    UserSuspender.new(user, suspended_till: 1.hour.from_now, reason: "Spam", by_user: admin).suspend
+
+    freeze_time 2.hours.from_now
+    Jobs::UserSuspensionExpired.new.execute(
+      user_id: user.id,
+      suspended_at: user.suspended_at.iso8601(6),
+      suspended_till: user.suspended_till.iso8601(6),
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unsuspended-trigger")
+    expect(trigger_data_for("unsuspended-trigger")).to match(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs Post hidden once when flags hide a post, and Post unhidden once when its author edits it" do
+    author = Fabricate(:user, refresh_auto_groups: true)
+    post = Fabricate(:post, topic:, user: author)
+    create_published_workflow("hidden-trigger", "trigger:post_hidden")
+    create_published_workflow("unhidden-trigger", "trigger:post_unhidden")
+    create_published_workflow("edited-trigger", "trigger:post_edited", type_version: "2.0")
+    Reviewable.set_priorities(high: 3.0)
+    SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
+
+    2.times { PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post) }
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("hidden-trigger")
+    expect(trigger_data_for("hidden-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostRevisor.new(post.reload).revise!(
+      author,
+      { raw: "#{post.raw} with an edit by its author" },
+      revised_at: post.updated_at + 11.minutes,
+    )
+
+    expect(enqueued_trigger_node_ids).to eq(%w[unhidden-trigger edited-trigger])
+    expect(trigger_data_for("unhidden-trigger")).to include("actor" => include("id" => author.id))
+  end
+
+  it "runs Slow mode cleared workflows, and not Topic timer completed ones, when slow mode expires" do
+    create_published_workflow("slow-mode-trigger", "trigger:topic_slow_mode_cleared")
+    create_published_workflow("completed-trigger", "trigger:topic_timer_completed")
+    Topic::UpdateSlowMode.call(
+      guardian: admin.guardian,
+      params: {
+        topic_id: topic.id,
+        seconds: 600,
+        enabled_until: "1",
+      },
+    )
+    timer = topic.reload.slow_mode_topic_timer
+
+    freeze_time(2.hours.from_now) { Jobs::ClearSlowMode.new.execute(topic_timer_id: timer.id) }
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("slow-mode-trigger")
+    expect(trigger_data_for("slow-mode-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs Topic published and Topic converted to public topic once each when a personal message is published on a schedule" do
+    create_published_workflow("published-trigger", "trigger:topic_published")
+    create_published_workflow("converted-trigger", "trigger:topic_converted_to_public_topic")
+    Fabricate(:post, topic:, user: topic.user)
+    topic.convert_to_private_message(Discourse.system_user)
+    timer =
+      Fabricate(
+        :topic_timer,
+        topic:,
+        user: admin,
+        status_type: TopicTimer.types[:publish_to_category],
+        category_id: other_category.id,
+        execute_at: 1.minute.ago,
+      )
+
+    Jobs::PublishTopicToCategory.new.execute(topic_timer_id: timer.id)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("published-trigger", "converted-trigger")
+    expect(trigger_data_for("converted-trigger")).to include(
+      "topic" => include("id" => topic.id, "category_id" => other_category.id),
+      "actor" => include("id" => admin.id),
+    )
+  end
+
   it "does not enqueue when plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
 
@@ -95,6 +284,36 @@ RSpec.describe DiscourseWorkflows::EventListener do
 
     expect(enqueued_trigger_node_ids).to include("matching-trigger")
     expect(enqueued_trigger_node_ids).not_to include("category-mismatch", "tag-mismatch")
+  end
+
+  it "runs Topic unpinned workflows when a pin expires" do
+    create_published_workflow("unpinned-trigger", "trigger:topic_unpinned")
+    topic.update_pinned(true)
+
+    Jobs::UnpinTopic.new.execute(topic_id: topic.id)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unpinned-trigger")
+    expect(trigger_data_for("unpinned-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs Topic bannered and Topic unbannered workflows when a banner replaces another" do
+    previous_banner = Fabricate(:topic, category:)
+    previous_banner.make_banner!(admin)
+    create_published_workflow("bannered-trigger", "trigger:topic_bannered")
+    create_published_workflow("unbannered-trigger", "trigger:topic_unbannered")
+
+    topic.make_banner!(admin)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("bannered-trigger", "unbannered-trigger")
+    expect(trigger_data_for("bannered-trigger")).to include(
+      "topic" => include("id" => topic.id),
+      "actor" => include("id" => admin.id),
+    )
+    expect(trigger_data_for("unbannered-trigger")).to include(
+      "topic" => include("id" => previous_banner.id),
+    )
   end
 
   it "only enqueues topic created workflows matching the category and tags" do
@@ -312,6 +531,36 @@ RSpec.describe DiscourseWorkflows::EventListener do
     )
   end
 
+  it "enqueues badge revoked workflows matching the badge, once per revoked grant",
+     :aggregate_failures do
+    badge.update!(multiple_grant: true)
+    first_grant = BadgeGranter.grant(badge, user, post_id: Fabricate(:post, user:).id)
+    second_grant = BadgeGranter.grant(badge, user, post_id: Fabricate(:post, user:).id)
+    create_published_workflow(
+      "matching-badge-trigger",
+      "trigger:badge_revoked",
+      configuration: {
+        "badge_id" => badge.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "badge-mismatch-trigger",
+      "trigger:badge_revoked",
+      configuration: {
+        "badge_id" => other_badge.id.to_s,
+      },
+    )
+
+    [first_grant, second_grant].each { BadgeGranter.revoke(it, revoked_by: admin) }
+
+    expect(enqueued_trigger_node_ids.tally).to eq("matching-badge-trigger" => 2)
+    expect(trigger_data_for("matching-badge-trigger")).to include(
+      "user" => include("id" => user.id),
+      "badge" => include("id" => badge.id),
+      "actor" => include("id" => admin.id),
+    )
+  end
+
   it "only enqueues user seen workflows matching the trigger setting" do
     seen_at = Time.zone.now
     user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
@@ -421,17 +670,16 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("first-post-only")
   end
 
-  it "enqueues user search workflows with the query" do
+  it "enqueues user search workflows with the query and the searching user" do
     create_published_workflow("user-search-trigger", "trigger:user_search")
 
     Search.execute("workflow query", guardian: Guardian.new(user), search_type: :header)
 
-    job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-    expect(job["args"].first).to include(
-      "trigger_node_id" => "user-search-trigger",
-      "trigger_data" => {
-        "query" => "workflow query",
-      },
+    job_args = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first
+    expect(job_args["trigger_node_id"]).to eq("user-search-trigger")
+    expect(job_args["trigger_data"]).to include(
+      "query" => "workflow query",
+      "actor" => include("id" => user.id),
     )
   end
 
@@ -451,7 +699,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    membership_group.add(user, automatic: true)
+    membership_group.add(user, automatic: true, acting_user: admin)
 
     expect(enqueued_trigger_node_ids).to include("matching-add-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-add-trigger")
@@ -470,6 +718,28 @@ RSpec.describe DiscourseWorkflows::EventListener do
         "action" => "added",
         "automatic" => true,
       },
+      "actor" => include("id" => admin.id, "username" => admin.username),
+    )
+  end
+
+  it "enqueues user added to group workflows with the system user for automatic memberships" do
+    trust_level_group = Group.find(Group::AUTO_GROUPS[:trust_level_3])
+    create_published_workflow(
+      "trust-level-add-trigger",
+      "trigger:user_added_to_group",
+      configuration: {
+        "group_id" => trust_level_group.id.to_s,
+      },
+    )
+
+    Group.user_trust_level_change!(user.id, TrustLevel[3])
+
+    expect(trigger_data_for("trust-level-add-trigger")).to include(
+      "membership" => {
+        "action" => "added",
+        "automatic" => true,
+      },
+      "actor" => include("id" => Discourse.system_user.id),
     )
   end
 
@@ -491,7 +761,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    membership_group.remove(user)
+    GroupMemberRemover.remove(admin.guardian, membership_group, usernames: user.username)
 
     expect(enqueued_trigger_node_ids).to include("matching-remove-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-remove-trigger")
@@ -510,6 +780,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
         "action" => "removed",
         "automatic" => nil,
       },
+      "actor" => include("id" => admin.id, "username" => admin.username),
     )
   end
 

@@ -168,6 +168,16 @@ RSpec.describe Groups::Create do
         expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(admin)
       end
 
+      it "announces each initial member as added by the creator" do
+        events = DiscourseEvent.track_events(:user_added_to_group) { result }
+
+        expect(events.map { it[:params].values_at(0, 2) }).to contain_exactly(
+          [admin, { automatic: false, acting_user: admin }],
+          [member_1, { automatic: false, acting_user: admin }],
+          [member_2, { automatic: false, acting_user: admin }],
+        )
+      end
+
       it "assigns members" do
         expect(group.group_users.where(owner: false).map(&:user)).to contain_exactly(
           member_1,

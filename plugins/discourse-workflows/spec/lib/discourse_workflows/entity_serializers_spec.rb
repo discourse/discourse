@@ -70,4 +70,54 @@ RSpec.describe DiscourseWorkflows::EntitySerializers do
       expect(result).not_to include(:custom_fields)
     end
   end
+
+  describe ".serialize_timer" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:timer) do
+      Fabricate(
+        :topic_timer,
+        topic:,
+        user:,
+        status_type: TopicTimer.types[:close],
+        execute_at: 1.day.from_now,
+        duration_minutes: 1440,
+      )
+    end
+
+    it "serializes a topic timer for workflow output" do
+      result = described_class.serialize_timer(timer)
+
+      expect(result).to eq(
+        id: timer.id,
+        status_type: "close",
+        execute_at: timer.execute_at.iso8601,
+        category_id: nil,
+        user_id: user.id,
+        based_on_last_post: false,
+        duration_minutes: 1440,
+      )
+      expect(result.keys.map(&:to_s)).to match_array(
+        DiscourseWorkflows::Schema::TOPIC_TIMER_PROPERTIES.keys,
+      )
+    end
+
+    it "serializes the timer as it was before a change" do
+      previous_execute_at = timer.execute_at
+      timer.update!(status_type: TopicTimer.types[:open], execute_at: 2.days.from_now)
+      previous =
+        timer.attributes.merge(
+          "status_type" => TopicTimer.types[:close],
+          "execute_at" => previous_execute_at,
+        )
+
+      result = described_class.serialize_timer(timer, previous)
+
+      expect(result).to include(
+        id: timer.id,
+        status_type: "close",
+        execute_at: previous_execute_at.iso8601,
+      )
+    end
+  end
 end
