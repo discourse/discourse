@@ -294,6 +294,10 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  enable_clickable_desktop_topic_rows:
+    default: false
+    client: true
+    area: "interface"
   default_homepage:
     client: true
     refresh: true

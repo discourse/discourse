@@ -32,6 +32,68 @@ describe "glimmer topic list" do
     end
   end
 
+  describe "desktop row navigation" do
+    fab!(:category)
+    fab!(:listed_topic) { Fabricate(:post, topic: Fabricate(:topic, category:)).topic }
+
+    def row
+      find(".topic-list-item[data-topic-id='#{listed_topic.id}']")
+    end
+
+    it "keeps non-link cells inactive by default" do
+      visit "/latest"
+      row.find("td.views").click
+      expect(page).to have_current_path("/latest")
+    end
+
+    context "when desktop rows are clickable" do
+      before { SiteSetting.enable_clickable_desktop_topic_rows = true }
+
+      it "opens the topic from a non-link cell" do
+        visit "/latest"
+        row.find("td.views").click
+        expect(topic_page).to have_topic_title(listed_topic.title)
+      end
+
+      it "preserves category link navigation" do
+        visit "/latest"
+        row.find("a[href='#{category.url}']").click
+        expect(page).to have_current_path(category.url)
+      end
+
+      it "does not navigate while selecting row text" do
+        visit "/latest"
+
+        page.execute_script(<<~JS, row)
+            const selection = window.getSelection();
+            selection.selectAllChildren(arguments[0].querySelector(".raw-topic-link"));
+            arguments[0].querySelector("td.views").click();
+          JS
+
+        expect(page).to have_current_path("/latest")
+      end
+
+      it "opens a new tab from Control-click and middle-click" do
+        visit "/latest"
+
+        { click: { button: 0, ctrlKey: true }, auxclick: { button: 1 } }.each do |event, options|
+          new_tab =
+            window_opened_by do
+              page.execute_script(<<~JS, row.find("td.views"), event.to_s, options)
+                  arguments[0].dispatchEvent(new MouseEvent(arguments[1], {
+                    ...arguments[2], bubbles: true, cancelable: true
+                  }));
+                JS
+            end
+
+          within_window(new_tab) { expect(topic_page).to have_topic_title(listed_topic.title) }
+          new_tab.close
+          expect(page).to have_current_path("/latest")
+        end
+      end
+    end
+  end
+
   describe "categories-with-featured-topics page" do
     let(:category_list) { PageObjects::Components::CategoryList.new }
 

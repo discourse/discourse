@@ -272,6 +272,8 @@ export default class Item extends Component {
           this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
           return;
         }
+
+        this.#navigateFromDesktopRow(event);
       },
       {
         event,
@@ -289,6 +291,41 @@ export default class Item extends Component {
     if (event.key === "Enter" && wantsNewWindow(event)) {
       event.preventDefault();
       window.open(this.args.topic.lastUnreadUrl, "_blank");
+    }
+  }
+
+  #navigateFromDesktopRow(event) {
+    if (
+      !this.siteSettings.enable_clickable_desktop_topic_rows ||
+      this.site.mobileView ||
+      this.args.bulkSelectEnabled ||
+      (event.button !== 0 && event.button !== 1) ||
+      event.defaultPrevented ||
+      event.altKey ||
+      event.shiftKey ||
+      event.target.closest(
+        "a, button, input, label, select, textarea, summary, [role='button'], [role='link'], [role='checkbox'], [contenteditable]:not([contenteditable='false'])"
+      )
+    ) {
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (
+      selection &&
+      !selection.isCollapsed &&
+      selection.containsNode(event.currentTarget, true)
+    ) {
+      return;
+    }
+
+    const opensNewWindow = wantsNewWindow(event);
+    event.preventDefault();
+    const topic = this.args.topic;
+    if (opensNewWindow) {
+      window.open(topic.lastUnreadUrl, "_blank", "noopener");
+    } else {
+      this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
   }
 
