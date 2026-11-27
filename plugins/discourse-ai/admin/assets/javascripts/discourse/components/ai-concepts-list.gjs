@@ -27,14 +27,17 @@ export default class AiConceptsList extends Component {
   @service dialog;
   @service messageBus;
   @service modal;
-  @service router;
   @service toasts;
 
+  #filter = tracked(null);
   #filterDebounce = null;
-  #isRefreshing = false;
+  #isLoading = tracked(false);
   #isStartingSeed = tracked(false);
+  #order = tracked(null);
   #overrideConcepts = tracked(null);
   #overrideMeta = tracked(null);
+  #requestId = 0;
+  #status = tracked(null);
 
   constructor() {
     super(...arguments);
@@ -109,8 +112,20 @@ export default class AiConceptsList extends Component {
     return i18n("discourse_ai.concepts.seed.queued");
   }
 
+  get isLoading() {
+    return this.#isLoading.value;
+  }
+
+  get currentFilter() {
+    return this.#filter.value ?? this.args.filter ?? "";
+  }
+
   get selectedStatus() {
-    return this.args.status || "all";
+    return this.#status.value ?? this.args.status ?? "all";
+  }
+
+  get selectedOrder() {
+    return this.#order.value ?? this.args.order ?? "usage";
   }
 
   get statusOptions() {
@@ -150,58 +165,64 @@ export default class AiConceptsList extends Component {
 
   @action
   resetOverrides() {
+    cancel(this.#filterDebounce);
+    this.#requestId += 1;
+    this.#isLoading.value = false;
+    this.#filter.value = null;
+    this.#status.value = null;
+    this.#order.value = null;
     this.#overrideConcepts.value = null;
     this.#overrideMeta.value = null;
   }
 
   @action
   onTextFilterChange(event) {
-    const value = event.target?.value || "";
+    this.#filter.value = event.target?.value || "";
     this.#filterDebounce = discourseDebounce(
       this,
-      this.#applyQuery,
-      { filter: value },
+      this.#refreshList,
       INPUT_DELAY
     );
   }
 
   @action
   onStatusChange(status) {
-    this.#applyQuery({ status });
+    cancel(this.#filterDebounce);
+    this.#status.value = status || "all";
+    return this.#refreshList();
   }
 
   @action
   onSortChange(order) {
-    this.#applyQuery({ order });
+    cancel(this.#filterDebounce);
+    this.#order.value = order || "usage";
+    return this.#refreshList();
   }
 
   @action
   clearFilters() {
-    this.#applyQuery({ status: "all", filter: "" });
+    cancel(this.#filterDebounce);
+    this.#filter.value = "";
+    this.#status.value = "all";
+    return this.#refreshList();
   }
 
   @action
   async loadMore() {
+    const requestId = this.#requestId;
     const nextPage = (this.meta.page || 1) + 1;
 
     try {
-      const data = { page: nextPage };
-      if (this.selectedStatus !== "all") {
-        data.status = this.selectedStatus;
-      }
-      if (this.args.filter?.trim()) {
-        data.filter = this.args.filter.trim();
-      }
-      if (this.args.order && this.args.order !== "usage") {
-        data.order = this.args.order;
-      }
-
       const response = await ajax(
         "/admin/plugins/discourse-ai/ai-concepts.json",
         {
-          data,
+          data: this.#buildQueryParams({ page: nextPage }),
         }
       );
+
+      if (this.isDestroying || requestId !== this.#requestId) {
+        return;
+      }
 
       this.#overrideConcepts.value = [
         ...this.concepts,
@@ -209,7 +230,9 @@ export default class AiConceptsList extends Component {
       ];
       this.#overrideMeta.value = response.meta;
     } catch (error) {
-      popupAjaxError(error);
+      if (requestId === this.#requestId) {
+        popupAjaxError(error);
+      }
     }
   }
 
@@ -365,66 +388,48 @@ export default class AiConceptsList extends Component {
     });
   }
 
-  #applyQuery(updates) {
-    if (this.args.onQueryChange) {
-      this.args.onQueryChange(updates);
-      return;
+  #buildQueryParams(extra = {}) {
+    const data = { ...extra };
+
+    if (this.selectedStatus !== "all") {
+      data.status = this.selectedStatus;
+    }
+    if (this.currentFilter.trim()) {
+      data.filter = this.currentFilter.trim();
+    }
+    if (this.selectedOrder && this.selectedOrder !== "usage") {
+      data.order = this.selectedOrder;
     }
 
-    const nextStatus =
-      "status" in updates ? updates.status || "all" : this.selectedStatus;
-    const nextFilter =
-      "filter" in updates ? (updates.filter || "").trim() : this.args.filter;
-    const nextOrder =
-      "order" in updates
-        ? updates.order || "usage"
-        : this.args.order || "usage";
-
-    this.router.replaceWith({
-      queryParams: {
-        status: nextStatus === "all" ? null : nextStatus,
-        filter: nextFilter || null,
-        order: nextOrder === "usage" ? null : nextOrder,
-      },
-    });
+    return data;
   }
 
   async #refreshList() {
-    if (this.#isRefreshing) {
-      return;
-    }
-
-    this.#isRefreshing = true;
+    const requestId = ++this.#requestId;
+    this.#isLoading.value = true;
 
     try {
-      const data = {};
-      if (this.selectedStatus !== "all") {
-        data.status = this.selectedStatus;
-      }
-      if (this.args.filter?.trim()) {
-        data.filter = this.args.filter.trim();
-      }
-      if (this.args.order && this.args.order !== "usage") {
-        data.order = this.args.order;
-      }
-
       const response = await ajax(
         "/admin/plugins/discourse-ai/ai-concepts.json",
         {
-          data,
+          data: this.#buildQueryParams(),
         }
       );
 
-      if (this.isDestroying) {
+      if (this.isDestroying || requestId !== this.#requestId) {
         return;
       }
 
       this.#overrideConcepts.value = response.ai_concepts || [];
       this.#overrideMeta.value = response.meta;
     } catch (error) {
-      popupAjaxError(error);
+      if (requestId === this.#requestId) {
+        popupAjaxError(error);
+      }
     } finally {
-      this.#isRefreshing = false;
+      if (!this.isDestroying && requestId === this.#requestId) {
+        this.#isLoading.value = false;
+      }
     }
   }
 
@@ -500,211 +505,202 @@ export default class AiConceptsList extends Component {
           </div>
         {{/if}}
 
-        <div class="ai-concepts-list__controls">
-          <DFilterControls
-            @array={{this.concepts}}
-            @defaultDropdownValue="all"
-            @defaultSort="usage"
-            @dropdownOptions={{this.statusOptions}}
-            @dropdownValue={{this.selectedStatus}}
-            @initialTextFilter={{@filter}}
-            @inputPlaceholder={{i18n
-              "discourse_ai.concepts.filter_placeholder"
-            }}
-            @onDropdownFilterChange={{this.onStatusChange}}
-            @onResetFilters={{this.clearFilters}}
-            @onSortChange={{this.onSortChange}}
-            @onTextFilterChange={{this.onTextFilterChange}}
-            @showNoResults={{false}}
-            @sortOptions={{this.sortOptions}}
-          />
-        </div>
-
-        {{#if this.concepts.length}}
-          <table class="d-table ai-concepts-list__table">
-            <thead class="d-table__header">
-              <tr>
-                <th>{{i18n "discourse_ai.concepts.columns.name"}}</th>
-                <th>{{i18n "discourse_ai.concepts.columns.status"}}</th>
-                <th>{{i18n "discourse_ai.concepts.columns.topics"}}</th>
-                {{#if this.showPostsColumn}}
-                  <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
-                {{/if}}
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="d-table__body">
-              {{#each this.concepts as |concept|}}
-                <tr
-                  class="ai-concepts-list__row d-table__row"
-                  data-concept-id={{concept.id}}
-                >
-                  <td class="d-table__cell --overview">
-                    <LinkTo
-                      class="d-table__overview-link"
-                      @model={{concept.id}}
-                      @route="adminPlugins.show.discourse-ai-concepts.edit"
-                    >
-                      <span class="d-table__overview-name">
-                        {{concept.name}}
-                      </span>
-                    </LinkTo>
-                    {{#if concept.description}}
-                      <div class="ai-concepts-list__description">
-                        {{concept.description}}
-                      </div>
-                    {{/if}}
-                    {{#if concept.aliases.length}}
-                      <div class="ai-concepts-list__aliases">
-                        {{#each concept.aliases as |aliasName|}}
-                          <span class="ai-concepts-list__alias">
-                            {{aliasName}}
-                          </span>
-                        {{/each}}
-                      </div>
-                    {{/if}}
-                    {{#if concept.parent_name}}
-                      <div class="ai-concepts-list__parent">
-                        {{i18n
-                          "discourse_ai.concepts.parent_label"
-                          name=concept.parent_name
-                        }}
-                      </div>
-                    {{/if}}
-                  </td>
-                  <td class="d-table__cell --detail">
-                    <div class="d-table__mobile-label">
-                      {{i18n "discourse_ai.concepts.columns.status"}}
-                    </div>
-                    <span
-                      class="ai-concept-status"
-                      data-status={{concept.status}}
-                    >
-                      {{i18n
-                        (concat
-                          "discourse_ai.concepts.statuses." concept.status
-                        )
-                      }}
-                    </span>
-                  </td>
-                  <td class="d-table__cell --detail">
-                    <div class="d-table__mobile-label">
-                      {{i18n "discourse_ai.concepts.columns.topics"}}
-                    </div>
-                    {{concept.topics_count}}
-                  </td>
+        <DFilterControls
+          @array={{this.concepts}}
+          @defaultDropdownValue="all"
+          @defaultSort="usage"
+          @dropdownFilterQueryParam="status"
+          @dropdownOptions={{this.statusOptions}}
+          @dropdownValue={{this.selectedStatus}}
+          @initialTextFilter={{@filter}}
+          @inputPlaceholder={{i18n "discourse_ai.concepts.filter_placeholder"}}
+          @loading={{this.isLoading}}
+          @noResultsMessage={{i18n "discourse_ai.concepts.no_results"}}
+          @onDropdownFilterChange={{this.onStatusChange}}
+          @onResetFilters={{this.clearFilters}}
+          @onSortChange={{this.onSortChange}}
+          @onTextFilterChange={{this.onTextFilterChange}}
+          @sortOptions={{this.sortOptions}}
+          @sortQueryParam="order"
+          @textFilterQueryParam="filter"
+        >
+          <:content as |concepts|>
+            <table class="d-table ai-concepts-list__table">
+              <thead class="d-table__header">
+                <tr>
+                  <th>{{i18n "discourse_ai.concepts.columns.name"}}</th>
+                  <th>{{i18n "discourse_ai.concepts.columns.status"}}</th>
+                  <th>{{i18n "discourse_ai.concepts.columns.topics"}}</th>
                   {{#if this.showPostsColumn}}
+                    <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
+                  {{/if}}
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="d-table__body">
+                {{#each concepts as |concept|}}
+                  <tr
+                    class="ai-concepts-list__row d-table__row"
+                    data-concept-id={{concept.id}}
+                  >
+                    <td class="d-table__cell --overview">
+                      <LinkTo
+                        class="d-table__overview-link"
+                        @model={{concept.id}}
+                        @route="adminPlugins.show.discourse-ai-concepts.edit"
+                      >
+                        <span class="d-table__overview-name">
+                          {{concept.name}}
+                        </span>
+                      </LinkTo>
+                      {{#if concept.description}}
+                        <div class="ai-concepts-list__description">
+                          {{concept.description}}
+                        </div>
+                      {{/if}}
+                      {{#if concept.aliases.length}}
+                        <div class="ai-concepts-list__aliases">
+                          {{#each concept.aliases as |aliasName|}}
+                            <span class="ai-concepts-list__alias">
+                              {{aliasName}}
+                            </span>
+                          {{/each}}
+                        </div>
+                      {{/if}}
+                      {{#if concept.parent_name}}
+                        <div class="ai-concepts-list__parent">
+                          {{i18n
+                            "discourse_ai.concepts.parent_label"
+                            name=concept.parent_name
+                          }}
+                        </div>
+                      {{/if}}
+                    </td>
                     <td class="d-table__cell --detail">
                       <div class="d-table__mobile-label">
-                        {{i18n "discourse_ai.concepts.columns.posts"}}
+                        {{i18n "discourse_ai.concepts.columns.status"}}
                       </div>
-                      {{concept.posts_count}}
-                    </td>
-                  {{/if}}
-                  <td class="d-table__cell --controls">
-                    <div class="d-table__cell-actions">
-                      <DButton
-                        class="btn-default btn-small ai-concepts-list__edit-btn"
-                        @label="discourse_ai.concepts.edit"
-                        @route="adminPlugins.show.discourse-ai-concepts.edit"
-                        @routeModels={{concept.id}}
-                      />
-                      <DMenu
-                        class="btn-default btn-small ai-concepts-list__actions-menu"
-                        @icon="ellipsis-vertical"
-                        @identifier="ai-concept-actions"
-                        @title={{i18n "discourse_ai.concepts.open_actions"}}
+                      <span
+                        class="ai-concept-status"
+                        data-status={{concept.status}}
                       >
-                        <:content as |args|>
-                          <DDropdownMenu as |dropdown|>
-                            {{#if (eq concept.status "candidate")}}
+                        {{i18n
+                          (concat
+                            "discourse_ai.concepts.statuses." concept.status
+                          )
+                        }}
+                      </span>
+                    </td>
+                    <td class="d-table__cell --detail">
+                      <div class="d-table__mobile-label">
+                        {{i18n "discourse_ai.concepts.columns.topics"}}
+                      </div>
+                      {{concept.topics_count}}
+                    </td>
+                    {{#if this.showPostsColumn}}
+                      <td class="d-table__cell --detail">
+                        <div class="d-table__mobile-label">
+                          {{i18n "discourse_ai.concepts.columns.posts"}}
+                        </div>
+                        {{concept.posts_count}}
+                      </td>
+                    {{/if}}
+                    <td class="d-table__cell --controls">
+                      <div class="d-table__cell-actions">
+                        <DButton
+                          class="btn-default btn-small ai-concepts-list__edit-btn"
+                          @label="discourse_ai.concepts.edit"
+                          @route="adminPlugins.show.discourse-ai-concepts.edit"
+                          @routeModels={{concept.id}}
+                        />
+                        <DMenu
+                          class="btn-default btn-small ai-concepts-list__actions-menu"
+                          @icon="ellipsis-vertical"
+                          @identifier="ai-concept-actions"
+                          @title={{i18n "discourse_ai.concepts.open_actions"}}
+                        >
+                          <:content as |args|>
+                            <DDropdownMenu as |dropdown|>
+                              {{#if (eq concept.status "candidate")}}
+                                <dropdown.item>
+                                  <DButton
+                                    class="btn-transparent ai-concepts-list__promote-btn"
+                                    @action={{fn
+                                      this.promoteConcept
+                                      concept
+                                      args.close
+                                    }}
+                                    @icon="check"
+                                    @label="discourse_ai.concepts.promote"
+                                  />
+                                </dropdown.item>
+                              {{/if}}
+
+                              {{#unless (eq concept.status "retired")}}
+                                <dropdown.item>
+                                  <DButton
+                                    class="btn-transparent ai-concepts-list__merge-btn"
+                                    @action={{fn
+                                      this.openMergeModal
+                                      concept
+                                      args.close
+                                    }}
+                                    @icon="code-merge"
+                                    @label="discourse_ai.concepts.merge.action"
+                                  />
+                                </dropdown.item>
+                              {{/unless}}
+
                               <dropdown.item>
                                 <DButton
-                                  class="btn-transparent ai-concepts-list__promote-btn"
+                                  class="btn-transparent ai-concepts-list__retire-btn"
                                   @action={{fn
-                                    this.promoteConcept
+                                    this.toggleRetireConcept
                                     concept
                                     args.close
                                   }}
-                                  @icon="check"
-                                  @label="discourse_ai.concepts.promote"
+                                  @icon="box-archive"
+                                  @label={{if
+                                    (eq concept.status "retired")
+                                    "discourse_ai.concepts.reactivate"
+                                    "discourse_ai.concepts.retire"
+                                  }}
                                 />
                               </dropdown.item>
-                            {{/if}}
 
-                            {{#unless (eq concept.status "retired")}}
                               <dropdown.item>
                                 <DButton
-                                  class="btn-transparent ai-concepts-list__merge-btn"
+                                  class="btn-transparent btn-danger ai-concepts-list__delete-btn"
                                   @action={{fn
-                                    this.openMergeModal
+                                    this.deleteConcept
                                     concept
                                     args.close
                                   }}
-                                  @icon="code-merge"
-                                  @label="discourse_ai.concepts.merge.action"
+                                  @icon="trash-can"
+                                  @label="discourse_ai.concepts.delete"
                                 />
                               </dropdown.item>
-                            {{/unless}}
+                            </DDropdownMenu>
+                          </:content>
+                        </DMenu>
+                      </div>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
 
-                            <dropdown.item>
-                              <DButton
-                                class="btn-transparent ai-concepts-list__retire-btn"
-                                @action={{fn
-                                  this.toggleRetireConcept
-                                  concept
-                                  args.close
-                                }}
-                                @icon="box-archive"
-                                @label={{if
-                                  (eq concept.status "retired")
-                                  "discourse_ai.concepts.reactivate"
-                                  "discourse_ai.concepts.retire"
-                                }}
-                              />
-                            </dropdown.item>
-
-                            <dropdown.item>
-                              <DButton
-                                class="btn-transparent btn-danger ai-concepts-list__delete-btn"
-                                @action={{fn
-                                  this.deleteConcept
-                                  concept
-                                  args.close
-                                }}
-                                @icon="trash-can"
-                                @label="discourse_ai.concepts.delete"
-                              />
-                            </dropdown.item>
-                          </DDropdownMenu>
-                        </:content>
-                      </DMenu>
-                    </div>
-                  </td>
-                </tr>
-              {{/each}}
-            </tbody>
-          </table>
-
-          {{#if this.hasMore}}
-            <div class="ai-concepts-list__pagination">
-              <DButton
-                class="btn-default ai-concepts-list__load-more"
-                @action={{this.loadMore}}
-                @label="discourse_ai.concepts.load_more"
-              />
-            </div>
-          {{/if}}
-        {{else}}
-          <div class="ai-concepts-list__no-results">
-            <span>{{i18n "discourse_ai.concepts.no_results"}}</span>
-            <DButton
-              class="btn-default btn-small"
-              @action={{this.clearFilters}}
-              @label="discourse_ai.concepts.clear_filters"
-            />
-          </div>
-        {{/if}}
+            {{#if this.hasMore}}
+              <div class="ai-concepts-list__pagination">
+                <DButton
+                  class="btn-default ai-concepts-list__load-more"
+                  @action={{this.loadMore}}
+                  @label="discourse_ai.concepts.load_more"
+                />
+              </div>
+            {{/if}}
+          </:content>
+        </DFilterControls>
       {{else}}
         <AdminConfigAreaEmptyList
           class="ai-concepts-list__empty"
