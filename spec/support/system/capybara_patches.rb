@@ -218,6 +218,9 @@ module PlaywrightSoftReset
   # Chromium rarely collects a reused tab's old documents, and forcing a GC or
   # replacing the tab often costs more than reuse saves, so replace it only once heavy.
   PARKED_HEAP_RECYCLE_THRESHOLD = 1024 * 1024 * 1024
+  # That retained memory adds up across parallel workers, so stop reusing tabs while the
+  # machine is short of memory. Replacing a tab frees its renderer straight away.
+  MIN_AVAILABLE_MEMORY_RATIO = 0.25
 
   class << self
     attr_reader :last_result, :last_reason
@@ -236,6 +239,15 @@ module PlaywrightSoftReset
     if @stats
       warn "Playwright resets: #{@stats.sort.map { |key, count| "#{key}=#{count}" }.join(", ")}"
     end
+  end
+
+  def self.memory_low?
+    meminfo = File.read("/proc/meminfo")
+    total = meminfo[/^MemTotal:\s+(\d+)/, 1]
+    available = meminfo[/^MemAvailable:\s+(\d+)/, 1]
+    total && available && available.to_i < total.to_i * MIN_AVAILABLE_MEMORY_RATIO
+  rescue Errno::ENOENT
+    false
   end
 
   # Ruby aliases don't call a prepended implementation of the original method.
@@ -429,14 +441,20 @@ module PlaywrightSoftReset
       reason =
         if ENV["CAPYBARA_PLAYWRIGHT_REUSE_PAGE"] == "0"
           :disabled
+        elsif !@driver.discourse_reuse_pages?
+          :secondary_session
         elsif !BlockRequestsMiddleware.blocking?
           :requests_allowed
         elsif !previous_pages.one? || previous_pages.first != pw_page || pw_page.closed?
           :page_count
         elsif !pw_page.discourse_reuse_armed?
           :untracked_page
+        elsif pw_page.discourse_reuse_fallback
+          pw_page.discourse_reuse_fallback
+        elsif PlaywrightSoftReset.memory_low?
+          :memory_pressure
         else
-          pw_page.discourse_reuse_fallback || reuse_page(pw_page)
+          reuse_page(pw_page)
         end
       return reject_soft_reset(:download) if @context_downloaded
 
@@ -540,6 +558,17 @@ module PlaywrightSoftReset
   end
 
   module Driver
+    def initialize(...)
+      super
+      # A parked tab is only checked again when its session is next used, so an idle
+      # `using_session` browser would hold its old documents for the rest of the run.
+      @discourse_reuse_pages = Capybara.session_name == :default
+    end
+
+    def discourse_reuse_pages?
+      @discourse_reuse_pages
+    end
+
     def reset!
       if !soft_reset_enabled?
         PlaywrightSoftReset.record(:hard_reset, :disabled) if @browser

@@ -8,6 +8,9 @@ RSpec.describe "System spec page isolation", order: :defined do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
 
+  # Stubs stay active through teardown, where the reset decides whether to reuse the tab.
+  before { allow(PlaywrightSoftReset).to receive(:memory_low?).and_return(false) }
+
   it "leaves a draft in the open composer and browser state for teardown" do
     sign_in(user)
     visit "/about"
@@ -149,6 +152,47 @@ RSpec.describe "System spec page isolation", order: :defined do
     expect(original).to be_closed
     expect(replacement.context.pages).to eq([replacement])
     expect(page.current_url).to eq("about:blank")
+  ensure
+    BlockRequestsMiddleware.allow_requests!
+  end
+
+  it "replaces the tab when the machine is short of memory" do
+    if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] == "0" || ENV["CAPYBARA_PLAYWRIGHT_REUSE_PAGE"] == "0"
+      skip "requires page reuse"
+    end
+
+    visit "/srv/status"
+    original = page.driver.with_playwright_page { |pw_page| pw_page }
+    allow(PlaywrightSoftReset).to receive(:memory_low?).and_return(true)
+
+    BlockRequestsMiddleware.block_requests!
+    page.reset!
+
+    expect([PlaywrightSoftReset.last_result, PlaywrightSoftReset.last_reason]).to eq(
+      %i[new_tab memory_pressure],
+    )
+    expect(original).to be_closed
+  ensure
+    BlockRequestsMiddleware.allow_requests!
+  end
+
+  it "replaces the tab of a secondary session" do
+    if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] == "0" || ENV["CAPYBARA_PLAYWRIGHT_REUSE_PAGE"] == "0"
+      skip "requires page reuse"
+    end
+
+    using_session(:page_reuse_secondary) do
+      visit "/srv/status"
+      original = page.driver.with_playwright_page { |pw_page| pw_page }
+
+      BlockRequestsMiddleware.block_requests!
+      page.reset!
+
+      expect([PlaywrightSoftReset.last_result, PlaywrightSoftReset.last_reason]).to eq(
+        %i[new_tab secondary_session],
+      )
+      expect(original).to be_closed
+    end
   ensure
     BlockRequestsMiddleware.allow_requests!
   end
