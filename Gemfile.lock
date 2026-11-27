@@ -643,7 +643,7 @@ GEM
     rubocop-capybara (3.1.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.89)
-    rubocop-discourse (4.0.0)
+    rubocop-discourse (4.1.0)
       activesupport (>= 6.1)
       lint_roller (>= 1.1.0)
       rubocop (>= 1.82.0)
@@ -1253,7 +1253,7 @@ CHECKSUMS
   rubocop (1.92.2) sha256=14fb31eed143a0dc6f78186c550c1715e81cd38f59d05d1165050e445c1f5382
   rubocop-ast (1.51.0) sha256=0ec311e36b191b3872d909078a35274e962ae97dbce64be6812d145ca59acfcb
   rubocop-capybara (3.1.0) sha256=1712900b04178272b643f7bffa385f7b1d157c4f83a0ad502ae10690e18f5096
-  rubocop-discourse (4.0.0) sha256=254ea115b2335a64e480e9e06286f5732e239fb06e5350974b73a23acdba0846
+  rubocop-discourse (4.1.0) sha256=6ee059bf6a6d082ce10d216d5d50840ced4152ff741f9b2d8fb4a546b257c552
   rubocop-discourse-base (1.0.0) sha256=a4121f0f2a8e32c3259fee22106af9fd35372cbeac14b0c69673bdee79b472b7
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-rails (2.38.0) sha256=6e2b7c532efa95e3050371bec20b8f5b025662acead8bc70ee31f0e3e6fa2f06

@@ -34,7 +34,7 @@ class EmailSettingsValidator
       if openssl_verify
         pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION)
       else
-        pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
+        pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) # rubocop:disable Discourse/NoTlsVerificationBypass because admins opt out with pop3_polling_openssl_verify
       end
     end
 
