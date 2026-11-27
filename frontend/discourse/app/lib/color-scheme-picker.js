@@ -62,15 +62,22 @@ export function loadColorSchemeStylesheet(
     (result) => {
       if (result && result.new_href) {
         const elementId = darkMode ? "cs-preview-dark" : "cs-preview-light";
+        const baseElement = document.querySelector(
+          darkMode ? "link.dark-scheme" : "link.light-scheme"
+        );
+        const media =
+          baseElement?.media ||
+          (darkMode
+            ? "(prefers-color-scheme: dark)"
+            : "(prefers-color-scheme: light)");
         const existingElement = document.querySelector(`link#${elementId}`);
         if (existingElement) {
           existingElement.href = result.new_href;
+          existingElement.media = media;
         } else {
           let link = document.createElement("link");
           link.href = result.new_href;
-          link.media = darkMode
-            ? "(prefers-color-scheme: dark)"
-            : "(prefers-color-scheme: light)";
+          link.media = media;
           link.rel = "stylesheet";
           link.id = elementId;
 
