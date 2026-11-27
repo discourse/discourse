@@ -215,10 +215,252 @@ end
 Playwright::Error.prepend(PlaywrightErrorPatch)
 
 module PlaywrightSoftReset
-  RESET_STORAGE_TYPES = "all"
-  private_constant :RESET_STORAGE_TYPES
+  # Chromium rarely collects a reused tab's old documents, and forcing a GC or
+  # replacing the tab often costs more than reuse saves, so replace it only once heavy.
+  PARKED_HEAP_RECYCLE_THRESHOLD = 1024 * 1024 * 1024
+
+  class << self
+    attr_reader :last_result, :last_reason
+  end
+
+  def self.record(result, reason = nil)
+    @last_result = result
+    @last_reason = reason
+    return unless ENV["CAPYBARA_PLAYWRIGHT_REUSE_STATS"] == "1"
+
+    @stats ||= Hash.new(0)
+    @stats[[result, reason].compact.join("/")] += 1
+  end
+
+  def self.print_stats
+    if @stats
+      warn "Playwright resets: #{@stats.sort.map { |key, count| "#{key}=#{count}" }.join(", ")}"
+    end
+  end
+
+  # Ruby aliases don't call a prepended implementation of the original method.
+  def self.each_guarded_method(api_class, methods)
+    methods.each do |method_name|
+      yield method_name, method_name
+      next unless method_name.start_with?("set_")
+
+      setter = :"#{method_name.to_s.delete_prefix("set_")}="
+      yield setter, method_name if api_class.method_defined?(setter)
+    end
+  end
+
+  module Page
+    attr_reader :discourse_reuse_fallback, :discourse_park_url
+
+    def discourse_track_reuse(app_origin)
+      @discourse_app_origin = app_origin
+      on("framenavigated", ->(frame) { discourse_check_origin(frame.url) })
+      @discourse_park_url = "#{app_origin}#{BlockRequestsMiddleware::BROWSER_PARK_PATH}"
+      @discourse_reuse_armed = true
+    end
+
+    def discourse_reuse_armed?
+      @discourse_reuse_armed
+    end
+
+    def discourse_check_origin(url)
+      return if url == "about:blank" || url == "about:srcdoc"
+      address = Addressable::URI.parse(url)
+      discourse_dirty_page!(:other_origin) unless address.origin == @discourse_app_origin
+    rescue Addressable::URI::InvalidURIError
+      discourse_dirty_page!(:other_origin)
+    end
+
+    def discourse_dirty_page!(reason)
+      @discourse_reuse_fallback ||= reason
+    end
+
+    def discourse_clear_input
+      @discourse_pressed_keys&.to_a&.each { |key| keyboard.up(key) }
+      @discourse_pressed_buttons&.to_a&.each { |button| mouse.up(button:) }
+      @discourse_pressed_keys&.clear
+      @discourse_pressed_buttons&.clear
+      mouse.move(0, 0)
+    end
+
+    # The Ruby client runs response listeners asynchronously, even after goto returns.
+    def capybara_set_last_response(response)
+      super unless response && response.url == @discourse_park_url
+    end
+
+    def discourse_reset_dialogs
+      # The driver's permanent listener looks this up when each dialog arrives.
+      # A fresh handler accepts beforeunload (and dismisses other unexpected dialogs).
+      @capybara_dialog_event_handler = nil
+    end
+
+    PlaywrightSoftReset.each_guarded_method(
+      ::Playwright::Page,
+      %i[
+        add_init_script
+        add_locator_handler
+        emulate_media
+        expose_binding
+        expose_function
+        remove_locator_handler
+        route
+        route_from_har
+        route_web_socket
+        unroute
+        unroute_all
+        set_default_timeout
+        set_default_navigation_timeout
+        set_extra_http_headers
+        set_viewport_size
+        once
+        on
+        off
+        pick_locator
+        start_css_coverage
+        start_js_coverage
+        screencast
+      ],
+    ) do |method_name, reason|
+      define_method(method_name) do |*args, **kwargs, &block|
+        discourse_dirty_page!(reason) if discourse_reuse_armed?
+        super(*args, **kwargs, &block)
+      end
+    end
+
+    def clock
+      context.discourse_context_reset_reason ||= :clock
+      super
+    end
+
+    def keyboard
+      super.tap do |device|
+        device.extend(Keyboard)
+        device.discourse_pressed = (@discourse_pressed_keys ||= Set.new)
+      end
+    end
+
+    def mouse
+      super.tap do |device|
+        device.extend(Mouse)
+        device.discourse_pressed = (@discourse_pressed_buttons ||= Set.new)
+      end
+    end
+  end
+
+  module Keyboard
+    attr_writer :discourse_pressed
+
+    def down(key)
+      @discourse_pressed.add(key)
+      super
+    end
+
+    def up(key)
+      super.tap { @discourse_pressed.delete(key) }
+    end
+  end
+
+  module Mouse
+    attr_writer :discourse_pressed
+
+    def down(button: nil, **options)
+      @discourse_pressed.add(button || "left")
+      super
+    end
+
+    def up(button: nil, **options)
+      super.tap { @discourse_pressed.delete(button || "left") }
+    end
+  end
+
+  module Context
+    attr_accessor :discourse_context_reset_reason
+
+    def new_cdp_session(target, discourse_reset: false)
+      unless discourse_reset
+        pw_page = target.is_a?(::Playwright::Frame) ? target.page : target
+        pw_page.discourse_dirty_page!(:cdp_session)
+      end
+      super(target)
+    end
+
+    def discourse_track_context_mutations
+      @discourse_track_context_mutations = true
+    end
+
+    PlaywrightSoftReset.each_guarded_method(
+      ::Playwright::BrowserContext,
+      %i[
+        add_init_script
+        clock
+        expose_binding
+        expose_function
+        route
+        route_from_har
+        route_web_socket
+        set_default_timeout
+        set_default_navigation_timeout
+        set_extra_http_headers
+        set_geolocation
+        set_offline
+        set_storage_state
+      ],
+    ) do |method_name, reason|
+      define_method(method_name) do |*args, **kwargs, &block|
+        self.discourse_context_reset_reason ||= reason if @discourse_track_context_mutations
+        super(*args, **kwargs, &block)
+      end
+    end
+  end
 
   module Browser
+    def soft_reset!
+      contexts = @playwright_browser.contexts
+      return reject_soft_reset(:context_count) unless contexts.one?
+      return reject_soft_reset(:download) if @context_downloaded
+
+      context = contexts.first
+      if context.discourse_context_reset_reason
+        return reject_soft_reset(context.discourse_context_reset_reason)
+      end
+
+      previous_pages = context.pages
+      pw_page = @playwright_page
+      reason =
+        if ENV["CAPYBARA_PLAYWRIGHT_REUSE_PAGE"] == "0"
+          :disabled
+        elsif !BlockRequestsMiddleware.blocking?
+          :requests_allowed
+        elsif !previous_pages.one? || previous_pages.first != pw_page || pw_page.closed?
+          :page_count
+        elsif !pw_page.discourse_reuse_armed?
+          :untracked_page
+        else
+          pw_page.discourse_reuse_fallback || reuse_page(pw_page)
+        end
+      return reject_soft_reset(:download) if @context_downloaded
+
+      if reason
+        # A persistent context closes if it loses its last tab.
+        previous_pages = context.pages
+        new_page = create_page(context)
+        previous_pages.each(&:close)
+        return reject_soft_reset(:clock) if fake_clock_installed?(new_page)
+
+        with_reset_cdp(new_page) { |cdp| clear_storage(cdp) }
+        context.clear_permissions
+        @playwright_page = new_page.tap(&:bring_to_front)
+        PlaywrightSoftReset.record(:new_tab, reason)
+      else
+        PlaywrightSoftReset.record(:reused)
+      end
+      true
+    rescue ::Playwright::Error
+      reject_soft_reset(:soft_reset_error)
+    end
+
+    private
+
     def create_browser_context
       # Each example registering a service worker that the soft reset then
       # force-clears caused mass spec timeouts on CI. The exact cause requires
@@ -228,49 +470,81 @@ module PlaywrightSoftReset
       super.tap do |browser_context|
         # Keep this set until a hard reset, even if another context opens or closes.
         browser_context.on("download", ->(_download) { @context_downloaded = true })
+        browser_context.discourse_track_context_mutations
       end
     end
 
-    def soft_reset!
-      contexts = @playwright_browser.contexts
-      return false unless contexts.size == 1
-      return false if @context_downloaded
-
-      context = contexts.first
-      previous_pages = context.pages
-      new_page = create_page(context)
-      previous_pages.each(&:close)
-      return false if fake_clock_installed?(new_page)
-
-      clear_storage(new_page)
-      context.clear_permissions
-      @playwright_page = new_page.tap(&:bring_to_front)
-      true
+    def create_page(context)
+      super.tap do |pw_page|
+        if (origin = @driver.send(:session)&.server_url)
+          pw_page.discourse_track_reuse(origin)
+        end
+      end
     end
 
-    private
+    def reuse_page(pw_page)
+      pw_page.discourse_check_origin(pw_page.url)
+      return pw_page.discourse_reuse_fallback if pw_page.discourse_reuse_fallback
+
+      pw_page.discourse_reset_dialogs
+      park_url = pw_page.discourse_park_url
+      response = pw_page.goto(park_url, timeout: 1500)
+      return :park_navigation unless response&.status == 200 && pw_page.url == park_url
+      return :page_count unless pw_page.context.pages == [pw_page]
+      return pw_page.discourse_reuse_fallback if pw_page.discourse_reuse_fallback
+
+      with_reset_cdp(pw_page) do |cdp|
+        # Replace a heavy renderer before doing cleanup that the new tab will repeat.
+        heap_usage = cdp.send_message("Runtime.getHeapUsage").fetch("usedSize")
+        return :recycle if heap_usage >= PARKED_HEAP_RECYCLE_THRESHOLD
+
+        # Clear after unloading, in case a page wrote to storage on its way out.
+        pw_page.evaluate("() => { sessionStorage.clear(); window.name = ''; }")
+
+        # Keep just the inert park entry. As with about:blank in a new tab,
+        # the first visit appends one entry and Back cannot reach an old document.
+        cdp.send_message("Page.resetNavigationHistory")
+        clear_storage(cdp)
+      end
+      pw_page.discourse_clear_input
+      pw_page.capybara_reset_frames
+      pw_page.capybara_set_last_response(nil)
+      pw_page.clear_console_messages
+      pw_page.clear_page_errors
+      pw_page.context.clear_permissions
+      pw_page.bring_to_front
+      nil
+    rescue ::Playwright::Error
+      :reuse_error
+    end
 
     def fake_clock_installed?(pw_page)
       !pw_page.evaluate("() => setTimeout.toString()").include?("[native code]")
     end
 
-    def clear_storage(pw_page)
-      cdp = pw_page.context.new_cdp_session(pw_page)
-      cdp.send_message(
-        "Storage.clearDataForOrigin",
-        params: {
-          origin: "*",
-          storageTypes: RESET_STORAGE_TYPES,
-        },
-      )
+    def with_reset_cdp(pw_page)
+      cdp = pw_page.context.new_cdp_session(pw_page, discourse_reset: true)
+      yield cdp
     ensure
       cdp&.detach
+    end
+
+    def clear_storage(cdp)
+      cdp.send_message("Storage.clearDataForOrigin", params: { origin: "*", storageTypes: "all" })
+    end
+
+    def reject_soft_reset(reason)
+      PlaywrightSoftReset.record(:hard_reset, reason)
+      false
     end
   end
 
   module Driver
     def reset!
-      return super if !soft_reset_enabled?
+      if !soft_reset_enabled?
+        PlaywrightSoftReset.record(:hard_reset, :disabled) if @browser
+        return super
+      end
 
       if callback_on_save_screenshot? && (screenshot = @browser&.raw_screenshot)
         callback_on_save_screenshot(screenshot)
@@ -291,5 +565,7 @@ module PlaywrightSoftReset
   end
 end
 
+Playwright::Page.prepend(PlaywrightSoftReset::Page)
+Playwright::BrowserContext.prepend(PlaywrightSoftReset::Context)
 Capybara::Playwright::Browser.prepend(PlaywrightSoftReset::Browser)
 Capybara::Playwright::Driver.prepend(PlaywrightSoftReset::Driver)

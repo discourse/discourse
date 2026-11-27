@@ -218,7 +218,10 @@ RSpec.configure do |config|
     SiteIconManager.clear_cache!
   end
 
-  config.after(:suite) { Downloads.clear } if system_specs_requested
+  if system_specs_requested
+    config.after(:suite) { Downloads.clear }
+    config.after(:suite) { PlaywrightSoftReset.print_stats }
+  end
 
   config.before(:each) { TestSetup.test_setup }
 
@@ -308,6 +311,9 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
+  ensure
+    $playwright_logger&.stop
+    $playwright_logger = nil
   end
 
   # Registered last so that, running in reverse order, it executes before the

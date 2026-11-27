@@ -77,8 +77,8 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
-    BlockRequestsMiddleware.allow_requests!
     BlockRequestsMiddleware.current_example_location = nil
+    BlockRequestsMiddleware.allow_requests!
     ApplicationSerializer.fragment_cache.clear
   end
 end

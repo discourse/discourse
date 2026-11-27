@@ -225,6 +225,13 @@ RSpec.describe "System test browser profile isolation" do
   end
 
   context "with the persistent profile driver" do
+    def reset_with_requests_blocked
+      BlockRequestsMiddleware.block_requests!
+      page.reset!
+    ensure
+      BlockRequestsMiddleware.allow_requests!
+    end
+
     before do
       unless SystemDrivers.use_headless_shell?(RSpec.current_example)
         skip "requires DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL=1"
@@ -304,7 +311,7 @@ RSpec.describe "System test browser profile isolation" do
       profile = profile_dir
       context = playwright_context
 
-      page.reset!
+      reset_with_requests_blocked
 
       # A soft reset keeps the context and the profile on disk, which is the
       # whole point of the persistent profile.
@@ -313,8 +320,7 @@ RSpec.describe "System test browser profile isolation" do
       expect(profile_dir).to eq(profile)
       expect(File.directory?(profile)).to be(true)
 
-      # The replacement page has no history and no inherited document state.
-      expect(page.current_url).to eq("about:blank")
+      # Neither a parked tab nor a replacement has history from the example.
       expect(evaluate("() => [history.length, window.name]")).to eq([1, ""])
 
       visit "/"
@@ -356,8 +362,9 @@ RSpec.describe "System test browser profile isolation" do
       expect(page).to have_no_css(".header-dropdown-toggle.current-user")
     end
 
-    it "creates the replacement page before closing the previous one" do
+    it "creates the replacement page before closing a tab with a changed viewport" do
       visit "/"
+      page.current_window.resize_to(900, 700)
       pages_when_created = []
 
       allow(browser).to receive(:create_page).and_wrap_original do |original, browser_context|
@@ -365,7 +372,7 @@ RSpec.describe "System test browser profile isolation" do
         original.call(browser_context)
       end
 
-      page.reset!
+      reset_with_requests_blocked
 
       # One page (the previous one) must still be open while the replacement is
       # created, otherwise the persistent context loses its last window.
@@ -397,7 +404,7 @@ RSpec.describe "System test browser profile isolation" do
         expect(page.driver.with_playwright_page { |pw_page| pw_page.context.pages.size }).to eq(2)
       end
 
-      page.reset!
+      reset_with_requests_blocked
 
       remaining = page.driver.with_playwright_page { |pw_page| pw_page.context.pages }
       expect(remaining.size).to eq(1)

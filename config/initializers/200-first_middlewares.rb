@@ -41,6 +41,7 @@ if Rails.env.test?
 
   class BlockRequestsMiddleware
     RSPEC_CURRENT_EXAMPLE_COOKIE_STRING = "rspec_current_example_location"
+    BROWSER_PARK_PATH = "/srv/status?system_spec_park=1"
 
     cattr_accessor :current_example_location
 
@@ -54,6 +55,10 @@ if Rails.env.test?
       @@block_requests = false
     end
 
+    def self.blocking?
+      @@block_requests
+    end
+
     def initialize(app)
       @app = app
     end
@@ -61,17 +66,29 @@ if Rails.env.test?
     def call(env)
       request = Rack::Request.new(env)
 
-      if @@block_requests ||
-           (
-             request.xhr? && self.class.current_example_location.present? &&
-               self.class.current_example_location !=
-                 request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
-           )
+      # This inert response can bypass the teardown block without reaching the app.
+      if request.get? && request.fullpath == BROWSER_PARK_PATH
+        return [
+          200,
+          {
+            "Content-Type" => "text/html",
+            "Cache-Control" => "no-store",
+            "Referrer-Policy" => "no-referrer",
+          },
+          ['<!doctype html><link rel="icon" href="data:,">']
+        ]
+      end
+
+      request_location = request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
+      example_location = self.class.current_example_location
+      # Unload beacons are not XHRs, but may still carry a previous example's cookie.
+      stale_request = request_location != example_location && (request_location || request.xhr?)
+      if self.class.blocking? || stale_request
         return [
           503,
           { "Content-Type" => "text/plain" },
           [
-            "Blocked by BlockRequestsMiddleware for requests initiated by #{request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]} when running #{self.class.current_example_location}",
+            "Blocked by BlockRequestsMiddleware for requests initiated by #{request_location} when running #{example_location}",
           ]
         ]
       end

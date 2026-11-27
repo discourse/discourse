@@ -7,29 +7,40 @@ class PlaywrightLogger
 
   def initialize(page)
     @logs = []
+    @sinks = page.discourse_log_sinks
+    @sinks << @logs
+  end
 
+  def stop
+    @sinks.delete_if { |sink| sink.equal?(@logs) }
+  end
+
+  # The Ruby client retains removed callbacks, so register only once per page.
+  def self.attach(page, sinks)
     page.on(
       "console",
       ->(msg) do
-        @logs << {
+        log = {
           level: msg.type,
           message: msg.text,
           timestamp: Time.now.to_i * 1000,
           source: "console-api",
         }
+        sinks.each { |sink| sink << log }
       end,
     )
 
     page.on(
       "pageerror",
       ->(error) do
-        @logs << {
+        log = {
           level: "error",
           message: error.message,
           stack: error.stack,
           timestamp: Time.now.to_i * 1000,
           source: "pageerror-api",
         }
+        sinks.each { |sink| sink << log }
       end,
     )
   end
@@ -62,3 +73,17 @@ class PlaywrightLogger
     lines << "~~~~~ END JS LOGS ~~~~~"
   end
 end
+
+module PlaywrightPageLogSinks
+  attr_reader :discourse_log_sinks
+
+  private
+
+  def capybara_initialize
+    super
+    @discourse_log_sinks = []
+    PlaywrightLogger.attach(self, @discourse_log_sinks)
+  end
+end
+
+Playwright::Page.prepend(PlaywrightPageLogSinks)
