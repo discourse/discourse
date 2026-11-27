@@ -50,7 +50,7 @@ describe DiscourseReactions::ReactionNotification do
     expect { described_class.new(thumbsup, user_1).create }.to change { Notification.count }.by(1)
     expect(Notification.last.user_id).to eq(post_1.user.id)
     expect(Notification.last.notification_type).to eq(Notification.types[:reaction])
-    expect(JSON.parse(Notification.last.data)["original_username"]).to eq(user_1.username)
+    expect(JSON.parse(Notification.last.data)["original_user_id"]).to eq(user_1.id)
 
     user_2 = Fabricate(:user)
     Fabricate(:reaction_user, reaction: thumbsup, user: user_2)
@@ -73,7 +73,7 @@ describe DiscourseReactions::ReactionNotification do
     user_2 = Fabricate(:user)
     Fabricate(:reaction_user, reaction: cry, user: user_2)
     expect { described_class.new(cry, user_1).create }.not_to change { Notification.count }
-    expect(JSON.parse(Notification.last.data)["display_username"]).to eq(user_1.username)
+    expect(JSON.parse(Notification.last.data)["display_user_id"]).to eq(user_1.id)
 
     DiscourseReactions::ReactionUser.find_by(reaction: cry, user: user_1).destroy
     DiscourseReactions::ReactionUser.find_by(reaction: thumbsup, user: user_1).destroy
@@ -81,14 +81,14 @@ describe DiscourseReactions::ReactionNotification do
       described_class.new(cry, user_1).delete
       described_class.new(thumbsup, user_1).delete
     end.not_to change { Notification.count }
-    expect(JSON.parse(Notification.last.data)["display_username"]).to eq(user_2.username)
+    expect(JSON.parse(Notification.last.data)["display_user_id"]).to eq(user_2.id)
     expect(Notification.last.notification_type).to eq(Notification.types[:reaction])
 
     DiscourseReactions::ReactionUser.find_by(reaction: cry, user: user_2).destroy
     expect { described_class.new(cry, user_2).delete }.to change { Notification.count }.by(-1)
   end
 
-  it "displays the full name" do
+  it "hydrates the full name without persisting it" do
     cry_p1 = Fabricate(:reaction, post: post_1, reaction_value: "cry")
 
     described_class.new(cry_p1, user_2).create
@@ -98,7 +98,9 @@ describe DiscourseReactions::ReactionNotification do
     ).to eq(1)
 
     notification = Notification.where(notification_type: Notification.types[:reaction]).last
-    expect(notification.data_hash[:display_name]).to eq(user_2.name)
+    expect(notification.data_hash[:display_name]).to be_nil
+    serialized = NotificationSerializer.new(notification).as_json[:notification][:data]
+    expect(serialized[:display_name]).to eq(user_2.name)
   end
 
   it "adds the heart icon when the remaining notification is a like" do
@@ -153,7 +155,7 @@ describe DiscourseReactions::ReactionNotification do
           Notification.where(notification_type: Notification.types[:reaction]).last
 
         expect(consolidated_notification.data_hash[:consolidated]).to eq(true)
-        expect(consolidated_notification.data_hash[:username]).to eq(user_2.username)
+        expect(consolidated_notification.data_hash[:acting_user_id]).to eq(user_2.id)
       end
 
       it "doesn't update a consolidated notification when a different user reacts to a post" do
@@ -171,7 +173,7 @@ describe DiscourseReactions::ReactionNotification do
           Notification.where(notification_type: Notification.types[:reaction]).last
 
         expect(consolidated_notification.data_hash[:consolidated]).to be_nil
-        expect(consolidated_notification.data_hash[:display_username]).to eq(user_3.username)
+        expect(consolidated_notification.data_hash[:display_user_id]).to eq(user_3.id)
       end
 
       it "keeps the reaction icon when consolidating multiple likes from the same user" do
@@ -236,10 +238,12 @@ describe DiscourseReactions::ReactionNotification do
         consolidated_notification =
           Notification.where(notification_type: Notification.types[:reaction]).last
 
-        expect(consolidated_notification.data_hash[:display_username]).to eq(user_3.username)
-        expect(consolidated_notification.data_hash[:username2]).to eq(user_2.username)
-        expect(consolidated_notification.data_hash[:display_name]).to eq(user_3.name)
-        expect(consolidated_notification.data_hash[:name2]).to eq(user_2.name)
+        expect(consolidated_notification.data_hash[:display_user_id]).to eq(user_3.id)
+        expect(consolidated_notification.data_hash[:user2_id]).to eq(user_2.id)
+        serialized =
+          NotificationSerializer.new(consolidated_notification).as_json[:notification][:data]
+        expect(serialized[:display_name]).to eq(user_3.name)
+        expect(serialized[:name2]).to eq(user_2.name)
       end
 
       it "creates a new notification if the last one was created more than one day ago" do

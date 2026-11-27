@@ -148,8 +148,8 @@ RSpec.describe PostActionCreator do
 
       notification = Notification.last
       notification_data = JSON.parse(notification.data)
-      expect(notification_data["display_username"]).to eq(user.username)
-      expect(notification_data["username2"]).to eq(nil)
+      expect(notification_data["display_user_id"]).to eq(user.id)
+      expect(notification_data["user2_id"]).to eq(nil)
     end
 
     it "does not create a notification if silent mode is enabled" do

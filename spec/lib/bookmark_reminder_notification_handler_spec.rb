@@ -21,7 +21,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       expect(notif.post_number).to eq(bookmark.bookmarkable.post_number)
       data = JSON.parse(notif.data)
       expect(data["title"]).to eq(bookmark.bookmarkable.topic.title)
-      expect(data["display_username"]).to eq(bookmark.user.username)
+      expect(data["display_user_id"]).to eq(bookmark.user_id)
       expect(data["bookmark_name"]).to eq(bookmark.name)
       expect(data["bookmarkable_url"]).to eq(bookmark.bookmarkable.url)
     end

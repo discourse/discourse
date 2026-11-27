@@ -55,6 +55,9 @@ expectTypeOf(notification.fancy_title).toEqualTypeOf<string | undefined>();
 // Sent only when true.
 expectTypeOf(notification.is_warning).toEqualTypeOf<boolean | undefined>();
 // The data packet depends on the notification type and on plugins.
+expectTypeOf(notification.data.display_user_id).toEqualTypeOf<
+  number | undefined
+>();
 expectTypeOf(notification.data.display_username).toEqualTypeOf<
   string | undefined
 >();

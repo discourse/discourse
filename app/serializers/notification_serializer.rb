@@ -34,9 +34,28 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def data
-    return object.data_hash if SiteSetting.enable_names?
+    Notification.populate_acting_user([object]) if object.users_by_id.nil?
+    raw = object.data_hash
+    enable_names = SiteSetting.enable_names?
+    result = raw.except(*Notification::SERIALIZER_EXCLUDED_DATA_KEYS)
 
-    object.data_hash.except(:display_name, :name, :name2, :original_name)
+    Notification::USER_REFERENCE_FIELDS.each do |id_key, username_key, name_key|
+      if (uid = raw[id_key]).present?
+        if (user = object.users_by_id[uid.to_i])
+          result[username_key] = user.username
+          result[name_key] = user.name if enable_names && name_key && user.name.present?
+        end
+      elsif (legacy_username = raw[username_key]).present?
+        user = object.users_by_username&.dig(legacy_username.to_s.downcase)
+        result[name_key] = user.name if enable_names && name_key && user&.name.present?
+      end
+    end
+
+    if raw[:display_label].present? && !result.key?(:display_username)
+      result[:display_username] = raw[:display_label]
+    end
+
+    result
   end
 
   def external_id

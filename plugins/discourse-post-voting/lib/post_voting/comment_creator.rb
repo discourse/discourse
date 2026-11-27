@@ -38,10 +38,7 @@ module PostVoting
         user_id: comment.post.user_id,
         post_number: comment.post.post_number,
         topic_id: comment.post.topic_id,
-        data: {
-          post_voting_comment_id: comment.id,
-          display_username: comment.user.username,
-        }.to_json,
+        data: { post_voting_comment_id: comment.id, display_user_id: comment.user_id }.to_json,
       )
 
       PostAlerter.create_notification_alert(

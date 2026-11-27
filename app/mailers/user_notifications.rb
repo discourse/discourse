@@ -526,7 +526,7 @@ class UserNotifications < ActionMailer::Base
       show_tags_in_subject: true,
       notification_type: "posted",
       notification_data_hash: {
-        original_username: post.user.username,
+        original_user_id: post.user_id,
         topic_title: post.topic.title,
       },
     }
@@ -619,17 +619,25 @@ class UserNotifications < ActionMailer::Base
       notification_type = notification_type.to_s
     end
 
-    user_name = notification_data[:original_username]
-
-    if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      name = User.where(id: notification_data[:original_user_id] || post.user_id).pick(:name)
-      user_name = name if name.present?
-    end
+    original_user_id = notification_data[:original_user_id] || notification_data[:display_user_id]
+    original_user =
+      if original_user_id.present?
+        original_user_id.to_i == post&.user_id ? post.user : User.find_by(id: original_user_id)
+      else
+        post&.user
+      end
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     original_username =
-      notification_data[:original_username] || post&.user&.username ||
-        notification_data[:display_username]
+      original_user&.username || notification_data[:original_username] ||
+        notification_data[:display_username] || notification_data[:display_label]
+
+    user_name =
+      if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
+        original_user&.name.presence || original_username
+      else
+        original_username
+      end
 
     if user.staged && post
       original_subject =

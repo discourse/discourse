@@ -40,12 +40,33 @@ class Notification::Action::BulkCreate < Service::ActionBase
   def insert_notifications
     now = Time.zone.now
 
-    rows =
+    parsed_data =
       records.map do |record|
+        raw = record[:data]
+        next raw unless raw.is_a?(String) || raw.is_a?(Hash)
+
+        raw.is_a?(String) ? JSON.parse(raw) : raw.deep_stringify_keys
+      rescue JSON::ParserError
+        raw
+      end
+
+    hashes = parsed_data.select { |d| d.is_a?(Hash) }
+    dirty = hashes.present? && Notification.normalize_data_hashes!(hashes)
+
+    rows =
+      records.each_with_index.map do |record, idx|
+        normalized_data = parsed_data[idx]
+        serialized_data =
+          if normalized_data.is_a?(Hash) && (dirty || !record[:data].is_a?(String))
+            normalized_data.to_json
+          else
+            record[:data]
+          end
+
         {
           user_id: record[:user_id],
           notification_type: record[:notification_type],
-          data: record[:data],
+          data: serialized_data,
           topic_id: record[:topic_id],
           post_number: record[:post_number],
           high_priority:

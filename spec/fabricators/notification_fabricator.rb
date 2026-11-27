@@ -25,9 +25,9 @@ Fabricator(:private_message_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: post.id,
       original_post_type: post.post_type,
-      original_username: post.user.username,
+      original_user_id: post.user_id,
       revision_number: nil,
-      display_username: post.user.username,
+      display_user_id: post.user_id,
     }.to_json
   end
 end
@@ -41,9 +41,9 @@ Fabricator(:bookmark_reminder_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: post.id,
       original_post_type: post.post_type,
-      original_username: post.user.username,
+      original_user_id: post.user_id,
       revision_number: nil,
-      display_username: post.user.username,
+      display_user_id: post.user_id,
       bookmark_name: "Check out Mr Freeze's opinion here",
     }.to_json
   end
@@ -56,9 +56,9 @@ Fabricator(:replied_notification, from: :notification) do
     {
       topic_title: attrs[:topic].title,
       original_post_id: post.id,
-      original_username: post.user.username,
+      original_user_id: post.user_id,
       revision_number: nil,
-      display_username: post.user.username,
+      display_user_id: post.user_id,
     }.to_json
   end
 end
@@ -71,9 +71,9 @@ Fabricator(:posted_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: post.id,
       original_post_type: post.post_type,
-      original_username: post.user.username,
+      original_user_id: post.user_id,
       revision_number: nil,
-      display_username: post.user.username,
+      display_user_id: post.user_id,
     }.to_json
   end
 end
@@ -85,9 +85,9 @@ Fabricator(:mentioned_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: attrs[:post].id,
       original_post_type: attrs[:post].post_type,
-      original_username: attrs[:post].user.username,
+      original_user_id: attrs[:post].user_id,
       revision_number: nil,
-      display_username: attrs[:post].user.username,
+      display_user_id: attrs[:post].user_id,
     }.to_json
   end
 end
@@ -100,10 +100,9 @@ Fabricator(:group_mentioned_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: attrs[:post].id,
       original_post_type: attrs[:post].post_type,
-      original_username: attrs[:post].user.username,
+      original_user_id: attrs[:post].user_id,
       revision_number: nil,
-      display_username: attrs[:post].user.username,
-      display_name: attrs[:user].name,
+      display_user_id: attrs[:post].user_id,
       group_id: attrs[:group].id,
       group_name: attrs[:group].name,
     }.to_json
@@ -117,9 +116,9 @@ Fabricator(:watching_first_post_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: attrs[:post].id,
       original_post_type: attrs[:post].post_type,
-      original_username: attrs[:post].user.username,
+      original_user_id: attrs[:post].user_id,
       revision_number: nil,
-      display_username: attrs[:post].user.username,
+      display_user_id: attrs[:post].user_id,
     }.to_json
   end
 end

@@ -2008,6 +2008,7 @@ RSpec.describe UserNotifications do
     let(:mail_type) { "user_#{notification_type}" }
     let(:mail_template) { "user_notifications.#{mail_type}" }
     let(:username) { "walterwhite" }
+    let(:actor) { Fabricate(:user, username: username, name: user.name) }
     let(:notification) do
       Fabricate(
         :notification,
@@ -2015,7 +2016,7 @@ RSpec.describe UserNotifications do
         topic: post.topic,
         notification_type: Notification.types[notification_type],
         post_number: post.post_number,
-        data: { original_username: username }.to_json,
+        data: { original_user_id: actor.id }.to_json,
       )
     end
 
@@ -2387,9 +2388,8 @@ RSpec.describe UserNotifications do
           post_number: post.post_number,
           data: {
             topic_title: post.topic.title,
-            display_username: inviter.username,
+            display_user_id: inviter.id,
             original_user_id: inviter.id,
-            original_username: inviter.username,
           }.to_json,
         )
       end

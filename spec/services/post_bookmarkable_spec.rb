@@ -171,7 +171,7 @@ RSpec.describe PostBookmarkable do
         {
           title: bookmark1.bookmarkable.topic.title,
           bookmarkable_url: bookmark1.bookmarkable.url,
-          display_username: bookmark1.user.username,
+          display_user_id: bookmark1.user_id,
           bookmark_name: bookmark1.name,
           bookmark_id: bookmark1.id,
           bookmarkable_type: bookmark1.bookmarkable_type,

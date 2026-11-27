@@ -24022,31 +24022,45 @@ CREATE UNIQUE INDEX index_nested_view_post_stats_on_post_id ON public.nested_vie
 
 
 --
--- Name: index_notifications_on_data_display_username; Type: INDEX; Schema: public; Owner: -
+-- Name: index_notifications_on_data_acting_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_notifications_on_data_display_username ON public.notifications USING btree ((((data)::jsonb ->> 'display_username'::text))) WHERE (((data)::jsonb ->> 'display_username'::text) IS NOT NULL);
-
-
---
--- Name: index_notifications_on_data_original_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_notifications_on_data_original_username ON public.notifications USING btree ((((data)::jsonb ->> 'original_username'::text))) WHERE (((data)::jsonb ->> 'original_username'::text) IS NOT NULL);
+CREATE INDEX index_notifications_on_data_acting_user_id ON public.notifications USING btree ((((data)::jsonb ->> 'acting_user_id'::text))) WHERE (((data)::jsonb ->> 'acting_user_id'::text) IS NOT NULL);
 
 
 --
--- Name: index_notifications_on_data_username; Type: INDEX; Schema: public; Owner: -
+-- Name: index_notifications_on_data_display_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_notifications_on_data_username ON public.notifications USING btree ((((data)::jsonb ->> 'username'::text))) WHERE (((data)::jsonb ->> 'username'::text) IS NOT NULL);
+CREATE INDEX index_notifications_on_data_display_user_id ON public.notifications USING btree ((((data)::jsonb ->> 'display_user_id'::text))) WHERE (((data)::jsonb ->> 'display_user_id'::text) IS NOT NULL);
 
 
 --
--- Name: index_notifications_on_data_username2; Type: INDEX; Schema: public; Owner: -
+-- Name: index_notifications_on_data_invited_by_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_notifications_on_data_username2 ON public.notifications USING btree ((((data)::jsonb ->> 'username2'::text))) WHERE (((data)::jsonb ->> 'username2'::text) IS NOT NULL);
+CREATE INDEX index_notifications_on_data_invited_by_user_id ON public.notifications USING btree ((((data)::jsonb ->> 'invited_by_user_id'::text))) WHERE (((data)::jsonb ->> 'invited_by_user_id'::text) IS NOT NULL);
+
+
+--
+-- Name: index_notifications_on_data_mentioned_by_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_data_mentioned_by_user_id ON public.notifications USING btree ((((data)::jsonb ->> 'mentioned_by_user_id'::text))) WHERE (((data)::jsonb ->> 'mentioned_by_user_id'::text) IS NOT NULL);
+
+
+--
+-- Name: index_notifications_on_data_original_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_data_original_user_id ON public.notifications USING btree ((((data)::jsonb ->> 'original_user_id'::text))) WHERE (((data)::jsonb ->> 'original_user_id'::text) IS NOT NULL);
+
+
+--
+-- Name: index_notifications_on_data_user2_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_data_user2_id ON public.notifications USING btree ((((data)::jsonb ->> 'user2_id'::text))) WHERE (((data)::jsonb ->> 'user2_id'::text) IS NOT NULL);
 
 
 --
@@ -26961,6 +26975,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261127130845'),
+('20261127130841'),
+('20261127130837'),
 ('20261126120000'),
 ('20261125161827'),
 ('20261124234323'),

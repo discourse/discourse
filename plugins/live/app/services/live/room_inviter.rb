@@ -104,7 +104,7 @@ module Live
           room_id: @room.id,
           room_slug: @room.slug,
           room_name: @room.name,
-          display_username: @inviter.username,
+          display_user_id: @inviter.id,
           call: calling || nil,
         }.compact.to_json,
       )

@@ -14,8 +14,14 @@ Fabricator(:assignment_notification, from: :notification) do
             "discourse_assign.assign_notification"
           end
         ),
-      display_username: attrs[:group] ? "group" : "user",
       assignment_id: rand(1..100),
-    }.to_json
+    }.tap do |data|
+        if attrs[:group]
+          data[:display_label] = "group"
+        else
+          data[:display_user_id] = (attrs[:user] || Fabricate(:user)).id
+        end
+      end
+      .to_json
   end
 end

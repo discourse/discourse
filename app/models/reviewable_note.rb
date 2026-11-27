@@ -67,7 +67,7 @@ class ReviewableNote < ActiveRecord::Base
           reviewable_id: reviewable_id,
           reviewable_note_id: id,
           topic_title: reviewable.title_for_notification(mentioned_user),
-          display_username: user.username,
+          display_user_id: user.id,
         }.to_json,
         skip_send_email: true,
       )

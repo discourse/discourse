@@ -372,15 +372,70 @@ RSpec.describe UserMerger do
   end
 
   context "with notifications" do
-    it "updates notifications" do
+    it "updates notifications and rewrites and deduplicates stored actor user IDs" do
       Fabricate(:notification, user: source_user)
       Fabricate(:notification, user: source_user)
       Fabricate(:notification, user: walter)
+      actor_notif =
+        Fabricate(
+          :notification,
+          user: walter,
+          data: {
+            original_user_id: source_user.id,
+            display_user_id: source_user.id,
+            acting_user_id: source_user.id,
+            mentioned_by_user_id: source_user.id,
+            invited_by_user_id: source_user.id,
+          }.to_json,
+        )
+
+      two_user_notif =
+        Fabricate(
+          :notification,
+          user: walter,
+          notification_type: Notification.types[:liked],
+          data: { display_user_id: source_user.id, user2_id: target_user.id, count: 2 }.to_json,
+        )
+
+      chat_thread_notif =
+        Fabricate(
+          :notification,
+          user: walter,
+          notification_type: Notification.types[:chat_watched_thread],
+          data: {
+            acting_user_id: coding_horror.id,
+            user_ids: [coding_horror.id, source_user.id, target_user.id],
+          }.to_json,
+        )
+
+      long_notif =
+        Fabricate(
+          :notification,
+          user: walter,
+          data: { acting_user_id: source_user.id, topic_title: "x" * 950 }.to_json,
+        )
 
       merge_users!
 
       expect(Notification.where(user_id: target_user.id).count).to eq(2)
       expect(Notification.where(user_id: source_user.id).count).to eq(0)
+      expect(actor_notif.reload.data_hash).to eq(
+        "original_user_id" => target_user.id,
+        "display_user_id" => target_user.id,
+        "acting_user_id" => target_user.id,
+        "mentioned_by_user_id" => target_user.id,
+        "invited_by_user_id" => target_user.id,
+      )
+      expect(two_user_notif.reload.data_hash).to eq(
+        "display_user_id" => target_user.id,
+        "count" => 1,
+      )
+      expect(chat_thread_notif.reload.data_hash).to eq(
+        "acting_user_id" => coding_horror.id,
+        "user_ids" => [coding_horror.id, target_user.id],
+      )
+      expect(long_notif.reload.data.length).to be <= 1000
+      expect(long_notif.data_hash["acting_user_id"]).to eq(target_user.id)
     end
   end
 

@@ -275,7 +275,7 @@ after_initialize do
     end
   end
 
-  field_key = "display_username"
+  field_key = "display_user_id"
   consolidated_reactions =
     Notifications::ConsolidateNotifications
       .new(
@@ -286,7 +286,7 @@ after_initialize do
         unconsolidated_query_blk:
           Proc.new do |notifications, data|
             notifications.where(
-              "data::json ->> 'username2' IS NULL AND data::json ->> 'consolidated' IS NULL",
+              "data::json ->> 'user2_id' IS NULL AND data::json ->> 'consolidated' IS NULL",
             ).where("data::json ->> '#{field_key}' = ?", data[field_key.to_sym].to_s)
           end,
         consolidated_query_blk:
@@ -301,14 +301,13 @@ after_initialize do
         set_data_blk:
           Proc.new do |notification|
             data = notification.data_hash
-            data.merge(
-              username: data[:display_username],
-              name: data[:display_name],
-              consolidated: true,
-            )
+            data.merge(acting_user_id: data[:display_user_id], consolidated: true)
           end,
       )
-      .set_precondition(precondition_blk: Proc.new { |data| data[:username2].blank? })
+      .set_precondition(
+        precondition_blk:
+          Proc.new { |data| data[:user2_id].blank? && data[:display_user_id].present? },
+      )
 
   consolidated_reactions.before_consolidation_callbacks(
     before_consolidation_blk:
@@ -353,12 +352,20 @@ after_initialize do
             data = notification.data_hash
             if existing_notification_of_same_type
               same_type_data = existing_notification_of_same_type.data_hash
+              previous_user_id =
+                same_type_data[:display_user_id] ||
+                  (
+                    if same_type_data[:display_username].present?
+                      User.where(username_lower: same_type_data[:display_username].downcase).pick(
+                        :id,
+                      )
+                    end
+                  )
 
               new_data =
                 data.merge(
                   previous_notification_id: existing_notification_of_same_type.id,
-                  username2: same_type_data[:display_username],
-                  name2: same_type_data[:display_name],
+                  user2_id: previous_user_id,
                   count: (same_type_data[:count] || 1).to_i + 1,
                 )
 

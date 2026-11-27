@@ -440,7 +440,7 @@ module DiscourseEvents
           data: {
             user_id: user.id,
             topic_title: name || post.topic.title,
-            display_username: post.user.username,
+            display_user_id: post.user_id,
             message: message,
             event_name: name,
           }.to_json,

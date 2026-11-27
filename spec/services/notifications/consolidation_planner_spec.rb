@@ -6,14 +6,14 @@ RSpec.describe Notifications::ConsolidationPlanner do
   describe "#consolidate_or_save!" do
     let(:threshold) { 1 }
     fab!(:user)
-    let(:like_user) { "user1" }
-    let(:link_user) { "user2" }
+    fab!(:like_actor, :user)
+    fab!(:link_actor, :user)
     let(:like_notification) do
       Fabricate.build(
         :notification,
         user: user,
         notification_type: Notification.types[:liked],
-        data: { display_username: like_user }.to_json,
+        data: { display_user_id: like_actor.id }.to_json,
       )
     end
     let(:link_notification) do
@@ -21,7 +21,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
         :notification,
         user: user,
         notification_type: Notification.types[:linked],
-        data: { display_username: link_user }.to_json,
+        data: { display_user_id: link_actor.id }.to_json,
       )
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
           :notification,
           user: user,
           notification_type: Notification.types[:liked],
-          data: { display_username: like_user }.to_json,
+          data: { display_user_id: like_actor.id }.to_json,
         )
       consolidated_like = planner.consolidate_or_save!(like_notification)
 
@@ -63,7 +63,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
           :notification,
           user: user,
           notification_type: Notification.types[:linked],
-          data: { display_username: link_user }.to_json,
+          data: { display_user_id: link_actor.id }.to_json,
         )
       consolidated_link = planner.consolidate_or_save!(link_notification)
 
@@ -79,7 +79,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
         :notification,
         user: user,
         notification_type: Notification.types[:liked_consolidated],
-        data: { count: count, display_username: like_user }.to_json,
+        data: { count: count, display_user_id: like_actor.id }.to_json,
       )
       updated = planner.consolidate_or_save!(like_notification)
 
@@ -94,7 +94,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
         :notification,
         user: user,
         notification_type: Notification.types[:linked_consolidated],
-        data: { count: count, display_username: link_user }.to_json,
+        data: { count: count, display_user_id: link_actor.id }.to_json,
       )
       updated = planner.consolidate_or_save!(link_notification)
 

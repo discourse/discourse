@@ -339,7 +339,7 @@ RSpec.describe PostAlerter, "#after_save_post" do
 
     Jobs::PostAlert.new.execute(post_id: post.id, new_record: true)
 
-    expect(bot.notifications.sole.data_hash[:original_username]).to eq(human.username)
+    expect(bot.notifications.sole.data_hash[:original_user_id]).to eq(human.id)
   end
 
   it "attributes an edit's mention to the human editor who added it, not a later bot editor" do
@@ -367,7 +367,7 @@ RSpec.describe PostAlerter, "#after_save_post" do
       editor_id: human.id,
     )
 
-    expect(bot.notifications.sole.data_hash[:original_username]).to eq(human.username)
+    expect(bot.notifications.sole.data_hash[:original_user_id]).to eq(human.id)
   end
 
   it "keeps each direct reply at its own post number even with earlier unread posts" do

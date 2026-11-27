@@ -26,7 +26,7 @@ module Jobs
           notification_type: Notification.types[:moved_post],
           topic_id: p.topic_id,
           post_number: p.post_number,
-          data: { topic_title: p.topic.title, display_username: moved_by.username }.to_json,
+          data: { topic_title: p.topic.title, display_user_id: moved_by&.id }.compact.to_json,
         )
         users_notified << p.user_id
       end

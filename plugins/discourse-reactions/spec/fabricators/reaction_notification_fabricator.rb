@@ -11,10 +11,9 @@ Fabricator(:one_reaction_notification, from: :notification) do
       topic_title: attrs[:topic].title,
       original_post_id: attrs[:post].id,
       original_post_type: attrs[:post].post_type,
-      original_username: acting_user.username,
-      display_name: acting_user.name,
+      original_user_id: acting_user.id,
       revision_number: nil,
-      display_username: acting_user.username,
+      display_user_id: acting_user.id,
     }.to_json
   end
 end
@@ -29,13 +28,11 @@ Fabricator(:multiple_reactions_notification, from: :one_reaction_notification) d
       topic_title: attrs[:topic].title,
       original_post_id: attrs[:post].id,
       original_post_type: attrs[:post].post_type,
-      original_username: acting_user_2.username,
+      original_user_id: acting_user_2.id,
       revision_number: nil,
-      display_username: acting_user_2.username,
-      display_name: acting_user_2.name,
+      display_user_id: acting_user_2.id,
       previous_notification_id: 2019,
-      username2: acting_user.username,
-      name2: acting_user.name,
+      user2_id: acting_user.id,
       count: attrs[:count] || 2,
     }.to_json
   end

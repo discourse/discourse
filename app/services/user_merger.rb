@@ -354,6 +354,7 @@ class UserMerger
     )
 
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    merge_notification_user_ids
 
     update_user_id(
       :post_actions,
@@ -551,5 +552,140 @@ class UserMerger
     conditions.each { |c| builder.where(c) }
 
     builder
+  end
+
+  def merge_notification_user_ids
+    actor_keys = Notification::USER_REFERENCE_FIELDS.map { |id_key, _, _| id_key.to_s }
+    key_pairs =
+      actor_keys
+        .map { |key| "'#{key}', CASE WHEN jb ->> '#{key}' = :source_str THEN :target_id END" }
+        .join(",\n              ")
+    where_clause = actor_keys.map { |key| "data::jsonb ->> '#{key}' = :source_str" }.join(" OR ")
+
+    params = {
+      source_id: @source_user.id,
+      source_str: @source_user.id.to_s,
+      target_id: @target_user.id,
+      chat_watched_thread_type: Notification.types[:chat_watched_thread],
+    }
+
+    dedup_user_ids_sql = <<~SQL.squish
+      COALESCE(
+        (
+          SELECT jsonb_agg(elem ORDER BY first_ord)
+          FROM (
+            SELECT elem, MIN(ord) AS first_ord
+            FROM jsonb_array_elements(updated.jb -> 'user_ids') WITH ORDINALITY AS a(val, ord),
+                 LATERAL (
+                   SELECT CASE
+                     WHEN val = to_jsonb(:source_id::integer) THEN to_jsonb(:target_id::integer)
+                     ELSE val
+                   END AS elem
+                 ) mapped
+            GROUP BY elem
+          ) d
+        ),
+        '[]'::jsonb
+      )
+    SQL
+
+    DB.exec(<<~SQL, params)
+      WITH candidates AS (
+        SELECT id, data::jsonb AS jb
+        FROM notifications
+        WHERE #{where_clause}
+      ),
+      updated AS (
+        SELECT
+          id,
+          jb || jsonb_strip_nulls(jsonb_build_object(
+            #{key_pairs}
+          )) AS jb
+        FROM candidates
+      ),
+      dedup AS (
+        SELECT
+          id,
+          CASE
+            WHEN jsonb_typeof(updated.jb -> 'user_ids') = 'array' THEN
+              jsonb_set(normalized.jb, '{user_ids}', (#{dedup_user_ids_sql}))
+            ELSE normalized.jb
+          END AS jb
+        FROM updated,
+             LATERAL (
+               SELECT
+                 CASE
+                   WHEN (updated.jb ->> 'user2_id') IS NOT NULL
+                     AND (updated.jb ->> 'user2_id') IN (updated.jb ->> 'display_user_id', updated.jb ->> 'acting_user_id')
+                   THEN
+                     CASE
+                       WHEN (updated.jb ->> 'count') ~ '^[0-9]+$' AND (updated.jb ->> 'count')::integer > 1
+                       THEN (updated.jb - 'user2_id') || jsonb_build_object('count', (updated.jb ->> 'count')::integer - 1)
+                       ELSE updated.jb - 'user2_id'
+                     END
+                   ELSE updated.jb
+                 END AS jb
+             ) normalized
+      )
+      UPDATE notifications n
+      SET data = #{compact_notification_json_sql("dedup.jb")}
+      FROM dedup
+      WHERE n.id = dedup.id
+    SQL
+
+    DB.exec(<<~SQL, params)
+      WITH updated AS (
+        SELECT id, data::jsonb AS jb
+        FROM notifications
+        WHERE notification_type = :chat_watched_thread_type
+          AND data LIKE '{%'
+          AND jsonb_typeof(data::jsonb) = 'object'
+          AND jsonb_typeof(data::jsonb -> 'user_ids') = 'array'
+          AND (data::jsonb -> 'user_ids') @> to_jsonb(:source_id::integer)
+      ),
+      dedup AS (
+        SELECT id, jsonb_set(updated.jb, '{user_ids}', (#{dedup_user_ids_sql})) AS jb
+        FROM updated
+      )
+      UPDATE notifications n
+      SET data = #{compact_notification_json_sql("dedup.jb")}
+      FROM dedup
+      WHERE n.id = dedup.id
+    SQL
+  end
+
+  def compact_notification_json_sql(jb_expr)
+    compact_expr =
+      lambda do |expr|
+        "('{' || COALESCE((SELECT string_agg(to_json(k)::text || ':' || v::text, ',') FROM jsonb_each(#{expr}) AS e(k, v)), '') || '}')"
+      end
+
+    raw_compact = compact_expr.call(jb_expr)
+    trimmed_jb = <<~SQL.squish
+      jsonb_set(
+        #{jb_expr},
+        ARRAY[longest.k],
+        to_jsonb(left(longest.val, GREATEST(0, char_length(longest.val) - (char_length(#{raw_compact}) - 1000))))
+      )
+    SQL
+
+    <<~SQL.squish
+      CASE
+        WHEN char_length(#{raw_compact}) <= 1000 THEN #{raw_compact}
+        ELSE COALESCE(
+          (
+            SELECT #{compact_expr.call(trimmed_jb)}
+            FROM (
+              SELECT k, v AS val
+              FROM jsonb_each_text(#{jb_expr}) AS t(k, v)
+              WHERE jsonb_typeof(#{jb_expr} -> k) = 'string'
+              ORDER BY char_length(v) DESC
+              LIMIT 1
+            ) longest
+          ),
+          #{raw_compact}
+        )
+      END
+    SQL
   end
 end

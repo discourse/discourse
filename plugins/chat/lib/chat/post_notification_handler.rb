@@ -21,7 +21,7 @@ module Chat
       quoted_users = extract_quoted_users(post)
       quoted_users = quoted_users.where.not(id: @notified_users) if @notified_users.present?
 
-      opts = { user_id: post.user.id, display_username: post.user.username }
+      opts = { user_id: post.user.id, display_user_id: post.user.id }
       quoted_users.each do |user|
         # PostAlerter.create_notification handles many edge cases, such as
         # muting, ignoring, double notifications etc.

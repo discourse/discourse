@@ -596,7 +596,7 @@ class BadgeGranter
           badge_name: badge.display_name,
           badge_slug: badge.slug,
           badge_title: badge.allow_title,
-          username: username,
+          acting_user_id: user_id,
         }.to_json,
       )
     end

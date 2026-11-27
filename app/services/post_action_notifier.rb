@@ -21,23 +21,23 @@ class PostActionNotifier
   def self.refresh_like_notification(post, read)
     return unless post && post.user_id && post.topic
 
-    usernames =
+    user_ids =
       post
         .post_actions
         .where(post_action_type_id: PostActionType.types[:like])
         .joins(:user)
         .order("post_actions.created_at desc")
         .where("post_actions.created_at > ?", 1.day.ago)
-        .pluck(:username)
+        .pluck("users.id")
 
-    if usernames.length > 0
+    if user_ids.length > 0
       data = {
         topic_title: post.topic.title,
-        username: usernames[0],
-        display_username: usernames[0],
-        username2: usernames[1],
-        count: usernames.length,
-      }
+        acting_user_id: user_ids[0],
+        display_user_id: user_ids[0],
+        user2_id: user_ids[1],
+        count: user_ids.length,
+      }.compact
       Notification.create(
         notification_type: Notification.types[:liked],
         topic_id: post.topic_id,
@@ -90,7 +90,7 @@ class PostActionNotifier
       post.user,
       Notification.types[:liked],
       post,
-      display_username: post_action.user.username,
+      display_user_id: post_action.user_id,
       post_action_id: post_action.id,
       user_id: post_action.user_id,
     )
@@ -144,7 +144,7 @@ class PostActionNotifier
         flagger,
         Notification.types[:edited],
         post,
-        display_username: post.last_editor.username,
+        display_user_id: post.last_editor.id,
         acting_user_id: post.last_editor.id,
       )
     end

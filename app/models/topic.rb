@@ -2243,9 +2243,8 @@ class Topic < ActiveRecord::Base
       post_number: post_number,
       data: {
         topic_title: title,
-        display_username: invited_by.username,
+        display_user_id: invited_by.id,
         original_user_id: invited_by.id,
-        original_username: invited_by.username,
       }.to_json,
     )
   end

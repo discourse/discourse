@@ -571,7 +571,7 @@ RSpec.describe PostAlerter do
       notification = walterwhite.notifications.last
       expect(notification.topic_id).to eq(post.topic.id)
       expect(notification.post_number).to eq(post.post_number)
-      expect(notification.data_hash["display_username"]).to eq(post.user.username)
+      expect(notification.data_hash["display_user_id"]).to eq(post.user_id)
 
       PostActionCreator.create(coding_horror, post, :spam)
       PostActionCreator.create(walterwhite, post, :off_topic)
@@ -1024,7 +1024,7 @@ RSpec.describe PostAlerter do
         :count,
       )
       n = evil_trout.notifications.last
-      expect(n.data_hash["original_username"]).to eq(admin.username)
+      expect(n.data_hash["original_user_id"]).to eq(admin.id)
     end
 
     it "doesn't notify the last post editor if they mention themselves" do
@@ -1400,7 +1400,7 @@ RSpec.describe PostAlerter do
       )
     end
 
-    it "adds display name to notification_data" do
+    it "strips display_name added by notification_data modifier when persisting" do
       plugin = Plugin::Instance.new
       modifier = ->(notification_data) do
         notification_data[:display_name] = "Benji McCool"
@@ -1409,7 +1409,7 @@ RSpec.describe PostAlerter do
       plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
-      expect(notification.data_hash[:display_name]).to eq("Benji McCool")
+      expect(notification.data_hash).not_to have_key(:display_name)
     ensure
       DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
@@ -2350,7 +2350,7 @@ RSpec.describe PostAlerter do
       notifications = bucket_op.notifications.where(notification_type: Notification.types[:replied])
       expect(notifications.count).to eq(1)
       expect(notifications.first.data_hash["reply_to_post_number"]).to eq(1)
-      expect(notifications.first.data_hash["display_username"]).to eq(
+      expect(notifications.first.data_hash["display_label"]).to eq(
         I18n.t("embed.replies", count: 2),
       )
       expect(notifications.first.data_hash["consolidated_count"]).to eq(2)
@@ -2462,7 +2462,7 @@ RSpec.describe PostAlerter do
       data = notifications.first.data_hash
       expect(data.key?("reply_to_post_number")).to eq(false)
       expect(data.key?("consolidated_count")).to eq(false)
-      expect(data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+      expect(data["display_label"]).to eq(I18n.t("embed.replies", count: 2))
     end
 
     it "does not store reply_to_post_number for a flat singular reply either" do
@@ -2578,7 +2578,7 @@ RSpec.describe PostAlerter do
         expect(notification.topic_id).to eq(topic.id)
         expect(notification.post_number).to eq(1)
         notification_data = JSON.parse(notification.data)
-        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+        expect(notification_data["display_label"]).to eq(I18n.t("embed.replies", count: 2))
       end
 
       it "sends a push notification when user has a push subscription" do
@@ -2632,7 +2632,7 @@ RSpec.describe PostAlerter do
         expect(notification.topic_id).to eq(topic.id)
         expect(notification.post_number).to eq(1)
         notification_data = JSON.parse(notification.data)
-        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+        expect(notification_data["display_label"]).to eq(I18n.t("embed.replies", count: 2))
       end
 
       it "does not add notification if user does not belong to tag group with permissions" do
@@ -3033,7 +3033,7 @@ RSpec.describe PostAlerter do
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
       expect(Notification.last.notification_type).to eq(Notification.types[:edited])
-      expect(JSON.parse(Notification.last.data)["display_username"]).to eq(last_editor.username)
+      expect(JSON.parse(Notification.last.data)["display_user_id"]).to eq(last_editor.id)
 
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)

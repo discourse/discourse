@@ -179,11 +179,7 @@ class PostAlerter
 
       if !new_record && (editor_id || post.last_editor_id) != post.user_id
         # Mention comes from an edit by someone else, so notification should say who added the mention.
-        mentioned_opts = {
-          user_id: editor_id || post.last_editor_id,
-          original_username: editor&.username,
-          display_username: editor&.username,
-        }
+        mentioned_opts = { user_id: editor_id || post.last_editor_id, acting_user: editor }
       end
 
       if mentioned_users
@@ -525,7 +521,7 @@ class PostAlerter
             group_id: stat[:group_id],
             group_name: stat[:group_name],
             inbox_count: stat[:inbox_count],
-            username: user.username_lower,
+            acting_user_id: user.id,
           }.to_json,
         )
       else
@@ -539,10 +535,25 @@ class PostAlerter
     # TODO decide if it makes sense to also publish a desktop notification
   end
 
+  def resolve_acting_user_id(opts)
+    opts[:display_user_id] || opts[:acting_user_id] || opts[:user_id] ||
+      (
+        if opts[:display_username].present?
+          User.where(username_lower: opts[:display_username].downcase).pick(:id)
+        end
+      )
+  end
+
   def should_notify_edit?(notification, post, opts)
-    notification.created_at < 1.day.ago ||
+    return true if notification.created_at < 1.day.ago
+
+    new_editor_id = resolve_acting_user_id(opts) || post.user_id
+    if notification.data_hash["display_user_id"].present?
+      notification.data_hash["display_user_id"].to_i != new_editor_id
+    else
       notification.data_hash["display_username"] !=
         (opts[:display_username].presence || post.user.username)
+    end
   end
 
   def should_notify_like?(user, notification)
@@ -643,9 +654,16 @@ class PostAlerter
     existing_notification_of_same_type =
       existing_notifications.find { |n| n.notification_type == type }
 
-    if existing_notification_of_same_type &&
-         !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
-      return
+    actor_id = resolve_acting_user_id(opts)
+
+    if existing_notification_of_same_type
+      check_opts =
+        if actor_id && !opts[:display_user_id] && !opts[:acting_user_id] && !opts[:user_id]
+          opts.merge(display_user_id: actor_id)
+        else
+          opts
+        end
+      return if !should_notify_previous?(user, post, existing_notification_of_same_type, check_opts)
     end
 
     # linked, quoted, mentioned, chat_quoted may be suppressed if you already have a reply notification
@@ -686,7 +704,8 @@ class PostAlerter
     end
 
     original_post = post
-    original_username = opts[:display_username].presence || post.username
+    original_user_id = opts[:original_user_id] || actor_id || original_post.user_id
+    display_label = nil
 
     if collapsed
       unread =
@@ -700,7 +719,7 @@ class PostAlerter
       if count > 1
         consolidated_count = count
         I18n.with_locale(user.effective_locale) do
-          opts[:display_username] = I18n.t("embed.replies", count: count)
+          display_label = I18n.t("embed.replies", count: count)
         end
       end
     end
@@ -721,18 +740,20 @@ class PostAlerter
       topic_title: topic_title,
       original_post_id: original_post.id,
       original_post_type: original_post.post_type,
-      original_username: original_username,
+      original_user_id: original_user_id,
       revision_number: opts[:revision_number],
-      display_username: opts[:display_username] || post.user.username,
     }
+
+    display_label ||= opts[:display_username] if actor_id.blank?
+    if display_label.present?
+      notification_data[:display_label] = display_label
+    else
+      notification_data[:display_user_id] = actor_id || post.user_id
+    end
 
     if bucket_post_number
       notification_data[:reply_to_post_number] = bucket_post_number
       notification_data[:consolidated_count] = consolidated_count if consolidated_count
-    end
-
-    if SiteSetting.enable_names? && (display_name = opts[:display_name] || post.user.name)
-      notification_data[:display_name] = display_name
     end
 
     opts[:custom_data].each { |k, v| notification_data[k] = v } if opts[:custom_data].is_a?(Hash)
@@ -768,11 +789,17 @@ class PostAlerter
 
     if created.id && (existing_notifications.empty? || new_bot_mention) &&
          NOTIFIABLE_TYPES.include?(type)
+      alert_username =
+        opts[:display_username].presence ||
+          (opts[:acting_user]&.username if opts[:acting_user]&.id == original_user_id) ||
+          (original_post.username if original_user_id == original_post.user_id) ||
+          User.where(id: original_user_id).pick(:username) || post.username
+
       create_notification_alert(
         user: user,
         post: original_post,
         notification_type: type,
-        username: original_username,
+        username: alert_username,
         group_name: group&.name,
       )
     end
@@ -1160,8 +1187,7 @@ class PostAlerter
           Notification.types[:posted]
         end
       opts = {}
-      opts[:display_username] = post.last_editor.username if calculated_type ==
-        Notification.types[:edited]
+      opts[:display_user_id] = post.last_editor_id if calculated_type == Notification.types[:edited]
       if create_notification(user, calculated_type, post, opts).present?
         received_notifications << user
       end

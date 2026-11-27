@@ -21,11 +21,7 @@ module Jobs
         notification_type: Notification.types[:invited_to_private_message],
         topic_id: topic.id,
         post_number: 1,
-        data: {
-          topic_title: topic.title,
-          display_username: user.username,
-          group_id: group.id,
-        }.to_json,
+        data: { topic_title: topic.title, display_user_id: user.id, group_id: group.id }.to_json,
       }
 
       watching_users =

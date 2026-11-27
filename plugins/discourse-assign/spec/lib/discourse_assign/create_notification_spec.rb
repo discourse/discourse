@@ -79,7 +79,7 @@ RSpec.describe DiscourseAssign::CreateNotification do
           read: mark_as_read,
           data_hash: {
             message: "discourse_assign.assign_notification",
-            display_username: assignment.assigned_by_user.username,
+            display_user_id: assignment.assigned_by_user_id,
             topic_title: post.topic.title,
             assignment_id: assignment.id,
           },
@@ -141,7 +141,7 @@ RSpec.describe DiscourseAssign::CreateNotification do
           read: mark_as_read,
           data_hash: {
             message: "discourse_assign.assign_group_notification",
-            display_username: assigned_to.name,
+            display_label: assigned_to.name,
             topic_title: post.topic.title,
             assignment_id: assignment.id,
           },

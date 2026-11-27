@@ -1000,26 +1000,22 @@ RSpec.describe Notification do
       fab!(:user5, :user)
       fab!(:user6, :user)
       fab!(:notification1) do
-        Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
+        Fabricate(:notification, user: user, data: { acting_user_id: user1.id }.to_json)
       end
       fab!(:notification2) do
-        Fabricate(:notification, user: user, data: { display_username: user2.username }.to_json)
+        Fabricate(:notification, user: user, data: { display_user_id: user2.id }.to_json)
       end
       fab!(:notification3) do
-        Fabricate(
-          :notification,
-          user: user,
-          data: { mentioned_by_username: user3.username }.to_json,
-        )
+        Fabricate(:notification, user: user, data: { mentioned_by_user_id: user3.id }.to_json)
       end
       fab!(:notification4) do
-        Fabricate(:notification, user: user, data: { invited_by_username: user4.username }.to_json)
+        Fabricate(:notification, user: user, data: { invited_by_user_id: user4.id }.to_json)
       end
       fab!(:notification5) do
-        Fabricate(:notification, user: user, data: { original_username: user5.username }.to_json)
+        Fabricate(:notification, user: user, data: { original_user_id: user5.id }.to_json)
       end
       fab!(:notification6) do
-        Fabricate(:notification, user: user, data: { original_username: user6.username }.to_json)
+        Fabricate(:notification, user: user, data: { original_user_id: user6.id }.to_json)
       end
 
       it "Sets the acting_user correctly for each notification" do
@@ -1032,14 +1028,19 @@ RSpec.describe Notification do
         expect(notification3.acting_user).to eq(user3)
         expect(notification4.acting_user).to eq(user4)
         expect(notification5.acting_user).to eq(user5)
-        expect(notification5.data_hash[:original_name]).to eq user5.name
+        expect(
+          NotificationSerializer.new(notification5).as_json[:notification][:data][:original_name],
+        ).to eq(user5.name)
+        expect(notification5.reload.data_hash[:original_name]).to be_nil
       end
 
       context "with SiteSettings.enable_names=false" do
-        it "doesn't set the :original_name property" do
+        it "doesn't serialize the :original_name property" do
           SiteSetting.enable_names = false
           Notification.populate_acting_user([notification6])
-          expect(notification6.data_hash[:original_name]).to be_nil
+          expect(
+            NotificationSerializer.new(notification6).as_json[:notification][:data][:original_name],
+          ).to be_nil
           SiteSetting.enable_names = true
         end
       end

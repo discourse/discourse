@@ -39,7 +39,7 @@ RSpec.describe BaseBookmarkable do
         {
           title: bookmark.bookmarkable.topic.title,
           bookmarkable_url: bookmark.bookmarkable.url,
-          display_username: bookmark.user.username,
+          display_user_id: bookmark.user_id,
           bookmark_name: bookmark.name,
           bookmark_id: bookmark.id,
           bookmarkable_type: bookmark.bookmarkable_type,
@@ -66,9 +66,10 @@ RSpec.describe BaseBookmarkable do
 
       notif = bookmark.user.notifications.last
       data = JSON.parse(notif[:data])
-      expect(data[:display_username]).not_to eq("bad username")
-      expect(data[:name]).not_to eq("bad name")
-      expect(data[:bookmark_id]).not_to eq(-89_854)
+      expect(data["display_user_id"]).to eq(bookmark.user_id)
+      expect(data["display_username"]).to be_nil
+      expect(data["bookmark_name"]).not_to eq("bad name")
+      expect(data["bookmark_id"]).not_to eq(-89_854)
     end
   end
 end
