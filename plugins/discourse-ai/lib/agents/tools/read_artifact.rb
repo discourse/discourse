@@ -204,7 +204,7 @@ module DiscourseAi
         end
 
         def download_css_files(urls)
-          urls.map { |url| fetch_page(URI.parse(url)).body }.join("\n")
+          urls.filter_map { |url| fetch_page(URI.parse(url))&.body }.join("\n")
         end
       end
     end

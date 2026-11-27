@@ -24,13 +24,17 @@ RSpec.describe RagDocumentSource do
     }.to change(Jobs::RefreshRagDocumentSource.jobs, :size).by(1)
   end
 
-  it "only accepts HTTP URLs without embedded credentials" do
-    source = described_class.new(target: agent, url: "file:///etc/passwd")
-    credentialed_source =
-      described_class.new(target: agent, url: "https://user:password@example.com/private")
+  it "only accepts HTTP URLs that FinalDestination allows, without embedded credentials" do
+    invalid_urls = %w[
+      file:///etc/passwd
+      https://user:password@example.com/private
+      https://example.com:8443/guide
+      https://1.2.3.4/guide
+    ]
 
-    expect(source).not_to be_valid
-    expect(credentialed_source).not_to be_valid
+    accepted = invalid_urls.select { |url| described_class.new(target: agent, url: url).valid? }
+
+    expect(accepted).to be_empty
   end
 
   it "removes active and pending indexed content when the source is deleted" do

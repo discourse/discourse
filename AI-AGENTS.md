@@ -99,6 +99,7 @@ use `bin/lint --fix --recent` only when appropriate.
 - Input: validate client+server, strong parameters, length limits, don't trust client-only validation
 - Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns. Use user.guardian shorthand not Guardian.new(user)
 - TLS: never disable certificate or hostname verification. Pass TLS and timeout options to `Net::HTTP.start(...)`, not inside its block: settings assigned there only apply to reconnections. Send outbound requests to user-supplied or third-party URLs through `FinalDestination::HTTP`, which raises on weakened modes; the only opt-out is `ssl: { verify: false }` on a Faraday connection using `FinalDestination::FaradayAdapter`, for admin-configured endpoints
+- SSRF: `FinalDestination::HTTP` only filters IPs at connect time. Also validate every URL it connects to, including each redirect hop, with `FinalDestination.new(url).validate_uri`, or let `FinalDestination#resolve`/`#get` follow redirects
 
 ## Knowledge Sharing
 - ALWAYS persist information for ALL developers (no conversational-only memory)

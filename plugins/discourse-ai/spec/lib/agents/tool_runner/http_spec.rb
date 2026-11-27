@@ -190,6 +190,23 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       expect(result).to eq("Hello World")
     end
 
+    it "uses plain HTTP for the configured S3 endpoint on a custom port" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      SiteSetting.allowed_internal_hosts = "minio.local"
+      script = <<~JS
+        function invoke(params) {
+          return http.get("http://minio.local:9000/bucket/file.txt").body;
+        }
+      JS
+      stub_request(:get, "http://minio.local:9000/bucket/file.txt").to_return(
+        status: 200,
+        body: "stored file",
+      )
+      runner = create_tool(script: script).runner({}, llm: nil, bot_user: nil)
+
+      expect(runner.invoke).to eq("stored file")
+    end
+
     it "does not time out on slow HTTP requests" do
       script = <<~JS
         function invoke(params) {

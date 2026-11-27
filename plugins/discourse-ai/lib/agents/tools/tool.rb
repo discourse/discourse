@@ -311,6 +311,8 @@ module DiscourseAi
               )
 
             uri = fd.resolve
+          elsif !FinalDestination.new(url).validate_uri
+            return
           end
 
           return if uri.blank?
@@ -335,9 +337,11 @@ module DiscourseAi
           request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
           headers.each { |k, v| request[k] = v }
 
-          FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response, uri }
-          end
+          FinalDestination::HTTP.start(
+            uri.hostname,
+            uri.port,
+            use_ssl: uri.scheme == "https",
+          ) { |http| http.request(request) { |response| yield response, uri } }
         end
 
         def self.read_response_body(response, max_length: nil)

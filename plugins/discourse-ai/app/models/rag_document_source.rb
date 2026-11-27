@@ -100,7 +100,9 @@ class RagDocumentSource < ActiveRecord::Base
 
   def validate_url
     uri = URI.parse(url.to_s)
-    valid = uri.scheme.in?(%w[http https]) && uri.host.present? && uri.userinfo.blank?
+    valid =
+      uri.scheme.in?(%w[http https]) && uri.host.present? && uri.userinfo.blank? &&
+        FinalDestination.new(uri.to_s).validate_uri
     errors.add(:url, :invalid) if !valid
   rescue URI::InvalidURIError
     errors.add(:url, :invalid)
