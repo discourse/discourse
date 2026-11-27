@@ -6,6 +6,7 @@ require "plugin/instance"
 require "version"
 require "version_compatibility"
 require "git_utils"
+require "scheduler/pending_work"
 
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
@@ -1062,6 +1063,8 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    disconnect_message_bus_clients
+
     DiscourseVips.before_fork
 
     if GlobalSetting.mini_racer_single_threaded
@@ -1070,6 +1073,49 @@ module Discourse
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end
+  end
+
+  def self.disconnect_message_bus_clients
+    connection_managers = ObjectSpace.each_object(MessageBus::ConnectionManager).to_a
+    ObjectSpace.each_object(MessageBus::Client) do |client|
+      connection_managers.each do |manager|
+        manager.synchronize do
+          manager.remove_client(client) if manager.lookup_client(client.client_id).equal?(client)
+        end
+      end
+      client.synchronize { client.close }
+    end
+  end
+  private_class_method :disconnect_message_bus_clients
+
+  def self.fork_when_idle(timeout:)
+    Scheduler::PendingWork.when_idle(timeout:) do
+      before_fork
+      yield
+    end
+  end
+
+  def self.after_preloader_fork(warmed:)
+    if !warmed && !GlobalSetting.mini_racer_single_threaded
+      raise "Forking a warmed process requires mini_racer_single_threaded"
+    end
+
+    Scheduler::Defer.reset_after_fork
+    if warmed
+      message_bus_backend = MessageBus.backend_instance
+      message_bus_backend.after_fork
+      message_bus_backend.request_reconnect
+      RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+      CachedCounting.after_fork
+    end
+  end
+
+  def self.wait_for_pending_work(timeout:)
+    Scheduler::PendingWork.when_idle(timeout:) {}
+  end
+
+  def self.before_service_exit
+    Demon::DiscourseVips.stop_accepting if defined?(Demon::DiscourseVips)
   end
 
   # Called in web worker processes after fork to apply worker-specific
@@ -1088,18 +1134,27 @@ module Discourse
       end
     end
 
-    if variables_overrides.any?
-      ActiveRecord::Base.configurations =
-        Rails.application.config.database_configuration(variables_overrides:)
-      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
-      ActiveRecord::Base.establish_connection
-    end
+    reload_database_configuration(variables_overrides:) if variables_overrides.any?
   end
+
+  def self.reset_worker_db_variables_overrides
+    reload_database_configuration(variables_overrides: {})
+  end
+
+  def self.reload_database_configuration(variables_overrides:)
+    RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+    ActiveRecord::Base.configurations =
+      Rails.application.config.database_configuration(variables_overrides:)
+    ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+    ActiveRecord::Base.establish_connection
+  end
+  private_class_method :reload_database_configuration
 
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    Scheduler::Defer.reset_after_fork
     Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
 
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414

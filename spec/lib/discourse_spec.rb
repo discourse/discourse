@@ -92,7 +92,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "applies worker-specific database variable overrides in a production environment" do
+    it "applies the overrides for web workers and the defaults elsewhere" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
       ENV["DISCOURSE_DB_NAME"] = test_database_config["database"]
@@ -109,6 +109,12 @@ RSpec.describe Discourse do
       expect(
         ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
       ).to eq("100s")
+
+      Discourse.reset_worker_db_variables_overrides
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("10s")
     ensure
       %i[
         db_variables_statement_timeout

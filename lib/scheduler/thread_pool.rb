@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "pending_work"
+
 module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
   # It maintains a minimum number of threads and can scale up to a maximum number
@@ -31,31 +33,26 @@ module Scheduler
       @min_threads = min_threads
       @max_threads = max_threads
       @idle_time = idle_time
-
-      @threads = Set.new
-      @busy_threads = Set.new
-
-      @queue = Queue.new
-      @mutex = Mutex.new
-      @new_work = ConditionVariable.new
       @shutdown = false
-
-      # Initialize minimum number of threads
-      @min_threads.times { spawn_thread }
+      @mutex = Mutex.new
+      @mutex.synchronize { reset_execution_state }
     end
 
     def post(&block)
-      raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
+      reset_after_fork if @pid != Process.pid
 
       db = RailsMultisite::ConnectionManagement.current_db
       locale = I18n.locale
       wrapped_block = wrap_block(block, db, locale)
 
-      @mutex.synchronize do
-        @queue << wrapped_block
-        spawn_thread if @threads.length == 0
+      PendingWork.enqueue do
+        @mutex.synchronize do
+          raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if @shutdown
+          spawn_thread if @threads.length == 0
+          @queue << wrapped_block
 
-        @new_work.signal
+          @new_work.signal
+        end
       end
     end
 
@@ -70,16 +67,22 @@ module Scheduler
 
         deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
         threads_to_join.each do |thread|
-          remaining_time = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          break if remaining_time <= 0
+          remaining_time = [deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC), 0].max
           if !thread.join(remaining_time)
-            Rails.logger.error "ThreadPool: Failed to join thread within timeout\n#{thread.backtrace.join("\n")}"
+            Rails.logger.error "ThreadPool: Failed to join thread within timeout\n#{Array(thread.backtrace).join("\n")}"
             failed_to_shutdown = true
           end
         end
 
         if failed_to_shutdown
-          @mutex.synchronize { @threads.each(&:kill) }
+          discarded_tasks = 0
+          @mutex.synchronize do
+            @threads.each(&:kill)
+            while (task = @queue.pop(timeout: 0))
+              discarded_tasks += 1 if task != :shutdown
+            end
+          end
+          discarded_tasks.times { PendingWork.finish }
           raise ShutdownError, "Failed to shutdown ThreadPool within timeout"
         end
       end
@@ -113,6 +116,19 @@ module Scheduler
 
     private
 
+    def reset_after_fork
+      @mutex.synchronize { reset_execution_state if @pid != Process.pid }
+    end
+
+    def reset_execution_state
+      @threads = Set.new
+      @busy_threads = Set.new
+      @queue = Queue.new
+      @new_work = ConditionVariable.new
+      @min_threads.times { spawn_thread } if !@shutdown
+      @pid = Process.pid
+    end
+
     def wrap_block(block, db, locale)
       proc do
         RailsMultisite::ConnectionManagement.with_connection(db) do
@@ -124,8 +140,8 @@ module Scheduler
     end
 
     def thread_loop
-      done = false
-      while !done
+      loop do
+        done = false
         work = nil
 
         @mutex.synchronize do
@@ -133,7 +149,9 @@ module Scheduler
           # to wait for signals, this also handles the race
           # condition between spinning up threads and posting work
           work = @queue.pop(timeout: 0)
-          @new_work.wait(@mutex, @idle_time) if !work
+          if !work
+            Thread.handle_interrupt(Object => :immediate) { @new_work.wait(@mutex, @idle_time) }
+          end
 
           if !work && @queue.empty?
             done = @threads.count > @min_threads
@@ -156,12 +174,12 @@ module Scheduler
           @threads.delete(Thread.current) if done
         end
 
+        break if done
+        Thread.handle_interrupt(Object => :immediate, &work) if work
+      ensure
         if work
-          begin
-            work.call
-          ensure
-            @mutex.synchronize { @busy_threads.delete(Thread.current) }
-          end
+          @mutex.synchronize { @busy_threads.delete(Thread.current) }
+          PendingWork.finish
         end
       end
     end
@@ -169,7 +187,7 @@ module Scheduler
     # Outside of constructor usage this is called from a synchronized block
     # we are already synchronized
     def spawn_thread
-      thread = Thread.new { thread_loop }
+      thread = Thread.new { Thread.handle_interrupt(Object => :never) { thread_loop } }
       thread.abort_on_exception = true
       @threads << thread
     end

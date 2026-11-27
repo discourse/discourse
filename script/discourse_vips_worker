@@ -5,6 +5,7 @@ require "landlock"
 require "msgpack"
 require "rbconfig"
 require "socket"
+require "timeout"
 require "tmpdir"
 require "vips"
 
@@ -472,20 +473,21 @@ class DiscourseVipsWorker
   }.freeze
   private_constant :RLIMITS
 
-  def self.run(server_fd:, owner_fd:)
-    parent_pid = Process.ppid
-    Landlock::Native.set_parent_death_signal! if LINUX_PLATFORM
-    exit! 1 if Process.ppid != parent_pid
+  def self.run(server_fd:, owner_fd:, owner_pid:, shared:)
+    Landlock::Native.set_parent_death_signal! if LINUX_PLATFORM && !shared
+    exit! 1 if Process.ppid != owner_pid
 
     Process.setproctitle("discourse vips worker")
-    new(server: UNIXServer.for_fd(server_fd), owner_reader: IO.for_fd(owner_fd)).run
+    new(server: UNIXServer.for_fd(server_fd), owner_reader: IO.for_fd(owner_fd), owner_pid:, shared:).run
   end
 
-  def initialize(server:, owner_reader:)
+  def initialize(server:, owner_reader:, owner_pid:, shared:)
     @server = server
     @socket_path = server.local_address.unix_path
     @socket_identity = File.stat(@socket_path).then { |stat| [stat.dev, stat.ino] }
     @owner_reader = owner_reader
+    @owner_pid = owner_pid
+    @shared = shared
   end
 
   def run
@@ -493,8 +495,12 @@ class DiscourseVipsWorker
     Operations.warm
 
     loop do
-      ready_ios = IO.select([@server, @owner_reader]).first
-      break if ready_ios.include?(@owner_reader)
+      ready_ios = IO.select([@server, @owner_reader], nil, nil, 1)&.first
+      if ready_ios&.include?(@owner_reader) || Process.ppid != @owner_pid
+        finish_requests if @owner_reader.read_nonblock(1, exception: false).is_a?(String)
+        break
+      end
+      next if !ready_ios
 
       connection = @server.accept
       fork_connection_process(connection)
@@ -502,11 +508,20 @@ class DiscourseVipsWorker
   ensure
     @server.close unless @server.closed?
     @owner_reader.close unless @owner_reader.closed?
-    remove_socket_directory
+    remove_socket_directory if !@shared
     Process.kill("KILL", -Process.pid)
   end
 
   private
+
+  def finish_requests
+    while (connection = @server.accept_nonblock(exception: false)) != :wait_readable
+      fork_connection_process(connection)
+    end
+    @server.close
+    Timeout.timeout(30) { Process.waitall }
+  rescue Timeout::Error
+  end
 
   def fork_connection_process(connection)
     parent_pid = Process.pid
@@ -635,7 +650,7 @@ if $PROGRAM_NAME == __FILE__
     operation = DiscourseVipsWorker::Operations.build(ARGV.drop(1))
     STDOUT.write(MessagePack.pack(DiscourseVipsWorker.operation_response(operation)))
   else
-    server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
-    DiscourseVipsWorker.run(server_fd:, owner_fd:)
+    server_fd, owner_fd, owner_pid = ARGV.first(3).map { |argument| Integer(argument) }
+    DiscourseVipsWorker.run(server_fd:, owner_fd:, owner_pid:, shared: ARGV[3] == "true")
   end
 end

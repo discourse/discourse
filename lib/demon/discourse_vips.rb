@@ -21,6 +21,10 @@ class Demon::DiscourseVips < Demon::Base
     demons&.each_value(&:release_inherited_worker)
   end
 
+  def self.stop_accepting
+    demons&.each_value(&:stop_accepting)
+  end
+
   def run
     @worker_process&.discard
     @worker_process =
@@ -50,6 +54,12 @@ class Demon::DiscourseVips < Demon::Base
   def release_inherited_worker
     @worker_process&.discard
     @worker_process = nil
+  end
+
+  def stop_accepting
+    @started = false
+    @worker_process&.stop_accepting
+    delete_pid_file(@pid)
   end
 
   private
