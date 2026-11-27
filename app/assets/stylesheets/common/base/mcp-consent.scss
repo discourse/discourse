@@ -1,0 +1,86 @@
+@use "lib/viewport";
+
+.mcp-consent {
+  h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .authorize-api-key__summary > :last-child {
+    margin-bottom: 0;
+  }
+
+  &__section-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--font-0);
+    font-weight: 600;
+  }
+
+  .authorize-api-key__permissions-header + &__section-title {
+    margin-top: 0;
+  }
+
+  &__scope + &__scope {
+    margin-top: var(--space-1);
+  }
+
+  &__withheld,
+  &__details {
+    font-size: var(--font-down-1);
+
+    summary {
+      cursor: pointer;
+      color: var(--primary-high);
+    }
+  }
+
+  &__withheld {
+    margin-bottom: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--primary-low);
+
+    p {
+      margin: var(--space-2) 0;
+    }
+  }
+
+  &__details {
+    dl {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: var(--space-2) var(--space-4);
+      margin: var(--space-3) 0 0;
+
+      @include viewport.until(sm) {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0;
+      }
+    }
+
+    dt {
+      color: var(--primary-high);
+
+      @include viewport.until(sm) {
+        &:not(:first-child) {
+          margin-top: var(--space-2);
+        }
+      }
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__scope-ids {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__disconnect {
+    margin: var(--space-4) 0 0;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+}

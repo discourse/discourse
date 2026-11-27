@@ -1,0 +1,11 @@
+<ul class="authorize-api-key__scopes mcp-consent__scopes">
+  <% items.each do |item| %>
+    <li class="mcp-consent__scope" data-scope="<%= item.scope %>">
+      <% if item.label %>
+        <%= item.label %>
+      <% else %>
+        <code><%= item.scope %></code>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
