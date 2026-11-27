@@ -171,7 +171,7 @@
     "expect-type": "^1.4.0",
     "jquery": "^4.1.0",
     "js-yaml": "^5.5.0",
-    "message-bus-client": "^4.6.0",
+    "message-bus-client": "^5.1.0",
     "pretender": "^3.4.7",
     "qunit": "^3.0.0",
     "qunit-dom": "^3.6.0",
