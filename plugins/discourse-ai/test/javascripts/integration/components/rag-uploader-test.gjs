@@ -1,13 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import {
-  click,
-  find,
-  render,
-  rerender,
-  settled,
-  waitUntil,
-} from "@ember/test-helpers";
+import { click, find, render, rerender, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -60,7 +53,7 @@ module("Integration | Component | RagUploader", function (hooks) {
     assert.strictEqual(find(ROWS), row);
   });
 
-  test("fetches indexing statuses once per set of uploads", async function (assert) {
+  test("fetches the indexing statuses of @target", async function (assert) {
     const requests = [];
     pretender.get(
       "/admin/plugins/discourse-ai/rag-document-fragments/files/status.json",
@@ -69,27 +62,16 @@ module("Integration | Component | RagUploader", function (hooks) {
         return response({ 1: { total: 2, indexed: 2, left: 0 } });
       }
     );
-    const target = tracked({ id: 7, rag_uploads: [first] });
+    const target = { id: 7, rag_uploads: [first] };
 
     await render(
       <template>
-        <RagUploader @target={{target.value}} @targetName="AiAgent" />
+        <RagUploader @target={{target}} @targetName="AiAgent" />
       </template>
     );
+
     assert.deepEqual(requests, [{ target_type: "AiAgent", target_id: "7" }]);
     assert.dom(".rag-uploader .indexed").exists("renders the fetched status");
-
-    target.value = { ...target.value, name: "renamed" };
-    await settled();
-    assert.strictEqual(
-      requests.length,
-      1,
-      "does not refetch for other changes"
-    );
-
-    target.value = { ...target.value, rag_uploads: [first, second] };
-    await settled();
-    assert.strictEqual(requests.length, 2, "refetches for new uploads");
   });
 
   test("hands over a finished upload when another one is cancelled", async function (assert) {

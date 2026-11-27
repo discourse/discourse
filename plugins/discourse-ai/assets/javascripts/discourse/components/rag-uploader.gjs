@@ -4,7 +4,6 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import helperFn from "discourse/helpers/helper-fn";
 import { ajax } from "discourse/lib/ajax";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
@@ -35,31 +34,20 @@ export default class RagUploader extends Component {
     this.uppyUpload.setup(element);
   });
 
-  loadIndexingStatuses = helperFn(() => {
+  constructor() {
+    super(...arguments);
+
     const targetId = this.args.target?.id;
-    const uploadIds = this.ragUploads.map((upload) => upload.id).join(",");
-    const statusesKey = `${targetId}:${uploadIds}`;
-
-    // @target is replaced on every form change
-    if (statusesKey === this.#statusesKey) {
-      return;
-    }
-    this.#statusesKey = statusesKey;
-
-    if (!uploadIds || !targetId) {
+    if (!targetId || !this.ragUploads.length) {
       return;
     }
 
     ajax(
       `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.args.targetName}&target_id=${targetId}`
     ).then((statuses) => {
-      if (this.#statusesKey === statusesKey && !this.isDestroying) {
-        this.ragIndexingStatuses = statuses;
-      }
+      this.ragIndexingStatuses = statuses;
     });
-  });
-
-  #statusesKey;
+  }
 
   get acceptedFileTypes() {
     if (this.args.allowImages) {
@@ -99,8 +87,6 @@ export default class RagUploader extends Component {
 
   <template>
     <div class="rag-uploader" ...attributes>
-      {{this.loadIndexingStatuses}}
-
       {{#if @allowImages}}
         <p>{{i18n "discourse_ai.rag.uploads.description_with_images"}}</p>
       {{else}}
