@@ -7,6 +7,9 @@ module DiscourseAssign
       assigned_group_to_post
       unassigned_from_post
       unassigned_group_from_post
+      note_change
+      status_change
+      details_change
     ].freeze
 
     def self.tracking_posts
