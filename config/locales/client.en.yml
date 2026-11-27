@@ -3662,6 +3662,9 @@ en:
           isNaN: "Returns true if the value is NaN."
           isFinite: "Returns true if the value is a finite number."
     composer:
+      topic_creation_confirmation:
+        title: "Before you create this topic"
+        go_back: "Go back"
       autocomplete:
         username_missing: "Selected autocomplete result is missing username."
         name_missing: "Selected autocomplete result is missing name."
@@ -5747,6 +5750,12 @@ en:
       require_topic_approval_for: "Require moderator approval of new topics for..."
       require_reply_approval_for: "Require moderator approval of new replies for..."
       new_topic_approval: "New topic approval"
+      topic_creation_prompt:
+        title: "New topic confirmation"
+        message: "Confirmation message"
+        description: "Show this message before users submit a new topic in this category. Leave blank to skip confirmation."
+        max_level: "Maximum trust level"
+        max_level_description: "Show the message up to this trust level, from 0 to 4. Leave blank to show it to everyone."
       new_reply_approval: "New reply approval"
       posting_review_modes:
         no_one: "No one"

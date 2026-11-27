@@ -765,6 +765,8 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
+          :topic_creation_prompt,
+          :topic_creation_prompt_max_trust_level,
           :topic_title_placeholder,
           :description,
           :sort_order,

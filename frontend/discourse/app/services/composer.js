@@ -1295,7 +1295,7 @@ export default class ComposerService extends Service {
     this.toolbarEvent.formatCode();
   }
 
-  save(force, options = {}) {
+  save(force, options = {}, confirmedCategory = null) {
     if (this.disableSubmit) {
       return;
     }
@@ -1342,6 +1342,42 @@ export default class ComposerService extends Service {
         model: composer,
       });
       return;
+    }
+
+    const category =
+      composer.action === CREATE_TOPIC ? composer.category : null;
+    const prompt = category?.topic_creation_prompt?.trim();
+    const maxTrustLevel = category?.topic_creation_prompt_max_trust_level;
+    if (
+      prompt &&
+      category !== confirmedCategory &&
+      (maxTrustLevel == null || this.currentUser.trust_level <= maxTrustLevel)
+    ) {
+      if (
+        this.dialog.show &&
+        this.dialog.class === "topic-creation-confirmation"
+      ) {
+        return;
+      }
+
+      return this.dialog
+        .confirm({
+          class: "topic-creation-confirmation",
+          title: i18n("composer.topic_creation_confirmation.title"),
+          message: escapeExpression(prompt).replaceAll("\n", "<br>"),
+          confirmButtonLabel: "composer.create_topic",
+          cancelButtonLabel: "composer.topic_creation_confirmation.go_back",
+        })
+        .then((confirmed) => {
+          if (
+            confirmed &&
+            this.model === composer &&
+            composer.action === CREATE_TOPIC &&
+            composer.category === category
+          ) {
+            return this.save(force, options, category);
+          }
+        });
     }
 
     const topic = composer.topic;

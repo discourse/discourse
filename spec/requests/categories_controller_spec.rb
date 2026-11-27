@@ -1138,6 +1138,55 @@ RSpec.describe CategoriesController do
     describe "logged in" do
       before { sign_in(admin) }
 
+      it "saves and clears the optional topic creation prompt" do
+        put "/categories/#{category.id}.json",
+            params: {
+              topic_creation_prompt: "Check the posting guidelines.",
+              topic_creation_prompt_max_trust_level: 0,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category"]).to include(
+          "topic_creation_prompt" => "Check the posting guidelines.",
+          "topic_creation_prompt_max_trust_level" => 0,
+        )
+
+        put "/categories/#{category.id}.json",
+            params: {
+              topic_creation_prompt: "",
+              topic_creation_prompt_max_trust_level: "",
+            }
+
+        expect(response.status).to eq(200)
+        expect(category.reload.topic_creation_prompt).to be_blank
+        expect(category.topic_creation_prompt_max_trust_level).to be_nil
+      end
+
+      it "returns a saved trust level even when the prompt is cleared" do
+        category.update!(
+          topic_creation_prompt: "Check the posting guidelines.",
+          topic_creation_prompt_max_trust_level: 2,
+        )
+
+        put "/categories/#{category.id}.json", params: { topic_creation_prompt: "" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.fetch("category")).to include(
+          "topic_creation_prompt_max_trust_level" => 2,
+        )
+      end
+
+      it "rejects an invalid topic creation prompt trust level" do
+        put "/categories/#{category.id}.json",
+            params: {
+              topic_creation_prompt: "Check the posting guidelines.",
+              topic_creation_prompt_max_trust_level: 5,
+            }
+
+        expect(response.status).to eq(422)
+        expect(category.reload.topic_creation_prompt).to be_nil
+      end
+
       it "raises an exception if they don't have permission to edit it" do
         sign_in(Fabricate(:user))
         put "/categories/#{category.slug}.json",
