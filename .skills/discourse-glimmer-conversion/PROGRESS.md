@@ -181,7 +181,6 @@
   - plugins/discourse-ai/ai-bot-conversations
   - plugins/discourse-gamification/gamification-leaderboard
 - [#46763](https://github.com/discourse/discourse/pull/46763)
-  - admin/site-settings/group
   - category-list-item
   - modal/share-topic
   - parent-category-row
