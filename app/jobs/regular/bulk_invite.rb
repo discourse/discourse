@@ -131,11 +131,19 @@ module Jobs
       user_fields
     end
 
+    def get_locale(locale, email)
+      return locale if locale.blank? || SiteSetting.allowed_user_locale_values.include?(locale)
+
+      save_log I18n.t("bulk_invite.invalid_locale", language: locale, email:)
+      @warnings += 1
+      nil
+    end
+
     def send_invite(invite)
       email = invite[:email]
       groups = get_groups(invite[:groups], email)
       topic = get_topic(invite[:topic_id], email)
-      locale = invite[:locale]
+      locale = get_locale(invite[:locale], email)
       user_fields = get_user_fields(invite.except(:email, :groups, :topic_id, :locale), email)
 
       begin

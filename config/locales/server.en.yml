@@ -745,6 +745,7 @@ en:
     file_should_be_csv: "The uploaded file should be of csv format."
     max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
+    invalid_locale: "Language '%{language}' for '%{email}' was ignored because it is not allowed on this site."
 
   invite_link:
     email_taken: "This email is already in use. If you already have an account please log in or reset password."

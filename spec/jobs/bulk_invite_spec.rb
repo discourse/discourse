@@ -27,6 +27,60 @@ RSpec.describe Jobs::BulkInvite do
       { skipped_invites: skipped_invites_emails, failed_invites: failed_invites_emails }
     end
 
+    it "sends invites while ignoring excluded or unknown language preferences" do
+      SiteSetting.allowed_user_locales = "ja"
+
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: [
+          { email: "excluded@discourse.org", locale: "fr" },
+          { email: "unknown@discourse.org", locale: "猫" },
+          { email: "allowed@discourse.org", locale: "ja" },
+        ],
+      )
+
+      expect(
+        Invite.where(
+          email: %w[excluded@discourse.org unknown@discourse.org allowed@discourse.org],
+        ).pluck(:email),
+      ).to contain_exactly(
+        "excluded@discourse.org",
+        "unknown@discourse.org",
+        "allowed@discourse.org",
+      )
+      expect(User.find_by_email("allowed@discourse.org").locale).to eq("ja")
+      expect(Post.last.topic.title).to eq(
+        I18n.t("system_messages.bulk_invite_succeeded.subject_template"),
+      )
+      expect(Post.last.raw).to include(
+        "2 warning",
+        I18n.t("bulk_invite.invalid_locale", language: "fr", email: "excluded@discourse.org"),
+        I18n.t("bulk_invite.invalid_locale", language: "猫", email: "unknown@discourse.org"),
+      )
+    end
+
+    it "keeps saved languages and applies group changes when an invite supplies an excluded language" do
+      user.update!(locale: "fr")
+      staged_user.update!(locale: "fr")
+      SiteSetting.allowed_user_locales = "ja"
+
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: [
+          { email: user.email, locale: "de", groups: group1.name },
+          { email: staged_user.email, locale: "de" },
+        ],
+      )
+
+      expect(user.reload.locale).to eq("fr")
+      expect(user.groups).to include(group1)
+      expect(staged_user.reload.locale).to eq("fr")
+      expect(Invite.exists?(email: staged_user.email)).to eq(true)
+      expect(Post.last.topic.title).to eq(
+        I18n.t("system_messages.bulk_invite_succeeded.subject_template"),
+      )
+    end
+
     it "raises an error when the invites array is missing" do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }.to raise_error(
         Discourse::InvalidParameters,
