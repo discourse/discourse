@@ -476,7 +476,16 @@ export default class GoogleDfpAd extends AdComponent {
       this.cleanup();
     }
 
-    if (!this.get("showAd") || !this.get("loadedGoogletag")) {
+    if (!this.get("showAd")) {
+      return;
+    }
+
+    // A component that mounted while hidden never loaded GPT; if it later
+    // becomes eligible without remounting, load it here so the ad can render.
+    if (!this.get("loadedGoogletag")) {
+      if (!isTesting()) {
+        loadGoogle().then(() => this.#defineSlot());
+      }
       return;
     }
 
