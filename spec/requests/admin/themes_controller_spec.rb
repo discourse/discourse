@@ -5,11 +5,9 @@ RSpec.describe Admin::ThemesController do
   fab!(:moderator)
   fab!(:user)
 
-  let! :repo do
-    setup_git_repo("about.json" => { name: "discourse-branch-header" }.to_json)
-  end
+  let(:repo) { setup_git_repo("about.json" => { name: "discourse-branch-header" }.to_json) }
 
-  let! :repo_url do
+  let(:repo_url) do
     MockGitImporter.register("https://github.com/discourse/discourse-brand-header.git", repo)
   end
 
@@ -181,33 +179,37 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(admin) }
 
       context "when theme allowlist mode is enabled" do
+        subject(:import_theme) do
+          post "/admin/themes/import.json", params: { remote: "    #{remote_url}       " }
+        end
+
+        let(:remote_url) { repo_url }
+
         before do
           global_setting :allowed_theme_repos,
                          "https://github.com/discourse/discourse-brand-header.git"
         end
 
-        it "allows allowlisted imports" do
-          expect(Theme.allowed_remote_theme_ids.length).to eq(0)
-
-          post "/admin/themes/import.json",
-               params: {
-                 remote: "    https://github.com/discourse/discourse-brand-header.git       ",
-               }
-
-          expect(Theme.allowed_remote_theme_ids.length).to eq(1)
-          expect(response.status).to eq(201)
+        context "when the repository is on the allowlist" do
+          it "adds the imported theme to the allowlist", :aggregate_failures do
+            expect { import_theme }.to change { Theme.allowed_remote_theme_ids.length }.from(0).to(
+              1,
+            )
+            expect(response).to have_http_status(:created)
+          end
         end
 
-        it "prevents adding disallowed themes" do
-          RemoteTheme.stubs(:import_theme)
-          remote = "    https://bad.com/discourse/discourse-brand-header.git       "
+        context "when the repository is not on the allowlist" do
+          let(:remote_url) { "https://bad.com/discourse/discourse-brand-header.git" }
 
-          post "/admin/themes/import.json", params: { remote: remote }
+          it "rejects the import", :aggregate_failures do
+            import_theme
 
-          expect(response.status).to eq(403)
-          expect(response.parsed_body["errors"]).to include(
-            I18n.t("themes.import_error.not_allowed_theme", { repo: remote.strip }),
-          )
+            expect(response).to have_http_status(:forbidden)
+            expect(response.parsed_body["errors"]).to include(
+              I18n.t("themes.import_error.not_allowed_theme", repo: remote_url),
+            )
+          end
         end
       end
 
@@ -812,7 +814,7 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#update" do
-    let!(:theme) { Fabricate(:theme) }
+    fab!(:theme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1346,7 +1348,7 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#destroy" do
-    let!(:theme) { Fabricate(:theme) }
+    fab!(:theme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1977,9 +1979,9 @@ RSpec.describe Admin::ThemesController do
   describe "#update_source" do
     fab!(:theme)
 
-    let!(:other_repo) { setup_git_repo("about.json" => { name: "other-theme" }.to_json) }
+    let(:other_repo) { setup_git_repo("about.json" => { name: "other-theme" }.to_json) }
 
-    let!(:other_repo_url) do
+    let(:other_repo_url) do
       MockGitImporter.register("https://github.com/discourse/other-theme.git", other_repo)
     end
 

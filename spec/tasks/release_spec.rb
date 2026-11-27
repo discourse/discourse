@@ -1,10 +1,30 @@
 # frozen_string_literal: true
 
 RSpec.describe "tasks/release" do
+  fab!(:origin_template) do
+    Dir
+      .mktmpdir("release-origin-", concurrency_safe_tmp_dir)
+      .tap { |directory| initialize_origin(directory) }
+  end
+
   let(:tmpdir) { Dir.mktmpdir }
   let(:origin_path) { "#{tmpdir}/origin-repo" }
   let(:local_path) { "#{tmpdir}/local-repo" }
-  let(:git_tags) { git("tag").lines.map(&:strip) }
+
+  before do
+    ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] = "1"
+    FileUtils.cp_r(origin_template, origin_path)
+    git "clone", "-b", "main", origin_path, local_path
+  end
+
+  after do
+    FileUtils.remove_entry(tmpdir)
+    ENV.delete("RUNNING_RELEASE_IN_RSPEC_TESTS")
+  end
+
+  def git_tags
+    git("tag").lines.map(&:strip)
+  end
 
   def git(*args)
     out, err, status = Open3.capture3("git", *args)
@@ -36,13 +56,8 @@ RSpec.describe "tasks/release" do
     end
   end
 
-  before do
-    ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] = "1"
-
-    Rake::Task.tasks.each { |t| t.reenable }
-    FileUtils.mkdir_p origin_path
-
-    Dir.chdir(origin_path) do
+  def initialize_origin(directory)
+    Dir.chdir(directory) do
       FileUtils.mkdir_p "lib"
       FileUtils.mkdir_p "tmp"
 
@@ -61,20 +76,13 @@ RSpec.describe "tasks/release" do
       git "commit", "-m", "Initial commit"
 
       git "checkout", "-b", "stable"
-      File.write("#{origin_path}/lib/version.rb", fake_version_rb("3.1.2"))
+      File.write("lib/version.rb", fake_version_rb("3.1.2"))
       git "add", "."
       git "commit", "-m", "Previous stable version bump"
 
       git "checkout", "main"
       git "config", "receive.denyCurrentBranch", "ignore"
     end
-
-    git "clone", "-b", "main", origin_path, local_path
-  end
-
-  after do
-    FileUtils.remove_entry(tmpdir)
-    ENV.delete("RUNNING_RELEASE_IN_RSPEC_TESTS")
   end
 
   describe "release:maybe_tag_release" do
