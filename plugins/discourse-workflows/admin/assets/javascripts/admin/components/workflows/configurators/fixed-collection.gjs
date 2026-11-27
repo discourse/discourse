@@ -2,10 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import {
   collectionAddLabel,
@@ -55,6 +58,8 @@ function isExtraFieldShown(field, item, activeAttrs, key) {
 }
 
 export default class FixedCollection extends Component {
+  @service siteSettings;
+
   @tracked activeAttrs = new Map();
   @tracked itemCounts = new Map();
 
@@ -334,26 +339,62 @@ export default class FixedCollection extends Component {
 
   @action
   toggleAttr(group, index, field, item, close) {
-    const key = `${group.name}:${index}`;
-    const active = this.isAttrActive(group, index, field, item);
-    const newMap = new Map(this.activeAttrs);
-    const set = new Set(newMap.get(key) || []);
+    if (this.isAttrActive(group, index, field, item)) {
+      this.hideAttrs(group, index, [field.name], [field]);
+    } else {
+      this.showAttrs(group, index, [field.name]);
+    }
+    close?.();
+  }
 
-    if (active) {
-      set.delete(field.name);
-      const defaultVal =
-        field.type === "boolean" ? false : (field.default ?? "");
+  @action
+  hasOldAttributesMenu(group) {
+    return (
+      !this.siteSettings.enable_new_select_controls &&
+      this.hasExtraFieldsFor(group)
+    );
+  }
+
+  @action
+  attributeOptions(group, item) {
+    return this.availableExtraFields(group, item).map((field) =>
+      selectOption(field, { label: this.fieldLabel(field.name) })
+    );
+  }
+
+  @action
+  shownAttrs(group, index, item) {
+    return this.availableExtraFields(group, item)
+      .filter((field) => this.isAttrActive(group, index, field, item))
+      .map((field) => field.name);
+  }
+
+  /** Attributes a field shows whenever its type allows them, so they can't be turned off. */
+  @action
+  lockedAttrs(group, item) {
+    return this.availableExtraFields(group, item)
+      .filter((field) => field.display_options?.show)
+      .map((field) => field.name);
+  }
+
+  @action
+  showAttrs(group, index, names) {
+    this.#updateAttrs(group, index, (set) =>
+      names.forEach((name) => set.add(name))
+    );
+  }
+
+  @action
+  hideAttrs(group, index, names, fields) {
+    for (const field of fields) {
       this.args.formApi.set(
         `${this.groupPath(group)}.${index}.${field.name}`,
-        defaultVal
+        field.type === "boolean" ? false : (field.default ?? "")
       );
-    } else {
-      set.add(field.name);
     }
-
-    newMap.set(key, set);
-    this.activeAttrs = newMap;
-    close?.();
+    this.#updateAttrs(group, index, (set) =>
+      names.forEach((name) => set.delete(name))
+    );
   }
 
   @action
@@ -386,6 +427,13 @@ export default class FixedCollection extends Component {
     return this.extraItemFields(group).filter((field) =>
       fieldVisible(field, item)
     );
+  }
+
+  #updateAttrs(group, index, change) {
+    const key = this.activeAttrKey(group, index);
+    const set = new Set(this.activeAttrs.get(key) || []);
+    change(set);
+    this.activeAttrs = new Map(this.activeAttrs).set(key, set);
   }
 
   <template>
@@ -467,6 +515,29 @@ export default class FixedCollection extends Component {
                       />
                     {{/if}}
                   {{/each}}
+
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    {{#if (this.hasExtraFieldsFor group)}}
+                      <DSelect
+                        class="workflows-property-engine__attributes"
+                        @contentClass="workflows-property-engine__attributes-content"
+                        @lockedValues={{this.lockedAttrs group item}}
+                        @maxVisibleChips={{0}}
+                        @multiple={{true}}
+                        @onDeselect={{fn this.hideAttrs group index}}
+                        @onSelect={{fn this.showAttrs group index}}
+                        @options={{this.attributeOptions group item}}
+                        @texts={{hash
+                          caption=(i18n
+                            "discourse_workflows.property_engine.add_attributes"
+                          )
+                        }}
+                        @value={{this.shownAttrs group index item}}
+                        @valueField="name"
+                        @variant="static"
+                      />
+                    {{/if}}
+                  {{/if}}
 
                   {{#each
                     (this.extraItemFields group) key="name"
@@ -567,7 +638,7 @@ export default class FixedCollection extends Component {
                     {{/if}}
                   {{/each}}
 
-                  {{#if (this.hasExtraFieldsFor group)}}
+                  {{#if (this.hasOldAttributesMenu group)}}
                     <div class="workflows-property-engine__block-actions">
                       <DMenu
                         class="btn btn-default workflows-property-engine__add-attrs-btn"

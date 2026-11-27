@@ -14,6 +14,7 @@ import Form from "discourse/components/form";
 import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
@@ -2181,3 +2182,113 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom(".workflows-variable-input").includesText("enabled");
   });
 });
+
+module(
+  "Integration | Component | workflows property engine | optional attributes",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const ATTRIBUTES = ".workflows-property-engine__attributes";
+
+    hooks.beforeEach(function () {
+      pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
+        response(200, { variables: [] })
+      );
+      this.session = new WorkflowEditorSession({
+        workflowId: 7,
+        lastExecutionRunData: {},
+      });
+      this.nodeType = "trigger:form";
+      this.schema = {
+        form_fields: {
+          type: "fixed_collection",
+          type_options: { multiple_values: true, hide_optional_fields: true },
+          options: [
+            {
+              name: "values",
+              values: {
+                field_label: { type: "string", required: true },
+                field_type: { type: "string", required: true },
+                description: { type: "string" },
+                required: { type: "boolean" },
+                placeholder: {
+                  type: "string",
+                  display_options: { show: { field_type: ["text"] } },
+                },
+              },
+            },
+          ],
+        },
+      };
+      this.configuration = {
+        form_fields: {
+          values: [
+            {
+              field_label: "Name",
+              field_type: "text",
+              description: "Your name",
+            },
+          ],
+        },
+      };
+    });
+
+    test("keeps today's attributes menu without new select controls", async function (assert) {
+      await renderEngine(this);
+
+      assert.dom(".workflows-property-engine__add-attrs-btn").exists();
+      assert.dom(ATTRIBUTES).doesNotExist();
+    });
+
+    test("picks a field's attributes from a list above them", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const formApi = await renderEngine(this, { withFormApi: true });
+
+      assert.dom(".workflows-property-engine__add-attrs-btn").doesNotExist();
+      assert
+        .dom(`${ATTRIBUTES} .d-select__caption`)
+        .hasText(i18n("discourse_workflows.property_engine.add_attributes"));
+      assert
+        .dom(`${ATTRIBUTES} .d-select__chips-more`)
+        .hasText(
+          "2",
+          "counts the description and the always-shown placeholder"
+        );
+      const fields = findAll(`${ATTRIBUTES}, [name$='description']`);
+      assert.deepEqual(
+        fields.map((field) => field.matches(ATTRIBUTES)),
+        [true, false],
+        "the list comes before the attributes it shows"
+      );
+
+      const attributes = dSelect(ATTRIBUTES);
+      await attributes.open();
+      assert
+        .dom("[role='option'][data-value='placeholder']")
+        .hasAria("selected", "true")
+        .hasAria(
+          "disabled",
+          "true",
+          "an always-shown attribute can't be removed"
+        );
+
+      await attributes.select("required");
+      assert
+        .dom(".form-kit__control-toggle")
+        .exists("picking an attribute shows its input");
+      assert
+        .dom("[role='option'][data-value='required']")
+        .hasAria("selected", "true", "the list stays open on the pick");
+
+      await attributes.select("description");
+      assert
+        .dom("[name$='description']")
+        .doesNotExist("removing an attribute hides its input");
+      assert.strictEqual(
+        formApi.get("form_fields.values.0.description"),
+        "",
+        "and resets its value"
+      );
+    });
+  }
+);

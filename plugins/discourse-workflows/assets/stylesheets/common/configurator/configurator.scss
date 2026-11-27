@@ -286,6 +286,16 @@
     justify-content: center;
     gap: var(--space-2);
   }
+
+  &__attributes {
+    align-self: flex-start;
+    width: auto;
+  }
+}
+
+// A selected row's bold label needs more room than the default floor.
+.workflows-property-engine__attributes-content {
+  --d-select-menu-min-width: 14em;
 }
 
 .workflows-data-table-column-select {
