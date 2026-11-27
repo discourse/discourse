@@ -1147,7 +1147,7 @@ RSpec.describe SessionController do
     describe "when in development mode" do
       before { Rails.env.stubs(:development?).returns(true) }
 
-      it "works" do
+      it "signs in as the requested user" do
         get "/session/#{user.username}/become"
 
         expect(response).to be_redirect
@@ -1574,7 +1574,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects to root when a protocol-relative return_path has a different host" do
       sso = get_sso("//eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
@@ -1585,7 +1585,7 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("/")
     end
 
-    it "redirects to root if the host of the return_path is different" do
+    it "redirects to root when an absolute return_path has a different host" do
       sso = get_sso("http://eviltrout.com")
       sso.external_id = "666"
       sso.email = "bob@bob.com"
