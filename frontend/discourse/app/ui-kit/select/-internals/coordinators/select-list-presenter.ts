@@ -36,7 +36,10 @@ export default class SelectListPresenter
   }
 
   get entryFocus(): DRovingFocusEntry {
-    return this.#canSeed() && !this.#usesDirectFocus() ? "first" : "none";
+    if (!this.#canSeed() || this.#usesDirectFocus()) {
+      return "none";
+    }
+    return this.shouldActivateSelected ? "selected-or-none" : "first";
   }
 
   /** The search field's prompt. */

@@ -382,7 +382,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
   });
 
   module("keyboard and selection", function () {
-    test("DSelectList activates a row only with focus and a query", async function (assert) {
+    test("a multi DSelectList activates a row only with focus and a query", async function (assert) {
       const held = tracked([]);
       const setHeld = (next) => (held.value = next);
       const load = fruitLoader();
@@ -2213,6 +2213,48 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert.deepEqual(changes, [], "nothing changes");
       assert.deepEqual(picks, [[2, "Banana"]], "the re-pick is reported");
       assert.dom(rows()[1]).hasAria("selected", "true");
+    });
+
+    test("focus returns to the held row, and a query moves to its first match", async function (assert) {
+      const held = tracked(3);
+      await renderSingle(held);
+
+      assert.strictEqual(activeRow(), null, "nothing active at rest");
+      await focus(input());
+      assert.dom(activeRow()).hasText("Cherry", "the held row is active");
+      await fillIn(input(), "an");
+      assert
+        .dom(activeRow())
+        .hasText("Banana", "a query takes its first match");
+      await fillIn(input(), "");
+      assert.dom(activeRow()).hasText("Cherry", "an empty query returns to it");
+    });
+
+    test("a held row in a first page that arrives after focus becomes active", async function (assert) {
+      const held = tracked(3);
+      const gate = gatedLoader();
+      const load = gate.load;
+      const valueRecords = [FRUIT[2]];
+      gate.hold();
+      const rendered = render(
+        <template>
+          <DSelectList
+            @debounce={{false}}
+            @load={{load}}
+            @multiple={{false}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{held.value}}
+            @valueRecords={{valueRecords}}
+          />
+        </template>
+      );
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      moveFocusNow(input());
+      gate.release();
+      await rendered;
+      await settled();
+
+      assert.dom(activeRow()).hasText("Cherry");
     });
 
     test("shows the held value by its selected row, without chips", async function (assert) {

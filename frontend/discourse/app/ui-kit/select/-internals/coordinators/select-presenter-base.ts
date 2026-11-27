@@ -58,6 +58,23 @@ export default class SelectPresenterBase {
     this.#getArgs = options.getArgs;
   }
 
+  /**
+   * Whether the cursor enters on the held option. This outranks first-row entry and so also
+   * applies to `button`, whose "wait for the user" rule exists to avoid pre-highlighting an
+   * *arbitrary* row — the user's own choice is not one.
+   *
+   * Excluded while filtering (the first match is what Enter should take, not a row the user
+   * already holds) and for a multi-select, where activating a selected row would make Enter
+   * call `deselect` and silently drop a value.
+   */
+  get shouldActivateSelected(): boolean {
+    return (
+      !this.#engine.multiple &&
+      this.#engine.hasValue &&
+      this.#engine.filter === ""
+    );
+  }
+
   /** Whether the resolved disabled option prevents opening or mutation. */
   get isDisabled(): boolean {
     return this.#engine.config.disabled ?? false;

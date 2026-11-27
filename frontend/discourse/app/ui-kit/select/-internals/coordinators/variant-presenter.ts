@@ -457,23 +457,6 @@ export default class VariantPresenter
   }
 
   /**
-   * Whether to restore the cursor to the already-selected option on open. This outranks
-   * {@link shouldAutoActivateFirst} and so also applies to `button`, whose "wait for the user"
-   * rule exists to avoid pre-highlighting an *arbitrary* row — the user's own choice is not one.
-   *
-   * Excluded while filtering (the first match is what Enter should take, not a row the user
-   * already holds) and for `multiple`, where activating a selected row would make Enter call
-   * `deselect` and silently drop a value.
-   */
-  get shouldActivateSelected(): boolean {
-    return (
-      !this.#getArgs().multiple &&
-      this.#engine.hasValue &&
-      this.#engine.filter === ""
-    );
-  }
-
-  /**
    * The fallback is the whole distinction between the four values: `button` restores a held
    * value but highlights nothing without one, so it cannot share `typeahead`'s.
    */

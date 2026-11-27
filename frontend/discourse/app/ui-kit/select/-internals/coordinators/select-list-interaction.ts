@@ -136,7 +136,8 @@ export default class SelectListInteraction {
   get canSeed(): boolean {
     return (
       this.inputFocused &&
-      this.#engine.filter.length > 0 &&
+      (this.#engine.filter.length > 0 ||
+        this.#presenter.shouldActivateSelected) &&
       !this.#engine.atMaximum &&
       !this.#presenter.isLocked
     );

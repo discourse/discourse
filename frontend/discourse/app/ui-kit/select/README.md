@@ -1841,9 +1841,10 @@ footer controls, then the next control; neither the chips nor the listbox are Ta
 stops. Escape clears a non-empty query and is otherwise left to the containing panel,
 including a `DMenu`.
 
-Automatic cursor entry needs focus inside the root, a query and room below the cap.
-Blur clears the cursor and pending jumps while preserving the query; returning with
-a query re-seeds it. List-state speech is restricted to the focused select, with a
+Automatic cursor entry needs focus inside the root and room below the cap. With a query the
+cursor takes the first match. With an empty query a single list returns to its held value, as
+DSelect does when it opens, and only once that row has loaded. Blur clears the cursor and
+pending jumps while preserving the query; returning re-seeds it. List-state speech is restricted to the focused select, with a
 second ownership check for deferred reports. Adds and removals always speak, and so does a
 single list's pick ("Selected Apple"), since no trigger reads the new value back. Empty
 and error content remains visible while unfocused without live-region roles. An
