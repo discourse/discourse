@@ -9,8 +9,11 @@ module LiveFakeMedia
     { label: "Live fake camera C", width: 640, height: 360, color: "#dc2626", accent: "#0891b2" },
   ].freeze
 
-  def install_live_fake_media(video_feeds: DEFAULT_VIDEO_FEEDS)
+  # `mic_failure` (`{ name:, message: }`) makes microphone capture reject with
+  # that DOMException until `allow_live_fake_mic` is called.
+  def install_live_fake_media(video_feeds: DEFAULT_VIDEO_FEEDS, mic_failure: nil)
     feeds_json = JSON.generate(video_feeds)
+    mic_failure_json = JSON.generate(mic_failure)
 
     page.driver.with_playwright_page do |playwright_page|
       playwright_page.add_init_script(script: <<~JS)
@@ -23,6 +26,7 @@ module LiveFakeMedia
           window.__liveFakeMediaStreams = [];
           window.__liveFakeMediaVideoFeeds = #{feeds_json};
           window.__liveFakeMediaVideoFeedIndex = 0;
+          window.__liveFakeMediaMicFailure = #{mic_failure_json};
 
           const mediaDevices = navigator.mediaDevices || {};
           Object.defineProperty(navigator, "mediaDevices", {
@@ -119,6 +123,11 @@ module LiveFakeMedia
           }
 
           mediaDevices.getUserMedia = async (constraints = {}) => {
+            const micFailure = window.__liveFakeMediaMicFailure;
+            if (constraints.audio && micFailure) {
+              throw new DOMException(micFailure.message, micFailure.name);
+            }
+
             const stream = new MediaStream();
 
             if (constraints.audio) {
@@ -158,6 +167,56 @@ module LiveFakeMedia
         })();
       JS
     end
+  end
+
+  def allow_live_fake_mic
+    page.execute_script("window.__liveFakeMediaMicFailure = null;")
+  end
+
+  # Waits for a remote participant's microphone sink to carry actual audio.
+  # A remote track is live and enabled as soon as it is negotiated, before any
+  # media arrives, so the received samples are measured instead.
+  def has_live_remote_voice?(timeout: 15)
+    page.evaluate_async_script(<<~JS, timeout * 1000)
+      const [timeoutMs, done] = arguments;
+      const startedAt = performance.now();
+      const context = new AudioContext();
+      const samples = new Float32Array(2048);
+      let analyser = null;
+      let analysedTrack = null;
+
+      const finish = (result) => {
+        context.close();
+        done(result);
+      };
+
+      const hearsAudio = () => {
+        const audio = document.querySelector(".live-voice-canvas__voice");
+        const stream = audio?.srcObject;
+        if (!stream || audio.muted || !stream.getAudioTracks().length) {
+          return false;
+        }
+        if (stream.getAudioTracks()[0] !== analysedTrack) {
+          analysedTrack = stream.getAudioTracks()[0];
+          analyser = context.createAnalyser();
+          context.createMediaStreamSource(stream).connect(analyser);
+        }
+        analyser.getFloatTimeDomainData(samples);
+        return samples.some((sample) => sample !== 0);
+      };
+
+      const check = () => {
+        if (hearsAudio()) {
+          finish(true);
+        } else if (performance.now() - startedAt > timeoutMs) {
+          finish(false);
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+
+      context.resume().then(check, check);
+    JS
   end
 
   def live_media_track_count(selector, kind: :video, timeout: 5)

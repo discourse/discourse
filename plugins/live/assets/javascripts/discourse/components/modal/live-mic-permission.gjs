@@ -17,8 +17,12 @@ let helpOpen = false;
 // past "deny"), so getUserMedia rejects with no prompt — the modal is the
 // only way the user learns what to fix. Other failures (no device, device
 // in use) get a toast.
+export function isMicPermissionError(error) {
+  return PERMISSION_ERROR_NAMES.includes(error?.name);
+}
+
 export function reportMicAcquisitionFailure(error, { modal, toasts }) {
-  if (PERMISSION_ERROR_NAMES.includes(error?.name)) {
+  if (isMicPermissionError(error)) {
     showMicPermissionHelp(modal);
   } else {
     toasts.error({
@@ -26,6 +30,23 @@ export function reportMicAcquisitionFailure(error, { modal, toasts }) {
       data: { message: i18n("live.room.mic_unavailable") },
     });
   }
+}
+
+// Non-blocking notice used when a user joins a room without a usable
+// microphone (denied permission, managed browser policy, or no mic connected).
+// They stay in the call muted and can still listen or unmute later.
+export function reportJoinedWithoutMic(error, { toasts }) {
+  toasts.default({
+    duration: 8000,
+    data: {
+      icon: "microphone-slash",
+      message: i18n(
+        isMicPermissionError(error)
+          ? "live.room.joined_without_mic_permission"
+          : "live.room.joined_without_mic"
+      ),
+    },
+  });
 }
 
 // Purely educational; resolves once dismissed.

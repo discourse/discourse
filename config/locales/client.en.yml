@@ -7232,8 +7232,10 @@ en:
             management: "Registration updates"
             manual: "Managed by admins"
             automatic: "Automatic"
+            dynamic: "Registered by client"
             manual_description: "Admins manage this client's name and redirect URIs. Metadata refreshes will not change them, so keep them up to date."
             automatic_description: "The name and redirect URIs update from published client metadata. Changing either switches both to admin management."
+            dynamic_description: "This client registered itself when it connected. Editing its name or redirect URIs switches it to admin management and keeps it even if nobody has authorized it yet."
             create: "Add client"
             created: "OAuth client added."
             edit: "Edit OAuth client"
@@ -7285,6 +7287,7 @@ en:
             registration_type:
               pre_registered: "Pre-registered"
               cimd: "Client ID metadata"
+              dcr: "Dynamic registration"
             authorization_status:
               active: "Active"
               server_disabled: "Server disabled"

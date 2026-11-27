@@ -22,7 +22,7 @@ class FakeRTCPeerConnection {
     return sender;
   }
 
-  addTransceiver(kind) {
+  addTransceiver(kind, options = {}) {
     const sender = {
       track: null,
       async replaceTrack(newTrack) {
@@ -31,7 +31,7 @@ class FakeRTCPeerConnection {
     };
     const transceiver = {
       mid: null,
-      direction: "sendrecv",
+      direction: options.direction ?? "sendrecv",
       sender,
       receiver: { track: { kind } },
     };
@@ -326,6 +326,115 @@ module("Live | Unit | Lib | peer-manager", function (hooks) {
       manager.diagnosticsFor(1, 3).iceCandidateErrors,
       [],
       "a peer without a connection has no errors"
+    );
+  });
+
+  test("reserves an idle mic slot before video and screen audio when no local stream exists", async function (assert) {
+    const manager = (this.manager = new PeerManager({
+      getIceServers: () => [],
+      getLocalStream: () => null,
+      canPublishMedia: () => true,
+      sendSignal: () => Promise.resolve(),
+      flushQueuedSignals: () => Promise.resolve(),
+      onTrack: () => {},
+      clearSignalQueue: () => {},
+      onPeerDestroyed: () => {},
+    }));
+
+    const pc = await manager.create(1, 2);
+    const transceivers = pc.getTransceivers();
+
+    assert.deepEqual(
+      transceivers.map((t) => ({
+        kind: t.receiver.track.kind,
+        direction: t.direction,
+      })),
+      [
+        { kind: "audio", direction: "sendrecv" },
+        { kind: "video", direction: "sendrecv" },
+        { kind: "audio", direction: "sendrecv" },
+      ],
+      "reserves mic audio first, followed by video and screen audio"
+    );
+    assert.strictEqual(
+      PeerManager.screenAudioTransceiverFor(pc),
+      transceivers[2],
+      "keeps screen audio on the second audio transceiver, not the mic slot"
+    );
+    assert.strictEqual(
+      PeerManager.micSenderFor(pc),
+      null,
+      "reports no active mic sender when no local track is attached"
+    );
+
+    const track = { kind: "audio" };
+    assert.true(
+      await manager.attachMicTrack(1, track),
+      "attaches a microphone captured later"
+    );
+    assert.strictEqual(
+      transceivers[0].sender.track,
+      track,
+      "sends it on the reserved mic slot"
+    );
+    assert.strictEqual(
+      PeerManager.micSenderFor(pc),
+      transceivers[0].sender,
+      "reports the mic sender once the track is attached"
+    );
+  });
+
+  test("does not attach a late microphone to a receive-only mic slot", async function (assert) {
+    const manager = (this.manager = new PeerManager({
+      getIceServers: () => [],
+      getLocalStream: () => null,
+      canPublishMedia: () => false,
+      sendSignal: () => Promise.resolve(),
+      flushQueuedSignals: () => Promise.resolve(),
+      onTrack: () => {},
+      clearSignalQueue: () => {},
+      onPeerDestroyed: () => {},
+    }));
+
+    const pc = await manager.create(1, 2);
+
+    assert.strictEqual(pc.getTransceivers()[0].direction, "recvonly");
+    assert.false(
+      await manager.attachMicTrack(1, { kind: "audio" }),
+      "reports that the connection must be rebuilt"
+    );
+    assert.strictEqual(
+      pc.getTransceivers()[0].sender.track,
+      null,
+      "leaves the sender untouched"
+    );
+  });
+
+  test("an answerer without a microphone turns the offered mic m-line into an idle sender", function (assert) {
+    const streams = [];
+    const transceiver = (kind, mid, sender = {}) => ({
+      mid,
+      direction: "recvonly",
+      sender: { track: null, setStreams: (s) => streams.push(s), ...sender },
+      receiver: { track: { kind } },
+    });
+    const mic = transceiver("audio", "0");
+    const pc = {
+      getTransceivers: () => [
+        transceiver("audio", null),
+        mic,
+        transceiver("video", "1"),
+        transceiver("audio", "2"),
+      ],
+    };
+
+    PeerManager.alignMicTransceiverForAnswer(pc);
+
+    assert.strictEqual(mic.direction, "sendrecv", "can send a late mic");
+    assert.strictEqual(
+      streams.length,
+      1,
+      "gives the sender a stream so receivers treat it as a microphone"
     );
   });
 });

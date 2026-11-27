@@ -19,6 +19,51 @@ describe Admin::McpController do
         I18n.t("mcp.admin.client_registered"),
       )
     end
+
+    it "counts dynamically registered clients only after authorization or admin management while enabled" do
+      register = ->(name) do
+        registration =
+          DiscourseMcp::OAuth::ClientRegistration.register!(
+            "client_name" => name,
+            "redirect_uris" => ["https://agent.example.com/callback"],
+          )
+        McpOauthClient.find_by!(client_id: registration[:client_id])
+      end
+      register.("Abandoned")
+
+      get "/admin/mcp/overview.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["metrics"]).to include("approved_oauth_clients" => 0)
+      client_checklist =
+        response.parsed_body["setup_checklist"].find do |item|
+          item["label"] == I18n.t("mcp.admin.client_registered")
+        end
+      expect(client_checklist["complete"]).to eq(false)
+
+      authorized_client = register.("Authorized")
+      McpOauthAuthorization.create!(
+        user: admin,
+        client: authorized_client,
+        resource: DiscourseMcp.resource_url,
+        consented_at: Time.zone.now,
+        status: "active",
+      )
+      managed_client = register.("Managed")
+      managed_client.update_registration!(name: "Admin managed")
+
+      get "/admin/mcp/overview.json"
+      expect(response.parsed_body["metrics"]).to include("approved_oauth_clients" => 2)
+      client_checklist =
+        response.parsed_body["setup_checklist"].find do |item|
+          item["label"] == I18n.t("mcp.admin.client_registered")
+        end
+      expect(client_checklist["complete"]).to eq(true)
+
+      SiteSetting.mcp_oauth_dynamic_client_registration = false
+
+      get "/admin/mcp/overview.json"
+      expect(response.parsed_body["metrics"]).to include("approved_oauth_clients" => 0)
+    end
   end
 
   describe "#primitives" do

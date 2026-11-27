@@ -3960,4 +3960,270 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       "every toggle_mute payload keeps muted=true for a stage listener"
     );
   });
+
+  test("joins an open mesh room muted when microphone permission is denied and allows unmuting once granted", async function (assert) {
+    assert.timeout(2000);
+
+    const rawTrack = createFakeTrack("late-raw-track");
+    const rawStream = createFakeStream("late-raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: createFakeStream(
+        "late-processed-stream",
+        createFakeTrack("late-processed-track")
+      ),
+    });
+
+    let allowMic = false;
+    navigator.mediaDevices.getUserMedia = async () => {
+      if (!allowMic) {
+        throw new DOMException("Permission denied", "NotAllowedError");
+      }
+      return rawStream;
+    };
+
+    const modalCalls = [];
+    const modalService = this.owner.lookup("service:modal");
+    const originalModalShow = modalService.show;
+    modalService.show = async (component) => {
+      modalCalls.push(component);
+    };
+
+    const muteRequests = [];
+    const signalRequests = [];
+    let leaveRequests = 0;
+
+    this.currentUser.id = 50;
+    this.room.room_type = "open";
+    this.room.membership = { role_name: "participant" };
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant", is_muted: false },
+      { id: 2, role: "participant", is_muted: false },
+    ];
+
+    pretender.post("/live/rooms/1/toggle_mute", (request) => {
+      muteRequests.push(request.requestBody);
+      return response(204, {});
+    });
+    pretender.post("/live/rooms/1/signal", (request) => {
+      signalRequests.push(...signalsFrom(request));
+      return response({});
+    });
+    pretender.delete("/live/rooms/1/leave", () => {
+      leaveRequests++;
+      return response(204, {});
+    });
+
+    try {
+      await this.subject.join(this.room);
+
+      assert.strictEqual(
+        leaveRequests,
+        0,
+        "does not leave the room when microphone permission is denied"
+      );
+      assert.strictEqual(
+        this.subject.connectionStateFor(1),
+        "connected",
+        "connects to the room without a microphone"
+      );
+      assert.strictEqual(this.subject.activeRoomId, 1, "sets the active room");
+      assert.strictEqual(
+        this.subject.localStream,
+        null,
+        "has no local microphone stream"
+      );
+      assert.false(this.subject.audioEnabled, "starts muted");
+      assert.strictEqual(
+        modalCalls.length,
+        0,
+        "does not block joining with the permission help modal"
+      );
+
+      const toasts = this.owner.lookup("service:toasts");
+      assert.strictEqual(
+        toasts.errors.length,
+        0,
+        "does not show an error toast on join"
+      );
+      assert.strictEqual(
+        toasts.defaults.length,
+        1,
+        "shows a non-blocking listen-only notice on join"
+      );
+      assert.strictEqual(
+        toasts.defaults[0].data.message,
+        i18n("live.room.joined_without_mic_permission")
+      );
+      assert.true(
+        muteRequests.some((body) => body.includes("muted=true")),
+        "reports muted=true to the server on join"
+      );
+
+      // Receives and plays remote speaker audio while mic-less.
+      const pc = await answerRemoteOffer(this, 2);
+      const remoteTrack = createFakeTrack("peer-2-mic");
+      pc.ontrack({
+        streams: [createFakeStream("peer-2-stream", remoteTrack)],
+        track: remoteTrack,
+      });
+      await wait(10);
+      assert.true(
+        this.subject
+          .remoteStreamsFor(1)
+          .some((stream) =>
+            stream.getTracks().some((track) => track.id === "peer-2-mic")
+          ),
+        "receives remote peer audio while joined without a mic"
+      );
+
+      // Deafen + undeafen keeps the user muted.
+      this.subject.toggleDeafen();
+      this.subject.toggleDeafen();
+      assert.false(this.subject.deafened, "undeafens locally");
+      assert.false(
+        this.subject.audioEnabled,
+        "undeafening does not unmute without a microphone"
+      );
+
+      // Clicking unmute while permission is still denied opens the help modal
+      // and leaves the peer connection and remote stream intact.
+      const pcsBeforeUnmute = FakeRTCPeerConnection.created;
+      await this.subject.toggleMute();
+      assert.strictEqual(
+        modalCalls.length,
+        1,
+        "opens the permission help modal when explicitly unmuting while blocked"
+      );
+      assert.false(this.subject.audioEnabled, "remains muted");
+      assert.strictEqual(
+        FakeRTCPeerConnection.created,
+        pcsBeforeUnmute,
+        "does not tear down peers when unmute capture fails"
+      );
+      assert.true(
+        this.subject
+          .remoteStreamsFor(1)
+          .some((stream) =>
+            stream.getTracks().some((track) => track.id === "peer-2-mic")
+          ),
+        "keeps remote peer audio playing after a failed unmute attempt"
+      );
+
+      // Once permission is granted, clicking unmute captures the mic and
+      // sends it over the existing connection, which keeps its data channel.
+      allowMic = true;
+      muteRequests.length = 0;
+      signalRequests.length = 0;
+
+      await this.subject.toggleMute();
+
+      assert.true(this.subject.audioEnabled, "unmutes once the mic is granted");
+      assert.notStrictEqual(
+        this.subject.localStream,
+        null,
+        "stores the newly acquired microphone stream"
+      );
+      assert.strictEqual(
+        FakeRTCPeerConnection.created,
+        pcsBeforeUnmute,
+        "keeps the existing peer connection"
+      );
+      assert.false(
+        signalRequests.some((s) => s.type === "offer"),
+        "does not renegotiate"
+      );
+      assert.strictEqual(
+        pc.transceivers[0].sender.track,
+        this.subject.localStream.getAudioTracks()[0],
+        "attaches the microphone to the idle microphone sender"
+      );
+      assert.true(
+        muteRequests.some((body) => body.includes("muted=false")),
+        "broadcasts muted=false to the server"
+      );
+    } finally {
+      modalService.show = originalModalShow;
+      audioEnvironment.restore();
+    }
+  });
+
+  test("joins an open mesh room muted when no microphone device is available", async function (assert) {
+    assert.timeout(2000);
+
+    const rawStream = createFakeStream(
+      "unused-raw",
+      createFakeTrack("unused-raw-track")
+    );
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: createFakeStream(
+        "unused-proc",
+        createFakeTrack("unused-proc-track")
+      ),
+    });
+
+    navigator.mediaDevices.getUserMedia = async () => {
+      throw new DOMException("Requested device not found", "NotFoundError");
+    };
+
+    const modalCalls = [];
+    const modalService = this.owner.lookup("service:modal");
+    const originalModalShow = modalService.show;
+    modalService.show = async (component) => {
+      modalCalls.push(component);
+    };
+
+    this.room.room_type = "open";
+    this.room.membership = { role_name: "participant" };
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant", is_muted: false },
+      { id: 2, role: "participant", is_muted: false },
+    ];
+
+    try {
+      await this.subject.join(this.room);
+
+      assert.strictEqual(
+        this.subject.connectionStateFor(1),
+        "connected",
+        "joins the room even when no microphone hardware exists"
+      );
+      assert.false(this.subject.audioEnabled, "starts muted");
+
+      const toasts = this.owner.lookup("service:toasts");
+      assert.strictEqual(
+        toasts.defaults[0]?.data?.message,
+        i18n("live.room.joined_without_mic"),
+        "shows the missing-microphone listen-only notice"
+      );
+      assert.strictEqual(
+        toasts.errors.length,
+        0,
+        "does not show an error toast on join"
+      );
+
+      // Explicitly unmuting without hardware shows the mic_unavailable error
+      // toast without leaving the room.
+      await this.subject.toggleMute();
+      assert.strictEqual(
+        modalCalls.length,
+        0,
+        "does not show the permission modal for missing hardware"
+      );
+      assert.strictEqual(
+        toasts.errors[0]?.data?.message,
+        i18n("live.room.mic_unavailable"),
+        "explains that no microphone could be accessed on explicit unmute"
+      );
+      assert.strictEqual(
+        this.subject.connectionStateFor(1),
+        "connected",
+        "stays connected to the room"
+      );
+    } finally {
+      modalService.show = originalModalShow;
+      audioEnvironment.restore();
+    }
+  });
 });

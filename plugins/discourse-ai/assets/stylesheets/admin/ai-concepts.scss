@@ -3,10 +3,6 @@
     margin-bottom: var(--space-4);
   }
 
-  &__controls {
-    margin-bottom: var(--space-4);
-  }
-
   &__description {
     margin-top: var(--space-1);
     color: var(--primary-medium);
@@ -34,15 +30,6 @@
     margin-top: var(--space-1);
     color: var(--primary-medium);
     font-size: var(--font-down-2);
-  }
-
-  &__no-results {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4) 0;
-    color: var(--primary-medium);
   }
 
   &__pagination {

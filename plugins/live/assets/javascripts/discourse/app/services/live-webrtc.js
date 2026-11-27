@@ -11,7 +11,10 @@ import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
 import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-warning.gjs";
-import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
+import {
+  reportJoinedWithoutMic,
+  reportMicAcquisitionFailure,
+} from "../../components/modal/live-mic-permission.gjs";
 import AudioMonitor from "../../lib/live/audio-monitor.js";
 import { RING_SECONDS } from "../../lib/live/call-constants.js";
 import {
@@ -721,13 +724,22 @@ export default class LiveWebrtcService extends Service {
     return this.#fileTransfers.transfers;
   }
 
-  // A room type change can leave the user allowed to speak without a captured
-  // microphone (see RosterHandler#handleRoomTypeChange).
+  // Joining without a microphone, a failed stage promotion capture, or a room
+  // type change can leave the user allowed to speak without a captured
+  // microphone.
   get #microphoneDeferred() {
     return (
       !!this.activeRoomId &&
       !this.localStream &&
       this.#canPublishMediaIn(this.activeRoomId)
+    );
+  }
+
+  // A rejected publish leaves a captured microphone the SFU never received.
+  get #microphoneUnpublished() {
+    return (
+      !!this.localStream &&
+      this.#livekit.sessionFor(this.activeRoomId)?.microphonePublished === false
     );
   }
 
@@ -1040,15 +1052,11 @@ export default class LiveWebrtcService extends Service {
     const isStageListener =
       joinedRoom?.room_type === "stage" && !this.#canSpeakInRoom(joinedRoom);
 
+    let joinedWithoutMic = false;
     if (!isStageListener && !this.localStream) {
-      const acquired = await this.#acquireMicrophoneWithFeedback();
+      const acquired = await this.#localAudio.acquireMicrophone();
       if (!acquired) {
-        ajax(`/live/rooms/${room.id}/leave`, {
-          type: "DELETE",
-          data: { participant_session_id: this.#roomSessions.get(room.id) },
-        });
-        this.#handleJoinFailure(room.id);
-        return;
+        joinedWithoutMic = true;
       }
     }
 
@@ -1061,13 +1069,13 @@ export default class LiveWebrtcService extends Service {
     }
 
     this.#roomTypes.set(room.id, joinedRoom?.room_type || "open");
-    if (isStageListener) {
+    if (isStageListener || !this.localStream) {
       this.#setMicEnabled(false);
-    } else if (this.localStream) {
+    } else {
       this.#setMicEnabled(!this.pttEnabled);
     }
 
-    // Only mark the room as active after the microphone is ready.
+    // Only mark the room as active after microphone acquisition settles.
     // This prevents incoming MessageBus signals from creating peer
     // connections before localStream is available (race condition that
     // caused audio to fail on first join).
@@ -1086,6 +1094,9 @@ export default class LiveWebrtcService extends Service {
     }
 
     this.#addLocalParticipant(room.id);
+    if (!isStageListener && !this.localStream) {
+      this.#broadcastMuteState();
+    }
 
     if (this.localStream) {
       this.#audioMonitor.ensure(
@@ -1124,7 +1135,13 @@ export default class LiveWebrtcService extends Service {
     this.#connectingRoomIds.delete(room.id);
     this.#bumpConnectionRevision();
 
-    if (this.pttEnabled && this.localStream) {
+    if (joinedWithoutMic && this.#activeRoomIds.has(room.id)) {
+      reportJoinedWithoutMic(this.#localAudio.lastAcquisitionError, {
+        toasts: this.toasts,
+      });
+    }
+
+    if (this.pttEnabled && !isStageListener) {
       this.#pttManager.startListening();
     }
 
@@ -1303,7 +1320,10 @@ export default class LiveWebrtcService extends Service {
       return;
     }
 
-    if (this.#microphoneDeferred) {
+    if (
+      this.#microphoneDeferred ||
+      (!this.audioEnabled && this.#microphoneUnpublished)
+    ) {
       if (!(await this.#acquireDeferredMicrophone())) {
         return;
       }
@@ -1321,6 +1341,7 @@ export default class LiveWebrtcService extends Service {
 
     if (this.audioEnabled && this.deafened) {
       this.deafened = false;
+      this.#participantAudio.applyAll();
     }
 
     this.#broadcastMuteState();
@@ -1953,7 +1974,13 @@ export default class LiveWebrtcService extends Service {
 
     this.#acquiringDeferredMicrophone = true;
     try {
-      return await this.#roster.acquireDeferredMicrophone(this.activeRoomId);
+      const acquired = await this.#roster.acquireDeferredMicrophone(
+        this.activeRoomId
+      );
+      if (acquired) {
+        await this.#applyVoiceQualityToPeers();
+      }
+      return acquired;
     } finally {
       this.#acquiringDeferredMicrophone = false;
     }
@@ -2080,7 +2107,7 @@ export default class LiveWebrtcService extends Service {
           deafened: this.deafened,
           participant_session_id: this.#roomSessions.get(roomId),
         },
-      });
+      }).catch(() => {});
     }
   }
 
@@ -2511,7 +2538,7 @@ export default class LiveWebrtcService extends Service {
     if (this.activeRoomId && !this.#canPublishMediaIn(this.activeRoomId)) {
       return;
     }
-    if (this.#microphoneDeferred) {
+    if (this.#microphoneDeferred || this.#microphoneUnpublished) {
       // The first press only captures; the key was likely released by the
       // time the microphone is ready.
       this.#acquireDeferredMicrophone();

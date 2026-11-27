@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import { i18n } from "discourse-i18n";
 import RosterHandler from "discourse/plugins/live/discourse/lib/live/roster-handler";
 
 const ROOM_ID = 1;
@@ -136,6 +137,7 @@ module("Live | Unit | Lib | roster-handler", function () {
         getRoomPeers: () => new Map(),
         has: () => false,
         destroyRoom() {},
+        attachMicTrack: async () => true,
       },
       signaling: { clearForRoom() {}, clearHttpQueue() {} },
       presencePending: { has: () => false, clear() {} },
@@ -152,7 +154,8 @@ module("Live | Unit | Lib | roster-handler", function () {
       removeAllRemoteStreams() {},
       getLocalVideoKind: () => null,
       stopLocalVideo: async () => {},
-      getLocalStream: () => (acquiredMic ? {} : null),
+      getLocalStream: () =>
+        acquiredMic ? { getAudioTracks: () => [{ kind: "audio" }] } : null,
       acquireMicrophone: async () => {
         acquiredMic = true;
         return true;
@@ -221,5 +224,329 @@ module("Live | Unit | Lib | roster-handler", function () {
     showingRoomPage = false;
     handler.handleSpeakInvitation(ROOM_ID, invitation);
     assert.strictEqual(toasts.length, 1, "toasts when only the widget is open");
+  });
+
+  test("acquireDeferredMicrophone leaves existing mesh peers untouched when capture fails", async function (assert) {
+    let destroyedRoom = false;
+    let removedStreams = false;
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map([[20, {}]]),
+        has: () => true,
+        destroyRoom() {
+          destroyedRoom = true;
+        },
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({
+        id: ROOM_ID,
+        room_type: "open",
+        active_participants: [
+          { id: CURRENT_USER_ID, role: "participant" },
+          { id: 20, role: "participant" },
+        ],
+      }),
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {
+        removedStreams = true;
+      },
+      getLocalVideoKind: () => null,
+      getLocalStream: () => null,
+      acquireMicrophone: async () => false,
+      setMicEnabled() {},
+      stopLocalAudio() {},
+      ensureLocalAudioMonitor() {},
+    });
+
+    assert.false(
+      await handler.acquireDeferredMicrophone(ROOM_ID),
+      "reports failure when microphone capture is denied or unavailable"
+    );
+    assert.false(destroyedRoom, "does not tear down working peer connections");
+    assert.false(removedStreams, "does not drop active remote audio streams");
+  });
+
+  test("acquireDeferredMicrophone attaches the microphone to existing mesh peers", async function (assert) {
+    const micTrack = { kind: "audio" };
+    let localStream = null;
+    let destroyedRoom = false;
+    const attached = [];
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map([[20, {}]]),
+        has: () => true,
+        destroyRoom() {
+          destroyedRoom = true;
+        },
+        attachMicTrack: async (roomId, track) => {
+          attached.push([roomId, track]);
+          return true;
+        },
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({ id: ROOM_ID, room_type: "open" }),
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {},
+      getLocalVideoKind: () => null,
+      getLocalStream: () => localStream,
+      acquireMicrophone: async () => {
+        localStream = { getAudioTracks: () => [micTrack] };
+        return true;
+      },
+      setMicEnabled() {},
+      stopLocalAudio() {},
+      ensureLocalAudioMonitor() {},
+    });
+
+    assert.true(await handler.acquireDeferredMicrophone(ROOM_ID));
+    assert.deepEqual(
+      attached,
+      [[ROOM_ID, micTrack]],
+      "sends the microphone over the existing connections"
+    );
+    assert.false(
+      destroyedRoom,
+      "keeps the peer connections and their data channels"
+    );
+  });
+
+  test("acquireDeferredMicrophone keeps the user muted when the SFU rejects the microphone", async function (assert) {
+    const errors = [];
+    const micStates = [];
+    let published = false;
+    let acquisitions = 0;
+    let localStream = null;
+    const session = {
+      refreshPublications: async () => {},
+      get microphonePublished() {
+        return published;
+      },
+    };
+
+    const handler = new RosterHandler({
+      peerManager: { getRoomPeers: () => new Map(), has: () => false },
+      livekit: { sessionFor: () => session },
+      presencePending: { has: () => false, clear() {} },
+      toasts: { error: (opts) => errors.push(opts) },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({ id: ROOM_ID, room_type: "open" }),
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => false,
+      getLocalVideoKind: () => null,
+      getLocalStream: () => localStream,
+      acquireMicrophone: async () => {
+        acquisitions++;
+        localStream = { getAudioTracks: () => [{ kind: "audio" }] };
+        return true;
+      },
+      setMicEnabled: (enabled) => micStates.push(enabled),
+      stopLocalAudio() {},
+      ensureLocalAudioMonitor() {},
+    });
+
+    assert.false(
+      await handler.acquireDeferredMicrophone(ROOM_ID),
+      "reports failure when the publish was rejected"
+    );
+    assert.deepEqual(micStates, [false], "keeps the microphone muted");
+    assert.strictEqual(
+      errors[0]?.data?.message,
+      i18n("live.room.mic_publish_failed"),
+      "tells the user the microphone was not shared"
+    );
+
+    published = true;
+    assert.true(
+      await handler.acquireDeferredMicrophone(ROOM_ID),
+      "the next unmute retries the publish"
+    );
+    assert.strictEqual(acquisitions, 1, "without capturing again");
+    assert.deepEqual(micStates, [false, true], "and unmutes");
+  });
+
+  test("acquireDeferredMicrophone rebuilds mesh peers that cannot send a late microphone", async function (assert) {
+    let localStream = null;
+    const offered = [];
+    const created = [];
+    const scheduledRetries = [];
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map(),
+        has: () => false,
+        destroyRoom() {},
+        attachMicTrack: async () => false,
+        create: async (_roomId, userId) => {
+          created.push(userId);
+        },
+        initiateOffer: async (_roomId, userId) => {
+          offered.push(userId);
+        },
+        scheduleOfferRetry: (_roomId, userId) => {
+          scheduledRetries.push(userId);
+        },
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      getCurrentUserId: () => 50,
+      getChatSound: () => null,
+      getRoom: () => ({
+        id: ROOM_ID,
+        room_type: "open",
+        active_participants: [
+          { id: 50, role: "participant" },
+          { id: 2, role: "participant" },
+        ],
+      }),
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {},
+      getLocalVideoKind: () => null,
+      getLocalStream: () => localStream,
+      acquireMicrophone: async () => {
+        localStream = { getAudioTracks: () => [{ kind: "audio" }] };
+        return true;
+      },
+      setMicEnabled() {},
+      stopLocalAudio() {},
+      ensureLocalAudioMonitor() {},
+    });
+
+    assert.true(await handler.acquireDeferredMicrophone(ROOM_ID));
+    await Promise.resolve();
+    assert.deepEqual(created, [2], "rebuilds the peer connection");
+    assert.deepEqual(
+      offered,
+      [2],
+      "immediately sends a fresh offer to the lower-id peer"
+    );
+    assert.deepEqual(
+      scheduledRetries,
+      [],
+      "does not wait on an offer retry timer"
+    );
+  });
+
+  test("acquireDeferredMicrophone stops captured audio if the user left while prompting", async function (assert) {
+    let active = true;
+    let stopped = false;
+    let micEnabled = true;
+    let destroyedRoom = false;
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map(),
+        has: () => false,
+        destroyRoom() {
+          destroyedRoom = true;
+        },
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({ id: ROOM_ID, room_type: "open" }),
+      isActiveRoom: () => active,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {},
+      getLocalVideoKind: () => null,
+      getLocalStream: () => null,
+      acquireMicrophone: async () => {
+        active = false;
+        return true;
+      },
+      setMicEnabled: (enabled) => {
+        micEnabled = enabled;
+      },
+      stopLocalAudio: () => {
+        stopped = true;
+      },
+      ensureLocalAudioMonitor() {},
+    });
+
+    assert.false(await handler.acquireDeferredMicrophone(ROOM_ID));
+    assert.true(stopped, "releases the freshly captured microphone");
+    assert.false(micEnabled, "keeps microphone state disabled");
+    assert.false(destroyedRoom, "does not reconnect peers for a left room");
+  });
+
+  test("handleRoleChange keeps mesh peers connected muted when mic acquisition fails on promotion", async function (assert) {
+    let micEnabled = true;
+    const recreated = [];
+    const toasts = [];
+    const room = {
+      id: ROOM_ID,
+      room_type: "stage",
+      active_participants: [
+        { id: CURRENT_USER_ID, role: "speaker" },
+        { id: 20, role: "moderator" },
+      ],
+    };
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map(),
+        has: () => false,
+        destroyRoom() {},
+        create: async (_roomId, userId) => {
+          recreated.push(userId);
+        },
+        initiateOffer: async () => {},
+        scheduleOfferRetry() {},
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      toasts: {
+        default: (opts) => toasts.push(opts),
+        success: (opts) => toasts.push(opts),
+      },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => room,
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {},
+      getLocalVideoKind: () => null,
+      getLocalStream: () => null,
+      acquireMicrophone: async () => false,
+      setMicEnabled: (enabled) => {
+        micEnabled = enabled;
+      },
+      stopLocalAudio() {},
+      ensureLocalAudioMonitor() {},
+    });
+
+    await handler.handleRoleChange(ROOM_ID, {
+      user_id: CURRENT_USER_ID,
+      role: "speaker",
+    });
+
+    assert.false(
+      handler.isRoleChangeInProgress(ROOM_ID),
+      "clears the role-change lock"
+    );
+    assert.false(micEnabled, "keeps the promoted speaker muted");
+    assert.deepEqual(
+      recreated,
+      [20],
+      "reconnects peers so the promoted speaker stays in the call"
+    );
   });
 });

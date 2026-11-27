@@ -5,6 +5,7 @@ import { module, test } from "qunit";
 import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import {
   setLivekitReconnectDelaysForTesting,
   setLivekitSdkLoaderForTesting,
@@ -2012,5 +2013,127 @@ module("Live | Unit | Service | live-webrtc-livekit", function (hooks) {
         "no subscription change after destruction"
       );
     });
+  });
+
+  test("livekit join connects muted without a microphone, receives audio, and publishes on later unmute", async function (assert) {
+    let allowMic = false;
+    const rawTrack = createFakeTrack("late-lk-mic");
+    const rawStream = createFakeStream("late-lk-raw", rawTrack);
+    navigator.mediaDevices.getUserMedia = async () => {
+      if (!allowMic) {
+        throw new DOMException("Permission denied", "NotAllowedError");
+      }
+      return rawStream;
+    };
+
+    const muteRequests = [];
+    pretender.post("/live/rooms/1/toggle_mute", (request) => {
+      muteRequests.push(request.requestBody);
+      return response(204, {});
+    });
+
+    await this.subject.join(this.room);
+
+    assert.strictEqual(
+      this.leaveRequests,
+      0,
+      "does not leave the LiveKit room when microphone permission is denied"
+    );
+    assert.strictEqual(
+      this.subject.connectionStateFor(1),
+      "connected",
+      "connects to the LiveKit room muted"
+    );
+    assert.false(this.subject.audioEnabled, "starts muted");
+    assert.strictEqual(
+      this.toasts.defaults[0]?.data?.message,
+      i18n("live.room.joined_without_mic_permission"),
+      "shows the listen-only permission notice"
+    );
+    assert.strictEqual(this.toasts.errors.length, 0, "no error toast on join");
+    assert.true(
+      muteRequests.some((body) => body.includes("muted=true")),
+      "broadcasts muted=true to the server"
+    );
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    assert.strictEqual(
+      lkRoom.localParticipant.published.length,
+      0,
+      "publishes no microphone track while mic-less"
+    );
+
+    // Remote speaker audio still flows through the SFU.
+    const remoteTrack = createFakeTrack("lk-peer-2-mic");
+    lkRoom.emit(
+      this.sdk.RoomEvent.TrackSubscribed,
+      {
+        kind: "audio",
+        mediaStreamTrack: remoteTrack,
+        mediaStream: createFakeStream("lk-peer-2-stream", remoteTrack),
+      },
+      { source: this.sdk.Track.Source.Microphone },
+      { identity: "2" }
+    );
+
+    assert.true(
+      this.subject
+        .remoteStreamsFor(1)
+        .some((stream) =>
+          stream.getTracks().some((track) => track.id === "lk-peer-2-mic")
+        ),
+      "receives remote microphone audio from LiveKit while joined without a mic"
+    );
+
+    // Granting permission later and clicking unmute publishes without reconnecting.
+    allowMic = true;
+    muteRequests.length = 0;
+
+    await this.subject.toggleMute();
+
+    assert.strictEqual(
+      this.FakeLivekitRoom.instances.length,
+      1,
+      "publishes on the existing LiveKit connection without reconnecting"
+    );
+    assert.strictEqual(
+      lkRoom.localParticipant.published.length,
+      1,
+      "publishes the newly acquired microphone track"
+    );
+    assert.strictEqual(
+      lkRoom.localParticipant.published[0].options.source,
+      this.sdk.Track.Source.Microphone
+    );
+    assert.true(this.subject.audioEnabled, "unmutes locally");
+    assert.true(
+      muteRequests.some((body) => body.includes("muted=false")),
+      "broadcasts muted=false to the server"
+    );
+  });
+
+  test("livekit connect failure after mic denial does not show a joined-without-mic toast", async function (assert) {
+    navigator.mediaDevices.getUserMedia = async () => {
+      throw new DOMException("Permission denied", "NotAllowedError");
+    };
+    this.FakeLivekitRoom.connectErrors.push(new Error("SFU unreachable"));
+
+    await this.subject.join(this.room);
+
+    assert.strictEqual(
+      this.subject.connectionStateFor(1),
+      "idle",
+      "unwinds the failed LiveKit join"
+    );
+    assert.strictEqual(
+      this.toasts.defaults.length,
+      0,
+      "does not claim the user joined muted when SFU connect failed"
+    );
+    assert.strictEqual(
+      this.toasts.errors.length,
+      1,
+      "reports the LiveKit connection error"
+    );
   });
 });

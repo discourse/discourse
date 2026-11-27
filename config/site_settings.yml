@@ -4539,6 +4539,16 @@ mcp:
         - approved_domains
     depends_behavior: "hidden"
     dependent_setting_display: "inline"
+  mcp_oauth_dynamic_client_registration:
+    default: true
+    area: "mcp"
+    depends_on:
+      - mcp_oauth_client_id_metadata_policy
+    depends_on_values:
+      mcp_oauth_client_id_metadata_policy:
+        - any_domain
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   mcp_access_token_lifetime_minutes:
     default: 60
     min: 5

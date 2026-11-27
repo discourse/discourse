@@ -150,6 +150,29 @@ describe "Admin AI concepts" do
     expect(kubernetes.reload.aliases).to include("k8s")
   end
 
+  it "filters concepts without reloading the page or losing search focus" do
+    visit "/admin/plugins/discourse-ai/ai-concepts"
+
+    expect(page).to have_css("[data-concept-id='#{kubernetes.id}']")
+    expect(page).to have_css("[data-concept-id='#{service_mesh.id}']")
+
+    search_input = find(".d-filter-controls__input")
+    search_input.click
+    search_input.send_keys("kuber")
+
+    expect(page).to have_css("[data-concept-id='#{kubernetes.id}']")
+    expect(page).to have_no_css("[data-concept-id='#{service_mesh.id}']")
+    expect(page).to have_current_path(/filter=kuber/)
+    expect(
+      page.evaluate_script("document.activeElement.matches('.d-filter-controls__input')"),
+    ).to eq(true)
+
+    find(".d-filter-controls__reset").click
+
+    expect(page).to have_css("[data-concept-id='#{service_mesh.id}']")
+    expect(page).to have_no_current_path(/filter=/)
+  end
+
   it "explains and starts initial concept seeding from the empty state" do
     InferredConceptTopic.delete_all
     InferredConceptPost.delete_all

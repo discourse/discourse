@@ -51,6 +51,22 @@ describe McpOauthMetadataController do
     expect(response.parsed_body["scopes_supported"]).to eq(DiscourseMcp.registry.scopes)
   end
 
+  it "advertises dynamic client registration only while it's allowed" do
+    get "/.well-known/oauth-authorization-server"
+    expect(response.parsed_body["registration_endpoint"]).to eq(
+      "#{Discourse.base_url}/oauth2/mcp/register",
+    )
+
+    SiteSetting.mcp_oauth_dynamic_client_registration = false
+    get "/.well-known/oauth-authorization-server"
+    expect(response.parsed_body).not_to have_key("registration_endpoint")
+
+    SiteSetting.mcp_oauth_dynamic_client_registration = true
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "disabled"
+    get "/.well-known/oauth-authorization-server"
+    expect(response.parsed_body).not_to have_key("registration_endpoint")
+  end
+
   it "advertises client ID metadata documents by default" do
     get "/.well-known/oauth-authorization-server"
 

@@ -1,5 +1,13 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  focus,
+  render,
+  settled,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -188,8 +196,14 @@ module("Integration | Component | AiConceptsList", function (hooks) {
       </template>
     );
     assert
-      .dom(".ai-concepts-list__no-results")
+      .dom(".d-filter-controls__no-results")
       .exists("renders no-results message when filters match nothing");
+    assert
+      .dom(".d-filter-controls__no-results")
+      .includesText(
+        "No concepts match these filters.",
+        "displays the no-results message text"
+      );
   });
 
   test("allows starting and tracking initial seed from the empty state when enabled", async function (assert) {
@@ -457,5 +471,200 @@ module("Integration | Component | AiConceptsList", function (hooks) {
       2,
       "refreshes list on first non-empty wave and completion"
     );
+  });
+
+  test("filters concepts in-place while preserving search input focus", async function (assert) {
+    const requestedParams = [];
+    const allConcepts = [
+      {
+        id: 1,
+        name: "Kubernetes",
+        aliases: ["k8s"],
+        status: "active",
+        topics_count: 14,
+        posts_count: 0,
+      },
+      {
+        id: 2,
+        name: "Service Mesh",
+        aliases: ["istio"],
+        status: "candidate",
+        topics_count: 3,
+        posts_count: 0,
+      },
+    ];
+
+    pretender.get("/admin/plugins/discourse-ai/ai-concepts.json", (req) => {
+      requestedParams.push(req.queryParams);
+
+      const filter = req.queryParams.filter;
+      const concepts = filter === "kube" ? [allConcepts[0]] : allConcepts;
+
+      return response(200, {
+        ai_concepts: concepts,
+        meta: {
+          total: concepts.length,
+          page: 1,
+          per_page: 50,
+          has_more: false,
+          counts: { active: 1, candidate: 1, retired: 0 },
+          enabled: true,
+          embeddings_enabled: true,
+          posts_enabled: false,
+        },
+      });
+    });
+
+    const model = {
+      ai_concepts: allConcepts,
+      meta: {
+        total: 2,
+        page: 1,
+        per_page: 50,
+        has_more: false,
+        counts: { active: 1, candidate: 1, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        posts_enabled: false,
+      },
+    };
+
+    await render(<template><AiConceptsList @model={{model}} /></template>);
+
+    await focus(".d-filter-controls__input");
+    await fillIn(".d-filter-controls__input", "kube");
+
+    assert.strictEqual(
+      requestedParams.at(-1)?.filter,
+      "kube",
+      "requests filtered concepts from the server"
+    );
+    assert
+      .dom(".ai-concepts-list__row")
+      .exists({ count: 1 }, "updates rendered rows to matching concepts");
+    assert
+      .dom('[data-concept-id="1"]')
+      .exists("renders the matching Kubernetes row");
+    assert
+      .dom(".d-filter-controls__input")
+      .isFocused("keeps focus in the search input after filtering");
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("kube", "preserves typed value in search input");
+
+    await click(".d-filter-controls__reset");
+
+    assert.strictEqual(
+      requestedParams.at(-1)?.filter,
+      undefined,
+      "omits filter param after resetting filters"
+    );
+    assert
+      .dom(".ai-concepts-list__row")
+      .exists({ count: 2 }, "restores all concepts after resetting filters");
+  });
+
+  test("discards stale search responses when typing continues", async function (assert) {
+    let resolveFirst;
+    let secondResolved = false;
+
+    pretender.get("/admin/plugins/discourse-ai/ai-concepts.json", (req) => {
+      if (req.queryParams.filter === "k") {
+        return new Promise((resolve) => (resolveFirst = resolve));
+      }
+
+      secondResolved = true;
+      return response(200, {
+        ai_concepts: [
+          {
+            id: 1,
+            name: "Kubernetes",
+            aliases: [],
+            status: "active",
+            topics_count: 14,
+            posts_count: 0,
+          },
+        ],
+        meta: {
+          total: 1,
+          page: 1,
+          per_page: 50,
+          has_more: false,
+          counts: { active: 2, candidate: 0, retired: 0 },
+          enabled: true,
+          embeddings_enabled: true,
+          posts_enabled: false,
+        },
+      });
+    });
+
+    const model = {
+      ai_concepts: [
+        {
+          id: 2,
+          name: "Service Mesh",
+          aliases: [],
+          status: "active",
+          topics_count: 3,
+          posts_count: 0,
+        },
+      ],
+      meta: {
+        total: 1,
+        page: 1,
+        per_page: 50,
+        has_more: false,
+        counts: { active: 2, candidate: 0, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        posts_enabled: false,
+      },
+    };
+
+    await render(<template><AiConceptsList @model={{model}} /></template>);
+
+    const input = find(".d-filter-controls__input");
+    input.value = "k";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await waitUntil(() => Boolean(resolveFirst));
+
+    input.value = "kube";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await waitUntil(
+      () => secondResolved && Boolean(find('[data-concept-id="1"]'))
+    );
+
+    resolveFirst(
+      response(200, {
+        ai_concepts: [
+          {
+            id: 99,
+            name: "Stale Concept",
+            aliases: [],
+            status: "active",
+            topics_count: 1,
+            posts_count: 0,
+          },
+        ],
+        meta: {
+          total: 1,
+          page: 1,
+          per_page: 50,
+          has_more: false,
+          counts: { active: 2, candidate: 0, retired: 0 },
+          enabled: true,
+          embeddings_enabled: true,
+          posts_enabled: false,
+        },
+      })
+    );
+    await settled();
+
+    assert
+      .dom('[data-concept-id="1"]')
+      .includesText("Kubernetes", "keeps the latest search response rendered");
+    assert
+      .dom('[data-concept-id="99"]')
+      .doesNotExist("ignores stale out-of-order search response");
   });
 });

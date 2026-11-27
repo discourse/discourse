@@ -81,6 +81,43 @@ describe Jobs::CleanUpMcpRecords do
     )
   end
 
+  it "removes dynamically registered apps nobody approved within a day" do
+    register = ->(name) do
+      registration =
+        DiscourseMcp::OAuth::ClientRegistration.register!(
+          "client_name" => name,
+          "redirect_uris" => ["https://agent.example.com/callback"],
+        )
+      McpOauthClient.find_by!(client_id: registration[:client_id])
+    end
+    abandoned = register.("Abandoned")
+    approved = register.("Approved")
+    edited = register.("Edited")
+    blocked = register.("Blocked")
+    recent = register.("Recent")
+    McpOauthAuthorization.create!(
+      user:,
+      client: approved,
+      resource: DiscourseMcp.resource_url,
+      consented_at: Time.zone.now,
+      status: "active",
+    )
+    edited.update_registration!(name: "Named by an admin")
+    blocked.update!(trust_state: "blocked")
+    McpOauthClient.where(
+      id: [abandoned.id, approved.id, edited.id, blocked.id, client.id],
+    ).update_all(created_at: 2.days.ago)
+
+    described_class.new.execute({})
+
+    expect(
+      McpOauthClient.where(id: [abandoned.id, approved.id, edited.id, blocked.id, recent.id]).pluck(
+        :name,
+      ),
+    ).to contain_exactly("Approved", "Named by an admin", "Blocked", "Recent")
+    expect(McpOauthClient.exists?(client.id)).to eq(true)
+  end
+
   def create_refresh_token(expires_at:)
     McpOauthRefreshToken.create!(
       authorization:,

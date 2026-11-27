@@ -1433,7 +1433,6 @@ en:
         disabled_notice_link: "AI features"
         filter_placeholder: "Filter by name, description, or alias..."
         no_results: "No concepts match these filters."
-        clear_filters: "Clear filters"
         empty: "No inferred concepts yet"
         empty_description: "Inferred concepts automatically discover recurring themes from your community's discussions. Start an initial seed to analyze a sample of popular topics across categories and build your first taxonomy, or create concepts manually."
         seed:
