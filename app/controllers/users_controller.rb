@@ -1098,16 +1098,26 @@ class UsersController < ApplicationController
 
     RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
+    login_key = Digest::SHA256.hexdigest(User.normalize_username(params[:login].to_s.strip).to_s)
+    RateLimiter.new(nil, "email-login-param-hour-#{login_key}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "email-login-param-min-#{login_key}", 3, 1.minute).performed!
+
     user = User.real.find_by_username_or_email(params[:login])
     user_presence = user.present? && !user.staged
 
     if user
-      RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
-      RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
+      hourly_limit =
+        RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!(
+          raise_error: !SiteSetting.hide_email_address_taken,
+        )
+      minute_limit =
+        RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!(
+          raise_error: !SiteSetting.hide_email_address_taken,
+        )
 
       raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
-      if user_presence
+      if user_presence && hourly_limit != false && minute_limit != false
         DiscourseEvent.trigger(:before_email_login, user)
 
         email_token =
