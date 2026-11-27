@@ -332,6 +332,11 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
+  .user-selector--badge-holders {
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
+  }
+
   .title-input {
     position: relative;
     display: flex;

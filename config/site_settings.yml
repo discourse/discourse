@@ -1884,6 +1884,10 @@ posting:
     default: 30
     min: 1
     area: "posts_and_topics"
+  enable_badge_holder_pm_recipients:
+    default: false
+    client: true
+    area: "posts_and_topics"
   disable_watched_word_checking_in_user_fields:
     hidden: true
     default: false

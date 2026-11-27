@@ -18,6 +18,7 @@ import ComposerSaveButton from "discourse/components/composer-save-button";
 import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
+import PmBadgeHolderPicker from "discourse/components/modal/pm-badge-holder-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -74,7 +75,12 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
 });
 
 const PmUserSelector = <template>
-  <div class="user-selector">
+  <div
+    class={{dConcatClass
+      "user-selector"
+      (if @onAddBadgeHolders "user-selector--badge-holders")
+    }}
+  >
     <ComposerUserSelector
       class={{dConcatClass "users-input" (if @showWarning "can-warn")}}
       @focusTarget={{@focusTarget}}
@@ -82,6 +88,13 @@ const PmUserSelector = <template>
       @recipients={{@model.targetRecipients}}
       @topicId={{@topicId}}
     />
+    {{#if @onAddBadgeHolders}}
+      <DButton
+        class="btn-default composer-add-badge-holders"
+        @action={{@onAddBadgeHolders}}
+        @label="composer.add_badge_holders"
+      />
+    {{/if}}
     {{#if @showWarning}}
       <label class="add-warning">
         <Input @checked={{@model.isWarning}} @type="checkbox" />
@@ -93,7 +106,9 @@ const PmUserSelector = <template>
 
 export default class ComposerContainer extends Component {
   @service composer;
+  @service currentUser;
   @service languageNameLookup;
+  @service modal;
   @service site;
   @service siteSettings;
   @service appEvents;
@@ -113,6 +128,15 @@ export default class ComposerContainer extends Component {
     return this.siteSettings.enable_composer_redesign;
   }
 
+  get canAddBadgeHolders() {
+    return (
+      this.siteSettings.enable_badges &&
+      this.siteSettings.enable_badge_holder_pm_recipients &&
+      this.currentUser?.staff &&
+      this.currentUser.can_send_private_messages
+    );
+  }
+
   get availableContentLocalizationLocales() {
     const originalPostLocale = this.composer.model?.post?.locale;
 
@@ -122,6 +146,13 @@ export default class ComposerContainer extends Component {
         name: this.languageNameLookup.getLanguageName(value),
         value,
       }));
+  }
+
+  @action
+  showBadgeHolderPicker() {
+    this.modal.show(PmBadgeHolderPicker, {
+      model: { composer: this.composer.model },
+    });
   }
 
   @action
@@ -423,6 +454,10 @@ export default class ComposerContainer extends Component {
                         <PmUserSelector
                           @focusTarget={{this.composer.focusTarget}}
                           @model={{this.composer.model}}
+                          @onAddBadgeHolders={{if
+                            this.canAddBadgeHolders
+                            this.showBadgeHolderPicker
+                          }}
                           @showWarning={{this.composer.showWarning}}
                           @topicId={{this.composer.topicModel.id}}
                         />
@@ -438,6 +473,10 @@ export default class ComposerContainer extends Component {
                           <PmUserSelector
                             @focusTarget={{this.composer.focusTarget}}
                             @model={{this.composer.model}}
+                            @onAddBadgeHolders={{if
+                              this.canAddBadgeHolders
+                              this.showBadgeHolderPicker
+                            }}
                             @showWarning={{this.composer.showWarning}}
                             @topicId={{this.composer.topicModel.id}}
                           />

@@ -3679,6 +3679,11 @@ en:
       unlist: "unlisted"
 
       add_warning: "This is an official warning."
+      add_badge_holders: "Add badge holders"
+      badge_holder_picker:
+        select_badge: "Select a badge"
+        no_badges: "There are no enabled badges."
+        no_recipients: "This badge has no other active holders."
       toggle_whisper: "Toggle whisper"
       insert_table: "Insert table"
       posting_not_on_topic: "Which topic do you want to reply to?"
