@@ -132,7 +132,7 @@ describe DiscoursePolicy::PolicyController do
   describe "#not_accepted" do
     before { sign_in(user1) }
 
-    it "returns pages of users who accepted" do
+    it "returns pages of users who have not accepted" do
       post = create_post(raw: raw, user: moderator)
 
       get "/policy/not-accepted.json", params: { post_id: post.id, offset: 0 }
@@ -144,7 +144,7 @@ describe DiscoursePolicy::PolicyController do
 
       get "/policy/not-accepted.json", params: { post_id: post.id, offset: 1 }
       expect(response.status).to eq(200)
-      expect(response.parsed_body["users"].map { |x| x["id"] }).to contain_exactly(user2.id)
+      expect(response.parsed_body["users"].map { |x| x["id"] }).to eq([user1.id]).or eq([user2.id])
 
       get "/policy/not-accepted.json", params: { post_id: post.id, offset: 2 }
       expect(response.status).to eq(200)

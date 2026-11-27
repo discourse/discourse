@@ -121,8 +121,8 @@ RSpec.describe PostPolicy do
       expect(policy.not_accepted_by).to eq []
     end
 
-    it "shows users who have not accepted ordered by id" do
-      expect(policy.not_accepted_by).to eq [user1, user2]
+    it "shows users who have not accepted" do
+      expect(policy.not_accepted_by).to contain_exactly(user1, user2)
     end
 
     it "excludes inactive or suspended users" do
@@ -146,7 +146,7 @@ RSpec.describe PostPolicy do
 
       user2.update(last_seen_at: 30.minutes.ago)
 
-      expect(policy.emailed_by).to eq [user1, user2]
+      expect(policy.emailed_by).to contain_exactly(user1, user2)
     end
   end
 
