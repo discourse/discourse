@@ -180,20 +180,23 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    outline: none;
 
     img.avatar {
       width: 2.1333em;
       height: 2.1333em;
     }
 
-    .discourse-no-touch &:hover,
-    .discourse-no-touch &:focus-visible {
+    .discourse-no-touch &:hover {
       background-color: var(--d-header-icon-background--hover);
 
       > .d-icon {
         color: var(--d-header-icon-color--hover);
       }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: 2px;
     }
   }
 
@@ -323,7 +326,11 @@
     height: 2.2857em;
     padding: 0.2143em;
 
-    &:focus-visible,
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: 2px;
+    }
+
     .discourse-no-touch & {
       &:hover {
         background-color: var(--primary-low);
