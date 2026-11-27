@@ -21,6 +21,16 @@ module DiscourseAssign
         User.from("(#{admin_ids.to_sql} UNION #{member_ids.to_sql}) AS users").select(:id)
       end
 
+      # Assign data may only reach assigners who are allowed to see the target.
+      def visible_assignable_user_ids(target, assigner: nil)
+        return [] if target.blank?
+
+        assignable = assignable_user_ids(target, assigner:)
+        return assignable.pluck(:id) if DiscourseAssign::Visibility.visible_to_all_users?(target)
+
+        assignable.where(id: DiscourseAssign::Visibility.visible_users(target)).pluck(:id)
+      end
+
       def assignable_groups(target, assigner:)
         groups = Group.assignable(assigner)
         return groups if !target

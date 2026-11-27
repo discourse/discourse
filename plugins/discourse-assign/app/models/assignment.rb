@@ -111,7 +111,7 @@ class Assignment < ActiveRecord::Base
     return if !assigned_to
 
     allowed_user_ids =
-      DiscourseAssign::AssignmentPermissions.assignable_user_ids(target || topic).pluck(:id)
+      DiscourseAssign::AssignmentPermissions.visible_assignable_user_ids(target || topic)
     return if allowed_user_ids.blank?
 
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer

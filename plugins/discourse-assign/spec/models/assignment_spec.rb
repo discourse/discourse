@@ -295,6 +295,82 @@ RSpec.describe Assignment do
     end
   end
 
+  describe "#publish_topic_assignment" do
+    fab!(:assign_allowed_group, :group)
+    fab!(:admin)
+    fab!(:topic)
+    fab!(:assignment) do
+      Fabricate(:topic_assignment, topic:, assigned_to: admin, assigned_by_user: admin)
+    end
+
+    before do
+      SiteSetting.assign_allowed_on_groups = assign_allowed_group.id.to_s
+      Fabricate.times(5, :user, groups: [assign_allowed_group])
+      publish
+    end
+
+    def publish
+      described_class.find(assignment.id).publish_topic_assignment
+    end
+
+    it "does not run a guardian lookup for every assignable user on a public topic" do
+      small_audience = track_sql_queries { publish }
+
+      Fabricate.times(10, :user, groups: [assign_allowed_group])
+      large_audience = track_sql_queries { publish }
+
+      expect(large_audience.length).to be <= small_audience.length + 1
+    end
+
+    it "does not run a guardian lookup for every assignable user on a private message" do
+      private_message = Fabricate(:private_message_post, user: admin).topic
+      assignment.update!(topic: private_message, target: private_message)
+
+      small_audience = track_sql_queries { publish }
+
+      Fabricate.times(10, :user, groups: [assign_allowed_group])
+      large_audience = track_sql_queries { publish }
+
+      expect(large_audience.length).to be <= small_audience.length + 1
+    end
+
+    it "does not run a guardian lookup for every assignable user on a visible post" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      post = Fabricate(:post, topic:, user: admin)
+      assignment.update!(target: post, target_type: "Post")
+
+      small_audience = track_sql_queries { publish }
+
+      Fabricate.times(10, :user, groups: [assign_allowed_group])
+      large_audience = track_sql_queries { publish }
+
+      expect(large_audience.length).to be <= small_audience.length + 1
+    end
+
+    it "does not run a guardian lookup for every assignable user on a whisper" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      post = Fabricate(:post, topic:, user: admin, post_type: Post.types[:whisper])
+      assignment.update!(target: post, target_type: "Post")
+
+      small_audience = track_sql_queries { publish }
+
+      Fabricate.times(10, :user, groups: [assign_allowed_group])
+      large_audience = track_sql_queries { publish }
+
+      expect(large_audience.length).to be <= small_audience.length + 1
+    end
+
+    it "broadcasts a private message assignment only to assignable users who can see it" do
+      participant = Fabricate(:user, groups: [assign_allowed_group])
+      private_message = Fabricate(:private_message_post, user: admin, recipient: participant).topic
+      assignment.update!(topic: private_message, target: private_message)
+
+      messages = MessageBus.track_publish("/staff/topic-assignment") { publish }
+
+      expect(messages.last.user_ids).to contain_exactly(admin.id, participant.id)
+    end
+  end
+
   describe "#deactivate!" do
     subject(:deactivate!) { assignment.deactivate! }
 

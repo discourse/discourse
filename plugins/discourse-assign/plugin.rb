@@ -21,6 +21,7 @@ end
 require_relative "lib/discourse_assign/engine"
 require_relative "lib/discourse_assign/assignee_resolver"
 require_relative "lib/discourse_assign/assignment_permissions"
+require_relative "lib/discourse_assign/visibility"
 require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
 
@@ -85,10 +86,12 @@ after_initialize do
     :assignment_count,
     include_condition: -> { scope.can_assign_globally? },
   ) do
-    Topic.joins(<<~SQL).where(<<~SQL, group_id: object.id).where("topics.deleted_at IS NULL").count
+    Topic
+      .joins(<<~SQL)
         JOIN assignments a
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
+      .where(<<~SQL, group_id: object.id)
         a.active AND
         ((
           a.assigned_to_type = 'User' AND a.assigned_to_id IN (
@@ -100,6 +103,9 @@ after_initialize do
           a.assigned_to_type = 'Group' AND a.assigned_to_id = :group_id
         ))
       SQL
+      .where("topics.deleted_at IS NULL")
+      .where(DiscourseAssign::Visibility.visible_assignments_sql(scope, table_alias: "a"))
+      .count
   end
 
   add_to_serializer(:group_show, :assignable_level) { object.assignable_level }
@@ -208,6 +214,8 @@ after_initialize do
 
     next if !allowed_access || topics.empty?
 
+    guardian = Guardian.new(topic_list.current_user)
+
     assignments =
       Assignment.strict_loading.active.where(topic: topics).includes(:target, :assigned_to)
     assignments_map = assignments.group_by(&:topic_id)
@@ -228,6 +236,7 @@ after_initialize do
 
         post_assignments.each do |assignment|
           next unless assignment.target
+          next if !guardian.can_see_post?(assignment.target)
 
           if assignment.assigned_to_user?
             indirectly_assigned_to[assignment.target_id] = {
@@ -286,6 +295,8 @@ after_initialize do
 
         indirect_assignments.each do |assignment|
           next unless assignment.target
+          next if !search.guardian.can_see_post?(assignment.target)
+
           indirect_assignment_map[assignment.target_id] = {
             assigned_to: assignment.assigned_to,
             post_number: assignment.target.post_number,
@@ -476,23 +487,24 @@ after_initialize do
     @assignment_status = assignment.status if SiteSetting.enable_assign_status && assignment&.active
   end
 
-  add_to_class(:topic, :indirectly_assigned_to) do
+  add_to_class(:topic, :indirectly_assigned_to) do |guardian = nil|
     return @indirectly_assigned_to if defined?(@indirectly_assigned_to)
     @indirectly_assigned_to =
       Assignment
         .where(topic_id: id, target_type: "Post", active: true)
         .includes(:target)
         .inject({}) do |acc, assignment|
-          if assignment.target
-            acc[assignment.target_id] = {
-              assigned_to: assignment.assigned_to,
-              post_number: assignment.target.post_number,
-              assignment_note: assignment.note,
-            }
-            acc[assignment.target_id][
-              :assignment_status
-            ] = assignment.status if SiteSetting.enable_assign_status
-          end
+          next acc if !assignment.target
+          next acc if guardian && !guardian.can_see_post?(assignment.target)
+
+          acc[assignment.target_id] = {
+            assigned_to: assignment.assigned_to,
+            post_number: assignment.target.post_number,
+            assignment_note: assignment.note,
+          }
+          acc[assignment.target_id][
+            :assignment_status
+          ] = assignment.status if SiteSetting.enable_assign_status
           acc
         end
   end
@@ -562,11 +574,11 @@ after_initialize do
     :indirectly_assigned_to,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?(object.topic)) &&
-        object.topic.indirectly_assigned_to.present?
+        object.topic.indirectly_assigned_to(scope).present?
     end,
   ) do
     DiscourseAssign::Helpers.build_indirectly_assigned_to(
-      object.topic.indirectly_assigned_to,
+      object.topic.indirectly_assigned_to(scope),
       object.topic,
     )
   end
@@ -612,9 +624,14 @@ after_initialize do
     :indirectly_assigned_to,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?(object)) &&
-        object.indirectly_assigned_to.present?
+        object.indirectly_assigned_to(scope).present?
     end,
-  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
+  ) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(
+      object.indirectly_assigned_to(scope),
+      object,
+    )
+  end
 
   add_to_serializer(
     :topic_list_item,
@@ -628,9 +645,14 @@ after_initialize do
     :indirectly_assigned_to,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?(object)) &&
-        object.indirectly_assigned_to.present?
+        object.indirectly_assigned_to(scope).present?
     end,
-  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
+  ) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(
+      object.indirectly_assigned_to(scope),
+      object,
+    )
+  end
 
   add_to_serializer(
     :topic_list_item,
@@ -680,9 +702,14 @@ after_initialize do
     :indirectly_assigned_to,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?(object)) &&
-        object.indirectly_assigned_to.present?
+        object.indirectly_assigned_to(scope).present?
     end,
-  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
+  ) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(
+      object.indirectly_assigned_to(scope),
+      object,
+    )
+  end
 
   # TopicsBulkAction
   TopicsBulkAction.register_operation("assign") do
@@ -840,10 +867,14 @@ after_initialize do
 
   # TopicTrackingState
   add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, assignee|
-    return unless topic.private_message?
-    opts = (assignee.is_a?(User) ? { user_ids: [assignee.id] } : { group_ids: [assignee.id] })
+    return unless topic.private_message? && assignee.present?
 
-    MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, opts)
+    assignees = assignee.is_a?(User) ? User.where(id: assignee.id) : assignee.users
+    user_ids =
+      DiscourseAssign::Visibility.visible_users(topic).where(id: assignees.select(:id)).pluck(:id)
+    return if user_ids.blank?
+
+    MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids:)
   end
 
   add_api_key_scope(
