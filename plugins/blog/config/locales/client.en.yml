@@ -83,6 +83,9 @@ en:
         blogs_tab_description: Edit a blog to change its name, theme and settings
         themes_tab_description: Browse and manage the themes available to your blog
         add_blog: Add blog
+        setup_title: "Hey %{name}, let's set up your blog"
+        setup_description: Give it a name and tagline, pick a theme, then write your first article
+        setup_button: Create my blog
         new_blog: New blog
         new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
         create_blog: Create blog
@@ -198,7 +201,6 @@ en:
           changes_pending: Live article is out of date
           scheduled: "Publishes %{date}"
           unpublished: Removed from the blog
-        will_publish_to: "Will publish to %{url}"
         last_updated: "Last updated %{age}"
         published_as: "Published on %{date}"
         view_live: View live ↗
@@ -253,7 +255,8 @@ en:
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, cover, search, co-authors, date, featured, page
+        page_settings: Page settings
+        settings_button: Settings
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -276,7 +279,6 @@ en:
         page_title: Draft review
         expires: "Expires %{date}"
         manage: Share for review and feedback
-        discard_metadata: Discard unsaved publication settings and share the saved article?
         intro: Anyone with the link can read the draft and leave private feedback.
         label: Label
         label_placeholder: For example, editorial round
@@ -338,6 +340,7 @@ en:
         preview_changes: Preview changes
         view_on_blog: View on blog
       new_draft: New draft
+      new_page: New page
       settings: Configure blog settings
       all: All
       all_blogs: All blogs
@@ -353,50 +356,34 @@ en:
         Remove this article from the blog? The topic and its replies
         will remain public in the community. Existing copies in feeds and search engines
         cannot be recalled.
+      article_settings:
+        kind_article: Article
+        kind_page: Page
+        search: Search engines
+        options: Authors and options
+        discard_confirm: Discard your unsaved changes?
       blog_field: Blog
       blog_field_hint: Until it is first published, an article can move to another blog.
       path: Article path
-      path_hint:
-        Start with / and use lowercase letters, numbers, hyphens, and optional
-        path segments. Until the article is first published, a path you haven't
-        edited follows its title. Old paths redirect automatically after a change.
-      path_hint_dated:
-        Start with / and use lowercase letters, numbers, hyphens, and optional
-        path segments. Until the article is first published, a path you haven't
-        edited follows its title and publication date. Old paths redirect
-        automatically after a change.
+      path_hint: Updates to match the title until you publish.
+      path_hint_dated: Updates to match the title and date until you publish.
       excerpt: Excerpt
-      excerpt_hint:
-        A short introduction for article cards and search previews. Leave
-        blank to generate an excerpt from the article.
+      excerpt_hint: A short introduction for article cards and search previews.
       cover: Cover image
-      cover_hint:
-        Shown above the article and used for its card and link previews. Leave
-        blank to use the first image in the article.
+      cover_hint: Shown above the article and used for its card and link previews.
       cover_alt: Cover image alt text
       cover_alt_hint:
         Describes the cover image for people who can't see it.
-      page: Standalone page
-      page_hint:
-        For pages like About, Contact or Privacy. Left out of the article lists
-        and the feed, and shown without a byline, date, tags or discussion.
       co_authors: Co-authors
       co_authors_hint:
         Credited beside the author in the byline, and listed on their own
         author pages.
       meta_description: Meta description
-      meta_description_hint:
-        The summary search engines and link previews show. Leave blank to use
-        the excerpt.
+      meta_description_hint: The summary search engines and link previews show.
       canonical_url: Canonical URL
-      canonical_url_hint:
-        For an article first published elsewhere, the original's full URL, so
-        search engines credit that page instead. Leave blank for this article's
-        own URL.
+      canonical_url_hint: The original URL, if this article was first published elsewhere.
       date: Publication date
-      date_hint:
-        Leave blank to use the first publication time. For imported articles,
-        choose a date in the past. Dates use UTC.
+      date_hint: Leave blank to use the first publication time. Dates use UTC format.
       featured: Feature on the homepage
       save: Save settings
       unpublish: Unpublish

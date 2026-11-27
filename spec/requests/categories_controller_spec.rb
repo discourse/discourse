@@ -677,6 +677,23 @@ RSpec.describe CategoriesController do
         expect(response).to be_forbidden
       end
 
+      it "returns read-only permission to a moderator who creates a read-only category" do
+        SiteSetting.moderators_manage_categories = true
+        sign_in(Fabricate(:moderator))
+        readonly = CategoryGroup.permission_types[:readonly]
+
+        post "/categories.json",
+             params: {
+               name: "Announcements",
+               permissions: {
+                 everyone: readonly,
+               },
+             }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("category", "permission")).to eq(readonly)
+      end
+
       it "raises an exception when the name is missing" do
         post "/categories.json", params: { color: "ff0", text_color: "fff" }
         expect(response.status).to eq(400)
@@ -766,6 +783,7 @@ RSpec.describe CategoriesController do
           cat_json = response.parsed_body["category"]
           expect(cat_json).to be_present
           expect(cat_json["moderating_group_ids"]).to eq([group.id])
+          expect(cat_json["permission"]).to eq(CategoryGroup.permission_types[:full])
           expect(cat_json["name"]).to eq("hello")
           expect(cat_json["slug"]).to eq("hello-cat")
           expect(cat_json["color"]).to eq("ff0")

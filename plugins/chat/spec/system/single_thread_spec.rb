@@ -41,7 +41,7 @@ describe "Single thread in side panel" do
         messages = Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel)
         chat_page.visit_thread(thread)
 
-        expect(page).to have_css("[data-id='#{message_1.id}'].-highlighted")
+        expect(thread_page).to have_message_in_view(message_1)
       end
     end
 

@@ -175,6 +175,8 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
+    return false if !is_staff? && visible_post_types.exclude?(post.post_type)
+
     # Staff in edit groups skip visibility (e.g. deleted topics); non-staff must pass it
     if is_in_edit_post_groups?
       return can_create_post?(post.topic) if is_staff?
@@ -201,7 +203,6 @@ module PostGuardian
     return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
-      return false if !is_staff? && !visible_post_types.include?(post.post_type)
       return false if @user.silenced?
 
       return can_edit_hidden_post?(post) if post.hidden?

@@ -21,13 +21,17 @@ async function renderEditor(initialState, onChange = () => {}) {
   );
 }
 
+/**
+ * An event in UTC. Its moments are built in UTC too, as the editor builds them in the event's zone;
+ * one in the browser's zone shows a different date wherever that zone is far from UTC.
+ */
 function stateWith(overrides) {
   return {
     ...defaultEventState(),
     name: "My event",
     timezone: "UTC",
-    startsAt: moment("2026-07-01T10:00:00Z"),
-    endsAt: moment("2026-07-01T11:00:00Z"),
+    startsAt: moment.utc("2026-07-01T10:00:00Z"),
+    endsAt: moment.utc("2026-07-01T11:00:00Z"),
     ...overrides,
   };
 }
@@ -51,8 +55,8 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
     await renderEditor(
       stateWith({
         livestream: true,
-        startsAt: moment("2020-07-01T10:00:00Z"),
-        endsAt: moment("2020-07-01T11:00:00Z"),
+        startsAt: moment.utc("2020-07-01T10:00:00Z"),
+        endsAt: moment.utc("2020-07-01T11:00:00Z"),
       })
     );
 
@@ -63,8 +67,8 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
     await renderEditor(
       stateWith({
         livestream: true,
-        startsAt: moment("2099-07-01T10:00:00Z"),
-        endsAt: moment("2099-07-01T11:00:00Z"),
+        startsAt: moment.utc("2099-07-01T10:00:00Z"),
+        endsAt: moment.utc("2099-07-01T11:00:00Z"),
       })
     );
 
@@ -76,8 +80,8 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
     await renderEditor(
       stateWith({
         livestream: true,
-        startsAt: moment("2020-07-01T10:00:00Z"),
-        endsAt: moment("2020-07-01T11:00:00Z"),
+        startsAt: moment.utc("2020-07-01T10:00:00Z"),
+        endsAt: moment.utc("2020-07-01T11:00:00Z"),
       }),
       (newState) => (state = newState)
     );
@@ -222,7 +226,7 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
   test("defaults the end date to the day after the start date", async function (assert) {
     const initialState = stateWith({
       allDay: true,
-      startsAt: moment("2027-07-14T00:00:00Z"),
+      startsAt: moment.utc("2027-07-14T00:00:00Z"),
       endsAt: null,
     });
     let lastState = null;
@@ -250,7 +254,7 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
 
   test("clamps end an hour after start when the picked end time is not after start", async function (assert) {
     const initialState = stateWith({
-      endsAt: moment("2026-07-01T12:00:00Z"),
+      endsAt: moment.utc("2026-07-01T12:00:00Z"),
     });
     let lastState = null;
     await renderEditor(initialState, (state) => (lastState = state));
@@ -267,7 +271,7 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
   test("the end date picker is bounded by the start date", async function (assert) {
     const initialState = stateWith({
       allDay: true,
-      startsAt: moment("2026-07-01"),
+      startsAt: moment.utc("2026-07-01"),
       endsAt: null,
     });
     await renderEditor(initialState);
@@ -284,7 +288,7 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
   test("picking the start day as the end day keeps a one-day all-day event", async function (assert) {
     const initialState = stateWith({
       allDay: true,
-      startsAt: moment("2026-07-01"),
+      startsAt: moment.utc("2026-07-01"),
       endsAt: null,
     });
     let lastState = null;

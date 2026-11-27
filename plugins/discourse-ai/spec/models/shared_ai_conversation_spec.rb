@@ -49,7 +49,7 @@ RSpec.describe SharedAiConversation, type: :model do
       expect(onebox).not_to include("GitHub pull request diff")
       expect(onebox).not_to include("<details>")
 
-      expect(onebox).to include("AI Conversation with Claude-2")
+      expect(onebox).to include("AI conversation with #{agent.name}")
     end
 
     it "updates an existing conversation if one exists" do
@@ -231,7 +231,7 @@ RSpec.describe SharedAiConversation, type: :model do
       conversation = described_class.share_conversation(user, topic)
       onebox = conversation.onebox
       expect(onebox).not_to include("</marquee>")
-      expect(onebox).to include("AI Conversation with Claude-2")
+      expect(onebox).to include("AI conversation with #{agent.name}")
     end
 
     it "escapes HTML in the title to prevent XSS" do
@@ -242,6 +242,44 @@ RSpec.describe SharedAiConversation, type: :model do
 
       expect(onebox).not_to include(xss_title)
       expect(onebox).to include(ERB::Util.html_escape(xss_title))
+    end
+  end
+
+  describe "#formatted_excerpt" do
+    it "uses the saved agent display name even when model labels are disabled" do
+      SiteSetting.ai_bot_show_model_name = false
+      agent.update!(name: "Forum helper")
+      conversation = described_class.share_conversation(user, topic)
+      agent.update!(name: "Renamed agent")
+
+      expect(conversation.onebox_title).to eq("AI conversation with Forum helper")
+      expect(conversation.formatted_excerpt).to eq(
+        "AI conversation with Forum helper:\n #{conversation.excerpt}",
+      )
+      expect(conversation.to_json[:llm_name]).to eq(claude_2.display_name)
+    end
+
+    it "uses a generic title for legacy shares without an agent name" do
+      conversation = described_class.share_conversation(user, topic)
+      conversation.update!(context: conversation.context.map { |post| post.except("agent") })
+
+      expect(conversation.onebox_title).to eq("AI conversation")
+      expect(conversation.formatted_excerpt).to eq("AI conversation:\n #{conversation.excerpt}")
+    end
+
+    it "uses a generic title when multiple agents participated" do
+      conversation = described_class.share_conversation(user, topic)
+      conversation.context << { "agent" => "Another agent" }
+
+      expect(conversation.onebox_title).to eq("AI conversation")
+    end
+
+    it "escapes the agent display name in onebox markup" do
+      agent.update!(name: "Helper <img src=x onerror=alert(1)>")
+      conversation = described_class.share_conversation(user, topic)
+
+      expect(conversation.onebox).not_to include(agent.name)
+      expect(conversation.onebox).to include(ERB::Util.html_escape(agent.name))
     end
   end
 

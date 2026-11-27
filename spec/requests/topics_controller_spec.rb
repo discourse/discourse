@@ -3113,10 +3113,16 @@ RSpec.describe TopicsController do
       it "shows a descriptive error message containing the group name" do
         get "/t/#{topic.id}.json"
 
-        html = CGI.unescapeHTML(response.parsed_body["extras"]["html"])
+        extras = response.parsed_body["extras"]
+        html = CGI.unescapeHTML(extras["html"])
         expect(response.status).to eq(403)
+        expect(extras["title"]).to eq(I18n.t("page_forbidden.page_title"))
         expect(html).to include(I18n.t("not_in_group.title_topic", group: group.name))
         expect(html).to include(I18n.t("not_in_group.join_group"))
+
+        get "/t/#{topic.id}"
+        expect(response).to have_http_status(:forbidden)
+        expect(css_select("title").text).to include(I18n.t("page_forbidden.page_title"))
       end
     end
 

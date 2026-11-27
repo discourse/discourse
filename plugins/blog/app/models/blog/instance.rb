@@ -87,6 +87,10 @@ module ::Blog
       cached.filter_map(&:category_id)
     end
 
+    def default_identity?
+      name == DEFAULT_NAME && description.blank?
+    end
+
     def published_articles?
       Publication.where(blog_id: id).where.not(published_revision_id: nil).exists?
     end

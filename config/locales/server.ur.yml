@@ -251,9 +251,7 @@ ur:
       s3_backup_requires_s3_settings: "آپ S3 کو بیک اپ کے طور پر استعمال نہیں کرسکتے جب تک کہ آپ نے '%{setting_name}' فراہم نہیں کیا ہو۔"
       s3_bucket_reused: "آپ 's3_upload_bucket' اور 's3_backup_bucket' کیلئے ایک ہی بَکِّٹ کا استعمال نہیں کرسکتے۔ ایک مختلف بَکِّٹ کا انتخاب کریں یا ہر بَکِّٹ کیلئے ایک مختلف راستہ استعمال کریں۔"
       share_quote_facebook_requirements: "فیس بک کے لیے اِقْتِباس شیئرنگ کو فعال کرنے کے لیے آپ کو فیس بک ایپ آئی ڈی سیٹ کرنی ہوگی۔"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "اگر مقامی لاگ ان غیر فعال ہیں تو آپ 2FA نافذ نہیں کر سکتے۔"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال ہو تو آپ 2FA نافذ نہیں کر سکتے۔"
-      local_login_cannot_be_disabled_if_second_factor_enforced: "اگر 2FA نافذ ہے تو آپ مقامی لاگ ان کو غیر فعال نہیں کر سکتے۔ مقامی لاگ ان کو غیر فعال کرنے سے پہلے نافذ شدہ 2FA کو غیر فعال کریں۔"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "آپ S3 اپ لوڈز کو فعال نہیں کر سکتے کیونکہ S3 اپ لوڈز پہلے سے ہی عالمی سطح پر فعال ہیں، اور اس سائٹ کی سطح کو فعال کرنے سے اپ لوڈز میں اہم مسائل پیدا ہو سکتے ہیں۔"
       cors_origins_should_not_have_trailing_slash: "آپ کو ذَیل سلیش (/) کو CORS کےآغاز میں شامل نہیں کرنا چاہیے۔"
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "رکن کے ایجنٹوں کو کم از کم 3 حروف کا ہونا ضروری ہے تاکہ غلطی سے جائز اراکین کی شرح کو محدود کرنے سے بچا جا سکے۔"
@@ -3136,6 +3134,8 @@ ur:
       title: "نیا لاگ اِن انتباہ"
     post_approved:
       title: "آپ کی پوسٹ منظور ہو گئی تھی"
+  page_forbidden:
+    page_title: "رسائی سے اِنکار کر دیا گیا"
   page_not_found:
     page_title: "صفحہ نہیں ملا"
     title: "افوہ! وہ صفحہ موجود نہیں یا ذاتی ہے۔"

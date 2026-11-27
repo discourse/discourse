@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import HeaderDropdown from "discourse/components/header/dropdown";
 import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import DButton from "discourse/ui-kit/d-button";
-import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
 import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
@@ -146,7 +146,8 @@ export default class ChatFooter extends Component {
       {{#if this.mobileTabBar.enabled}}
         <MobileTabBarViews>
           <div class="c-footer --pills">
-            <DHorizontalOverflowNav>
+            {{! Scrolls with faded edges, like the topic lists' views }}
+            <ul class="nav-pills" {{dScrollEdges}}>
               {{#each this.items key="id" as |item|}}
                 <li>
                   <LinkTo
@@ -154,16 +155,20 @@ export default class ChatFooter extends Component {
                     id={{item.id}}
                     @route={{item.route}}
                   >
-                    <span data-label={{i18n item.label}}>{{i18n
-                        item.label
-                      }}</span>
-                    {{#if item.indicator}}
-                      <item.indicator />
-                    {{/if}}
+                    <span class="mobile-tab-bar__indicator">
+                      <span data-label={{i18n item.label}}>{{i18n
+                          item.label
+                        }}</span>
+                      {{#if item.indicator}}
+                        <span class="mobile-tab-bar__badge">
+                          <item.indicator />
+                        </span>
+                      {{/if}}
+                    </span>
                   </LinkTo>
                 </li>
               {{/each}}
-            </DHorizontalOverflowNav>
+            </ul>
             {{#if this.listOptionsSection}}
               <div class="c-footer__options">
                 <ChannelListOptionsButton

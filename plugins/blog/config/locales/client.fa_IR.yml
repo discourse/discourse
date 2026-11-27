@@ -18,7 +18,6 @@ fa_IR:
         save: ذخیره
         about_tab: درباره
         blog_slug: نشانک (slug)
-        general_heading: عمومی
         settings_tab: تنظیم
         theme_tab: قالب
         column_name: نام
@@ -46,6 +45,7 @@ fa_IR:
           title: عنوان
           body: body
           tags: برچسب‌ها
+        settings_button: تنظیم
       review:
         create: ایجاد پیوند
         copy: کپی
@@ -68,5 +68,7 @@ fa_IR:
       drafts: پیش‌نویس‌ها
       pages: صفحه
       preview: پیش‌نمایش
+      article_settings:
+        kind_page: صفحه
       unpublish: لغو انتشار
       appearance_link: ظاهر

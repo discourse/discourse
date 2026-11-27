@@ -50,14 +50,22 @@ export default class SecurityController extends Controller {
     return !this.model.staged;
   }
 
-  get isCurrentUser() {
-    return this.currentUser?.id === this.model.id;
+  get secondFactorsAvailable() {
+    return (
+      !this.siteSettings.enable_discourse_connect &&
+      (this.siteSettings.enable_local_logins ||
+        this.siteSettings.enforce_second_factor_on_external_auth)
+    );
+  }
+
+  get canUseSecondFactors() {
+    return this.secondFactorsAvailable && !this.model?.is_anonymous;
   }
 
   get canUsePasskeys() {
     return (
-      !this.siteSettings.enable_discourse_connect &&
-      this.siteSettings.enable_local_logins &&
+      this.secondFactorsAvailable &&
+      !this.model?.is_anonymous &&
       this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
@@ -229,32 +237,25 @@ export default class SecurityController extends Controller {
       }
     )
       .then(() => {
-        if (!token) {
+        if (!token && this.model.isCurrent) {
           logout();
-        } // All sessions revoked
+          return;
+        }
+
+        this.model.set(
+          "user_auth_tokens",
+          token
+            ? this.model.user_auth_tokens.filter(({ id }) => id !== token.id)
+            : []
+        );
       })
       .catch(popupAjaxError);
   }
 
   @action
-  async manage2FA() {
-    try {
-      const trustedSession = await this.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () =>
-            this.router.transitionTo("preferences.second-factor"),
-        });
-      } else {
-        await this.router.transitionTo("preferences.second-factor");
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
+  manage2FA() {
+    const transition = this.router.transitionTo("preferences.second-factor");
+    transition.data.confirmSecondFactorSession = true;
   }
 
   @action

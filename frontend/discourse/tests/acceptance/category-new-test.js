@@ -84,6 +84,17 @@ acceptance("Category New", function (needs) {
       "it transitions to the new category's page"
     );
 
+    const allCategoriesLink = ".empty-state__cta a[href='/categories']";
+    assert
+      .dom(allCategoriesLink)
+      .hasText(i18n("category.all"), "the empty state offers All categories");
+    await click(allCategoriesLink);
+    assert.strictEqual(
+      currentURL(),
+      "/categories",
+      "it opens the category directory"
+    );
+
     await visit("/c/testing/edit/tags");
 
     assert.strictEqual(
@@ -204,8 +215,8 @@ acceptance("Category color", function (needs) {
   });
 
   function previewColor() {
-    return getComputedStyle(find(".category-name-style__preview"))
-      .getPropertyValue("--icon-color")
+    return getComputedStyle(find(".d-name-style-input__preview"))
+      .getPropertyValue("--d-name-style-input-color")
       .trim();
   }
 

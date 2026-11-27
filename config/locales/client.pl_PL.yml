@@ -2135,6 +2135,8 @@ pl_PL:
       unread_message_count: "Wiadomości"
       admin_delete: "Usuń"
       users: "Użytkownicy"
+      staff_only_setting: "Tylko dla personelu. %{username} nie może tego zmienić."
+      self_only_setting: "Tylko %{username} może z tego korzystać."
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       allowed_pm_users: "Dozwolone"
@@ -2371,6 +2373,7 @@ pl_PL:
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
         verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
+        revoke_apps: "Wyloguj się także ze wszystkich podłączonych aplikacji (zalecane, jeśli uważasz, że ktoś inny uzyskał dostęp do Twojego konta)"
         title: "Reset hasła"
         remove: "Usuń hasło"
         remove_disabled: "Aby usunąć hasło, konto musi się logować co najmniej za pomocą innej metody (np. klucza dostępu lub powiązanego konta zewnętrznego)."
@@ -2415,11 +2418,11 @@ pl_PL:
         short_description: |
           Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa lub fizycznych kluczy bezpieczeństwa.
         extended_description: |
-          Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
-        oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
+          Uwierzytelnianie dwuskładnikowe dodaje krok weryfikacji podczas logowania, również w przypadku korzystania z konta zewnętrznego. Tokeny można generować na urządzeniach <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         use: "Użyj aplikacji Authenticator"
         enforced_with_oauth_notice: "Musisz włączyć uwierzytelnianie dwuskładnikowe. Zostaniesz poproszony o użycie tej opcji tylko podczas logowania przy użyciu hasła, a nie przy użyciu zewnętrznego uwierzytelniania lub metod logowania społecznościowego."
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
+        external_login_required: "Aby potwierdzić swoją tożsamość przed skorzystaniem z uwierzytelniania dwuskładnikowego, wyloguj się i zaloguj ponownie za pomocą konta zewnętrznego."
         disable: "Wyłącz"
         disable_confirm: "Czy na pewno chcesz wyłączyć uwierzytelnianie dwuskładnikowe?"
         delete: "Usuń"
@@ -2470,12 +2473,14 @@ pl_PL:
         not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza dostępu, został anulowany lub jest niedozwolony."
         already_added_error: "Już zarejestrowałeś ten klucz dostępu. Nie musisz rejestrować go ponownie."
         confirm_button: "lub użyj klucza dostępu"
+        external_login_required: "Aby potwierdzić swoją tożsamość przed zarządzaniem kluczami dostępu, wyloguj się i zaloguj ponownie przy użyciu konta zewnętrznego."
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
       change_username:
         title: "Zmień nazwę użytkownika"
         confirm: "Czy na pewno chcesz zmienić swoją nazwę użytkownika?"
+        confirm_other: "Czy jesteś absolutnie pewien, że chcesz zmienić nazwę użytkownika %{username}?"
         taken: "Przykro nam, ale ta nazwa jest zajęta."
         invalid: "Ta nazwa jest niepoprawna. Powinna zawierać jedynie liczby i litery."
       add_email:
@@ -2488,6 +2493,7 @@ pl_PL:
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres e-mail."
         success_via_admin: "Wysłaliśmy wiadomość e-mail na ten adres. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości e-mail."
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
+        success_staff_via_admin: "Wysłaliśmy wiadomość e-mail na aktualny adres użytkownika. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości."
         back_to_preferences: "Powrót do preferencji"
         confirm_success: "Twój e-mail został zmieniony."
         confirm: "Potwierdź"
@@ -3366,7 +3372,6 @@ pl_PL:
       not_allowed_from_ip_address: "Nie możesz się zalogować z tego adresu IP."
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
-      omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
       works_with: "Działa z"
       activate_account: "Aktywuj konto"
       resend_title: "Wyślij ponownie e-mail aktywacyjny"
@@ -5052,7 +5057,8 @@ pl_PL:
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
         replies_short: "%{current} / %{total}"
       progress:
-        title: postęp tematu
+        title: "Postęp tematu"
+        position: "Postęp tematu, %{current} z %{total}"
         jump_prompt: "przejdź do…"
         jump_prompt_of:
           one: "z %{count} wpisu"
@@ -5369,6 +5375,7 @@ pl_PL:
         actions: "Działania zbiorcze"
     post:
       accessible_heading: "wpis %{username} %{date}"
+      accessible_reply_heading: "wpis autorstwa %{username} %{date}, w odpowiedzi na wpis nr%{replyTo}"
       ai_generated: "AI"
       ai_generated_title: "Ta treść została częściowo lub w całości wygenerowana przez sztuczną inteligencję"
       heading_anchor: "Łącze nagłówka"
@@ -5776,7 +5783,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      back_to_categories: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
       moderation: "Moderacja"
@@ -6734,7 +6740,6 @@ pl_PL:
       create: "Utwórz"
       menu: "Menu"
       more: "Więcej"
-      edit_topic: "Edytuj tytuł, kategorię i tagi"
       menu_with_reviewables:
         one: "Menu, %{count} pozycja do przejrzenia"
         few: "Menu, %{count} pozycje do przejrzenia"
@@ -6797,6 +6802,7 @@ pl_PL:
       expand_btn: "Rozwiń tabelę"
       view_table: "Zobacz tabelę"
     second_factor_auth:
+      no_available_method: "Żadna z Twoich obecnych metod dwuskładnikowego uwierzytelniania nie może zostać użyta w tym żądaniu. Zacznij od nowa."
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
       title: "Pasek boczny"

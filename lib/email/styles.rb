@@ -12,6 +12,10 @@ module Email
     ONEBOX_IMAGE_THUMBNAIL_STYLE = "width: 60px;"
     ONEBOX_INLINE_AVATAR_STYLE = "width: 20px; height: 20px; float: none; vertical-align: middle;"
     CODE_BACKGROUND_COLOR = "#f9f9f9"
+    # Cooked HTML can sit at Nokogiri's default parser limits, and styling adds
+    # attributes and parents on top of it, so leave some room on both limits.
+    MAX_ATTRIBUTES = Nokogiri::Gumbo::DEFAULT_MAX_ATTRIBUTES + 100
+    MAX_TREE_DEPTH = Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH + 100
 
     @@plugin_callbacks = []
 
@@ -22,7 +26,8 @@ module Email
     def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}
-      @fragment = Nokogiri::HTML5.parse(@html)
+      @fragment =
+        Nokogiri::HTML5.parse(@html, max_attributes: MAX_ATTRIBUTES, max_tree_depth: MAX_TREE_DEPTH)
       @custom_styles = nil
     end
 
@@ -188,7 +193,7 @@ module Email
           top_content = [h3, info_div, onebox.at_css("p")].compact.map(&:to_html).join
           joined_html = joined ? joined.to_html : ""
 
-          onebox.inner_html = <<~HTML
+          replace_inner_html(onebox, <<~HTML)
             <table cellspacing="0" cellpadding="0" border="0">
               <tr>
                 <td rowspan="2" valign="top" style="width: 90px;">#{img.to_html}</td>
@@ -220,7 +225,7 @@ module Email
                 "<p style='padding: 0;'>#{original_node.css("> blockquote").inner_html}</p>"
               end
             )
-          n.inner_html = original_node.css("> div.title").inner_html + blockquote
+          replace_inner_html(n, original_node.css("> div.title").inner_html + blockquote)
           n.name = "blockquote"
         end
 
@@ -590,6 +595,16 @@ module Email
           return
           # rubocop:enable Lint/NonLocalExitFromIterator
         end
+    end
+
+    def replace_inner_html(node, html)
+      node.children =
+        Nokogiri::HTML5::DocumentFragment.new(
+          node.document,
+          html,
+          node,
+          max_attributes: MAX_ATTRIBUTES,
+        )
     end
 
     def reset_tables

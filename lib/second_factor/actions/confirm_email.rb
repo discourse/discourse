@@ -2,15 +2,16 @@
 
 module SecondFactor::Actions
   class ConfirmEmail < Base
+    def challenge_scope
+      @opts.fetch(:change_request_id)
+    end
+
     def no_second_factors_enabled!(params)
       # handled in controller
     end
 
-    def second_factor_auth_required!(params)
+    def second_factor_auth_required!(_params)
       {
-        callback_params: {
-          token: params[:token],
-        },
         redirect_url:
           (
             if @current_user
@@ -22,7 +23,7 @@ module SecondFactor::Actions
       }
     end
 
-    def second_factor_auth_completed!(callback_params)
+    def second_factor_auth_completed!(_callback_params)
       # handled in controller
     end
   end

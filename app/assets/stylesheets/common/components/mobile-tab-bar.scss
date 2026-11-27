@@ -13,11 +13,10 @@ html.mobile-tab-bar-visible {
     env(safe-area-inset-bottom)
   );
   --mobile-tab-bar-side-inset: var(--space-3);
-  --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-corner-radius: var(--space-4);
 
-  // Set here rather than on the bar, so the page's own bubbles over it match.
-  // The theme's button radius, so containers match the buttons beside them
-  --mobile-tab-bar-radius: var(--d-button-border-radius);
+  // Set here rather than on the bar, so the page's own bubbles over it match
+  --mobile-tab-bar-radius: var(--space-4);
 
   // Kept close, as the controls have no border to set them off
   --mobile-tab-bar-shadow:
@@ -101,6 +100,8 @@ html.mobile-tab-bar-visible {
 
 .mobile-tab-bar {
   --mobile-tab-bar-controls-gap: var(--space-2);
+  --mobile-tab-bar-badge-size: 1rem;
+  --mobile-tab-bar-badge-background: var(--header_background);
   --mobile-tab-bar-inner-radius: 0;
   position: fixed;
   bottom: 0;
@@ -326,6 +327,7 @@ html.mobile-tab-bar-visible {
 
       &:not(.active) {
         @include hover {
+          --mobile-tab-bar-badge-background: var(--d-hover);
           background: var(--d-hover);
           color: var(--header_primary);
         }
@@ -336,13 +338,6 @@ html.mobile-tab-bar-visible {
         color: var(--d-nav-color--active);
         font-weight: bold;
       }
-    }
-
-    .navigation-item__count {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      right: calc(var(--space-1) * -1);
     }
 
     // Holds each label's bold width, so the views don't shift as the
@@ -402,6 +397,10 @@ html.mobile-tab-bar-visible {
     box-sizing: border-box;
     pointer-events: auto;
 
+    // A pill, so the ends have no straight edge; the end buttons inherit it
+    --mobile-tab-bar-radius: calc(var(--mobile-tab-bar-controls-height) / 2);
+    --mobile-tab-bar-corner-radius: var(--mobile-tab-bar-radius);
+
     @include mobile-tab-bar-floating;
     border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
     border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
@@ -454,15 +453,6 @@ html.mobile-tab-bar-visible {
     padding: 0;
     border-start-start-radius: var(--mobile-tab-bar-radius);
     border-end-start-radius: var(--mobile-tab-bar-corner-radius);
-
-    .mobile-tab-bar__badge {
-      top: var(--space-2);
-      left: 55%;
-    }
-
-    .mobile-tab-bar__count {
-      outline: 2px solid var(--mobile-tab-bar-badge-background);
-    }
 
     &:focus-visible {
       --mobile-tab-bar-badge-background: var(
@@ -647,24 +637,47 @@ html.mobile-tab-bar-visible {
     }
   }
 
+  // Every badge, count or dot, is centered on the same point off the top
+  // corner of its icon or label
   &__badge {
     position: absolute;
-    top: -0.2rem;
-    left: 55%;
+    z-index: 1;
+    top: 0;
+    left: calc(100% + 0.2rem);
     display: flex;
+
+    // Reset, so counts in smaller labels come out the same size
+    font-size: var(--font-0-rem);
+    transform: translate(-50%, -50%);
+  }
+
+  // Past a label's end rather than over it, where it would cover a letter
+  &__views &__badge {
+    left: calc(100% + 0.1rem);
+    transform: translateY(-50%);
+  }
+
+  &__views .nav-pills > li > a:has(.mobile-tab-bar__badge > *) {
+    padding-inline-end: calc(var(--space-3) + var(--mobile-tab-bar-badge-size));
+  }
+
+  &__tab.--active,
+  &__views a.active {
+    --mobile-tab-bar-badge-background: var(--d-selected);
   }
 
   &__count,
   &__views .navigation-item__count {
-    min-width: 1rem;
+    min-width: var(--mobile-tab-bar-badge-size);
     padding: 0 0.3em;
     box-sizing: border-box;
     border-radius: 999px;
+    outline: 2px solid var(--mobile-tab-bar-badge-background);
     background: var(--tertiary);
     color: var(--secondary);
     font-size: var(--font-down-3);
     font-weight: bold;
-    line-height: 1rem;
+    line-height: var(--mobile-tab-bar-badge-size);
     text-align: center;
   }
 

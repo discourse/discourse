@@ -30,3 +30,7 @@ en:
       description: "List most recent reactions."
       labels:
         day: "Day"
+  mcp:
+    oauth:
+      scopes:
+        discourse_reactions_write: "React to posts"

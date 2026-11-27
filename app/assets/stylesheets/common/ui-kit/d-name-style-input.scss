@@ -1,0 +1,119 @@
+.d-name-style-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .form-kit__control-input-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // The menu content renders elsewhere, so this only reaches the name input.
+  :is(input, .form-kit__control-input) {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  &__trigger.btn {
+    --d-button-default-bg-color: var(--token-color-background-input);
+    --d-button-default-bg-color--hover: var(--primary-very-low);
+    --d-button-default-border: 1px solid var(--primary-low-mid);
+    --d-button-default-border--hover: var(--d-button-default-border);
+    --d-button-default-icon-color: var(
+      --d-name-style-input-color,
+      var(--primary-high)
+    );
+    --d-button-default-icon-color--hover: var(--d-button-default-icon-color);
+    flex: 0 0 auto;
+    height: var(--space-9);
+    margin-inline-end: -1px;
+    border-radius: var(--d-input-border-radius);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    padding: 0 var(--space-3);
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
+    }
+  }
+
+  &__preview {
+    display: inline-flex;
+    font-size: var(--font-up-1);
+
+    > * {
+      width: 1em;
+      height: 1em;
+      color: var(--d-name-style-input-color, var(--primary-high));
+    }
+  }
+}
+
+// Raised so the menu also opens above a modal that contains the input.
+.fk-d-menu.d-name-style-input__content {
+  z-index: z("modal", "dialog");
+  box-sizing: border-box;
+  width: 24rem;
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+  }
+}
+
+.d-name-style-input__panel {
+  flex: 1;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+
+  .d-icon-grid-picker__filter-container {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    height: auto;
+    background: transparent;
+  }
+
+  // Compound selector outranks the picker's own transparent border.
+  .d-icon-grid-picker__filter.filter-input-container {
+    flex: 1 1 6em;
+    min-width: 0;
+    margin: 0;
+    border-color: var(--primary-low-mid);
+
+    .filter-input {
+      padding-inline-start: 0;
+    }
+  }
+
+  // Sized to sit beside the icon search rather than span the panel.
+  .form-kit__field-color {
+    width: auto;
+
+    .form-kit__container-content {
+      width: auto;
+    }
+
+    .form-kit__control-color-input {
+      gap: 0;
+    }
+
+    .form-kit__control-color-input-prefix {
+      flex: none;
+      justify-content: center;
+      inline-size: 2em;
+      margin: 0;
+      padding-inline: 0;
+    }
+
+    .form-kit__control-color-input-hex {
+      --hex-input-width: calc(8ch + 1em);
+      flex: 0 0 var(--hex-input-width);
+      max-width: var(--hex-input-width);
+      font-family: var(--d-font-family--monospace);
+    }
+
+    .form-kit__control-color-picker-wrapper {
+      margin-inline-start: var(--space-2);
+    }
+  }
+}

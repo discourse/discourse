@@ -706,9 +706,7 @@ pl_PL:
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
       secure_uploads_requirements: "Przed włączeniem funkcji bezpiecznego wysyłania należy włączyć wysyłanie w trybie S3."
       share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nie możesz wymusić 2FA, jeśli DiscourseConnect jest włączony."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć przypadkowego ograniczania prawdziwych użytkowników."
@@ -806,6 +804,11 @@ pl_PL:
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
   authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
+  remove_password_too_soon:
+    one: "Możesz usunąć swoje hasło %{count} minutę po jego ustawieniu."
+    few: "Możesz usunąć swoje hasło %{count} minuty po jego ustawieniu."
+    many: "Możesz usunąć swoje hasło %{count} minut po jego ustawieniu."
+    other: "Możesz usunąć swoje hasło %{count} minut po jego ustawieniu."
   scoped_api_key_html_not_allowed: "Kluczy API wraz z zakresami nie można używać do żądania stron HTML. Zamiast tego należy zażądać formatu JSON."
   provider_not_enabled: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie został upoważniony w systemie."
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
@@ -2401,8 +2404,8 @@ pl_PL:
     email_subject: "Możliwość dostosowania formatu tematu standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Dostosowywanie określonych szablonów wiadomości e-mail w systemie w Meta</a>."
     simple_email_subject: "Po włączeniu tej opcji tematy wiadomości e-mail będą bardziej zwięzłe i będą zawierać tylko najważniejsze informacje. Ułatwia to użytkownikom szybkie zrozumienie celu wiadomości e-mail na pierwszy rzut oka."
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
-    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego (2FA) przed uzyskaniem dostępu do interfejsu użytkownika Discourse. To ustawienie nie ma wpływu na uwierzytelnianie API ani dostawcy DiscourseConnect. Jeśli opcja {{setting:enforce_second_factor_on_external_auth}} jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
-    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników stałego korzystania z uwierzytelniania dwuskładnikowego (2FA). Po włączeniu tej opcji użytkownicy nie będą mogli logować się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie za pośrednictwem mediów społecznościowych, jeśli mają włączoną funkcję 2FA. Po wyłączeniu tej opcji użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania za pomocą nazwy użytkownika i hasła. Zobacz również ustawienie {{setting:enforce_second_factor}}."
+    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego (2FA) przed uzyskaniem dostępu do interfejsu użytkownika Discourse. To ustawienie nie wpływa na uwierzytelnianie API ani dostawcy DiscourseConnect. Po włączeniu opcji {{setting:enforce_second_factor_on_external_auth}} użytkownicy, którzy skonfigurowali uwierzytelnianie dwuskładnikowe, będą również proszeni o jego włączenie podczas logowania się za pomocą zewnętrznych dostawców uwierzytelniania."
+    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników potwierdzenia uwierzytelniania dwuskładnikowego (2FA) podczas logowania za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie za pośrednictwem mediów społecznościowych, jeśli mają włączoną funkcję 2FA. Po jej wyłączeniu użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania za pomocą nazwy użytkownika i hasła. Zobacz również ustawienie {{setting:enforce_second_factor}}."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
@@ -2440,6 +2443,7 @@ pl_PL:
     num_tl3_users_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają flagi num_tl3_flags_to_silence_new_user od wielu różnych użytkowników poziomu zaufania 3, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     notify_mods_when_user_silenced: "Jeśli użytkownik zostanie automatycznie wyciszony, wyślij wiadomość do wszystkich moderatorów."
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na temat z tego samego adresu IP, co użytkownik, który rozpoczął ten temat, oflaguj oba jego wpisy jako potencjalny spam."
+    enable_ai_content_labelling_in_composer: "Zezwól członkom na oznaczanie treści w kompozytorze, w tym cytatów, szczegółów i bloków kodu, w miarę jak sztuczna inteligencja je generuje"
     traditional_markdown_linebreaks: "Używaj tradycyjnych znaków końca linii w Markdown, to znaczy dwóch spacji na końcu linii."
     enable_markdown_typographer: "Popraw czytelność tekstu za pomocą zasad typografii: zamień proste cudzysłowy ' na cudzysłowy typograficzne ’, (tm) na odpowiedni symbol znaku towarowego ™, -- na półpauzę – itd."
     enable_markdown_linkify: "Automatycznie traktuj tekst, który wygląda jak link, jako link: www.example.com i https://example.com zostaną automatycznie połączone"
@@ -3686,6 +3690,7 @@ pl_PL:
     auto_deleted_by_timer: "Automatycznie usunięte przez regulator czasowy."
     auto_deleted_by_merge: "Automatycznie usunięte poprzez scalenie."
   login:
+    second_factor_external_login_required: "Aby potwierdzić swoją tożsamość przed skorzystaniem z uwierzytelniania dwuskładnikowego, wyloguj się i zaloguj ponownie za pomocą konta zewnętrznego."
     invalid_second_factor_method: "Wybrana metoda uwierzytelniania dwuskładnikowego jest nieprawidłowa."
     not_enabled_second_factor_method: "Wybrana metoda uwierzytelniania dwuskładnikowego nie jest włączona na Twoim koncie."
     security_key_description: "Po przygotowaniu fizycznego klucza bezpieczeństwa naciśnij przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa poniżej."
@@ -5387,6 +5392,7 @@ pl_PL:
 
         To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że [Twój wpis](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
+    page_title: "Brak dostępu"
     title: "Ups! Ta strona jest prywatna."
   site_setting_missing: "Ustawienie `%{name}` musi być ustawione."
   page_not_found:

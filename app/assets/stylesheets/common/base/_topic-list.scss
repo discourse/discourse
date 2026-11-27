@@ -17,19 +17,6 @@
   border-radius: var(--d-border-radius);
 }
 
-.category-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  margin-bottom: var(--space-3);
-  color: var(--primary-medium);
-
-  &:hover,
-  &:focus-visible {
-    color: var(--primary-high);
-  }
-}
-
 .category-heading {
   max-width: 100%;
 

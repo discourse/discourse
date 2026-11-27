@@ -12,7 +12,6 @@ sr:
         preview_archive: Arhiviraj
         save: Sačuvaj
         about_tab: O nama
-        general_heading: Opšti
         settings_tab: Podešavanje
         column_name: Ime foruma
         column_category: Kategorija
@@ -30,6 +29,7 @@ sr:
         change:
           title: naslov
           tags: tagovi
+        settings_button: Podešavanje
       review:
         create: Napravi link
         copy: Kopija

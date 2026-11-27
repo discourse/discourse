@@ -293,6 +293,38 @@ RSpec.describe Auth::ManagedAuthenticator do
       end
     end
 
+    describe "when the matched user is suspended" do
+      fab!(:user)
+      let!(:associated) do
+        UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
+      end
+
+      before { user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now) }
+
+      it "does not download or select the provider avatar" do
+        SiteSetting.auth_overrides_avatar = true
+
+        expect {
+          authenticator.after_authenticate(
+            hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
+          )
+        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+
+        expect(user.user_avatar&.selected_user_associated_account_id).to be_nil
+      end
+
+      it "stores the provider data without importing the profile" do
+        authenticator.after_authenticate(
+          hash.deep_merge(info: { description: "New bio", location: "New location" }),
+        )
+
+        expect(associated.reload.info["description"]).to eq("New bio")
+        user.user_profile.reload
+        expect(user.user_profile.bio_raw).to be_nil
+        expect(user.user_profile.location).to be_nil
+      end
+    end
+
     describe "avatar on create" do
       fab!(:user)
       let!(:association) do

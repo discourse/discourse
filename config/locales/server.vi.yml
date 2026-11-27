@@ -221,7 +221,6 @@ vi:
       s3_backup_requires_s3_settings: "Bạn không thể sử dụng S3 làm vị trí sao lưu trừ khi bạn đã cung cấp '%{setting_name}'."
       share_quote_facebook_requirements: "Bạn phải đặt id ứng dụng Facebook để bật tính năng chia sẻ báo giá cho Facebook."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Bạn không thể thực thi 2FA nếu DiscourseConnect được bật."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Bạn không thể tắt đăng nhập cục bộ nếu 2FA được thực thi. Tắt 2FA được thực thi trước khi tắt đăng nhập cục bộ."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Bạn không thể bật tải lên S3 vì tải lên S3 đã được bật trên toàn cầu và việc bật cấp trang web này có thể gây ra các vấn đề nghiêm trọng với tải lên"
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
@@ -2131,6 +2130,8 @@ vi:
     post_approved:
       title: "Tút của bạn đã được phê duyệt"
       subject_template: "[%{site_name}] Tút của bạn đã được phê duyệt"
+  page_forbidden:
+    page_title: "Bạn không thể xem được"
   page_not_found:
     page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."

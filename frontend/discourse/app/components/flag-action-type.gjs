@@ -69,9 +69,10 @@ export default class FlagActionType extends Component {
   }
 
   get description() {
-    return this.site.mobileView
-      ? this.args.flag?.short_description
-      : this.args.flag?.description;
+    const flag = this.args.flag;
+    return this.site.mobileView && flag?.short_description
+      ? flag.short_description
+      : flag?.description;
   }
 
   get customMessageLengthClasses() {

@@ -255,7 +255,7 @@ small {
 
 blockquote {
   background: var(--d-post-aside-background);
-  border-left: var(--d-post-aside-border-left);
+  border-inline-start: var(--d-post-aside-border-left);
 
   @include viewport.until(sm) {
     clear: both;
@@ -441,7 +441,8 @@ input[type="search"] {
 ::-webkit-datetime-edit-text,
 ::-webkit-datetime-edit-month-field,
 ::-webkit-datetime-edit-day-field,
-::-webkit-datetime-edit-year-field {
+::-webkit-datetime-edit-year-field,
+::-webkit-calendar-picker-indicator {
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -1176,6 +1177,14 @@ body.has-sidebar-page {
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 var(--d-main-content-gap);
+
+    @media print {
+      grid-template-areas:
+        "content"
+        "below-content";
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 0;
+    }
 
     @include viewport.until(lg) {
       --d-main-content-gap: var(--space-4);

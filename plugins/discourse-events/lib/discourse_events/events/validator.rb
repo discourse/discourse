@@ -96,10 +96,17 @@ module DiscourseEvents
           end
         end
 
-        max_attendees_limit = SiteSetting.discourse_post_event_max_attendees_limit
-        if extracted_event[:"max-attendees"].present? &&
-             !extracted_event[:"max-attendees"].to_i.between?(1, max_attendees_limit)
-          add_error("invalid_max_attendees", maximum: max_attendees_limit)
+        # Limits are only enforced on changed values, so events saved before a limit
+        # existed (or before it was lowered) can still have their post edited.
+        if extracted_event[:"max-attendees"].present?
+          max_attendees = extracted_event[:"max-attendees"].to_i
+          max_attendees_limit = SiteSetting.discourse_post_event_max_attendees_limit
+          over_limit =
+            max_attendees > max_attendees_limit && max_attendees != @post.event&.max_attendees
+
+          if max_attendees < 1 || over_limit
+            add_error("invalid_max_attendees", maximum: max_attendees_limit)
+          end
         end
 
         if extracted_event[:"recurrence-until"].present? &&
@@ -115,10 +122,13 @@ module DiscourseEvents
             add_error("invalid_reminders", reminders: invalid_reminders.join(", "))
           end
 
-          reminder_counts = valid_reminders.map { |r| Event.reminder_type(r) }.tally
-          Event::MAX_REMINDERS_PER_TYPE.each do |type, maximum|
-            if reminder_counts.fetch(type, 0) > maximum
-              add_error("too_many_reminders.#{type.underscore}", count: maximum)
+          # Reminder limits are also only re-evaluated and enforced on changed values.
+          if extracted_event[:reminders] != @post.event&.reminders
+            reminder_counts = valid_reminders.map { |reminder| Event.reminder_type(reminder) }.tally
+            Event::MAX_REMINDERS_PER_TYPE.each do |type, maximum|
+              if reminder_counts.fetch(type, 0) > maximum
+                add_error("too_many_reminders.#{type.underscore}", count: maximum)
+              end
             end
           end
         end

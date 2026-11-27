@@ -2041,9 +2041,6 @@ ur:
         show_key_description: "دستی طور پر درج کریں"
         short_description: |
           اپنے اکاؤنٹ کو ایک بار استعمال کرنے والے سیکیورٹی کوڈز یا فزیکل سیکیورٹی کیز کے ساتھ محفوظ کریں۔
-        extended_description: |
-          دو عنصری توثیق آپ کے اکاؤنٹ میں آپ کے پاس ورڈ کے علاوہ ون ٹائم ٹوکن کی ضرورت کے ذریعے اضافی سیکیورٹی کا اضافہ کرتی ہے۔ ٹوکنز <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> اور <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> آلات پر بنائے جا سکتے ہیں۔
-        oauth_enabled_warning: "براہ کرم نوٹ کریں کہ آپ کے اکاؤنٹ پر دو عنصری تصدیق کے فعال ہونے کے بعد سوشل لاگ ان کو غیر فعال کر دیا جائے گا۔"
         use: "تصدیق کنندہ ایپ استعمال کریں"
         enforced_with_oauth_notice: "آپ کو دو عنصری توثیق کو فعال کرنے کی ضرورت ہے۔ آپ کو صرف پاس ورڈ کے ساتھ لاگ ان ہونے پر اسے استعمال کرنے کے لیے کہا جائے گا، نہ کہ بیرونی تصدیق یا سماجی لاگ ان کے طریقوں سے۔"
         enforced_notice: "اس سائٹ تک رسائی سے پہلے آپ کو دو عنصری تصدیق کو فعال کرنے کی ضرورت ہے۔"
@@ -2921,7 +2918,6 @@ ur:
       not_allowed_from_ip_address: "آپ اس IP سے لاگ ان نہیں ہوسکتے ہیں۔"
       admin_not_allowed_from_ip_address: "آپ ایڈمن کے طور پر اِس آئی پی ایڈریس سے لاگ اِن نہیں ہو سکتے۔"
       resend_activation_email: "دوبارہ ایکٹیویشن ای میل بھیجنے کے لئے یہاں کلک کریں۔"
-      omniauth_disallow_totp: "آپ کے اکاؤنٹ میں دو عنصری توثیق فعال ہے۔ براہ کرم اپنے پاس ورڈ کے ساتھ لاگ ان کریں۔"
       works_with: "ساتھ کام کرتا ہے"
       activate_account: "اکاؤنٹ فعال کریں"
       resend_title: "ایکٹیویشن اِیمیل دوبارہ بھیجییں"
@@ -4241,7 +4237,7 @@ ur:
         back_description: "اپنے آخری بغیر پڑھے دھاگے پر واپس جائیں"
         replies_short: "%{current}/ %{total}"
       progress:
-        title: موضوع کی پیش رَفت
+        title: "موضوع کی پیش رَفت"
         jump_prompt: "پر جائیں۔۔۔"
         jump_prompt_of:
           one: "کا %{count} دھاگہ"

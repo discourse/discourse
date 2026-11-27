@@ -85,6 +85,30 @@ acceptance("Blog admin with one blog", function (needs) {
       .doesNotExist("the main blog is always published");
   });
 
+  test("offers to set up a blog that has not been named yet", async function (assert) {
+    pretender.get("/admin/plugins/blog/blogs.json", () =>
+      response({ blogs: [blog], can_add_blog: true, needs_setup: true })
+    );
+
+    await visit("/admin/plugins/blog/blogs");
+
+    assert
+      .dom(".blog-blogs .empty-state__title")
+      .includesText("let's set up your blog", "the admin is greeted");
+    assert.dom(".blog-blogs__table").doesNotExist("in place of the list");
+    assert
+      .dom(".blog-blogs .d-page-subheader")
+      .doesNotExist("and without Add blog");
+
+    await click(".blog-blogs .empty-state__cta .btn-primary");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/blogs/1/about",
+      "the button opens the blog's About tab"
+    );
+  });
+
   test("keeps the old identity link working", async function (assert) {
     await visit("/admin/plugins/blog/identity");
 

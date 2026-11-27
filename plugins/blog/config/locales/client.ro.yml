@@ -16,7 +16,6 @@ ro:
         mobile: Mobil
         save: Salvează
         about_tab: Despre
-        general_heading: General
         settings_tab: Setări
         theme_tab: Temă
         column_name: Nume
@@ -41,6 +40,7 @@ ro:
           title: titlu
           body: corp
           tags: etichete
+        settings_button: Setări
       review:
         create: Creează legătură
         copy: Copiază
@@ -62,4 +62,6 @@ ro:
       drafts: Ciorne
       pages: Pagini
       preview: Previzualizează
+      article_settings:
+        kind_page: Pagină
       appearance_link: Aspect

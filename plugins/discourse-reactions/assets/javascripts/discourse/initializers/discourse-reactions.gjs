@@ -68,8 +68,7 @@ function initializeDiscourseReactions(api) {
           const result = super.collection;
 
           if (
-            this.args.setting.setting ===
-            "discourse_reactions_enabled_reactions"
+            this.args.settingName === "discourse_reactions_enabled_reactions"
           ) {
             const hasDefaultValue = this.args.values.includes(
               this.siteSettings.discourse_reactions_reaction_for_like

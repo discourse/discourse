@@ -670,9 +670,31 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       expect(response.body).not_to include("Translation missing")
       expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css(".llm-name").text.strip).to eq(shared_conversation.llm_name)
+      expect(html.at_css(".post__model").text).to eq("Claude-2")
+    end
+
+    it "hides model labels on shared conversations when disabled" do
+      SiteSetting.ai_bot_show_model_name = false
+
+      get "#{path}/#{shared_conversation.share_key}"
+
+      expect(response).to have_http_status(:success)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.css(".llm-name, .post__model")).to be_empty
+      expect(html.at_css(".post__agent").text).to eq(agent.name)
+      expect(html.at_css('meta[property="og:description"]')["content"]).to eq(
+        "AI conversation with #{agent.name}:\n #{shared_conversation.excerpt}",
+      )
+      expect(html.at_css('meta[name="twitter:description"]')["content"]).to eq(
+        "AI conversation with #{agent.name}:\n #{shared_conversation.excerpt}",
+      )
     end
 
     it "is also able to render in json format" do
+      SiteSetting.ai_bot_show_model_name = false
+
       get "#{path}/#{shared_conversation.share_key}.json"
       expect(response.parsed_body["llm_name"]).to eq("Claude-2")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")

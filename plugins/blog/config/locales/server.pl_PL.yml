@@ -13,7 +13,7 @@ pl_PL:
   site_settings:
     blog_custom_themes_enabled: Zezwól witrynie na tworzenie, dostosowywanie i importowanie szablonów blogów. Gdy ta opcja jest wyłączona, blogi korzystają z wbudowanych szablonów.
     blog_max_instances: Największa liczba blogów, jaką ta strona może mieć.
-    blog_custom_domains_enabled: Zezwól na serwowanie bloga z jego własnej domeny, a nie z adresu społeczności.
+    blog_custom_domains_enabled: Zezwól na udostępnianie bloga z własnej domeny zamiast z adresu społeczności.
     blog_role_groups_enabled: Pozwól witrynie wybrać, które grupy mają role autora bloga, redaktora i wydawcy. Gdy ta opcja jest wyłączona, role te ma tylko personel.
     blog_contributor_groups: Grupy, które mogą pisać i przesyłać własne wersje robocze bloga. Grupy te widzą kategorię „prywatne szkice”. Nie daje to uprawnień pracownikom forum.
     blog_editor_groups: Grupy, które mogą edytować i przesyłać dowolne szkice bloga, które widzą. Grupy te widzą kategorię szkiców prywatnych. Publikacja wymaga roli publikującego.
@@ -120,7 +120,7 @@ pl_PL:
       blog_slug_in_use: Ten slug jest już zajęty na innym blogu. Wybierz inny.
       blog_slug_reserved: Ten adres jest używany przez samego bloga. Wybierz inny.
       blog_slug_taken: Artykuł na blogu głównym zaczyna się już od tego adresu. Wybierz inny.
-      blog_url_unavailable: Blogi nie mogą używać na tej stronie własnych domen.
+      blog_url_unavailable: W tej witrynie nie ma możliwości korzystania z domen własnych.
       blog_url_forum_host: Domena bloga musi różnić się od domeny społeczności.
       category_name_taken: "Kategoria o nazwie „%{name}” już istnieje, więc blog nie może utworzyć własnej. Wybierz publiczną kategorię bloga w ustawieniach bloga."
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.

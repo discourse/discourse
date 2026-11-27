@@ -12,7 +12,6 @@ id:
         preview_archive: Arsip
         save: Simpan
         about_tab: Tentang
-        general_heading: Umum
         settings_tab: Pengaturan
         theme_tab: Tema
         column_name: Nama
@@ -31,6 +30,7 @@ id:
           title: judul
           body: konten
           tags: label
+        settings_button: Pengaturan
       review:
         copy: Salin
         open: Buka

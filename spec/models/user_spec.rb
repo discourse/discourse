@@ -3191,6 +3191,18 @@ RSpec.describe User do
       expect(messages.size).to eq(1)
     end
 
+    it "omits the last notification when the user can no longer see its topic" do
+      notification = Fabricate(:notification, user:)
+      notification.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
+
+      expect(message.data[:last_notification]).to be_nil
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
@@ -3257,6 +3269,33 @@ RSpec.describe User do
 
       expect(message.data[:unread_notifications]).to eq(1)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
+    end
+
+    it "does not publish a reviewable mention the user can no longer access" do
+      SiteSetting.enable_mentions = true
+      moderator = Fabricate(:moderator, last_seen_at: Time.zone.now)
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(
+        reviewable:,
+        user: Fabricate(:admin),
+        content: "@#{moderator.username}",
+      )
+      mention = moderator.notifications.find_by!(notification_type: Notification.types[:mentioned])
+
+      publish_last_notification = -> do
+        MessageBus
+          .track_publish("/notification/#{moderator.id}") { moderator.publish_notifications_state }
+          .first
+          .data[
+          :last_notification
+        ]
+      end
+
+      expect(publish_last_notification.call[:notification][:id]).to eq(mention.id)
+
+      reviewable.update!(reviewable_by_moderator: false)
+
+      expect(publish_last_notification.call).to be_nil
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do

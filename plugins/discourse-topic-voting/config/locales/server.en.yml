@@ -67,3 +67,7 @@ en:
       name: "Visionary"
       description: "Receive 25 votes on your topic"
       long_description: "This badge is granted for receiving 25 votes on one of your topics. :white_check_mark: Give the people what they want! :clap:"
+  mcp:
+    oauth:
+      scopes:
+        discourse_topic_voting_write: "Vote on topics"

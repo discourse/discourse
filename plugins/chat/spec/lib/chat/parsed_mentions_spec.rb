@@ -134,6 +134,18 @@ RSpec.describe Chat::ParsedMentions do
     end
   end
 
+  describe "#count" do
+    it "counts each user or group once" do
+      group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      message =
+        create_message(
+          "@#{channel_member_1.username} @#{channel_member_1.username.upcase} @#{channel_member_2.username} @#{group.name} @#{group.name} @here @here",
+        )
+
+      expect(described_class.new(message).count).to eq(4)
+    end
+  end
+
   describe "#direct_mentions" do
     it "returns users who were mentioned directly" do
       message =

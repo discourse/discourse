@@ -658,6 +658,18 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
+  @include viewport.until(sm) {
+    &.private-message .with-tags {
+      .title-and-category {
+        flex-wrap: wrap;
+      }
+
+      .tags-input {
+        max-width: 100%;
+      }
+    }
+  }
+
   @include viewport.from(sm) {
     &.private-message {
       .with-tags {

@@ -1913,9 +1913,6 @@ hu:
         show_key_description: "Kézi beírás"
         short_description: |
           Védje fiókját egyszer használatos biztonsági kódokkal vagy fizikai biztonsági kulcsokkal.
-        extended_description: |
-          A kétfaktoros hitelesítés további biztonságot nyújt a fiókja számára, mert a jelszaván kívül még egy egyszer használatos token beírását is igényli. A tokenek <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>androidos</a> és <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-es</a> eszközökön egyaránt előállíthatók.
-        oauth_enabled_warning: "Felhívjuk figyelmét, hogy a közösségi bejelentkezések letiltásra kerülnek, ha a fiókjában engedélyezi a kétfaktoros hitelesítést."
         use: "Hitelesítő alkalmazás használata"
         enforced_with_oauth_notice: "Engedélyeznie kell a kétfaktoros hitelesítést. Ezt csak jelszóval történő bejelentkezéskor kell használnia, külső hitelesítési vagy közösségi bejelentkezési módszereknél nem."
         enforced_notice: "A webhely elérése előtt engedélyeznie kell a kétfaktoros hitelesítést."
@@ -2737,7 +2734,6 @@ hu:
       not_allowed_from_ip_address: "Nem jelentkezhet be erről az IP-címről."
       admin_not_allowed_from_ip_address: "Nem léphet be erről az IP-címről adminisztrátorként."
       resend_activation_email: "Kattintson ide az aktiváló e-mail újraküldéséhez."
-      omniauth_disallow_totp: "A fiókjában engedélyezve van a kétfaktoros hitelesítés. Jelentkezzen be a jelszavával."
       works_with: "Működik vele"
       activate_account: "Fiók aktiválása"
       resend_title: "Aktiváló e-mail újraküldése"
@@ -3821,7 +3817,7 @@ hu:
         back_description: "Vissza az utolsó olvasatlan bejegyzéshez"
         replies_short: "%{current} / %{total}"
       progress:
-        title: téma állapota
+        title: "téma állapota"
         jump_prompt: "ugrás…"
         jump_prompt_of:
           one: "a %{count} bejegyzésből"

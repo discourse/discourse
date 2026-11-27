@@ -27,7 +27,8 @@ class SessionController < ApplicationController
                                   :forgot_password,
                                   :redeem_password_reset_code,
                                   :create_login_code,
-                                  :verify_login_code
+                                  :verify_login_code,
+                                  :second_factor_auth_perform
 
   # Every SessionController action is part of auth. An archived site permits
   # all of them so existing users can log in, log out, and reset passwords.
@@ -46,6 +47,7 @@ class SessionController < ApplicationController
   GENERATED_USERNAME_SIGNUP_KEY_PREFIX = "login-code-generated-username-"
   GENERATED_USERNAME_SIGNUP_INDEX_KEY = "login-code-generated-username-ids"
   GENERATED_USERNAME_ATTEMPTS = 5
+  SSO_PROVIDER_2FA_CONFIRMED_KEY = "sso_provider_2fa_confirmed"
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -77,9 +79,27 @@ class SessionController < ApplicationController
       raise Discourse::InvalidAccess
     end
 
+    if current_user && !confirmed_2fa_during_login && params[:second_factor_nonce].blank?
+      token_id = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]&.id
+      if token_id
+        stored = server_session[SSO_PROVIDER_2FA_CONFIRMED_KEY]
+        expected = { user_id: current_user.id, token_id:, payload: payload || request.query_string }
+        if stored == expected &&
+             server_session.compare_and_set(
+               SSO_PROVIDER_2FA_CONFIRMED_KEY,
+               expected: stored,
+               replacement: nil,
+             )
+          confirmed_2fa_during_login = true
+        end
+      end
+    end
+
     result =
       run_second_factor!(
         SecondFactor::Actions::DiscourseConnectProvider,
+        # A provider request resumed by login starts its own action.
+        nonce: payload ? nil : params[:second_factor_nonce].presence,
         action_data: {
           payload: payload,
           confirmed_2fa_during_login: confirmed_2fa_during_login,
@@ -472,7 +492,7 @@ class SessionController < ApplicationController
       response = { can_login: true, token: token, token_email: matched_token.email }
 
       matched_user = matched_token.user
-      if matched_user&.totp_enabled?
+      if matched_user&.totp_or_backup_codes_enabled?
         response.merge!(
           second_factor_required: true,
           backup_codes_enabled: matched_user&.backup_codes_enabled?,
@@ -568,19 +588,30 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
+    user = one_time_password_user
+    @otp_username = user&.username
 
-    if otp_username && user = User.find_by_username(otp_username)
-      if current_user&.username == otp_username
+    if user
+      if current_user&.id == user.id
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
         if payload = login_error_check(user)
           @error = payload[:error]
         else
-          log_on_user(user, replay_anonymous_action: true)
-          Discourse.redis.del "otp_#{params[:token]}"
-          return redirect_to path("/")
+          # Re-check the token under the credential lock so a password change
+          # cannot commit between the check and the new session being created.
+          logged_in =
+            user.with_credential_lock do
+              next false if one_time_password_user != user
+
+              log_on_user(user, replay_anonymous_action: true)
+              Discourse.redis.del "otp_#{params[:token]}"
+              true
+            end
+          return redirect_to path("/") if logged_in
+
+          @error = I18n.t("user_api_key.invalid_token")
         end
       else
         # Display the form
@@ -603,7 +634,8 @@ class SessionController < ApplicationController
         SecondFactor::AuthManager.find_second_factor_challenge(
           nonce: nonce,
           server_session:,
-          target_user: current_user,
+          request:,
+          current_user:,
         )
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
@@ -618,7 +650,9 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      passkeys_for_2fa = user.passkeys_available_as_second_factor?
+      passkeys_for_2fa =
+        challenge[:allowed_methods].include?(UserSecondFactor.methods[:passkey]) &&
+          user.passkeys_available_as_second_factor?
       if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
         json.merge!(
@@ -651,67 +685,42 @@ class SessionController < ApplicationController
 
   def second_factor_auth_perform
     nonce = params.require(:nonce)
-    challenge = nil
-    error_key = nil
-    user = nil
-    status_code = 200
-    begin
-      challenge =
-        SecondFactor::AuthManager.find_second_factor_challenge(
-          nonce: nonce,
-          server_session:,
-          target_user: current_user,
-        )
-      user = User.find(challenge[:target_user_id])
-    rescue SecondFactor::BadChallenge => exception
-      error_key = exception.error_translation_key
-      status_code = exception.status_code
+    challenge =
+      SecondFactor::AuthManager.find_second_factor_challenge(
+        nonce:,
+        server_session:,
+        request:,
+        current_user:,
+      )
+    user = User.find(challenge.fetch(:target_user_id))
+    if @staff_writes_only_mode && !current_user&.staff?
+      unless user.staff? && challenge[:action] == SecondFactor::Actions::Login.name
+        raise Discourse::ReadOnly
+      end
     end
 
-    if error_key
-      json =
-        failed_json.merge(
-          ok: false,
-          error: I18n.t(error_key),
-          reason: "challenge_not_found_or_expired",
-        )
-      render json: failed_json.merge(json), status: status_code
-      return
-    end
-
-    # no proper error messages for these cases because the only way they can
-    # happen is if someone is messing with us.
-    # the first one can only happen if someone disables a 2FA method after
-    # they're redirected to the 2fa page and then uses the same method they've
-    # disabled.
     second_factor_method = params[:second_factor_method].to_i
-    if !user.valid_second_factor_method_for_user?(second_factor_method)
-      raise Discourse::InvalidAccess.new
-    end
-    # and this happens if someone tries to use a 2FA method that's not accepted
-    # for the action they're trying to perform. e.g. using backup codes to
-    # grant someone admin status.
-    if !challenge[:allowed_methods].include?(second_factor_method)
-      raise Discourse::InvalidAccess.new
+    raise Discourse::InvalidAccess if challenge[:allowed_methods].exclude?(second_factor_method)
+    unless user.valid_second_factor_method_for_user?(second_factor_method)
+      raise Discourse::InvalidAccess
     end
 
     if !challenge[:successful]
       rate_limit_second_factor!(user)
       second_factor_auth_result = user.authenticate_second_factor(params, server_session)
-      if second_factor_auth_result.ok
-        challenge[:successful] = true
-        challenge[:generated_at] += 1.minute.to_i
-        server_session["current_second_factor_auth_challenge"] = challenge.to_json
-      else
-        error_json =
-          second_factor_auth_result
-            .to_h
-            .deep_symbolize_keys
-            .slice(:ok, :error, :reason)
-            .merge(failed_json)
-        render json: error_json, status: :bad_request
-        return
+      unless second_factor_auth_result.ok
+        error = second_factor_auth_result.to_h.slice(:ok, :error, :reason)
+        return render json: failed_json.merge(error), status: :bad_request
       end
+      # A no-factor login also returns OK. It isn't proof for a pending challenge.
+      unless second_factor_auth_result.used_2fa_method == second_factor_method
+        raise Discourse::InvalidAccess
+      end
+      SecondFactor::AuthManager.mark_challenge_successful!(
+        challenge,
+        server_session:,
+        used_2fa_method: second_factor_auth_result.used_2fa_method,
+      )
     end
     render json: {
              ok: true,
@@ -720,6 +729,14 @@ class SessionController < ApplicationController
              redirect_url: challenge[:redirect_url],
            },
            status: :ok
+  rescue SecondFactor::BadChallenge => error
+    render json:
+             failed_json.merge(
+               ok: false,
+               error: I18n.t(error.error_translation_key),
+               reason: "challenge_not_found_or_expired",
+             ),
+           status: error.status_code
   end
 
   def forgot_password
@@ -731,6 +748,12 @@ class SessionController < ApplicationController
 
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(
+      nil,
+      "forgot-password-param-day-#{normalized_login_param}",
+      FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+      1.day,
+    ).performed!
 
     user =
       if SiteSetting.hide_email_address_taken && !current_user&.staff?
@@ -746,12 +769,6 @@ class SessionController < ApplicationController
       raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
       enqueue_password_reset_for_user(user)
     else
-      RateLimiter.new(
-        nil,
-        "forgot-password-login-hour-#{normalized_login_param}",
-        5,
-        1.hour,
-      ).performed!
       server_session.delete(:password_reset_code)
     end
 
@@ -892,6 +909,16 @@ class SessionController < ApplicationController
 
   private
 
+  def one_time_password_user
+    payload = JSON.parse(Discourse.redis.get("otp_#{params[:token]}").to_s)
+    return if !payload.is_a?(Hash)
+
+    user = User.find_by(id: payload["user_id"])
+    user if user&.one_time_password_payload_valid?(payload)
+  rescue JSON::ParserError
+    nil
+  end
+
   def connect_verbose_warn(&blk)
     Rails.logger.warn(blk.call) if SiteSetting.verbose_discourse_connect_logging
   end
@@ -969,8 +996,7 @@ class SessionController < ApplicationController
     # is what actually surfaces the 503 archive response.
     raise Discourse::SiteArchived if SiteSetting.site_archived && matched_user.nil?
 
-    if matched_user &&
-         (matched_user.totp_or_backup_codes_enabled? || matched_user.security_keys_enabled?)
+    if matched_user&.requires_second_factor_for_login?
       if missing_second_factor_params?
         return render json: login_code_second_factor_info(matched_user)
       end
@@ -1633,12 +1659,19 @@ class SessionController < ApplicationController
   end
 
   def enqueue_password_reset_for_user(user)
-    RateLimiter.new(
-      nil,
-      "forgot-password-login-day-#{user.username}",
-      FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
-      1.day,
-    ).performed!
+    limited =
+      RateLimiter.new(
+        nil,
+        "forgot-password-login-day-#{user.username}",
+        FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+        1.day,
+      ).performed!(raise_error: !SiteSetting.hide_email_address_taken || current_user&.staff?) ==
+        false
+
+    if limited
+      server_session.delete(:password_reset_code)
+      return
+    end
 
     if password_reset_via_code?(user)
       user

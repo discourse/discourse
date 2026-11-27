@@ -246,7 +246,6 @@ module DiscourseAi
                 "ai_artifacts.id",
                 "ai_artifacts.name",
                 "posts.topic_id",
-                "posts.id",
                 "ai_artifacts.metadata",
               )
               .index_by(&:first)
@@ -269,11 +268,8 @@ module DiscourseAi
                   embed_url: AiArtifact.embed_url(artifact_id, version),
                   available:
                     SiteSetting.ai_artifact_security.in?(%w[lax hybrid strict]) &&
-                      SiteSetting.discourse_ai_enabled && artifact[4]&.dig("public") == true &&
-                      posts_by_id.key?(artifact[3]) &&
-                      conversation.context.any? do |context_post|
-                        context_post["id"] == artifact[3]
-                      end,
+                      SiteSetting.discourse_ai_enabled && artifact[3]&.dig("public") == true &&
+                      conversation.publishes_artifact?(artifact_id),
                   artifact_id: artifact_id,
                   artifact_version: version,
                   share_key: conversation.share_key,

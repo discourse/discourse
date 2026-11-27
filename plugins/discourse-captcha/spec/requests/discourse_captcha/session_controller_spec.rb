@@ -1,6 +1,212 @@
 # frozen_string_literal: true
 
 RSpec.describe SessionController do
+  describe "#create_login_code" do
+    fab!(:existing_user, :user)
+
+    let(:email) { "new.person@example.com" }
+
+    before do
+      Jobs.run_immediately!
+      SiteSetting.enable_local_logins_via_email = true
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.discourse_captcha_enabled = true
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::HCAPTCHA
+      SiteSetting.hcaptcha_site_key = "site-key"
+      SiteSetting.hcaptcha_secret_key = "secret-key"
+    end
+
+    def honeypot_magic(params)
+      get "/session/hp.json"
+      json = response.parsed_body
+      params.merge(password_confirmation: json["value"], challenge: json["challenge"].reverse)
+    end
+
+    def solve_captcha
+      post "/captcha/hcaptcha/create.json", params: { token: "captcha-token" }
+    end
+
+    def emailed_code
+      ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
+    end
+
+    def stub_captcha_verification
+      stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+        body: {
+          secret: SiteSetting.hcaptcha_secret_key,
+          response: "captcha-token",
+        },
+      ).to_return(status: 200, body: '{"success":true}')
+    end
+
+    it "does not email a code without completing CAPTCHA" do
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(EmailLoginCode.for_email(email).count).to eq(0)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it "challenges existing accounts too, so the response does not reveal them" do
+      post "/session/login-code.json", params: honeypot_magic(email: existing_user.email)
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(EmailLoginCode.for_email(existing_user.email).count).to eq(0)
+    end
+
+    it "emails a code after the CAPTCHA provider verifies the challenge" do
+      stub_captcha_verification
+      solve_captcha
+
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(EmailLoginCode.for_email(email).count).to eq(1)
+    end
+
+    it "does not email a code when the CAPTCHA provider rejects the challenge" do
+      stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).to_return(
+        status: 200,
+        body: '{"success":false}',
+      )
+      solve_captcha
+
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(EmailLoginCode.for_email(email).count).to eq(0)
+    end
+
+    it "lets the same session resend a code to the same address without another challenge" do
+      verification_request = stub_captcha_verification
+      solve_captcha
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(verification_request).to have_been_requested.once
+    end
+
+    it "challenges again before emailing a different address" do
+      stub_captcha_verification
+      solve_captcha
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      post "/session/login-code.json", params: honeypot_magic(email: "someone.else@example.com")
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(EmailLoginCode.for_email("someone.else@example.com").count).to eq(0)
+    end
+
+    it "does not challenge invitations" do
+      invite = Fabricate(:invite, email: "invited@example.com")
+
+      post "/session/login-code.json",
+           params: honeypot_magic(email: invite.email, invite_key: invite.invite_key)
+
+      expect(response.parsed_body["error"]).to be_nil
+      expect(EmailLoginCode.for_email(invite.email).count).to eq(1)
+    end
+
+    it "does not challenge when CAPTCHA is disabled" do
+      SiteSetting.discourse_captcha_enabled = false
+
+      post "/session/login-code.json", params: honeypot_magic(email:)
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(EmailLoginCode.for_email(email).count).to eq(1)
+    end
+
+    it "creates the account without a second challenge" do
+      verification_request = stub_captcha_verification
+      solve_captcha
+      post "/session/login-code.json", params: honeypot_magic(email:)
+      code = emailed_code
+
+      expect {
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code:,
+               username: "chosen_username",
+             }
+      }.to change(User, :count).by(1)
+
+      expect(response.parsed_body["account_created"]).to eq(true)
+      expect(verification_request).to have_been_requested.once
+    end
+
+    it "creates an approval account without a second challenge" do
+      SiteSetting.must_approve_users = true
+      verification_request = stub_captcha_verification
+      solve_captcha
+      post "/session/login-code.json", params: honeypot_magic(email:)
+      code = emailed_code
+
+      post "/session/login-code/verify.json", params: { email:, code: }
+      signup_token = response.parsed_body["signup_token"]
+
+      expect {
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "approval-person",
+             }
+      }.to change(User, :count).by(1)
+
+      expect(response.parsed_body).to eq("pending_approval" => true)
+      expect(verification_request).to have_been_requested.once
+    end
+
+    context "when using reCAPTCHA v3" do
+      before do
+        SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+        SiteSetting.recaptcha_v3_site_key = "site-key"
+        SiteSetting.recaptcha_v3_secret_key = "secret-key"
+        stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "captcha-token"),
+        ).to_return(status: 200, body: '{"success":true,"score":0.9,"action":"signup"}')
+      end
+
+      it "stores the score from the code request on the account it creates" do
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code.json", params: honeypot_magic(email:)
+        code = emailed_code
+
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code:,
+               username: "chosen_username",
+             }
+
+        expect(
+          User.find_by_email(email).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to eq("0.9")
+      end
+
+      it "stores the score from the code request on an approval account" do
+        SiteSetting.must_approve_users = true
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code.json", params: honeypot_magic(email:)
+        code = emailed_code
+
+        post "/session/login-code/verify.json", params: { email:, code: }
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token: response.parsed_body["signup_token"],
+               username: "approval-person",
+             }
+
+        expect(
+          User.find_by_email(email).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to eq("0.9")
+      end
+    end
+  end
+
   describe "#verify_login_code" do
     fab!(:existing_user, :user)
 

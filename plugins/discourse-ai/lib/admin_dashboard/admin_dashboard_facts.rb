@@ -16,10 +16,8 @@ module DiscourseAi
     #   }
     class AdminDashboardFacts
       BROWSER_REQ_TYPES = %i[
-        page_view_anon_browser
-        page_view_anon_browser_mobile
-        page_view_logged_in_browser
-        page_view_logged_in_browser_mobile
+        page_view_anon_browser_beacon
+        page_view_logged_in_browser_beacon
       ].freeze
 
       MAX_SIGNALS = 6

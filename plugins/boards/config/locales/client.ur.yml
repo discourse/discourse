@@ -49,6 +49,8 @@ ur:
           column_title: "عنوان"
           icon: "آئیکن"
           color: "رنگ"
+          color_palette: "رنگوں کا مجموعہ"
+          icon_search_placeholder: "تلاش۔۔۔"
           default_sort_priority: "ترجیح"
           tag: "ٹیگ"
           move_to_assigned_unassign: "غیر اسائین کریں"

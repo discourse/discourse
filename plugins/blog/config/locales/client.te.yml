@@ -15,7 +15,6 @@ te:
         save: సేవ్ చేయండి
         about_tab: మా సంఘం గురించి
         blog_slug: స్లగ్
-        general_heading: సాధారణ
         settings_tab: అమరికలు
         theme_tab: థీమ్
         column_name: పేరు
@@ -40,6 +39,7 @@ te:
           title: శీర్షిక
           body: బాడీ
           tags: ట్యాగులు
+        settings_button: అమరికలు
       review:
         copy: నకలు
         status:

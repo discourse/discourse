@@ -88,45 +88,6 @@ module("Unit | Lib | setting-field-registry", function () {
         GroupControl
       );
     });
-
-    test("the converted types are admin-ready, the fallback never is", function (assert) {
-      for (const type of [
-        "string",
-        "float",
-        "username",
-        "email",
-        "textarea",
-        "password",
-        "enum",
-        "locale_enum",
-        "category",
-        "group",
-        "tag_list",
-        "tag_group_list",
-        "icon",
-        "group_list",
-        "category_list",
-        "compact_list",
-        "date",
-        "host_list",
-        "font_list",
-        "locale_list",
-        "topic",
-        "datetime",
-        "color",
-      ]) {
-        assert.true(
-          resolveSettingFieldType({ type }).adminReady,
-          `${type} renders with FormKit on the admin page`
-        );
-      }
-
-      assert.strictEqual(
-        resolveSettingFieldType({ type: "not_a_real_type" }).adminReady,
-        undefined,
-        "types without an explicit entry keep their legacy control instead of degrading to a bare text input"
-      );
-    });
   });
 
   module("settingFieldValidation", function () {

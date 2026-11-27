@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 
-export function preventDecimal(event) {
+function preventDecimal(event) {
   if (event.key === "." || event.key === ",") {
     event.preventDefault();
   }

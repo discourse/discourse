@@ -5,6 +5,7 @@ import type RestModel from "discourse/models/rest";
 import type Topic from "discourse/models/topic";
 import User, {
   SECOND_FACTOR_METHODS,
+  type SecondFactorManagementResponse,
   type UserCreateAttrs,
   type UserFindDetailsOptions,
   type UserGroup,
@@ -85,6 +86,7 @@ expectTypeOf(user.can_send_private_messages).toEqualTypeOf<
 expectTypeOf(user.can_invite_to_forum).toEqualTypeOf<true | undefined>();
 expectTypeOf(user.muted_category_ids).toEqualTypeOf<number[] | undefined>();
 expectTypeOf(user.ignored_users).toEqualTypeOf<string[] | undefined>();
+expectTypeOf(user.staff_only_settings).toEqualTypeOf<string[] | undefined>();
 expectTypeOf(user.dismissed_banner_key).toEqualTypeOf<
   number | null | undefined
 >();
@@ -162,6 +164,11 @@ user.setPrimaryGroup(null);
 user.setPrimaryGroup(1);
 user.save();
 user.save(["name", "title"]);
+expectTypeOf(user.requiresSecondFactor).toEqualTypeOf<boolean>();
+expectTypeOf(user.enforcedSecondFactor).toEqualTypeOf<boolean>();
+expectTypeOf(
+  user.loadSecondFactorCodes()
+).resolves.toEqualTypeOf<SecondFactorManagementResponse>();
 user.updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE);
 user.pickAvatar(1, "custom");
 

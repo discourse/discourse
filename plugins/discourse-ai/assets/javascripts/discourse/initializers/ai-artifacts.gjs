@@ -1,6 +1,18 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiArtifact from "../components/ai-artifact.gjs";
 
+const AiArtifactTemplate = <template>
+  <AiArtifact
+    @artifactHeight={{@data.artifactHeight}}
+    @artifactId={{@data.artifactId}}
+    @artifactVersion={{@data.artifactVersion}}
+    @autorun={{@data.autorun}}
+    @dataAttributes={{@data.dataAttributes}}
+    @seamless={{@data.seamless}}
+    @shareKey={{@data.shareKey}}
+  />
+</template>;
+
 function initializeAiArtifacts(api) {
   api.decorateCookedElement(
     (element, helper) => {
@@ -49,20 +61,15 @@ function initializeAiArtifacts(api) {
             }
           }
 
-          helper.renderGlimmer(
-            artifactElement,
-            <template>
-              <AiArtifact
-                @artifactHeight={{artifactHeight}}
-                @artifactId={{artifactId}}
-                @artifactVersion={{artifactVersion}}
-                @autorun={{autorun}}
-                @dataAttributes={{dataAttributes}}
-                @seamless={{seamless}}
-                @shareKey={{shareKey}}
-              />
-            </template>
-          );
+          helper.renderGlimmer(artifactElement, AiArtifactTemplate, {
+            artifactHeight,
+            artifactId,
+            artifactVersion,
+            autorun,
+            dataAttributes,
+            seamless,
+            shareKey,
+          });
         }
       );
     },

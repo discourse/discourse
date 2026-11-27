@@ -76,6 +76,11 @@ after_initialize do
     topic.blog_article_topic? ? 1 : min_length
   end
 
+  # While an article is live it is the canonical page, so its topic stays out of the forum sitemap.
+  register_modifier(:sitemap_topics_query) do |topics|
+    topics.where.not(id: Blog::Publication.publicly_visible.select(:discussion_topic_id))
+  end
+
   add_to_serializer(
     :post,
     :blog_article,
@@ -114,14 +119,17 @@ after_initialize do
     @blog_publication
   end
 
-  # "New draft" sends the blog the editor was viewing.
+  # "New draft" sends the blog the editor was viewing, and "New page" that it is a page.
   add_permitted_post_create_param(:blog_id)
+  add_permitted_post_create_param(:blog_page)
   on(:topic_created) do |topic, opts, user|
-    next if opts[:blog_id].blank? || user.nil?
+    next if user.nil?
+    next if opts[:blog_id].blank? && opts[:blog_page].blank?
     Blog::Publication::StartOnBlog.call(
       params: {
         topic_id: topic.id,
         blog_id: opts[:blog_id],
+        page: opts[:blog_page],
       },
       guardian: user.guardian,
     )

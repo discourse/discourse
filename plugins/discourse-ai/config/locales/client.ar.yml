@@ -261,11 +261,9 @@ ar:
         error: "خطأ"
         response: "الرد"
       post_image_captions:
-        edit: "تعديل تعليق الذكاء الاصطناعي على الصورة"
-        title: "تعديل تعليق الذكاء الاصطناعي على الصورة"
-        description: "التعليق"
-        save: "حفظ التعليق"
         saved: "تم حفظ تعليق الذكاء الاصطناعي على الصورة"
+        image_descriptions:
+          apply: "تطبيق"
       discourse_workflows:
         ai_agent:
           agent_id: "الوكيل"
@@ -1097,6 +1095,8 @@ ar:
           title: "إنشاء بيانات اعتماد جديدة"
       concepts:
         edit: "تعديل"
+        seed:
+          refresh: "تحديث"
         delete: "حذف"
         columns:
           status: "الحالة"
@@ -1110,6 +1110,13 @@ ar:
           description: "الوصف"
           aliases: "الأسماء المستعارة"
           status: "الحالة"
+        shared_topics_count:
+          zero: "%{count} موضوع"
+          one: "موضوع واحد"
+          two: "%{count} موضوع"
+          few: "%{count} موضوع"
+          many: "%{count} موضوع"
+          other: "%{count} موضوعًا"
         tagged_topics: "الموضوعات الموسومة"
         topic_columns:
           topic: "الموضوع"

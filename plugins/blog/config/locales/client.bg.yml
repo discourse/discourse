@@ -15,7 +15,6 @@ bg:
         save: Запази
         about_tab: Относно
         blog_slug: Slug
-        general_heading: Основни
         settings_tab: Настройки
         theme_tab: Тема
         column_name: Име
@@ -39,6 +38,7 @@ bg:
           title: заглавие
           body: тяло
           tags: етикети
+        settings_button: Настройки
       review:
         copy: Копирай
         open: Отвори

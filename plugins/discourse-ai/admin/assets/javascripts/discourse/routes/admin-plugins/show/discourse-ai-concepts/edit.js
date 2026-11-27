@@ -10,7 +10,10 @@ export default class AdminPluginsShowDiscourseAiConceptsEditRoute extends Discou
     return {
       concept: detail.ai_concept,
       topics: detail.topics || [],
+      topicsTotal: detail.topics_total ?? detail.ai_concept?.topics_count ?? 0,
       children: detail.children || [],
+      neighborConcepts: detail.neighbor_concepts || [],
+      coOccurringConcepts: detail.co_occurring_concepts || [],
       isNew: false,
     };
   }

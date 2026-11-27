@@ -51,6 +51,8 @@ ja:
           column_title: "タイトル"
           icon: "アイコン"
           color: "色"
+          color_palette: "色パレット"
+          icon_search_placeholder: "検索…"
           default_sort_priority: "優先度"
           tag: "タグ"
           move_to_assigned_unassign: "割り当て解除"

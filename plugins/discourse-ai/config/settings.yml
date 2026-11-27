@@ -441,6 +441,10 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_show_model_name:
+    default: true
+    client: true
+    area: "ai-features/bot"
   enable_ai_bot_starred_conversations:
     default: false
     hidden: true
@@ -834,7 +838,7 @@ discourse_ai:
     client: false
     area: "ai-features/inference"
   inferred_concepts_daily_posts_limit:
-    default: 30
+    default: 0
     min: 0
     max: 500
     client: false

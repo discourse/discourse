@@ -17,7 +17,6 @@ sk:
         save: Uložiť
         about_tab: O stránke
         blog_slug: Slug
-        general_heading: Všeobecné
         settings_tab: Nastavení
         theme_tab: Téma
         column_name: Meno
@@ -47,6 +46,7 @@ sk:
           title: názov
           body: telo
           tags: značky
+        settings_button: Nastavení
       review:
         create: Vytvorte odkaz
         copy: Kopírovať
@@ -69,5 +69,7 @@ sk:
       drafts: Koncepty
       pages: Stránky
       preview: Náhľad
+      article_settings:
+        kind_page: Stránka
       unpublish: Zrušenie zverejnenia
       appearance_link: Vzhľad

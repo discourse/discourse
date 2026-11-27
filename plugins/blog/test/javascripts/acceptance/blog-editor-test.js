@@ -467,6 +467,18 @@ acceptance("Blog composer", function (needs) {
     );
   });
 
+  test("starts a page from the menu", async function (assert) {
+    await visit("/blog-editor");
+    await click(".blog-dashboard__page-actions");
+    await click(".blog-dashboard__new-page");
+
+    assert.dom("#reply-control .d-editor").exists("the composer opens");
+    assert.true(
+      this.owner.lookup("service:composer").model.blogPage,
+      "the draft is created as a page"
+    );
+  });
+
   test("accepts a short title for a page", async function (assert) {
     await visit("/blog-editor");
     await click(".d-page-header__actions .btn-primary");

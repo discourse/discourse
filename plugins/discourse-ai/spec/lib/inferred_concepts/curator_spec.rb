@@ -17,6 +17,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Curator do
     SiteSetting.ai_embeddings_selected_model = vector_def.id
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
+    allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(:gen_bulk_reprensentations)
   end
 
   describe "#find_duplicate_clusters" do
@@ -52,6 +53,47 @@ RSpec.describe DiscourseAi::InferredConcepts::Curator do
 
       expect(clusters.all? { |cluster| cluster.size <= 2 }).to eq(true)
       expect(clusters.flatten).to contain_exactly(first, third)
+    end
+
+    it "clusters concepts with high topic co-occurrence even when embeddings are distant" do
+      first = Fabricate(:inferred_concept, name: "Platform Migration", status: :active)
+      second = Fabricate(:inferred_concept, name: "Forum Data Transfer", status: :active)
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      schema.store(first, base_vector, "p1")
+      schema.store(second, distant_vector, "p2")
+
+      3.times do
+        topic = Fabricate(:topic)
+        InferredConceptTopic.create!(inferred_concept: first, topic: topic)
+        InferredConceptTopic.create!(inferred_concept: second, topic: topic)
+      end
+
+      InferredConceptTopic.create!(inferred_concept: first, topic: Fabricate(:topic))
+
+      expect(curator.find_duplicate_clusters(include_co_occurrence: false)).to be_empty
+
+      clusters = curator.find_duplicate_clusters
+      expect(clusters.size).to eq(1)
+      expect(clusters.first).to contain_exactly(first, second)
+    end
+
+    it "seeds hub-anchored clusters from highest-usage concepts first" do
+      hub = Fabricate(:inferred_concept, name: "Hub Theme", status: :active)
+      spoke_a = Fabricate(:inferred_concept, name: "Spoke Alpha", status: :active)
+      spoke_b = Fabricate(:inferred_concept, name: "Spoke Beta", status: :active)
+
+      5.times { InferredConceptTopic.create!(inferred_concept: hub, topic: Fabricate(:topic)) }
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      [hub, spoke_a, spoke_b].each_with_index do |concept, idx|
+        schema.store(concept, base_vector, "h#{idx}")
+      end
+
+      clusters = curator.find_duplicate_clusters(max_cluster_size: 2, include_co_occurrence: false)
+      expect(clusters.size).to eq(1)
+      expect(clusters.first).to include(hub)
+      expect(clusters.first.size).to eq(2)
     end
   end
 
@@ -101,6 +143,157 @@ RSpec.describe DiscourseAi::InferredConcepts::Curator do
       expect(kubernetes.description).to eq("Kubernetes container orchestration")
       expect(kubernetes.topics).to contain_exactly(topic)
       expect(helm.reload.parent).to eq(kubernetes)
+    end
+
+    it "runs multi-pass clustering, refreshes merged canonical embeddings, and skips already-evaluated pairs" do
+      dim = vector_def.dimensions
+      broader_vector = Array.new(dim) { |i| i == 0 ? 0.68 : (i == 1 ? 0.7332 : 0.0) }
+      other_base_vector = Array.new(dim) { |i| i == 3 ? 1.0 : 0.0 }
+      other_close_vector = Array.new(dim) { |i| i == 3 ? 0.99 : (i == 4 ? 0.14 : 0.0) }
+
+      canonical =
+        Fabricate(:inferred_concept, name: "Community platform migration", status: :active)
+      tight_dup = Fabricate(:inferred_concept, name: "Community Migration", status: :candidate)
+      broader_dup =
+        Fabricate(:inferred_concept, name: "Forum platform data migration", status: :active)
+
+      unrelated_a = Fabricate(:inferred_concept, name: "Plugin Development", status: :active)
+      unrelated_b = Fabricate(:inferred_concept, name: "Plugin Hooks", status: :active)
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      schema.store(canonical, base_vector, "c1")
+      schema.store(tight_dup, close_vector, "c2")
+      schema.store(broader_dup, broader_vector, "c3")
+      schema.store(unrelated_a, other_base_vector, "u1")
+      schema.store(unrelated_b, other_close_vector, "u2")
+
+      refreshed_ids = []
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        refreshed_ids.concat(relation.pluck(:id))
+      end
+
+      evaluated_batches = []
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Curator).to receive(
+        :deduplicate_cluster,
+      ).and_wrap_original do |method, concepts, **kwargs|
+        evaluated_batches << concepts.map(&:name)
+        ids = concepts.map(&:id)
+
+        if ids.include?(canonical.id) && ids.include?(tight_dup.id)
+          response = {
+            merges: [{ canonical_id: canonical.id, merge_ids: [tight_dup.id], description: "" }],
+            reparents: [],
+          }
+          DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+            method.call(concepts, **kwargs)
+          end
+        elsif ids.include?(canonical.id) && ids.include?(broader_dup.id)
+          response = {
+            merges: [{ canonical_id: canonical.id, merge_ids: [broader_dup.id], description: "" }],
+            reparents: [],
+          }
+          DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+            method.call(concepts, **kwargs)
+          end
+        else
+          DiscourseAi::Completions::Llm.with_prepared_responses([{ merges: [], reparents: [] }]) do
+            method.call(concepts, **kwargs)
+          end
+        end
+      end
+
+      stats = curator.deduplicate_clusters!
+
+      expect(stats[:merges_applied]).to eq(2)
+      expect(stats[:concepts_retired]).to eq(2)
+      expect(tight_dup.reload).to be_retired
+      expect(broader_dup.reload).to be_retired
+      expect(refreshed_ids).to include(canonical.id)
+
+      unrelated_calls = evaluated_batches.count { |names| names.include?("Plugin Development") }
+      expect(unrelated_calls).to eq(1)
+    end
+
+    it "includes shared_topics, overlap_ratio, and similarity in related_pairs payload" do
+      c1 = Fabricate(:inferred_concept, name: "Platform Migration", status: :active)
+      c2 = Fabricate(:inferred_concept, name: "Forum Data Migration", status: :active)
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      schema.store(c1, base_vector, "p1")
+      schema.store(c2, close_vector, "p2")
+
+      3.times do
+        topic = Fabricate(:topic)
+        InferredConceptTopic.create!(inferred_concept: c1, topic: topic)
+        InferredConceptTopic.create!(inferred_concept: c2, topic: topic)
+      end
+
+      captured_payloads = []
+      fake_bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+      allow(fake_bot).to receive(:reply) do |context|
+        captured_payloads << JSON.parse(context.messages.first[:content])
+      end
+
+      curator.deduplicate_clusters!(max_passes: 1)
+
+      expect(captured_payloads.size).to eq(1)
+      pairs = captured_payloads.first["related_pairs"]
+      expect(pairs.size).to eq(1)
+      expect(pairs.first["concept_ids"]).to eq([c1.id, c2.id].sort)
+      expect(pairs.first["shared_topics"]).to eq(3)
+      expect(pairs.first["overlap_ratio"]).to eq(1.0)
+      expect(pairs.first["similarity"]).to be > 0.9
+    end
+
+    it "continues after per-cluster errors and stops cleanly on CreditLimitExceeded" do
+      dim = vector_def.dimensions
+      second_vec = Array.new(dim) { |i| i == 3 ? 1.0 : 0.0 }
+
+      c1 = Fabricate(:inferred_concept, name: "Cluster One A", status: :active)
+      c2 = Fabricate(:inferred_concept, name: "Cluster One B", status: :active)
+      c3 = Fabricate(:inferred_concept, name: "Cluster Two A", status: :active)
+      c4 = Fabricate(:inferred_concept, name: "Cluster Two B", status: :active)
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      schema.store(c1, base_vector, "1a")
+      schema.store(c2, close_vector, "1b")
+      schema.store(c3, second_vec, "2a")
+      schema.store(c4, second_vec, "2b")
+
+      allow(Discourse).to receive(:warn_exception)
+      call_index = 0
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_wrap_original do |method, *args, **kw|
+        call_index += 1
+        raise "transient error" if call_index == 1
+
+        method.call(*args, **kw)
+      end
+
+      surviving_merge_response = {
+        merges: [{ canonical_id: c1.id, merge_ids: [c2.id], description: "" }],
+        reparents: [],
+      }
+
+      stats =
+        DiscourseAi::Completions::Llm.with_prepared_responses([surviving_merge_response]) do
+          curator.deduplicate_clusters!(max_passes: 1)
+        end
+
+      expect(Discourse).to have_received(:warn_exception).once
+      expect(stats[:merges_applied]).to eq(1)
+      expect(stats[:clusters_processed]).to eq(1)
+      expect(c2.reload).to be_retired
+      expect(c4.reload).to be_active
+
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(
+        LlmCreditAllocation::CreditLimitExceeded,
+        "limit reached",
+      )
+      credit_stats = curator.deduplicate_clusters!(max_passes: 1)
+      expect(credit_stats[:clusters_processed]).to eq(0)
     end
   end
 

@@ -18,7 +18,6 @@ it:
         save: Salva
         about_tab: Informazioni su
         blog_slug: Abbreviazione
-        general_heading: Generale
         settings_tab: Impostazioni
         theme_tab: Tema
         column_name: Nome
@@ -48,6 +47,7 @@ it:
           title: titolo
           body: corpo
           tags: etichette
+        settings_button: Impostazioni
       review:
         create: Crea link
         copy: Copia
@@ -70,5 +70,7 @@ it:
       drafts: Bozze
       pages: Pagine
       preview: Anteprima
+      article_settings:
+        kind_page: Pagina
       unpublish: Annulla pubblicazione
       appearance_link: Aspetto

@@ -140,6 +140,15 @@
 
 .discourse-boards-column-settings-modal {
   --modal-max-width: 50ch;
+
+  // Unlike the other boards modals this one has a standard header, so it
+  // matches the standard modal spacing.
+  .form-kit__section,
+  .form-kit__actions {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1rem 1.5rem;
+  }
 }
 
 .discourse-boards-manage {

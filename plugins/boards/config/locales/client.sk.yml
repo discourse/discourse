@@ -54,6 +54,8 @@ sk:
           column_title: "Názov"
           icon: "Ikona"
           color: "Farba"
+          color_palette: "Paleta farieb"
+          icon_search_placeholder: "Hľadať…"
           default_sort_priority: "Priorita"
           tag: "Značka"
           move_to_assigned_unassign: "Nepriradené"

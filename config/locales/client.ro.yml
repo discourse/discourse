@@ -1613,7 +1613,6 @@ ro:
         enable: "Gestionează autentificarea în doi pași (2FA)"
         name: "Nume"
         disable_description: "Introdu codul de autentificare din aplicația 2FA"
-        oauth_enabled_warning: "Atenție! Autentificarea cu rețelele sociale va fi dezactivată atunci când activezi autentificarea în doi pași (2FA)."
         disable: "Dezactivează"
         delete: "Șterge"
         save: "Salvează"
@@ -2183,7 +2182,6 @@ ro:
       not_allowed_from_ip_address: "Nu te poți conecta cu această adresă IP."
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
-      omniauth_disallow_totp: "Contul tău are autentificarea în doi pași (2FA) activată. Te rog să te autentifici cu parola"
       works_with: "Funcționează cu"
       activate_account: "Activare cont"
       resend_title: "Retrimite emailul de activare"
@@ -2845,7 +2843,7 @@ ro:
         back_description: "Întoarce-te la ultima ta postare necitită"
         replies_short: "%{current} / %{total}"
       progress:
-        title: Evoluția subiectului
+        title: "Evoluția subiectului"
         jump_prompt_to_date: "la data"
         jump_prompt_or: "sau"
       notifications:

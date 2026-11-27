@@ -1,8 +1,14 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import User from "discourse/models/user";
+import pretender, {
+  fixturesByUrl,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -60,6 +66,27 @@ acceptance("User Preferences - Security", function (needs) {
       redirect.calledOnceWithExactly("/u/password-reset/reset-token"),
       "loads the password reset page after verification"
     );
+  });
+
+  test("does not carry the password reset status over to another user", async function (assert) {
+    await visit("/u/eviltrout/preferences/security");
+    await click("#change-password-button");
+
+    assert
+      .dom(".pref-password")
+      .includesText(
+        i18n("user.change_password.success"),
+        "shows the status for the first user"
+      );
+
+    await visit("/u/charlie/preferences/security");
+
+    assert
+      .dom(".pref-password")
+      .doesNotIncludeText(
+        i18n("user.change_password.success"),
+        "starts clean for the other user"
+      );
   });
 
   test("opens code entry from the confirm-session dialog", async function (assert) {
@@ -120,17 +147,25 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing user api keys", async function (assert) {
-    updateCurrentUser({
-      user_api_keys: [
-        {
-          id: 1,
-          application_name: "Discourse Hub",
-          scopes: ["Read and clear notifications"],
-          created_at: "2020-11-14T00:57:09.093Z",
-          last_used_at: "2022-09-15T18:55:41.672Z",
-        },
-      ],
+    pretender.get("/u/eviltrout.json", () => {
+      const json = cloneJSON(fixturesByUrl["/u/eviltrout.json"]);
+      Object.assign(json.user, {
+        admin: false,
+        can_edit: true,
+        user_api_keys: [
+          {
+            id: 1,
+            application_name: "Discourse Hub",
+            scopes: ["Read and clear notifications"],
+            created_at: "2020-11-14T00:57:09.093Z",
+            last_used_at: "2022-09-15T18:55:41.672Z",
+          },
+        ],
+      });
+      return response(json);
     });
+
+    updateCurrentUser({ admin: false });
 
     await visit("/u/eviltrout/preferences/security");
 
@@ -157,6 +192,10 @@ acceptance("User Preferences - Security", function (needs) {
     assert
       .dom(".user-api-key__date-last-used")
       .exists("displays the last used at date for the API key");
+
+    assert
+      .dom(".user-api-key__actions .btn")
+      .exists("lets a non-admin owner revoke the API key");
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {
@@ -261,31 +300,39 @@ acceptance("User Preferences - Security", function (needs) {
       .doesNotExist("does not include a passkey button");
   });
 
-  test("Viewing Passkeys - another user has a key", async function (assert) {
+  test("disables passkeys and two-factor on another user's page", async function (assert) {
     this.siteSettings.enable_passkeys = true;
 
-    // user charlie has passkeys in fixtures
     await visit("/u/charlie/preferences/security");
 
     assert
-      .dom(".pref-passkeys__rows .row-passkey__name")
-      .hasText("iCloud Keychain", "displays the passkey name");
+      .dom(".pref-passkeys .access-notice.--self")
+      .exists("explains only the user can add passkeys");
+    assert
+      .dom(".pref-passkeys__add .btn")
+      .isDisabled("disables adding a passkey");
+    assert
+      .dom(".pref-second-factor .access-notice.--self")
+      .exists("explains only the user can manage two-factor");
+    assert.dom(".btn-second-factor").isDisabled("disables managing two-factor");
+  });
+
+  test("treats your own page as yours when opened with a separate user object", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+
+    await visit("/");
+    await getOwner(this)
+      .lookup("service:router")
+      .transitionTo(
+        "preferences.security",
+        User.create({ username: "eviltrout" })
+      );
+    await settled();
 
     assert
-      .dom(".row-passkey__created-date")
-      .exists("displays the created at date for the passkey");
-
-    assert
-      .dom(".row-passkey__used-date")
-      .exists("displays the last used at date for the passkey");
-
-    assert
-      .dom(".pref-passkeys__add")
-      .doesNotExist("does not show add passkey button");
-
-    assert
-      .dom(".passkey-options-dropdown")
-      .doesNotExist("does not show passkey options dropdown");
+      .dom(".pref-passkeys .access-notice.--self")
+      .doesNotExist("does not show the self-only notice");
+    assert.dom(".pref-passkeys__add .btn").isEnabled("lets you add a passkey");
   });
 
   test("Remove Password availability", async function (assert) {
@@ -346,5 +393,78 @@ acceptance("User Preferences - Security", function (needs) {
         i18n("user.change_password.set_password"),
         "shows set password instead of change after password removed"
       );
+  });
+});
+
+acceptance("User Preferences - Security with external auth", function (needs) {
+  needs.user({ no_password: true, user_passkeys: [] });
+  needs.settings({ enable_local_logins: false, enable_passkeys: true });
+
+  test("shows passkey registration when local logins are disabled without confirming session", async function (assert) {
+    let createCalled = 0;
+    pretender.post("/u/create_passkey.json", () => {
+      createCalled++;
+      return response({
+        challenge: "challenge",
+        rp_name: "Discourse",
+        rp_id: "localhost",
+        user_secure_id: "user1",
+        supported_algorithms: [-7],
+        existing_passkey_credential_ids: [],
+      });
+    });
+    const createStub = sinon
+      .stub(navigator.credentials, "create")
+      .rejects(new DOMException("Cancelled", "NotAllowedError"));
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert
+      .dom("#change-password-button")
+      .doesNotExist("keeps password controls hidden");
+    assert
+      .dom(".pref-passkeys__add .btn")
+      .exists("renders passkey registration controls");
+
+    await click(".pref-passkeys__add .btn");
+
+    assert.strictEqual(
+      createCalled,
+      1,
+      "requests a passkey challenge directly"
+    );
+    assert
+      .dom(".confirm-session")
+      .doesNotExist("does not ask for a local credential");
+    assert.true(createStub.calledOnce, "starts WebAuthn registration");
+  });
+
+  test("prompts to sign in again when external passkey grant has expired", async function (assert) {
+    pretender.post("/u/create_passkey.json", () =>
+      response(403, {
+        error_type: "second_factor_external_login_required",
+        errors: ["Sign in again"],
+      })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+
+    assert.dom(".dialog-header h3").hasText(i18n("user.confirm_access.title"));
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.passkeys.external_login_required"));
+    assert.dom(".dialog-footer .btn-primary").hasText(i18n("user.log_out"));
+  });
+
+  test("hides passkey and 2FA controls when external auth 2FA is disabled", async function (assert) {
+    this.siteSettings.enforce_second_factor_on_external_auth = false;
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.dom(".pref-passkeys").doesNotExist("hides passkey management");
+    assert
+      .dom(".pref-second-factor")
+      .doesNotExist("hides two-factor management");
   });
 });

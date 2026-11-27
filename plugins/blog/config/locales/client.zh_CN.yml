@@ -76,7 +76,7 @@ zh_CN:
         save: 保存
         about_tab: 关于
         blog_slug: 缩略名
-        general_heading: 常规
+        blog_url: 自定义域名
         settings_tab: 设置
         theme_tab: 主题
         published_status: 已发布
@@ -87,7 +87,6 @@ zh_CN:
         select_theme: 选择主题
         path_formats:
           custom: 自定义
-        themes_index_description: 选择读者看到的界面设计。您可以自定义内置主题或编辑自己的主题；更改在您激活之前都将保持私密状态。
         thumbnail:
           journal: 日记
           headline: 保持好奇心。
@@ -158,7 +157,6 @@ zh_CN:
           changes_pending: 在线文章已过期
           scheduled: "发布 %{date}"
           unpublished: 已从博客中删除
-        will_publish_to: "将发布到 %{url}"
         last_updated: "最后更新于 %{age}"
         published_as: "发布于 %{date}"
         view_live: 查看在线
@@ -207,6 +205,7 @@ zh_CN:
         hide_diff: 隐藏差异
         diff_error: 更改幅度过大，无法以差异比较的形式显示。请改用预览功能。
         settings: 文章设置
+        settings_button: 设置
         feedback:
           none: 目前还没有私人反馈
           show: 显示反馈
@@ -228,7 +227,6 @@ zh_CN:
         page_title: 审阅草稿
         expires: "过期时间 %{date}"
         manage: 分享以供审阅和反馈
-        discard_metadata: 放弃未保存的发布设置并分享已保存的文章？
         intro: 任何拥有链接的人都可以阅读草稿并留下私人反馈。
         label: 标签
         label_placeholder: 例如，编辑会议
@@ -300,16 +298,15 @@ zh_CN:
       preview: 预览
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
+      article_settings:
+        kind_article: 文章
       blog_field: 博客
       path: 文章路径
       excerpt: 摘录
-      excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
       cover: 封面图片
-      cover_hint: 显示在文章上方，用于文章卡片和链接预览。留空则使用文章中的第一张图片。
       cover_alt: 封面图片的替代文本
       cover_alt_hint: 为无法看到封面图片的人描述该图片。
       date: 发布日期
-      date_hint: 留空则使用首次发布时间。对于导入的文章，请选择过去的日期。日期采用 UTC 时间。
       featured: 首页专题
       save: 保存设置
       unpublish: 取消发布

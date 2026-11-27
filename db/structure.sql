@@ -2751,7 +2751,6 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 2 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -20397,10 +20396,10 @@ CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree
 
 
 --
--- Name: idx_bpe_created_at_session_id; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_created_at_session; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USING btree (created_at, session_id, source);
+CREATE INDEX idx_bpe_created_at_session ON public.browser_pageview_events USING btree (created_at, session_id);
 
 
 --
@@ -26669,13 +26668,6 @@ CREATE TRIGGER discourse_rss_polling_rss_feeds_author_readonly BEFORE INSERT OR 
 
 
 --
--- Name: browser_pageview_events skip_piggyback_browser_pageview_events; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER skip_piggyback_browser_pageview_events BEFORE INSERT OR UPDATE OF source ON public.browser_pageview_events FOR EACH ROW WHEN ((new.source = ANY (ARRAY[1, 2]))) EXECUTE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events();
-
-
---
 -- Name: topic_timers topic_timers_topic_id_readonly; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -26969,6 +26961,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261126120000'),
 ('20261125161827'),
 ('20261124234323'),
 ('20261124173030'),
@@ -26980,6 +26973,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261124013638'),
 ('20261123182523'),
 ('20261123103548'),
+('20261123051323'),
+('20261123051317'),
+('20261123051155'),
 ('20261123031254'),
 ('20261123030923'),
 ('20261123011249'),

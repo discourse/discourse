@@ -11,6 +11,16 @@ RSpec.describe FastImage do
     FinalDestination::SSRFDetector.disallow_ip_lookups_in_test!
   end
 
+  it "verifies the certificate of https endpoints" do
+    http = FinalDestination::HTTP.new("example.com", 443)
+    FinalDestination::HTTP.stubs(:new).returns(http)
+    http.stubs(:request_get)
+
+    described_class.type("https://example.com/image.png")
+
+    expect(http.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+  end
+
   it "filters the endpoint hostname through the SSRF detector and returns a null object" do
     stub_ip_lookup("example.com", %W[0.0.0.0])
 

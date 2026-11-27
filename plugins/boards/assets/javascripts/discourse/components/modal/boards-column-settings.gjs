@@ -2,15 +2,21 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import DButton from "discourse/ui-kit/d-button";
+import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
 import DModal from "discourse/ui-kit/d-modal";
+import DNameStyleInput from "discourse/ui-kit/d-name-style-input";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import {
   ASSIGNED_OPTIONS,
@@ -21,7 +27,20 @@ import {
   STATUS_OPTIONS,
   tagToArray,
 } from "../../lib/boards-column-helpers.js";
-import BoardsEditableTitle from "../boards-editable-title.gjs";
+
+function iconColorStyle(color) {
+  if (isValidHex(color)) {
+    return trustHTML(`--icon-color: #${normalizeHex(color)}`);
+  }
+}
+
+function styleLabel(icon) {
+  return icon
+    ? i18n("boards.manage.columns.choose_style_with_icon", {
+        name: icon.replace(/^fa[brs]-/, "").replace(/[-_]/g, " "),
+      })
+    : i18n("boards.manage.columns.choose_style");
+}
 
 export default class BoardsColumnSettings extends Component {
   @tracked showAdvanced = false;
@@ -115,7 +134,7 @@ export default class BoardsColumnSettings extends Component {
 
   @action
   validateTitle(name, value, { data, addError }) {
-    if (isEmpty(value) && isEmpty(data.tag_name)) {
+    if (isEmpty(value?.trim()) && isEmpty(data.tag_name?.trim())) {
       addError("title", {
         title: i18n("boards.manage.columns.column_title"),
         message: i18n("boards.manage.columns.column_title_required"),
@@ -127,40 +146,72 @@ export default class BoardsColumnSettings extends Component {
     <DModal
       class="discourse-boards-column-settings-modal"
       @closeModal={{@closeModal}}
-      @hideHeader={{true}}
+      @title={{i18n
+        (if
+          @model.column
+          "boards.board.column_settings_title"
+          "boards.board.new_column_title"
+        )
+      }}
     >
       <:body>
         <Form @data={{this.formData}} @onSubmit={{this.save}} as |form data|>
-          <BoardsEditableTitle
-            @form={{form}}
-            @name="title"
-            @onClose={{@closeModal}}
-            @placeholder={{i18n
-              "boards.manage.columns.column_title_placeholder"
-            }}
-            @title={{i18n "boards.manage.columns.column_title"}}
-            @validate={{this.validateTitle}}
-          />
           <div class="discourse-boards-column-settings-modal__wrapper">
             <form.Section>
               <form.Field
+                class="discourse-boards-column-settings__name"
                 @format="max"
-                @name="icon"
-                @title={{i18n "boards.manage.columns.icon"}}
-                @type="icon"
+                @name="title"
+                @title={{i18n "boards.manage.columns.name_and_style"}}
+                @type="input"
+                @validate={{this.validateTitle}}
                 as |field|
               >
-                <field.Control />
-              </form.Field>
-
-              <form.Field
-                @format="max"
-                @name="color"
-                @title={{i18n "boards.manage.columns.color"}}
-                @type="color"
-                as |field|
-              >
-                <field.Control @colors={{PRESET_COLUMN_COLORS}} />
+                <DNameStyleInput
+                  @color={{data.color}}
+                  @identifier="discourse-boards-column-style"
+                  @styleLabel={{styleLabel data.icon}}
+                >
+                  <:preview>
+                    {{dIcon (or data.icon "table-columns") ignoreMissing=true}}
+                  </:preview>
+                  <:content>
+                    <DIconGridPickerContent
+                      @iconColorStyle={{iconColorStyle data.color}}
+                      @onSelect={{fn form.set "icon"}}
+                      @searchPlaceholder={{i18n
+                        "boards.manage.columns.icon_search_placeholder"
+                      }}
+                      @showNames={{true}}
+                      @value={{data.icon}}
+                    >
+                      <form.Field
+                        @name="color"
+                        @showTitle={{false}}
+                        @title={{i18n "boards.manage.columns.color"}}
+                        @type="color"
+                        as |colorField|
+                      >
+                        <colorField.Control
+                          aria-label={{colorField.title}}
+                          @collapseSwatches={{true}}
+                          @collapseSwatchesLabel={{i18n
+                            "boards.manage.columns.color_palette"
+                          }}
+                          @colors={{PRESET_COLUMN_COLORS}}
+                        />
+                      </form.Field>
+                    </DIconGridPickerContent>
+                  </:content>
+                  <:default>
+                    <field.Control
+                      placeholder={{i18n
+                        "boards.manage.columns.column_title_placeholder"
+                      }}
+                      {{dAutoFocus selectText=true}}
+                    />
+                  </:default>
+                </DNameStyleInput>
               </form.Field>
 
               <form.Field
@@ -278,15 +329,10 @@ export default class BoardsColumnSettings extends Component {
               @action={{@closeModal}}
               @label="cancel"
             />
-            <DButton
-              class="btn-default show-advanced"
-              @action={{this.toggleAdvanced}}
-              @icon="gear"
-              @title={{if
-                this.showAdvanced
-                "boards.manage.columns.hide_advanced"
-                "boards.manage.columns.show_advanced"
-              }}
+            <AdvancedModeToggle
+              class="show-advanced"
+              @active={{this.showAdvanced}}
+              @onToggle={{this.toggleAdvanced}}
             />
           </form.Actions>
         </Form>

@@ -8,6 +8,16 @@ module PageObjects
         self
       end
 
+      def open_from_preferences_nav(user)
+        page.visit("/u/#{user.username}/preferences")
+        find(".user-nav__preferences-chat a").click
+        self
+      end
+
+      def has_saved?
+        has_css?(".save-controls .saved")
+      end
+
       def emoji_picker_triggers
         all(".emoji-picker-trigger", visible: true)
       end

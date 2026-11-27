@@ -7,8 +7,13 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import pretender, {
+  response as jsonResponse,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY } = SECOND_FACTOR_METHODS;
 
@@ -136,6 +141,26 @@ acceptance("Second Factor Auth Page", function (needs) {
         "could not find an active challenge in your session",
         "load error message is shown"
       );
+  });
+
+  test("asks the user to restart if no allowed method remains", async function (assert) {
+    pretender.get("/session/2fa.json", () =>
+      jsonResponse({
+        allowed_methods: [TOTP, SECURITY_KEY],
+        totp_enabled: false,
+        security_keys_enabled: false,
+        backup_enabled: true,
+      })
+    );
+
+    await visit("/session/2fa?nonce=methods-changed");
+
+    assert
+      .dom(".alert-error")
+      .hasText(i18n("second_factor_auth.no_available_method"));
+    assert.dom(".second-factor-token-input").doesNotExist();
+    assert.dom("#security-key-authenticate-button").doesNotExist();
+    assert.strictEqual(callbackCount, 0);
   });
 
   test("default 2FA method", async function (assert) {
@@ -393,6 +418,21 @@ acceptance("Second Factor Auth Page", function (needs) {
       "user has been redirected to the redirect_url"
     );
     assert.strictEqual(callbackCount, 1, "callback request has been performed");
+  });
+
+  test("reloads the destination after a callback signs the browser in", async function (assert) {
+    pretender.put("/callback-path", () =>
+      jsonResponse({ redirect_url: "/latest", reload: true })
+    );
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/session/2fa?nonce=ok110111");
+    await fillIn("form.totp-token .second-factor-token-input", "323421");
+    await click('form.totp-token .btn-primary[type="submit"]');
+    assert.true(
+      redirect.calledWithExactly("/latest"),
+      "loads the new signed-in session"
+    );
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {

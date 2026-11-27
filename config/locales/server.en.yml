@@ -209,24 +209,58 @@ en:
     # %{tool} is the name of a tool the agent calls.
     setup_guide_instructions: "When an administrator asks for help setting up or changing this community, call %{tool} first and follow it."
     oauth:
-      authorize_title: "Authorize MCP client"
-      client_request: "%{client_name} is requesting access to %{site_name}."
-      client_id: "Client ID"
-      redirect_uri: "Redirect URI"
+      # %{client_name} is the name of the app asking for access.
+      page_title: 'Authorize "%{client_name}" - %{site_name}'
+      authorize_title_html: 'Authorize "%{client_name}"'
+      logged_in_as: "Logged in as"
+      permissions_header_html: 'This will allow "%{client_name}" to:'
+      scope_sections:
+        member: "Use the site as you"
+        manage: "Manage the site"
+      withheld_permissions:
+        one: "%{count} requested permission won't be granted"
+        other: "%{count} requested permissions won't be granted"
+      withheld_explanation: "Your account can't give these permissions, so some of the app's features may not work."
+      acts_as_you: "The app acts as you, so it can only do what your account can do. Anything it reads through this connection is sent to it."
+      # %{host} is the website, or the address of an app on this device, that authorizing opens.
+      redirect_html: "Authorizing will redirect you to %{host}."
+      redirect_local_html: "Authorizing will redirect you to an app on this device (%{host})."
+      app_details: "App details"
+      client_id: "App ID"
+      redirect_url: "Redirect URL"
       resource: "MCP server"
-      requested_permission_count:
-        one: "%{client_name} requested %{count} permission."
-        other: "%{client_name} requested %{count} permissions."
-      eligible_permission_count:
-        one: "Your account is eligible for %{count}."
-        other: "Your account is eligible for %{count}."
-      granted_permissions:
-        one: "The following permission will be granted"
-        other: "The following permissions will be granted"
-      guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
-      data_notice: "Anything %{client_name} reads through this connection is sent to it. You can disconnect it at any time under MCP Apps in your security preferences."
-      deny: "Deny"
+      scope_ids: "Scopes"
       approve: "Authorize"
+      cancel: "Cancel"
+      disconnect_html: 'You can disconnect the app at any time from <a href="%{url}">MCP Apps</a> in your security preferences.'
+      # Each completes the sentence "This will allow "App" to:".
+      scopes:
+        mcp_profile_read: "See your username and profile"
+        mcp_profile_write: "Update your profile"
+        mcp_content_read: "Read and search topics, posts, and profiles, plus your notifications and bookmarks"
+        mcp_content_write: "Create and edit topics and posts, delete your posts, and upload files"
+        mcp_private_messages_read: "Read your personal messages"
+        mcp_private_messages_write: "Send personal messages and add people to them"
+        mcp_drafts_read: "Read your drafts"
+        mcp_drafts_write: "Save and delete your drafts"
+        mcp_groups_read: "See groups, their members, and membership requests"
+        mcp_groups_write: "Create, edit, and delete groups, and manage their members"
+        mcp_repository_read: "Read Discourse's source code and authoring guides"
+        mcp_site_settings_read: "See site settings"
+        mcp_site_settings_write: "Change site settings"
+        mcp_themes_read: "See themes and theme components"
+        mcp_themes_write: "Install, edit, and delete themes, including their code"
+        mcp_categories_read: "See category settings"
+        mcp_categories_write: "Create, edit, and delete categories"
+        mcp_tag_groups_read: "See tag groups"
+        mcp_tag_groups_write: "Create, edit, and delete tag groups"
+        mcp_users_read: "List and filter users, as staff see them"
+        mcp_users_write: "Create users, and activate, approve, or deactivate accounts"
+        mcp_moderation_read: "See the review queue and moderation history"
+        mcp_moderation_write: "Act on flagged posts, suspend or silence users, and close or pin topics"
+        mcp_reports_read: "See site reports"
+        mcp_webhooks_read: "See webhooks and their delivery history"
+        mcp_webhooks_write: "Create, edit, and delete webhooks, which send site data to other services"
     admin:
       site_enabled: "Enable the MCP server site setting"
       primitives_enabled: "Enable at least one primitive in Capabilities"
@@ -674,9 +708,7 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
@@ -783,6 +815,9 @@ en:
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
+  remove_password_too_soon:
+    one: "You can remove your password %{count} minute after setting it."
+    other: "You can remove your password %{count} minutes after setting it."
   scoped_api_key_html_not_allowed: "API keys with scopes cannot be used to request HTML pages. Request the JSON format instead."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
@@ -2343,8 +2378,8 @@ en:
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
     simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If {{setting:enforce_second_factor_on_external_auth}} is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
-    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the {{setting:enforce_second_factor}} setting."
+    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. When {{setting:enforce_second_factor_on_external_auth}} is enabled, users who set up 2FA will also be prompted for it when logging in with external authentication providers."
+    enforce_second_factor_on_external_auth: "Require users to confirm two-factor authentication (2FA) when logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the {{setting:enforce_second_factor}} setting."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -2390,6 +2425,7 @@ en:
     notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the user who started the topic, flag both of their posts as potential spam."
 
+    enable_ai_content_labelling_in_composer: "Allow members to label content in the composer, including quotes, details, and code blocks, as AI generated"
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     enable_markdown_typographer: "Use typography rules to improve readability of text: replace straight quotes ' with curly quotes ’, (tm) with symbol, -- with emdash –, etc"
     enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.example.com and https://example.com will be automatically linked"
@@ -3763,6 +3799,7 @@ en:
     auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
+    second_factor_external_login_required: "To confirm your identity before managing two-factor authentication, please log out and log in again with your external account."
     invalid_second_factor_method: "The selected two-factor method is invalid."
     not_enabled_second_factor_method: "The selected two-factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
@@ -5607,6 +5644,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
+    page_title: "Access Denied"
     title: "Oops! That page is private."
 
   site_setting_missing: "`%{name}` site setting has to be set."

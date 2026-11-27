@@ -198,6 +198,7 @@ RSpec.describe UpcomingChangesFileValidator do
     it "accepts known values" do
       expect(core_errors(change(allow_enabled_for: %w[staff specific_groups]))).to be_empty
       expect(core_errors(change(allow_enabled_for: ["everyone"]))).to be_empty
+      expect(core_errors(change(allow_enabled_for: ["logged_in_users"]))).to be_empty
     end
 
     it "must be an array" do
@@ -218,6 +219,14 @@ RSpec.describe UpcomingChangesFileValidator do
       expect(core_errors(change(allow_enabled_for: %w[everyone staff]))).to eq(
         [
           "my_change `upcoming_change.allow_enabled_for` may not combine `everyone` with other values",
+        ],
+      )
+    end
+
+    it "can't combine `logged_in_users` with other values" do
+      expect(core_errors(change(allow_enabled_for: %w[logged_in_users specific_groups]))).to eq(
+        [
+          "my_change `upcoming_change.allow_enabled_for` may not combine `logged_in_users` with other values",
         ],
       )
     end

@@ -33,9 +33,11 @@ export default class AiToolEditor extends Component {
     <AiToolEditorForm
       @editingModel={{this.editingModel}}
       @isNew={{@model.isNew}}
+      @llms={{@llms}}
       @model={{@model}}
       @secrets={{@secrets}}
       @selectedPreset={{this.selectedPreset}}
+      @settings={{@settings}}
       @tools={{@tools}}
     />
   </template>

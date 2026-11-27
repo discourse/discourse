@@ -17,7 +17,6 @@ lt:
         save: Saugoti
         about_tab: Apie
         blog_slug: URL adresas
-        general_heading: Bendra
         settings_tab: Nustatymai
         theme_tab: Tema
         column_name: Vardas
@@ -45,6 +44,7 @@ lt:
           title: antraštė
           body: tekstas
           tags: žymos
+        settings_button: Nustatymai
       review:
         label: Pavadinimas
         create: Sukurti nuorodą

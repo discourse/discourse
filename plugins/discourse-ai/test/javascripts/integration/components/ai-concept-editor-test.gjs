@@ -86,6 +86,13 @@ module("Integration | Component | AiConceptEditor", function (hooks) {
         parent_name: "Infrastructure",
       },
       children: [{ id: 3, name: "Helm", status: "candidate" }],
+      topicsTotal: 42,
+      neighborConcepts: [
+        { id: 4, name: "Docker", status: "active", similarity: 0.874 },
+      ],
+      coOccurringConcepts: [
+        { id: 3, name: "Helm", status: "candidate", shared_topics_count: 4 },
+      ],
       topics: [
         {
           id: 99,
@@ -93,6 +100,10 @@ module("Integration | Component | AiConceptEditor", function (hooks) {
           url: "/t/deploying-discourse-on-kubernetes/99",
           primary: true,
           relevance: 0.94,
+          concepts: [
+            { id: 2, name: "Kubernetes", status: "active", primary: true },
+            { id: 3, name: "Helm", status: "candidate", primary: false },
+          ],
         },
       ],
     };
@@ -108,14 +119,76 @@ module("Integration | Component | AiConceptEditor", function (hooks) {
       .dom(".ai-concept-editor__child-item")
       .includesText("Helm", "displays sub-concepts linked to this concept");
     assert
+      .dom(".ai-concept-editor__neighbors-card")
+      .includesText("Docker", "displays closest neighbor concepts");
+    assert
+      .dom(".ai-concept-editor__neighbors-card")
+      .includesText("87%", "formats similarity percentage");
+    assert
+      .dom(".ai-concept-editor__co-occurring-card")
+      .includesText("Helm", "displays co-occurring concepts");
+    assert
+      .dom(".ai-concept-editor__co-occurring-card")
+      .includesText("4 topics", "displays shared topic counts");
+    assert
+      .dom(".ai-concept-editor__topics-card .admin-config-area-card__title")
+      .includesText("42", "displays total tagged topic count in section title");
+    assert
+      .dom(
+        ".ai-concept-editor__topics-card .admin-config-area-card__description"
+      )
+      .includesText(
+        "1",
+        "displays top-N summary when total exceeds displayed topics"
+      );
+    assert
       .dom(".ai-concept-editor__topics-table")
       .includesText(
         "Deploying Discourse on Kubernetes",
         "displays tagged public topics"
       );
     assert
+      .dom(".ai-concept-editor__topic-concepts .ai-concept-pill.--current")
+      .includesText("Kubernetes", "highlights current concept pill");
+    assert
+      .dom(".ai-concept-editor__topic-concepts a.ai-concept-pill")
+      .includesText("Helm", "renders linked pills for other concepts on topic");
+    assert
       .dom(".ai-concept-editor__merge-btn")
       .exists("renders the merge action button for non-retired concepts");
+  });
+
+  test("renders empty states for neighbor and co-occurring concept cards", async function (assert) {
+    const model = {
+      isNew: false,
+      concept: {
+        id: 2,
+        name: "Kubernetes",
+        description: "",
+        aliases: [],
+        status: "active",
+        parent_id: null,
+        parent_name: null,
+      },
+      children: [],
+      topics: [],
+      topicsTotal: 0,
+      neighborConcepts: [],
+      coOccurringConcepts: [],
+    };
+
+    await render(<template><AiConceptEditor @model={{model}} /></template>);
+
+    assert
+      .dom(
+        ".ai-concept-editor__neighbors-card .ai-concept-editor__empty-related"
+      )
+      .exists("renders empty state when no neighbor concepts are available");
+    assert
+      .dom(
+        ".ai-concept-editor__co-occurring-card .ai-concept-editor__empty-related"
+      )
+      .exists("renders empty state when no co-occurring concepts exist");
   });
 
   test("searches and selects a parent concept from the server", async function (assert) {

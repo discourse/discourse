@@ -47,6 +47,9 @@ sq:
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
+      post_image_captions:
+        image_descriptions:
+          apply: "Apliko"
       discourse_workflows:
         ai_tool:
           list_item: "Element liste"
@@ -223,6 +226,8 @@ sq:
         embedding: "Embedding"
       concepts:
         edit: "Redaktoni"
+        seed:
+          refresh: "Rifresko"
         delete: "Fshij"
         columns:
           status: "Status"
@@ -234,6 +239,9 @@ sq:
           name: "Emri"
           description: "Përshkrimi"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} temë"
+          other: "%{count} tema"
         topic_columns:
           topic: "Topic"
           primary: "Kryesor"

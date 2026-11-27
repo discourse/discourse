@@ -26,6 +26,8 @@ export default {
       // Set by "New draft" in the editor.
       api.serializeOnCreate("blog_id", "blogId");
       api.serializeToDraft("blogId");
+      api.serializeOnCreate("blog_page", "blogPage");
+      api.serializeToDraft("blogPage");
       // Article titles like "Contact" are shorter than a forum topic title needs to be.
       // Read the settings each time: the blog creates its categories mid-session.
       api.registerValueTransformer(

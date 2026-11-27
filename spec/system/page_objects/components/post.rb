@@ -11,6 +11,20 @@ module PageObjects
         find(post_id)
       end
 
+      def focus_lightbox_link
+        find("#{post_id} a.lightbox").execute_script("this.focus()")
+      end
+
+      def has_inset_lightbox_focus_outline?
+        has_css?("#{post_id} a.lightbox:focus-visible") { |link| link.evaluate_script(<<~JS) }
+            (() => {
+              const { outlineWidth, outlineOffset } = getComputedStyle(this);
+              return parseFloat(outlineWidth) > 0 &&
+                parseFloat(outlineOffset) <= -parseFloat(outlineWidth);
+            })()
+          JS
+      end
+
       def reply
         post.find(".reply.create").click
       end
@@ -36,6 +50,30 @@ module PageObjects
 
       def cooked_content
         post.find(".contents > .cooked")
+      end
+
+      def has_ltr_code_copy_padding_in_rtl_interface?
+        page.has_css?("#{post_id} .cooked pre.codeblock-buttons:has(.copy-cmd) > code") do |code|
+          code.evaluate_script(<<~JS)
+            (() => {
+              const style = getComputedStyle(this);
+              return getComputedStyle(document.documentElement).direction === "rtl" &&
+                style.direction === "ltr" &&
+                parseFloat(style.paddingRight) > parseFloat(style.paddingLeft);
+            })()
+          JS
+        end
+      end
+
+      def has_ltr_quote_border_in_rtl_interface?
+        page.has_css?("#{post_id} .cooked > blockquote") { |quote| quote.evaluate_script(<<~JS) }
+            (() => {
+              const style = getComputedStyle(this);
+              return getComputedStyle(document.documentElement).direction === "rtl" &&
+                style.direction === "ltr" &&
+                parseFloat(style.borderLeftWidth) > 0 && style.borderRightWidth === "0px";
+            })()
+          JS
       end
 
       def click_category_hashtag(category)

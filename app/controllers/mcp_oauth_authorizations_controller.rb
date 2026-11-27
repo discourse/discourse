@@ -20,6 +20,14 @@ class McpOauthAuthorizationsController < ApplicationController
         user: current_user,
         requested_scopes: @requested_scopes,
       )
+    @client_name = display_name(@client.name)
+    @scope_sections = DiscourseMcp::ScopePresenter.sections(@granted_scopes)
+    # Only scopes this site offers are listed, so a request can't put its own text on the page.
+    @withheld_scopes =
+      DiscourseMcp::ScopePresenter.items(
+        (@requested_scopes & DiscourseMcp.registry.scopes) - @granted_scopes,
+      )
+    @custom_body_class = "mcp-consent-page"
     render :show
   end
 
@@ -29,20 +37,22 @@ class McpOauthAuthorizationsController < ApplicationController
     validate_redirect!(client)
     return redirect_with(error: "access_denied") if params[:decision] != "approve"
 
-    authorization =
-      DiscourseMcp::OAuth::AuthorizationGrant.create!(
-        user: current_user,
-        client: client,
-        redirect_uri: params[:redirect_uri],
-        requested_scopes: requested_scopes,
-      )
     code =
-      McpOauthAuthorizationCode.issue!(
-        authorization: authorization,
-        redirect_uri: params[:redirect_uri],
-        resource: params[:resource],
-        code_challenge: params[:code_challenge],
-      )
+      with_revalidated_credential do
+        authorization =
+          DiscourseMcp::OAuth::AuthorizationGrant.create!(
+            user: current_user,
+            client: client,
+            redirect_uri: params[:redirect_uri],
+            requested_scopes: requested_scopes,
+          )
+        McpOauthAuthorizationCode.issue!(
+          authorization: authorization,
+          redirect_uri: params[:redirect_uri],
+          resource: params[:resource],
+          code_challenge: params[:code_challenge],
+        )
+      end
     redirect_with(code: code)
   end
 
@@ -77,6 +87,12 @@ class McpOauthAuthorizationsController < ApplicationController
 
   def requested_scopes
     params[:scope].to_s.split(" ").reject(&:blank?).uniq
+  end
+
+  # Apps choose their own names, so drop the characters that can reorder how a
+  # name reads, which could make it look like another app's.
+  def display_name(name)
+    name.gsub(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/, "").squish
   end
 
   def redirect_with(values)

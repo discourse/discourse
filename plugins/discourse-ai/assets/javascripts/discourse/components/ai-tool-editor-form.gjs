@@ -21,7 +21,6 @@ export default class AiToolEditorForm extends Component {
   @service router;
   @service toasts;
 
-  @tracked uploadedFiles = [];
   @tracked isSaving = false;
 
   PARAMETER_TYPES = [
@@ -51,8 +50,7 @@ export default class AiToolEditorForm extends Component {
       }
     );
 
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
+    // FormKit deep-freezes @data; copy so the model's own uploads stay mutable
     const ragUploads = this.args.editingModel.rag_uploads || [];
     const plainRagUploads =
       ragUploads.length > 0 ? toPlainObject(ragUploads) : [];
@@ -72,6 +70,7 @@ export default class AiToolEditorForm extends Component {
     );
 
     return {
+      id: this.args.editingModel.id,
       name: this.args.editingModel.name || "",
       tool_name: this.args.editingModel.tool_name || "",
       description: this.args.editingModel.description || "",
@@ -181,27 +180,16 @@ export default class AiToolEditorForm extends Component {
   }
 
   @action
-  updateUploads(addItemToCollection, uploads) {
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
-    const plainUploads = toPlainObject(uploads);
-    const uniqueUploads = plainUploads.filter(
-      (upload) => !this.uploadedFiles.some((file) => file.id === upload.id)
-    );
-    addItemToCollection("rag_uploads", uniqueUploads);
-    this.uploadedFiles = [...this.uploadedFiles, ...uniqueUploads];
+  updateUploads(form, uploads) {
+    form.set("rag_uploads", uploads);
   }
 
   @action
-  removeUpload(form, upload) {
-    this.uploadedFiles = this.uploadedFiles.filter(
-      (file) => file.id !== upload.id
+  removeUpload(form, currentUploads, upload) {
+    form.set(
+      "rag_uploads",
+      currentUploads.filter((file) => file.id !== upload.id)
     );
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
-    const plainUploads =
-      this.uploadedFiles.length > 0 ? toPlainObject(this.uploadedFiles) : [];
-    form.set("rag_uploads", plainUploads);
   }
 
   @action
@@ -538,9 +526,10 @@ export default class AiToolEditorForm extends Component {
           <field.Control>
             <RagUploader
               @allowImages={{@settings.rag_images_enabled}}
-              @onRemove={{fn this.removeUpload form}}
-              @target={{@editingModel}}
-              @updateUploads={{fn this.updateUploads form.addItemToCollection}}
+              @onRemove={{fn this.removeUpload form field.value}}
+              @target={{data}}
+              @targetName="AiTool"
+              @updateUploads={{fn this.updateUploads form}}
             />
             <RagOptionsFk
               @allowImages={{@settings.rag_images_enabled}}

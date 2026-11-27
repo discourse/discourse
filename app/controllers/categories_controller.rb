@@ -240,6 +240,7 @@ class CategoriesController < ApplicationController
     end
 
     if @category.persisted?
+      Category.set_permission!(guardian, @category)
       render_serialized(@category, CategorySerializer)
     else
       render_json_error(@category)

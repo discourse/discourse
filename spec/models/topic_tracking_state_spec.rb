@@ -217,9 +217,57 @@ RSpec.describe TopicTrackingState do
     end
   end
 
+  shared_examples "only publishes unlisted topics to users who can see them" do |channel, method|
+    fab!(:unlisted_group, :group)
+    fab!(:unlisted_category_member) { Fabricate(:user, groups: [unlisted_group]) }
+    fab!(:unlisted_category_moderator) do
+      Fabricate(:moderator, groups: [unlisted_group], refresh_auto_groups: true)
+    end
+    fab!(:trust_level_4_user) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+    fab!(:unlisted_admin) { Fabricate(:admin, refresh_auto_groups: true) }
+
+    it "publishes an unlisted topic in a public category to staff and trust level 4" do
+      unlisted_topic = Fabricate(:topic, category: Fabricate(:category), visible: false)
+
+      message =
+        MessageBus
+          .track_publish(channel) { described_class.public_send(method, unlisted_topic) }
+          .first
+
+      expect(message.group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:trust_level_4],
+      )
+      expect(message.user_ids).to eq(nil)
+    end
+
+    it "publishes an unlisted topic in a restricted category only to those of them who can see the category" do
+      unlisted_topic =
+        Fabricate(
+          :topic,
+          category: Fabricate(:private_category, group: unlisted_group),
+          visible: false,
+        )
+
+      message =
+        MessageBus
+          .track_publish(channel) { described_class.public_send(method, unlisted_topic) }
+          .first
+
+      expect(message.group_ids).to eq(nil)
+      expect(message.user_ids).to include(unlisted_admin.id, unlisted_category_moderator.id)
+      expect(message.user_ids).not_to include(unlisted_category_member.id, trust_level_4_user.id)
+    end
+  end
+
   describe ".publish_new" do
     include_examples("publishes message to right groups and users", "/new", :publish_new)
     include_examples("does not publish message for private topics", :publish_new)
+    include_examples(
+      "only publishes unlisted topics to users who can see them",
+      "/new",
+      :publish_new,
+    )
 
     it "includes tags as objects with id when tagging is enabled" do
       SiteSetting.tagging_enabled = true
@@ -251,6 +299,11 @@ RSpec.describe TopicTrackingState do
   describe ".publish_latest" do
     include_examples("publishes message to right groups and users", "/latest", :publish_latest)
     include_examples("does not publish message for private topics", :publish_latest)
+    include_examples(
+      "only publishes unlisted topics to users who can see them",
+      "/latest",
+      :publish_latest,
+    )
 
     it "can correctly publish latest" do
       message = MessageBus.track_publish("/latest") { described_class.publish_latest(topic) }.first
@@ -1153,6 +1206,11 @@ RSpec.describe TopicTrackingState do
   describe ".publish_recover" do
     include_examples("publishes message to right groups and users", "/recover", :publish_recover)
     include_examples("does not publish message for private topics", :publish_recover)
+    include_examples(
+      "only publishes unlisted topics to users who can see them",
+      "/recover",
+      :publish_recover,
+    )
   end
 
   describe ".publish_delete" do

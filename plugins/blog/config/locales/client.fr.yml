@@ -19,7 +19,6 @@ fr:
         save: Enregistrer
         about_tab: À propos
         blog_slug: Identifiant
-        general_heading: Général
         settings_tab: Paramètres
         theme_tab: Thème
         column_name: Nom
@@ -51,6 +50,7 @@ fr:
           title: titre
           body: corps
           tags: étiquettes
+        settings_button: Paramètres
       review:
         create: Créer un lien
         copy: Copie
@@ -73,5 +73,7 @@ fr:
       drafts: Brouillons
       pages: Pages
       preview: Aperçu
+      article_settings:
+        kind_page: Page
       unpublish: Annuler la publication
       appearance_link: Apparence

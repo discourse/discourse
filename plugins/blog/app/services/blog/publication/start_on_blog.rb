@@ -1,23 +1,24 @@
 # frozen_string_literal: true
 
-# Records the blog a new draft was started for, so it is listed and published
-# there. A draft without a publication belongs to the default blog, so drafts
-# started for it need nothing recorded.
+# Records what a new draft was started as: an article on another blog, or a
+# page. A draft without a publication is an article on the default blog, so
+# those need nothing recorded.
 class Blog::Publication::StartOnBlog
   include Service::Base
 
   params do
     attribute :topic_id, :integer
     attribute :blog_id, :integer
+    attribute :page, :boolean
 
-    validates :topic_id, :blog_id, presence: true
+    validates :topic_id, presence: true
   end
 
   model :topic
   policy :editorial_draft
   policy :can_edit_draft
   model :blog
-  policy :blog_is_not_default
+  policy :differs_from_default
   transaction { model :publication, :create_publication }
 
   private
@@ -35,18 +36,21 @@ class Blog::Publication::StartOnBlog
   end
 
   def fetch_blog(params:)
+    return Blog::Instance.default_blog if params.blog_id.blank?
     Blog::Instance.find_cached(params.blog_id)
   end
 
-  def blog_is_not_default(blog:)
-    !blog.is_default?
+  def differs_from_default(params:, blog:)
+    params.page || !blog.is_default?
   end
 
-  def create_publication(topic:, blog:)
-    path = Blog::Publication.default_path(topic, blog:)
+  def create_publication(params:, topic:, blog:)
+    page = params.page.present?
+    path = Blog::Publication.default_path(topic, blog:, page:)
     if Blog::Path.exists?(blog_id: blog.id, path:)
-      path = Blog::Publication.default_path(topic, blog:, slug: "#{topic.slug}-#{topic.id}")
+      slug = "#{topic.slug}-#{topic.id}"
+      path = Blog::Publication.default_path(topic, blog:, slug:, page:)
     end
-    Blog::Publication.create(topic:, blog:, path:)
+    Blog::Publication.create(topic:, blog:, path:, page:)
   end
 end

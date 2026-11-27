@@ -58,6 +58,9 @@ da:
         type: "Type"
         error: "Fejl"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Anvend"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
@@ -264,6 +267,8 @@ da:
         embedding: "Indlejring"
       concepts:
         edit: "Rediger"
+        seed:
+          refresh: "Genindlæs"
         delete: "Slet"
         columns:
           status: "Status"
@@ -275,6 +280,9 @@ da:
           name: "Navn"
           description: "Beskrivelse"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
         tagged_topics: "Markerede emner"
         topic_columns:
           topic: "Emne"

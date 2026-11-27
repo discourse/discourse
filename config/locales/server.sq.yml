@@ -1258,6 +1258,8 @@ sq:
         %{base_url}/u/activate-account/%{email_token}
 
         Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
+  page_forbidden:
+    page_title: "Ndalohet hyrja"
   page_not_found:
     page_title: "Faqja nuk u gjet"
     see_more: "Më shumë"

@@ -69,6 +69,9 @@ describe "User preferences | Security" do
     before { SiteSetting.enable_passkeys = true }
 
     it "adds a passkey, removes user password, logs in with passkey" do
+      # A password can only be removed once it is older than a login token
+      user.user_password.update_columns(created_at: 1.hour.ago)
+
       with_virtual_authenticator(
         hasUserVerification: true,
         hasResidentKey: true,
@@ -131,18 +134,18 @@ describe "User preferences | Security" do
 
       visit("/")
 
+      expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
       expect(page).to have_selector(
         ".alert-error",
-        text: "You are required to enable two-factor authentication before accessing this site.",
+        text: I18n.t("js.user.second_factor.enforced_notice"),
       )
+      expect(page).to have_no_css(".new-totp")
 
-      expect(page).to have_css(".user-preferences .totp")
+      click_button I18n.t("js.user.confirm_access.title")
+      PageObjects::Modals::ConfirmSession.new.submit_password(password)
+
       expect(page).to have_css(".user-preferences .security-key")
-
-      find(".user-preferences .totp .btn.new-totp").click
-
-      find(".dialog-body input#password").fill_in(with: password)
-      find(".confirm-session .btn-primary").click
+      find(".user-preferences .totp .new-totp").click
 
       expect(page).to have_css(".qr-code")
     end
@@ -200,6 +203,34 @@ describe "User preferences | Security" do
           text: I18n.t("js.user.change_password.staged_user"),
         )
       end
+    end
+
+    it "logs the user's devices out without logging the admin out" do
+      UserAuthToken.generate!(user_id: user.id, user_agent: "Firefox", client_ip: "1.1.1.1")
+
+      user_preferences_security_page.visit(user)
+
+      expect(user_preferences_security_page).to have_auth_token("Firefox")
+
+      dropdown = user_preferences_security_page.auth_token_dropdown
+      dropdown.expand
+
+      expect(dropdown).to have_no_option_value("notYou")
+
+      dropdown.select_row_by_value("logOut")
+
+      expect(user_preferences_security_page).to have_no_auth_token("Firefox")
+      expect(user_preferences_security_page).to have_auth_token
+
+      user_preferences_security_page.log_out_all_devices
+
+      expect(user_preferences_security_page).to have_no_auth_token
+
+      page.refresh
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/security")
+      expect(user_preferences_security_page).to have_auth_tokens_section
+      expect(user_preferences_security_page).to have_no_auth_token
     end
   end
 end

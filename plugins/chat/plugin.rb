@@ -229,6 +229,10 @@ after_initialize do
     end,
   ) { true }
 
+  add_to_serializer(:user, :can_chat, include_condition: -> { include_can_edit? && can_edit }) do
+    object.guardian.can_chat?
+  end
+
   add_to_serializer(
     :current_user,
     :can_direct_message,

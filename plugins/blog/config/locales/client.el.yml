@@ -18,7 +18,6 @@ el:
         save: Αποθήκευση
         about_tab: Σχετικά
         blog_slug: Slug
-        general_heading: Γενικά
         settings_tab: Ρυθμίσεις
         theme_tab: Θέμα
         column_name: Όνομα
@@ -48,6 +47,7 @@ el:
           title: τίτλος
           body: κύριο μέρος
           tags: ετικέτες
+        settings_button: Ρυθμίσεις
       review:
         create: Δημιουργία συνδέσμου
         copy: Αντιγραφή
@@ -70,5 +70,7 @@ el:
       drafts: Προσχέδια
       pages: Σελίδες
       preview: Προεπισκόπηση
+      article_settings:
+        kind_page: Σελίδα
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

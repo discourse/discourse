@@ -305,6 +305,23 @@ describe Chat::Notifier do
         expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
       end
 
+      it "counts repeated mentions of a user once toward the 'max_mentions_per_chat_message' setting" do
+        SiteSetting.max_mentions_per_chat_message = 2
+        user_3 = Fabricate(:user)
+        @chat_group.add(user_3)
+        Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user_3)
+
+        msg =
+          build_cooked_msg(
+            "Hello @#{user_2.username}, @#{user_2.username} and @#{user_3.username}",
+            user_1,
+          )
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id, user_3.id)
+      end
+
       describe "users ignoring or muting the user creating the message" do
         it "does not publish new mentions to these users" do
           Fabricate(:muted_user, user: user_2, muted_user: user_1)

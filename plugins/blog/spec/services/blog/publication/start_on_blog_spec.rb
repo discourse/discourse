@@ -3,7 +3,6 @@
 RSpec.describe Blog::Publication::StartOnBlog do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:topic_id) }
-    it { is_expected.to validate_presence_of(:blog_id) }
   end
 
   describe ".call" do
@@ -24,7 +23,7 @@ RSpec.describe Blog::Publication::StartOnBlog do
     let(:params) { { topic_id: topic.id, blog_id: engineering.id } }
 
     context "when contract is invalid" do
-      let(:params) { { topic_id: topic.id } }
+      let(:params) { { blog_id: engineering.id } }
 
       it { is_expected.to fail_a_contract }
     end
@@ -51,8 +50,32 @@ RSpec.describe Blog::Publication::StartOnBlog do
       let(:params) { super().merge(blog_id: Blog::Instance.default_blog.id) }
 
       it "records nothing, as drafts belong to it already" do
-        expect(result).to fail_a_policy(:blog_is_not_default)
+        expect(result).to fail_a_policy(:differs_from_default)
         expect(Blog::Publication.where(topic:)).not_to exist
+      end
+    end
+
+    context "when the draft is a page" do
+      let(:params) { { topic_id: topic.id, page: true } }
+
+      it "records a page on the default blog, with a path that skips the date" do
+        expect(result[:publication]).to have_attributes(
+          blog_id: Blog::Instance.default_blog.id,
+          page: true,
+          path: "/#{topic.slug}",
+        )
+      end
+    end
+
+    context "when the draft is a page on another blog" do
+      let(:params) { super().merge(page: true) }
+
+      it "records a page on that blog" do
+        expect(result[:publication]).to have_attributes(
+          blog_id: engineering.id,
+          page: true,
+          path: "/#{topic.slug}",
+        )
       end
     end
 

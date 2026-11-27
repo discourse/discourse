@@ -1,5 +1,5 @@
-import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action, computed, set } from "@ember/object";
+import Controller from "@ember/controller";
+import EmberObject, { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
@@ -8,7 +8,6 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
-import { deepEqual } from "discourse/lib/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
@@ -17,7 +16,6 @@ import { i18n } from "discourse-i18n";
 export default class AccountController extends Controller {
   @service dialog;
   @service modal;
-  @controller user;
 
   canSaveUser = true;
 
@@ -39,15 +37,6 @@ export default class AccountController extends Controller {
   init() {
     super.init(...arguments);
     this.set("revoking", {});
-  }
-
-  @computed("user.viewingSelf")
-  get canDownloadPosts() {
-    return this.user?.viewingSelf;
-  }
-
-  set canDownloadPosts(value) {
-    set(this, "user.viewingSelf", value);
   }
 
   @computed("siteSettings.enable_names")
@@ -83,11 +72,6 @@ export default class AccountController extends Controller {
   @computed("model.availableFlairs.length")
   get canSelectFlair() {
     return this.model?.availableFlairs?.length > 0;
-  }
-
-  @computed("model.id", "currentUser.id")
-  get disableConnectButtons() {
-    return !deepEqual(this.model?.id, this.currentUser?.id);
   }
 
   get saveAttrNames() {

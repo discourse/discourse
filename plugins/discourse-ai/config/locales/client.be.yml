@@ -46,6 +46,9 @@ be:
       ai_decoded_transcript:
         type: "Тып"
         error: "памылка"
+      post_image_captions:
+        image_descriptions:
+          apply: "Прымяніць"
       discourse_workflows:
         ai_tool:
           list_item: "Элемент спіса"
@@ -196,6 +199,8 @@ be:
         embedding: "узаемадзеянне"
       concepts:
         edit: "Рэдагаваць"
+        seed:
+          refresh: "Абнавіць"
         delete: "Выдаліць"
         columns:
           status: "Статус"
@@ -207,6 +212,11 @@ be:
           name: "Імя"
           description: "Апісанне"
           status: "Статус"
+        shared_topics_count:
+          one: "%{count} тэма"
+          few: "%{count} тэмы"
+          many: "%{count} тэм"
+          other: "%{count} тэма"
         tagged_topics: "Tagged тэмы"
         topic_columns:
           topic: "Тэма"

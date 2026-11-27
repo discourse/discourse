@@ -173,6 +173,22 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create" do
+    it "does not issue a key once a password change revokes the session mid-request" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :can_authorize_key?,
+      ).and_wrap_original do |original|
+        result = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      expect { post "/user-api-key.json", params: args }.not_to change { UserApiKey.count }
+      expect(response.status).to eq(403)
+    end
+
     it "does not allow anon" do
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
@@ -464,6 +480,56 @@ RSpec.describe UserApiKeysController do
       approval_token = approval_token_for(body["user_code"], user)
       post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
       user
+    end
+
+    it "does not issue a key once a password change revokes the session mid-request" do
+      body = create_pending_device_request
+      user = Fabricate(:user, refresh_auto_groups: true)
+      approval_token = approval_token_for(body["user_code"], user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :can_authorize_key?,
+      ).and_wrap_original do |original|
+        result = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
+
+      expect(response.parsed_body).to include(
+        "state" => UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE,
+        "expired_code" => true,
+      )
+      expect(UserApiKey.where(user_id: user.id)).to be_empty
+    end
+
+    it "does not revive a request that expires while waiting for the credential lock" do
+      body = create_pending_device_request
+      user = Fabricate(:user, refresh_auto_groups: true)
+      approval_token = approval_token_for(body["user_code"], user)
+      device_code = body["device_code"]
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :with_revalidated_credential,
+      ).and_wrap_original do |original, &block|
+        UserApiKey::DeviceAuth::GrantStore.delete(device_code)
+        original.call(&block)
+      end
+
+      post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
+
+      expect(UserApiKey.where(user_id: user.id)).to be_empty
+      expect(UserApiKey::DeviceAuth::GrantStore.load(device_code)).to be_nil
+    end
+
+    it "keeps the key when the approval is rendered as HTML" do
+      body = create_pending_device_request
+      user = Fabricate(:user, refresh_auto_groups: true)
+      approval_token = approval_token_for(body["user_code"], user)
+
+      post "/user-api-key/device/authorize", params: { approval_token: approval_token }
+
+      expect(response.status).to eq(200)
+      expect(UserApiKey.active.where(user_id: user.id).count).to eq(1)
     end
 
     it "does not bind or authorize a pending device request as a shadow" do
@@ -1058,6 +1124,24 @@ RSpec.describe UserApiKeysController do
       expect(key.reload.revoked_at).to be_nil
     end
 
+    it "does not restore a key once a password change revokes the session mid-request" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      user = key.user
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :find_key,
+      ).and_wrap_original do |original|
+        found = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        found
+      end
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+
     it "lets an admin restore an ordinary user's key" do
       key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
       sign_in(Fabricate(:admin))
@@ -1146,6 +1230,42 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create_otp" do
+    it "does not issue a login token once a password change revokes the session mid-request" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :can_authorize_key?,
+      ).and_wrap_original do |original|
+        result = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        result
+      end
+
+      post "/user-api-key/otp.json", params: otp_args
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body).not_to have_key("redirect_url")
+    end
+
+    it "issues a login token to a User API key request admitted under load" do
+      global_setting :reject_anonymous_min_queue_seconds, 1.0
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      key = Fabricate(:user_api_key, user:, scopes: [UserApiKeyScope.new(name: "write")])
+
+      post "/user-api-key/otp.json",
+           params: otp_args,
+           headers: {
+             "User-Api-Key" => key.key,
+             "X-Request-Start" => "t=#{Time.now.to_f - 5}",
+           }
+
+      expect(response.status).to eq(200)
+      otp = decrypt_payload(extract_payload_from_redirect(response, key: "oneTimePassword"))
+      expect(Discourse.redis.get("otp_#{otp}")).to be_present
+    end
+
     it "denies an OTP to a shadow even when its group may request one" do
       SiteSetting.allow_anonymous_mode = true
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
@@ -1226,7 +1346,10 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted)
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "preserves callback query parameters when returning an OTP" do
@@ -1243,7 +1366,10 @@ RSpec.describe UserApiKeysController do
       expect(query).to include("state" => "return-to-client", "oneTimePassword" => be_present)
 
       otp = decrypt_payload(Base64.decode64(query["oneTimePassword"]))
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "encrypts OTP with OAEP padding when requested" do
@@ -1256,7 +1382,10 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted, padding: "oaep")
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "rejects invalid padding parameter" do

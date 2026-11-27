@@ -16,7 +16,6 @@ ca:
         mobile: Mòbil
         save: Desa
         about_tab: Quant a
-        general_heading: General
         settings_tab: Configuració
         theme_tab: Aparença
         column_name: Nom
@@ -42,6 +41,7 @@ ca:
           title: títol
           body: cos
           tags: etiquetes
+        settings_button: Configuració
       review:
         copy: Còpia
         open: Obre

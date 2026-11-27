@@ -82,6 +82,9 @@ ur:
         type: "قِسم"
         error: "خرابی"
         response: "جواب"
+      post_image_captions:
+        image_descriptions:
+          apply: "لاگو کریں"
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
@@ -313,6 +316,8 @@ ur:
         embedding: "اَیمبَیڈ کرنا"
       concepts:
         edit: "ترمیم کریں"
+        seed:
+          refresh: "تازہ کریں"
         delete: "مٹائیں"
         columns:
           status: "حیثیت"
@@ -325,6 +330,9 @@ ur:
           description: "تفصیل"
           aliases: "مستعاری اسماء"
           status: "حیثیت"
+        shared_topics_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوعات"
         tagged_topics: "ٹیگ ہوے ٹاپک"
         topic_columns:
           topic: "ٹاپک"

@@ -19,7 +19,6 @@ hu:
         save: Mentés
         about_tab: Névjegy
         blog_slug: URL slug
-        general_heading: Általános
         settings_tab: Beállítások
         theme_tab: Téma
         column_name: Név
@@ -48,6 +47,7 @@ hu:
           title: cím
           body: törzs
           tags: címkék
+        settings_button: Beállítások
       review:
         create: Hivatkozás létrehozása
         copy: Másolás
@@ -70,5 +70,7 @@ hu:
       drafts: Vázlatok
       pages: Oldalak
       preview: Előnézet
+      article_settings:
+        kind_page: Oldal
       unpublish: Közzététel visszavonása
       appearance_link: Megjelenés

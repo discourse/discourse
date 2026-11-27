@@ -17,7 +17,6 @@ gl:
         save: Gardar
         about_tab: Verbo de
         blog_slug: Localizador abreviado
-        general_heading: Xeral
         settings_tab: Configuración
         theme_tab: Tema
         column_name: Nome
@@ -43,6 +42,7 @@ gl:
           title: título
           body: mensaxe
           tags: etiquetas
+        settings_button: Configuración
       review:
         copy: Copiar
         open: Abrir

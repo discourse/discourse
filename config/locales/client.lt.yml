@@ -2327,9 +2327,6 @@ lt:
         show_key_description: "Įveskite rankiniu būdu"
         short_description: |
           Apsaugokite savo paskyrą naudodami vienkartinius saugos kodus arba fizinius saugos raktus.
-        extended_description: |
-          Dviejų veiksnių autentifikavimas suteikia papildomo saugumo jūsų paskyrai, nes be slaptažodžio reikia ir vienkartinio prieigos rakto. Tokenus galima generuoti <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>„Android“</a> ir <a href="https://www.google.com/search?q=authenticator+apps+for+ios">„iOS“</a> įrenginiuose.
-        oauth_enabled_warning: "Atminkite, kad socialiniai prisijungimai bus išjungti, kai jūsų paskyroje bus įgalintas dviejų veiksnių autentifikavimas."
         use: "Naudoti autentifikavimo programėlę"
         enforced_with_oauth_notice: "Privalote įjungti dviejų veiksnių autentifikavimą. Jūsų bus prašoma jį naudoti tik prisijungiant slaptažodžiu, o ne naudojant išorinį autentifikavimą ar prisijungimo per socialinius tinklus metodus."
         enforced_notice: "Prieš prisijungdami prie šios svetainės turite įjungti dviejų veiksnių autentifikavimą."
@@ -3285,7 +3282,6 @@ lt:
       not_allowed_from_ip_address: "Jūs negalite prisijungti iš šio IP adreso."
       admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
       resend_activation_email: "Spustelėkite čia, kad dar kartą išsiųstumėte aktyvavimo el. laišką."
-      omniauth_disallow_totp: "Jūsų paskyroje įgalintas dviejų veiksnių autentifikavimas. Prisijunkite naudodami savo slaptažodį."
       works_with: "Veikia su"
       activate_account: "Aktyvuoti vartotoją"
       resend_title: "Persiųsti patvirtinimo laišką"
@@ -4965,7 +4961,7 @@ lt:
         back_description: "Grįžkite prie paskutinio neskaityto įrašo"
         replies_short: "%{current} / %{total}"
       progress:
-        title: temos progresas
+        title: "temos progresas"
         jump_prompt: "peršokti į…"
         jump_prompt_of:
           one: "iš %{count} įrašo"

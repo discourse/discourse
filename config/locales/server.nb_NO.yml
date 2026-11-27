@@ -1247,6 +1247,8 @@ nb_NO:
       subject_template_improved: "Login"
     post_approved:
       title: "Ditt innlegg ble godkjent"
+  page_forbidden:
+    page_title: "Tilgang avslått"
   page_not_found:
     page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."

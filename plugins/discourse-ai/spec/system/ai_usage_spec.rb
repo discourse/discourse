@@ -40,6 +40,7 @@ RSpec.describe "AI Usage Admin Page" do
   it "lets admins see usage for workflows that made AI requests" do
     create_usage(llm_model, feature: "workflow")
     ai_usage_page.visit
+    expect(ai_usage_page).to have_features_total_row
     expect(ai_usage_page).to have_no_workflows_table
 
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Summary demo")
@@ -52,6 +53,7 @@ RSpec.describe "AI Usage Admin Page" do
       llm_model: llm_model,
       request_tokens: 100,
       response_tokens: 30,
+      created_at: 1.day.ago,
     )
 
     ai_usage_page.visit

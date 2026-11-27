@@ -26,8 +26,8 @@ module Reports::SiteTraffic
           <<~SQL,
             WITH browser_pageviews AS (
               SELECT date,
-                SUM(count) FILTER (WHERE req_type IN (:logged_in_browser_types)) AS logged_in,
-                SUM(count) FILTER (WHERE req_type IN (:anonymous_browser_types)) AS anonymous
+                SUM(count) FILTER (WHERE req_type = :page_view_logged_in_browser) AS logged_in,
+                SUM(count) FILTER (WHERE req_type = :page_view_anon_browser) AS anonymous
               FROM (#{browser_pageviews.where(date: report.start_date..report.end_date).to_sql}) requests
               GROUP BY date
             ), likely_crawlers AS (
@@ -79,16 +79,9 @@ module Reports::SiteTraffic
           page_view_anon: ApplicationRequest.req_types[:page_view_anon],
           page_view_crawler: ApplicationRequest.req_types[:page_view_crawler],
           page_view_logged_in: ApplicationRequest.req_types[:page_view_logged_in],
-          anonymous_browser_types:
-            ApplicationRequest.req_types.values_at(
-              "page_view_anon_browser",
-              "page_view_anon_browser_beacon",
-            ),
-          logged_in_browser_types:
-            ApplicationRequest.req_types.values_at(
-              "page_view_logged_in_browser",
-              "page_view_logged_in_browser_beacon",
-            ),
+          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser_beacon],
+          page_view_logged_in_browser:
+            ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
           page_view_embed: ApplicationRequest.req_types[:page_view_embed],
           first_browser_pageview_date: first_browser_pageview_date,
         )

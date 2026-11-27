@@ -76,6 +76,9 @@ fa_IR:
         type: "نوع"
         error: "خطا"
         response: "پاسخ"
+      post_image_captions:
+        image_descriptions:
+          apply: "اعمال کردن"
       discourse_workflows:
         ai_tool:
           tool_ref: "ابزار"
@@ -287,6 +290,8 @@ fa_IR:
         tool: "ابزار"
       concepts:
         edit: "ویرایش"
+        seed:
+          refresh: "تازه‌سازی"
         delete: "حذف"
         columns:
           status: "وضعیت"
@@ -298,6 +303,9 @@ fa_IR:
           name: "نام"
           description: "توضیح"
           status: "وضعیت"
+        shared_topics_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوع"
         tagged_topics: "موضوعات برچسب خورده"
         topic_columns:
           topic: "موضوع"

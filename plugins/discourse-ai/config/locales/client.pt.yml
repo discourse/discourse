@@ -85,6 +85,9 @@ pt:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_agent:
           mode: "Modo"
@@ -335,6 +338,8 @@ pt:
         embedding: "Incorporação"
       concepts:
         edit: "Editar"
+        seed:
+          refresh: "Atualizar"
         delete: "Eliminar"
         columns:
           status: "Estado"
@@ -346,6 +351,9 @@ pt:
           name: "Nome"
           description: "Descrição"
           status: "Estado"
+        shared_topics_count:
+          one: "%{count} tópico"
+          other: "%{count} tópicos"
         tagged_topics: "Tópicos etiquetados"
         topic_columns:
           topic: "Tópico"

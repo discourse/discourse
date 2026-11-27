@@ -216,9 +216,7 @@ pt:
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Você não pode impor 2FA se o DiscourseConnect estiver habilitado."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Você não pode desabilitar o login local se 2FA for obrigatório. Desative o 2FA obrigatório antes de desativar os logins locais."
       cors_origins_should_not_have_trailing_slash: "Você não deve adicionar a barra final (/) às origins de CORS."
   word_connector:
     comma: ", "
@@ -1861,6 +1859,8 @@ pt:
       subject_template: "Foi aprovado no %{site_name}!"
     post_approved:
       title: "A sua publicação foi aprovada"
+  page_forbidden:
+    page_title: "Acesso Negado"
   page_not_found:
     page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."

@@ -206,6 +206,18 @@ RSpec.describe UsersController do
           expect(user_deferred.reload.active).to eq(true)
         end
 
+        it "still requires a fresh login on an external-only site" do
+          SiteSetting.enable_local_logins = false
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          expect { put "/u/activate-account/#{email_token.token}" }.not_to change(
+            UserAuthToken,
+            :count,
+          )
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(user_deferred.reload.active?).to eq(true)
+        end
+
         it "activates the account without logging in a user with only backup codes" do
           Fabricate(:user_second_factor_backup, user: user_deferred)
 
@@ -335,6 +347,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -342,8 +355,27 @@ RSpec.describe UsersController do
 
       it "succeeds with a newly-created user" do
         user.update!(created_at: 1.minute.ago)
+        user.user_password.update_columns(created_at: 1.hour.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
+      end
+
+      it "waits until login tokens issued before a password was added expire" do
+        freeze_time
+        user.user_password.update_columns(created_at: 2.minutes.ago)
+        stub_server_session_confirmed
+
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("remove_password_too_soon", count: 10),
+        )
+        expect(user.reload.user_password).to be_present
+
+        freeze_time 9.minutes.from_now
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+        expect(user.reload.user_password).to be_nil
       end
     end
 
@@ -378,6 +410,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -483,7 +516,7 @@ RSpec.describe UsersController do
         expect(response.body).to have_tag("script#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
-            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_connected_apps":false}',
           )
         end
 
@@ -525,6 +558,133 @@ RSpec.describe UsersController do
 
         expect(WebPush).not_to have_received(:payload_send)
         expect(user1.push_subscriptions).to be_empty
+      end
+
+      describe "authorized apps" do
+        fab!(:user_api_key) { Fabricate(:user_api_key, user: user1) }
+
+        it "reports whether the user has authorized apps" do
+          get "/u/password-reset/#{email_token.token}.json"
+
+          expect(response.parsed_body["has_connected_apps"]).to eq(true)
+        end
+
+        it "keeps authorized apps unless the user asks to revoke them" do
+          put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to be_nil
+        end
+
+        it "revokes authorized apps when requested" do
+          other_key = Fabricate(:user_api_key)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_present
+          expect(other_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to eq("revoked_user_api_keys: 1")
+        end
+
+        context "with an MCP authorization" do
+          fab!(:mcp_client) do
+            McpOauthClient.create!(
+              client_id: "password-reset-client",
+              name: "Password reset client",
+              registration_type: "pre_registered",
+              trust_state: "approved",
+              redirect_uris: ["http://127.0.0.1/callback"],
+            )
+          end
+          fab!(:mcp_authorization) do
+            McpOauthAuthorization.create!(
+              user: user1,
+              client: mcp_client,
+              resource: DiscourseMcp.resource_url,
+              consented_at: Time.zone.now,
+            )
+          end
+
+          before do
+            McpOauthAccessToken.issue!(authorization: mcp_authorization)
+            McpOauthRefreshToken.issue!(authorization: mcp_authorization)
+          end
+
+          it "reports MCP authorizations as authorized apps" do
+            user_api_key.update!(revoked_at: Time.zone.now)
+
+            get "/u/password-reset/#{email_token.token}.json"
+
+            expect(response.parsed_body["has_connected_apps"]).to eq(true)
+          end
+
+          it "keeps MCP authorizations unless the user asks to revoke them" do
+            put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(mcp_authorization.reload).to be_active
+          end
+
+          it "revokes MCP authorizations and their tokens when requested" do
+            put "/u/password-reset/#{email_token.token}.json",
+                params: {
+                  password: "hg9ow8yHG32O",
+                  revoke_connected_apps: true,
+                }
+
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(mcp_authorization.reload).not_to be_active
+            expect(mcp_authorization.revoked_reason).to eq("password_reset")
+            expect(mcp_authorization.access_tokens.where(revoked_at: nil)).to be_empty
+            expect(mcp_authorization.refresh_tokens.where(revoked_at: nil)).to be_empty
+            expect(
+              UserHistory
+                .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+                .last
+                .details,
+            ).to eq("revoked_user_api_keys: 1\nrevoked_mcp_authorizations: 1")
+          end
+        end
+
+        it "leaves expired apps, which the form does not offer to revoke, alone" do
+          user_api_key.update!(expires_at: 1.day.ago)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
+        end
+
+        it "keeps authorized apps when the new password is rejected" do
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "abc",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(user_api_key.reload.revoked_at).to be_nil
+        end
       end
 
       it "disallows double password reset" do
@@ -776,7 +936,7 @@ RSpec.describe UsersController do
           expect(response.body).to have_tag("script#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
-              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_connected_apps":false}',
             )
           end
 
@@ -3157,6 +3317,17 @@ RSpec.describe UsersController do
 
         include_examples "when username is available"
       end
+
+      context "when a moderator changing it for someone else" do
+        fab!(:user) { Fabricate(:user, username: "hansolo") }
+        before do
+          sign_in(moderator)
+
+          get "/u/check_username.json", params: { username: "HanSolo", for_user_id: user.id }
+        end
+
+        include_examples "when username is available"
+      end
     end
   end
 
@@ -4950,9 +5121,23 @@ RSpec.describe UsersController do
     context "when username does not exist" do
       it "does not send an activation email" do
         post "/u/action/send_activation_email.json", params: { username: "nopenopenopenope" }
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
+    end
+
+    it "does not reveal whether an email address belongs to an account" do
+      SiteSetting.hide_email_address_taken = true
+
+      responses =
+        [user.email, "nobody@example.com"].map do |email|
+          post "/u/action/send_activation_email.json", params: { username: email }
+          [response.status, response.parsed_body]
+        end
+
+      expect(responses.map(&:first)).to eq([403, 403])
+      expect(responses.map(&:last).uniq.size).to eq(1)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
     end
   end
 
@@ -5577,6 +5762,17 @@ RSpec.describe UsersController do
           expect(IgnoredUser.count).to eq(0)
           expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
         end
+
+        it "does not allow admin to make a source user mute themself" do
+          sign_in(admin)
+          put "/u/#{user.username}/notification_level.json",
+              params: {
+                notification_level: "mute",
+                acting_user_id: user.id,
+              }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(MutedUser.exists?(user_id: user.id, muted_user_id: user.id)).to eq(false)
+        end
       end
 
       context "when changing notification level to ignore" do
@@ -5606,6 +5802,47 @@ RSpec.describe UsersController do
           expect(
             IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id),
           ).to be_present
+        end
+
+        it "allows admin to change the ignore status for a source user who cannot ignore" do
+          ignored_user.destroy!
+          user.change_trust_level!(TrustLevel[0])
+          sign_in(admin)
+
+          put "/u/#{another_user.username}/notification_level.json",
+              params: {
+                notification_level: "ignore",
+                acting_user_id: user.id,
+                expiring_at: 3.days.from_now,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(IgnoredUser.exists?(user_id: user.id, ignored_user_id: another_user.id)).to eq(
+            true,
+          )
+        end
+
+        it "does not allow admin to make a source user ignore themself" do
+          sign_in(admin)
+          put "/u/#{user.username}/notification_level.json",
+              params: {
+                notification_level: "ignore",
+                acting_user_id: user.id,
+                expiring_at: 3.days.from_now,
+              }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(IgnoredUser.exists?(user_id: user.id, ignored_user_id: user.id)).to eq(false)
+        end
+
+        it "rejects a missing or unparseable expiring_at and keeps the existing mute" do
+          [nil, "garbage", "2020-13-45"].each do |expiring_at|
+            put "/u/#{another_user.username}/notification_level.json",
+                params: { notification_level: "ignore", expiring_at: }.compact
+
+            expect(response).to have_http_status(:bad_request)
+          end
+
+          expect(MutedUser.exists?(muted_user.id)).to eq(true)
         end
 
         it "does not allow a regular user to change the ignore status for anyone but themself" do
@@ -8402,6 +8639,74 @@ RSpec.describe UsersController do
   describe "#email_login" do
     before { SiteSetting.enable_local_logins_via_email = true }
 
+    it "applies the same per-login limits to known and unknown emails across IP addresses" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      freeze_time
+
+      7.times do |attempt|
+        responses =
+          [user1.email, "unknown@example.com"].map do |login|
+            post "/u/email-login.json",
+                 params: {
+                   login: attempt.odd? ? login.upcase : login,
+                 },
+                 headers: {
+                   "REMOTE_ADDR" => "10.0.0.#{attempt + 1}",
+                 }
+            [response.status, response.parsed_body]
+          end
+
+        expect(responses.first).to eq(responses.last)
+        expect(response.status).to eq([3, 6].include?(attempt) ? 422 : 200)
+        freeze_time 61.seconds.from_now if attempt == 3
+      end
+    end
+
+    it "silently limits account delivery across different logins when account existence is hidden" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      secondary_email = Fabricate(:secondary_email, user: user1).email
+      freeze_time
+
+      [["min", 3, 1.minute], ["hour", 6, 1.hour]].each do |period, max, duration|
+        freeze_time 61.minutes.from_now
+        limit = RateLimiter.new(nil, "email-login-#{period}-#{user1.id}", max, duration)
+        max.times { limit.performed! }
+
+        post "/u/email-login.json", params: { login: secondary_email }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK", "hide_taken" => true)
+        expect(Jobs::CriticalUserEmail.jobs).to be_empty
+      end
+    end
+
+    it "delivers login mail during Redis read-only failover" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = true
+      allow(RateLimiter::PERFORM_LUA).to receive(:eval).and_raise(Redis::ReadOnlyError)
+
+      expect_enqueued_with(job: :critical_user_email, args: { type: "email_login" }) do
+        post "/u/email-login.json", params: { login: user1.email }
+      end
+      expect(response.status).to eq(200)
+    end
+
+    it "returns an account-limit error when account existence is visible" do
+      RateLimiter.enable
+      SiteSetting.hide_email_address_taken = false
+      secondary_email = Fabricate(:secondary_email, user: user1).email
+      freeze_time
+
+      limit = RateLimiter.new(nil, "email-login-min-#{user1.id}", 3, 1.minute)
+      limit.max.times { limit.performed! }
+
+      post "/u/email-login.json", params: { login: secondary_email }
+      expect(response.status).to eq(422)
+      expect(Jobs::CriticalUserEmail.jobs).to be_empty
+    end
+
     it "enqueues the right email" do
       post "/u/email-login.json", params: { login: user1.email }
 
@@ -8522,7 +8827,10 @@ RSpec.describe UsersController do
 
             post "/users/create_second_factor_totp.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8831,7 +9139,10 @@ RSpec.describe UsersController do
 
             put "/users/second_factors_backup.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -9037,6 +9348,14 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
+    it "fails if session is not confirmed" do
+      UsersController.any_instance.unstub(:server_session_confirmed?)
+      sign_in(user1)
+      post "/u/create_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
     it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
       sign_in(user1)
       post "/u/create_passkey.json"
@@ -9115,6 +9434,17 @@ RSpec.describe UsersController do
 
         expect(passkey.reload.name).to eq("original name")
       end
+
+      it "does not rename a second-factor security key" do
+        security_key =
+          Fabricate(:user_security_key_with_random_credential, user: user1, name: "YubiKey")
+
+        sign_in(user1)
+        put "/u/rename_passkey/#{security_key.id}.json", params: { name: "new name" }
+
+        expect(response.status).to eq(400)
+        expect(security_key.reload.name).to eq("YubiKey")
+      end
     end
   end
 
@@ -9142,6 +9472,17 @@ RSpec.describe UsersController do
         delete "/u/delete_passkey/#{passkey.id}.json"
         expect(response.status).to eq(200)
         expect(user1.passkey_credential_ids).to eq([])
+      end
+
+      it "does not delete a second-factor security key" do
+        security_key = Fabricate(:user_security_key_with_random_credential, user: user1)
+
+        sign_in(user1)
+        expect do delete "/u/delete_passkey/#{security_key.id}.json" end.not_to change(
+          UserSecurityKey,
+          :count,
+        )
+        expect(response.status).to eq(200)
       end
 
       it "does not let an admin delete a passkey associated with user1" do
@@ -9193,6 +9534,15 @@ RSpec.describe UsersController do
       before do
         stub_server_session_confirmed
         sign_in(user1)
+      end
+
+      it "does not modify a first-factor passkey" do
+        passkey = Fabricate(:passkey_with_random_credential, user: user1, name: "Original name")
+
+        put "/u/security_key.json", params: { id: passkey.id, name: "new name", disable: "true" }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(passkey.reload).to have_attributes(name: "Original name", enabled: true)
       end
 
       it "returns 400 for an invalid security key id" do
@@ -9490,6 +9840,18 @@ RSpec.describe UsersController do
         expect(user1.push_subscriptions).to be_empty
         expect(PushSubscription.exists?(other_subscription.id)).to eq(true)
       end
+
+      it "notifies only the target user's sessions when staff log them out from everywhere" do
+        sign_in(admin)
+
+        messages =
+          MessageBus.track_publish do
+            post "/u/#{user1.username}/preferences/revoke-auth-token.json"
+          end
+
+        logout_channels = messages.map(&:channel).grep(%r{\A/logout/})
+        expect(logout_channels).to contain_exactly("/logout/#{user1.id}")
+      end
     end
   end
 
@@ -9514,7 +9876,15 @@ RSpec.describe UsersController do
     context "when local logins are not enabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "does not allow access" do
+      it "requires a recent external login when external auth 2FA is enabled" do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["external_login_required"]).to eq(true)
+      end
+
+      it "does not allow access when enforce_second_factor_on_external_auth is false" do
+        SiteSetting.enforce_second_factor_on_external_auth = false
+
         post "/u/second_factors.json"
         expect(response.status).to eq(404)
       end
