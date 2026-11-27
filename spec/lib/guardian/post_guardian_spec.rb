@@ -1235,6 +1235,24 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#filter_visible_posts_without_topic_check" do
+    fab!(:private_topic) do
+      Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+    end
+    fab!(:visible_post) { Fabricate(:post, topic: private_topic) }
+    fab!(:hidden_post) { Fabricate(:post, topic: private_topic, hidden: true) }
+
+    it "applies the post rules and leaves the topic check to the caller" do
+      posts = Post.where(topic: private_topic)
+      guardian = Fabricate(:user).guardian
+
+      expect(guardian.filter_visible_posts(posts)).to be_empty
+      expect(guardian.filter_visible_posts_without_topic_check(posts)).to contain_exactly(
+        visible_post,
+      )
+    end
+  end
+
   describe "#filter_visible_posts" do
     def expect_post_scope_parity(posts, viewers)
       viewers.each do |viewer|

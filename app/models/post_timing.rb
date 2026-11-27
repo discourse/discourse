@@ -244,10 +244,7 @@ SQL
     )
     TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 
-    if total_changed > 0
-      current_user.reload
-      current_user.publish_notifications_state
-    end
+    current_user.publish_notifications_state if total_changed > 0
   end
 end
 

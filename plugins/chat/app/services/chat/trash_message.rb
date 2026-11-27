@@ -75,6 +75,7 @@ module Chat
             .joins(:notifications)
             .select("notifications.id"),
       ).destroy_all
+      Chat::Action::DestroyWatchedThreadNotifications.call([message.id])
     end
 
     def update_tracking_state(message:)

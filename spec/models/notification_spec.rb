@@ -1,72 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Notification do
-  describe ".filter_inaccessible_reviewable_notifications" do
-    fab!(:admin)
-    fab!(:moderator)
-    fab!(:reviewable, :reviewable_flagged_post)
-
-    it "preserves regular mentions and filters reviewable mentions after access changes or deletion" do
-      SiteSetting.enable_mentions = true
-      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
-      mention = moderator.notifications.find_by!(notification_type: Notification.types[:mentioned])
-      regular =
-        Fabricate(:notification, user: moderator, notification_type: Notification.types[:mentioned])
-      notifications = [mention, regular]
-
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(
-          moderator.guardian,
-          notifications,
-        ),
-      ).to eq(notifications)
-
-      reviewable.update!(reviewable_by_moderator: false)
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(
-          moderator.guardian,
-          notifications,
-        ),
-      ).to eq([regular])
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(admin.guardian, notifications),
-      ).to eq(notifications)
-
-      reviewable.destroy!
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(admin.guardian, notifications),
-      ).to eq([regular])
-    end
-
-    it "filters mentions after category moderation membership is revoked" do
-      SiteSetting.enable_mentions = true
-      SiteSetting.enable_category_group_moderation = true
-      recipient = Fabricate(:user)
-      group = Fabricate(:group)
-      group.add(recipient)
-      category = reviewable.topic.category
-      reviewable.update!(category: category)
-      Fabricate(:category_moderation_group, category: category, group: group)
-      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{recipient.username}")
-      notifications = recipient.notifications.to_a
-
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(
-          recipient.guardian,
-          notifications,
-        ),
-      ).to eq(notifications)
-
-      group.remove(recipient)
-      expect(
-        described_class.filter_inaccessible_reviewable_notifications(
-          recipient.reload.guardian,
-          notifications,
-        ),
-      ).to be_empty
-    end
-  end
-
   context "with the notification observer enabled" do
     fab!(:user)
     fab!(:coding_horror)
@@ -219,13 +153,6 @@ RSpec.describe Notification do
           }.to change(user, :unread_notifications)
         end
 
-        it "increases total_unread_notifications" do
-          expect {
-            Fabricate(:notification, user: user)
-            user.reload
-          }.to change(user, :total_unread_notifications)
-        end
-
         it "doesn't increase unread_high_priority_notifications" do
           expect {
             Fabricate(:notification, user: user)
@@ -242,13 +169,6 @@ RSpec.describe Notification do
           }.not_to change(user, :unread_notifications)
         end
 
-        it "increases total_unread_notifications" do
-          expect {
-            Fabricate(:notification, user: user)
-            user.reload
-          }.to change(user, :total_unread_notifications)
-        end
-
         it "increases unread_high_priority_notifications" do
           expect {
             Fabricate(:private_message_notification, user: user)
@@ -263,13 +183,6 @@ RSpec.describe Notification do
             Fabricate(:bookmark_reminder_notification, user: user)
             user.reload
           }.not_to change(user, :unread_notifications)
-        end
-
-        it "increases total_unread_notifications" do
-          expect {
-            Fabricate(:notification, user: user)
-            user.reload
-          }.to change(user, :total_unread_notifications)
         end
 
         it "increases unread_high_priority_notifications" do
@@ -350,7 +263,7 @@ RSpec.describe Notification do
           Notification.types[:private_message],
         )
         expect(post.user.unread_notifications).to eq(0)
-        expect(post.user.total_unread_notifications).to eq(0)
+        expect(post.user.notifications.unread.count).to eq(0)
         expect(target.unread_high_priority_notifications).to eq(1)
 
         Fabricate(:post, topic:, user: topic.user)
@@ -521,7 +434,7 @@ RSpec.describe Notification do
         user.reload
 
         expect(user.unread_notifications).to eq(0)
-        expect(user.total_unread_notifications).to eq(3)
+        expect(user.notifications.unread.count).to eq(3)
         expect(user.unread_high_priority_notifications).to eq(2)
       end
     end
@@ -658,279 +571,60 @@ RSpec.describe Notification do
   context "with the notification observer disabled" do
     fab!(:user)
 
-    describe ".prioritized_list" do
-      def create(**opts)
-        opts[:user] = user if !opts[:user]
-        Fabricate(:notification, user: user, **opts)
-      end
+    describe "#consolidate_membership_requests" do
+      fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
+      fab!(:user)
+      fab!(:post)
 
-      fab!(:unread_high_priority_1) do
-        create(high_priority: true, read: false, created_at: 8.minutes.ago)
-      end
-      fab!(:read_high_priority_1) do
-        create(high_priority: true, read: true, created_at: 7.minutes.ago)
-      end
-      fab!(:unread_regular_1) do
-        create(high_priority: false, read: false, created_at: 6.minutes.ago)
-      end
-      fab!(:read_regular_1) { create(high_priority: false, read: true, created_at: 5.minutes.ago) }
-      fab!(:unread_like) do
-        create(
-          high_priority: false,
-          read: false,
-          created_at: 130.seconds.ago,
-          notification_type: Notification.types[:liked],
-        )
-      end
-
-      fab!(:unread_high_priority_2) do
-        create(high_priority: true, read: false, created_at: 1.minute.ago)
-      end
-      fab!(:read_high_priority_2) do
-        create(high_priority: true, read: true, created_at: 2.minutes.ago)
-      end
-      fab!(:unread_regular_2) do
-        create(high_priority: false, read: false, created_at: 3.minutes.ago)
-      end
-      fab!(:read_regular_2) { create(high_priority: false, read: true, created_at: 4.minutes.ago) }
-
-      it "puts unread high_priority on top followed by unread normal notifications and then everything else in reverse chronological order" do
-        expect(Notification.prioritized_list(user).map(&:id)).to eq(
-          [
-            unread_high_priority_2,
-            unread_high_priority_1,
-            unread_regular_2,
-            unread_regular_1,
-            read_high_priority_2,
-            unread_like,
-            read_regular_2,
-            read_regular_1,
-            read_high_priority_1,
-          ].map(&:id),
-        )
-      end
-
-      it "doesn't include notifications from other users" do
-        another_user_notification = create(high_priority: true, read: false, user: Fabricate(:user))
-        expect(Notification.prioritized_list(user).map(&:id)).to contain_exactly(
-          *[
-            unread_high_priority_2,
-            unread_high_priority_1,
-            unread_regular_2,
-            unread_regular_1,
-            read_high_priority_2,
-            unread_like,
-            read_regular_2,
-            read_regular_1,
-            read_high_priority_1,
-          ].map(&:id),
-        )
-        expect(
-          Notification.prioritized_list(another_user_notification.user).map(&:id),
-        ).to contain_exactly(another_user_notification.id)
-      end
-
-      it "doesn't include notifications from deleted topics" do
-        unread_high_priority_1.topic.trash!
-        unread_regular_2.topic.trash!
-        read_regular_1.topic.trash!
-        expect(Notification.prioritized_list(user).map(&:id)).to contain_exactly(
-          *[
-            unread_high_priority_2,
-            unread_regular_1,
-            read_high_priority_2,
-            unread_like,
-            read_regular_2,
-            read_high_priority_1,
-          ].map(&:id),
-        )
-      end
-
-      it "doesn't include like notifications if the user doesn't want like notifications" do
-        user.user_option.update!(
-          like_notification_frequency: UserOption.like_notification_frequency_type[:never],
-        )
-        unread_regular_1.update!(notification_type: Notification.types[:liked])
-        read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
-        expect(Notification.prioritized_list(user).map(&:id)).to eq(
-          [
-            unread_high_priority_2,
-            unread_high_priority_1,
-            unread_regular_2,
-            read_high_priority_2,
-            read_regular_1,
-            read_high_priority_1,
-          ].map(&:id),
-        )
-      end
-
-      it "respects the count param" do
-        expect(Notification.prioritized_list(user, count: 1).map(&:id)).to eq(
-          [unread_high_priority_2].map(&:id),
-        )
-
-        expect(Notification.prioritized_list(user, count: 3).map(&:id)).to eq(
-          [unread_high_priority_2, unread_high_priority_1, unread_regular_2].map(&:id),
-        )
-      end
-
-      it "can filter the list by specific types" do
-        unread_regular_1.update!(notification_type: Notification.types[:liked])
-        read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
-        expect(
-          Notification.prioritized_list(
-            user,
-            types: [Notification.types[:liked], Notification.types[:liked_consolidated]],
-          ).map(&:id),
-        ).to eq([unread_like, unread_regular_1, read_regular_2].map(&:id))
-      end
-
-      it "includes like notifications when filtering by like types even if the user doesn't want like notifications" do
-        user.user_option.update!(
-          like_notification_frequency: UserOption.like_notification_frequency_type[:never],
-        )
-        unread_regular_1.update!(notification_type: Notification.types[:liked])
-        read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
-        expect(
-          Notification.prioritized_list(
-            user,
-            types: [Notification.types[:liked], Notification.types[:liked_consolidated]],
-          ).map(&:id),
-        ).to eq([unread_like, unread_regular_1, read_regular_2].map(&:id))
-        expect(
-          Notification.prioritized_list(user, types: [Notification.types[:liked]]).map(&:id),
-        ).to contain_exactly(unread_like.id, unread_regular_1.id)
-      end
-    end
-
-    describe "#recent_report" do
-      let(:post) { Fabricate(:post) }
-      let(:vars) { { i: 0 } }
-
-      def fab(type, read)
-        vars[:i] += 1
-        Notification.create!(
-          read: read,
+      def create_membership_request_notification
+        Notification.consolidate_or_create!(
+          notification_type: Notification.types[:private_message],
           user_id: user.id,
-          topic_id: post.topic_id,
-          post_number: post.post_number,
-          data: "[]",
-          notification_type: type,
-          created_at: vars[:i].days.from_now,
+          data: {
+            topic_title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+            original_post_id: post.id,
+          }.to_json,
+          updated_at: Time.zone.now,
+          created_at: Time.zone.now,
         )
       end
 
-      def unread_pm
-        fab(Notification.types[:private_message], false)
+      before do
+        PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
+        2.times { create_membership_request_notification }
       end
 
-      def unread_bookmark_reminder
-        fab(Notification.types[:bookmark_reminder], false)
+      it "consolidates membership requests into a new notification" do
+        original_notification = create_membership_request_notification
+        starting_count = SiteSetting.notification_consolidation_threshold
+
+        consolidated_notification = create_membership_request_notification
+        expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+        expect(consolidated_notification.notification_type).to eq(
+          Notification.types[:membership_request_consolidated],
+        )
+
+        data = consolidated_notification.data_hash
+        expect(data[:group_name]).to eq(group.name)
+        expect(data[:count]).to eq(starting_count + 1)
+
+        updated_consolidated_notification = create_membership_request_notification
+
+        expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
       end
 
-      def pm
-        fab(Notification.types[:private_message], true)
-      end
+      it 'consolidates membership requests with "processed" false if user is in DND' do
+        user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
 
-      def regular
-        fab(Notification.types[:liked], true)
-      end
+        create_membership_request_notification
+        create_membership_request_notification
 
-      def liked_consolidated
-        fab(Notification.types[:liked_consolidated], true)
-      end
-
-      it "correctly finds visible notifications" do
-        pm
-        expect(Notification.visible.count).to eq(1)
-        post.topic.trash!
-        expect(Notification.visible.count).to eq(0)
-      end
-
-      it "orders stuff by creation descending, bumping unread high priority (pms, bookmark reminders) to top" do
-        # note we expect the final order to read bottom-up for this list of variables,
-        # with unread pm + bookmark reminder at the top of that list
-        a = unread_pm
-        regular
-        b = unread_bookmark_reminder
-        c = pm
-        d = regular
-
-        notifications = Notification.recent_report(user, 4)
-        expect(notifications.map { |n| n.id }).to eq([b.id, a.id, d.id, c.id])
-      end
-
-      describe "for a user that does not want to be notify on liked" do
-        before do
-          user.user_option.update!(
-            like_notification_frequency: UserOption.like_notification_frequency_type[:never],
-          )
-        end
-
-        it "excludes all types of like notifications" do
-          notification = pm
-          regular
-          liked_consolidated
-
-          expect(Notification.recent_report(user)).to contain_exactly(notification)
-        end
-      end
-
-      describe "#consolidate_membership_requests" do
-        fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
-        fab!(:user)
-        fab!(:post)
-
-        def create_membership_request_notification
-          Notification.consolidate_or_create!(
-            notification_type: Notification.types[:private_message],
-            user_id: user.id,
-            data: {
-              topic_title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
-              original_post_id: post.id,
-            }.to_json,
-            updated_at: Time.zone.now,
-            created_at: Time.zone.now,
-          )
-        end
-
-        before do
-          PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
-          2.times { create_membership_request_notification }
-        end
-
-        it "consolidates membership requests into a new notification" do
-          original_notification = create_membership_request_notification
-          starting_count = SiteSetting.notification_consolidation_threshold
-
-          consolidated_notification = create_membership_request_notification
-          expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
-
-          expect(consolidated_notification.notification_type).to eq(
-            Notification.types[:membership_request_consolidated],
-          )
-
-          data = consolidated_notification.data_hash
-          expect(data[:group_name]).to eq(group.name)
-          expect(data[:count]).to eq(starting_count + 1)
-
-          updated_consolidated_notification = create_membership_request_notification
-
-          expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
-        end
-
-        it 'consolidates membership requests with "processed" false if user is in DND' do
-          user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
-
-          create_membership_request_notification
-          create_membership_request_notification
-
-          notification = Notification.last
-          expect(notification.notification_type).to eq(
-            Notification.types[:membership_request_consolidated],
-          )
-          expect(notification.shelved_notification).to be_present
-        end
+        notification = Notification.last
+        expect(notification.notification_type).to eq(
+          Notification.types[:membership_request_consolidated],
+        )
+        expect(notification.shelved_notification).to be_present
       end
     end
 
@@ -1042,49 +736,6 @@ RSpec.describe Notification do
           expect(notification6.data_hash[:original_name]).to be_nil
           SiteSetting.enable_names = true
         end
-      end
-    end
-
-    describe ".filter_disabled_badge_notifications" do
-      fab!(:enabled_badge) { Fabricate(:badge, enabled: true) }
-      fab!(:disabled_badge) { Fabricate(:badge, enabled: false) }
-
-      fab!(:enabled_badge_notification) do
-        BadgeGranter.send_notification(user.id, user.username, user.locale, enabled_badge)
-      end
-
-      fab!(:disabled_badge_notification) do
-        BadgeGranter.send_notification(user.id, user.username, user.locale, disabled_badge)
-      end
-
-      fab!(:regular_notification) { Fabricate(:notification, user: user) }
-
-      it "filters all badge notifications when enable_badges is false" do
-        SiteSetting.enable_badges = false
-
-        result =
-          Notification.filter_disabled_badge_notifications(
-            [enabled_badge_notification, disabled_badge_notification, regular_notification],
-          )
-
-        expect(result).to contain_exactly(regular_notification)
-      end
-
-      it "filters badge notifications for badges that are disabled" do
-        result =
-          Notification.filter_disabled_badge_notifications(
-            [enabled_badge_notification, disabled_badge_notification, regular_notification],
-          )
-
-        expect(result).to contain_exactly(enabled_badge_notification, regular_notification)
-      end
-
-      it "filters badge notifications for badges that do not exist" do
-        enabled_badge.destroy!
-
-        result = Notification.filter_disabled_badge_notifications([enabled_badge_notification])
-
-        expect(result).to eq([])
       end
     end
   end

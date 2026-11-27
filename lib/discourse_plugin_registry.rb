@@ -135,6 +135,7 @@ class DiscoursePluginRegistry
   define_filtered_register :admin_dashboard_highlight_kpis
   define_filtered_register :admin_dashboard_sections
   define_filtered_register :bookmarkables
+  define_register :notification_visibility_rules, Array
   define_filtered_register :admin_dashboard_report_sources
 
   define_filtered_register :list_suggested_for_providers

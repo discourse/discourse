@@ -193,6 +193,44 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     end
   end
 
+  describe "#visible_scope" do
+    it "only includes the query groups the user can see" do
+      expect(registered_bookmarkable.visible_scope(guardian)).to contain_exactly(
+        query_group1,
+        query_group2,
+        query_group3,
+      )
+      expect(registered_bookmarkable.visible_scope(admin_user.guardian)).to include(query_group4)
+
+      query2.update!(hidden: true)
+      group_user1.delete
+
+      expect(registered_bookmarkable.visible_scope(user.reload.guardian)).to contain_exactly(
+        query_group2,
+      )
+    end
+
+    it "hides a reminder from the notifications of a user who left the group" do
+      reminder =
+        Fabricate(
+          :notification,
+          user:,
+          topic: nil,
+          notification_type: Notification.types[:bookmark_reminder],
+          data: {
+            bookmarkable_type: "DiscourseDataExplorer::QueryGroup",
+            bookmarkable_id: query_group1.id,
+          }.to_json,
+        )
+
+      expect(Notification::Feed.new(user).notifications).to contain_exactly(reminder)
+
+      group_user1.delete
+
+      expect(Notification::Feed.new(User.find(user.id)).notifications).to be_empty
+    end
+  end
+
   describe "#can_see?" do
     it "returns false if the user is not a member of the group from which they created the bookmark" do
       expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(true) # Query 1, Group 0

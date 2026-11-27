@@ -744,7 +744,7 @@ RSpec.describe Chat::Api::ChannelsController do
         expect(victim_channel.chatable.user_can_access?(attacker)).to be(false)
         expect(
           Chat::ThreadUnreadsQuery
-            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .call(channel_ids: [victim_channel.id], user: victim)
             .first
             .unread_count,
         ).to eq(1)
@@ -755,7 +755,7 @@ RSpec.describe Chat::Api::ChannelsController do
         expect(response.parsed_body.dig("channel", "threading_enabled")).to be(true)
         expect(
           Chat::ThreadUnreadsQuery
-            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .call(channel_ids: [victim_channel.id], user: victim)
             .first
             .unread_count,
         ).to eq(1)

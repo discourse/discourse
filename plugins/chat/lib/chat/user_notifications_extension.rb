@@ -160,7 +160,7 @@ module Chat
           JOIN chat_messages ON chat_messages.chat_channel_id = chat_channels.id
           JOIN chat_mentions ON chat_mentions.chat_message_id = chat_messages.id
           JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = chat_mentions.id
-          JOIN notifications ON notifications.id = cmn.notification_id
+          JOIN (#{user.notification_feed.notifications(state: :unread).to_sql}) notifications ON notifications.id = cmn.notification_id
           JOIN users ON users.id = chat_messages.user_id
           WHERE uccm.user_id = #{user.id}
           AND NOT uccm.muted
@@ -178,7 +178,6 @@ module Chat
             WHEN 'Chat::AllMention' THEN chat_channels.allow_channel_wide_mentions = true
             #{group_sql} END
           )
-          AND NOT notifications.read
           GROUP BY uccm.id
         )
         UPDATE user_chat_channel_memberships uccm

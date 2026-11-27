@@ -36,7 +36,6 @@ acceptance("Chat | Disabled in preferences", function (needs) {
             },
           },
         ],
-        total_rows_notifications: 1,
         seen_notification_id: 0,
       })
     );

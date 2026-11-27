@@ -114,7 +114,9 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
 
         it "publishes the updated notifications state" do
           message = messages.find { |m| m.channel == "/notification/#{current_user.id}" }
-          expect(message.data[:recent]).to include([notification.id, true])
+          expect(message.data[:grouped_unread_notifications]).not_to include(
+            Notification.types[:chat_mention],
+          )
         end
 
         context "when there are no unread mentions" do

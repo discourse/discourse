@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | result-set", function (hooks) {
   setupTest(hooks);
@@ -78,6 +79,27 @@ module("Unit | Model | result-set", function (hooks) {
     assert.false(
       resultSet.canLoadMore,
       "cannot load more when total equals length"
+    );
+  });
+
+  test("pagination without a total", async function (assert) {
+    pretender.get("/cats", () =>
+      response({ cats: [{ id: 1 }], load_more_cats: "/load-more-cats" })
+    );
+    pretender.get("/load-more-cats", () => response({ cats: [{ id: 2 }] }));
+
+    const store = getOwner(this).lookup("service:store");
+    const resultSet = await store.findAll("cat");
+    assert.true(
+      resultSet.canLoadMore,
+      "can load more while the server sends a load more url"
+    );
+
+    await resultSet.loadMore();
+    assert.strictEqual(resultSet.content.length, 2, "appends the next page");
+    assert.false(
+      resultSet.canLoadMore,
+      "cannot load more once the server stops sending a load more url"
     );
   });
 

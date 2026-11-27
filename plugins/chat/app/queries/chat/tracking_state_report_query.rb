@@ -47,7 +47,7 @@ module Chat
           ::Chat::ChannelUnreadsQuery
             .call(
               channel_ids: channel_ids,
-              user_id: guardian.user.id,
+              user: guardian.user,
               include_missing_memberships: include_missing_memberships,
               include_read: include_read,
             )
@@ -71,7 +71,7 @@ module Chat
           ::Chat::ThreadUnreadsQuery.call(
             channel_ids: channel_ids,
             thread_ids: thread_ids,
-            user_id: guardian.user.id,
+            user: guardian.user,
             include_missing_memberships: include_missing_memberships,
             include_read: include_read,
           )

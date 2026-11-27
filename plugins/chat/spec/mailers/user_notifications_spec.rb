@@ -32,10 +32,11 @@ describe UserNotifications do
 
     if mention_klass
       notification_type = Notification.types[:chat_mention]
+      data = { chat_message_id: chat_message.id, chat_channel_id: chat_channel.id }.to_json
 
       Fabricate(
         :chat_mention_notification,
-        notification: Fabricate(:notification, user:, notification_type:),
+        notification: Fabricate(:notification, user:, notification_type:, data:),
         chat_mention: mention_klass.find_by(chat_message:),
       )
     end

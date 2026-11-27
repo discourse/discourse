@@ -30,10 +30,7 @@ RSpec.describe Jobs::Chat::MarkAllChannelThreadsRead do
   end
 
   def unread_count(user, target_channel = channel)
-    Chat::ThreadUnreadsQuery
-      .call(channel_ids: [target_channel.id], user_id: user.id)
-      .first
-      .unread_count
+    Chat::ThreadUnreadsQuery.call(channel_ids: [target_channel.id], user: user).first.unread_count
   end
 
   it "marks all threads as read across all users in the channel" do

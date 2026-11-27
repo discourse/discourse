@@ -161,6 +161,9 @@ class BaseBookmarkable
     raise NotImplementedError
   end
 
+  def self.visible_scope(guardian)
+  end
+
   ##
   # Some additional information about the bookmark or the surrounding relations
   # may be required when the bookmark is created or destroyed. For example, when

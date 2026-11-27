@@ -44,7 +44,7 @@ module Chat
             .update_all(read: true)
 
         # update_all skips Notification callbacks, so clients wouldn't learn about the change
-        DB.after_commit { user.reload.publish_notifications_state } if marked_count > 0
+        DB.after_commit { user.publish_notifications_state } if marked_count > 0
       end
     end
   end

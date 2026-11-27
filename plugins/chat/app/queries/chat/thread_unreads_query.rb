@@ -28,7 +28,7 @@ module Chat
     # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
     #  is used in tandem with channel_ids, it will just further filter the results of
     #  the thread counts from those channels.
-    # @param user_id [Integer] The ID of the user to count for.
+    # @param user [User] The user to count for.
     # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
     # @param include_read [Boolean] Whether to include threads that the user
@@ -37,11 +37,17 @@ module Chat
     def self.call(
       channel_ids: nil,
       thread_ids: nil,
-      user_id:,
+      user:,
       include_missing_memberships: false,
       include_read: true
     )
       return [] if channel_ids.blank? && thread_ids.blank?
+
+      unread_mentions =
+        user
+          .notification_feed
+          .notifications(types: [::Notification.types[:chat_mention]], state: :unread)
+          .to_sql
 
       # The CTE picks the candidate thread set up front — at most MAX_THREADS,
       # ordered by recency — and resolves the static per-thread filters
@@ -102,12 +108,9 @@ module Chat
         ) unread_calc ON true
         LEFT JOIN LATERAL (
           SELECT COUNT(*) AS cnt
-          FROM notifications n
-          INNER JOIN chat_messages cm ON cm.id = (n.data::json->>'chat_message_id')::bigint
-          WHERE n.user_id = :user_id
-            AND n.notification_type = :notification_type_mention
-            AND NOT n.read
-            AND cm.thread_id = lm.thread_id
+          FROM (#{unread_mentions}) notifications
+          INNER JOIN chat_messages cm ON cm.id = #{::Notification::Feed.data_id("chat_message_id")}
+          WHERE cm.thread_id = lm.thread_id
             AND cm.deleted_at IS NULL
             AND cm.id > COALESCE(lm.last_read_message_id, 0)
             AND lm.threading_enabled
@@ -140,11 +143,10 @@ module Chat
         sql,
         channel_ids: channel_ids,
         thread_ids: thread_ids,
-        user_id: user_id,
+        user_id: user.id,
         limit: MAX_THREADS,
         tracking_level: ::Chat::UserChatThreadMembership.notification_levels[:tracking],
         watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
-        notification_type_mention: ::Notification.types[:chat_mention],
       )
     end
   end

@@ -633,6 +633,7 @@ export default class StoreService extends Service {
       content,
       findArgs,
       totalRows: pageTarget["total_rows_" + typeName] || content.length,
+      hasTotalRows: "total_rows_" + typeName in pageTarget,
       loadMoreUrl: pageTarget["load_more_" + typeName],
       refreshUrl: pageTarget["refresh_" + typeName],
       resultSetMeta: result.meta,

@@ -75,5 +75,17 @@ module DiscourseDataExplorer
       !bookmarkable.query.hidden? &&
         guardian.group_and_user_can_access_query?(bookmarkable.group, bookmarkable.query)
     end
+
+    def self.visible_scope(guardian)
+      query_groups = QueryGroup.joins(:query, :group)
+      return query_groups if guardian.is_admin?
+
+      query_groups.where(
+        data_explorer_queries: {
+          hidden: false,
+        },
+        group_id: GroupUser.where(user_id: guardian.user&.id).select(:group_id),
+      )
+    end
   end
 end

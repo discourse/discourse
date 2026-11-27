@@ -86,6 +86,10 @@ module Chat
       guardian.can_join_chat_channel?(bookmarkable.chat_channel)
     end
 
+    def self.visible_scope(guardian)
+      Chat::Message.joins(:chat_channel).merge(Chat::ChannelFetcher.allowed_channels(guardian))
+    end
+
     def self.cleanup_deleted
       DB.query(<<~SQL, grace_time: 3.days.ago, bookmarkable_type: Chat::Message.polymorphic_name)
       DELETE FROM bookmarks b

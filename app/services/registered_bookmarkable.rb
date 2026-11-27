@@ -92,6 +92,10 @@ class RegisteredBookmarkable
     bookmarkable_klass.can_see_bookmarkable?(guardian, bookmarkable)
   end
 
+  def visible_scope(guardian)
+    bookmarkable_klass.visible_scope(guardian)
+  end
+
   def bookmark_metadata(bookmark, user)
     bookmarkable_klass.bookmark_metadata(bookmark, user)
   end

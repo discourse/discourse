@@ -44,7 +44,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
         .expects(:call)
         .with(
           channel_ids: channel_ids,
-          user_id: current_user.id,
+          user: current_user,
           include_missing_memberships: include_missing_memberships,
           include_read: include_read,
         )
@@ -96,7 +96,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
           .with(
             channel_ids: channel_ids,
             thread_ids: thread_ids,
-            user_id: current_user.id,
+            user: current_user,
             include_missing_memberships: include_missing_memberships,
             include_read: include_read,
           )

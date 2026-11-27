@@ -13,13 +13,19 @@ module Chat
 
     ##
     # @param channel_ids [Array<Integer>] The IDs of the channels to count.
-    # @param user_id [Integer] The ID of the user to count for.
+    # @param user [User] The user to count for.
     # @param include_missing_memberships [Boolean] Whether to include channels
     #   that the user is not a member of. These counts will always be 0.
     # @param include_read [Boolean] Whether to include channels that the user
     #   is a member of where they have read all the messages. This overrides
     #   include_missing_memberships.
-    def self.call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
+    def self.call(channel_ids:, user:, include_missing_memberships: false, include_read: true)
+      unread_mentions =
+        user
+          .notification_feed
+          .notifications(types: [::Notification.types[:chat_mention]], state: :unread)
+          .to_sql
+
       # The CTE picks the candidate channel set up front and resolves the
       # static per-channel filters (threading_enabled, muted, and
       # last_read_message_id) into columns. The three LATERAL aggregates then
@@ -95,15 +101,12 @@ module Chat
         ) unread_calc ON true
         LEFT JOIN LATERAL (
           SELECT COUNT(*) AS cnt
-          FROM notifications n
-          INNER JOIN chat_messages cm ON cm.id = (n.data::json->>'chat_message_id')::bigint
+          FROM (#{unread_mentions}) notifications
+          INNER JOIN chat_messages cm ON cm.id = #{::Notification::Feed.data_id("chat_message_id")}
           LEFT JOIN chat_threads ct ON ct.id = cm.thread_id
           LEFT JOIN user_chat_thread_memberships uctm
                  ON uctm.thread_id = cm.thread_id AND uctm.user_id = :user_id
-          WHERE n.user_id = :user_id
-            AND n.notification_type = :notification_type_mention
-            AND NOT n.read
-            AND (n.data::json->>'chat_channel_id')::bigint = lc.chat_channel_id
+          WHERE #{::Notification::Feed.data_id("chat_channel_id")} = lc.chat_channel_id
             AND (
               -- Mentions on a message in the channel stream, including replies
               -- that render inline, are read via the channel's marker. Piece
@@ -159,8 +162,7 @@ module Chat
       DB.query(
         sql,
         channel_ids: channel_ids,
-        user_id: user_id,
-        notification_type_mention: ::Notification.types[:chat_mention],
+        user_id: user.id,
         watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
         limit: MAX_CHANNELS,
       )

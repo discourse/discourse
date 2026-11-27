@@ -9,7 +9,7 @@ class UserNotificationTotalSerializer < ApplicationSerializer
              :group_inboxes
 
   def unread_notifications
-    object.all_unread_notifications_count - new_personal_messages_notifications_count
+    object.notification_feed.counts.unseen(except_type: Notification.types[:private_message])
   end
 
   def include_unread_personal_messages?
@@ -17,7 +17,7 @@ class UserNotificationTotalSerializer < ApplicationSerializer
   end
 
   def unread_personal_messages
-    new_personal_messages_notifications_count
+    object.new_personal_messages_notifications_count
   end
 
   def include_unseen_reviewables?
@@ -33,33 +33,14 @@ class UserNotificationTotalSerializer < ApplicationSerializer
   end
 
   def group_inboxes
-    group_inbox_data =
-      Notification
-        .unread
-        .where(
-          user_id: scope.user.id,
-          notification_type: Notification.types[:group_message_summary],
-        )
-        .pluck(:data)
+    object
+      .notification_feed
+      .notifications(types: [Notification.types[:group_message_summary]], state: :unread)
+      .pluck(:data)
+      .map do |json|
+        data = JSON.parse(json, symbolize_names: true)
 
-    results = []
-
-    return results if group_inbox_data.blank?
-
-    group_inbox_data.map do |json|
-      data = JSON.parse(json, symbolize_names: true)
-
-      results << {
-        group_id: data[:group_id],
-        group_name: data[:group_name],
-        count: data[:inbox_count],
-      }
-    end
-
-    results
-  end
-
-  def new_personal_messages_notifications_count
-    @new_personal_messages_notifications_count ||= object.new_personal_messages_notifications_count
+        { group_id: data[:group_id], group_name: data[:group_name], count: data[:inbox_count] }
+      end
   end
 end

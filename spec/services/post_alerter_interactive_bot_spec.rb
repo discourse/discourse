@@ -32,7 +32,7 @@ RSpec.describe PostAlerter, "#after_save_post" do
     expect(notification.post_number).to eq(post.post_number)
     expect(messages).to be_present
     expect(messages.last.user_ids).to eq([bot.id])
-    expect(messages.last.data.dig(:last_notification, :notification, :id)).to eq(notification.id)
+    expect(messages.last.data[:unread_notifications]).to eq(1)
   end
 
   it "records direct notifications without enqueuing email" do

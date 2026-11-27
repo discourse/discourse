@@ -2123,8 +2123,10 @@ class UsersController < ApplicationController
     end
 
     reminder_notifications =
-      BookmarkQuery.new(user: current_user, guardian:).unread_notifications(
+      current_user.notification_feed.menu(
         limit: USER_MENU_LIST_LIMIT,
+        types: [Notification.types[:bookmark_reminder]],
+        state: :unread,
       )
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =
@@ -2151,6 +2153,8 @@ class UsersController < ApplicationController
       serialized_bookmarks = serialize_data(bookmark_list.bookmarks, UserMenuBookmarkSerializer)
     end
 
+    current_user.publish_notifications_state if !@readonly_mode
+
     render json: {
              notifications: serialized_notifications || [],
              bookmarks: serialized_bookmarks || [],
@@ -2168,18 +2172,11 @@ class UsersController < ApplicationController
     end
 
     unread_notifications =
-      Notification
-        .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
-        .unread
-        .where(
-          notification_type: [
-            Notification.types[:private_message],
-            Notification.types[:group_message_summary],
-          ],
-        )
-        .to_a
-    unread_notifications =
-      Notification.filter_inaccessible_topic_notifications(guardian, unread_notifications)
+      current_user.notification_feed.menu(
+        limit: USER_MENU_LIST_LIMIT,
+        types: [Notification.types[:private_message], Notification.types[:group_message_summary]],
+        state: :unread,
+      )
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
@@ -2200,12 +2197,11 @@ class UsersController < ApplicationController
           end
 
       read_notifications =
-        Notification
-          .for_user_menu(current_user.id, limit: limit)
-          .where(read: true, notification_type: Notification.types[:group_message_summary])
-          .to_a
-      read_notifications =
-        Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
+        current_user.notification_feed.menu(
+          limit:,
+          types: [Notification.types[:group_message_summary]],
+          state: :read,
+        )
     end
 
     notifications = unread_notifications + read_notifications.to_a
@@ -2220,6 +2216,8 @@ class UsersController < ApplicationController
     if read_notifications.present?
       serialized_read_notifications = serialize_data(read_notifications, NotificationSerializer)
     end
+
+    current_user.publish_notifications_state if !@readonly_mode
 
     render json: {
              unread_notifications: serialized_unread_notifications || [],

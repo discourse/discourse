@@ -10805,7 +10805,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(0)
+        expect(notifications.size).to eq(1)
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
@@ -10975,6 +10975,7 @@ RSpec.describe UsersController do
         read: false,
         user: user,
         notification_type: Notification.types[:group_message_summary],
+        data: { group_id: group1.id }.to_json,
         created_at: 2.minutes.ago,
       )
     end
@@ -10985,6 +10986,7 @@ RSpec.describe UsersController do
         read: true,
         user: user,
         notification_type: Notification.types[:group_message_summary],
+        data: { group_id: group1.id }.to_json,
         created_at: 1.minute.ago,
       )
     end
@@ -11118,6 +11120,7 @@ RSpec.describe UsersController do
             read: true,
             user: user,
             notification_type: Notification.types[:group_message_summary],
+            data: { group_id: group1.id }.to_json,
             created_at: 5.minutes.ago,
           )
         get "/u/#{user.username}/user-menu-private-messages"
@@ -11160,7 +11163,7 @@ RSpec.describe UsersController do
       it "includes the last poster of each message without loading posts" do
         queries = track_sql_queries { get "/u/#{user.username}/user-menu-private-messages" }
         expect(response.status).to eq(200)
-        expect(queries.grep(/FROM "posts"/)).to be_empty
+        expect(queries.grep(/SELECT "posts"\./)).to be_empty
 
         topic =
           response.parsed_body["topics"].find { |t| t["id"] == message_without_notification.id }
