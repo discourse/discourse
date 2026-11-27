@@ -93,6 +93,12 @@ RSpec.describe ReviewablesController do
     end
 
     it "filters by AI triage Type and automation Reason" do
+      reviewable2.add_score(
+        Fabricate(:user),
+        ReviewableScore.types[:notify_moderators],
+        context: DiscourseAi::Automation.triage_automation_score_context(automation.id),
+        force_review: true,
+      )
       sign_in(admin)
 
       get "/review.json?type=discourse_ai:triage"
@@ -100,7 +106,7 @@ RSpec.describe ReviewablesController do
       ids = response.parsed_body["reviewables"].map { |json| json["id"] }
       expect(ids).to contain_exactly(reviewable.id)
 
-      get "/review.json?type=discourse_ai:triage&score_type=ai_triage_automation:#{automation.id}"
+      get "/review.json?score_type=ai_triage_automation:#{automation.id}"
       expect(response.status).to eq(200)
       ids = response.parsed_body["reviewables"].map { |json| json["id"] }
       expect(ids).to contain_exactly(reviewable.id)

@@ -3,14 +3,21 @@ import EmberObject, { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { compare, isEmpty } from "@ember/utils";
+import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
+import FlagModal from "discourse/components/modal/flag";
+import ReportIllegalContentModal from "discourse/components/modal/report-illegal-content";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import getURL from "discourse/lib/get-url";
+import ProfileFlag from "discourse/lib/flag-targets/profile-flag";
+import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { i18n } from "discourse-i18n";
 
 export default class UserController extends Controller {
   @service currentUser;
+  @service modal;
   @service router;
+  @service toasts;
   @service userNavSidebarStateManager;
   @optionalService adminTools;
 
@@ -338,6 +345,42 @@ export default class UserController extends Controller {
 
   get adminDeleteOptions() {
     return this.adminTools?.deleteUserOptions ?? [];
+  }
+
+  @action
+  flagProfile() {
+    const user = this.model;
+    const contentPath = ProfileFlag.pathFor(user);
+    if (!this.currentUser) {
+      if (user.can_submit_profile_dsa_notice) {
+        this.modal.show(ReportIllegalContentModal, {
+          model: { contentUrl: getAbsoluteURL(contentPath) },
+        });
+      } else if (user.can_report_profile_by_email) {
+        this.modal.show(AnonymousFlagModal, {
+          model: { flagModel: user, flagTarget: new ProfileFlag() },
+        });
+      }
+      return;
+    }
+
+    const flags = this.site.flagTypes.filter((flag) =>
+      user.available_profile_flag_ids.includes(flag.id)
+    );
+    this.modal.show(FlagModal, {
+      model: {
+        allowIllegalContentReport: user.can_submit_profile_dsa_notice,
+        contentPath,
+        flagModel: user,
+        flagTarget: new ProfileFlag(flags),
+        onFlagged: () => {
+          user.set("available_profile_flag_ids", []);
+          this.toasts.success({
+            data: { message: i18n("flagging_profile.submitted") },
+          });
+        },
+      },
+    });
   }
 
   @action

@@ -71,6 +71,15 @@ expectTypeOf(user.primary_group_name).toEqualTypeOf<
   string | null | undefined
 >();
 expectTypeOf(user.flair_url).toEqualTypeOf<string | null | undefined>();
+expectTypeOf(user.available_profile_flag_ids).toEqualTypeOf<
+  number[] | undefined
+>();
+expectTypeOf(user.can_report_profile_by_email).toEqualTypeOf<
+  boolean | undefined
+>();
+expectTypeOf(user.can_submit_profile_dsa_notice).toEqualTypeOf<
+  boolean | undefined
+>();
 expectTypeOf(user.profile_hidden).toEqualTypeOf<true | undefined>();
 
 /* Current-user payload. */

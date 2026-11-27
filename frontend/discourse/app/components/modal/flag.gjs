@@ -47,13 +47,19 @@ export default class Flag extends Component {
   constructor() {
     super(...arguments);
 
-    this.adminTools
-      ?.checkSpammer(this.args.model.flagModel.user_id)
-      .then((result) => (this.spammerDetails = result));
+    if (this.supportsPostActions) {
+      this.adminTools
+        ?.checkSpammer(this.args.model.flagModel.user_id)
+        .then((result) => (this.spammerDetails = result));
+    }
 
     if (this.flagsAvailable.length === 1 && !this.canReportIllegalContent) {
       this.selected = this.flagsAvailable[0];
     }
+  }
+
+  get supportsPostActions() {
+    return this.args.model.flagTarget.supportsPostActions !== false;
   }
 
   get flagActions() {
@@ -87,6 +93,7 @@ export default class Flag extends Component {
 
   get canSendWarning() {
     return (
+      this.supportsPostActions &&
       !this.args.model.flagTarget.targetsTopic() &&
       this.currentUser.staff &&
       this.selected?.name_key === "notify_user"
@@ -102,7 +109,8 @@ export default class Flag extends Component {
 
   get contentUrl() {
     const content = this.args.model.flagModel;
-    const url = content.urlWithNumber || content.url;
+    const url =
+      this.args.model.contentPath || content.urlWithNumber || content.url;
     return url ? getAbsoluteURL(url) : "";
   }
 
@@ -154,6 +162,7 @@ export default class Flag extends Component {
 
   get canTakeAction() {
     return (
+      this.supportsPostActions &&
       !this.args.model.flagTarget.targetsTopic() &&
       !this.selected?.require_message &&
       this.currentUser.staff
@@ -233,10 +242,12 @@ export default class Flag extends Component {
       opts.message = this.message;
     }
     const created = this.args.model.flagTarget.create(this, opts);
-    this.appEvents.trigger("flag:created", {
-      message: opts.message,
-      postId: this.args.model.flagModel.id,
-    });
+    if (this.supportsPostActions) {
+      this.appEvents.trigger("flag:created", {
+        message: opts.message,
+        postId: this.args.model.flagModel.id,
+      });
+    }
     return created;
   }
 
@@ -291,11 +302,13 @@ export default class Flag extends Component {
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
-        <PluginOutlet
-          @connectorTagName="div"
-          @name="after-flag-modal-review-process-description"
-          @outletArgs={{lazyHash post=@model.flagModel}}
-        />
+        {{#if this.supportsPostActions}}
+          <PluginOutlet
+            @connectorTagName="div"
+            @name="after-flag-modal-review-process-description"
+            @outletArgs={{lazyHash post=@model.flagModel}}
+          />
+        {{/if}}
         <form>
           {{#each
             (reportingChoices this.flagsAvailable this.canReportIllegalContent)
@@ -340,11 +353,13 @@ export default class Flag extends Component {
             {{i18n "flagging.cant"}}
           {{/each}}
         </form>
-        <PluginOutlet
-          @connectorTagName="div"
-          @name="flag-modal-bottom"
-          @outletArgs={{lazyHash post=@model.flagModel}}
-        />
+        {{#if this.supportsPostActions}}
+          <PluginOutlet
+            @connectorTagName="div"
+            @name="flag-modal-bottom"
+            @outletArgs={{lazyHash post=@model.flagModel}}
+          />
+        {{/if}}
       </:body>
       <:footer>
         {{#if this.dsaSelected}}

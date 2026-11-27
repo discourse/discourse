@@ -39,6 +39,17 @@ class UserField < ActiveRecord::Base
     2048
   end
 
+  def self.cast_value(field_type, value)
+    case field_type
+    when "confirm"
+      HasCustomFields::Helpers::CUSTOM_FIELD_TRUE.include?(value)
+    when "number"
+      cast_number(value)
+    else
+      value
+    end
+  end
+
   # Returns an Integer or Float for a stored number field value, or nil if it isn't a number.
   def self.cast_number(value)
     return if !value.is_a?(String) || !NUMBER_VALUE_REGEX.match?(value)

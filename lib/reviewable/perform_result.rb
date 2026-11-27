@@ -16,6 +16,7 @@ class Reviewable < ActiveRecord::Base
       :post_revision,
       :deleted_user,
       :removed_avatar,
+      :removed_profile_content,
     )
 
     def initialize(reviewable, status)

@@ -75,8 +75,7 @@ class ReviewablesController < ApplicationController
         filters.merge(
           total_rows_reviewables: total_rows,
           types: meta_types,
-          reviewable_types:
-            Reviewable.types + Reviewable.custom_filter_type_options.map { |option| option[:id] },
+          reviewable_types: reviewable_filter_types,
           unknown_reviewable_types_and_sources: Reviewable.unknown_types_and_sources,
           score_types:
             ReviewableScore
@@ -374,6 +373,14 @@ class ReviewablesController < ApplicationController
 
   def version_required
     render_json_error(I18n.t("reviewables.missing_version"), status: 422) if params[:version].blank?
+  end
+
+  def reviewable_filter_types
+    types = Reviewable.types
+    unless UpcomingChanges.enabled?(:flaggable_user_profiles) || ReviewableFlaggedProfile.exists?
+      types = types - [ReviewableFlaggedProfile]
+    end
+    types + Reviewable.custom_filter_type_options.pluck(:id)
   end
 
   def meta_types

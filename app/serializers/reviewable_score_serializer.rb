@@ -72,6 +72,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   def reason
     return @reason if defined?(@reason)
+    if object.reason == "profile_flag_message"
+      return @reason = ERB::Util.html_escape(object.context)
+    end
     return unless object.reason
 
     link_text = setting_name_for_reason(object.reason)

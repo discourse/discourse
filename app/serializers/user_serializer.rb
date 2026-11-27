@@ -49,6 +49,9 @@ class UserSerializer < UserCardSerializer
              :has_title_badges,
              :pending_count,
              :profile_view_count,
+             :available_profile_flag_ids,
+             :can_report_profile_by_email,
+             :can_submit_profile_dsa_notice,
              :second_factor_enabled,
              :second_factor_backup_enabled,
              :second_factor_remaining_backup_codes,
@@ -240,6 +243,22 @@ class UserSerializer < UserCardSerializer
 
   def include_user_passkeys?
     SiteSetting.enable_passkeys? && user_is_current_user
+  end
+
+  def available_profile_flag_ids
+    return [] unless scope.can_flag_profile?(object)
+    reports = ReviewableFlaggedProfile.pending.where(target: object.user_profile)
+    return [] if ReviewableScore.pending.exists?(reviewable: reports, user: scope.user)
+
+    scope.allowed_profile_flags.ids
+  end
+
+  def can_report_profile_by_email
+    scope.can_report_profile_by_email?(object)
+  end
+
+  def can_submit_profile_dsa_notice
+    scope.can_submit_profile_dsa_notice?(object)
   end
 
   def bio_raw

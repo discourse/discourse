@@ -126,6 +126,18 @@ Fabricator(:reviewable_flagged_post) do
   reviewable_scores { |attrs| [Fabricate.build(:reviewable_score, reviewable_id: attrs[:id])] }
 end
 
+Fabricator(:reviewable_flagged_profile) do
+  reviewable_by_moderator true
+  created_by { Fabricate(:user) }
+  target { Fabricate(:user).user_profile }
+  target_created_by { |attrs| attrs[:target].user }
+
+  after_create do |reviewable|
+    reviewable.capture_profile!(reviewable.target)
+    reviewable.add_score(reviewable.created_by, ReviewableScore.types[:spam], force_review: true)
+  end
+end
+
 Fabricator(:reviewable_user) do
   reviewable_by_moderator true
   type "ReviewableUser"

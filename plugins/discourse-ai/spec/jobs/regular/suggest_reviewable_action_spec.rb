@@ -59,6 +59,87 @@ RSpec.describe Jobs::SuggestReviewableAction do
     )
   end
 
+  context "when a profile is reported again" do
+    fab!(:reporter) { Fabricate(:trust_level_2, refresh_auto_groups: true) }
+    fab!(:owner, :user)
+    fab!(:profile_report) do
+      owner.user_profile.update!(bio_raw: "First reported biography")
+      Fabricate(:reviewable_flagged_profile, target: owner.user_profile, created_by: reporter)
+    end
+
+    before do
+      SiteSetting.flaggable_user_profiles = true
+      Jobs.run_later!
+    end
+
+    def reopen_profile_report
+      profile_report.perform(Discourse.system_user, :dismiss_profile_flag)
+      owner.user_profile.update!(bio_raw: "New biography")
+      User::FlagProfile.call!(
+        guardian: reporter.guardian,
+        params: {
+          username: owner.username,
+          flag_type_id: PostActionType.types[:inappropriate],
+        },
+      )
+    end
+
+    it "replaces the previous suggestion using the new snapshot and pending flags" do
+      DiscourseAi::Decisions.with_canned_answers(action: "user_profile-remove_profile_content") do
+        described_class.new.execute(reviewable_id: profile_report.id)
+      end
+      expect(profile_report.reload.ai_reviewable_suggestion.action_name).to eq(
+        "user_profile-remove_profile_content",
+      )
+
+      expect { reopen_profile_report }.to change { described_class.jobs.size }.by(1)
+      expect(profile_report.reload.ai_reviewable_suggestion).to be_nil
+      job_args = described_class.jobs.last.fetch("args").sole.symbolize_keys
+      DiscourseAi::Decisions.with_canned_answers(
+        action: "user_profile-dismiss_profile_flag",
+      ) do |canned|
+        described_class.new.execute(job_args)
+        expect(canned.calls.sole[:state].dig(:item, "bio")).to eq(owner.user_profile.bio_raw)
+        expect(canned.calls.sole[:state][:flags].sole[:type]).to eq(:inappropriate)
+      end
+      expect(profile_report.reload.ai_reviewable_suggestion.action_name).to eq(
+        "user_profile-dismiss_profile_flag",
+      )
+    end
+
+    it "clears the stale suggestion without queuing another when the plugin is disabled" do
+      DiscourseAi::Decisions.with_canned_answers(action: "user_profile-remove_profile_content") do
+        described_class.new.execute(reviewable_id: profile_report.id)
+      end
+      suggestion = profile_report.reload.ai_reviewable_suggestion
+      expect(suggestion).to be_actionable
+
+      SiteSetting.discourse_ai_enabled = false
+      expect { reopen_profile_report }.not_to change { described_class.jobs.size }
+      expect(AiReviewableSuggestion.exists?(suggestion.id)).to be(false)
+
+      SiteSetting.discourse_ai_enabled = true
+      expect(profile_report.reload).to be_pending
+      expect(profile_report.ai_reviewable_suggestion).to be_nil
+    end
+
+    it "discards a suggestion if the profile is resolved and reported again during inference" do
+      reopen = method(:reopen_profile_report)
+      DiscourseAi::Decisions.with_canned_answers(
+        action: "user_profile-remove_profile_content",
+      ) do |canned|
+        canned.define_singleton_method(:decide) do |**args|
+          reopen.call
+          super(**args)
+        end
+        described_class.new.execute(reviewable_id: profile_report.id)
+      end
+
+      expect(profile_report.reload).to be_pending
+      expect(profile_report.ai_reviewable_suggestion).to be_nil
+    end
+  end
+
   it "gives the model the fast-typing reason and the queued reply to evaluate together" do
     item = Fabricate(:reviewable_queued_post)
     item.add_score(
@@ -76,8 +157,11 @@ RSpec.describe Jobs::SuggestReviewableAction do
     end
   end
 
-  it "provides the spam flag and flagged post with the post-specific account action" do
+  it "provides the post's full flag history and the post-specific account action" do
     post = Fabricate(:post)
+    earlier_report =
+      PostActionCreator.create(Fabricate(:trust_level_2), post, :inappropriate).reviewable
+    earlier_report.perform(Discourse.system_user, :disagree)
     reason =
       I18n.t("discourse_ai.spam_detection.flag_reason", url: "/admin/plugins/discourse-ai/ai-spam")
     item =
@@ -95,7 +179,10 @@ RSpec.describe Jobs::SuggestReviewableAction do
     DiscourseAi::Decisions.with_canned_answers(action: :refusal) do |canned|
       described_class.new.execute(reviewable_id: item.id)
       call = canned.calls.sole
-      expect(call[:state][:flags].sole).to include(type: :spam, reason:)
+      expect(call[:state][:flags]).to contain_exactly(
+        a_hash_including(type: :inappropriate),
+        a_hash_including(type: :spam, reason:),
+      )
       expect(call[:state][:post]).to eq(post.raw)
       expect(call[:questions].sole.instructions).to include("prefer post-delete_user_block")
     end

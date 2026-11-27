@@ -181,25 +181,17 @@ class PostAction < ActiveRecord::Base
   # A custom rate limiter for this model
   def post_action_rate_limiter
     return unless is_flag? || is_like?
+    @rate_limiter ||= self.class.rate_limiter_for(user, is_like? ? :like : :flag)
+  end
 
-    return @rate_limiter if @rate_limiter.present?
-
-    %w[like flag].each do |type|
-      if public_send("is_#{type}?")
-        limit = SiteSetting.get("max_#{type}s_per_day")
-
-        if (is_flag? || is_like?) && user && user.trust_level >= 2
-          multiplier =
-            SiteSetting.get("tl#{user.trust_level}_additional_#{type}s_per_day_multiplier").to_f
-          multiplier = 1.0 if multiplier < 1.0
-
-          limit = (limit * multiplier).to_i
-        end
-
-        @rate_limiter = RateLimiter.new(user, "create_#{type}", limit, 1.day.to_i)
-        return @rate_limiter
-      end
+  def self.rate_limiter_for(user, type)
+    limit = SiteSetting.get("max_#{type}s_per_day")
+    if user && user.trust_level >= 2
+      multiplier =
+        SiteSetting.get("tl#{user.trust_level}_additional_#{type}s_per_day_multiplier").to_f
+      limit = (limit * [multiplier, 1.0].max).to_i
     end
+    RateLimiter.new(user, "create_#{type}", limit, 1.day.to_i)
   end
 
   def ensure_unique_actions

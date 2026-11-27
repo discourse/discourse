@@ -57,6 +57,25 @@ RSpec.describe DsaStatementsController do
       expect(response).to have_http_status(:not_found)
     end
 
+    it "lets staff finish classifying a profile restriction after the reporter is deleted" do
+      owner = Fabricate(:user)
+      owner.user_profile.update!(bio_raw: "Reported biography")
+      report = Fabricate(:reviewable_flagged_profile, target: owner.user_profile)
+      report.perform(moderator, :remove_profile_content)
+      pending_statement = report.dsa_statement_of_records.pending.sole
+      UserDestroyer.new(Fabricate(:admin)).destroy(report.created_by)
+      sign_in(moderator)
+
+      put(
+        "/review/#{report.id}/dsa-classification.json",
+        params: params.merge(statement_ids: [pending_statement.id]),
+      )
+
+      expect(response).to have_http_status(:ok)
+      expect(pending_statement.reload).to be_ready
+      expect(report.reload).to be_approved
+    end
+
     it "returns a generic error for an unknown community rule" do
       sign_in(moderator)
       params[:community_rule] = "unknown"

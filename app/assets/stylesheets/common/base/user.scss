@@ -301,7 +301,7 @@
       }
 
       @include viewport.from(md) {
-        align-self: center;
+        align-self: start;
         max-width: 13.5em;
         margin-left: 0.5em;
 

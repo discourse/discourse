@@ -38,6 +38,10 @@ export interface ReviewablePayload {
   email?: string | null;
   name?: string | null;
   bio?: string | null;
+  location?: string;
+  profile_header_url?: string;
+  card_background_url?: string;
+  profile_fields?: { name: string; value: string }[];
   website?: string | null;
   avatar_url?: string | null;
   scrubbed_by?: string;
@@ -187,6 +191,7 @@ export interface ReviewableFields {
   topic_id?: number | null;
   post_id?: number;
   user_id?: number;
+  userprofile_id?: number;
   target_id?: number | null;
   target_type: string | null;
   removed_topic_id?: number | null;
@@ -222,6 +227,8 @@ export interface ReviewableFields {
   reviewable_histories: ReviewableHistoryEntry[];
   reviewable_history_ids?: number[];
   reviewable_scores: ReviewableScore[];
+  /** Scores from the current reporting cycle on a flagged profile. */
+  decision_score_ids?: number[];
   reviewable_score_ids?: number[];
   reviewable_note_ids?: number[];
   topic_tags?: { id: number; name: string; slug: string }[];
@@ -282,6 +289,7 @@ export default class Reviewable extends RestModel {
   @tracked created_at!: ReviewableFields["created_at"];
   @tracked created_by!: ReviewableFields["created_by"];
   @tracked created_from_flag!: ReviewableFields["created_from_flag"];
+  @tracked decision_score_ids?: ReviewableFields["decision_score_ids"];
   @tracked deleted_at?: ReviewableFields["deleted_at"];
   @tracked dsa_classification?: ReviewableFields["dsa_classification"];
   @tracked editable_fields!: ReviewableFields["editable_fields"];
@@ -347,12 +355,21 @@ export default class Reviewable extends RestModel {
     });
   }
 
-  @computed("humanNoun")
+  @computed("decision_score_ids", "reviewable_scores")
+  get scoresForDecision(): ReviewableScore[] {
+    if (!this.decision_score_ids) {
+      return this.reviewable_scores;
+    }
+    const ids = new Set(this.decision_score_ids);
+    return this.reviewable_scores.filter((score) => ids.has(score.id));
+  }
+
+  @computed("humanNoun", "scoresForDecision")
   /** Requires scores to be loaded, including each referenced score type. */
   get flaggedReviewableContextQuestion(): string {
     // TODO(typescript-pending): uniqueItemsFromArray loses its element type; remove this assertion when generic.
     const uniqueReviewableScores = uniqueItemsFromArray(
-      this.reviewable_scores.filter(
+      this.scoresForDecision.filter(
         (score) => score.score_type!.type !== "needs_approval"
       ),
       "score_type.type"

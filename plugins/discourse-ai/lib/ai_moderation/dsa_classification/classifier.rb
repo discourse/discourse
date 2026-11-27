@@ -42,7 +42,7 @@ module DiscourseAi
           context = {
             flag_reasons:
               reviewable
-                .reviewable_scores
+                .scores_for_decision
                 .map do |score|
                   ReviewableScore.type_title(ReviewableScore.types.key(score.reviewable_score_type))
                 end

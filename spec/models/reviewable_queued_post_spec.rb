@@ -442,6 +442,17 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(shared.reload).to be_pending
         end
       end
+
+      it "includes a retained profile report closed by Delete and block in the queue update" do
+        report = Fabricate(:reviewable_flagged_profile, created_by: reviewable.target_created_by)
+        Fabricate(:dsa_statement_of_record, reviewable_id: report.id)
+
+        result = reviewable.perform(moderator, :delete_and_block_user)
+
+        expect(report.reload).to be_ignored
+        expect(result.remove_reviewable_ids).to include(report.id)
+        expect(result.affected_reviewable_ids).to include(report.id)
+      end
     end
   end
 

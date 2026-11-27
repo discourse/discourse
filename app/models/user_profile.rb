@@ -31,17 +31,33 @@ class UserProfile < ActiveRecord::Base
   after_save :trigger_badges
   after_save :pull_hotlinked_image
 
+  after_destroy { clear_flagged_profile_report!("reviewables.target_user_deleted") }
+
   after_save do
     if saved_change_to_profile_background_upload_id? ||
          saved_change_to_card_background_upload_id? || saved_change_to_bio_raw?
-      upload_ids =
-        [profile_background_upload_id, card_background_upload_id] +
-          Upload.extract_upload_ids(bio_raw)
-      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+      sync_upload_references
     end
   end
 
   attr_accessor :skip_pull_hotlinked_image
+
+  def clear_reported_content!
+    # Moderation must succeed even if unrelated fields no longer pass profile validation.
+    update_columns(
+      bio_raw: nil,
+      bio_cooked: nil,
+      website: nil,
+      profile_background_upload_id: nil,
+      card_background_upload_id: nil,
+    )
+    sync_upload_references
+    trigger_badges
+  end
+
+  def clear_flagged_profile_report!(note_key)
+    ReviewableFlaggedProfile.lock.find_by(target: self)&.clear_snapshot!(note_key)
+  end
 
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
@@ -159,6 +175,12 @@ class UserProfile < ActiveRecord::Base
   end
 
   private
+
+  def sync_upload_references
+    upload_ids =
+      [profile_background_upload_id, card_background_upload_id] + Upload.extract_upload_ids(bio_raw)
+    UploadReference.ensure_exist!(upload_ids:, target: self)
+  end
 
   def self.remove_featured_topic_from_all_profiles(topic)
     where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)

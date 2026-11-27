@@ -1437,9 +1437,7 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    reviewable_ids = Reviewable.created_solely_by(self).pluck(:id)
-    ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-    Reviewable.where(id: reviewable_ids).delete_all
+    Reviewable.delete_all_created_solely_by(self)
 
     posts
       .order("post_number desc")
@@ -1738,6 +1736,25 @@ class User < ActiveRecord::Base
 
   USER_FIELD_PREFIX = "user_field_"
 
+  def clear_public_profile_fields!
+    removed_fields = DB.query(<<~SQL, user_id: id, prefix: USER_FIELD_PREFIX)
+      DELETE FROM user_custom_fields AS stored USING user_fields AS field
+      WHERE stored.user_id = :user_id AND stored.name = :prefix || field.id
+        AND field.show_on_profile
+      RETURNING stored.value, stored.updated_at, field.field_type_enum
+    SQL
+    return if removed_fields.empty?
+
+    clear_custom_fields
+    SearchIndexer.index(self, force: true)
+    removed_fields
+      .filter_map do |field|
+        type = UserField.field_type_enums.key(field.field_type_enum)
+        field.updated_at if UserField.cast_value(type, field.value).present?
+      end
+      .max
+  end
+
   def user_fields(field_ids = nil)
     fields =
       if field_ids.nil?
@@ -1746,20 +1763,9 @@ class User < ActiveRecord::Base
         UserField.where(id: field_ids).pluck(:id, :field_type)
       end
 
-    fields
-      .map do |fid, ftype|
-        value =
-          if ftype == "confirm"
-            !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
-          elsif ftype == "number"
-            UserField.cast_number(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
-          else
-            custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
-          end
-
-        [fid.to_s, value]
-      end
-      .to_h
+    fields.to_h do |id, type|
+      [id.to_s, UserField.cast_value(type, custom_fields["#{USER_FIELD_PREFIX}#{id}"])]
+    end
   end
 
   def validatable_user_fields_values

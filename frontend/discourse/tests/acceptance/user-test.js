@@ -3,6 +3,7 @@ import {
   click,
   currentRouteName,
   currentURL,
+  fillIn,
   settled,
   visit,
 } from "@ember/test-helpers";
@@ -519,5 +520,48 @@ acceptance("User - Hidden profile", function (needs) {
   test("does not render the invites tab", async function (assert) {
     await visit("/u/hideme");
     assert.dom(".user-nav__invites").doesNotExist();
+  });
+});
+
+acceptance("Flag profile", function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ flaggable_user_profiles: true });
+  needs.pretender((server, helper) => {
+    server.get("/u/charlie.json", () => {
+      const profile = userFixtures["/u/charlie.json"];
+      return helper.response({
+        ...profile,
+        user: { ...profile.user, available_profile_flag_ids: [4, 7, 8] },
+      });
+    });
+  });
+
+  test("submits a profile flag with an explanation", async function (assert) {
+    const message = "Please review the links in this biography.";
+    let submitted;
+    pretender.post("/u/charlie/profile-flags", (request) => {
+      submitted = new URLSearchParams(request.requestBody);
+      return jsonResponse(201, { profile_flag: { id: 1 } });
+    });
+
+    await visit("/u/charlie/summary");
+    await click(".flag-profile");
+    assert.dom("#radio_off_topic").doesNotExist();
+    await click("#radio_spam");
+    assert.dom(".flag-modal__take-action").doesNotExist();
+    assert.dom(".flag-modal__delete-spammer").doesNotExist();
+    await click("#radio_notify_moderators");
+    assert.dom(".flag-modal__create-flag").isDisabled();
+    await fillIn(".flag-message", message);
+    await click(".flag-modal__create-flag");
+    assert.strictEqual(submitted.get("flag_type_id"), "7");
+    assert.strictEqual(submitted.get("message"), message);
+    assert.dom(".flag-profile").doesNotExist();
+  });
+
+  test("hides the button when the change is disabled", async function (assert) {
+    this.siteSettings.flaggable_user_profiles = false;
+    await visit("/u/charlie/summary");
+    assert.dom(".flag-profile").doesNotExist();
   });
 });

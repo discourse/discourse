@@ -26,6 +26,22 @@ RSpec.describe Jobs::PullUserProfileHotlinkedImages do
       expect(user.user_profile.reload.bio_cooked).to include(Upload.last.url)
     end
 
+    it "preserves a moderator's removal while an image download is in progress" do
+      profile = user.user_profile
+      profile.update!(bio_raw: "Reported biography ![](#{image_url})")
+      report = Fabricate(:reviewable_flagged_profile, target: profile)
+      moderator = Fabricate(:moderator)
+      stub_request(:get, image_url).to_return do
+        report.perform(moderator, :remove_profile_content)
+        { body: png, headers: { "Content-Type" => "image/png" } }
+      end
+
+      described_class.new.execute(user_id: user.id)
+
+      expect(report.reload).to be_approved
+      expect(profile.reload).to have_attributes(bio_raw: nil, bio_cooked: nil)
+    end
+
     it "does not copy a secure upload whose URL sits outside the site's subfolder" do
       enable_secure_uploads
       upload = Fabricate(:secure_upload_s3, secure: true)

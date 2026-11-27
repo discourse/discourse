@@ -512,6 +512,7 @@ end
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
 #  index_notifications_on_data_display_username                 ((((data)::jsonb ->> 'display_username'::text))) WHERE (((data)::jsonb ->> 'display_username'::text) IS NOT NULL)
 #  index_notifications_on_data_original_username                ((((data)::jsonb ->> 'original_username'::text))) WHERE (((data)::jsonb ->> 'original_username'::text) IS NOT NULL)
+#  index_notifications_on_data_reviewable_id                    ((((data)::jsonb ->> 'reviewable_id'::text))) WHERE (((data)::jsonb ->> 'reviewable_id'::text) IS NOT NULL)
 #  index_notifications_on_data_username                         ((((data)::jsonb ->> 'username'::text))) WHERE (((data)::jsonb ->> 'username'::text) IS NOT NULL)
 #  index_notifications_on_data_username2                        ((((data)::jsonb ->> 'username2'::text))) WHERE (((data)::jsonb ->> 'username2'::text) IS NOT NULL)
 #  index_notifications_on_post_action_id                        (post_action_id)

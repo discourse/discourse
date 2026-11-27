@@ -203,10 +203,7 @@ after_initialize do
 
     automated ||
       scores
-        .where(
-          "context LIKE ?",
-          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
-        )
+        .merge(DiscourseAi::Automation.triage_scores)
         .or(
           scores.where(
             user_id: SiteSetting.ai_spam_detection_user_id.presence,
@@ -246,10 +243,13 @@ after_initialize do
     end,
   ) { object.ai_reviewable_suggestion.action_name }
 
-  on(:reviewable_created) do |reviewable|
-    if reviewable.pending? && SiteSetting.ai_reviewable_action_suggestions_enabled &&
-         SiteSetting.ai_reviewable_action_decision_model.present?
-      Jobs.enqueue(:suggest_reviewable_action, reviewable_id: reviewable.id)
+  on(:reviewable_created) { |reviewable| Jobs::SuggestReviewableAction.enqueue_for(reviewable) }
+
+  # Invalidate even while the plugin is disabled so re-enabling it cannot expose an old decision.
+  DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    if status == :pending && reviewable.is_a?(ReviewableFlaggedProfile)
+      AiReviewableSuggestion.where(reviewable_id: reviewable.id).delete_all
+      Jobs::SuggestReviewableAction.enqueue_for(reviewable)
     end
   end
 
@@ -400,22 +400,13 @@ after_initialize do
     [
       :ai_triage_automation_id,
       Proc.new do |results, value|
-        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
         if value != :all
           automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
           next results if !automation_id || automation_id <= 0
-
-          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
         end
-
-        results.where(<<~SQL, context:)
-            EXISTS (
-              SELECT 1
-              FROM reviewable_scores
-              WHERE reviewable_scores.reviewable_id = reviewables.id
-              AND reviewable_scores.context LIKE :context
-            )
-          SQL
+        results.where(
+          id: DiscourseAi::Automation.triage_scores(automation_id).select(:reviewable_id),
+        )
       end,
     ],
     type_filter: {

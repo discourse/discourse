@@ -21,6 +21,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableCreated::V1 do
 
       expect(described_class.load_options_context(context)).to contain_exactly(
         { id: "ReviewableFlaggedPost", name: "Reviewable flagged post" },
+        { id: "ReviewableFlaggedProfile", name: "Reviewable flagged profile" },
       )
     end
   end

@@ -41,7 +41,11 @@ RSpec.describe ReviewableFlaggedPost do
     it "records manual detection when a moderator deletes a post flagged as spam by a human" do
       DiscourseAi::AiModeration::SpamScanner.ensure_flagging_user!
       reviewable = Fabricate(:reviewable_flagged_post)
-      reviewable.add_score(Fabricate(:user), ReviewableScore.types[:spam])
+      reviewable.add_score(
+        Fabricate(:user),
+        ReviewableScore.types[:spam],
+        context: DiscourseAi::Automation.triage_automation_score_context(1),
+      )
 
       reviewable.perform(Fabricate(:admin), :delete_and_agree)
 

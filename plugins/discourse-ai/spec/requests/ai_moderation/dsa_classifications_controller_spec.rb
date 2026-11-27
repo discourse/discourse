@@ -176,6 +176,31 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
         )
       end
 
+      it "classifies a reopened profile using only reasons from the current report" do
+        SiteSetting.flaggable_user_profiles = true
+        owner = Fabricate(:user)
+        owner.user_profile.update!(bio_raw: "Reported biography")
+        report = Fabricate(:reviewable_flagged_profile, target: owner.user_profile)
+        report.perform(moderator, :dismiss_profile_flag)
+        reporter = Fabricate(:trust_level_2, refresh_auto_groups: true)
+        User::FlagProfile.call!(
+          guardian: reporter.guardian,
+          params: {
+            username: owner.username,
+            flag_type_id: ReviewableScore.types[:inappropriate],
+          },
+        )
+        stub_request(:post, decision_model.url).to_return(body: refusal_response)
+
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{report.id}/suggest.json"
+
+        expect(response).to have_http_status(:ok)
+        context = JSON.parse(JSON.parse(AiApiAuditLog.last.raw_request_payload).fetch("state"))
+        expect(context.fetch("flag_reasons")).to contain_exactly(
+          ReviewableScore.type_title(:inappropriate),
+        )
+      end
+
       it "sends the content of a chat reviewable" do
         message = Fabricate(:chat_message, message: "Buy discounted watches from my shop.")
         chat_review = Fabricate(:chat_reviewable_message, target: message)

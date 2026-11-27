@@ -212,6 +212,33 @@ module UserGuardian
     !SiteSetting.hide_user_profiles_from_public || !anonymous?
   end
 
+  def can_flag_profile?(target)
+    authenticated? && profile_reporting_available?(target) &&
+      (SiteSetting.allow_flagging_staff? || !target.staff?) &&
+      (can_use_standard_profile_flags? || SiteSetting.allow_all_users_to_flag_illegal_content?)
+  end
+
+  def can_remove_profile_content?(target)
+    target&.human? && can_moderate?(target) && (!target.staff? || is_admin?)
+  end
+
+  def can_report_profile_by_email?(target)
+    anonymous? && SiteSetting.allow_all_users_to_flag_illegal_content? &&
+      !SiteSetting.dsa_reporting_enabled? && profile_reporting_available?(target)
+  end
+
+  def can_submit_profile_dsa_notice?(target)
+    SiteSetting.dsa_reporting_enabled? && profile_reporting_available?(target)
+  end
+
+  def allowed_profile_flags
+    flags = Flag.enabled.applicable_to("UserProfile")
+    flags = flags.where.not(name_key: "illegal") if SiteSetting.dsa_reporting_enabled?
+    return flags if can_use_standard_profile_flags?
+    return flags.where(name_key: "illegal") if SiteSetting.allow_all_users_to_flag_illegal_content?
+    Flag.none
+  end
+
   def can_see_profile?(user)
     return false if user.blank?
     return false unless public_can_see_profiles?
@@ -397,6 +424,16 @@ module UserGuardian
   end
 
   private
+
+  def profile_reporting_available?(target)
+    UpcomingChanges.enabled_for_user?(:flaggable_user_profiles, user) && !user&.anonymous? &&
+      !is_me?(target) && target.active? && target.human? && can_see_profile?(target)
+  end
+
+  def can_use_standard_profile_flags?
+    authenticated? && !@user.silenced? &&
+      @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map)
+  end
 
   def changed_theme_ids(current_ids, new_ids)
     new_ids = Array(new_ids).map(&:to_i)

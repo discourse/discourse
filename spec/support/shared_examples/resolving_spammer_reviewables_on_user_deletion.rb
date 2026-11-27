@@ -7,8 +7,6 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
 
   let(:review_page) { PageObjects::Pages::Review.new }
 
-  before { Jobs.run_immediately! }
-
   it "resolves every reviewable tied to the spammer in the acting and watching queues" do
     flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
     flag.target.update!(
@@ -54,6 +52,7 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
     expect(review_page).to have_reviewable_with_problem_confirmed_status(user_review)
     expect(review_page).to have_reviewable_with_problem_confirmed_status(review_every_post)
 
+    Jobs::NotifyReviewable.drain
     using_session(:other_tab) do
       expect(review_page).to have_reviewable_with_problem_confirmed_status(acted_reviewable)
       expect(review_page).to have_reviewable_with_problem_confirmed_status(flag)

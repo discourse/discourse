@@ -35,6 +35,80 @@ RSpec.describe UserAnonymizer do
       expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
+    context "with a flagged profile" do
+      let(:report) do
+        profile = user.user_profile
+        profile.update!(
+          bio_raw: "The owner's biography",
+          website: "https://example.com",
+          profile_background_upload: Fabricate(:upload),
+        )
+        Fabricate(:reviewable_flagged_profile, target: profile)
+      end
+
+      it "clears the saved identity and closes a pending profile report" do
+        expect(report.payload).to include(
+          "username" => user.username,
+          "website" => user.user_profile.website,
+        )
+        expect(report.upload_references).to be_present
+
+        make_anonymous
+
+        expect(report.reload).to be_ignored
+        expect(report.reviewable_scores.sole).to be_ignored
+        expect(report.payload).to eq({})
+        expect(report.upload_references).to be_empty
+        expect(report.actions_for(admin.guardian).to_a).to be_empty
+      end
+
+      it "clears a resolved profile report and preserves the moderator's decision" do
+        report.perform(admin, :agree_profile_flag)
+
+        make_anonymous
+
+        expect(report.reload).to be_approved
+        expect(report.reviewable_scores.sole).to be_agreed
+        expect(report.payload).to eq({})
+        expect(report.upload_references).to be_empty
+      end
+
+      it "replaces old mention titles in each recipient's language, including former staff" do
+        SiteSetting.allow_user_locale = true
+        title_key = "js.review.types.reviewable_flagged_profile.title"
+        french_title = "Profil signalé"
+        TranslationOverride.upsert!("fr", title_key, french_title)
+        moderator = Fabricate(:moderator)
+        french_moderator = Fabricate(:moderator, locale: "fr")
+        note =
+          report.reviewable_notes.create!(
+            user: admin,
+            content: "@#{moderator.username} @#{french_moderator.username} please review.",
+          )
+        mentions = Notification.where(notification_type: Notification.types[:mentioned])
+        mention = mentions.find_by!(user: moderator)
+        french_mention = mentions.find_by!(user: french_moderator)
+        expect(mention.data_hash).to include(
+          reviewable_note_id: note.id,
+          topic_title: I18n.t(title_key),
+        )
+        expect(french_mention.data_hash[:topic_title]).to eq(french_title)
+
+        # Older notifications contain the username that was on the report when the note was added.
+        [mention, french_mention].each do |notification|
+          notification.update!(
+            data: notification.data_hash.merge(topic_title: user.username).to_json,
+          )
+        end
+        note.destroy!
+        french_moderator.update!(moderator: false)
+        make_anonymous
+
+        expect(Notification.find(mention.id).data_hash[:topic_title]).to eq(I18n.t(title_key))
+        expect(Notification.find(french_mention.id).data_hash[:topic_title]).to eq(french_title)
+      end
+    end
+
     it "changes the primary email address" do
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")

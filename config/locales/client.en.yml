@@ -1106,6 +1106,8 @@ en:
       deleted_user: "(user deleted)"
       user:
         avatar: "Avatar when flagged"
+        profile_header: "Profile header when flagged"
+        card_background: "User card background when flagged"
         bio: "Bio"
         website: "Website"
         username: "Username"
@@ -1248,6 +1250,9 @@ en:
         approve_topic: "Approve this topic?"
 
       types:
+        reviewable_flagged_profile:
+          title: "Flagged profile"
+          noun: "profile"
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
@@ -1274,6 +1279,8 @@ en:
           title: "Flagged Comment"
           noun: "comment"
       flagged_as: "Flagged as"
+      view_image: "View image"
+      profile_flagged_as: "Profile flagged as"
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
@@ -5895,6 +5902,16 @@ en:
           one: "%{count} remaining"
           other: "%{count} remaining"
 
+    flagging_profile:
+      action: "Flag"
+      anonymous_description: 'To report illegal content on this profile, email <a href="mailto:%{email}?subject=%{subject}&amp;body=%{url}">%{email}</a>.'
+      submitted: "Your profile flag has been sent to the moderators."
+      description:
+        spam: "This profile advertises or links to spam."
+        inappropriate: "This profile contains abusive or inappropriate content."
+        illegal: "I believe this profile contains illegal content."
+        notify_moderators: "Something else on this profile needs moderator attention."
+
     flagging_topic:
       title: "Thanks for keeping our community civil!"
       action: "Flag Topic"
@@ -8850,6 +8867,7 @@ en:
             invalid_applies_to: "Required"
             topic: "topics"
             post: "posts"
+            userprofile: "user profiles"
             chat_message: "chat messages"
             enabled: "Enable this custom flag after saving"
             create_warning: "Once a custom flag has been used, it can only be disabled or edited but not deleted."

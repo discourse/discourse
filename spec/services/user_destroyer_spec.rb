@@ -232,6 +232,102 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    context "with a flagged profile" do
+      fab!(:header, :upload)
+      fab!(:report) do
+        profile = user.user_profile
+        profile.update!(bio_raw: "Biography captured for review", profile_background_upload: header)
+        Fabricate(:reviewable_flagged_profile, target: profile, created_by: admin)
+      end
+
+      it "ignores a pending report and removes its snapshot and upload references" do
+        expect(report.payload).to include(
+          "username" => user.username,
+          "bio" => user.user_profile.bio_raw,
+        )
+        expect(report.upload_references.pluck(:upload_id)).to contain_exactly(header.id)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(report.reload).to be_ignored
+        expect(report.payload).to eq({})
+        expect(report.upload_references).to be_empty
+        expect(report.reviewable_scores.sole).to be_ignored
+        expect(report.reviewable_notes.sole.content).to eq(
+          I18n.t("reviewables.target_user_deleted"),
+        )
+      end
+
+      it "removes a resolved report's snapshot and upload references and preserves its decision" do
+        report.perform(admin, :agree_profile_flag)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(report.reload).to be_approved
+        expect(report.payload).to eq({})
+        expect(report.upload_references).to be_empty
+        expect(report.reviewable_scores.sole).to be_agreed
+      end
+    end
+
+    it "releases a profile report's retained media when its sole reporter is deleted" do
+      profile = Fabricate(:user).user_profile
+      header = Fabricate(:upload)
+      profile.update!(profile_background_upload: header)
+      report = Fabricate(:reviewable_flagged_profile, created_by: user, target: profile)
+      reference = report.upload_references.find_by!(upload: header)
+
+      described_class.new(admin).destroy(user)
+
+      expect(Reviewable.exists?(report.id)).to be(false)
+      expect(UploadReference.exists?(reference.id)).to be(false)
+      expect(profile.upload_references.pluck(:upload_id)).to contain_exactly(header.id)
+    end
+
+    it "deletes the report when its reporters are deleted one at a time" do
+      report = Fabricate(:reviewable_flagged_profile, created_by: user)
+      other_reporter = Fabricate(:user)
+      report.add_score(other_reporter, ReviewableScore.types[:inappropriate], force_review: true)
+
+      described_class.new(admin).destroy(user)
+      expect(report.reload.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        other_reporter.id,
+      )
+
+      described_class.new(admin).destroy(other_reporter)
+      expect(ReviewableFlaggedProfile.exists?(report.id)).to be(false)
+    end
+
+    it "closes a reopened profile report when its last current reporter is deleted" do
+      SiteSetting.flaggable_user_profiles = true
+      owner = Fabricate(:user)
+      report = Fabricate(:reviewable_flagged_profile, target: owner.user_profile)
+      report.perform(admin, :dismiss_profile_flag)
+      reporter = Fabricate(:trust_level_2, refresh_auto_groups: true)
+      User::FlagProfile.call!(
+        guardian: reporter.guardian,
+        params: {
+          username: owner.username,
+          flag_type_id: ReviewableScore.types[:inappropriate],
+        },
+      )
+      second_reporter = Fabricate(:user)
+      report.reload.add_score(second_reporter, ReviewableScore.types[:spam], force_review: true)
+
+      described_class.new(admin).destroy(reporter)
+      expect(report.reload).to be_pending
+      expect(report.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        second_reporter.id,
+      )
+
+      described_class.new(admin).destroy(second_reporter)
+      expect(report.reload).to be_ignored
+      expect(report.reviewable_scores.sole).to be_disagreed
+      expect(report.reviewable_notes.last.content).to eq(
+        I18n.t("reviewables.last_reporter_deleted"),
+      )
+    end
+
     context "with a reviewable user" do
       let(:reviewable) { Fabricate(:reviewable, created_by: admin) }
 

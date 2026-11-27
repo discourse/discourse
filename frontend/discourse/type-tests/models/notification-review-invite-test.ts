@@ -119,6 +119,7 @@ expectTypeOf(reviewable.score).toEqualTypeOf<number>();
 expectTypeOf(reviewable.version).toEqualTypeOf<number>();
 expectTypeOf(reviewable.can_edit).toEqualTypeOf<boolean>();
 expectTypeOf(reviewable.created_from_flag).toEqualTypeOf<boolean>();
+expectTypeOf(reviewable.userprofile_id).toEqualTypeOf<number | undefined>();
 expectTypeOf(reviewable.signup_approval).toEqualTypeOf<boolean | undefined>();
 // The store swaps side-loaded ids for records, or null when a record is missing.
 expectTypeOf(reviewable.created_by).toEqualTypeOf<User | null>();
@@ -190,8 +191,23 @@ expectTypeOf<NotificationData["custom_key"]>().toBeUnknown();
 // Plugin-only top-level fields stay out of core.
 expectTypeOf<Notification>().not.toHaveProperty("topic_bumped_at");
 expectTypeOf<ReviewableFields>().not.toHaveProperty("chat_channel");
+expectTypeOf(reviewable.decision_score_ids).toEqualTypeOf<
+  number[] | undefined
+>();
 // munge strips `category` so the getter wins.
 expectTypeOf<ReviewableFields>().not.toHaveProperty("category");
+expectTypeOf<ReviewablePayload["profile_fields"]>().toEqualTypeOf<
+  { name: string; value: string }[] | undefined
+>();
+expectTypeOf<ReviewablePayload["profile_header_url"]>().toEqualTypeOf<
+  string | undefined
+>();
+expectTypeOf<ReviewablePayload["card_background_url"]>().toEqualTypeOf<
+  string | undefined
+>();
+expectTypeOf<ReviewablePayload["location"]>().toEqualTypeOf<
+  string | undefined
+>();
 expectTypeOf<ReviewablePayload["custom_key"]>().toBeUnknown();
 expectTypeOf<ReviewablePayload["tags"]>().toEqualTypeOf<
   string[] | null | undefined

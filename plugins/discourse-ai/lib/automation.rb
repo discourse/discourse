@@ -12,6 +12,16 @@ module DiscourseAi
       "#{TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}#{automation_id}" if automation_id.present?
     end
 
+    def self.triage_scores(automation_id = nil)
+      scores = ReviewableScore.where(user_id: Discourse::SYSTEM_USER_ID)
+      return scores.where(context: triage_automation_score_context(automation_id)) if automation_id
+
+      scores.where(
+        "context LIKE ?",
+        "#{ReviewableScore.sanitize_sql_like(TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+      )
+    end
+
     def self.flag_post_reason(
       reason:,
       llm_response: nil,
