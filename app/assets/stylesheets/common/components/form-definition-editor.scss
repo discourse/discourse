@@ -1,0 +1,55 @@
+.form-definition-editor {
+  &__questions {
+    display: grid;
+    align-self: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__question {
+    position: relative;
+    padding: var(--space-7) var(--space-4) var(--space-6);
+    border-radius: var(--d-border-radius);
+    background-color: var(--primary-very-low);
+
+    .form-kit__object {
+      min-width: 0;
+    }
+  }
+
+  &__attribute-option[aria-pressed="false"] > .d-icon-check {
+    visibility: hidden;
+  }
+
+  &__requirement,
+  &__field-menus {
+    position: absolute;
+    inset-block-start: calc(-0.5 * var(--space-5));
+  }
+
+  &__requirement {
+    inset-inline-start: var(--space-2);
+    min-height: var(--space-6);
+    padding: var(--space-half) var(--space-2);
+    font-weight: 600;
+
+    &[aria-pressed="false"] {
+      --d-button-default-text-color: var(--primary-high);
+    }
+  }
+
+  &__field-menus {
+    display: flex;
+    gap: var(--space-2);
+    inset-inline-end: var(--space-4);
+  }
+}
+
+.form-definition-fields__text {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  margin-block: 0;
+}

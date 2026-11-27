@@ -1,9 +1,11 @@
 import BoolControl from "discourse/components/setting-field/bool";
 import CategoryControl from "discourse/components/setting-field/category";
 import CategoryListControl from "discourse/components/setting-field/category-list";
+import CheckboxGroupControl from "discourse/components/setting-field/checkbox-group";
 import ColorControl from "discourse/components/setting-field/color";
 import CompactListControl from "discourse/components/setting-field/compact-list";
 import DatetimeControl from "discourse/components/setting-field/datetime";
+import DecimalControl from "discourse/components/setting-field/decimal";
 import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
 import FontListControl from "discourse/components/setting-field/font-list";
@@ -83,6 +85,11 @@ registerSettingFieldType("radio-group", {
   type: "radio-group",
   renderer: RadioGroupControl,
 });
+registerSettingFieldType("checkbox-group", {
+  ...ROW,
+  type: "custom",
+  renderer: CheckboxGroupControl,
+});
 registerSettingFieldType("enum", {
   ...ROW,
   type: "select",
@@ -156,6 +163,11 @@ registerSettingFieldType("bool", {
   type: "checkbox",
   includeDescription: false,
   renderer: BoolControl,
+});
+registerSettingFieldType("decimal", {
+  ...ROW,
+  type: "input-number",
+  renderer: DecimalControl,
 });
 registerSettingFieldType("integer", {
   ...INLINE,

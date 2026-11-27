@@ -80,6 +80,103 @@ module("Integration | Component | workflows property engine", function (hooks) {
     sinon.restore();
   });
 
+  test("edits existing grouped form fields and keeps their choice values and attributes when moved", async function (assert) {
+    const dropdown = {
+      field_type: "dropdown",
+      field_label: "Meal",
+      options: ["Lunch", { value: "Dinner" }],
+      field_name: "meal_code",
+    };
+    this.configuration = { form_fields: { values: dropdown } };
+    this.nodeType = "trigger:form";
+    this.nodeTypes = [{ identifier: this.nodeType, name: this.nodeType }];
+    this.schema = {
+      form_fields: {
+        type: "fixed_collection",
+        ui: { control: "form_fields" },
+        options: [
+          {
+            name: "values",
+            values: {
+              field_label: { type: "string", required: true },
+              field_type: {
+                type: "options",
+                options: ["text", "dropdown"],
+                default: "text",
+                required: true,
+              },
+              description: { type: "string" },
+              options: {
+                type: "fixed_collection",
+                display_options: { show: { field_type: ["dropdown"] } },
+                options: [
+                  {
+                    name: "values",
+                    values: { value: { type: "string", required: true } },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const api = await renderEngine(this, { withFormApi: true });
+    const cards = ".form-definition-editor__question";
+    const menu = ".form-definition-editor__field-menu";
+    const add = ".form-definition-editor__add";
+    assert.deepEqual(
+      api.get("form_fields"),
+      { values: dropdown },
+      "opening a singleton leaves its representation intact"
+    );
+    await fillIn('[name="form_fields.values.options.0"]', "Breakfast");
+    await click(".form-definition-editor__attributes");
+    await click('[data-field-attribute="description"]');
+    assert
+      .dom('[name="form_fields.values.description"]')
+      .exists("a blank optional attribute can be opened");
+
+    await click(add);
+    await click(`${cards}:first-child ${menu}`);
+    await click('[data-field-action="down"]');
+    assert
+      .dom('[name="form_fields.values.1.description"]')
+      .exists("the open attribute follows the moved field");
+    assert
+      .dom(`${cards}:last-child ${menu}`)
+      .isFocused("focus follows the moved field");
+    assert.deepEqual(
+      api.get("form_fields.values")[1],
+      {
+        ...dropdown,
+        options: ["Breakfast", { value: "Dinner" }],
+      },
+      "changing one choice preserves the remaining values and the output key"
+    );
+
+    await click(`${cards}:first-child ${menu}`);
+    await click('[data-field-action="remove"]');
+    assert
+      .dom(cards)
+      .exists({ count: 1 }, "removing a field keeps its neighbor");
+    assert
+      .dom('[name="form_fields.values.0.options.1.value"]')
+      .hasValue(
+        "Dinner",
+        "the original object choice is editable at its new path"
+      );
+
+    await click(".form-definition-editor__add-choice");
+    await fillIn('[name="form_fields.values.0.options.2.value"]', "Supper");
+    assert.deepEqual(api.get("form_fields.values.0.options"), [
+      "Breakfast",
+      { value: "Dinner" },
+      { value: "Supper" },
+    ]);
+  });
+
   test("preserves focus for scalar fields while typing", async function (assert) {
     this.configuration = { title: "" };
     this.nodeType = "action:topic";
@@ -715,6 +812,39 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.deepEqual(formApi.get("updates"), {
       trust_level_locked: true,
     });
+  });
+
+  test("toggles optional fixed collection fields in the Attributes menu", async function (assert) {
+    this.configuration = { entries: { values: [{ label: "Guests" }] } };
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: { multiple_values: true, hide_optional_fields: true },
+        options: [
+          {
+            name: "values",
+            values: {
+              label: { type: "string", required: true },
+              description: { type: "string" },
+            },
+          },
+        ],
+      },
+    };
+    const form = await renderEngine(this, { withFormApi: true });
+    const trigger = ".workflows-property-engine__add-attrs-btn";
+    const option = ".dropdown-menu__item button";
+    const input = 'input[name="entries.values.0.description"]';
+    assert.dom(input).doesNotExist();
+    await click(trigger);
+    assert.dom(option).hasAttribute("aria-pressed", "false");
+    await click(option);
+    await fillIn(input, "Party size");
+    await click(trigger);
+    assert.dom(option).hasAttribute("aria-pressed", "true");
+    await click(option);
+    assert.dom(input).doesNotExist();
+    assert.strictEqual(form.get("entries.values.0.description"), "");
   });
 
   test("renders fixed collections with missing group data", async function (assert) {

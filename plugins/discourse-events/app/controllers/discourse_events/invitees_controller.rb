@@ -4,6 +4,10 @@ module DiscourseEvents
   class InviteesController < BaseController
     requires_login except: %i[index]
 
+    rescue_from Events::Registration::InvalidSubmission do |error|
+      render_json_error(error.message, 422)
+    end
+
     def index
       DiscourseEvents::Events::ListInvitees.call(
         params: {
@@ -31,6 +35,7 @@ module DiscourseEvents
           recurring: params.dig(:invitee, :recurring) || false,
           event_id: params[:event_id],
           invitee_id: params[:invitee_id],
+          registration: params.dig(:invitee, :registration),
         },
         guardian:,
       ) do
@@ -57,6 +62,7 @@ module DiscourseEvents
           status: params[:invitee][:status],
           recurring: params[:invitee][:recurring] || false,
           user_id: params[:invitee][:user_id],
+          registration: params.dig(:invitee, :registration),
           event_id: params[:event_id],
         },
         guardian:,

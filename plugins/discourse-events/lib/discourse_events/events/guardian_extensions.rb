@@ -19,6 +19,14 @@ module DiscourseEvents
         can_create_discourse_post_event? && can_edit_post?(event.post)
       end
 
+      def can_create_event_registration_form?
+        is_admin? || (SiteSetting.discourse_post_event_enabled && can_create_discourse_post_event?)
+      end
+
+      def can_manage_event_registration_form?(form)
+        is_admin? || (can_create_event_registration_form? && form.created_by_id == user.id)
+      end
+
       def can_see_livestream_event?(event)
         event&.livestream? && event.deleted_at.nil? && can_see?(event.post)
       end
@@ -49,14 +57,21 @@ module DiscourseEvents
           .count == raw_invitees.length
       end
 
+      def can_export_event_registrations?(event)
+        authenticated? && SiteSetting.discourse_post_event_enabled && can_see?(event.post) &&
+          event.registration_host_ids.include?(user.id)
+      end
+
       def can_export_entity?(entity, entity_id = nil, args = nil)
-        if entity == "post_event"
+        if %w[post_event event_registrations].include?(entity)
           return false if !SiteSetting.discourse_post_event_enabled
 
           event_id = args&.[](:id) || args&.[]("id")
           event = DiscourseEvents::Events::Event.find_by(id: event_id)
 
-          return event.present? && can_act_on_discourse_post_event?(event)
+          return false unless event
+          return can_export_event_registrations?(event) if entity == "event_registrations"
+          return can_act_on_discourse_post_event?(event)
         end
 
         super

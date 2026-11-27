@@ -33,6 +33,8 @@ export const EVENT_ATTRIBUTES = {
   allDay: { default: null },
   image: { default: null },
   hosts: { default: null },
+  registrationForm: { default: null },
+  registrationFormId: { default: null },
   recording: { default: null },
 };
 

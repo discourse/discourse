@@ -107,6 +107,10 @@ export default class DiscoursePostEventEvent {
   @tracked recurrenceUntil;
   @tracked recurrence;
   @tracked customFields;
+  @tracked registrationForm;
+  @tracked registrationFormId;
+  @tracked registrationRevision;
+  @tracked canExportRegistrations;
   @tracked channel;
   @tracked imageUpload;
   @tracked isFutureOccurrence = false;
@@ -139,6 +143,10 @@ export default class DiscoursePostEventEvent {
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
     this.creator = args.creator;
+    this.registrationForm = args.registration_form;
+    this.registrationFormId = args.registration_form_id;
+    this.registrationRevision = args.registration_revision;
+    this.canExportRegistrations = args.can_export_registrations;
     this.hosts = args.hosts || [];
     this.post = args.post;
     this.isClosed = args.is_closed;
@@ -278,6 +286,10 @@ export default class DiscoursePostEventEvent {
     this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
+    this.registrationForm = event.registrationForm;
+    this.registrationFormId = event.registrationFormId;
+    this.registrationRevision = event.registrationRevision;
+    this.canExportRegistrations = event.canExportRegistrations;
     this.hosts = event.hosts || [];
     this.isClosed = event.isClosed;
     this.isExpired = event.isExpired;

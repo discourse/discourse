@@ -1,5 +1,130 @@
 @use "lib/viewport";
 
+.admin-plugin-config-area:has(> .event-registration-form-editor) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--admin-content-max-width);
+  margin-inline: auto;
+}
+
+.event-registration-form-editor__description {
+  margin-block-end: var(--space-2);
+}
+
+.event-registration-form-page {
+  max-width: 700px;
+  margin-inline: auto;
+  padding-block: var(--space-4);
+}
+
+.event-registration-form-editor .d-floating-control-bar {
+  align-self: center;
+}
+
+.d-floating-control-bar__controls:has(.event-registration-form-editor__delete) {
+  width: 100%;
+}
+
+.event-registration-form-editor__delete {
+  margin-inline-start: auto;
+}
+
+.event-registration-submissions__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+
+  .filter-input-container {
+    flex: 1 1 20em;
+  }
+}
+
+.event-registration-submissions__hosts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.event-registration-submissions__hosts a,
+.event-registration-form-creator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.event-registration-picker {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+
+  > :not(.d-icon) {
+    grid-column: 2;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  &__select:not(:disabled) {
+    @include hover {
+      --token-color-background-input: var(--primary-very-low);
+    }
+  }
+
+  &__selection {
+    position: relative;
+    min-width: 0;
+
+    .d-native-select {
+      padding-inline: $hpad !important;
+      background-image: none;
+    }
+
+    option {
+      color: var(--d-input-text-color);
+      font-style: normal;
+    }
+
+    &.--empty .d-native-select,
+    option:first-child {
+      color: var(--primary-medium);
+      font-style: italic;
+    }
+
+    &.--empty select:not(:hover, :focus) {
+      opacity: 0.8;
+    }
+  }
+
+  &__sizer {
+    display: block;
+    width: auto;
+    visibility: hidden;
+  }
+
+  select {
+    position: absolute;
+    inset: 0;
+    border: 0;
+  }
+
+  &__notice {
+    margin: 0;
+    padding-inline-start: $hpad;
+    color: var(--primary-high);
+
+    small {
+      display: block;
+      font-size: var(--font-down-1);
+    }
+  }
+}
+
 .post-event-builder-modal {
   [name="attendanceMode"] {
     .form-kit__control-radio-description {

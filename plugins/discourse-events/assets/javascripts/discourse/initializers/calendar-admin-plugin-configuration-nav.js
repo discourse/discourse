@@ -21,6 +21,16 @@ export default {
           description:
             "discourse_events.holidays.disabled_holidays_description",
         },
+        {
+          label: "event_registration.library.title",
+          route: "adminPlugins.show.discourse-events-registration-forms",
+          description: "event_registration.library.description",
+        },
+        {
+          label: "event_registration.submissions.title",
+          route: "adminPlugins.show.discourse-events-submissions",
+          description: "event_registration.submissions.description",
+        },
       ]);
     });
   },

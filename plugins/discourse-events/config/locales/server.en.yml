@@ -1,4 +1,20 @@
 en:
+  event_registration:
+    form_in_use: "This form can be deleted after the last event using it ends."
+    required: "Complete the registration form to RSVP as Going."
+    changed: "The registration form or event date has changed. Reopen the event to register."
+    invalid: "Check your answer to %{label}."
+    report_title: "Registrations for %{event}"
+    submission_erased: "This registration was removed because the member’s account was deleted or anonymized."
+    report_body: |
+      Event: %{event}
+      Form: %{form}
+      Member: %{username}
+      Submitted at: %{submitted_at}
+      Occurrence: %{occurrence}
+      RSVP: %{rsvp_scope}
+    recurring: "This and future events"
+    single: "This event"
   category_types:
     events:
       name: "Events"
@@ -66,7 +82,7 @@ en:
     displayed_invitees_limit: "Limits the numbers of invitees displayed on an event."
     display_post_event_date_on_topic_title: "Displays the date of the event after the topic title."
     use_local_event_date: "Use local date after topic title instead of relative time."
-    discourse_post_event_allowed_on_groups: "Groups that are allowed to create events."
+    discourse_post_event_allowed_on_groups: "Members of these groups can create events and registration forms. They can edit and delete their own forms."
     discourse_post_event_allowed_custom_fields: "Allows to let each event to set the value of custom fields."
     discourse_post_event_allowed_custom_fields_invalid: "These custom field names are invalid: %{names}. Names must start and end with a letter or number and use single dots, dashes, or underscores as separators (for example: dress_code, live-stream, q.and.a)."
     discourse_post_event_allowed_custom_fields_collision: "These custom field names resolve to the same name once dots, dashes, and letter case are normalized: %{names}. Each custom field must be unique."
@@ -227,6 +243,10 @@ en:
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
           acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
           invalid_allowed_groups: "Invalid allowed groups."
+          registration_hosts: "Only event hosts can change the registration form or its report recipients."
+          unknown_registration_form: "Select a saved registration form from the event editor."
+          registration_form_needs_field: "Add at least one field that members can answer."
+          invalid_registration_form: "Enter a form title, give each field a label and type, and add choices to fields that offer a selection."
           invalid_hosts: "One or more hosts can't be added to this event."
           too_many_hosts:
             one: "An event is limited to %{count} host."

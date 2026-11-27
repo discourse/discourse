@@ -25,6 +25,8 @@ module DiscourseEvents
         :"all-day",
         :image,
         :hosts,
+        :"registration-form",
+        :"registration-form-id",
         :recording,
       ]
 

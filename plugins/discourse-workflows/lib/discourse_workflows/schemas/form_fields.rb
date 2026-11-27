@@ -18,10 +18,6 @@ module DiscourseWorkflows
       ValidationError = Struct.new(:field_label, :code, keyword_init: true)
 
       ITEM_SCHEMA = {
-        field_label: {
-          type: :string,
-          required: true,
-        },
         field_type: {
           type: :options,
           required: true,
@@ -42,6 +38,10 @@ module DiscourseWorkflows
           ui: {
             expression: true,
           },
+        },
+        field_label: {
+          type: :string,
+          required: true,
         },
       }.freeze
 
@@ -126,6 +126,9 @@ module DiscourseWorkflows
       SCHEMA = {
         type: :fixed_collection,
         required: true,
+        ui: {
+          control: :form_fields,
+        },
         type_options: {
           multiple_values: true,
           hide_optional_fields: true,

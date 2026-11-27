@@ -2,10 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DMenu from "discourse/float-kit/components/d-menu";
+import AttributesMenu from "discourse/components/form-definition-editor/attributes-menu";
 import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   collectionAddLabel,
@@ -17,6 +15,7 @@ import {
   fixedCollectionGroup,
   fixedCollectionGroupMultiple,
   fixedCollectionGroups,
+  isExtraFieldShown,
   normalizeSchema,
   propertyDescription,
   propertyLabel,
@@ -30,28 +29,6 @@ function isCollection(field) {
 
 function isItemFieldVisible(field, item) {
   return fieldVisible(field, item);
-}
-
-function hasNonDefaultValue(item, field) {
-  const value = item[field.name];
-  if (field.type === "boolean") {
-    return value === true;
-  }
-  return value !== undefined && value !== null && value !== "";
-}
-
-function isExtraFieldShown(field, item, activeAttrs, key) {
-  if (!fieldVisible(field, item)) {
-    return false;
-  }
-  if (field.display_options?.show) {
-    return true;
-  }
-  const explicit = activeAttrs.get(key);
-  if (explicit?.has(field.name)) {
-    return true;
-  }
-  return hasNonDefaultValue(item, field);
 }
 
 export default class FixedCollection extends Component {
@@ -322,8 +299,7 @@ export default class FixedCollection extends Component {
     return isExtraFieldShown(
       field,
       item,
-      this.activeAttrs,
-      this.activeAttrKey(group, index)
+      this.activeAttrs.get(this.activeAttrKey(group, index))
     );
   }
 
@@ -333,7 +309,7 @@ export default class FixedCollection extends Component {
   }
 
   @action
-  toggleAttr(group, index, field, item, close) {
+  toggleAttr(group, index, field, item) {
     const key = `${group.name}:${index}`;
     const active = this.isAttrActive(group, index, field, item);
     const newMap = new Map(this.activeAttrs);
@@ -353,7 +329,6 @@ export default class FixedCollection extends Component {
 
     newMap.set(key, set);
     this.activeAttrs = newMap;
-    close?.();
   }
 
   @action
@@ -472,14 +447,7 @@ export default class FixedCollection extends Component {
                     (this.extraItemFields group) key="name"
                     as |extraField|
                   }}
-                    {{#if
-                      (isExtraFieldShown
-                        extraField
-                        item
-                        this.activeAttrs
-                        (this.activeAttrKey group index)
-                      )
-                    }}
+                    {{#if (this.isAttrActive group index extraField item)}}
                       {{#if (isCollection extraField)}}
                         <div
                           class="workflows-property-engine__nested-collection"
@@ -569,49 +537,37 @@ export default class FixedCollection extends Component {
 
                   {{#if (this.hasExtraFieldsFor group)}}
                     <div class="workflows-property-engine__block-actions">
-                      <DMenu
-                        class="btn btn-default workflows-property-engine__add-attrs-btn"
+                      <AttributesMenu
+                        class="workflows-property-engine__add-attrs-btn"
                         @inline={{true}}
+                        @label={{i18n
+                          "discourse_workflows.property_engine.add_attributes"
+                        }}
                         @modalForwardRecipient={{true}}
+                        as |Attribute|
                       >
-                        <:trigger>
-                          {{i18n
-                            "discourse_workflows.property_engine.add_attributes"
-                          }}
-                          {{dIcon "chevron-down"}}
-                        </:trigger>
-                        <:content as |menu|>
-                          <DDropdownMenu as |dropdown|>
-                            {{#each
-                              (this.availableExtraFields group item) key="name"
-                              as |extraField|
+                        {{#each
+                          (this.availableExtraFields group item) key="name"
+                          as |extraField|
+                        }}
+                          <Attribute
+                            @active={{this.isAttrActive
+                              group
+                              index
+                              extraField
+                              item
                             }}
-                              <dropdown.item>
-                                <DButton
-                                  class="btn-transparent"
-                                  @action={{fn
-                                    this.toggleAttr
-                                    group
-                                    index
-                                    extraField
-                                    item
-                                    menu.close
-                                  }}
-                                  @icon={{if
-                                    (this.isAttrActive
-                                      group index extraField item
-                                    )
-                                    "check"
-                                  }}
-                                  @translatedLabel={{this.fieldLabel
-                                    extraField.name
-                                  }}
-                                />
-                              </dropdown.item>
-                            {{/each}}
-                          </DDropdownMenu>
-                        </:content>
-                      </DMenu>
+                            @label={{this.fieldLabel extraField.name}}
+                            @onToggle={{fn
+                              this.toggleAttr
+                              group
+                              index
+                              extraField
+                              item
+                            }}
+                          />
+                        {{/each}}
+                      </AttributesMenu>
                     </div>
                   {{/if}}
                 {{/if}}
