@@ -34,6 +34,30 @@ module BulkImport
     TRANSACTION_SIZE = 1000
     QUEUE_SIZE = 1000
 
+    def self.prepare_native(configuration, settings_path, progress)
+      require_relative "native_upload_store"
+      require_relative "discourse_merger/prepared_uploads"
+      settings = YAML.safe_load_file(settings_path, symbolize_names: true)
+      store = NativeUploadStore.for_preparation(configuration, settings, progress)
+      workers = Integer(settings.fetch(:preupload_workers, 20)).clamp(1, 64)
+      directory = configuration.directory
+      File.open(directory.join("workflow.lock"), "w", 0o600) do |lock|
+        unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+          raise DiscourseMerge::Error, "Another workflow command is active"
+        end
+        if directory.join("active-run.json").exist?
+          raise DiscourseMerge::Error, "Use a fresh project after apply"
+        end
+        if directory.join("mappings.xlsx").exist? || directory.join("setup.lock").exist?
+          DiscourseMerge::Workbook.validate!(configuration, progress)
+        end
+        DiscourseMerge::PreparedUploads.open(
+          DiscourseMerge::PreparedUploads.path_for(configuration),
+          readonly: false,
+        ) { |state| state.prepare!(configuration, store, progress, workers: workers) }
+      end
+    end
+
     def initialize(settings_path)
       @settings = YAML.load_file(settings_path, symbolize_names: true)
       @settings[:path_replacements] ||= []
@@ -823,4 +847,4 @@ module BulkImport
 end
 
 # bundle exec ruby script/bulk_import/uploads_importer.rb /path/to/uploads_importer.yml
-BulkImport::UploadsImporter.new(ARGV.first).run
+BulkImport::UploadsImporter.new(ARGV.first).run if $PROGRAM_NAME == __FILE__

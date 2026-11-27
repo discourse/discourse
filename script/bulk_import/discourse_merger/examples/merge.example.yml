@@ -1,0 +1,34 @@
+# Prepare and align both databases before running the workflow.
+source:
+  dbname: incoming_forum
+  host: localhost
+  user: discourse
+  password_env: MERGE_SOURCE_PASSWORD
+destination:
+  dbname: discourse
+  host: localhost
+  user: discourse
+  password_env: MERGE_DESTINATION_PASSWORD
+source_url: https://source.example.com
+destination_url: https://destination.example.com
+namespace: incoming
+# copy verifies and transfers original file bytes. preserve_remote retains
+# remote metadata and qualifies source-relative URLs; bytes are not checked.
+upload_mode: copy
+# preuploaded stages both sites in the final bucket before a SQL-only launch.
+# Supply an extracted root for each site whose bytes are missing from that target.
+# Both roots are optional in preserve_remote mode.
+source_upload_root: /shared/import/source/uploads/default
+destination_upload_root: /shared/uploads/default
+include_private_messages: true
+import_tags: true
+max_category_depth: 3
+# Optional engineer-reviewed overrides for imported/new category paths.
+# Values are destination group IDs. Permission type is full access.
+category_access: {}
+# Explicit restricted-to-public exceptions, identified by destination path.
+allow_access_changes: []
+# Instructions for records absent from an acknowledged older snapshot.
+allowed_missing_topic_ids: []
+# Only after investigating recorded SHA-1 versus actual-byte discrepancies.
+upload_hash_discrepancy_ids: []

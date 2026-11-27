@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+image=${1:?Supply the pinned local all-in-one image built for the merger}
+merger=$(cd "$(dirname "$0")" && pwd)
+fixture=$(cd "$merger/../../../spec/script/bulk_import/discourse_merger/fixtures" && pwd)
+exec docker run --pull=never --rm --network none \
+  --mount "type=bind,src=$merger,dst=/var/www/discourse/script/bulk_import/discourse_merger,readonly" \
+  --mount "type=bind,src=$fixture,dst=/fixture,readonly" \
+  --entrypoint bash "$image" /fixture/run.sh
