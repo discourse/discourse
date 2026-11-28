@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import { removeAccents } from "discourse/lib/utilities";
+import DPill from "discourse/ui-kit/d-pill";
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
@@ -389,7 +390,7 @@ export default class DSelectTimezone extends Component<DSelectTimezoneSignature>
               <span class="d-select-timezone__place">{{option.label}}</span>
               <span class="d-select-timezone__when">
                 {{#if zone.day}}
-                  <span class="d-select-timezone__day">{{zone.day}}</span>
+                  <DPill class="d-select-timezone__day" @label={{zone.day}} />
                 {{/if}}
                 <span class="d-select-timezone__time">{{zone.time}}</span>
               </span>
