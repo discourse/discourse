@@ -19,15 +19,19 @@ RSpec.describe "Drawer - starred channels" do
   context "when user has starred channels" do
     before { channel_1.membership_for(current_user).update!(starred: true) }
 
-    it "defaults to starred channels, shows footer tab, and can open channel" do
+    it "defaults to starred channels and returns there after opening a channel" do
       visit("/")
       chat_page.open_from_header
 
       expect(drawer_page).to have_open_starred_channels
       expect(page).to have_css("#c-footer-starred.--active")
 
-      find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
+      drawer_page.click_starred_channels
+      drawer_page.open_channel_row(channel_1)
       expect(drawer_page).to have_open_channel(channel_1)
+
+      drawer_page.back
+      expect(drawer_page).to have_open_starred_channels
     end
   end
 
@@ -165,26 +169,15 @@ RSpec.describe "Drawer - starred channels" do
   context "when navigating back from a channel" do
     before { channel_1.membership_for(current_user).update!(starred: true) }
 
-    it "returns to starred channels when starred channels exist" do
+    it "goes back to the channels list after the last star is removed" do
       visit("/")
       chat_page.open_from_header
       drawer_page.click_starred_channels
-      find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
-
-      find(".c-navbar__back-button").click
-      expect(drawer_page).to have_open_starred_channels
-    end
-
-    it "redirects to channels list after unstarring the last channel" do
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.click_starred_channels
-      find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
-
-      find(".c-navbar__star-channel-button").click
+      drawer_page.open_channel_row(channel_1)
+      find(".c-navbar__star-channel-button.--starred").click
       expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
 
-      find(".c-navbar__back-button").click
+      drawer_page.back
       expect(drawer_page).to have_open_channels
     end
 

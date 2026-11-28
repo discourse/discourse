@@ -23,6 +23,7 @@ describe "Chat | bundle analyzer" do
 
     open_analyzer
 
+    expect(analyzer).to have_report
     expect(analyzer).to have_no_card("chat")
   end
 end

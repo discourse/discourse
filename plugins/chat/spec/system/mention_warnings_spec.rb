@@ -7,6 +7,7 @@ RSpec.describe "Mentions warnings" do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap(current_user, [channel_1, channel_2])
@@ -38,10 +39,12 @@ RSpec.describe "Mentions warnings" do
         fab!(:user_2, :user)
 
         context "when the group has too many members" do
+          fab!(:user_3, :user)
+
           before do
             SiteSetting.max_users_notified_per_group_mention = 1
             publicly_mentionable_group.add(user_2)
-            publicly_mentionable_group.add(Fabricate(:user))
+            publicly_mentionable_group.add(user_3)
           end
 
           it "displays a warning" do
@@ -58,7 +61,7 @@ RSpec.describe "Mentions warnings" do
         context "when typing too many mentions" do
           before { SiteSetting.max_mentions_per_chat_message = 1 }
 
-          it "displays a warning" do
+          it "warns about too many distinct mentions but not duplicates" do
             chat_page.visit_channel(channel_1)
             channel_page.type_in_composer(
               "@#{user_2.username} @#{publicly_mentionable_group.name} ",
@@ -66,25 +69,31 @@ RSpec.describe "Mentions warnings" do
 
             expect(page).to have_css(".chat-mention-warnings")
             expect(page.find(".chat-mention-warnings-list__simple")).to be_present
-          end
 
-          it "doesn’t count duplicates" do
-            chat_page.visit_channel(channel_1)
-            channel_page.type_in_composer("@#{user_2.username} @#{user_2.username} ")
+            channel_page.fill_composer("@#{user_2.username} @#{user_2.username} ")
 
             expect(page).to have_no_css(".chat-mention-warnings")
           end
 
-          it "doesn't consider code-blocks when counting mentions" do
-            raw =
-              "Hey @#{user_2.username}\n\n```\ndef foo\n  @#{publicly_mentionable_group.name} = true\nend\n```\n"
-            message_1 =
+          context "when editing a message with a code block" do
+            fab!(:message_1) do
+              raw =
+                "Hey @#{user_2.username}\n\n```\ndef foo\n  @#{publicly_mentionable_group.name} = true\nend\n```\n"
               Fabricate(:chat_message, user: current_user, chat_channel: channel_1, message: raw)
-            chat_page.visit_channel(channel_1)
+            end
 
-            channel_page.messages.edit(message_1)
+            before do
+              channel_1.update!(last_message: message_1, messages_count: 1)
+              channel_1.membership_for(current_user).mark_read!(message_1.id)
+            end
 
-            expect(page).to have_no_css(".chat-mention-warnings")
+            it "doesn't consider code-blocks when counting mentions" do
+              chat_page.visit_channel(channel_1)
+              channel_page.messages.edit(message_1)
+
+              expect(channel_page.composer).to be_editing_message(message_1)
+              expect(page).to have_no_css(".chat-mention-warnings")
+            end
           end
         end
       end
@@ -122,12 +131,15 @@ RSpec.describe "Mentions warnings" do
         expect(page.find(".chat-mention-warnings-list__simple")).to be_present
 
         # Channel 2 doesn't have a draft so it should disappear
-        chat_page.visit_channel(channel_2)
+        sidebar.open_channel(channel_2)
+        expect(page).to have_current_path(channel_2.relative_url)
+        expect(channel_page.composer).to be_blank
         expect(page).to have_no_css(".chat-mention-warnings")
 
         # Navigating back to channel 1 will make the mention warnings appear b/c the draft
         # will trigger the @all mention warning again
-        chat_page.visit_channel(channel_1)
+        sidebar.open_channel(channel_1)
+        expect(page).to have_current_path(channel_1.relative_url)
         expect(page).to have_css(".chat-mention-warnings")
         expect(page.find(".chat-mention-warnings-list__simple")).to be_present
       end

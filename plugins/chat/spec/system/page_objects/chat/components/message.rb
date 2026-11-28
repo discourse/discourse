@@ -46,26 +46,30 @@ module PageObjects
         end
 
         def open_mobile_actions
-          page.execute_script(<<-JS, component)
-            arguments[0].dispatchEvent(new TouchEvent("touchstart", {
-              cancelable: true,
-              bubbles: true,
-              touches: [
-                new Touch({ identifier: Date.now(), target: arguments[0] })
-              ],
+          pressed = "html.disable-message-actions-touch"
+          page.assert_no_selector(pressed)
+          page.execute_script(<<~JS, component)
+            const [target] = arguments;
+            const touch = new Touch({ identifier: 1, target });
+            target.dispatchEvent(new TouchEvent("touchstart", {
+              bubbles: true, cancelable: true, touches: [touch], changedTouches: [touch],
             }));
-
-
-            setTimeout(() => {
-              arguments[0].dispatchEvent(new TouchEvent("touchend", {
-                cancelable: true,
-                bubbles: true,
-                touches: [
-                  new Touch({ identifier: Date.now(), target: arguments[0] })
-                ],
-              }));
-            }, 600);
           JS
+
+          begin
+            # The app adds the guard when the long press fires, not at the initial highlight.
+            page.assert_selector(pressed)
+          ensure
+            page.execute_script(<<~JS, component)
+              const [target] = arguments;
+              const touch = new Touch({ identifier: 1, target });
+              target.dispatchEvent(new TouchEvent("touchend", {
+                bubbles: true, cancelable: true, changedTouches: [touch],
+              }));
+            JS
+          end
+          page.assert_selector("html:not(.disable-message-actions-touch) .chat-message-actions")
+          nil
         end
 
         def bookmark

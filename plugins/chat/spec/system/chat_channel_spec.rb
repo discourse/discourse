@@ -21,6 +21,8 @@ RSpec.describe "Chat channel" do
 
     before do
       channel_1.update!(threading_enabled: true)
+      thread_1.update_last_message_id!
+      channel_1.update_last_message_id!
       thread_1.add(current_user)
       Fabricate(:chat_message, thread: thread_1, use_service: true)
     end
@@ -59,16 +61,38 @@ RSpec.describe "Chat channel" do
   end
 
   context "when first batch of messages doesn't fill page" do
-    before { Fabricate.times(30, :chat_message, user: current_user, chat_channel: channel_1) }
+    fab!(:recent_messages) do
+      Fabricate.times(
+        Chat::MessagesQuery::PAST_MESSAGE_LIMIT + 1,
+        :chat_message,
+        user: current_user,
+        chat_channel: channel_1,
+      )
+    end
 
-    it "autofills for more messages" do
+    it "autofills for older messages without scrolling" do
+      newest_message = recent_messages.last
+      channel_1.update_last_message_id!
+      channel_1.membership_for(current_user).update!(last_read_message: newest_message)
+
       chat_page.prefers_full_page
       visit("/")
       # cheap trick to ensure the messages don't fill the initial page
       page.execute_script(
         "document.head.insertAdjacentHTML('beforeend', `<style>.chat-message-text{font-size:3px;}</style>`)",
       )
-      sidebar_page.open_channel(channel_1)
+      PageObjects::CDP
+        .new
+        .with_paused_request(
+          %r{/channels/#{channel_1.id}/messages\?.*direction=past},
+        ) do |older_page|
+          sidebar_page.open_channel(channel_1)
+
+          older_page.wait
+          expect(channel_page.messages).to have_message(id: newest_message.id)
+          expect(channel_page.messages).to have_no_message(id: message_1.id)
+          older_page.resume
+        end
 
       expect(channel_page.messages).to have_message(id: message_1.id)
     end
@@ -123,8 +147,11 @@ RSpec.describe "Chat channel" do
       end
     end
 
+    before { channel_1.update_last_message_id! }
+
     it "loads the most recent messages after sending a message" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
+      channel_1.update!(last_message: unloaded_message)
       chat_page.visit_channel(channel_1, message_id: message_1.id)
       expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
 
@@ -134,6 +161,7 @@ RSpec.describe "Chat channel" do
 
     it "jumps to the bottom of the channel when clicking the arrow" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
+      channel_1.update!(last_message: unloaded_message)
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(channel_page).to have_no_loading_skeleton
@@ -260,11 +288,16 @@ RSpec.describe "Chat channel" do
 
   context "when reply is not directly connected" do
     fab!(:other_user, :user)
+    fab!(:intervening_message) do
+      Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
+    end
+    fab!(:reply) do
+      Fabricate(:chat_message, in_reply_to: message_1, user: other_user, chat_channel: channel_1)
+    end
 
     before do
-      Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
-      Fabricate(:chat_message, in_reply_to: message_1, user: other_user, chat_channel: channel_1)
-      channel_1.add(other_user)
+      channel_1.update!(last_message: reply)
+      channel_1.add(other_user).update!(last_read_message: reply)
     end
 
     it "shows the reply-to line" do

@@ -3,9 +3,9 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import EmptyState from "./empty-state.gjs";
 import Item from "./item.gjs";
 
@@ -50,7 +50,7 @@ export default class List extends Component {
 
   @action
   loadCollection() {
-    discourseDebounce(this, this.debouncedLoadCollection, INPUT_DELAY);
+    discourseDebounce(this, this.debouncedLoadCollection, CHAT_INPUT_DELAY);
   }
 
   async debouncedLoadCollection() {

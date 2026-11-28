@@ -34,29 +34,25 @@ RSpec.describe "Shortcuts | drawer" do
     end
 
     context "when pressing escape" do
-      context "when the composer is not focused" do
-        it "closes the drawer" do
-          expect(chat_page).to have_drawer
+      it "leaves unfocused typing alone, then blurs and closes the drawer on Escape" do
+        expect(chat_page).to have_drawer
 
-          drawer_page.open_channel(channel_1)
-          page.send_keys(:tab) # ensures we focus out of input
-          page.send_keys(:escape)
+        drawer_page.open_channel(channel_1)
+        page.send_keys(:tab) # move focus out of the composer before testing letter interception
+        page.send_keys("e")
+        expect(channel_page.composer.value).to eq("")
 
-          expect(chat_page).to have_no_drawer
-        end
-      end
+        channel_page.composer.input.click
+        expect(channel_page.composer).to be_focused
 
-      context "when the composer is focused" do
-        it "blurs the input" do
-          expect(chat_page).to have_drawer
+        page.send_keys(:escape)
 
-          drawer_page.open_channel(channel_1)
-          channel_page.composer.input.click
+        expect(page).to have_no_css(".chat-drawer .chat-composer__input:focus")
+        expect(chat_page).to have_drawer
 
-          page.send_keys(:escape)
+        page.send_keys(:escape)
 
-          expect(chat_page).to have_drawer
-        end
+        expect(chat_page).to have_no_drawer
       end
 
       context "when lightbox is open" do
@@ -78,16 +74,6 @@ RSpec.describe "Shortcuts | drawer" do
           expect(lightbox).to be_hidden
           expect(chat_page).to have_drawer
         end
-      end
-    end
-
-    context "when pressing a letter" do
-      it "doesn’t intercept the event" do
-        drawer_page.open_channel(channel_1)
-        page.send_keys(:tab) # simple way to ensure composer is not focused
-        page.send_keys("e")
-
-        expect(channel_page.composer.value).to eq("")
       end
     end
 

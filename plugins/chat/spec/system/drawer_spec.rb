@@ -12,7 +12,7 @@ RSpec.describe "Drawer" do
     chat_page.prefers_drawer
   end
 
-  it "handles transitions between drawer and full page and applies appropriate classes" do
+  it "opens the channels list with a footer and updates the layout when maximized" do
     visit("/")
 
     chat_page.open_from_header
@@ -21,6 +21,9 @@ RSpec.describe "Drawer" do
     )
     expect(page).to have_css("html.has-drawer-chat.has-chat")
     expect(page).to have_no_css("body.has-full-page-chat")
+    expect(drawer_page).to have_open_channels
+    expect(page).to have_css(".chat-drawer .c-footer")
+    expect(page).to have_css(".chat-drawer .c-footer__item", count: 3)
 
     drawer_page.maximize
     expect(page).to have_css("body.has-chat.has-full-page-chat")
@@ -58,33 +61,24 @@ RSpec.describe "Drawer" do
         page.find(".c-navbar__channel-title").click
       end
 
-      it "opens channel preferences page" do
+      it "opens preferences with a back button and working settings and members tabs" do
         expect(drawer_page).to have_channel_preferences
-      end
-
-      it "has tabs for settings and members" do
         expect(drawer_page).to have_css(".c-channel-info__nav li a", text: "Settings")
         expect(drawer_page).to have_css(".c-channel-info__nav li a", text: "Members")
-      end
+        expect(drawer_page).to have_css(".c-navbar__back-button")
 
-      it "opens correct tab when clicked" do
         page.find(".c-channel-info__nav li a", text: "Members").click
         expect(drawer_page).to have_channel_members
 
         page.find(".c-channel-info__nav li a", text: "Settings").click
         expect(drawer_page).to have_channel_settings
       end
-
-      it "has a back button" do
-        expect(drawer_page).to have_css(".c-navbar__back-button")
-      end
     end
   end
 
   context "when opening" do
     it "uses stored size" do
-      visit("/") # we need to visit the page first to set the local storage
-
+      # Sign-in has already loaded a same-origin document, without booting chat.
       page.execute_script "window.localStorage.setItem('discourse_chat_drawer_size_width','500');"
       page.execute_script "window.localStorage.setItem('discourse_chat_drawer_size_height','500');"
 
@@ -97,28 +91,27 @@ RSpec.describe "Drawer" do
       expect(chat_drawer).to have_computed_style(height: "500px")
     end
 
-    it "has a default size" do
+    it "uses the default size, collapses from the header, and clears its active state on close" do
       visit("/")
-
       chat_page.open_from_header
 
-      chat_drawer = page.find(".chat-drawer")
+      chat_drawer = page.find(".chat-drawer.is-expanded")
       expect(chat_drawer).to have_computed_style(width: "400px")
       expect(chat_drawer).to have_computed_style(height: "530px")
-    end
-  end
+      expect(page).to have_css("body.chat-drawer-active.chat-drawer-expanded")
 
-  context "when toggling open/close" do
-    it "toggles a css class on body" do
-      visit("/")
+      chat_drawer.find(".c-navbar").click
+      expect(page).to have_css(".chat-drawer:not(.is-expanded)")
+      expect(page).to have_no_css("body.chat-drawer-expanded")
 
-      chat_page.open_from_header
-
-      expect(page.find("body.chat-drawer-active")).to be_visible
+      drawer_page.expand
+      chat_drawer = page.find(".chat-drawer.is-expanded")
+      expect(chat_drawer).to have_computed_style(width: "400px")
+      expect(chat_drawer).to have_computed_style(height: "530px")
+      expect(page).to have_css("body.chat-drawer-active.chat-drawer-expanded")
 
       drawer_page.close
-
-      expect(page.find("body:not(.chat-drawer-active)")).to be_visible
+      expect(page).to have_no_css("body.chat-drawer-active")
     end
   end
 
@@ -126,7 +119,7 @@ RSpec.describe "Drawer" do
     fab!(:channel_1, :chat_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-    before { channel_1.add(current_user) }
+    fab!(:membership) { channel_1.add(current_user) }
 
     it "resets the active message" do
       visit("/")
@@ -142,21 +135,6 @@ RSpec.describe "Drawer" do
     end
   end
 
-  context "when clicking the drawer's header" do
-    it "collapses the drawer" do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(page).to have_selector(".chat-drawer.is-expanded")
-      expect(page).to have_selector("body.chat-drawer-expanded")
-
-      page.find(".c-navbar").click
-
-      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
-      expect(page).to have_selector("body:not(.chat-drawer-expanded)")
-    end
-  end
-
   context "when the drawer is collapsed" do
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:membership) do
@@ -165,7 +143,7 @@ RSpec.describe "Drawer" do
 
     before { SiteSetting.chat_search_enabled = true }
 
-    it "only keeps the navbar controls which are usable when collapsed" do
+    it "hides unusable navbar controls when collapsed and can expand by keyboard or click" do
       drawer_page.visit_channel(channel)
 
       expect(page).to have_selector(".c-navbar__star-channel-button")
@@ -180,19 +158,6 @@ RSpec.describe "Drawer" do
       expect(page).to have_no_selector(".c-navbar__threads-list-button")
       expect(page).to have_selector(".c-navbar__close-drawer-button")
 
-      drawer_page.expand
-
-      expect(page).to have_selector(".chat-drawer.is-expanded")
-      expect(page).to have_selector(".c-navbar__star-channel-button")
-      expect(page).to have_selector(".c-navbar__filter")
-      expect(page).to have_selector(".c-navbar__threads-list-button")
-    end
-
-    it "can be expanded with the keyboard" do
-      drawer_page.visit_channel(channel)
-      drawer_page.collapse
-
-      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
       expect(drawer_page.toggle_button_width).to be <= 1 # not visible to pointer users
 
       drawer_page.focus_toggle_button
@@ -200,8 +165,19 @@ RSpec.describe "Drawer" do
       expect(drawer_page.toggle_button_width).to be > 1
 
       drawer_page.expand_with_keyboard
-
       expect(page).to have_selector(".chat-drawer.is-expanded")
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
+
+      drawer_page.collapse
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+
+      drawer_page.expand
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
     end
   end
 
@@ -209,14 +185,14 @@ RSpec.describe "Drawer" do
     fab!(:channel_1, :chat_channel)
     fab!(:channel_2, :chat_channel)
     fab!(:user_1, :user)
+    fab!(:membership_1) { channel_1.add(current_user) }
+    fab!(:membership_2) { channel_2.add(current_user) }
+    fab!(:other_membership_1) { channel_1.add(user_1) }
+    fab!(:other_membership_2) { channel_2.add(user_1) }
 
-    before do
-      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
-      channel_1.add(current_user)
-      channel_2.add(current_user)
-      channel_1.add(user_1)
-      channel_2.add(user_1)
-    end
+    let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
+
+    before { current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id) }
 
     it "correctly resets subscriptions" do
       visit("/")
@@ -238,9 +214,10 @@ RSpec.describe "Drawer" do
 
       expect(page).to have_content("onlyonce", count: 1)
 
-      chat_page.visit_channel(channel_2)
+      sidebar_page.open_channel(channel_2)
 
-      expect(page).to have_content("onlyonce", count: 0)
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel_2.id}']")
+      expect(page).to have_no_content("onlyonce")
     end
   end
 
@@ -334,21 +311,6 @@ RSpec.describe "Drawer" do
   end
 
   describe "with chat footer" do
-    it "opens channels list by default" do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(drawer_page).to have_open_channels
-    end
-
-    it "shows footer nav when 2 or more tabs are accessible" do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(page).to have_css(".chat-drawer .c-footer")
-      expect(page).to have_css(".chat-drawer .c-footer__item", count: 3)
-    end
-
     it "hides footer nav when only channels are accessible" do
       SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
 
@@ -377,12 +339,13 @@ RSpec.describe "Drawer" do
       end
 
       context "with viewable threads" do
-        before do
-          message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
-          thread = Fabricate(:chat_thread, channel: channel, original_message: message)
-          thread.add(current_user)
-          Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
-          thread.set_replies_count_cache(1, update_db: true)
+        fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
+        fab!(:thread) do
+          chat_thread_with_replies(
+            channel: channel,
+            original_message: message,
+            reply_users: [other_user],
+          )
         end
 
         it "redirects to correct route" do
@@ -397,6 +360,7 @@ RSpec.describe "Drawer" do
 
           drawer_page.click_user_threads
           expect(drawer_page).to have_open_user_threads
+          expect(drawer_page).to have_css(".c-user-thread[data-id='#{thread.id}']")
         end
       end
     end

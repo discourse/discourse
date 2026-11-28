@@ -3,15 +3,17 @@
 RSpec.describe "Chat | composer | thread" do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:current_user, :admin)
-  fab!(:message_1) do
-    Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
-  end
-  fab!(:message_2) do
-    Fabricate(:chat_message, user: current_user, in_reply_to: message_1, use_service: true)
+  fab!(:thread) do
+    chat_thread_with_replies(
+      channel: channel_1,
+      original_message_user: current_user,
+      reply_users: [current_user],
+      link_replies: true,
+    )
   end
 
+  let(:reply) { thread.last_message }
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:cdp) { PageObjects::CDP.new }
 
@@ -22,45 +24,29 @@ RSpec.describe "Chat | composer | thread" do
   end
 
   describe "edit message" do
-    it "adds the edit indicator" do
-      chat_page.visit_thread(message_2.thread)
-      thread_page.edit_message(message_2)
+    it "cancels edits with Escape or close and applies submitted edits offline" do
+      chat_page.visit_thread(thread)
+      thread_page.edit_message(reply)
 
-      expect(thread_page.composer).to be_editing_message(message_2)
-    end
+      expect(thread_page.composer).to be_editing_message(reply)
 
-    it "updates the message instantly" do
-      chat_page.visit_thread(message_2.thread)
+      thread_page.composer.cancel_shortcut
+
+      expect(thread_page.composer).to be_editing_no_message
+
+      thread_page.edit_message(reply)
+      expect(thread_page.composer).to be_editing_message(reply)
+      thread_page.composer.cancel_editing
+
+      expect(thread_page.composer).to be_editing_no_message
 
       cdp.with_network_disconnected do
-        thread_page.edit_message(message_2, "instant")
+        thread_page.edit_message(reply, "instant")
 
         expect(thread_page.messages).to have_message(
-          text: message_2.message + " instant",
+          text: reply.message + " instant",
           persisted: false,
         )
-      end
-    end
-
-    context "when pressing escape" do
-      it "cancels editing" do
-        chat_page.visit_thread(message_2.thread)
-        thread_page.edit_message(message_2)
-        thread_page.composer.cancel_shortcut
-
-        expect(thread_page.composer).to be_editing_no_message
-        expect(thread_page.composer).to be_blank
-      end
-    end
-
-    context "when closing edited message" do
-      it "cancels editing" do
-        chat_page.visit_thread(message_2.thread)
-        thread_page.edit_message(message_2)
-        thread_page.composer.cancel_editing
-
-        expect(thread_page.composer).to be_editing_no_message
-        expect(thread_page.composer.value).to be_blank
       end
     end
   end

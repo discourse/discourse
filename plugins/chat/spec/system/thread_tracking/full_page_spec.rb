@@ -4,7 +4,12 @@ describe "Thread tracking state | full page" do
   fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user, :user)
-  fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+  fab!(:thread) do
+    thread = Fabricate(:chat_thread, channel: channel, original_message_user: other_user)
+    channel.add(other_user).mark_read!(thread.original_message_id)
+    channel.update_last_message_id!
+    thread
+  end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -21,16 +26,17 @@ describe "Thread tracking state | full page" do
 
   context "when the user has unread messages for a thread" do
     fab!(:message_1) do
-      Fabricate(:chat_message, thread: thread, user: current_user, use_service: true)
+      Fabricate(:chat_message, chat_channel: channel, thread: thread, user: current_user)
     end
-    fab!(:message_2) { Fabricate(:chat_message, thread: thread, use_service: true) }
-
-    it "shows the count of threads with unread messages on the thread list button" do
-      chat_page.visit_channel(channel)
-      channel_threads_page.close
-
-      expect(channel_page).to have_unread_thread_indicator(count: 1)
+    fab!(:message_2) do
+      message = Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
+      thread.membership_for(other_user).mark_read!(message.id)
+      thread.update!(replies_count: 2)
+      thread.update_last_message_id!
+      message
     end
+
+    before { thread.membership_for(current_user).mark_read!(message_1.id) }
 
     it "does not include threads with deleted original messages in the count of threads with unread messages" do
       thread.original_message.trash!
@@ -38,14 +44,16 @@ describe "Thread tracking state | full page" do
       expect(thread_page).to have_no_unread_list_indicator
     end
 
-    it "shows an indicator on the unread thread in the list" do
+    it "shows unread counts on the button and in the list and clears them when the user opens the thread" do
       chat_page.visit_channel(channel)
-
       expect(thread_list_page).to have_unread_item(thread.id, count: 1)
-    end
 
-    it "marks the thread as read and removes both indicators when the user opens it" do
-      chat_page.visit_channel(channel)
+      channel_threads_page.close
+      expect(channel_page).to have_unread_thread_indicator(count: 1)
+
+      channel_page.open_thread_list
+      expect(thread_list_page).to have_unread_item(thread.id, count: 1)
+
       thread_list_page.item_by_id(thread.id).click
 
       expect(thread_page).to have_no_unread_list_indicator
@@ -93,8 +101,14 @@ describe "Thread tracking state | full page" do
     end
 
     it "allows the user to start tracking a thread they have not replied to" do
-      new_thread = Fabricate(:chat_thread, channel: channel, use_service: true)
-      Fabricate(:chat_message, thread: new_thread, use_service: true)
+      new_thread =
+        chat_thread_with_replies(
+          channel: channel,
+          original_message_user: other_user,
+          reply_users: [other_user],
+          track_replies: true,
+        )
+      channel.update_last_message_id!
       chat_page.visit_thread(new_thread)
       thread_page.notification_level = :tracking
 
@@ -138,7 +152,11 @@ describe "Thread tracking state | full page" do
       it "shows an unread indicator for the channel sidebar if a new thread message arrives while the user is not looking at the channel" do
         chat_page.visit_channel(channel)
         expect(sidebar_page).to have_no_unread_channel(channel)
-        chat_page.visit_channel(other_channel)
+
+        sidebar_page.open_channel(other_channel)
+        expect(page).to have_current_path(other_channel.relative_url)
+        expect(chat_page).to have_finished_loading
+
         Fabricate(:chat_message, thread: thread, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel)
       end
@@ -147,13 +165,10 @@ describe "Thread tracking state | full page" do
     context "when the user's notification level for the thread is set to normal" do
       before { thread.membership_for(current_user).update!(notification_level: :normal) }
 
-      it "does not show a the count of threads with unread messages on the thread list button" do
+      it "shows no unread indicator on the thread list button or in the list" do
         chat_page.visit_channel(channel)
         expect(channel_page).to have_no_unread_thread_indicator
-      end
 
-      it "does not show an indicator on the unread thread in the list" do
-        chat_page.visit_channel(channel)
         channel_page.open_thread_list
         expect(thread_list_page).to have_no_unread_item(thread.id)
       end

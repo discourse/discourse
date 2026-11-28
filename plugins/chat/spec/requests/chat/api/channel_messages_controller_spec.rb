@@ -446,6 +446,28 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    it "publishes unread-tracking payloads with millisecond created_at" do
+      SiteSetting.chat_thread_improvements = true
+      channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel: channel)
+      reply_created_at = Time.zone.parse("2026-01-01 12:00:00.200")
+
+      published =
+        MessageBus.track_publish(Chat::Publisher.new_messages_message_bus_channel(channel.id)) do
+          freeze_time(reply_created_at) do
+            post "/chat/#{channel.id}.json",
+                 params: params.merge(thread_id: thread.id, broadcast: true)
+          end
+        end
+
+      expect(response).to have_http_status(:ok)
+      expect(published.map { |event| event.data[:type] }).to contain_exactly("channel", "thread")
+      published.each do |event|
+        created_at = Time.iso8601(event.data.dig(:message, :created_at))
+        expect(created_at).to eq(reply_created_at)
+      end
+    end
+
     context "when the message is a reply in a thread whose original message was trashed" do
       fab!(:threading_channel) { Fabricate(:category_channel, threading_enabled: true) }
       fab!(:original_message) do

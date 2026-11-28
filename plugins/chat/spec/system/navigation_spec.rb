@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Navigation" do
-  fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user, :admin)
@@ -29,18 +28,6 @@ RSpec.describe "Navigation" do
     sign_in(current_user)
   end
 
-  context "when clicking chat icon and drawer is viewing channel" do
-    it "navigates to index" do
-      visit("/")
-
-      chat_page.open_from_header
-      chat_drawer_page.open_channel(category_channel_2)
-      chat_page.open_from_header
-
-      expect(page).to have_content(I18n.t("js.chat.direct_messages.title"))
-    end
-  end
-
   context "when clicking back button on mobile and is viewing channel" do
     it "navigates to channels tab", mobile: true do
       chat_page.visit_channel(category_channel_2)
@@ -51,12 +38,14 @@ RSpec.describe "Navigation" do
   end
 
   context "when clicking chat icon on mobile" do
-    it "has the chat title with link to chat index", mobile: true do
+    it "shows the linked chat title in place of the forum search and menu", mobile: true do
       visit("/")
       chat_page.open_from_header
 
       expect(page).to have_title(I18n.t("js.chat.heading"))
       expect(page).to have_css("a.c-heading[href='#{chat_path}']")
+      expect(page).to have_no_css(".search-dropdown")
+      expect(page).to have_no_css(".hamburger-dropdown")
     end
 
     it "has the back to forum link with last visited url", mobile: true do
@@ -69,14 +58,6 @@ RSpec.describe "Navigation" do
 
       expect(page).to have_title(I18n.t("js.chat.heading"))
       expect(page).to have_css(".back-to-forum[href='#{topic.relative_url}']")
-    end
-
-    it "hides the search icon and hamburger icon", mobile: true do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(page).to have_no_css(".search-dropdown")
-      expect(page).to have_no_css(".hamburger-dropdown")
     end
   end
 
@@ -100,13 +81,19 @@ RSpec.describe "Navigation" do
     end
   end
 
-  context "when opening chat" do
-    it "opens the drawer by default" do
-      visit("/")
-      chat_page.open_from_header
+  it "opens the drawer by default and returns to its index from a channel" do
+    visit("/")
+    chat_page.open_from_header
 
-      expect(page).to have_css(".chat-drawer.is-expanded")
-    end
+    expect(page).to have_css(".chat-drawer.is-expanded")
+
+    chat_drawer_page.open_channel(category_channel_2)
+    expect(chat_drawer_page).to have_open_channel(category_channel_2)
+
+    chat_page.open_from_header
+
+    expect(chat_drawer_page).to have_open_channels
+    expect(page).to have_no_css(".chat-drawer .chat-channel[data-id='#{category_channel_2.id}']")
   end
 
   context "when opening chat with full page as preferred mode" do
@@ -143,11 +130,10 @@ RSpec.describe "Navigation" do
   end
 
   context "when opening channel settings from thread" do
-    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+    fab!(:thread) { chat_thread_with_replies(channel: category_channel) }
 
     before do
       category_channel.update!(threading_enabled: true)
-      Fabricate(:chat_message, thread: thread, use_service: true)
       thread.add(current_user)
     end
 
@@ -182,11 +168,10 @@ RSpec.describe "Navigation" do
   end
 
   context "when opening a thread" do
-    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+    fab!(:thread) { chat_thread_with_replies(channel: category_channel) }
 
     before do
       category_channel.update!(threading_enabled: true)
-      Fabricate(:chat_message, thread: thread, use_service: true)
       thread.add(current_user)
     end
 
@@ -203,7 +188,6 @@ RSpec.describe "Navigation" do
 
       context "for mobile" do
         it "goes back to the thread list when clicking the back button", mobile: true do
-          visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.open_thread_list
           expect(thread_list_page).to have_loaded
@@ -215,9 +199,7 @@ RSpec.describe "Navigation" do
         end
 
         context "when there are unread threads" do
-          fab!(:thread_2) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
-
-          before { Fabricate(:chat_message, thread: thread_2, use_service: true) }
+          fab!(:thread_2) { chat_thread_with_replies(channel: category_channel) }
 
           it "goes back to the thread list when clicking the back button", mobile: true do
             chat_page.visit_channel(category_channel)
@@ -239,7 +221,6 @@ RSpec.describe "Navigation" do
 
     context "when opening a thread from indicator" do
       it "goes back to the thread list when clicking the back button" do
-        visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel_page).to have_open_thread(thread)
@@ -251,7 +232,6 @@ RSpec.describe "Navigation" do
       context "for mobile" do
         it "closes the thread and goes back to the channel when clicking the back button",
            mobile: true do
-          visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.message_thread_indicator(thread.original_message).click
           expect(side_panel_page).to have_open_thread(thread)
@@ -298,26 +278,20 @@ RSpec.describe "Navigation" do
       end
     end
 
-    context "when opening channel from sidebar with full page preferred" do
-      it "opens channel in full page" do
+    context "with full page preferred" do
+      before do
+        # Stored before the first boot so the app starts with full page preferred.
+        chat_page.prefers_full_page
         visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.maximize
-        visit("/")
+      end
+
+      it "opens a sidebar channel in full page" do
         sidebar_component.click_link(category_channel.name)
 
-        expect(page).to have_current_path(
-          chat.channel_path(category_channel.slug, category_channel.id),
-        )
+        expect(page).to have_current_path(category_channel.relative_url)
       end
-    end
 
-    context "when starting draft from sidebar with full page preferred" do
-      it "opens draft in full page" do
-        visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.maximize
-        visit("/")
+      it "opens the draft composer from the forum keyboard shortcut" do
         chat_page.open_new_message
 
         expect(chat_page.message_creator).to be_opened
@@ -407,26 +381,15 @@ RSpec.describe "Navigation" do
       end
     end
 
-    context "when opening a channel in drawer" do
-      it "activates the channel in the sidebar" do
-        visit("/")
-        chat_page.open_from_header
-        sidebar_component.click_section_link(category_channel.name)
+    it "activates the sidebar channel in the drawer and deactivates it on close" do
+      visit("/")
+      chat_page.open_from_header
+      sidebar_component.click_section_link(category_channel.name)
 
-        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
-      end
-    end
+      expect(sidebar_component).to have_section_link(category_channel.name, active: true)
 
-    context "when closing drawer in a channel" do
-      it "deactivates the channel in the sidebar" do
-        visit("/")
-        chat_page.open_from_header
-
-        sidebar_component.click_section_link(category_channel.name)
-        chat_drawer_page.close
-
-        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
-      end
+      chat_drawer_page.close
+      expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
     end
 
     context "when exiting a thread for homepage" do

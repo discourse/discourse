@@ -24,22 +24,6 @@ RSpec.describe "Create channel" do
     before { sign_in(current_admin_user) }
 
     context "when selecting a category" do
-      it "shows access hint" do
-        chat_page.visit_browse
-        chat_page.new_channel_button.click
-        channel_modal.select_category(category_1)
-
-        expect(channel_modal).to have_create_hint(Group[:everyone].name)
-      end
-
-      it "shows threading toggle" do
-        chat_page.visit_browse
-        chat_page.new_channel_button.click
-        channel_modal.select_category(category_1)
-
-        expect(channel_modal).to have_threading_toggle
-      end
-
       it "does not override channel name if that was already specified" do
         chat_page.visit_browse
         chat_page.new_channel_button.click
@@ -156,28 +140,26 @@ RSpec.describe "Create channel" do
             channel_modal.click_primary_button
           end
 
-          it "displays the correct warning" do
+          it "warns about auto-joining a public channel before allowing creation" do
             expect(dialog).to have_content(
               I18n.t(
                 "js.chat.create_channel.auto_join_users.public_category_warning",
                 category: category_1.name,
               ),
             )
-          end
 
-          it "allows the user to proceed with channel creation" do
+            dialog.click_no
+            expect(dialog).to be_closed
+            expect(page).to have_css(".chat-modal-create-channel")
+            expect(Chat::Channel.exists?(chatable_id: category_1.id)).to eq(false)
+
+            channel_modal.click_primary_button
             dialog.click_yes
             expect(page).to have_content(name)
             created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
             expect(page).to have_current_path(
               chat.channel_path(created_channel.slug, created_channel.id),
             )
-          end
-
-          it "does nothing if no is clicked" do
-            dialog.click_no
-            expect(page).to have_css(".chat-modal-create-channel")
-            expect(Chat::Channel.exists?(chatable_id: category_1.id)).to eq(false)
           end
         end
 
@@ -277,12 +259,14 @@ RSpec.describe "Create channel" do
       end
 
       context "when successful" do
-        it "redirects to created channel" do
+        it "shows public channel defaults and redirects to the created channel" do
           chat_page.visit_browse
           chat_page.new_channel_button.click
           channel_modal.select_category(category_1)
 
           expect(channel_modal).to have_name_prefilled(category_1.name)
+          expect(channel_modal).to have_create_hint(Group[:everyone].name)
+          expect(channel_modal).to have_threading_toggle
 
           channel_modal.fill_description("All kind of cute cats")
           channel_modal.click_primary_button

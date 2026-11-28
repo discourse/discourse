@@ -57,7 +57,7 @@ RSpec.describe "Admin category channels list" do
     fab!(:subcategory) { Fabricate(:category, parent_category: category) }
     fab!(:subcategory_channel) { Fabricate(:chat_channel, chatable: subcategory) }
 
-    it "shows subcategory channels by default with toggle visible" do
+    it "shows subcategory channels by default and hides them when toggled" do
       visit "#{category.slug_url_without_id}/edit/chat"
 
       expect(page).to have_css(".edit-category-chat__subcategory-toggle")
@@ -68,20 +68,14 @@ RSpec.describe "Admin category channels list" do
         ".badge-category__wrapper .badge-category__name",
         text: subcategory.name,
       )
-    end
-
-    it "hides subcategory channels when toggle is clicked" do
-      visit "#{category.slug_url_without_id}/edit/chat"
-
-      expect(page).to have_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
 
       PageObjects::Components::DToggleSwitch.new(
         ".edit-category-chat__subcategory-toggle .d-toggle-switch__checkbox",
       ).toggle
 
-      expect(page).to have_no_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
       expect(page).to have_css(".d-table__row[data-channel-id='#{channel_1.id}']")
       expect(page).to have_css(".d-table__row[data-channel-id='#{channel_2.id}']")
+      expect(page).to have_no_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
     end
   end
 

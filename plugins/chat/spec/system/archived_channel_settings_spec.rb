@@ -17,22 +17,18 @@ RSpec.describe "Archived channel settings" do
   context "when channel is archived" do
     before { channel_1.update!(status: :archived) }
 
-    it "shows a disabled open channel button with a tooltip" do
+    it "shows only a disabled open channel button with an archived tooltip" do
       chat.visit_channel_settings(channel_1)
 
       expect(channel_settings).to have_open_button(disabled: true)
       expect(channel_settings).to have_no_close_button
 
+      expect(page).to have_no_content(I18n.t("js.chat.channel_settings.archive_channel"))
+
       channel_settings.hover_open_button
       expect(page).to have_content(
         I18n.t("js.chat.channel_settings.open_channel_disabled_archived"),
       )
-    end
-
-    it "does not show the archive channel button" do
-      chat.visit_channel_settings(channel_1)
-
-      expect(page).to have_no_content(I18n.t("js.chat.channel_settings.archive_channel"))
     end
   end
 

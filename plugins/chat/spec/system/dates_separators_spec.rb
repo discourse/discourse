@@ -14,23 +14,52 @@ RSpec.describe "Dates separators" do
     sign_in(current_user)
   end
 
-  context "when today separator is out of screen" do
-    before do
-      15.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago) }
-      30.times { Fabricate(:chat_message, chat_channel: channel_1) }
-    end
-
-    it "shows it as a sticky date" do
-      chat_page.visit_channel(channel_1)
-
-      expect(page.find(".chat-message-separator__text-container.is-pinned")).to have_content(
-        I18n.t("js.chat.chat_message_separator.today"),
+  it "pins Today's date on opening the channel at the live edge",
+     time: Time.zone.parse("2026-05-01 12:00:00") do
+    Fabricate(:chat_message, chat_channel: channel_1, user: current_user, created_at: 2.days.ago)
+    # Pinning needs a day taller than the scrollport, not a full page of messages.
+    today_message =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        user: current_user,
+        message: "Line\n\n" * 80,
       )
-      expect(page).to have_css(
-        ".chat-message-separator-date.with-last-visit .chat-message-separator__text-container:not(.is-pinned)",
-        text: I18n.t("js.chat.last_visit"),
-      )
-    end
+
+    chat_page.visit_channel(channel_1)
+
+    today = ".chat-message-separator-date[data-id='#{today_message.id}']"
+    expect(page).to have_css(
+      "#{today} .chat-message-separator__text-container.is-pinned",
+      text: I18n.t("js.chat.chat_message_separator.today"),
+    )
+    expect(page).to have_css(
+      ".chat-message-separator-date.with-last-visit .chat-message-separator__text-container:not(.is-pinned)",
+      text: I18n.t("js.chat.last_visit"),
+    )
+
+    scroller = find(".chat-channel .chat-messages-scroller")
+    scroller.scroll_to(0, -10_000)
+    expect(page).to have_css(
+      ".chat-message-separator-date.with-last-visit .chat-message-separator__text-container:not(.is-pinned)",
+      text: I18n.t("js.chat.last_visit"),
+    )
+    expect(page).to have_css(
+      "#{today} .chat-message-separator__text-container:not(.is-pinned)",
+      text: I18n.t("js.chat.chat_message_separator.today"),
+    )
+
+    scroller.hover
+    page.driver.with_playwright_page { |browser| browser.mouse.wheel(0, 10_000) }
+
+    expect(page).to have_css(
+      "#{today} .chat-message-separator__text-container.is-pinned",
+      text: I18n.t("js.chat.chat_message_separator.today"),
+    )
+    expect(page).to have_css(
+      ".chat-message-separator-date.with-last-visit .chat-message-separator__text-container:not(.is-pinned)",
+      text: I18n.t("js.chat.last_visit"),
+    )
   end
 
   context "when receiving messages on a different channel" do

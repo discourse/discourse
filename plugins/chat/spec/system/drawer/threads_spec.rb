@@ -16,16 +16,19 @@ RSpec.describe "Drawer - threads" do
   end
 
   context "when user has viewable threads" do
-    before do
-      message = Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
-      thread = Fabricate(:chat_thread, channel: channel_1, original_message: message)
-      thread.add(current_user)
-      Fabricate(:chat_message, chat_channel: channel_1, thread: thread, user: other_user)
-      thread.set_replies_count_cache(1, update_db: true)
+    fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+    fab!(:thread) do
+      chat_thread_with_replies(
+        channel: channel_1,
+        original_message: message,
+        reply_users: [other_user],
+      )
     end
 
     it "shows a button for chat search" do
       drawer_page.visit_user_threads
+      expect(drawer_page).to have_css(".c-user-thread[data-id='#{thread.id}']")
+
       drawer_page.open_chat_search
 
       expect(drawer_page).to have_open_chat_search

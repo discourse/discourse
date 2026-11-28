@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Visit channel" do
-  fab!(:category)
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user, :user)
   fab!(:category_channel_1, :category_channel)
   fab!(:private_category_channel_1, :private_category_channel)
@@ -132,7 +129,10 @@ RSpec.describe "Visit channel" do
               )
             end
 
-            before { category_channel_1.update(threading_enabled: true) }
+            before do
+              category_channel_1.update!(threading_enabled: true, last_message: message_1)
+              thread.update_last_message_id!
+            end
 
             it "allows to join it" do
               chat.visit_thread(thread)
@@ -174,13 +174,22 @@ RSpec.describe "Visit channel" do
 
           context "when visiting a specific channel message ID then navigating to another channel" do
             fab!(:early_message) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+            fab!(:newer_messages) do
+              Fabricate.times(
+                Chat::MessagesQuery::FUTURE_MESSAGE_LIMIT + 1,
+                :chat_message,
+                chat_channel: category_channel_1,
+                user: early_message.user,
+              )
+            end
             fab!(:other_channel) do
               Fabricate(:category_channel, chatable: category_channel_1.chatable)
             end
             fab!(:other_channel_message) { Fabricate(:chat_message, chat_channel: other_channel) }
 
             before do
-              30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
+              category_channel_1.update!(last_message: newer_messages.last)
+              other_channel.update!(last_message: other_channel_message)
               other_channel.add(current_user)
             end
 

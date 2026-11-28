@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const ARCHIVED = "archived";
 const ALL = "all";
@@ -85,7 +85,7 @@ export default class BrowseChannels extends Component {
       this,
       this.debouncedSetFilter,
       event.target.value,
-      INPUT_DELAY
+      CHAT_INPUT_DELAY
     );
   }
 

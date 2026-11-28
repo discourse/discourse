@@ -106,19 +106,32 @@ RSpec.describe "Channel - Info - Settings page" do
       expect(membership.muted_until).to be_nil
     end
 
-    it "can mute channel for a duration" do
+    it "changes the notification level and then sets a timed mute" do
       chat_page.visit_channel_preferences(channel_1)
       membership = channel_1.membership_for(current_user)
-      mute_field = channel_settings_page.notification_form.field("mute")
+      form = channel_settings_page.notification_form
 
-      mute_field.select("8_hours")
+      expect(form.field("notification_level")).to have_value("mention")
+      expect(form.field("mute")).to have_value("off")
+      expect {
+        form.field("notification_level").select("never")
 
-      expect(toasts).to have_success(I18n.t("js.saved"))
-      expect(mute_field).to have_value("current")
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { membership.reload.notification_level }.from("mention").to("never")
 
-      membership.reload
-      expect(membership.muted).to eq(true)
+      toasts.close_button.click
+      expect(toasts).to have_no_message
+
+      expect(form.field("mute")).to have_value("off")
+      expect {
+        form.field("mute").select("8_hours")
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        expect(form.field("mute")).to have_value("current")
+      }.to change { membership.reload.muted }.from(false).to(true)
+
       expect(membership.muted_until).to be_within(1.minute).of(8.hours.from_now)
+      expect(membership.notification_level).to eq("never")
     end
 
     it "can unmute a channel muted for a duration" do
@@ -130,17 +143,6 @@ RSpec.describe "Channel - Info - Settings page" do
 
       expect(toasts).to have_success(I18n.t("js.saved"))
       expect(membership.reload).to have_attributes(muted: false, muted_until: nil)
-    end
-
-    it "can change notification level" do
-      chat_page.visit_channel_preferences(channel_1)
-      membership = channel_1.membership_for(current_user)
-
-      expect {
-        channel_settings_page.notification_form.field("notification_level").select("never")
-
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.notification_level }.from("mention").to("never")
     end
 
     it "can unfollow channel" do
@@ -279,15 +281,26 @@ RSpec.describe "Channel - Info - Settings page" do
       }.to change { channel_1.reload.auto_join_users }.from(false).to(true)
     end
 
-    it "can change allow channel wide mentions" do
+    it "can disable channel-wide mentions and enable threading" do
       chat_page.visit_channel_settings(channel_1)
+      form = channel_settings_page.channel_form
 
       expect {
-        channel_settings_page.channel_form.field("allow_channel_wide_mentions").toggle
-        channel_settings_page.channel_form.submit
+        form.field("allow_channel_wide_mentions").toggle
+        form.submit
 
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
+
+      toasts.close_button.click
+      expect(toasts).to have_no_message
+
+      expect {
+        form.field("threading_enabled").toggle
+        form.submit
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { channel_1.reload.threading_enabled }.from(false).to(true)
     end
 
     it "can close channel" do
@@ -299,17 +312,6 @@ RSpec.describe "Channel - Info - Settings page" do
 
         expect(page).to have_content(I18n.t("js.chat.channel_status.closed_header"))
       }.to change { channel_1.reload.status }.from("open").to("closed")
-    end
-
-    it "can enable threading" do
-      chat_page.visit_channel_settings(channel_1)
-
-      expect {
-        channel_settings_page.channel_form.field("threading_enabled").toggle
-        channel_settings_page.channel_form.submit
-
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { channel_1.reload.threading_enabled }.from(false).to(true)
     end
 
     it "can delete channel" do

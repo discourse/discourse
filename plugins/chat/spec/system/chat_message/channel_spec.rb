@@ -3,7 +3,7 @@
 RSpec.describe "Chat message - channel" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -16,7 +16,7 @@ RSpec.describe "Chat message - channel" do
   end
 
   context "when hovering a message" do
-    it "adds an active class" do
+    it "activates the message and shows its action buttons" do
       chat_page.visit_channel(channel_1)
 
       channel_page.hover_message(message_1)
@@ -24,13 +24,6 @@ RSpec.describe "Chat message - channel" do
       expect(page).to have_css(
         ".chat-channel[data-id='#{channel_1.id}'] .chat-message-container[data-id='#{message_1.id}'].-active",
       )
-    end
-
-    it "shows the message actions container with buttons" do
-      chat_page.visit_channel(channel_1)
-
-      channel_page.hover_message(message_1)
-
       expect(channel_page.messages).to have_actions_container(message_1)
       expect(channel_page.messages).to have_reply_btn(message_1)
       expect(channel_page.messages).to have_reaction_buttons(message_1)
@@ -51,20 +44,7 @@ RSpec.describe "Chat message - channel" do
     end
   end
 
-  context "when copying text of a message" do
-    before { cdp.allow_clipboard }
-
-    it "[mobile] copies the text of a single message", mobile: true do
-      chat_page.visit_channel(channel_1)
-
-      channel_page.messages.copy_text(message_1)
-
-      cdp.clipboard_has_text?(message_1.message, chomp: true)
-      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.text_copied"))
-    end
-  end
-
-  context "when copying link to a message" do
+  context "when copying a message" do
     before { cdp.allow_clipboard }
 
     it "copies the link to the message" do
@@ -76,8 +56,13 @@ RSpec.describe "Chat message - channel" do
       expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
     end
 
-    it "[mobile] copies the link to the message", mobile: true do
+    it "[mobile] copies the text and the link of a single message", mobile: true do
       chat_page.visit_channel(channel_1)
+
+      channel_page.messages.copy_text(message_1)
+
+      cdp.clipboard_has_text?(message_1.message, chomp: true)
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.text_copied"))
 
       channel_page.messages.copy_link(message_1)
 
@@ -89,10 +74,11 @@ RSpec.describe "Chat message - channel" do
       before { channel_1.update!(threading_enabled: true) }
 
       fab!(:thread_1) do
-        chat_thread_chain_bootstrap(
+        Fabricate(
+          :chat_thread,
           channel: channel_1,
-          users: [current_user, Fabricate(:user)],
-          messages_count: 2,
+          original_message_user: current_user,
+          with_replies: 1,
         )
       end
 

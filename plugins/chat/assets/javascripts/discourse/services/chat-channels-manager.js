@@ -5,6 +5,7 @@ import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { debounce } from "discourse/lib/decorators";
+import { isRailsTesting } from "discourse/lib/environment";
 import {
   CHAT_CHANNEL_LIST_ACTIVE_DAYS,
   CHAT_CHANNEL_LIST_FILTERS,
@@ -416,7 +417,7 @@ export default class ChatChannelsManager extends Service {
     }
   }
 
-  @debounce(300)
+  @debounce(isRailsTesting() ? 100 : 300)
   async markAllChannelsRead() {
     // The user tracking state for each channel marked read will be propagated by MessageBus
     return this.chatApi.markAllChannelsAsRead();

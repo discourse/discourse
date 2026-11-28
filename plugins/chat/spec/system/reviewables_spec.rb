@@ -28,15 +28,10 @@ describe "Reviewables" do
   context "when the message is hard deleted" do
     before { message_1.destroy! }
 
-    it "does not throw an error" do
+    it "renders the deleted item with an option to ignore the flag" do
       visit("/review?type=Chat%3A%3AReviewableMessage")
 
       expect(page).to have_selector(".review-item__post-content")
-    end
-
-    it "adds the option to ignore the flag" do
-      visit("/review?type=Chat%3A%3AReviewableMessage")
-
       expect(page).to have_text(I18n.t("chat.reviewables.actions.ignore.title"))
     end
   end

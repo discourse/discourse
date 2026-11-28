@@ -13,36 +13,29 @@ describe "Admin Chat Incoming Webhooks" do
     sign_in(current_user)
   end
 
-  it "can filter channels in the channel chooser" do
-    other_channel = Fabricate(:chat_channel)
-    Fabricate.times(9, :chat_channel)
+  it "filters channels by title and creates a webhook for the selected channel" do
+    # The chooser only shows the filter when it has at least ten options.
+    other_channel = Fabricate(:chat_channel, chatable: chat_channel_1.chatable)
+    Fabricate.times(8, :chat_channel, chatable: chat_channel_1.chatable)
 
     admin_incoming_webhooks_page.visit
-    admin_incoming_webhooks_page.click_new
-
-    chooser = admin_incoming_webhooks_page.channel_chooser
-    chooser.expand
-    chooser.search(chat_channel_1.title)
-
-    expect(chooser).to have_no_option_value(other_channel.id)
-    expect(chooser).to have_option_value(chat_channel_1.id)
-  end
-
-  it "can create incoming webhooks" do
-    admin_incoming_webhooks_page.visit
-
     expect(d_page_header).to be_visible
 
     admin_incoming_webhooks_page.click_new
-
     expect(d_page_header).to be_hidden
 
     admin_incoming_webhooks_page.form.field("name").fill_in("Test webhook")
     admin_incoming_webhooks_page.form.field("description").fill_in("Some test content")
     admin_incoming_webhooks_page.form.field("username").fill_in("system")
-    admin_incoming_webhooks_page.channel_chooser.expand
-    admin_incoming_webhooks_page.channel_chooser.select_row_by_value(chat_channel_1.id)
-    admin_incoming_webhooks_page.channel_chooser.collapse
+    chooser = admin_incoming_webhooks_page.channel_chooser
+    chooser.expand
+    expect(chooser).to have_option_value(other_channel.id)
+
+    chooser.search(chat_channel_1.title)
+    expect(chooser).to have_option_value(chat_channel_1.id)
+    expect(chooser).to have_no_option_value(other_channel.id)
+    chooser.select_row_by_value(chat_channel_1.id)
+    chooser.collapse
     # TODO (martin) Add an emoji selection once Joffrey's emoji selector
     # unification has landed in core.
 
@@ -56,16 +49,13 @@ describe "Admin Chat Incoming Webhooks" do
     fab!(:webhook_1, :incoming_chat_webhook)
     fab!(:webhook_2, :incoming_chat_webhook)
 
-    it "can list existing incoming webhooks" do
+    it "lists existing webhooks and saves edits to a webhook" do
       admin_incoming_webhooks_page.visit
       expect(page).to have_content(webhook_1.name)
       expect(page).to have_content(webhook_1.chat_channel.title)
       expect(page).to have_content(webhook_2.name)
       expect(page).to have_content(webhook_2.chat_channel.title)
-    end
 
-    it "can edit an existing incoming webhook" do
-      admin_incoming_webhooks_page.visit
       admin_incoming_webhooks_page
         .list_row(webhook_1.id)
         .find(".admin-chat-incoming-webhooks-edit")
@@ -85,7 +75,8 @@ describe "Admin Chat Incoming Webhooks" do
         .find(".admin-chat-incoming-webhooks-delete")
         .click
       dialog.click_danger
-      expect(page).not_to have_content(webhook_1.name)
+      expect(page).to have_css(".incoming-chat-webhooks-row[data-webhook-id='#{webhook_2.id}']")
+      expect(page).to have_no_css(".incoming-chat-webhooks-row[data-webhook-id='#{webhook_1.id}']")
     end
   end
 end

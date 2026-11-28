@@ -16,13 +16,17 @@ describe "Single thread in side panel" do
   end
 
   context "when threading is disabled for the channel" do
-    fab!(:channel, :chat_channel)
-
-    before { channel.update!(threading_enabled: false) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: false) }
+    fab!(:thread) do
+      thread = chat_thread_with_replies(channel: channel, original_message_user: current_user)
+      reply = thread.last_message
+      channel.add(reply.user)
+      thread.add(reply.user).mark_read!(reply.id)
+      channel.update_last_message_id!
+      thread
+    end
 
     it "does not open the side panel for a single thread" do
-      thread =
-        chat_thread_chain_bootstrap(channel: channel, users: [current_user, Fabricate(:user)])
       chat_page.visit_channel(channel)
       channel_page.hover_message(thread.original_message)
       expect(page).not_to have_css(".chat-message-thread-btn")
@@ -32,16 +36,31 @@ describe "Single thread in side panel" do
   context "when threading is enabled for the channel" do
     fab!(:user_2, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-    fab!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
+    fab!(:thread) do
+      thread =
+        chat_thread_with_replies(
+          channel: channel,
+          original_message_user: user_2,
+          reply_users: [current_user],
+        )
+      channel.add(user_2).mark_read!(thread.original_message_id)
+      thread.add(current_user).mark_read!(thread.last_message_id)
+      channel.update_last_message_id!
+      thread
+    end
 
     context "when returning to a thread where last read is not last message" do
       it "scrolls to the correct last read message" do
-        message_1 = Fabricate(:chat_message, thread: thread, chat_channel: channel)
-        thread.membership_for(current_user).update!(last_read_message: message_1)
-        messages = Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel)
+        last_read = thread.last_message
+        # A latest-only fetch can return up to 50 messages; the anchor must be older.
+        Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel, user: user_2)
+        thread.update!(replies_count: 51)
+        thread.update_last_message_id!
+        thread.membership_for(user_2).mark_read!
+
         chat_page.visit_thread(thread)
 
-        expect(thread_page).to have_message_in_view(message_1)
+        expect(thread_page).to have_message_in_view(last_read)
       end
     end
 
@@ -73,15 +92,7 @@ describe "Single thread in side panel" do
       end
     end
 
-    it "opens the single thread in the drawer using the indicator" do
-      visit("/latest")
-      chat_page.open_from_header
-      chat_drawer_page.open_channel(channel)
-      channel_page.message_thread_indicator(thread.original_message).click
-      expect(chat_drawer_page).to have_open_thread(thread)
-    end
-
-    it "navigates back to the channel when clicking back button from a thread" do
+    it "returns to the drawer channel using Back or the original message link" do
       visit("/latest")
       chat_page.open_from_header
       chat_drawer_page.open_channel(channel)
@@ -91,6 +102,15 @@ describe "Single thread in side panel" do
       chat_drawer_page.back
 
       expect(chat_drawer_page).to have_open_channel(channel)
+
+      channel_page.message_thread_indicator(thread.original_message).click
+      thread_page.open_original_message
+
+      expect(chat_drawer_page).to have_open_channel(channel)
+      expect(channel_page.messages).to have_message(
+        id: thread.original_message_id,
+        highlighted: true,
+      )
     end
 
     context "when thread is forced and threading disabled" do
@@ -106,22 +126,6 @@ describe "Single thread in side panel" do
       end
     end
 
-    context "when in drawer" do
-      it "takes the user to the highlighted message after they click the original message link" do
-        visit("/latest")
-        chat_page.open_from_header
-        chat_drawer_page.open_channel(channel)
-        channel_page.message_thread_indicator(thread.original_message).click
-        thread_page.open_original_message
-
-        expect(chat_drawer_page).to have_open_channel(channel)
-        expect(channel_page.messages).to have_message(
-          id: thread.original_message.id,
-          highlighted: true,
-        )
-      end
-    end
-
     it "takes the user to the highlighted message after they click the original message link" do
       chat_page.visit_thread(thread)
 
@@ -133,42 +137,35 @@ describe "Single thread in side panel" do
       )
     end
 
-    it "opens the side panel for a single thread from the indicator" do
-      chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator(thread.original_message).click
-      expect(side_panel).to have_open_thread(thread)
-    end
-
     describe "sending a message" do
-      it "shows the message in the thread pane and links it to the correct channel" do
+      it "opens a thread from its indicator and keeps replies in the thread pane" do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
-        thread_page.send_message("new thread message")
+
+        reply_text = thread_page.send_message("new thread message")
+
         expect(thread_page.messages).to have_message(
           thread_id: thread.id,
-          text: "new thread message",
+          text: reply_text,
+          persisted: true,
         )
-        thread_message = thread.last_message
+        thread_message = thread.replies.find_by!(message: reply_text)
+        expect(thread.reload.last_message_id).to eq(thread_message.id)
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
-      end
-
-      it "does not echo the message in the channel pane" do
-        chat_page.visit_channel(channel)
-        channel_page.message_thread_indicator(thread.original_message).click
-        expect(side_panel).to have_open_thread(thread)
-        thread_page.send_message("new thread message")
-        expect(thread_page.messages).to have_message(
-          thread_id: thread.id,
-          text: "new thread message",
-        )
-        thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
 
       it "changes the tracking bell to be Tracking level in the thread panel" do
-        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true)
+        new_thread =
+          chat_thread_with_replies(
+            channel: channel,
+            original_message_user: user_2,
+            reply_users: [user_2],
+            track_replies: true,
+          )
+        channel.update_last_message_id!
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(new_thread.original_message).click
         expect(side_panel).to have_open_thread(new_thread)
@@ -258,7 +255,15 @@ describe "Single thread in side panel" do
 
     context "when messages are separated by a day" do
       before do
-        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 2.days.ago)
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          thread: thread,
+          user: user_2,
+          created_at: 2.days.ago,
+        )
+        thread.update!(replies_count: 2)
+        thread.update_last_message_id!
       end
 
       it "shows a date separator" do

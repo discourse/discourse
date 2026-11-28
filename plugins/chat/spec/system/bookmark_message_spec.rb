@@ -19,35 +19,37 @@ RSpec.describe "Bookmark message" do
   end
 
   context "when desktop" do
-    it "allows to bookmark a message" do
-      chat_page.visit_channel(category_channel_1)
-      channel_page.bookmark_message(message_1)
-
-      bookmark_modal.fill_name("Check this out later")
-      bookmark_modal.select_preset_reminder(:next_month)
-
-      expect(channel_page).to have_bookmarked_message(message_1)
-    end
-
     context "when in a long thread" do
-      it "supports linking to a bookmark in a long thread" do
-        category_channel_1.update!(threading_enabled: true)
-        category_channel_1.add(current_user)
-
-        thread =
-          chat_thread_chain_bootstrap(
-            channel: category_channel_1,
-            users: [current_user, Fabricate(:user)],
-            messages_count: 51,
+      fab!(:category_channel_1) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: category_channel_1, original_message_user: current_user)
+      end
+      fab!(:first_reply) do
+        Fabricate(:chat_message, chat_channel: category_channel_1, user: current_user, thread:)
+      end
+      fab!(:last_reply) do
+        # Seed a full page of history, but don't send each historical reply live.
+        replies =
+          Fabricate.times(
+            49,
+            :chat_message,
+            chat_channel: category_channel_1,
+            user: current_user,
+            thread: thread,
           )
+        category_channel_1.update!(last_message: thread.original_message)
+        thread.update_last_message_id!
+        thread.update!(replies_count: replies.size + 1)
+        replies.last
+      end
 
-        first_message = thread.replies.first
-
-        bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
+      it "supports linking to a bookmark in a long thread" do
+        thread.membership_for(current_user).update!(last_read_message_id: last_reply.id)
+        bookmark = Bookmark.create!(bookmarkable: first_reply, user: current_user)
 
         visit bookmark.bookmarkable.url
 
-        expect(thread_page).to have_bookmarked_message(first_message)
+        expect(thread_page).to have_bookmarked_message(first_reply)
       end
     end
 
@@ -105,35 +107,33 @@ RSpec.describe "Bookmark message" do
       end
     end
 
-    context "with reminder notification cleanup" do
-      it "removes bookmark reminder notification when bookmark is deleted" do
-        chat_page.visit_channel(category_channel_1)
-        channel_page.bookmark_message(message_1)
-        bookmark_modal.fill_name("Check this out later")
-        bookmark_modal.select_preset_reminder(:tomorrow)
+    it "creates a bookmark with a reminder and clears its notification on deletion" do
+      chat_page.visit_channel(category_channel_1)
+      channel_page.bookmark_message(message_1)
+      bookmark_modal.fill_name("Check this out later")
+      bookmark_modal.select_preset_reminder(:next_month)
 
-        expect(channel_page).to have_bookmarked_message(message_1)
+      expect(channel_page).to have_bookmarked_message(message_1)
 
-        bookmark = Bookmark.find_by(bookmarkable: message_1, user: current_user)
-        Chat::MessageBookmarkable.send_reminder_notification(
-          bookmark,
-          data: {
-            title: bookmark.bookmarkable.chat_channel.title(current_user),
-            bookmarkable_url: bookmark.bookmarkable.url,
-          },
-        )
+      bookmark = Bookmark.find_by(bookmarkable: message_1, user: current_user)
+      Chat::MessageBookmarkable.send_reminder_notification(
+        bookmark,
+        data: {
+          title: bookmark.bookmarkable.chat_channel.title(current_user),
+          bookmarkable_url: bookmark.bookmarkable.url,
+        },
+      )
 
-        user_menu.open
+      user_menu.open
 
-        expect(page).to have_css("#quick-access-all-notifications .bookmark-reminder")
+      expect(page).to have_css("#quick-access-all-notifications .bookmark-reminder")
 
-        channel_page.bookmark_message(message_1)
-        bookmark_modal.delete
-        bookmark_modal.confirm_delete
-        user_menu.open
+      channel_page.bookmark_message(message_1)
+      bookmark_modal.delete
+      bookmark_modal.confirm_delete
+      user_menu.open
 
-        expect(page).to have_no_css("#quick-access-all-notifications .bookmark-reminder")
-      end
+      expect(find("#quick-access-all-notifications")).to have_no_css(".bookmark-reminder")
     end
   end
 

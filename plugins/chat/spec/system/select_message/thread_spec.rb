@@ -4,7 +4,6 @@ RSpec.describe "Chat | Select message | thread" do
   fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
-  fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -16,49 +15,38 @@ RSpec.describe "Chat | Select message | thread" do
     sign_in(current_user)
   end
 
-  fab!(:thread_message_1) do
-    Fabricate(
-      :chat_message,
-      thread_id: thread_1.id,
-      chat_channel: channel_1,
-      in_reply_to: original_message,
-    )
-  end
-  fab!(:thread_message_2) do
-    Fabricate(
-      :chat_message,
-      thread_id: thread_1.id,
-      chat_channel: channel_1,
-      in_reply_to: original_message,
-    )
-  end
-  fab!(:thread_message_3) do
-    Fabricate(
-      :chat_message,
-      thread_id: thread_1.id,
-      chat_channel: channel_1,
-      in_reply_to: original_message,
-    )
+  fab!(:replies) do
+    replies =
+      Fabricate.times(
+        3,
+        :chat_message,
+        thread: thread_1,
+        chat_channel: channel_1,
+        in_reply_to: thread_1.original_message,
+      )
+    thread_1.update_last_message_id!
+    thread_1.update!(replies_count: replies.size)
+    replies
   end
 
-  it "can select multiple messages" do
+  it "selects multiple messages individually or with shift-click" do
     chat_page.visit_thread(thread_1)
 
-    thread_page.messages.select(thread_message_1)
-    thread_page.messages.select(thread_message_2)
+    first_reply, second_reply, third_reply = replies
+    thread_page.messages.select(first_reply)
+    thread_page.messages.select(second_reply)
 
-    expect(thread_page).to have_selected_messages(thread_message_1, thread_message_2)
-  end
+    expect(thread_page).to have_selected_messages(first_reply, second_reply)
 
-  it "can shift + click to select messages between the first and last" do
-    chat_page.visit_thread(thread_1)
-    thread_page.messages.select(thread_message_1)
-    thread_page.messages.shift_select(thread_message_3)
+    thread_page.selection_management.cancel
+    expect(thread_page.selection_management).to be_not_visible
 
-    expect(thread_page).to have_selected_messages(
-      thread_message_1,
-      thread_message_2,
-      thread_message_3,
-    )
+    thread_page.messages.select(first_reply)
+    expect(page).to have_css(".chat-thread .chat-message-container.-selected", count: 1)
+    expect(thread_page).to have_selected_messages(first_reply)
+
+    thread_page.messages.shift_select(third_reply)
+
+    expect(thread_page).to have_selected_messages(first_reply, second_reply, third_reply)
   end
 end

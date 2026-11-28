@@ -29,25 +29,29 @@ module PageObjects
         end
 
         def long_press
-          page.execute_script(<<-JS, component)
-            arguments[0].dispatchEvent(new TouchEvent("touchstart", {
-              cancelable: true,
-              bubbles: true,
-              touches: [
-                new Touch({ identifier: Date.now(), target: arguments[0] })
-              ],
+          row = component
+          pressed = ".fk-d-menu-modal .chat-channel-sidebar-link-menu"
+          page.assert_no_selector(pressed)
+          page.execute_script(<<~JS, row)
+            const [target] = arguments;
+            const touch = new Touch({ identifier: 1, target });
+            target.dispatchEvent(new TouchEvent("touchstart", {
+              bubbles: true, cancelable: true, touches: [touch], changedTouches: [touch],
             }));
-
-            setTimeout(() => {
-              arguments[0].dispatchEvent(new TouchEvent("touchend", {
-                cancelable: true,
-                bubbles: true,
-                touches: [
-                  new Touch({ identifier: Date.now(), target: arguments[0] })
-                ],
-              }));
-            }, 600);
           JS
+
+          begin
+            page.assert_selector(pressed)
+          ensure
+            page.execute_script(<<~JS, row)
+              const [target] = arguments;
+              const touch = new Touch({ identifier: 1, target });
+              target.dispatchEvent(new TouchEvent("touchend", {
+                bubbles: true, cancelable: true, changedTouches: [touch],
+              }));
+            JS
+          end
+          nil
         end
 
         def component(**args)

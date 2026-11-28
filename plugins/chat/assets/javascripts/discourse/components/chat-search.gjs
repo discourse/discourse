@@ -11,7 +11,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -24,6 +23,7 @@ import { i18n } from "discourse-i18n";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ChatMessageComponent from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-thread-heading";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -115,7 +115,7 @@ export default class ChatSearch extends Component {
     this.debouncedHandler = discourseDebounce(
       this.debounceFilterChange,
       value === "" ? null : value,
-      INPUT_DELAY
+      CHAT_INPUT_DELAY
     );
   }
 

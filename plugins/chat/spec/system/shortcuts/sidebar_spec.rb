@@ -21,6 +21,9 @@ RSpec.describe "Shortcuts | sidebar" do
     context "when on homepage" do
       it "does nothing" do
         visit("/")
+        expect(sidebar_page).to have_channel(channel_1)
+        expect(sidebar_page).to have_channel(dm_channel_1)
+
         find("body").send_keys(%i[alt down])
 
         expect(sidebar_page).to have_no_active_channel(channel_1)
@@ -123,16 +126,19 @@ RSpec.describe "Shortcuts | sidebar" do
     fab!(:other_user, :user)
     fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
-    before do
-      channel_1.add(current_user)
-      channel_2.add(current_user)
-      channel_3.add(current_user)
-      channel_4.add(current_user)
-    end
+    fab!(:membership_1) { channel_1.add(current_user) }
+    fab!(:membership_2) { channel_2.add(current_user) }
+    fab!(:membership_3) { channel_3.add(current_user) }
+    fab!(:membership_4) { channel_4.add(current_user) }
 
     context "when on homepage" do
       it "does nothing" do
         visit("/")
+        expect(sidebar_page).to have_channel(channel_1)
+        expect(sidebar_page).to have_channel(channel_2)
+        expect(sidebar_page).to have_channel(dm_channel_1)
+        expect(sidebar_page).to have_channel(dm_channel_2)
+
         find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_no_active_channel(channel_1)
@@ -143,7 +149,7 @@ RSpec.describe "Shortcuts | sidebar" do
     end
 
     context "when on chat page" do
-      it "does nothing when no channels have activity" do
+      it "stays put without activity and cycles through unread public channels and DMs" do
         chat.visit_channel(channel_1)
         expect(sidebar_page).to have_active_channel(channel_1)
 
@@ -158,21 +164,11 @@ RSpec.describe "Shortcuts | sidebar" do
         find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(channel_1)
-      end
 
-      it "navigates through the channels with activity" do
-        chat.visit_channel(channel_1)
-        expect(sidebar_page).to have_active_channel(channel_1)
-
-        Fabricate(:chat_message, chat_channel: channel_2, message: "hello!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_2, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_2)
 
-        Fabricate(
-          :chat_message,
-          chat_channel: dm_channel_2,
-          message: "hello here!",
-          use_service: true,
-        )
+        Fabricate(:chat_message, chat_channel: dm_channel_2, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(dm_channel_2)
 
         find("body").send_keys(%i[alt shift down])
@@ -185,12 +181,7 @@ RSpec.describe "Shortcuts | sidebar" do
         expect(sidebar_page).to have_active_channel(dm_channel_2)
         expect(sidebar_page).to have_no_unread_channel(dm_channel_2)
 
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_1,
-          message: "hello again!",
-          use_service: true,
-        )
+        Fabricate(:chat_message, chat_channel: channel_1, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_1)
 
         find("body").send_keys(%i[alt shift up])
@@ -211,10 +202,10 @@ RSpec.describe "Shortcuts | sidebar" do
         chat.visit_channel(channel_3)
         expect(sidebar_page).to have_active_channel(channel_3)
 
-        Fabricate(:chat_message, chat_channel: channel_2, message: "hello!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_2, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_2)
 
-        Fabricate(:chat_message, chat_channel: channel_4, message: "yes, hello!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_4, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
         find("body").send_keys(%i[alt shift down])
@@ -222,12 +213,7 @@ RSpec.describe "Shortcuts | sidebar" do
         expect(sidebar_page).to have_active_channel(channel_4)
         expect(sidebar_page).to have_no_unread_channel(channel_4)
 
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_3,
-          message: "hello, here, too!",
-          use_service: true,
-        )
+        Fabricate(:chat_message, chat_channel: channel_3, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_3)
 
         find("body").send_keys(%i[alt shift up])
@@ -235,12 +221,7 @@ RSpec.describe "Shortcuts | sidebar" do
         expect(sidebar_page).to have_active_channel(channel_3)
         expect(sidebar_page).to have_no_unread_channel(channel_3)
 
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_4,
-          message: "okay, byebye!",
-          use_service: true,
-        )
+        Fabricate(:chat_message, chat_channel: channel_4, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
         find("body").send_keys(%i[alt shift up])
@@ -253,10 +234,10 @@ RSpec.describe "Shortcuts | sidebar" do
         chat.visit_channel(channel_2)
         expect(sidebar_page).to have_active_channel(channel_2)
 
-        Fabricate(:chat_message, chat_channel: channel_1, message: "hello!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_1, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_1)
 
-        Fabricate(:chat_message, chat_channel: channel_4, message: "howdy!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_4, user: other_user, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
         find("body").send_keys(%i[alt shift up])

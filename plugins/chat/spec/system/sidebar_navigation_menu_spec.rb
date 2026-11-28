@@ -2,17 +2,16 @@
 
 RSpec.describe "Sidebar navigation menu" do
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
-  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
-
   fab!(:current_user, :user)
 
+  let(:signed_in_user) { current_user }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
 
-    sign_in(current_user)
+    sign_in(signed_in_user)
   end
 
   context "when displaying the public channels section" do
@@ -20,21 +19,18 @@ RSpec.describe "Sidebar navigation menu" do
 
     before { channel_1.add(current_user) }
 
-    it "displays correct channels section title" do
+    it "shows the channels section title and links to the channel with the default icon" do
       visit("/")
 
-      expect(sidebar_page.channels_section).to have_css(
+      section = sidebar_page.channels_section
+      expect(section).to have_css(
         ".sidebar-section-header-text",
         text: I18n.t("js.chat.chat_channels").upcase,
       )
-    end
-
-    it "displays the correct hash icon prefix" do
-      visit("/")
-
-      expect(sidebar_page.channels_section).to have_css(
+      expect(section).to have_css(
         ".sidebar-section-link[data-link-name='#{channel_1.slug}'] .sidebar-section-link-prefix svg.prefix-icon.d-icon-d-chat",
       )
+      expect(section).to have_link(channel_1.name, href: channel_1.relative_url)
     end
 
     context "when the channel has an emoji and emoji are disabled" do
@@ -55,20 +51,11 @@ RSpec.describe "Sidebar navigation menu" do
       end
     end
 
-    it "channel link has the correct href" do
-      visit("/")
-
-      expect(page).to have_link(channel_1.name, href: "/chat/c/#{channel_1.slug}/#{channel_1.id}")
-    end
-
     context "when the category is private" do
       fab!(:group_1, :group)
       fab!(:private_channel_1) { Fabricate(:private_category_channel, group: group_1) }
-
-      before do
-        group_1.add(current_user)
-        private_channel_1.add(current_user)
-      end
+      fab!(:group_membership) { group_1.add(current_user) }
+      fab!(:channel_membership) { private_channel_1.add(current_user) }
 
       it "has a lock badge" do
         visit("/")
@@ -96,7 +83,7 @@ RSpec.describe "Sidebar navigation menu" do
     context "when the channel is muted" do
       fab!(:channel_2, :chat_channel)
 
-      before do
+      fab!(:muted_membership) do
         Fabricate(
           :user_chat_channel_membership,
           user: current_user,
@@ -135,24 +122,12 @@ RSpec.describe "Sidebar navigation menu" do
       fab!(:other_user, :user)
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
-      it "displays other user avatar in prefix when two participants" do
+      it "labels the direct message with the other participant's username and avatar" do
         visit("/")
 
-        expect(
-          sidebar_page.dms_section.find(
-            "a.sidebar-section-link:nth-child(1) .sidebar-section-link-prefix img",
-          )[
-            "src"
-          ],
-        ).to include(other_user.username)
-      end
-
-      it "displays other user username as link text" do
-        visit("/")
-
-        expect(
-          sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)"),
-        ).to have_content(other_user.username)
+        link = sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)")
+        expect(link).to have_content(other_user.username)
+        expect(link.find(".sidebar-section-link-prefix img")["src"]).to include(other_user.username)
       end
 
       context "when other user has status" do
@@ -227,7 +202,7 @@ RSpec.describe "Sidebar navigation menu" do
     context "as admin" do
       fab!(:admin)
       fab!(:channel_1, :chat_channel)
-      before { sign_in admin }
+      let(:signed_in_user) { admin }
 
       it "has back to forum button which leads to forum homepage" do
         visit("/chat/c/#{channel_1.slug}/#{channel_1.id}")

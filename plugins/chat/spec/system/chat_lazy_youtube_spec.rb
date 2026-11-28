@@ -69,23 +69,21 @@ RSpec.describe "Chat lazy YouTube videos" do
       stub_oembed_request(youtube_url)
     end
 
-    it "renders lazy-video-container for standard youtube.com URL" do
-      chat_page.visit_channel(channel)
-      channel_page.send_message(youtube_url)
-
-      expect(page).to have_css(".lazy-video-container[data-video-id='#{video_id}']")
-    end
-
-    it "renders lazy-video-container for youtube.com URL with timestamp" do
+    it "shows a lazy video with and without a timestamp in youtube.com links" do
       url_with_time = "#{youtube_url}&t=42"
       stub_youtube_requests(url_with_time)
       stub_oembed_request(url_with_time)
 
       chat_page.visit_channel(channel)
-      channel_page.send_message(url_with_time)
 
+      channel_page.send_message(youtube_url)
+      expect(page).to have_css(".lazy-video-container[data-video-id='#{video_id}']", count: 1)
+
+      channel_page.send_message(url_with_time)
+      expect(page).to have_css(".lazy-video-container[data-video-id='#{video_id}']", count: 2)
       expect(page).to have_css(
         ".lazy-video-container[data-video-id='#{video_id}'][data-video-start-time='42']",
+        count: 1,
       )
     end
   end
@@ -120,37 +118,27 @@ RSpec.describe "Chat lazy YouTube videos" do
       stub_oembed_request(youtu_be_url)
     end
 
-    it "renders lazy-video-container for youtu.be URL" do
+    it "shows lazy videos for short links and keeps timestamps with or without a share parameter" do
+      timed_url = "#{youtu_be_url}?t=42"
+      shared_url = "#{youtu_be_url}?si=abc123&t=42"
+      stub_youtube_requests(timed_url)
+      stub_oembed_request(timed_url)
+      stub_youtube_requests(shared_url)
+      stub_oembed_request(shared_url)
+
       chat_page.visit_channel(channel)
+
+      video = ".lazy-video-container[data-video-id='#{video_id}']"
+      timed_video = "#{video}[data-video-start-time='42']"
+
       channel_page.send_message(youtu_be_url)
+      expect(page).to have_css(video, count: 1)
 
-      expect(page).to have_css(".lazy-video-container[data-video-id='#{video_id}']")
-    end
+      channel_page.send_message(timed_url)
+      expect(page).to have_css(timed_video, count: 1)
 
-    it "renders lazy-video-container for youtu.be URL with timestamp" do
-      url_with_time = "#{youtu_be_url}?t=42"
-      stub_youtube_requests(url_with_time)
-      stub_oembed_request(url_with_time)
-
-      chat_page.visit_channel(channel)
-      channel_page.send_message(url_with_time)
-
-      expect(page).to have_css(
-        ".lazy-video-container[data-video-id='#{video_id}'][data-video-start-time='42']",
-      )
-    end
-
-    it "renders lazy-video-container for youtu.be URL with si and timestamp parameters" do
-      url_with_params = "#{youtu_be_url}?si=abc123&t=42"
-      stub_youtube_requests(url_with_params)
-      stub_oembed_request(url_with_params)
-
-      chat_page.visit_channel(channel)
-      channel_page.send_message(url_with_params)
-
-      expect(page).to have_css(
-        ".lazy-video-container[data-video-id='#{video_id}'][data-video-start-time='42']",
-      )
+      channel_page.send_message(shared_url)
+      expect(page).to have_css(timed_video, count: 2)
     end
   end
 end

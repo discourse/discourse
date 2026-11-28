@@ -15,43 +15,29 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
     sign_in(current_user)
   end
 
-  context "when using meta + b" do
-    it "adds bold text" do
-      chat.visit_channel(channel_1)
+  it "adds bold, italic, and preformatted text through keyboard shortcuts" do
+    chat.visit_channel(channel_1)
+    composer = channel_page.composer
 
-      channel_page.composer.bold_text_shortcut
+    composer.bold_text_shortcut
+    expect(composer).to have_value("**strong text**")
 
-      expect(channel_page.composer.value).to eq("**strong text**")
-    end
-  end
+    composer.fill_in(with: "")
+    composer.emphasized_text_shortcut
+    expect(composer).to have_value("_emphasized text_")
 
-  context "when using meta + i" do
-    it "adds italic text" do
-      chat.visit_channel(channel_1)
-
-      channel_page.composer.emphasized_text_shortcut
-
-      expect(channel_page.composer.value).to eq("_emphasized text_")
-    end
-  end
-
-  context "when using meta + e" do
-    it "adds preformatted text" do
-      chat.visit_channel(channel_1)
-
-      channel_page.composer.indented_text_shortcut
-
-      expect(channel_page.composer.value).to eq("`indent preformatted text by 4 spaces`")
-    end
+    composer.fill_in(with: "")
+    composer.indented_text_shortcut
+    expect(composer).to have_value("`indent preformatted text by 4 spaces`")
   end
 
   context "when the thread panel is also open" do
-    fab!(:user_2, :user)
     fab!(:thread) do
-      chat_thread_chain_bootstrap(
+      Fabricate(
+        :chat_thread,
         channel: channel_1,
-        users: [current_user, user_2],
-        messages_count: 2,
+        original_message_user: current_user,
+        with_replies: 1,
       )
     end
 
@@ -76,16 +62,19 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
   end
 
   context "when using ArrowUp" do
-    fab!(:message_1) do
-      Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
-    end
-    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-    it "edits last editable message" do
+    it "replies to the last message with Shift+Up and edits the last editable message with Up" do
       chat.visit_channel(channel_1)
 
-      channel_page.composer.edit_last_message_shortcut
+      channel_page.composer.reply_to_last_message_shortcut
+      expect(channel_page.composer.message_details).to be_replying_to(message_2)
 
+      channel_page.composer.cancel_editing
+      expect(channel_page.composer).to be_editing_no_message
+
+      channel_page.composer.edit_last_message_shortcut
       expect(channel_page.composer.message_details).to be_editing(message_1)
     end
 
@@ -111,16 +100,6 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
         channel_page.composer.edit_last_message_shortcut
 
         expect(channel_page.composer.message_details).to have_no_message
-      end
-    end
-
-    context "with shift" do
-      it "starts replying to the last message" do
-        chat.visit_channel(channel_1)
-
-        channel_page.composer.reply_to_last_message_shortcut
-
-        expect(channel_page.composer.message_details).to be_replying_to(message_2)
       end
     end
   end

@@ -17,72 +17,51 @@ RSpec.describe "Chat composer" do
     sign_in(current_user)
   end
 
-  context "when adding an emoji through the picker" do
-    it "adds the emoji to the composer" do
-      chat_page.visit_channel(channel_1)
-      channel_page.composer.open_emoji_picker
-      find(".emoji-picker [data-emoji='grimacing']").click
+  it "inserts an emoji from the default picker and autocomplete" do
+    chat_page.visit_channel(channel_1)
+    composer = channel_page.composer
 
-      expect(channel_page.composer).to have_value(":grimacing:")
-    end
+    composer.open_emoji_picker
+    find(".emoji-picker [data-emoji='grimacing']").click
+    expect(composer).to have_value(":grimacing:")
 
-    it "removes denied emojis from insert emoji picker" do
-      SiteSetting.emoji_deny_list = "monkey|peach"
-
-      chat_page.visit_channel(channel_1)
-      channel_page.composer.open_emoji_picker
-
-      expect(page).to have_no_selector("[data-emoji='monkey']")
-      expect(page).to have_no_selector("[data-emoji='peach']")
-    end
+    composer.fill_in(with: "")
+    composer.send_keys(":gri")
+    find(".emoji-shortname", text: "grimacing").click
+    expect(composer).to have_value(":grimacing: ")
   end
 
-  context "when adding an emoji through the autocomplete" do
-    it "adds the emoji to the composer" do
-      chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").send_keys(":gri")
-      find(".emoji-shortname", text: "grimacing").click
+  it "removes denied emojis from the picker" do
+    SiteSetting.emoji_deny_list = "monkey|peach"
 
-      expect(channel_page.composer).to have_value(":grimacing: ")
-    end
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.open_emoji_picker
 
-    it "doesn't suggest denied emojis and aliases" do
-      SiteSetting.emoji_deny_list = "peach|poop"
-      chat_page.visit_channel(channel_1)
+    expect(page).to have_no_selector("[data-emoji='monkey']")
+    expect(page).to have_no_selector("[data-emoji='peach']")
+  end
 
-      find(".chat-composer__input").fill_in(with: ":peac")
-      expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+  it "doesn't autocomplete denied emojis or their aliases" do
+    SiteSetting.emoji_deny_list = "peach|poop"
+    chat_page.visit_channel(channel_1)
 
-      find(".chat-composer__input").fill_in(with: ":hank") # alias
-      expect(page).to have_no_selector(".emoji-shortname", text: "poop")
-    end
+    find(".chat-composer__input").fill_in(with: ":peac")
+    expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+
+    find(".chat-composer__input").fill_in(with: ":hank") # alias
+    expect(page).to have_no_selector(".emoji-shortname", text: "poop")
   end
 
   context "when opening emoji picker through more button of the autocomplete" do
-    it "prefills the emoji picker filter input" do
+    it "prefills and filters the picker before replacing the partial emoji" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").send_keys(":gri")
+      channel_page.composer.send_keys("hey :gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(find(".emoji-picker .filter-input").value).to eq("gri")
-    end
+      expect(page).to have_field(class: "filter-input", with: "gri")
+      expect(page).to have_css(".emoji-picker__section.filtered [data-emoji='grimacing']")
 
-    it "filters with the prefilled input" do
-      chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").send_keys(":fr")
-
-      click_link(I18n.t("js.composer.more_emoji"))
-
-      expect(page).to have_selector(".emoji-picker [data-emoji='france']")
-      expect(page).to have_no_selector(".emoji-picker [data-emoji='grinning_face']")
-    end
-
-    it "replaces the partially typed emoji with the selected" do
-      chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").send_keys("hey :gri")
-
-      click_link(I18n.t("js.composer.more_emoji"))
       find(".emoji-picker [data-emoji='grimacing']").click
 
       expect(channel_page.composer).to have_value("hey :grimacing: ")
@@ -128,74 +107,43 @@ RSpec.describe "Chat composer" do
     context "when user preference is set to send on enter" do
       before { current_user.user_option.update!(send_shortcut: "enter") }
 
-      context "when pressing enter" do
-        it "sends the message" do
-          chat_page.visit_channel(channel_1)
+      it "sends with Enter or Meta+Enter and adds a newline with Shift+Enter" do
+        chat_page.visit_channel(channel_1)
+        composer = channel_page.composer
 
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.enter_shortcut
+        composer.send_keys("shift enter")
+        composer.shift_enter_shortcut
+        expect(composer).to have_value("shift enter\n")
 
-          expect(channel_page.messages).to have_message(text: "testenter")
-        end
-      end
+        composer.fill_in(with: "ordinary enter")
+        composer.enter_shortcut
+        expect(channel_page.messages).to have_message(text: "ordinary enter")
+        expect(composer).to be_blank
 
-      context "when pressing shift + enter" do
-        it "adds a linebreak" do
-          chat_page.visit_channel(channel_1)
-
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.shift_enter_shortcut
-
-          expect(channel_page.composer).to have_value("testenter\n")
-        end
-      end
-
-      context "when pressing meta + enter" do
-        it "sends the message" do
-          chat_page.visit_channel(channel_1)
-
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.meta_enter_shortcut
-
-          expect(channel_page.messages).to have_message(text: "testenter")
-        end
+        composer.send_keys("meta enter")
+        composer.meta_enter_shortcut
+        expect(channel_page.messages).to have_message(text: "meta enter")
       end
     end
 
     context "when user preference is set to send on meta + enter" do
       before { current_user.user_option.update!(send_shortcut: "meta_enter") }
 
-      context "when pressing enter" do
-        it "adds a linebreak" do
-          chat_page.visit_channel(channel_1)
+      it "adds a newline with Enter or Shift+Enter and sends with Meta+Enter" do
+        chat_page.visit_channel(channel_1)
+        composer = channel_page.composer
 
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.enter_shortcut
+        composer.send_keys("ordinary enter")
+        composer.enter_shortcut
+        expect(composer).to have_value("ordinary enter\n")
 
-          expect(channel_page.composer).to have_value("testenter\n")
-        end
-      end
+        composer.fill_in(with: "shift enter")
+        composer.shift_enter_shortcut
+        expect(composer).to have_value("shift enter\n")
 
-      context "when pressing shift + enter" do
-        it "adds a linebreak" do
-          chat_page.visit_channel(channel_1)
-
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.shift_enter_shortcut
-
-          expect(channel_page.composer).to have_value("testenter\n")
-        end
-      end
-
-      context "when pressing meta + enter" do
-        it "sends the message" do
-          chat_page.visit_channel(channel_1)
-
-          channel_page.composer.send_keys("testenter")
-          channel_page.composer.meta_enter_shortcut
-
-          expect(channel_page.messages).to have_message(text: "testenter")
-        end
+        composer.fill_in(with: "meta enter")
+        composer.meta_enter_shortcut
+        expect(channel_page.messages).to have_message(text: "meta enter")
       end
     end
   end
@@ -274,19 +222,17 @@ RSpec.describe "Chat composer" do
     end
 
     context "in a channel" do
-      it "adds a reaction to the message" do
+      it "adds a reaction to the last message using an emoji shortcode or literal emoji" do
         chat_page.visit_channel(channel_1)
 
         channel_page.send_message("+:+1:")
-
         expect(channel_page).to have_reaction(react_message, "+1")
-      end
+        expect(channel_page.composer).to be_blank
 
-      it "works with literal emoji" do
-        chat_page.visit_channel(channel_1)
+        channel_page.click_reaction(react_message, "+1")
+        expect(channel_page).to have_no_reactions(react_message)
 
         channel_page.send_message("+👍")
-
         expect(channel_page).to have_reaction(react_message, "+1")
       end
     end
@@ -296,44 +242,32 @@ RSpec.describe "Chat composer" do
         Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
       end
       fab!(:thread) do
-        Fabricate(:chat_thread, channel: channel_1, original_message: original_message)
-      end
-
-      fab!(:thread_message) do
-        Fabricate(
-          :chat_message,
-          in_reply_to_id: original_message.id,
-          chat_channel: channel_1,
-          thread_id: thread.id,
-          user: current_user,
+        chat_thread_with_replies(
+          channel: channel_1,
+          original_message: original_message,
+          reply_users: [current_user],
+          link_replies: true,
         )
       end
+      let(:thread_message) { thread.replies.first }
 
-      before do
-        channel_1.update!(threading_enabled: true)
-        Chat::Thread.update_counts
-        thread.add(current_user)
-      end
+      before { channel_1.update!(threading_enabled: true) }
 
-      it "adds a reaction to the message" do
+      it "adds a reaction to the last thread reply using a shortcode or literal emoji" do
         chat_page.visit_channel(channel_1)
         channel_page.message_thread_indicator(original_message).click
-
         expect(side_panel).to have_open_thread(original_message.thread)
 
         open_thread.send_message("+:+1:")
-
         expect(open_thread).to have_reaction(thread_message, "+1")
-      end
+        expect(open_thread.composer).to be_blank
 
-      it "works with literal emoji" do
-        chat_page.visit_channel(channel_1)
-        channel_page.message_thread_indicator(original_message).click
-
-        expect(side_panel).to have_open_thread(original_message.thread)
+        open_thread.message_reactions_list(thread_message).find('[data-emoji-name="+1"]').click
+        expect(open_thread.message_by_id(thread_message.id)).to have_no_css(
+          ".chat-message-reaction-list",
+        )
 
         open_thread.send_message("+👍")
-
         expect(open_thread).to have_reaction(thread_message, "+1")
       end
     end

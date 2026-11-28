@@ -25,16 +25,13 @@ RSpec.describe "React to message" do
     end
 
     shared_examples "inline reactions" do
-      it "shows existing reactions under the message" do
+      it "shows the other user’s reaction and increments its count when clicked" do
         sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        expect(channel).to have_reaction(message_1, reaction_1.emoji)
-      end
+        expect(channel).to have_reaction(message_1, reaction_1.emoji, 1)
 
-      it "increments when clicking it" do
-        sign_in(current_user)
-        chat.visit_channel(category_channel_1)
         channel.click_reaction(message_1, reaction_1.emoji)
+
         expect(channel).to have_reaction(message_1, reaction_1.emoji, 2)
       end
     end
@@ -81,74 +78,57 @@ RSpec.describe "React to message" do
     end
 
     context "when desktop" do
-      context "when using inline reaction button" do
-        it "adds a reaction" do
+      it "adds reactions from the inline picker, the hover picker, and the favorites" do
+        sign_in(current_user)
+        chat.visit_channel(category_channel_1)
+
+        channel.react_to_message(message_1)
+        find('.emoji-picker [data-emoji="grimacing"]').click
+        expect(channel).to have_reaction(message_1, "grimacing")
+
+        channel.hover_message(message_1)
+        find(".chat-message-actions .react-btn").click
+        find('.emoji-picker [data-emoji="nerd_face"]').click
+        expect(channel).to have_reaction(message_1, "nerd_face")
+
+        channel.hover_message(message_1)
+        find('.chat-message-actions [data-emoji-name="+1"]').click
+        expect(channel).to have_reaction(message_1, "+1")
+      end
+
+      context "when current user has multiple sessions" do
+        it "adds reaction on each session" do
           sign_in(current_user)
           chat.visit_channel(category_channel_1)
-          channel.react_to_message(message_1)
-          find(".emoji-picker [data-emoji=\"grimacing\"]").click
 
-          expect(channel).to have_reaction(message_1, "grimacing")
-        end
-
-        context "when current user has multiple sessions" do
-          it "adds reaction on each session" do
+          using_session(:tab_1) do
             sign_in(current_user)
             chat.visit_channel(category_channel_1)
 
-            using_session(:tab_1) do
-              sign_in(current_user)
-              chat.visit_channel(category_channel_1)
+            channel.react_to_message(message_1)
+            find(".emoji-picker [data-emoji=\"grimacing\"]").click
 
-              channel.react_to_message(message_1)
-              find(".emoji-picker [data-emoji=\"grimacing\"]").click
+            expect(channel).to have_reaction(message_1, "grimacing")
+          end
 
-              expect(channel).to have_reaction(message_1, "grimacing")
-            end
-
-            try_until_success(reason: "relies on MessageBus updates") do
-              expect(channel).to have_reaction(message_1, "grimacing")
-            end
+          try_until_success(reason: "relies on MessageBus updates") do
+            expect(channel).to have_reaction(message_1, "grimacing")
           end
         end
       end
 
-      context "when using message actions menu" do
-        context "when using the emoji picker" do
-          it "adds a reaction" do
-            sign_in(current_user)
-            chat.visit_channel(category_channel_1)
-            channel.hover_message(message_1)
-            find(".chat-message-actions .react-btn").click
-            find(".emoji-picker [data-emoji=\"nerd_face\"]").click
+      it "removes denied emojis and aliases from reactions" do
+        SiteSetting.emoji_deny_list = "fu"
 
-            expect(channel).to have_reaction(message_1, reaction_1.emoji)
-          end
+        sign_in(current_user)
+        chat.visit_channel(category_channel_1)
+        channel.hover_message(message_1)
+        find(".chat-message-actions .react-btn").click
 
-          it "removes denied emojis and aliases from reactions" do
-            SiteSetting.emoji_deny_list = "fu"
-
-            sign_in(current_user)
-            chat.visit_channel(category_channel_1)
-            channel.hover_message(message_1)
-            find(".chat-message-actions .react-btn").click
-
-            expect(page).to have_no_css(".emoji-picker [data-emoji=\"fu\"]")
-            expect(page).to have_no_css(".emoji-picker [data-emoji=\"middle_finger\"]")
-          end
-        end
-
-        context "when using favorite reactions" do
-          it "adds a reaction" do
-            sign_in(current_user)
-            chat.visit_channel(category_channel_1)
-            channel.hover_message(message_1)
-            find(".chat-message-actions [data-emoji-name=\"+1\"]").click
-
-            expect(channel.message_reactions_list(message_1)).to have_css(
-              "[data-emoji-name=\"+1\"]",
-            )
-          end
+        within(".emoji-picker") do
+          expect(page).to have_css('[data-emoji="grimacing"]')
+          expect(page).to have_no_css('[data-emoji="fu"]')
+          expect(page).to have_no_css('[data-emoji="middle_finger"]')
         end
       end
     end
@@ -211,16 +191,13 @@ RSpec.describe "React to message" do
     end
 
     shared_examples "inline reactions" do
-      it "shows existing reactions under the message" do
+      it "shows the current user’s reaction and removes it when clicked" do
         sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        expect(channel).to have_reaction(message_1, reaction_1.emoji)
-      end
+        expect(channel).to have_reaction(message_1, reaction_1.emoji, 1)
 
-      it "removes it when clicking it" do
-        sign_in(current_user)
-        chat.visit_channel(category_channel_1)
         channel.click_reaction(message_1, reaction_1.emoji)
+
         expect(channel).to have_no_reactions(message_1)
       end
     end

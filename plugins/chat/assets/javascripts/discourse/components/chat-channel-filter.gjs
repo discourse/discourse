@@ -9,11 +9,11 @@ import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatChannelFilter extends Component {
   @service capabilities;
@@ -31,7 +31,9 @@ export default class ChatChannelFilter extends Component {
 
   @action
   clearInput() {
-    this.currentChannelFilter = "";
+    cancel(this.debouncedSearch);
+    this.searchRequest?.abort?.();
+    this.clearFilteringState();
   }
 
   @action
@@ -90,10 +92,7 @@ export default class ChatChannelFilter extends Component {
     this.currentChannelFilter = event.target.value;
 
     if (isBlank(this.currentChannelFilter)) {
-      cancel(this, this.performSearch);
-      this.searchRequest?.abort?.();
-      this.clearFilteringState();
-      cancel(this.debouncedSearch);
+      this.clearInput();
       return;
     }
 
@@ -103,7 +102,7 @@ export default class ChatChannelFilter extends Component {
       this.currentChannelFilter,
       // given we have to blur on iOS, we give more time to the user
       // to avoid bluring in the middle of a query
-      this.capabilities.isIOS ? INPUT_DELAY * 2 : INPUT_DELAY
+      this.capabilities.isIOS ? CHAT_INPUT_DELAY * 2 : CHAT_INPUT_DELAY
     );
   }
 

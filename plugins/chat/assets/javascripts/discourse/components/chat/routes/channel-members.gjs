@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import DButton from "discourse/ui-kit/d-button";
@@ -16,6 +15,7 @@ import { i18n } from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatRouteChannelMembers extends Component {
   @service chatApi;
@@ -94,7 +94,7 @@ export default class ChatRouteChannelMembers extends Component {
 
   @action
   load() {
-    discourseDebounce(this, this.debouncedLoad, INPUT_DELAY);
+    discourseDebounce(this, this.debouncedLoad, CHAT_INPUT_DELAY);
   }
 
   @action

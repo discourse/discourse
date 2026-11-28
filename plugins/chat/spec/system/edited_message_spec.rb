@@ -34,26 +34,23 @@ RSpec.describe "Edited message" do
       end
     end
 
-    it "runs decorators on the edited message" do
-      message_1 =
-        Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
-      chat_page.visit_channel(channel_1)
+    context "for the author" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 
-      channel_page.edit_message(message_1, '[date=2025-03-10 timezone="Europe/Paris"]')
+      it "runs decorators on edits and shows the reply indicator when replying to an edited message" do
+        chat_page.visit_channel(channel_1)
 
-      expect(page).to have_css(".cooked-date")
-    end
-  end
+        channel_page.edit_message(message_1, '[date=2025-03-10 timezone="Europe/Paris"]')
 
-  context "when replying to and edited message" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+        expect(page).to have_css(".cooked-date")
 
-    it "shows the correct reply indicator" do
-      chat_page.visit_channel(channel_1)
-      channel_page.edit_message(message_1, message_1.message + "a")
-      channel_page.reply_to(message_1)
+        edit = message_1.message + "a"
+        channel_page.edit_message(message_1, edit)
+        expect(channel_page.messages).to have_message(id: message_1.id, text: edit, persisted: true)
+        channel_page.reply_to(message_1)
 
-      expect(channel_page.composer.message_details).to be_replying_to(message_1)
+        expect(channel_page.composer.message_details).to be_replying_to(message_1)
+      end
     end
   end
 end

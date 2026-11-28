@@ -102,6 +102,7 @@ RSpec.describe "Chat pinned messages" do
 
     find(".c-navbar__close-pins-button").click
 
+    expect(page).to have_css(".chat-pinned-bar__see-all")
     expect(page).to have_no_css(".chat-pinned-bar__unread-indicator")
   end
 
@@ -116,10 +117,11 @@ RSpec.describe "Chat pinned messages" do
     find(".chat-pinned-bar__see-all").click
     expect(page).to have_css(".c-routes.--channel-pins")
 
-    # Reload while panel is open — pins should stay marked as read
     page.refresh
 
+    # Load the channel without reopening the panel to check the persisted read state.
     chat_page.visit_channel(channel)
+    expect(page).to have_css(".chat-pinned-bar")
     expect(page).to have_no_css(".chat-pinned-bar__unread-indicator")
   end
 
@@ -136,6 +138,7 @@ RSpec.describe "Chat pinned messages" do
     find(".c-navbar__close-pins-button").click
     find(".chat-pinned-bar__see-all").click
     expect(page).to have_css(".c-routes.--channel-pins")
+    expect(page).to have_css(".chat-pinned-message", count: 2)
     expect(page).to have_no_css(".chat-pinned-message__pinned-by-icon")
   end
 
@@ -163,7 +166,7 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".chat-pinned-bar")
   end
 
-  it "cycles through pins when clicking the sticky bar" do
+  it "cycles through pins in the bar and jumps to a pin from the ordered panel" do
     other_message = Fabricate(:chat_message, chat_channel: channel, message: "Second message")
     Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
     Chat::PinnedMessage.create!(chat_message: other_message, chat_channel: channel, user: admin)
@@ -178,32 +181,14 @@ RSpec.describe "Chat pinned messages" do
 
     find(".chat-pinned-bar__jump").click
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
-  end
-
-  it "shows the visited pin in the sticky bar when clicking a pin in the panel" do
-    other_message = Fabricate(:chat_message, chat_channel: channel, message: "Second message")
-    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
-    Chat::PinnedMessage.create!(chat_message: other_message, chat_channel: channel, user: admin)
-
-    chat_page.visit_channel(channel)
-    expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
 
     find(".chat-pinned-bar__see-all").click
+    expect(page).to have_css(".chat-pinned-message:first-child", text: "Important message")
+    expect(page).to have_css(".chat-pinned-message:last-child", text: "Second message")
+
     find(".chat-pinned-message", text: "Important message").click
 
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Important message")
-  end
-
-  it "lists pins oldest-first in the panel (channel timeline order)" do
-    other_message = Fabricate(:chat_message, chat_channel: channel, message: "Second message")
-    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
-    Chat::PinnedMessage.create!(chat_message: other_message, chat_channel: channel, user: admin)
-
-    chat_page.visit_channel(channel)
-    find(".chat-pinned-bar__see-all").click
-
-    expect(page).to have_css(".chat-pinned-message:first-child", text: "Important message")
-    expect(page).to have_css(".chat-pinned-message:last-child", text: "Second message")
   end
 
   it "removes a pinned message from the bar when it is deleted" do
@@ -216,20 +201,6 @@ RSpec.describe "Chat pinned messages" do
     channel_page.messages.delete(message)
 
     expect(page).to have_no_css(".chat-pinned-bar")
-  end
-
-  it "toggles the pinned messages panel from the bar's see-all button" do
-    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
-    pin_another_message
-
-    chat_page.visit_channel(channel)
-
-    find(".chat-pinned-bar__see-all").click
-    expect(page).to have_css(".c-routes.--channel-pins")
-
-    # clicking again closes the panel
-    find(".chat-pinned-bar__see-all").click
-    expect(page).to have_no_css(".c-routes.--channel-pins")
   end
 
   it "lets a user without pin permissions hide the bar from the pins panel" do
@@ -291,12 +262,21 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".c-navbar__pinned-messages-btn")
   end
 
-  it "hides the bar from the pins panel for a user who can manage pins" do
+  it "toggles the pins panel from the bar and hides the bar without unpinning" do
     Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
     pin_another_message
 
     chat_page.visit_channel(channel)
+
     find(".chat-pinned-bar__see-all").click
+    expect(page).to have_css(".c-routes.--channel-pins")
+
+    # clicking again closes the panel
+    find(".chat-pinned-bar__see-all").click
+    expect(page).to have_no_css(".c-routes.--channel-pins")
+
+    find(".chat-pinned-bar__see-all").click
+    expect(page).to have_css(".c-routes.--channel-pins")
     find(".chat-pinned-messages-list__dismiss").click
 
     expect(page).to have_no_css(".c-routes.--channel-pins")
@@ -346,9 +326,7 @@ RSpec.describe "Chat pinned messages" do
 
       find(".c-navbar__close-pins-button").click
 
-      expect(page).to have_no_css(
-        ".chat-message-container[data-id='#{message.id}'] .chat-message-info__pinned",
-      )
+      expect(channel_page.message_by_id(message.id)).to have_no_css(".chat-message-info__pinned")
 
       # the remaining pin still counts: the bar must not vanish
       expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
@@ -363,6 +341,7 @@ RSpec.describe "Chat pinned messages" do
         ".chat-pinned-message__unpin",
       ).click
 
+      expect(page).to have_css(".chat-pinned-message", text: "Second message")
       expect(page).to have_no_css(".chat-pinned-message", text: "Important message")
     end
   end

@@ -16,35 +16,42 @@ RSpec.describe "Chat search" do
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)
 
-  let(:chat_page) { PageObjects::Pages::Chat.new }
+  fab!(:message_1_channel_1) do
+    Fabricate(:chat_message, chat_channel: channel_1, message: "message 1 music lounge")
+  end
+  fab!(:message_1_channel_2) do
+    Fabricate(:chat_message, chat_channel: channel_2, message: "message 1 sports arena")
+  end
+
   let(:chat_search_page) { PageObjects::Pages::ChatSearch.new }
 
   context "when searching for messages" do
-    it "shows search results for multiple channels" do
-      message_1_channel_1 =
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_1,
-          message: "message 1 channel 1",
-          use_service: true,
-        )
-      message_1_channel_2 =
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_2,
-          message: "message 1 channel 2",
-          use_service: true,
-        )
+    it "shows matching results across channels and narrows them" do
+      SearchIndexer.index(message_1_channel_1)
+      SearchIndexer.index(message_1_channel_2)
 
       chat_search_page.visit
 
       chat_search_page.fill_in("message 1")
 
-      expect(chat_search_page).to have_results(message_1_channel_1, message_1_channel_2)
+      [message_1_channel_1, message_1_channel_2].each do |message|
+        expect(page).to have_css(
+          ".c-routes.--search .chat-message-container[data-id='#{message.id}']",
+        )
+      end
 
-      chat_search_page.fill_in("channel 1")
+      chat_search_page.fill_in("music lounge")
 
-      expect(chat_search_page).to have_results(message_1_channel_1)
+      expect(chat_search_page).to have_x_results(1)
+      expect(page).to have_css(
+        ".c-routes.--search .chat-message-container[data-id='#{message_1_channel_1.id}']",
+      )
+    end
+
+    it "shows a no-results message for a non-matching first query" do
+      chat_search_page.visit.fill_in("aaaaaaaa")
+
+      expect(page).to have_css(".c-routes.--search .alert.alert-info")
     end
 
     it "can click on a result" do
@@ -58,28 +65,29 @@ RSpec.describe "Chat search" do
       )
     end
 
-    it "shows no results message when no matches found" do
-      chat_search_page.visit.fill_in("aaaaaaaa")
+    context "when results span more than one page" do
+      fab!(:searchable_messages) do
+        (1..21).map do |number|
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: current_user,
+            message: "test #{number}",
+          )
+        end
+      end
 
-      expect(chat_search_page).to have_no_results
-    end
+      it "can load more results" do
+        searchable_messages.each { |message| SearchIndexer.index(message) }
 
-    it "can load more results" do
-      Fabricate.times(
-        21,
-        :chat_message,
-        chat_channel: channel_1,
-        message: "test",
-        use_service: true,
-      )
+        chat_search_page.visit.fill_in("test")
 
-      chat_search_page.visit.fill_in("test")
+        expect(chat_search_page).to have_x_results(20)
 
-      expect(chat_search_page).to have_x_results(20)
+        chat_search_page.scroll_to_bottom
 
-      chat_search_page.scroll_to_bottom
-
-      expect(chat_search_page).to have_x_results(21)
+        expect(chat_search_page).to have_x_results(21)
+      end
     end
 
     it "can clear the search input" do
@@ -91,7 +99,10 @@ RSpec.describe "Chat search" do
 
       chat_search_page.clear
 
-      expect(chat_search_page).to have_zero_results
+      within(".c-routes.--search") do
+        expect(page).to have_field(class: "filter-input", with: "")
+        expect(page).to have_no_css(".chat-message-search-entry")
+      end
     end
   end
 

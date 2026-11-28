@@ -24,19 +24,26 @@ RSpec.describe "Reply to message - smoke" do
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(original_message)
 
+      expect(side_panel).to have_open_thread
+      thread = Chat::Thread.find_by!(original_message: original_message)
+      expect(side_panel).to have_open_thread(thread)
+
       using_session(:user_2) do
         sign_in(user_2)
         chat_page.visit_channel(channel_1)
         channel_page.reply_to(original_message)
-        expect(side_panel).to have_open_thread(original_message.thread)
+        expect(side_panel).to have_open_thread(thread)
       end
 
+      # Capybara switches sessions without foregrounding the browser page.
+      page.driver.with_playwright_page(&:bring_to_front)
       thread_page.send_message("user1reply")
 
       expect(thread_page.messages).to have_message(text: "user1reply")
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       using_session(:user_2) do |session|
+        page.driver.with_playwright_page(&:bring_to_front)
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
@@ -49,6 +56,7 @@ RSpec.describe "Reply to message - smoke" do
         session.quit
       end
 
+      page.driver.with_playwright_page(&:bring_to_front)
       expect(thread_page.messages).to have_message(text: "user1reply")
       expect(thread_page.messages).to have_message(text: "user2reply")
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)

@@ -58,9 +58,10 @@ RSpec.describe "Message user info" do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-    it "shows user info only on both messages" do
-      Fabricate(:chat_webhook_event, chat_message: message_1)
-      Fabricate(:chat_webhook_event, chat_message: message_2)
+    fab!(:webhook_event_1) { Fabricate(:chat_webhook_event, chat_message: message_1) }
+    fab!(:webhook_event_2) { Fabricate(:chat_webhook_event, chat_message: message_2) }
+
+    it "shows user info on both messages" do
       chat_page.visit_channel(channel_1)
 
       expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(

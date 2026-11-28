@@ -27,18 +27,22 @@ describe "Thread list in side panel | full page" do
   end
 
   context "for threads the user is not a participant in" do
-    fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel, use_service: true) }
+    fab!(:thread_om) do
+      message = Fabricate(:chat_message, chat_channel: channel, user: other_user)
+      channel.add(other_user).mark_read!(message.id)
+      channel.update_last_message_id!
+      message
+    end
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
     it "shows threads in the channel even if the user is not tracking them" do
       thread_1 =
-        Fabricate(
-          :chat_thread,
-          original_message: thread_om,
+        chat_thread_with_replies(
           channel: channel,
-          with_replies: 1,
-          use_service: true,
+          original_message: thread_om,
+          reply_users: [other_user],
+          track_replies: true,
         )
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
@@ -66,7 +70,9 @@ describe "Thread list in side panel | full page" do
   end
 
   it "doesn’t list threads with no replies" do
-    thread = Fabricate(:chat_thread, channel: channel, use_service: true)
+    thread = Fabricate(:chat_thread, channel: channel, original_message_user: other_user)
+    channel.add(other_user).mark_read!(thread.original_message_id)
+    channel.update_last_message_id!
 
     chat_page.visit_channel(channel)
     channel_page.open_thread_list
@@ -76,22 +82,18 @@ describe "Thread list in side panel | full page" do
 
   context "when there are threads that the user is participating in" do
     fab!(:thread_1) do
-      chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
-    end
-    fab!(:thread_2) do
-      chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
-    end
-
-    before do
-      chat_system_user_bootstrap(user: other_user, channel: channel)
-      thread_1.add(current_user)
-      thread_2.add(current_user)
-    end
-
-    it "shows the OM excerpt for threads without a title" do
-      chat_page.visit_threads_list(channel)
-
-      expect(page).to have_content(thread_1.original_message.excerpt)
+      thread =
+        chat_thread_with_replies(
+          channel: channel,
+          original_message_user: other_user,
+          reply_users: [current_user],
+        )
+      original_message = thread.original_message
+      original_message.update!(excerpt: original_message.build_excerpt)
+      channel.add(other_user).mark_read!(original_message.id)
+      thread.add(current_user).mark_read!(thread.last_message_id)
+      channel.update_last_message_id!
+      thread
     end
 
     it "shows the thread title with emoji" do
@@ -124,17 +126,13 @@ describe "Thread list in side panel | full page" do
       )
     end
 
-    it "doesn’t show the thread original message user avatar" do
-      chat_page.visit_threads_list(channel)
-
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
-        thread_list_page.avatar_selector(thread_1.original_message.user),
-      )
-    end
-
     it "shows the last reply date of the thread" do
       freeze_time
-      last_reply = Fabricate(:chat_message, thread: thread_1, use_service: true)
+      last_reply =
+        Fabricate(:chat_message, chat_channel: channel, thread: thread_1, user: other_user)
+      thread_1.membership_for(other_user).mark_read!(last_reply.id)
+      thread_1.update!(replies_count: 2)
+      thread_1.update_last_message_id!
       chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
@@ -142,38 +140,46 @@ describe "Thread list in side panel | full page" do
       )
     end
 
-    it "shows participants" do
+    it "shows the original excerpt and participants for an untitled thread and opens the selected thread" do
+      older_original =
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: other_user,
+          created_at: thread_1.original_message.created_at - 2.minutes,
+        )
+      older_thread = Fabricate(:chat_thread, original_message: older_original)
+      older_reply =
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          thread: older_thread,
+          user: current_user,
+          created_at: older_original.created_at + 1.minute,
+        )
+      older_thread.add(current_user).mark_read!(older_reply.id)
+      older_thread.update!(replies_count: 1)
+      older_thread.update_last_message_id!
+
       chat_page.visit_threads_list(channel)
 
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
-        ".avatar[title='#{current_user.username}']",
+      expect(thread_list_page).to have_threads(count: 2)
+      thread_item = thread_list_page.item_by_id(thread_1.id)
+      expect(thread_item).to have_content(thread_1.original_message.excerpt)
+      expect(thread_item).to have_no_css(
+        thread_list_page.avatar_selector(thread_1.original_message.user),
       )
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
-        ".avatar[title='#{other_user.username}']",
-      )
-    end
+      expect(thread_item).to have_css(".avatar[title='#{current_user.username}']")
+      expect(thread_item).to have_css(".avatar[title='#{other_user.username}']")
 
-    it "opens a thread" do
-      chat_page.visit_threads_list(channel)
+      selected_item = thread_list_page.item_by_id(older_thread.id)
+      expect(selected_item).to match_css(":nth-child(2)")
+      selected_item.click
 
-      thread_list_page.item_by_id(thread_1.id).click
-      expect(side_panel).to have_open_thread(thread_1)
+      expect(side_panel).to have_open_thread(older_thread)
     end
 
     describe "deleting and restoring the original message of the thread" do
-      fab!(:thread_1) do
-        chat_thread_chain_bootstrap(
-          channel: channel,
-          messages_count: 2,
-          users: [current_user, other_user],
-        )
-      end
-
-      before do
-        thread_1.update!(original_message_user: other_user)
-        thread_1.original_message.update!(user: other_user)
-      end
-
       it "hides the thread in the list when another user deletes the original message" do
         chat_page.visit_threads_list(channel)
 

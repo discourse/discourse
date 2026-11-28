@@ -15,14 +15,12 @@ RSpec.describe "User chat preferences" do
   end
 
   context "when chat disabled" do
-    before do
-      SiteSetting.chat_enabled = false
-      sign_in(current_user)
-    end
+    before { SiteSetting.chat_enabled = false }
 
     it "doesn’t show the tab" do
       visit("/my/preferences")
 
+      expect(page).to have_css(".user-navigation-secondary")
       expect(page).to have_no_css(".user-nav__preferences-chat", visible: :all)
     end
 
@@ -33,7 +31,7 @@ RSpec.describe "User chat preferences" do
     end
   end
 
-  it "can change chat quick reaction type to custom and select emoji" do
+  it "saves custom quick reactions and a separate sidebar mode" do
     user_preferences_chat_page.visit
     form.field("chat_quick_reaction_type").select("custom")
 
@@ -45,7 +43,13 @@ RSpec.describe "User chat preferences" do
 
     reaction_buttons.first.click
     emoji_picker.select_emoji(":sweat_smile:")
+    expect(form.field("chat_quick_reactions_custom").component).to have_css(
+      '.emoji-picker-trigger img[title="sweat_smile"]',
+    )
+
+    form.field("chat_separate_sidebar_mode").select("fullscreen")
     form.submit
+    expect(user_preferences_chat_page).to have_saved
     user_preferences_chat_page.visit
 
     expect(
@@ -55,6 +59,7 @@ RSpec.describe "User chat preferences" do
     custom_field = form.field("chat_quick_reactions_custom")
     reaction_buttons = custom_field.component.all("button.emoji-picker-trigger")
     expect(reaction_buttons.first.find("img")[:title]).to eq "sweat_smile"
+    expect(form.field("chat_separate_sidebar_mode").value).to eq("fullscreen")
   end
 
   describe "chat interface" do
@@ -88,20 +93,9 @@ RSpec.describe "User chat preferences" do
     end
   end
 
-  it "can select and save separate sidebar mode" do
-    user_preferences_chat_page.visit
-    form.field("chat_separate_sidebar_mode").select("fullscreen")
-    form.submit
-    user_preferences_chat_page.visit
-
-    expect(form.field("chat_separate_sidebar_mode").value).to eq("fullscreen")
-  end
-
   context "as an admin on another user's preferences" do
     fab!(:current_user, :admin)
     fab!(:user_1, :user)
-
-    before { sign_in(current_user) }
 
     it "allows to change settings" do
       visit("/u/#{user_1.username}/preferences")

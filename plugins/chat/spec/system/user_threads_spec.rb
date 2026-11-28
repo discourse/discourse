@@ -2,13 +2,13 @@
 
 RSpec.describe "User threads" do
   fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:user_threads_page) { PageObjects::Pages::UserThreads.new }
 
   before do
@@ -18,11 +18,8 @@ RSpec.describe "User threads" do
 
   context "when in sidebar" do
     context "when user has viewable threads" do
-      before do
-        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-      end
-
       it "shows a link to user threads" do
+        create_tracked_thread(channel_1)
         visit("/")
 
         expect(sidebar_page).to have_user_threads_section
@@ -40,17 +37,9 @@ RSpec.describe "User threads" do
     end
 
     context "when user has unreads" do
-      before do
-        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-        Fabricate(
-          :chat_message,
-          thread: channel_1.threads.last,
-          user: Fabricate(:user),
-          use_service: true,
-        )
-      end
-
       it "has an unread indicator" do
+        thread = create_tracked_thread(channel_1)
+        thread.membership_for(current_user).mark_read!(thread.original_message_id)
         visit("/")
 
         expect(sidebar_page).to have_unread_user_threads
@@ -64,15 +53,7 @@ RSpec.describe "User threads" do
     end
 
     it "lists threads" do
-      Fabricate
-        .times(5, :chat_channel, threading_enabled: true)
-        .each do |channel|
-          chat_thread_chain_bootstrap(
-            channel: channel,
-            users: [current_user, Fabricate(:user)],
-            messages_count: 2,
-          )
-        end
+      create_tracked_threads(5)
 
       chat_page.visit_user_threads
 
@@ -80,15 +61,8 @@ RSpec.describe "User threads" do
     end
 
     it "can load more threads" do
-      Fabricate
-        .times(20, :chat_channel, threading_enabled: true)
-        .each do |channel|
-          chat_thread_chain_bootstrap(
-            channel: channel,
-            users: [current_user, Fabricate(:user)],
-            messages_count: 2,
-          )
-        end
+      # One thread beyond the first page is enough to exercise load-more.
+      create_tracked_threads(11)
 
       chat_page.visit_user_threads
 
@@ -96,33 +70,24 @@ RSpec.describe "User threads" do
 
       page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-      expect(user_threads_page).to have_threads(count: 20)
+      expect(user_threads_page).to have_threads(count: 11)
     end
 
-    it "can open a thread" do
-      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+    it "can open a thread and go back to the user threads list" do
+      thread = create_tracked_thread(channel_1)
 
       chat_page.visit_user_threads
-      user_threads_page.open_thread(channel_1.threads.first)
+      user_threads_page.open_thread(thread)
 
-      expect(chat_page).to have_current_path(
-        "/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{channel_1.threads.first.id} ",
-      )
-    end
+      expect(chat_page).to have_current_path(thread.relative_url)
 
-    it "navigating back from a thread opens the user threads" do
-      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-
-      chat_page.visit_user_threads
-      user_threads_page.open_thread(channel_1.threads.first)
       thread_page.back
 
       expect(user_threads_page).to have_threads
     end
 
     it "updates the thread when another user replies" do
-      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-      thread = channel_1.threads.last
+      thread = create_tracked_thread(channel_1, replies_count: 3)
       last_user = Fabricate(:user)
 
       chat_page.visit_user_threads
@@ -140,18 +105,6 @@ RSpec.describe "User threads" do
   context "when in drawer" do
     before { SiteSetting.chat_threads_enabled = true }
 
-    context "when user has viewable threads" do
-      before do
-        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-      end
-
-      it "shows the user threads tab" do
-        visit("/")
-        chat_page.open_from_header
-        expect(drawer_page).to have_user_threads_section
-      end
-    end
-
     context "when user has no viewable threads" do
       before { channel_1.add(current_user) }
 
@@ -164,17 +117,9 @@ RSpec.describe "User threads" do
     end
 
     context "when user has unreads" do
-      before do
-        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-        Fabricate(
-          :chat_message,
-          thread: channel_1.threads.last,
-          user: Fabricate(:user),
-          use_service: true,
-        )
-      end
-
       it "has an unread indicator" do
+        thread = create_tracked_thread(channel_1)
+        thread.membership_for(current_user).mark_read!(thread.original_message_id)
         visit("/")
         chat_page.open_from_header
 
@@ -189,15 +134,7 @@ RSpec.describe "User threads" do
     end
 
     it "lists threads" do
-      Fabricate
-        .times(5, :chat_channel, threading_enabled: true)
-        .each do |channel|
-          chat_thread_chain_bootstrap(
-            channel: channel,
-            users: [current_user, Fabricate(:user)],
-            messages_count: 2,
-          )
-        end
+      create_tracked_threads(5)
 
       visit("/")
       chat_page.open_from_header
@@ -207,15 +144,8 @@ RSpec.describe "User threads" do
     end
 
     it "can load more threads" do
-      Fabricate
-        .times(20, :chat_channel, threading_enabled: true)
-        .each do |channel|
-          chat_thread_chain_bootstrap(
-            channel: channel,
-            users: [current_user, Fabricate(:user)],
-            messages_count: 2,
-          )
-        end
+      # One thread beyond the first page is enough to exercise load-more.
+      create_tracked_threads(11)
 
       visit("/")
       chat_page.open_from_header
@@ -227,27 +157,21 @@ RSpec.describe "User threads" do
         "document.querySelector('.chat-drawer-content').scrollTo(0, document.querySelector('.chat-drawer-content').scrollHeight)",
       )
 
-      expect(user_threads_page).to have_threads(count: 20)
+      expect(user_threads_page).to have_threads(count: 11)
     end
 
-    it "can open a thread" do
-      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+    it "can open a thread and go back to the user threads list" do
+      thread = create_tracked_thread(channel_1)
 
       visit("/")
       chat_page.open_from_header
+      expect(drawer_page).to have_user_threads_section
+
       drawer_page.click_user_threads
-      user_threads_page.open_thread(channel_1.threads.first)
+      user_threads_page.open_thread(thread)
 
-      expect(drawer_page).to have_open_thread(channel_1.threads.first)
-    end
+      expect(drawer_page).to have_open_thread(thread)
 
-    it "navigating back from a thread opens the user threads" do
-      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
-
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.click_user_threads
-      user_threads_page.open_thread(channel_1.threads.first)
       drawer_page.back
 
       expect(user_threads_page).to have_threads
@@ -255,19 +179,10 @@ RSpec.describe "User threads" do
   end
 
   context "when in mobile", mobile: true do
-    before do
-      SiteSetting.chat_threads_enabled = true
-
-      last_message =
-        chat_thread_chain_bootstrap(
-          channel: channel_1,
-          users: [current_user, Fabricate(:user)],
-        ).last_message
-
-      update_message!(last_message, text: "How's everyone doing?")
-    end
+    before { SiteSetting.chat_threads_enabled = true }
 
     it "has the expected UI elements" do
+      create_tracked_thread(channel_1, reply_text: "How's everyone doing?")
       chat_page.visit_user_threads
 
       expect(user_threads_page).to have_threads(count: 1)
@@ -280,5 +195,31 @@ RSpec.describe "User threads" do
 
       expect(user_threads_page.excerpt_text).to eq("How's everyone doing?")
     end
+  end
+
+  private
+
+  def create_tracked_threads(count)
+    Fabricate
+      .times(count, :chat_channel, threading_enabled: true)
+      .each { |channel| create_tracked_thread(channel) }
+  end
+
+  def create_tracked_thread(channel, replies_count: 1, reply_text: nil)
+    reply_users = [other_user, current_user].cycle.take(replies_count)
+    thread =
+      chat_thread_with_replies(
+        channel: channel,
+        original_message_user: current_user,
+        reply_users: reply_users,
+        link_replies: true,
+        track_replies: true,
+        reply_text: reply_text,
+      )
+    channel.add(current_user).mark_read!(thread.original_message_id)
+    channel.add(other_user)
+    channel.update_last_message_id!
+    thread.membership_for(current_user).mark_read!
+    thread
   end
 end

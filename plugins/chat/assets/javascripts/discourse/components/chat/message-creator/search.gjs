@@ -6,9 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import { MODES } from "./constants.js";
 import ChatablesLoader from "./lib/chatables-loader.js";
 import listKeyboardNavigation from "./lib/list-keyboard-navigation.js";
@@ -87,7 +87,7 @@ export default class ChatMessageCreatorSearch extends Component {
       this,
       this.fetch,
       event.target.value,
-      INPUT_DELAY
+      CHAT_INPUT_DELAY
     );
   }
 

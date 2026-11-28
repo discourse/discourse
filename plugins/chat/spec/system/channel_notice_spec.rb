@@ -113,9 +113,16 @@ RSpec.describe "Channel notice" do
         find(".sidebar-row.channel-#{private_channel.id}").click
         expect(drawer_page).to have_open_channel(private_channel)
 
-        wait_for_timeout(1000) # we are waiting for message bus to update the notice
+        stream = Chat::Publisher.root_message_bus_channel(private_channel.id)
+        page.driver.with_playwright_page do |browser_page|
+          browser_page.wait_for_function(
+            "([stream, id]) => window.MessageBus.callbacks.some((entry) => entry.channel === stream && entry.last_id >= id)",
+            arg: [stream, MessageBus.last_id(stream)],
+            timeout: Capybara.default_max_wait_time * 1000,
+          )
+        end
 
-        expect(page).to have_no_css(".chat-notices__notice", wait: 0)
+        expect(page).to have_no_css(".chat-notices__notice")
       end
     end
   end

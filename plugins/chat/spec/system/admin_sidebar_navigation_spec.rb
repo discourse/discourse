@@ -10,13 +10,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links" do
     sign_in(admin)
   end
 
-  it "shows links to enabled plugin admin routes" do
-    visit("/admin")
-    sidebar.toggle_all_sections
-    expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat")
-  end
-
-  it "does not duplicate links to enabled plugin admin routes when showing and hiding sidebar" do
+  it "shows a single Chat admin link before and after toggling the sidebar" do
     visit("/admin")
     sidebar.toggle_all_sections
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat", count: 1)
@@ -30,6 +24,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links" do
     find("#btn-enter-safe-mode").click
     expect(sidebar).to have_section_link("Admin", href: "/admin")
     sidebar.click_link_in_section("community", "admin")
+    expect(sidebar).to have_section("admin-root")
     expect(sidebar).to have_no_section_link("Chat", href: "/admin/plugins/chat")
   end
 
@@ -41,6 +36,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links" do
       visit("/")
       expect(sidebar).to have_switch_button("chat")
       sidebar.click_link_in_section("community", "admin")
+      expect(sidebar).to have_section("admin-root")
       expect(sidebar).to have_no_switch_button("chat")
       click_logo
       expect(sidebar).to have_switch_button("chat")
@@ -54,6 +50,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links" do
       expect(sidebar).to have_section("chat-channels")
       expect(sidebar).to have_no_switch_button("chat")
       sidebar.click_link_in_section("community", "admin")
+      expect(sidebar).to have_section("admin-root")
       expect(sidebar).to have_no_section("chat-channels")
       click_logo
       expect(sidebar).to have_section("chat-channels")
@@ -71,6 +68,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links" do
       visit("/admin")
       expect(sidebar).to have_section("admin-root")
       chat_page.open_from_header
+      expect(sidebar).to be_visible
       expect(sidebar).to have_no_section("admin-root")
       chat_page.minimize_full_page
       expect(chat_page).to have_drawer
