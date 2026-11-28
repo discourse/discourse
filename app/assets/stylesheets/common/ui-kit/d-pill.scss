@@ -1,0 +1,40 @@
+/* Each type's colour sets the text, and a light mix of it over the page background sets the
+   fill, so every type reads in light and dark schemes alike. */
+
+.d-pill {
+  --d-pill-color: var(--primary-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.1em 0.5em;
+  border-radius: var(--d-border-radius);
+  background: color-mix(in srgb, var(--d-pill-color) 14%, var(--secondary));
+  color: var(--d-pill-color);
+  font-size: var(--font-down-2);
+  font-weight: normal;
+  line-height: var(--line-height-large);
+  white-space: nowrap;
+  vertical-align: middle;
+
+  .d-icon {
+    font-size: 0.75em;
+  }
+}
+
+.d-pill.--info {
+  --d-pill-color: var(--tertiary);
+}
+
+.d-pill.--success {
+  --d-pill-color: var(--success);
+}
+
+.d-pill.--danger {
+  --d-pill-color: var(--danger);
+}
+
+/* The highlight colour is too pale to read as text, so a warning tints only the fill. */
+.d-pill.--warning {
+  background: var(--highlight-medium);
+  color: var(--primary-high);
+}

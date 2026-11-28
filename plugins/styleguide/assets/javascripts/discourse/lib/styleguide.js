@@ -11,6 +11,7 @@ import dropdowns from "../components/sections/atoms/09-dropdowns.gjs";
 import topicLink from "../components/sections/atoms/10-topic-link-status.gjs";
 import shortcut from "../components/sections/atoms/11-shortcut.gjs";
 import designVariables from "../components/sections/atoms/12-design-variables.gjs";
+import pill from "../components/sections/atoms/13-pill.gjs";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs.gjs";
 import categories from "../components/sections/molecules/categories.gjs";
 import charCounter from "../components/sections/molecules/char-counter.gjs";
@@ -77,6 +78,7 @@ const SECTIONS = [
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
   { component: shortcut, category: "atoms", id: "shortcut" },
+  { component: pill, category: "atoms", id: "pill" },
   { component: designVariables, category: "atoms", id: "design-variables" },
   {
     component: segmentedControl,
