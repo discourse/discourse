@@ -283,6 +283,18 @@ whatever is held: `Sort  Latest`, `Attributes  [Placeholder] [Required]`, or wit
 - It can't be combined with `@ariaLabelledBy`, which would give the control a second name, or with
   `@iconOnly`, which leaves no room for it. Development builds assert on both.
 
+## Inside a menu
+
+A select that sits in a dropdown menu, next to the menu's buttons, passes `@menuItem={{true}}`.
+
+- The trigger is drawn like the menu's other items: the same icon box, gap and padding, with the
+  `caption` text above the value and the caret where a button's suffix icon sits.
+- The list opens beside the row like a submenu, on the side the text reads toward, unless
+  `@placement` says otherwise. The arrow toward the list opens it and the one back toward the row
+  closes it; Up and Down don't open it, and they wrap around inside the open list.
+- A menu that opens its own submenus gives them a group identifier, and the select passes the same
+  one as `@menuGroupIdentifier`, so only one of them is open at a time.
+
 ## Changes and picks
 
 Three callbacks report selection, each with `(value, records, change)`. A single select passes

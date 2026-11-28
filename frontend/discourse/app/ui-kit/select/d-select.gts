@@ -341,10 +341,28 @@ export interface DSelectSignature {
      * It can only remove a footer: without a `:footer` block there is none either way.
      */
     suppressFooter?: boolean;
-    /** The overlay's preferred placement relative to the trigger (forwarded to the menu). */
-    placement?: MenuOptions["placement"];
+    /**
+     * The overlay's placement relative to the trigger (forwarded to the menu). A list gives the
+     * preferred placement first, then the ones to try in order when it doesn't fit; a single
+     * placement keeps the menu's own fallbacks. A `@menuItem` defaults to opening beside its row.
+     */
+    placement?: MenuOptions["placement"] | readonly MenuOptions["placement"][];
+    /**
+     * Makes the select an item of the dropdown menu it sits in. The trigger is drawn like the
+     * menu's other items, with the caption above the value, and its list opens beside the row
+     * like a submenu: the caret points that way, the arrow toward the list opens it and the one
+     * back toward the row closes it (swapped in right-to-left layouts), Up and Down don't open
+     * it, and they wrap around inside the open list.
+     */
+    menuItem?: boolean;
     /** The overlay's offset from the trigger, in pixels (forwarded to the menu). */
     offset?: MenuOptions["offset"];
+    /**
+     * Menus sharing this identifier close each other, so opening the select closes another open
+     * menu of the group (forwarded to the menu as its group identifier). For a select inside a
+     * menu that opens submenus.
+     */
+    menuGroupIdentifier?: MenuOptions["groupIdentifier"];
     /** Called when the overlay opens; composed with the internal open handling. */
     onShow?: () => void;
     /** Called when the overlay closes; composed with the internal close handling. */
@@ -590,6 +608,18 @@ export default class DSelect extends Component<DSelectSignature> {
       .join(" ");
   }
 
+  /** The preferred placement: `@placement`, or the head of an `@placement` list. */
+  get placement(): MenuOptions["placement"] | undefined {
+    const placement = this.#placements;
+    return typeof placement === "string" ? placement : placement?.[0];
+  }
+
+  /** The tail of an `@placement` list; the menu's own fallbacks otherwise. */
+  get fallbackPlacements(): readonly MenuOptions["placement"][] | undefined {
+    const placement = this.#placements;
+    return typeof placement === "string" ? undefined : placement?.slice(1);
+  }
+
   /** Stable id for the hidden value read after a `@ariaLabelledBy` caption. */
   get labelledValueId(): string {
     return `${this.#listboxId}-labelled-value`;
@@ -667,6 +697,22 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   get selectionId() {
     return `d-select-selection-${guidFor(this)}`;
+  }
+
+  /**
+   * `@placement`, or for a menu item without one, beside its row on the side the text reads
+   * toward. The menu doesn't mirror placements in right-to-left layouts, so this does.
+   */
+  get #placements():
+    | MenuOptions["placement"]
+    | readonly MenuOptions["placement"][]
+    | undefined {
+    if (this.args.placement || !this.args.menuItem) {
+      return this.args.placement;
+    }
+    return document.documentElement.classList.contains("rtl")
+      ? ["left-start", "left-end", "right-start", "right-end"]
+      : ["right-start", "right-end", "left-start", "left-end"];
   }
 
   /**
@@ -754,7 +800,9 @@ export default class DSelect extends Component<DSelectSignature> {
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}
       @disabled={{this.presenter.isLocked}}
+      @fallbackPlacements={{this.fallbackPlacements}}
       @focusTarget={{this.interaction.focusTarget}}
+      @groupIdentifier={{@menuGroupIdentifier}}
       @identifier={{@identifier}}
       {{! The panel is portaled away from the trigger, so Tab follows the portal's place in the
         document instead of the field's. Both directions need it, for different variants: the
@@ -777,7 +825,7 @@ export default class DSelect extends Component<DSelectSignature> {
       @onPositioned={{this.listbox.remeasureListbox}}
       @onRegisterApi={{this.interaction.registerMenu}}
       @onShow={{this.interaction.handleShow}}
-      @placement={{@placement}}
+      @placement={{this.placement}}
       @trapTab={{false}}
       @triggerClass={{this.presenter.triggerClass}}
       {{! Desktop typeahead puts ARIA and keyboard behavior on its input; other surfaces use

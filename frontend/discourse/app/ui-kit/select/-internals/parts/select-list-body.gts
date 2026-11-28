@@ -341,6 +341,7 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
                     @onRegisterRoving @listbox.registerListboxRoving
                   )
                   entryFocus=@presenter.entryFocus
+                  wrap=@presenter.wrapsNavigation
                   fallbackSkipsMarked=@multiple
                 )
                 as |register release recordEntry recordUpdate countEntry countUpdate roving|

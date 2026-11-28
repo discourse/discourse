@@ -3727,3 +3727,129 @@ module("Integration | ui-kit | select | DSelect (none held)", function (hooks) {
     assert.dom(".d-select__input").hasAttribute("placeholder", "Pick a fruit");
   });
 });
+
+module("Integration | ui-kit | select | DSelect (menu item)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const noop = () => {};
+  const renderMenuItem = () =>
+    render(
+      <template>
+        <DSelect
+          @menuItem={{true}}
+          @onChange={{noop}}
+          @options={{ITEMS}}
+          @value={{1}}
+          @variant="static"
+        />
+      </template>
+    );
+
+  test("a menu item opens its list beside the row with the arrow pointing at it", async function (assert) {
+    await renderMenuItem();
+
+    assert
+      .dom(".d-select__trigger.--menu-item .d-select__caret.d-icon-angle-right")
+      .exists("the caret points at the side the list opens on");
+
+    await focus(TRIGGER);
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowDown");
+
+    assert
+      .dSelect(".d-select")
+      .isClosed("Down is left to the menu instead of opening the list");
+
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowRight");
+
+    assert.dSelect(".d-select").isOpen("the arrow toward the list opens it");
+    assert
+      .dom("[data-placement]")
+      .hasAttribute(
+        "data-placement",
+        "right-start",
+        "the list opens beside the row"
+      );
+  });
+
+  test("a right-to-left menu item opens its list to the left", async function (assert) {
+    // The page's direction: the keys read the trigger's own, the placement the root's class.
+    const root = document.documentElement;
+    root.classList.add("rtl");
+
+    try {
+      await render(
+        <template>
+          <div dir="rtl">
+            <DSelect
+              @menuItem={{true}}
+              @onChange={{noop}}
+              @options={{ITEMS}}
+              @value={{1}}
+              @variant="static"
+            />
+          </div>
+        </template>
+      );
+      await focus(TRIGGER);
+      await triggerKeyEvent(TRIGGER, "keydown", "ArrowRight");
+
+      assert
+        .dSelect(".d-select")
+        .isClosed("the arrow pointing away from the list leaves it closed");
+
+      await triggerKeyEvent(TRIGGER, "keydown", "ArrowLeft");
+
+      assert.dSelect(".d-select").isOpen("the arrow toward the list opens it");
+      assert
+        .dom("[data-placement]")
+        .hasAttribute(
+          "data-placement",
+          "left-start",
+          "the list opens on the left"
+        );
+
+      await triggerKeyEvent(TRIGGER, "keydown", "ArrowRight");
+
+      assert
+        .dSelect(".d-select")
+        .isClosed("the arrow back toward the row closes it");
+    } finally {
+      root.classList.remove("rtl");
+    }
+  });
+
+  test("Up and Down wrap around a menu item's list", async function (assert) {
+    await renderMenuItem();
+    await focus(TRIGGER);
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowRight");
+
+    assert
+      .dom(".d-select__option.--active[data-value='1']")
+      .exists("the list opens on the held option");
+
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowUp");
+
+    assert
+      .dom(".d-select__option.--active[data-value='3']")
+      .exists("Up from the first option moves to the last");
+
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowDown");
+
+    assert
+      .dom(".d-select__option.--active[data-value='1']")
+      .exists("Down from the last option moves to the first");
+  });
+
+  test("the arrow back toward the row closes a menu item's list", async function (assert) {
+    await renderMenuItem();
+    await focus(TRIGGER);
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowRight");
+
+    assert.dSelect(".d-select").isOpen("the list is open");
+
+    await triggerKeyEvent(TRIGGER, "keydown", "ArrowLeft");
+
+    assert.dSelect(".d-select").isClosed("Left closes the list");
+    assert.dom(TRIGGER).isFocused("focus stays on the row");
+  });
+});

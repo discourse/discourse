@@ -16,6 +16,8 @@ export interface OptionsPresenter {
   readonly usesActiveRoving: boolean;
   /** Cursor policy when the list mounts. */
   readonly entryFocus: DRovingFocusEntry;
+  /** Whether Up and Down wrap around at the ends of the list. */
+  readonly wrapsNavigation?: boolean;
   /** Whether activation is blocked. */
   readonly isLocked: boolean;
   /** Field used for fallback row labels. */

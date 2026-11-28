@@ -29,6 +29,8 @@ interface VariantPresenterArgs extends SelectPresenterArgs {
   /** Maximum trigger chips; zero renders only the selected count. */
   maxVisibleChips?: number;
   variant?: SelectVariant;
+  /** Draws and drives the select as an item of the menu it sits in. */
+  menuItem?: boolean;
 }
 
 interface VariantPresenterInit {
@@ -67,6 +69,16 @@ export default class VariantPresenter
     return this.#getArgs().variant ?? SELECT_VARIANTS.typeahead;
   }
 
+  /** Whether the select is an item of the menu it sits in, opening its list beside the row. */
+  get menuItem(): boolean {
+    return !!this.#getArgs().menuItem;
+  }
+
+  /** Only a menu item's list wraps, as a submenu's does. */
+  get wrapsNavigation(): boolean {
+    return this.menuItem;
+  }
+
   /** Whether the selected variant uses the typeahead query-input machinery. */
   get isTypeahead(): boolean {
     return this.variant === SELECT_VARIANTS.typeahead;
@@ -85,6 +97,9 @@ export default class VariantPresenter
     }
     if (this.iconOnly) {
       classes.push("--icon-only");
+    }
+    if (this.menuItem) {
+      classes.push("--menu-item");
     }
     if (this.isDisabled) {
       classes.push("--disabled");
@@ -245,6 +260,10 @@ export default class VariantPresenter
     const arg = this.#engine.config.caretIcon;
     if (typeof arg === "string") {
       return arg;
+    }
+    // A menu item's list opens beside it. The icon is mirrored in right-to-left layouts.
+    if (!arg && this.menuItem) {
+      return "angle-right";
     }
     return this.#isExpanded()
       ? (arg?.open ?? "angle-up")

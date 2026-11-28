@@ -2983,6 +2983,58 @@ module(
         );
     });
 
+    test("@menuGroupIdentifier closes another open menu of the group", async function (assert) {
+      await render(
+        <template>
+          <DMenu
+            @groupIdentifier="test-group"
+            @identifier="test-menu"
+            @inline={{true}}
+            @label="Menu"
+          >
+            <:content>Menu content</:content>
+          </DMenu>
+          <DSelect
+            @menuGroupIdentifier="test-group"
+            @options={{ITEMS}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      await click("[data-identifier='test-menu'][data-trigger]");
+      assert
+        .dom("[data-content][data-identifier='test-menu']")
+        .exists("the other menu is open");
+
+      await dSelect(".d-select").open();
+
+      assert
+        .dom("[data-content][data-identifier='test-menu']")
+        .doesNotExist("opening the select closes the other menu of its group");
+    });
+
+    test("an @placement list falls back through its tail in order", async function (assert) {
+      // The trigger spans the fixture, so nothing fits to its left, and the menu's default
+      // fallbacks would try the top and right sides before the bottom.
+      const placements = ["left-start", "bottom-end"];
+      await render(
+        <template>
+          <DSelect @options={{ITEMS}} @placement={{placements}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[data-placement]")
+        .hasAttribute(
+          "data-placement",
+          "bottom-end",
+          "the first placement in the list that fits is used"
+        );
+    });
+
     test("@offset forwards to the overlay positioning", async function (assert) {
       // A large offset pushes the overlay well clear of the trigger; the exact pixel gap is
       // clamped by floating-ui's viewport math in the tiny test fixture, so this asserts the

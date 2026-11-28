@@ -91,6 +91,55 @@
   opacity: 0.5;
 }
 
+// A `@menuItem` select, drawn as a dropdown menu item so it lines up with the menu's buttons: the
+// same icon box, gap and padding, the caption above the value, and the caret where a button's
+// suffix icon sits.
+.d-select__trigger.--menu-item {
+  @include menu-item;
+  display: grid;
+  grid-template-areas:
+    "icon caption caret"
+    "icon value caret";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--d-sidebar-section-link-prefix-margin-right);
+  row-gap: 0;
+  border: 0;
+  color: var(--d-button-transparent-text-color);
+
+  // Outweighs the mixin's one-line row height: the caption puts the value on a second line.
+  &.--menu-item {
+    height: auto;
+    padding-block: var(--space-2);
+  }
+
+  .d-select__leading-icon {
+    grid-area: icon;
+  }
+
+  .d-select__caption {
+    grid-area: caption;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .d-select__value,
+  .d-select__placeholder {
+    grid-area: value;
+  }
+
+  .d-select__caret,
+  .d-select__pending-icon {
+    grid-area: caret;
+  }
+
+  .d-select__leading-icon,
+  .d-select__caret,
+  .d-select__pending-icon {
+    color: var(--d-button-transparent-icon-color);
+  }
+}
+
 // Leading icon and the growing value keep the trailing clear + caret pinned to the end.
 .d-select__leading-icon {
   flex-shrink: 0;

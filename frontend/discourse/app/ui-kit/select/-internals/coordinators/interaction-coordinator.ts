@@ -385,7 +385,6 @@ export default class InteractionCoordinator {
   handleTriggerRootKeydown(event: KeyboardEvent): void {
     if (
       !this.#presenter.triggerTakesFocus ||
-      this.isExpanded ||
       this.#presenter.isLocked ||
       event.isComposing
     ) {
@@ -396,11 +395,22 @@ export default class InteractionCoordinator {
     if (event.target !== event.currentTarget) {
       return;
     }
+    const sideKey = this.#presenter.menuItem
+      ? this.#menuItemSideKey(event)
+      : null;
+    if (this.isExpanded) {
+      if (sideKey === "toward-row") {
+        event.preventDefault();
+        this.closeMenu();
+      }
+      return;
+    }
     if (
       event.key === "Enter" ||
       event.key === " " ||
-      event.key === "ArrowDown" ||
-      event.key === "ArrowUp"
+      sideKey === "toward-list" ||
+      (!this.#presenter.menuItem &&
+        (event.key === "ArrowDown" || event.key === "ArrowUp"))
     ) {
       event.preventDefault();
       this.#menu?.show();
@@ -615,6 +625,19 @@ export default class InteractionCoordinator {
   // signal that the whole widget lost focus. A `null` relatedTarget is treated as "stayed" (an
   // in-widget non-focusable click; a truly-outside non-focusable click is caught by
   // close-on-click-outside), matching the documented trigger-blur edge above.
+  /**
+   * Which way a horizontal arrow points for a menu item, whose list opens beside its row: toward
+   * the list (Right, or Left in a right-to-left layout) or back toward the row.
+   */
+  #menuItemSideKey(event: KeyboardEvent): "toward-list" | "toward-row" | null {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+      return null;
+    }
+    const rtl =
+      getComputedStyle(event.currentTarget as HTMLElement).direction === "rtl";
+    return (event.key === "ArrowRight") !== rtl ? "toward-list" : "toward-row";
+  }
+
   #focusEscapedWidget(next: EventTarget | null): boolean {
     if (!(next instanceof Node)) {
       return false;
