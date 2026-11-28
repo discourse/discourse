@@ -57,6 +57,9 @@ export default class LiveCallControls extends Component {
   @tracked audioOutputDevices = [];
   @tracked videoInputDevices = [];
   @tracked recordingPending = false;
+  @tracked audioInputWithheld = false;
+  @tracked audioOutputWithheld = false;
+  @tracked videoInputWithheld = false;
 
   /** Settle at the first listing of each kind, so a select asked before it waits instead of reading an empty list. */
   #audioListing = Promise.withResolvers();
@@ -405,11 +408,12 @@ export default class LiveCallControls extends Component {
 
   @action
   async loadVideoDevices() {
-    const inputs = await enumerateVideoDevices();
+    const { inputs, withheld } = await enumerateVideoDevices();
     if (this.isDestroying) {
       return;
     }
     this.videoInputDevices = [this.#systemDefaultDevice(), ...inputs];
+    this.videoInputWithheld = withheld;
     this._videoDevicesListed = true;
     this.#videoListing.resolve();
   }
@@ -472,13 +476,16 @@ export default class LiveCallControls extends Component {
   }
 
   async #listAudioDevices() {
-    const { inputs, outputs } = await enumerateAudioDevices();
+    const { inputs, outputs, inputsWithheld, outputsWithheld } =
+      await enumerateAudioDevices();
     if (this.isDestroying) {
       return;
     }
     const defaultDevice = this.#systemDefaultDevice();
     this.audioInputDevices = [defaultDevice, ...inputs];
     this.audioOutputDevices = [defaultDevice, ...outputs];
+    this.audioInputWithheld = inputsWithheld;
+    this.audioOutputWithheld = outputsWithheld;
     this._audioDevicesListed = true;
     this.#audioListing.resolve();
   }
@@ -576,6 +583,7 @@ export default class LiveCallControls extends Component {
                     @menuItem={{true}}
                     @onChange={{this.pickInputDevice}}
                     @value={{this.liveWebrtc.inputDeviceId}}
+                    @withheld={{this.audioInputWithheld}}
                   />
                 </dropdown.item>
               {{else}}
@@ -609,6 +617,7 @@ export default class LiveCallControls extends Component {
                       @menuItem={{true}}
                       @onChange={{this.pickOutputDevice}}
                       @value={{this.liveWebrtc.outputDeviceId}}
+                      @withheld={{this.audioOutputWithheld}}
                     />
                   </dropdown.item>
                 {{else}}
@@ -707,6 +716,7 @@ export default class LiveCallControls extends Component {
                     @menuItem={{true}}
                     @onChange={{this.pickOutputDevice}}
                     @value={{this.liveWebrtc.outputDeviceId}}
+                    @withheld={{this.audioOutputWithheld}}
                   />
                 </dropdown.item>
               {{else}}
@@ -810,6 +820,7 @@ export default class LiveCallControls extends Component {
                     @menuItem={{true}}
                     @onChange={{this.pickCamera}}
                     @value={{this.liveWebrtc.videoInputDeviceId}}
+                    @withheld={{this.videoInputWithheld}}
                   />
                 </dropdown.item>
               {{else}}

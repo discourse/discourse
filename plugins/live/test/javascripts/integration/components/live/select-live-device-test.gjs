@@ -16,6 +16,7 @@ module("Integration | Component | Live | SelectLiveDevice", function (hooks) {
   hooks.beforeEach(function () {
     const devices = (this.devices = tracked([SYSTEM_DEFAULT, DESK_MIC]));
     const held = (this.held = tracked("desk-mic"));
+    const withheld = (this.withheld = tracked(false));
     const picks = (this.picks = []);
     const onChange = (deviceId) => {
       picks.push(deviceId);
@@ -31,6 +32,7 @@ module("Integration | Component | Live | SelectLiveDevice", function (hooks) {
             @kind="audioinput"
             @onChange={{onChange}}
             @value={{held.value}}
+            @withheld={{withheld.value}}
           />
         </template>
       );
@@ -112,6 +114,25 @@ module("Integration | Component | Live | SelectLiveDevice", function (hooks) {
         i18n("live.devices.unavailable"),
         "the trigger marks it unavailable"
       );
+  });
+
+  test("marks a missing held device as blocked when the browser withholds the list", async function (assert) {
+    this.held.value = "unplugged-mic";
+    this.withheld.value = true;
+    await this.renderSelect();
+
+    assert
+      .dom(`${SELECT} .d-pill`)
+      .hasText(
+        i18n("live.devices.no_permission"),
+        "the trigger says permission is missing"
+      );
+
+    await dSelect(SELECT).open();
+
+    assert
+      .dom(".d-select__option[data-value='unplugged-mic'] .d-pill")
+      .hasText(i18n("live.devices.no_permission"), "and so does its row");
   });
 
   test("lists a held device that isn't listed as a disabled option", async function (assert) {

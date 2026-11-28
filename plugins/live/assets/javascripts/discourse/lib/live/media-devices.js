@@ -171,9 +171,15 @@ export function outputSelectionSupported() {
   );
 }
 
+/**
+ * Lists the browser's microphones and speakers. `inputsWithheld` and `outputsWithheld` say the
+ * browser withheld that kind's devices, which it does until the microphone permission is granted.
+ */
 export async function enumerateAudioDevices() {
   const inputs = [];
   const outputs = [];
+  let inputsWithheld = false;
+  let outputsWithheld = false;
 
   if (!navigator.mediaDevices?.enumerateDevices) {
     return { inputs, outputs };
@@ -194,6 +200,11 @@ export async function enumerateAudioDevices() {
     // Before mic permission is granted browsers return placeholder entries
     // with empty deviceIds; they can't be selected, so skip them.
     if (!device.deviceId) {
+      if (device.kind === "audioinput") {
+        inputsWithheld = true;
+      } else {
+        outputsWithheld = true;
+      }
       continue;
     }
 
@@ -211,25 +222,34 @@ export async function enumerateAudioDevices() {
   rememberHeldDeviceName("audioinput", devices);
   rememberHeldDeviceName("audiooutput", devices);
 
-  return { inputs, outputs };
+  return { inputs, outputs, inputsWithheld, outputsWithheld };
 }
 
+/**
+ * Lists the browser's cameras. `withheld` says the browser withheld them, which it does until the
+ * camera permission is granted.
+ */
 export async function enumerateVideoDevices() {
   const inputs = [];
+  let withheld = false;
 
   if (!navigator.mediaDevices?.enumerateDevices) {
-    return inputs;
+    return { inputs, withheld };
   }
 
   let devices;
   try {
     devices = await navigator.mediaDevices.enumerateDevices();
   } catch {
-    return inputs;
+    return { inputs, withheld };
   }
 
   for (const device of devices) {
-    if (device.kind !== "videoinput" || !device.deviceId) {
+    if (device.kind !== "videoinput") {
+      continue;
+    }
+    if (!device.deviceId) {
+      withheld = true;
       continue;
     }
 
@@ -245,7 +265,7 @@ export async function enumerateVideoDevices() {
 
   rememberHeldDeviceName("videoinput", devices);
 
-  return inputs;
+  return { inputs, withheld };
 }
 
 export function applyOutputDevice(element, deviceId) {

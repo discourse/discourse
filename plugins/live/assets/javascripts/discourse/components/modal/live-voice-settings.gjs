@@ -40,6 +40,8 @@ export default class LiveVoiceSettingsModal extends Component {
   @tracked level = 0;
   @tracked micError = false;
   @tracked testingOutput = false;
+  @tracked inputWithheld = false;
+  @tracked outputWithheld = false;
 
   /** Settles at the first device listing, so a select asked before it waits instead of reading an empty list. */
   #firstListing = Promise.withResolvers();
@@ -197,10 +199,13 @@ export default class LiveVoiceSettingsModal extends Component {
   }
 
   async refreshDevices() {
-    const { inputs, outputs } = await enumerateAudioDevices();
+    const { inputs, outputs, inputsWithheld, outputsWithheld } =
+      await enumerateAudioDevices();
     if (this.isDestroying) {
       return;
     }
+    this.inputWithheld = inputsWithheld;
+    this.outputWithheld = outputsWithheld;
 
     const defaultOption = {
       id: SYSTEM_DEFAULT_DEVICE_ID,
@@ -360,6 +365,7 @@ export default class LiveVoiceSettingsModal extends Component {
                 @kind="audioinput"
                 @onChange={{this.onInputChange}}
                 @value={{this.liveWebrtc.inputDeviceId}}
+                @withheld={{this.inputWithheld}}
               />
             {{else}}
               <ComboBox
@@ -397,6 +403,7 @@ export default class LiveVoiceSettingsModal extends Component {
                     @kind="audiooutput"
                     @onChange={{this.onOutputChange}}
                     @value={{this.liveWebrtc.outputDeviceId}}
+                    @withheld={{this.outputWithheld}}
                   />
                 {{else}}
                   <ComboBox

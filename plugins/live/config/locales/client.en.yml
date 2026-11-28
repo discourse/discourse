@@ -193,6 +193,7 @@ en:
       devices:
         system_default: "System default"
         unavailable: "Unavailable"
+        no_permission: "No permission"
         missing_device: "Unknown device"
         unknown_device: "Device %{index}"
       quality:

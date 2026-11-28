@@ -344,6 +344,36 @@ module("Integration | Component | LiveVoiceSettingsModal", function (hooks) {
       );
   });
 
+  test("marks a held device as blocked, not unavailable, when the microphone is denied", async function (assert) {
+    localStorage.setItem("voice_audio_input_device", "desk-mic");
+    this.liveWebrtc.inputDeviceId = "desk-mic";
+    this.listing.resolve();
+    await render(
+      <template><LiveVoiceSettingsModal @inline={{true}} /></template>
+    );
+    await clearRender();
+
+    // Without permission, browsers list each kind once with no id or name.
+    this.devices = [
+      { kind: "audioinput", deviceId: "", label: "" },
+      { kind: "audiooutput", deviceId: "", label: "" },
+    ];
+    navigator.mediaDevices.getUserMedia.rejects(new Error("denied"));
+    await render(
+      <template><LiveVoiceSettingsModal @inline={{true}} /></template>
+    );
+
+    assert
+      .dSelect(INPUT)
+      .hasName("Desk mic", "the device keeps its last known name");
+    assert
+      .dom(`${INPUT} .d-pill`)
+      .hasText(
+        i18n("live.devices.no_permission"),
+        "it is marked as blocked by the missing permission"
+      );
+  });
+
   test("names a held microphone after itself, not a speaker sharing its id", async function (assert) {
     // Browsers give both kinds' default entries the id "default".
     this.devices = [

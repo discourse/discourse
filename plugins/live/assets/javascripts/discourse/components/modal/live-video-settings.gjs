@@ -27,6 +27,7 @@ export default class LiveVideoSettingsModal extends Component {
   @tracked previewStream = null;
   @tracked previewError = false;
   @tracked busy = false;
+  @tracked cameraWithheld = false;
   #previewRawStream = null;
 
   #previewBlur = null;
@@ -158,10 +159,11 @@ export default class LiveVideoSettingsModal extends Component {
   }
 
   async refreshDevices() {
-    const inputs = await enumerateVideoDevices();
+    const { inputs, withheld } = await enumerateVideoDevices();
     if (this.isDestroying) {
       return;
     }
+    this.cameraWithheld = withheld;
 
     this.videoDevices = [
       {
@@ -305,6 +307,7 @@ export default class LiveVideoSettingsModal extends Component {
                 @kind="videoinput"
                 @onChange={{this.onCameraChange}}
                 @value={{this.liveWebrtc.videoInputDeviceId}}
+                @withheld={{this.cameraWithheld}}
               />
             {{else}}
               <ComboBox

@@ -7,14 +7,14 @@ import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import { rememberedDeviceName } from "../../lib/live/media-devices.js";
 
-/** A device's name, marked when the browser no longer lists the device. */
+/** A device's name, with a pill saying why the device can't be used when it can't. */
 const LiveDeviceName = <template>
   <span class="live-device-name">
     <span class="live-device-name__text">
       {{~@name~}}
     </span>
-    {{#if @unavailable}}
-      <DPill @label={{i18n "live.devices.unavailable"}} />
+    {{#if @pill}}
+      <DPill @label={{@pill}} />
     {{/if}}
   </span>
 </template>;
@@ -29,12 +29,21 @@ const LiveDeviceName = <template>
  * - `@devices`: the listed `{ id, name }` devices, or a promise of them until the first listing,
  *   so the select shows loading rather than an empty list.
  * - `@value`: the held device id.
+ * - `@withheld`: whether the browser withheld the devices for lack of permission, so a missing
+ *   held device is marked as blocked rather than unavailable.
  * - `@onChange`: called with the picked device id.
  * - `@ariaLabelledBy`: the id of the field's label, or
  * - `@caption`: a caption drawn in the trigger that names the field instead.
  * - `@icon` and `@menuItem`: passed to the select, for one that sits in a menu.
  */
 export default class SelectLiveDevice extends Component {
+  /** Why a held device that isn't listed can't be used. */
+  get missingLabel() {
+    return this.args.withheld
+      ? i18n("live.devices.no_permission")
+      : i18n("live.devices.unavailable");
+  }
+
   @action
   load() {
     return this.#whenListed((devices) => this.#optionsOf(devices));
@@ -107,17 +116,17 @@ export default class SelectLiveDevice extends Component {
       <:option as |option|>
         <LiveDeviceName
           @name={{option.label}}
-          @unavailable={{this.isUnavailable option.value}}
+          @pill={{if (this.isUnavailable option.value) this.missingLabel}}
         />
       </:option>
       <:selection as |option|>
         <LiveDeviceName
           @name={{option.label}}
-          @unavailable={{this.isUnavailable option.value}}
+          @pill={{if (this.isUnavailable option.value) this.missingLabel}}
         />
       </:selection>
       <:unresolved as |option|>
-        <LiveDeviceName @name={{option.label}} @unavailable={{true}} />
+        <LiveDeviceName @name={{option.label}} @pill={{this.missingLabel}} />
       </:unresolved>
     </DSelect>
   </template>
