@@ -192,6 +192,8 @@ en:
         auto_update_off: "Auto-update status"
       devices:
         system_default: "System default"
+        unavailable: "Unavailable"
+        missing_device: "Unknown device"
         unknown_device: "Device %{index}"
       quality:
         standard: "Standard"

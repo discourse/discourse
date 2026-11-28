@@ -31,6 +31,56 @@ function storeDevice(key, deviceId) {
   }
 }
 
+const STORAGE_KEYS_BY_KIND = {
+  audioinput: INPUT_STORAGE_KEY,
+  audiooutput: OUTPUT_STORAGE_KEY,
+  videoinput: VIDEO_INPUT_STORAGE_KEY,
+};
+
+/**
+ * Saves the browser's name for the held device of a kind when a listing includes it, so a device
+ * that is later unplugged can still be named. Only the held device's name is kept.
+ */
+function rememberHeldDeviceName(kind, devices) {
+  const key = STORAGE_KEYS_BY_KIND[kind];
+  const heldId = readStoredDevice(key);
+  // Browsers reuse ids such as "default" across kinds.
+  const held = devices.find(
+    (device) =>
+      device.kind === kind && device.deviceId === heldId && device.label
+  );
+  if (!held) {
+    return;
+  }
+  try {
+    localStorage.setItem(
+      `${key}_name`,
+      JSON.stringify({ id: held.deviceId, name: held.label })
+    );
+  } catch {
+    // ignore storage errors
+  }
+}
+
+/**
+ * The name a held device had the last time the browser listed it, for naming it while it is
+ * missing. A device the browser lists now should be named from that listing instead.
+ *
+ * @param kind - The device kind: `"audioinput"`, `"audiooutput"` or `"videoinput"`.
+ * @param deviceId - The held device's id.
+ * @returns The saved name, or `undefined` when none was saved for this device.
+ */
+export function rememberedDeviceName(kind, deviceId) {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(`${STORAGE_KEYS_BY_KIND[kind]}_name`)
+    );
+    return saved?.id === deviceId ? saved.name : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function preferredInputDeviceId() {
   return readStoredDevice(INPUT_STORAGE_KEY);
 }
@@ -158,6 +208,9 @@ export async function enumerateAudioDevices() {
     });
   }
 
+  rememberHeldDeviceName("audioinput", devices);
+  rememberHeldDeviceName("audiooutput", devices);
+
   return { inputs, outputs };
 }
 
@@ -189,6 +242,8 @@ export async function enumerateVideoDevices() {
         }),
     });
   }
+
+  rememberHeldDeviceName("videoinput", devices);
 
   return inputs;
 }

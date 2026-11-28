@@ -9,6 +9,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import { NOISE_SUPPRESSION_MODES } from "../../lib/live/audio-processing.js";
 import { rmsToPercent, sampleRms } from "../../lib/live/input-gate.js";
@@ -25,11 +26,13 @@ import {
   noiseSuppressionModeLabel,
 } from "../../lib/live/ns-engines.js";
 import { STT_MODELS, sttModelLabel } from "../../lib/live/stt-models.js";
+import SelectLiveDevice from "../live/select-live-device.gjs";
 
 const METER_INTERVAL_MS = 50;
 
 export default class LiveVoiceSettingsModal extends Component {
   @service liveWebrtc;
+  @service siteSettings;
 
   @tracked inputDevices = [];
   @tracked outputDevices = [];
@@ -37,10 +40,14 @@ export default class LiveVoiceSettingsModal extends Component {
   @tracked micError = false;
   @tracked testingOutput = false;
 
+  /** Settles at the first device listing, so a select asked before it waits instead of reading an empty list. */
+  #firstListing = Promise.withResolvers();
+
   #previewStream = null;
   #previewContext = null;
   #meterTimer = null;
   #onDeviceChange = () => this.refreshDevices();
+  @tracked _devicesListed = false;
 
   constructor() {
     super(...arguments);
@@ -127,6 +134,14 @@ export default class LiveVoiceSettingsModal extends Component {
     return this.liveWebrtc.subtitlesAvailable;
   }
 
+  get inputDeviceChoices() {
+    return this.#listedDevices(() => this.inputDevices);
+  }
+
+  get outputDeviceChoices() {
+    return this.#listedDevices(() => this.outputDevices);
+  }
+
   async startPreview() {
     this.#stopPreview();
     this.micError = false;
@@ -141,6 +156,7 @@ export default class LiveVoiceSettingsModal extends Component {
         this.micError = true;
         this.level = 0;
       }
+      await this.refreshDevices();
       return;
     }
 
@@ -187,6 +203,8 @@ export default class LiveVoiceSettingsModal extends Component {
     };
     this.inputDevices = [defaultOption, ...inputs];
     this.outputDevices = [defaultOption, ...outputs];
+    this._devicesListed = true;
+    this.#firstListing.resolve();
   }
 
   @action
@@ -286,6 +304,13 @@ export default class LiveVoiceSettingsModal extends Component {
     }
   }
 
+  /** The devices once listed, or a promise of them until the first listing. */
+  #listedDevices(devices) {
+    return this._devicesListed
+      ? devices()
+      : this.#firstListing.promise.then(devices);
+  }
+
   #stopPreview() {
     if (this.#meterTimer) {
       clearTimeout(this.#meterTimer);
@@ -309,26 +334,45 @@ export default class LiveVoiceSettingsModal extends Component {
     <DModal
       class="live-voice-settings-modal"
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n "live.voice_settings.title"}}
     >
       <:body>
         <div class="live-voice-settings">
           <div class="live-voice-settings__field">
-            <label class="live-voice-settings__label">
+            <label
+              class="live-voice-settings__label"
+              id="live-voice-settings-input-label"
+            >
               {{i18n "live.voice_settings.input_device"}}
             </label>
-            <ComboBox
-              class="live-voice-settings__input-select"
-              @content={{this.inputDevices}}
-              @onChange={{this.onInputChange}}
-              @options={{hash none=false}}
-              @value={{this.liveWebrtc.inputDeviceId}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <SelectLiveDevice
+                class="live-voice-settings__input-select"
+                @ariaLabelledBy="live-voice-settings-input-label"
+                @devices={{this.inputDeviceChoices}}
+                @kind="audioinput"
+                @onChange={{this.onInputChange}}
+                @value={{this.liveWebrtc.inputDeviceId}}
+              />
+            {{else}}
+              <ComboBox
+                class="live-voice-settings__input-select"
+                @content={{this.inputDevices}}
+                @onChange={{this.onInputChange}}
+                @options={{hash none=false}}
+                @value={{this.liveWebrtc.inputDeviceId}}
+              />
+            {{/if}}
           </div>
 
           {{#if this.outputSupported}}
             <div class="live-voice-settings__field">
-              <label class="live-voice-settings__label">
+              <label
+                class="live-voice-settings__label"
+                id="live-voice-settings-output-label"
+              >
                 {{i18n "live.voice_settings.output_device"}}
               </label>
               <div class="live-voice-settings__output-row">
@@ -338,6 +382,16 @@ export default class LiveVoiceSettingsModal extends Component {
                     @action={{this.chooseOutputDevice}}
                     @icon="headphones"
                     @label="live.voice_settings.choose_output"
+                  />
+                {{else if this.siteSettings.enable_new_select_controls}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <SelectLiveDevice
+                    class="live-voice-settings__output-select"
+                    @ariaLabelledBy="live-voice-settings-output-label"
+                    @devices={{this.outputDeviceChoices}}
+                    @kind="audiooutput"
+                    @onChange={{this.onOutputChange}}
+                    @value={{this.liveWebrtc.outputDeviceId}}
                   />
                 {{else}}
                   <ComboBox
@@ -410,16 +464,33 @@ export default class LiveVoiceSettingsModal extends Component {
           </div>
 
           <div class="live-voice-settings__field">
-            <label class="live-voice-settings__label">
+            <label
+              class="live-voice-settings__label"
+              id="live-voice-settings-noise-suppression-label"
+            >
               {{i18n "live.voice_settings.noise_suppression"}}
             </label>
-            <ComboBox
-              class="live-voice-settings__noise-suppression-select"
-              @content={{this.noiseSuppressionModeOptions}}
-              @onChange={{this.onNoiseSuppressionModeChange}}
-              @options={{hash none=false disabled=this.busy}}
-              @value={{this.liveWebrtc.noiseSuppressionMode}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelect
+                class="live-voice-settings__noise-suppression-select"
+                @ariaLabelledBy="live-voice-settings-noise-suppression-label"
+                @clearMode="never"
+                @disabled={{this.busy}}
+                @onChange={{this.onNoiseSuppressionModeChange}}
+                @options={{this.noiseSuppressionModeOptions}}
+                @value={{this.liveWebrtc.noiseSuppressionMode}}
+                @variant="static"
+              />
+            {{else}}
+              <ComboBox
+                class="live-voice-settings__noise-suppression-select"
+                @content={{this.noiseSuppressionModeOptions}}
+                @onChange={{this.onNoiseSuppressionModeChange}}
+                @options={{hash none=false disabled=this.busy}}
+                @value={{this.liveWebrtc.noiseSuppressionMode}}
+              />
+            {{/if}}
             <p class="live-voice-settings__hint">
               {{i18n "live.voice_settings.noise_suppression_hint"}}
             </p>
@@ -463,16 +534,32 @@ export default class LiveVoiceSettingsModal extends Component {
             </div>
 
             <div class="live-voice-settings__field">
-              <label class="live-voice-settings__label">
+              <label
+                class="live-voice-settings__label"
+                id="live-voice-settings-subtitles-model-label"
+              >
                 {{i18n "live.voice_settings.subtitles_model"}}
               </label>
-              <ComboBox
-                class="live-voice-settings__subtitles-model-select"
-                @content={{this.sttModelOptions}}
-                @onChange={{this.liveWebrtc.setSttModel}}
-                @options={{hash none=false}}
-                @value={{this.liveWebrtc.sttModel}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="live-voice-settings__subtitles-model-select"
+                  @ariaLabelledBy="live-voice-settings-subtitles-model-label"
+                  @clearMode="never"
+                  @onChange={{this.liveWebrtc.setSttModel}}
+                  @options={{this.sttModelOptions}}
+                  @value={{this.liveWebrtc.sttModel}}
+                  @variant="static"
+                />
+              {{else}}
+                <ComboBox
+                  class="live-voice-settings__subtitles-model-select"
+                  @content={{this.sttModelOptions}}
+                  @onChange={{this.liveWebrtc.setSttModel}}
+                  @options={{hash none=false}}
+                  @value={{this.liveWebrtc.sttModel}}
+                />
+              {{/if}}
               <p class="live-voice-settings__hint">
                 {{i18n "live.voice_settings.subtitles_model_hint"}}
               </p>
@@ -481,16 +568,32 @@ export default class LiveVoiceSettingsModal extends Component {
 
           {{#if this.showQuality}}
             <div class="live-voice-settings__field">
-              <label class="live-voice-settings__label">
+              <label
+                class="live-voice-settings__label"
+                id="live-voice-settings-quality-label"
+              >
                 {{i18n "live.voice_settings.quality"}}
               </label>
-              <ComboBox
-                class="live-voice-settings__quality-select"
-                @content={{this.qualityOptions}}
-                @onChange={{this.liveWebrtc.setVoiceQuality}}
-                @options={{hash none=false}}
-                @value={{this.liveWebrtc.voiceQuality}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="live-voice-settings__quality-select"
+                  @ariaLabelledBy="live-voice-settings-quality-label"
+                  @clearMode="never"
+                  @onChange={{this.liveWebrtc.setVoiceQuality}}
+                  @options={{this.qualityOptions}}
+                  @value={{this.liveWebrtc.voiceQuality}}
+                  @variant="static"
+                />
+              {{else}}
+                <ComboBox
+                  class="live-voice-settings__quality-select"
+                  @content={{this.qualityOptions}}
+                  @onChange={{this.liveWebrtc.setVoiceQuality}}
+                  @options={{hash none=false}}
+                  @value={{this.liveWebrtc.voiceQuality}}
+                />
+              {{/if}}
               <p class="live-voice-settings__hint">
                 {{i18n "live.voice_settings.quality_hint"}}
               </p>

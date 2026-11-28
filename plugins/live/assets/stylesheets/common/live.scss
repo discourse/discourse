@@ -834,6 +834,25 @@
   }
 }
 
+// A long device name gives way so the pill beside it stays in view.
+.live-device-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+
+  .d-pill {
+    flex: none;
+  }
+
+  &__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .live-voice-settings {
   display: flex;
   flex-direction: column;
@@ -859,7 +878,8 @@
     align-items: center;
     gap: 0.5rem;
 
-    .combo-box {
+    .combo-box,
+    .live-voice-settings__output-select {
       flex: 1;
       min-width: 0;
     }

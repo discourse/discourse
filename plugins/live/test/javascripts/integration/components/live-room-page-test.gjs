@@ -6,6 +6,7 @@ import sinon from "sinon";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import LiveRoomPage from "discourse/plugins/live/discourse/components/live/room-page";
@@ -29,16 +30,22 @@ class LiveWebrtcStub extends Service {
   @tracked localVideoKind = null;
   @tracked pttEnabled = false;
 
-  inputDeviceId = "system_default";
+  @tracked inputDeviceId = "system_default";
   noiseSuppressionMode = "none";
   noiseSuppressionState = "off";
   outputDeviceId = "system_default";
   screenShareSupported = true;
   videoInputDeviceId = "system_default";
   watchingCalls = [];
+  inputDevicePicks = [];
 
   get activeRoom() {
     return this.liveRooms.roomById(this.activeRoomId);
+  }
+
+  async setInputDevice(deviceId) {
+    this.inputDevicePicks.push(deviceId);
+    this.inputDeviceId = deviceId;
   }
 
   connectionStateFor() {
@@ -793,5 +800,98 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       [systemDefault, "Desk mic", "Headset"],
       "a microphone plugged in while it is open joins the list"
     );
+  });
+
+  test("picks a microphone from the audio menu", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
+    this.liveWebrtc.inputDeviceId = "desk-mic";
+    sinon.stub(navigator.mediaDevices, "enumerateDevices").resolves([
+      { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
+      { kind: "audioinput", deviceId: "headset", label: "Headset" },
+    ]);
+    const field = ".live-call-menu__input-select";
+
+    await render(
+      <template>
+        <DMenus />
+        <LiveRoomPage @room={{this.room}} />
+      </template>
+    );
+    await click(
+      ".live-call-controls__mic-combo .live-call-controls__combo-caret"
+    );
+
+    assert
+      .dom(`${field} .d-select__caption`)
+      .hasText(
+        i18n("live.voice_settings.input_audio"),
+        "the select's caption names the field"
+      );
+    assert
+      .dom(`${field} .d-select__leading-icon.d-icon-microphone`)
+      .exists("the select carries the row's icon");
+    assert.dSelect(field).hasName("Desk mic", "it names the held microphone");
+
+    await dSelect(field).open();
+    await dSelect(field).select("headset");
+
+    assert.deepEqual(
+      this.liveWebrtc.inputDevicePicks,
+      ["headset"],
+      "the picked microphone is handed to the call"
+    );
+  });
+
+  test("opening another submenu closes an open device list", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
+    sinon
+      .stub(navigator.mediaDevices, "enumerateDevices")
+      .resolves([
+        { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
+      ]);
+    const field = ".live-call-menu__input-select";
+
+    await render(
+      <template>
+        <DMenus />
+        <LiveRoomPage @room={{this.room}} />
+      </template>
+    );
+    await click(
+      ".live-call-controls__mic-combo .live-call-controls__combo-caret"
+    );
+    await dSelect(field).open();
+    await click(".live-call-menu__noise-suppression");
+
+    assert.dSelect(field).isClosed("only one submenu is open at a time");
+  });
+
+  test("opening a device list closes another open submenu", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
+    sinon
+      .stub(navigator.mediaDevices, "enumerateDevices")
+      .resolves([
+        { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
+      ]);
+    await render(
+      <template>
+        <DMenus />
+        <LiveRoomPage @room={{this.room}} />
+      </template>
+    );
+    await click(
+      ".live-call-controls__mic-combo .live-call-controls__combo-caret"
+    );
+    await click(".live-call-menu__noise-suppression");
+    await dSelect(".live-call-menu__input-select").open();
+
+    assert
+      .dom(
+        "[data-content][data-identifier='live-call-submenu']:not(.d-select__content)"
+      )
+      .doesNotExist("only one submenu is open at a time");
   });
 });

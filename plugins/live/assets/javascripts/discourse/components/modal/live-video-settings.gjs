@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import BackgroundBlurManager from "../../lib/live/background-blur.js";
 import {
@@ -16,19 +17,26 @@ import {
   enumerateVideoDevices,
   SYSTEM_DEFAULT_DEVICE_ID,
 } from "../../lib/live/media-devices.js";
+import SelectLiveDevice from "../live/select-live-device.gjs";
 
 export default class LiveVideoSettingsModal extends Component {
   @service liveWebrtc;
+  @service siteSettings;
 
   @tracked videoDevices = [];
   @tracked previewStream = null;
   @tracked previewError = false;
   @tracked busy = false;
-
   #previewRawStream = null;
+
   #previewBlur = null;
   #previewEpoch = 0;
+
+  /** Settles at the first device listing, so a select asked before it waits instead of reading an empty list. */
+  #firstListing = Promise.withResolvers();
+
   #onDeviceChange = () => this.refreshDevices();
+  @tracked _devicesListed = false;
 
   constructor() {
     super(...arguments);
@@ -111,6 +119,13 @@ export default class LiveVideoSettingsModal extends Component {
       : this.previewStream;
   }
 
+  /** The cameras once listed, or a promise of them until the first listing. */
+  get cameraChoices() {
+    return this._devicesListed
+      ? this.videoDevices
+      : this.#firstListing.promise.then(() => this.videoDevices);
+  }
+
   async startPreview() {
     this.#stopPreview();
     const epoch = ++this.#previewEpoch;
@@ -128,6 +143,7 @@ export default class LiveVideoSettingsModal extends Component {
       if (!this.isDestroying) {
         this.previewError = true;
       }
+      await this.refreshDevices();
       return;
     }
 
@@ -154,6 +170,8 @@ export default class LiveVideoSettingsModal extends Component {
       },
       ...inputs,
     ];
+    this._devicesListed = true;
+    this.#firstListing.resolve();
   }
 
   @action
@@ -247,6 +265,7 @@ export default class LiveVideoSettingsModal extends Component {
     <DModal
       class="live-video-settings-modal"
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n "live.video_settings.title"}}
     >
       <:body>
@@ -271,30 +290,61 @@ export default class LiveVideoSettingsModal extends Component {
           </div>
 
           <div class="live-video-settings__field">
-            <label class="live-video-settings__label">
+            <label
+              class="live-video-settings__label"
+              id="live-video-settings-camera-label"
+            >
               {{i18n "live.video_settings.camera"}}
             </label>
-            <ComboBox
-              class="live-video-settings__camera-select"
-              @content={{this.videoDevices}}
-              @onChange={{this.onCameraChange}}
-              @options={{hash none=false}}
-              @value={{this.liveWebrtc.videoInputDeviceId}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <SelectLiveDevice
+                class="live-video-settings__camera-select"
+                @ariaLabelledBy="live-video-settings-camera-label"
+                @devices={{this.cameraChoices}}
+                @kind="videoinput"
+                @onChange={{this.onCameraChange}}
+                @value={{this.liveWebrtc.videoInputDeviceId}}
+              />
+            {{else}}
+              <ComboBox
+                class="live-video-settings__camera-select"
+                @content={{this.videoDevices}}
+                @onChange={{this.onCameraChange}}
+                @options={{hash none=false}}
+                @value={{this.liveWebrtc.videoInputDeviceId}}
+              />
+            {{/if}}
           </div>
 
           {{#if this.showCameraQuality}}
             <div class="live-video-settings__field">
-              <label class="live-video-settings__label">
+              <label
+                class="live-video-settings__label"
+                id="live-video-settings-camera-quality-label"
+              >
                 {{i18n "live.video_settings.camera_quality"}}
               </label>
-              <ComboBox
-                class="live-video-settings__camera-quality-select"
-                @content={{this.cameraQualityOptions}}
-                @onChange={{this.onCameraQualityChange}}
-                @options={{hash none=false}}
-                @value={{this.liveWebrtc.cameraQuality}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="live-video-settings__camera-quality-select"
+                  @ariaLabelledBy="live-video-settings-camera-quality-label"
+                  @clearMode="never"
+                  @onChange={{this.onCameraQualityChange}}
+                  @options={{this.cameraQualityOptions}}
+                  @value={{this.liveWebrtc.cameraQuality}}
+                  @variant="static"
+                />
+              {{else}}
+                <ComboBox
+                  class="live-video-settings__camera-quality-select"
+                  @content={{this.cameraQualityOptions}}
+                  @onChange={{this.onCameraQualityChange}}
+                  @options={{hash none=false}}
+                  @value={{this.liveWebrtc.cameraQuality}}
+                />
+              {{/if}}
               <p class="live-video-settings__hint">
                 {{i18n "live.video_settings.camera_quality_hint"}}
               </p>
@@ -303,16 +353,32 @@ export default class LiveVideoSettingsModal extends Component {
 
           {{#if this.showScreenQuality}}
             <div class="live-video-settings__field">
-              <label class="live-video-settings__label">
+              <label
+                class="live-video-settings__label"
+                id="live-video-settings-screen-quality-label"
+              >
                 {{i18n "live.video_settings.screen_quality"}}
               </label>
-              <ComboBox
-                class="live-video-settings__screen-quality-select"
-                @content={{this.screenQualityOptions}}
-                @onChange={{this.liveWebrtc.setScreenQuality}}
-                @options={{hash none=false}}
-                @value={{this.liveWebrtc.screenQuality}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="live-video-settings__screen-quality-select"
+                  @ariaLabelledBy="live-video-settings-screen-quality-label"
+                  @clearMode="never"
+                  @onChange={{this.liveWebrtc.setScreenQuality}}
+                  @options={{this.screenQualityOptions}}
+                  @value={{this.liveWebrtc.screenQuality}}
+                  @variant="static"
+                />
+              {{else}}
+                <ComboBox
+                  class="live-video-settings__screen-quality-select"
+                  @content={{this.screenQualityOptions}}
+                  @onChange={{this.liveWebrtc.setScreenQuality}}
+                  @options={{hash none=false}}
+                  @value={{this.liveWebrtc.screenQuality}}
+                />
+              {{/if}}
               <p class="live-video-settings__hint">
                 {{i18n "live.video_settings.screen_quality_hint"}}
               </p>
@@ -320,16 +386,32 @@ export default class LiveVideoSettingsModal extends Component {
           {{/if}}
 
           <div class="live-video-settings__field">
-            <label class="live-video-settings__label">
+            <label
+              class="live-video-settings__label"
+              id="live-video-settings-screen-content-label"
+            >
               {{i18n "live.video_settings.screen_content"}}
             </label>
-            <ComboBox
-              class="live-video-settings__screen-content-select"
-              @content={{this.screenContentOptions}}
-              @onChange={{this.liveWebrtc.setScreenContent}}
-              @options={{hash none=false}}
-              @value={{this.liveWebrtc.screenContent}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelect
+                class="live-video-settings__screen-content-select"
+                @ariaLabelledBy="live-video-settings-screen-content-label"
+                @clearMode="never"
+                @onChange={{this.liveWebrtc.setScreenContent}}
+                @options={{this.screenContentOptions}}
+                @value={{this.liveWebrtc.screenContent}}
+                @variant="static"
+              />
+            {{else}}
+              <ComboBox
+                class="live-video-settings__screen-content-select"
+                @content={{this.screenContentOptions}}
+                @onChange={{this.liveWebrtc.setScreenContent}}
+                @options={{hash none=false}}
+                @value={{this.liveWebrtc.screenContent}}
+              />
+            {{/if}}
             <p class="live-video-settings__hint">
               {{i18n "live.video_settings.screen_content_hint"}}
             </p>

@@ -31,6 +31,7 @@ import { queuePosition } from "../../lib/live/speak-queue.js";
 import LiveVideoSettingsModal from "../modal/live-video-settings.gjs";
 import LiveVoiceSettingsModal from "../modal/live-voice-settings.gjs";
 import LiveCallSubmenu from "./call-submenu.gjs";
+import SelectLiveDevice from "./select-live-device.gjs";
 
 const AUDIO_MENU = "live-audio-menu";
 const VIDEO_MENU = "live-video-menu";
@@ -55,10 +56,17 @@ export default class LiveCallControls extends Component {
   @tracked videoInputDevices = [];
   @tracked recordingPending = false;
 
+  /** Settle at the first listing of each kind, so a select asked before it waits instead of reading an empty list. */
+  #audioListing = Promise.withResolvers();
+  #videoListing = Promise.withResolvers();
+
   #onDeviceChange = () => {
     this.#listAudioDevices();
     this.loadVideoDevices();
   };
+  @tracked _audioDevicesListed = false;
+
+  @tracked _videoDevicesListed = false;
 
   constructor() {
     super(...arguments);
@@ -78,6 +86,24 @@ export default class LiveCallControls extends Component {
 
   get room() {
     return this.args.room;
+  }
+
+  get inputDeviceChoices() {
+    return this._audioDevicesListed
+      ? this.audioInputDevices
+      : this.#audioListing.promise.then(() => this.audioInputDevices);
+  }
+
+  get outputDeviceChoices() {
+    return this._audioDevicesListed
+      ? this.audioOutputDevices
+      : this.#audioListing.promise.then(() => this.audioOutputDevices);
+  }
+
+  get cameraChoices() {
+    return this._videoDevicesListed
+      ? this.videoInputDevices
+      : this.#videoListing.promise.then(() => this.videoInputDevices);
   }
 
   get videoAllowed() {
@@ -373,6 +399,23 @@ export default class LiveCallControls extends Component {
       return;
     }
     this.videoInputDevices = [this.#systemDefaultDevice(), ...inputs];
+    this._videoDevicesListed = true;
+    this.#videoListing.resolve();
+  }
+
+  @action
+  pickInputDevice(deviceId) {
+    this.liveWebrtc.setInputDevice(deviceId);
+  }
+
+  @action
+  pickOutputDevice(deviceId) {
+    this.liveWebrtc.setOutputDevice(deviceId);
+  }
+
+  @action
+  pickCamera(deviceId) {
+    this.liveWebrtc.setVideoInputDevice(deviceId);
   }
 
   @action
@@ -425,6 +468,8 @@ export default class LiveCallControls extends Component {
     const defaultDevice = this.#systemDefaultDevice();
     this.audioInputDevices = [defaultDevice, ...inputs];
     this.audioOutputDevices = [defaultDevice, ...outputs];
+    this._audioDevicesListed = true;
+    this.#audioListing.resolve();
   }
 
   #systemDefaultDevice() {
@@ -508,39 +553,73 @@ export default class LiveCallControls extends Component {
         >
           <:content as |audioMenu|>
             <DDropdownMenu as |dropdown|>
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent live-call-menu__device-row"
-                  @action={{this.openInputDeviceMenu}}
-                  @forwardEvent={{true}}
-                  @icon="microphone"
-                  @label="live.voice_settings.input_audio"
-                  @suffixIcon="angle-right"
-                >
-                  {{#if this.currentInputDeviceName}}
-                    <span class="live-call-menu__current-device">
-                      {{this.currentInputDeviceName}}
-                    </span>
-                  {{/if}}
-                </DButton>
-              </dropdown.item>
-              {{#if this.audioOutputSupported}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <dropdown.item>
+                  <SelectLiveDevice
+                    class="live-call-menu__input-select"
+                    @caption={{i18n "live.voice_settings.input_audio"}}
+                    @devices={{this.inputDeviceChoices}}
+                    @icon="microphone"
+                    @kind="audioinput"
+                    @menuGroupIdentifier={{SUBMENU}}
+                    @menuItem={{true}}
+                    @onChange={{this.pickInputDevice}}
+                    @value={{this.liveWebrtc.inputDeviceId}}
+                  />
+                </dropdown.item>
+              {{else}}
                 <dropdown.item>
                   <DButton
                     class="btn-transparent live-call-menu__device-row"
-                    @action={{this.openOutputDeviceMenu}}
+                    @action={{this.openInputDeviceMenu}}
                     @forwardEvent={{true}}
-                    @icon="volume-high"
-                    @label="live.voice_settings.output_audio"
+                    @icon="microphone"
+                    @label="live.voice_settings.input_audio"
                     @suffixIcon="angle-right"
                   >
-                    {{#if this.currentOutputDeviceName}}
+                    {{#if this.currentInputDeviceName}}
                       <span class="live-call-menu__current-device">
-                        {{this.currentOutputDeviceName}}
+                        {{this.currentInputDeviceName}}
                       </span>
                     {{/if}}
                   </DButton>
                 </dropdown.item>
+              {{/if}}
+              {{#if this.audioOutputSupported}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <dropdown.item>
+                    <SelectLiveDevice
+                      class="live-call-menu__output-select"
+                      @caption={{i18n "live.voice_settings.output_audio"}}
+                      @devices={{this.outputDeviceChoices}}
+                      @icon="volume-high"
+                      @kind="audiooutput"
+                      @menuGroupIdentifier={{SUBMENU}}
+                      @menuItem={{true}}
+                      @onChange={{this.pickOutputDevice}}
+                      @value={{this.liveWebrtc.outputDeviceId}}
+                    />
+                  </dropdown.item>
+                {{else}}
+                  <dropdown.item>
+                    <DButton
+                      class="btn-transparent live-call-menu__device-row"
+                      @action={{this.openOutputDeviceMenu}}
+                      @forwardEvent={{true}}
+                      @icon="volume-high"
+                      @label="live.voice_settings.output_audio"
+                      @suffixIcon="angle-right"
+                    >
+                      {{#if this.currentOutputDeviceName}}
+                        <span class="live-call-menu__current-device">
+                          {{this.currentOutputDeviceName}}
+                        </span>
+                      {{/if}}
+                    </DButton>
+                  </dropdown.item>
+                {{/if}}
               {{/if}}
               <dropdown.divider />
               <dropdown.item>
@@ -584,22 +663,39 @@ export default class LiveCallControls extends Component {
         <:content as |audioMenu|>
           <DDropdownMenu as |dropdown|>
             {{#if this.audioOutputSupported}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent live-call-menu__device-row"
-                  @action={{this.openOutputDeviceMenu}}
-                  @forwardEvent={{true}}
-                  @icon="volume-high"
-                  @label="live.voice_settings.output_audio"
-                  @suffixIcon="angle-right"
-                >
-                  {{#if this.currentOutputDeviceName}}
-                    <span class="live-call-menu__current-device">
-                      {{this.currentOutputDeviceName}}
-                    </span>
-                  {{/if}}
-                </DButton>
-              </dropdown.item>
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <dropdown.item>
+                  <SelectLiveDevice
+                    class="live-call-menu__output-select"
+                    @caption={{i18n "live.voice_settings.output_audio"}}
+                    @devices={{this.outputDeviceChoices}}
+                    @icon="volume-high"
+                    @kind="audiooutput"
+                    @menuGroupIdentifier={{SUBMENU}}
+                    @menuItem={{true}}
+                    @onChange={{this.pickOutputDevice}}
+                    @value={{this.liveWebrtc.outputDeviceId}}
+                  />
+                </dropdown.item>
+              {{else}}
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent live-call-menu__device-row"
+                    @action={{this.openOutputDeviceMenu}}
+                    @forwardEvent={{true}}
+                    @icon="volume-high"
+                    @label="live.voice_settings.output_audio"
+                    @suffixIcon="angle-right"
+                  >
+                    {{#if this.currentOutputDeviceName}}
+                      <span class="live-call-menu__current-device">
+                        {{this.currentOutputDeviceName}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                </dropdown.item>
+              {{/if}}
             {{/if}}
             <dropdown.item>
               <DButton
@@ -671,22 +767,39 @@ export default class LiveCallControls extends Component {
         >
           <:content as |videoMenu|>
             <DDropdownMenu as |dropdown|>
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent live-call-menu__device-row"
-                  @action={{this.openCameraMenu}}
-                  @forwardEvent={{true}}
-                  @icon="video"
-                  @label="live.video_settings.camera"
-                  @suffixIcon="angle-right"
-                >
-                  {{#if this.currentVideoDeviceName}}
-                    <span class="live-call-menu__current-device">
-                      {{this.currentVideoDeviceName}}
-                    </span>
-                  {{/if}}
-                </DButton>
-              </dropdown.item>
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <dropdown.item>
+                  <SelectLiveDevice
+                    class="live-call-menu__camera-select"
+                    @caption={{i18n "live.video_settings.camera"}}
+                    @devices={{this.cameraChoices}}
+                    @icon="video"
+                    @kind="videoinput"
+                    @menuGroupIdentifier={{SUBMENU}}
+                    @menuItem={{true}}
+                    @onChange={{this.pickCamera}}
+                    @value={{this.liveWebrtc.videoInputDeviceId}}
+                  />
+                </dropdown.item>
+              {{else}}
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent live-call-menu__device-row"
+                    @action={{this.openCameraMenu}}
+                    @forwardEvent={{true}}
+                    @icon="video"
+                    @label="live.video_settings.camera"
+                    @suffixIcon="angle-right"
+                  >
+                    {{#if this.currentVideoDeviceName}}
+                      <span class="live-call-menu__current-device">
+                        {{this.currentVideoDeviceName}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                </dropdown.item>
+              {{/if}}
               <dropdown.divider />
               <dropdown.item>
                 <DButton
