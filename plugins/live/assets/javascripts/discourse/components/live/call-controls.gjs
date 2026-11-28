@@ -55,6 +55,27 @@ export default class LiveCallControls extends Component {
   @tracked videoInputDevices = [];
   @tracked recordingPending = false;
 
+  #onDeviceChange = () => {
+    this.#listAudioDevices();
+    this.loadVideoDevices();
+  };
+
+  constructor() {
+    super(...arguments);
+    navigator.mediaDevices?.addEventListener?.(
+      "devicechange",
+      this.#onDeviceChange
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    navigator.mediaDevices?.removeEventListener?.(
+      "devicechange",
+      this.#onDeviceChange
+    );
+  }
+
   get room() {
     return this.args.room;
   }
@@ -324,11 +345,12 @@ export default class LiveCallControls extends Component {
     this.#openSubmenu(
       event,
       AUDIO_MENU,
-      NOISE_SUPPRESSION_MODES.map((mode) => ({
-        id: mode,
-        label: noiseSuppressionModeLabel(mode),
-        selected: mode === this.liveWebrtc.noiseSuppressionMode,
-      })),
+      () =>
+        NOISE_SUPPRESSION_MODES.map((mode) => ({
+          id: mode,
+          label: noiseSuppressionModeLabel(mode),
+          selected: mode === this.liveWebrtc.noiseSuppressionMode,
+        })),
       (mode) => this.liveWebrtc.setNoiseSuppressionMode(mode)
     );
   }
@@ -341,13 +363,7 @@ export default class LiveCallControls extends Component {
     if (engine) {
       prefetchEngineAssets(engine).catch(() => {});
     }
-    const { inputs, outputs } = await enumerateAudioDevices();
-    if (this.isDestroying) {
-      return;
-    }
-    const defaultDevice = this.#systemDefaultDevice();
-    this.audioInputDevices = [defaultDevice, ...inputs];
-    this.audioOutputDevices = [defaultDevice, ...outputs];
+    await this.#listAudioDevices();
   }
 
   @action
@@ -364,7 +380,11 @@ export default class LiveCallControls extends Component {
     this.#openSubmenu(
       event,
       AUDIO_MENU,
-      this.#deviceItems(this.audioInputDevices, this.liveWebrtc.inputDeviceId),
+      () =>
+        this.#deviceItems(
+          this.audioInputDevices,
+          this.liveWebrtc.inputDeviceId
+        ),
       (id) => this.liveWebrtc.setInputDevice(id)
     );
   }
@@ -374,10 +394,11 @@ export default class LiveCallControls extends Component {
     this.#openSubmenu(
       event,
       AUDIO_MENU,
-      this.#deviceItems(
-        this.audioOutputDevices,
-        this.liveWebrtc.outputDeviceId
-      ),
+      () =>
+        this.#deviceItems(
+          this.audioOutputDevices,
+          this.liveWebrtc.outputDeviceId
+        ),
       (id) => this.liveWebrtc.setOutputDevice(id)
     );
   }
@@ -387,12 +408,23 @@ export default class LiveCallControls extends Component {
     this.#openSubmenu(
       event,
       VIDEO_MENU,
-      this.#deviceItems(
-        this.videoInputDevices,
-        this.liveWebrtc.videoInputDeviceId
-      ),
+      () =>
+        this.#deviceItems(
+          this.videoInputDevices,
+          this.liveWebrtc.videoInputDeviceId
+        ),
       (id) => this.liveWebrtc.setVideoInputDevice(id)
     );
+  }
+
+  async #listAudioDevices() {
+    const { inputs, outputs } = await enumerateAudioDevices();
+    if (this.isDestroying) {
+      return;
+    }
+    const defaultDevice = this.#systemDefaultDevice();
+    this.audioInputDevices = [defaultDevice, ...inputs];
+    this.audioOutputDevices = [defaultDevice, ...outputs];
   }
 
   #systemDefaultDevice() {
@@ -404,7 +436,7 @@ export default class LiveCallControls extends Component {
 
   // Opened programmatically (not a nested <DMenu>) so the trigger stays a
   // normal full-width menu item, matching core's channel context menu.
-  #openSubmenu(event, parentMenu, items, onSelect) {
+  #openSubmenu(event, parentMenu, itemsFor, onSelect) {
     // Anchor to the row button, not the clicked icon/label, so the submenu
     // opens flush to the row's right edge.
     const anchor = event.target.closest(".btn") ?? event.target;
@@ -416,7 +448,10 @@ export default class LiveCallControls extends Component {
       offset: { mainAxis: 8, crossAxis: -5 },
       modalForMobile: true,
       data: {
-        items,
+        // Read on each render, so an open submenu follows device changes.
+        get items() {
+          return itemsFor();
+        },
         onSelect: (id) => {
           onSelect(id);
           this.menu.close(parentMenu);
