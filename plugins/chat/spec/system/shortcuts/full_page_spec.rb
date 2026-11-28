@@ -25,12 +25,14 @@ RSpec.describe "Shortcuts | full page" do
   end
 
   context "when pressing Esc" do
-    fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+    fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, user: current_user) }
-    fab!(:other_message) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+    fab!(:other_message) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:other_pin) do
       Fabricate(:chat_pinned_message, chat_message: other_message, user: current_user)
     end
+
+    before { channel_1.update_last_message_id! }
 
     it "closes the pinned messages list" do
       chat.visit_channel(channel_1)
@@ -52,6 +54,7 @@ RSpec.describe "Shortcuts | full page" do
       it "doesn't show the link to /chat/search" do
         visit("/")
 
+        expect(page).to have_css('.sidebar-section[data-section-name="community"]')
         expect(page).to have_no_selector(".sidebar-section[data-section-name=\"chat-search\"]")
       end
     end

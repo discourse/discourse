@@ -10,11 +10,11 @@ RSpec.describe "Separate sidebar mode" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)
+  fab!(:membership_1) { channel_1.add(current_user) }
+  fab!(:membership_2) { channel_2.add(current_user) }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
-    channel_1.add(current_user)
-    channel_2.add(current_user)
     chat_system_bootstrap
     sign_in(current_user)
   end

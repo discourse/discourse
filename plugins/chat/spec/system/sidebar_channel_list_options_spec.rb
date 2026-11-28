@@ -8,14 +8,16 @@ RSpec.describe "Chat sidebar channel list options" do
 
   let(:chat_sidebar) { PageObjects::Pages::ChatSidebar.new }
 
+  fab!(:read_message) do
+    Fabricate(
+      :chat_message,
+      chat_channel: read_channel,
+      user: message_author,
+      created_at: 2.days.ago,
+    )
+  end
+
   before do
-    read_message =
-      Fabricate(
-        :chat_message,
-        chat_channel: read_channel,
-        user: message_author,
-        created_at: 2.days.ago,
-      )
     read_channel.update!(last_message: read_message, messages_count: 1)
 
     chat_system_bootstrap(current_user, [read_channel, unread_channel])

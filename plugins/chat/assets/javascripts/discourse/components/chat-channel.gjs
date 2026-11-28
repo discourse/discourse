@@ -317,6 +317,8 @@ export default class ChatChannel extends Component {
       this.args.channel,
       result
     );
+    // A resize can be coalesced with the loading skeleton's resize.
+    DatesSeparatorsPositioner.apply(this.scroller);
 
     if (findArgs.target_message_id) {
       this.scrollToMessageId(findArgs.target_message_id, {

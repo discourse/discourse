@@ -36,7 +36,7 @@ describe "Channel thread message echoing" do
 
     before { channel.update!(threading_enabled: true) }
 
-    it "does not echo the thread messages except for the original message into the channel stream" do
+    it "shows the original message in the channel but keeps existing and new replies in the thread" do
       chat_page.visit_channel(channel)
       expect(channel_page).to have_css(
         channel_page.message_by_id_selector(thread.original_message.id),
@@ -44,14 +44,16 @@ describe "Channel thread message echoing" do
       thread.replies.each do |thread_message|
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
-    end
 
-    it "does not echo new thread messages into the channel stream" do
-      chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
       thread_page.send_message("new thread message")
-      expect(thread_page.messages).to have_message(thread_id: thread.id, text: "new thread message")
+
+      expect(thread_page.messages).to have_message(
+        thread_id: thread.id,
+        text: "new thread message",
+        persisted: true,
+      )
       new_message = thread.reload.replies.last
       expect(channel_page).not_to have_css(channel_page.message_by_id_selector(new_message.id))
     end

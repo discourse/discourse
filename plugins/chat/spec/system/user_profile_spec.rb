@@ -11,6 +11,7 @@ RSpec.describe "User profile" do
 
   shared_examples "not showing chat button" do
     it "has no chat button" do
+      expect(page).to have_css(".user-profile-avatar")
       expect(page).to have_no_css(".chat-direct-message-btn")
     end
   end

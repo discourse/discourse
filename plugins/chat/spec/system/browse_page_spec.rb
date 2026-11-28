@@ -41,6 +41,9 @@ RSpec.describe "Browse page" do
 
     it "shows the empty state instead of channels for an unmatched query" do
       chat_page.visit_browse
+      expect(browse_page).to have_channel(name: foo.name)
+      expect(browse_page).to have_channel(name: bar.name)
+
       browse_page.search("x")
       expect(browse_page).to have_channel(name: I18n.t("js.chat.empty_state.title"))
       expect(browse_page).to have_no_channel(name: foo.name)
@@ -82,10 +85,18 @@ RSpec.describe "Browse page" do
     end
 
     it "loads more channels when scrolling" do
-      Fabricate.times(25, :chat_channel, status: :open)
-      chat_page.visit_browse(:all)
-      scroll_to(find(".chat-channel-card:last-child"))
-      expect(browse_page).to have_selector(".chat-channel-card", count: 29)
+      Fabricate.times(17, :chat_channel, chatable: open_channel.chatable)
+
+      resize_window(height: 450) do
+        chat_page.visit_browse(:all)
+        expect(browse_page).to have_selector(".chat-channel-card", count: 10)
+
+        scroll_to(find(".chat-channel-card:last-child"))
+        expect(browse_page).to have_selector(".chat-channel-card", count: 20)
+
+        scroll_to(find(".chat-channel-card:last-child"))
+        expect(browse_page).to have_selector(".chat-channel-card", count: 21)
+      end
     end
 
     it "shows the archived tab and its channels when archiving is enabled" do

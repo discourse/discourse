@@ -13,16 +13,8 @@ RSpec.describe "Chat channel sidebar context menu" do
     sign_in(current_user)
   end
 
-  context "when navigating to channel settings" do
-    it "opens the channel settings page" do
-      chat_page.visit_channel(channel_1)
-      chat_sidebar_page.open_channel_settings(channel_1)
-      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
-    end
-  end
-
-  context "when starring toggling starred channel" do
-    it "stars and unstars a channel" do
+  context "when using the channel menu" do
+    it "toggles the star and opens settings from the regular channel list" do
       chat_page.visit_channel(channel_1)
       chat_sidebar_page.toggle_star_channel(channel_1)
 
@@ -35,6 +27,9 @@ RSpec.describe "Chat channel sidebar context menu" do
 
       expect(chat_sidebar_page).to have_no_starred_channels_section
       expect(channel_1.membership_for(current_user).starred).to be_falsy
+
+      chat_sidebar_page.open_channel_settings(channel_1)
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
     end
   end
 
@@ -107,22 +102,16 @@ RSpec.describe "Chat channel sidebar context menu" do
   end
 
   context "when changing notification settings" do
-    it "changes notification level to never" do
+    it "switches notifications to never and back to mentions" do
       chat_page.visit_channel(channel_1)
+      membership = channel_1.membership_for(current_user)
 
-      chat_sidebar_page.open_notification_settings(channel_1)
-      chat_sidebar_page.set_notification_level("never")
+      %w[never mention].each do |level|
+        chat_sidebar_page.open_notification_settings(channel_1)
+        chat_sidebar_page.set_notification_level(level)
 
-      expect(channel_1.membership_for(current_user).reload.notification_level).to eq("never")
-    end
-
-    it "changes notification level to mention" do
-      chat_page.visit_channel(channel_1)
-
-      chat_sidebar_page.open_notification_settings(channel_1)
-      chat_sidebar_page.set_notification_level("mention")
-
-      expect(channel_1.membership_for(current_user).reload.notification_level).to eq("mention")
+        expect(membership.reload.notification_level).to eq(level)
+      end
     end
 
     it "changes notification level to always" do
@@ -170,7 +159,7 @@ RSpec.describe "Chat channel sidebar context menu" do
       expect(membership.muted_until).to be_within(1.minute).of(1.hour.from_now)
     end
 
-    it "shows when a channel muted for a duration unmutes" do
+    it "shows when a timed mute ends and can remove it" do
       channel_1.membership_for(current_user).update!(muted: true, muted_until: 1.hour.from_now)
 
       chat_page.visit_channel(channel_1)
@@ -180,14 +169,8 @@ RSpec.describe "Chat channel sidebar context menu" do
       expect(menu).to have_option(
         ".chat-channel-sidebar-link-menu__unmute-channel .chat-channel-sidebar-link-menu__muted-until",
       )
-    end
-
-    it "unmutes a muted channel" do
-      channel_1.membership_for(current_user).update!(muted: true, muted_until: 1.hour.from_now)
-
-      chat_page.visit_channel(channel_1)
-
-      chat_sidebar_page.unmute_channel(channel_1)
+      menu.option(".chat-channel-sidebar-link-menu__unmute-channel").click
+      expect(page).to have_no_css(".chat-channel-sidebar-link-menu__unmute-channel")
 
       membership = channel_1.membership_for(current_user).reload
       expect(membership.muted).to eq(false)

@@ -3,9 +3,15 @@
 RSpec.describe "Chat | composer | shortcuts | thread" do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:current_user, :admin)
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
-  fab!(:thread_1) do
-    Fabricate(:chat_message, user: current_user, in_reply_to: message_1, use_service: true).thread
+  fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
+  fab!(:reply) do
+    Fabricate(
+      :chat_message,
+      chat_channel: channel_1,
+      user: current_user,
+      in_reply_to: thread_1.original_message,
+      thread: thread_1,
+    )
   end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -15,7 +21,14 @@ RSpec.describe "Chat | composer | shortcuts | thread" do
 
   before do
     chat_system_bootstrap
+    channel_1.update_last_message_id!
+    channel_1.add(thread_1.original_message_user).update!(
+      last_read_message: thread_1.original_message,
+    )
     channel_1.add(current_user)
+    thread_1.update_last_message_id!
+    thread_1.update!(replies_count: 1)
+    thread_1.add(current_user).update!(last_read_message: reply)
     sign_in(current_user)
   end
 
@@ -30,10 +43,16 @@ RSpec.describe "Chat | composer | shortcuts | thread" do
   end
 
   describe "ArrowUp" do
-    let(:last_thread_message) { thread_1.replies.last }
-
     context "when there are editable messages" do
-      before { Fabricate(:chat_message, user: current_user, thread: thread_1, use_service: true) }
+      fab!(:last_thread_message) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_user, thread: thread_1)
+      end
+
+      before do
+        thread_1.update_last_message_id!
+        thread_1.update!(replies_count: 2)
+        thread_1.membership_for(current_user).update!(last_read_message: last_thread_message)
+      end
 
       it "starts editing the last editable message" do
         chat_page.visit_thread(thread_1)
@@ -60,8 +79,9 @@ RSpec.describe "Chat | composer | shortcuts | thread" do
 
     context "when last message is deleted" do
       before do
-        last_thread_message.trash!
+        reply.trash!
         thread_1.update_last_message_id!
+        thread_1.update!(replies_count: 0)
       end
 
       it "does not edit a message" do

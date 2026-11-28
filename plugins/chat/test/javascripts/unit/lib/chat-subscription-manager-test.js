@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -330,6 +331,68 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.strictEqual(message.deletedAt, "2026-03-11T10:00:00.000Z");
     assert.false(message.expanded);
   });
+
+  for (const firstEvent of [
+    "thread_created",
+    "update_thread_original_message",
+  ]) {
+    test(`channel manager retains the first reply preview when ${firstEvent} arrives first in a batch`, async function (assert) {
+      const channel = this.fabricators.channel();
+      const originalMessage = this.fabricators.message({ channel });
+      channel.messagesManager.addMessages([originalMessage]);
+      const manager = new ChatChannelSubscriptionManager(this, channel);
+      const threadId = 224;
+      const originalMessagePayload = buildChatMessagePayload({
+        id: originalMessage.id,
+      });
+      const events = {
+        thread_created: {
+          type: "thread_created",
+          thread_id: threadId,
+          chat_message: {
+            ...originalMessagePayload,
+            thread: {
+              id: threadId,
+              original_message: originalMessagePayload,
+              preview: { reply_count: 0 },
+            },
+          },
+        },
+        update_thread_original_message: {
+          type: "update_thread_original_message",
+          thread_id: threadId,
+          original_message_id: originalMessage.id,
+          preview: {
+            reply_count: 1,
+            last_reply_excerpt: "First reply",
+          },
+        },
+      };
+
+      const secondEvent = Object.keys(events).find(
+        (type) => type !== firstEvent
+      );
+      manager.onMessage(events[firstEvent], 1, 1);
+      manager.onMessage(events[secondEvent], 2, 2);
+      await settled();
+
+      assert.strictEqual(
+        originalMessage.thread?.id,
+        threadId,
+        "the original message is associated with the new thread"
+      );
+      assert.strictEqual(
+        originalMessage.thread?.preview.replyCount,
+        1,
+        "the original message shows the first reply count"
+      );
+      assert.strictEqual(
+        originalMessage.thread?.preview.lastReplyExcerpt,
+        "First reply",
+        "the preview contains the first reply"
+      );
+    });
+  }
 
   test("channel manager refreshes the thread preview carried by the original message", function (assert) {
     const channel = this.fabricators.channel({ id: 15 });

@@ -25,8 +25,9 @@ RSpec.describe "Quoting chat message transcripts" do
     expect(PageObjects::Components::Toasts.new).to have_success(
       I18n.t("js.chat.quote.copy_success"),
     )
-    cdp.clipboard_has_text?(generate_transcript(messages, current_user), chomp: true)
-    cdp.read_clipboard
+    clipboard_text = cdp.read_clipboard
+    expect(clipboard_text.chomp).to eq(generate_transcript(messages, current_user))
+    clipboard_text
   end
 
   def generate_transcript(messages, acting_user)
@@ -132,34 +133,24 @@ RSpec.describe "Quoting chat message transcripts" do
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }
 
     let(:user_card) { PageObjects::Components::UserCard.new }
-    let!(:post_1) do
+
+    fab!(:post_1) do
       Fabricate(:post, raw: generate_transcript([message_1, message_2], current_user))
     end
 
-    it "groups the messages in one box under the channel" do
+    it "groups the messages with timestamp links and opens the user's card from their name" do
       topic_page.visit_topic(post_1.topic)
 
       within(topic_page.post_by_number_selector(1)) do
         expect(page).to have_css(".chat-transcript-group", count: 1)
         expect(page).to have_css(".chat-transcript-group__channel", text: chat_channel_1.name)
         expect(page).to have_css(".chat-transcript-group__body .chat-transcript", count: 2)
-      end
-    end
-
-    it "links each timestamp to its message" do
-      topic_page.visit_topic(post_1.topic)
-
-      within(topic_page.post_by_number_selector(1)) do
         [message_1, message_2].each do |message|
           expect(page).to have_css(
             ".chat-transcript-datetime a[href$='/chat/c/-/#{chat_channel_1.id}/#{message.id}']",
           )
         end
       end
-    end
-
-    it "opens the user card from the username" do
-      topic_page.visit_topic(post_1.topic)
 
       find(".chat-transcript[data-message-id='#{message_2.id}'] .chat-transcript-username a").click
 
@@ -173,9 +164,8 @@ RSpec.describe "Quoting chat message transcripts" do
       Fabricate(:chat_thread, channel: chat_channel_1, title: "Ideas", with_replies: 2)
     end
 
-    before { chat_channel_1.update!(threading_enabled: true) }
-
-    let!(:post_1) do
+    fab!(:post_1) do
+      chat_channel_1.update!(threading_enabled: true)
       Fabricate(:post, raw: generate_transcript(thread.original_message, current_user))
     end
 

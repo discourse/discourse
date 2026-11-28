@@ -2,6 +2,7 @@
 
 RSpec.describe "Invite users to channel" do
   fab!(:user_1, :user)
+  fab!(:inviting_admin, :admin)
   fab!(:channel_1, :category_channel)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
@@ -17,7 +18,7 @@ RSpec.describe "Invite users to channel" do
     context "when the invitation is linking to a channel" do
       before do
         Chat::InviteUsersToChannel.call(
-          guardian: Guardian.new(Fabricate(:admin)),
+          guardian: inviting_admin.guardian,
           params: {
             channel_id: channel_1.id,
             user_ids: [user_1.id],
@@ -39,7 +40,7 @@ RSpec.describe "Invite users to channel" do
 
       before do
         Chat::InviteUsersToChannel.call(
-          guardian: Guardian.new(Fabricate(:admin)),
+          guardian: inviting_admin.guardian,
           params: {
             channel_id: channel_1.id,
             user_ids: [user_1.id],

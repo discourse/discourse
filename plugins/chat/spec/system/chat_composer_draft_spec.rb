@@ -6,7 +6,6 @@ RSpec.describe "Chat composer draft" do
   fab!(:message_1) do
     Fabricate(
       :chat_message,
-      use_service: true,
       chat_channel: channel_1,
       message: "This is a message for draft and replies",
     )
@@ -16,11 +15,13 @@ RSpec.describe "Chat composer draft" do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
+  let(:draft_data) { { message: "draft" } }
+
   before { chat_system_bootstrap }
 
   context "when loading a channel with a draft" do
     before do
-      create_draft(channel_1, user: current_user)
+      create_draft(channel_1, user: current_user, data: draft_data)
       channel_1.add(current_user)
       sign_in(current_user)
     end
@@ -49,42 +50,24 @@ RSpec.describe "Chat composer draft" do
     end
 
     context "when editing" do
-      before do
-        create_draft(
-          channel_1,
-          user: current_user,
-          data: {
-            message: message_1.message,
-            id: message_1.id,
-            editing: true,
-          },
-        )
-      end
+      let(:draft_data) { { message: message_1.message, id: message_1.id, editing: true } }
 
-      it "loads the draft with the editing state" do
+      it "restores the edit and clears the draft when editing is canceled" do
         chat_page.visit_channel(channel_1)
-
         expect(channel_page.composer).to be_editing_message(message_1)
-      end
 
-      context "when canceling editing" do
-        it "resets the draft" do
-          chat_page.visit_channel(channel_1)
-          channel_page.composer.message_details.cancel_edit
+        channel_page.composer.message_details.cancel_edit
 
-          expect(channel_page.composer).to be_blank
-          expect(channel_page.composer).to have_unsaved_draft
-          expect(channel_page.composer).to have_saved_draft
-        end
+        expect(channel_page.composer).to be_blank
+        expect(channel_page.composer).to have_unsaved_draft
+        expect(channel_page.composer).to have_saved_draft
       end
     end
 
     context "with uploads" do
       fab!(:upload_1, :image_upload)
 
-      before do
-        create_draft(channel_1, user: current_user, data: { message: "draft", uploads: [upload_1] })
-      end
+      let(:draft_data) { { message: "draft", uploads: [upload_1] } }
 
       it "loads the draft with the upload" do
         chat_page.visit_channel(channel_1)
@@ -95,24 +78,20 @@ RSpec.describe "Chat composer draft" do
     end
 
     context "when replying" do
-      before do
-        create_draft(
-          channel_1,
-          user: current_user,
-          data: {
-            message: "draft",
-            replyToMsg: {
-              id: message_1.id,
-              excerpt: message_1.excerpt,
-              user: {
-                id: message_1.user.id,
-                name: nil,
-                avatar_template: message_1.user.avatar_template,
-                username: message_1.user.username,
-              },
+      let(:draft_data) do
+        {
+          message: "draft",
+          replyToMsg: {
+            id: message_1.id,
+            excerpt: message_1.excerpt,
+            user: {
+              id: message_1.user.id,
+              name: nil,
+              avatar_template: message_1.user.avatar_template,
+              username: message_1.user.username,
             },
           },
-        )
+        }
       end
 
       it "loads the draft with replied to message" do
@@ -130,7 +109,7 @@ RSpec.describe "Chat composer draft" do
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
 
     before do
-      create_draft(channel_1, user: current_user, thread: thread_1)
+      create_draft(channel_1, user: current_user, thread: thread_1, data: draft_data)
       channel_1.add(current_user)
       sign_in(current_user)
     end
@@ -166,51 +145,24 @@ RSpec.describe "Chat composer draft" do
     end
 
     context "when editing" do
-      before do
-        create_draft(
-          channel_1,
-          user: current_user,
-          thread: thread_1,
-          data: {
-            message: message_1.message,
-            id: message_1.id,
-            editing: true,
-          },
-        )
-      end
+      let(:draft_data) { { message: message_1.message, id: message_1.id, editing: true } }
 
-      it "loads the draft with the editing state" do
+      it "restores the edit and clears the draft when editing is canceled" do
         chat_page.visit_thread(thread_1)
-
         expect(thread_page.composer).to be_editing_message(message_1)
-      end
 
-      context "when canceling editing" do
-        it "resets the draft" do
-          chat_page.visit_thread(thread_1)
-          thread_page.composer.message_details.cancel_edit
+        thread_page.composer.message_details.cancel_edit
 
-          expect(thread_page.composer).to be_blank
-          expect(thread_page.composer).to have_unsaved_draft
-          expect(thread_page.composer).to have_saved_draft
-        end
+        expect(thread_page.composer).to be_blank
+        expect(thread_page.composer).to have_unsaved_draft
+        expect(thread_page.composer).to have_saved_draft
       end
     end
 
     context "with uploads" do
       fab!(:upload_1, :image_upload)
 
-      before do
-        create_draft(
-          channel_1,
-          user: current_user,
-          thread: thread_1,
-          data: {
-            message: "draft",
-            uploads: [upload_1],
-          },
-        )
-      end
+      let(:draft_data) { { message: "draft", uploads: [upload_1] } }
 
       it "loads the draft with the upload" do
         chat_page.visit_thread(thread_1)

@@ -3,17 +3,24 @@
 require "faker"
 
 module ChatSystemHelpers
-  def chat_system_bootstrap(user = Fabricate(:admin), channels_for_membership = [])
-    # ensures we have one valid registered admin/user
-    user.activate
+  def chat_system_bootstrap(user = nil, channels_for_membership = [])
+    if user
+      user.activate
+    else
+      eligible_admins = User.admins.real.activated.not_staged.not_suspended.not_silenced
+      # A second admin keeps a fresh admin's sign-in from running first-admin setup.
+      unless eligible_admins.exists?(["moderator OR last_seen_at IS NOT NULL"])
+        Fabricate(:admin).activate
+      end
+    end
 
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
     channels_for_membership.each do |channel|
       membership = channel.add(user)
-      if channel.chat_messages.any?
-        membership.update!(last_read_message_id: channel.chat_messages.last.id)
+      if last_message = channel.chat_messages.last
+        membership.update!(last_read_message_id: last_message.id)
       end
     end
 
@@ -22,9 +29,11 @@ module ChatSystemHelpers
 
   def chat_system_user_bootstrap(user:, channel:)
     user.activate
-    user.user_option.update!(chat_enabled: true)
+    user.user_option.update!(chat_enabled: true) unless user.user_option.chat_enabled?
     Group.refresh_automatic_group!(:trust_level_0)
-    Group.refresh_automatic_group!(:"trust_level_#{user.trust_level}")
+    if user.trust_level != TrustLevel[0]
+      Group.refresh_automatic_group!(:"trust_level_#{user.trust_level}")
+    end
     channel.add(user)
   end
 
@@ -55,6 +64,37 @@ module ChatSystemHelpers
     last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
     last_message.thread.update!(thread_attrs) if thread_attrs.any?
     last_message.thread
+  end
+
+  # Build fixture rows without sending messages through the service. Channel membership and
+  # unread/cache state beyond the replying users' own read positions belong to the scenario.
+  def chat_thread_with_replies(
+    channel:,
+    original_message_user: nil,
+    original_message: nil,
+    title: nil,
+    reply_users: [nil],
+    link_replies: false,
+    track_replies: false,
+    reply_text: nil
+  )
+    attributes = { channel:, original_message_user:, title: }
+    attributes[:original_message] = original_message if original_message
+    thread = Fabricate(:chat_thread, **attributes)
+    last_message = thread.original_message
+
+    reply_users.each do |user|
+      attributes = { chat_channel: thread.channel, thread: }
+      attributes[:user] = user if user
+      attributes[:message] = reply_text if reply_text
+      attributes[:in_reply_to] = last_message if link_replies
+      last_message = Fabricate(:chat_message, **attributes)
+      thread.add(last_message.user).mark_read!(last_message.id) if track_replies
+    end
+
+    thread.update!(replies_count: reply_users.size)
+    thread.update_last_message_id!
+    thread
   end
 
   def thread_excerpt(message)

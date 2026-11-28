@@ -38,15 +38,19 @@ RSpec.describe "Chat channel as the homepage" do
     expect(page).to have_current_path(channel_1.relative_url)
   end
 
-  it "shows the usual homepage when the user cannot chat" do
-    SiteSetting.chat_allowed_groups = Fabricate(:group).id
+  context "when chat is restricted to another group" do
+    fab!(:group)
 
-    visit("/")
+    it "shows the usual homepage when the user cannot chat" do
+      SiteSetting.chat_allowed_groups = group.id
 
-    # the fallback is still served at / like any other homepage
-    expect(page).to have_css(".navigation-container .nav-item_latest.active")
-    expect(page).to have_no_css(".chat-channel")
-    expect(page).to have_current_path("/")
+      visit("/")
+
+      # the fallback is still served at / like any other homepage
+      expect(page).to have_css(".navigation-container .nav-item_latest.active")
+      expect(page).to have_no_css(".chat-channel")
+      expect(page).to have_current_path("/")
+    end
   end
 
   it "shows the usual homepage when the user has disabled chat" do
@@ -72,14 +76,14 @@ RSpec.describe "Chat channel as the homepage" do
     fab!(:current_user, :admin)
     fab!(:other_channel, :category_channel)
     fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
+    fab!(:membership) { channel_1.add(current_user) }
+    fab!(:other_membership) { other_channel.add(current_user) }
 
     let(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
     before do
       SiteSetting.enable_site_owner_onboarding = true
       Theme.foundation_theme.set_default!
-      channel_1.add(current_user)
-      other_channel.add(current_user)
     end
 
     it "lets the owner see the checklist under the channel header on the Chat homepage and other channels" do
@@ -111,7 +115,12 @@ RSpec.describe "Chat channel as the homepage" do
       expect(channel_page).to have_onboarding_banner_below_header
       expect(channel_page).to have_no_elevated_overlays
 
-      Fabricate.times(40, :chat_message, chat_channel: channel_1)
+      # One tall message is enough to put the top of the timeline behind the checklist.
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        message: (["A line of chat history"] * 65).join("\n\n"),
+      )
       page.refresh
 
       expect(channel_page).to have_onboarding_banner_below_header
@@ -119,6 +128,8 @@ RSpec.describe "Chat channel as the homepage" do
     end
 
     it "keeps the pinned message bar and channel notices clear of the checklist" do
+      # First-admin sign-in can dismiss the retention notice; this example needs it visible.
+      current_user.user_option.update!(dismissed_channel_retention_reminder: false)
       Fabricate(
         :chat_pinned_message,
         chat_message: message_1,

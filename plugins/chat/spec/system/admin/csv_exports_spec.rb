@@ -5,6 +5,9 @@ RSpec.describe "Admin Chat CSV exports" do
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
   fab!(:current_user, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
+  fab!(:other_user, :user)
 
   before do
     Jobs.run_immediately!
@@ -13,11 +16,20 @@ RSpec.describe "Admin Chat CSV exports" do
   end
 
   it "exports chat messages" do
-    Jobs.run_immediately!
-    message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
-    message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
-    message_3 = Fabricate(:chat_message, created_at: 1.month.ago)
-    message_4 = Fabricate(:chat_message, created_at: Time.now)
+    message_1 =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        user: current_user,
+        created_at: 12.months.ago,
+      )
+    message_2 =
+      Fabricate(:chat_message, chat_channel: channel_2, user: other_user, created_at: 6.months.ago)
+    message_3 =
+      Fabricate(:chat_message, chat_channel: channel_1, user: other_user, created_at: 1.month.ago)
+    message_4 = Fabricate(:chat_message, chat_channel: channel_2, user: current_user)
+    channel_1.update_last_message_id!
+    channel_2.update_last_message_id!
 
     visit "/admin/plugins/chat"
     click_button I18n.t("js.chat.admin.export_messages.create_export")

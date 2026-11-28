@@ -13,6 +13,8 @@ export default class ChatChannelSubscriptionManager {
 
   @tracked channel;
 
+  #pendingThreadPreviews = new WeakMap();
+
   constructor(context, channel, { onNewMessage, onRemoveMessage } = {}) {
     setOwner(this, getOwner(context));
 
@@ -257,8 +259,21 @@ export default class ChatChannelSubscriptionManager {
           thread.originalMessage.id
         );
 
-        if (channelOriginalMessage) {
+        if (!channelOriginalMessage) {
+          return;
+        }
+
+        if (channelOriginalMessage.thread?.id !== thread.id) {
           channelOriginalMessage.thread = thread;
+        }
+
+        const pending = this.#pendingThreadPreviews.get(channelOriginalMessage);
+        if (pending?.threadId === thread.id) {
+          this.#pendingThreadPreviews.delete(channelOriginalMessage);
+          this.#updateThreadPreview(
+            channelOriginalMessage.thread,
+            pending.preview
+          );
         }
       });
   }
@@ -269,15 +284,26 @@ export default class ChatChannelSubscriptionManager {
 
   handleThreadOriginalMessageUpdate(data) {
     const threadId = parseInt(data.thread_id, 10);
+    const originalMessage = this.messagesManager.findMessage(
+      data.original_message_id
+    );
+    // A preview can arrive before thread_created has associated the original.
+    if (originalMessage) {
+      if (originalMessage.thread?.id === threadId) {
+        this.#pendingThreadPreviews.delete(originalMessage);
+      } else {
+        this.#pendingThreadPreviews.set(originalMessage, {
+          threadId,
+          preview: data.preview,
+        });
+      }
+    }
+
     this.messagesManager.messages
       .filter((message) => message.thread?.id === threadId)
-      .forEach((message) => {
-        if (message.thread.preview) {
-          message.thread.preview.update(data.preview);
-        } else {
-          message.thread.preview = ChatThreadPreview.create(data.preview);
-        }
-      });
+      .forEach((message) =>
+        this.#updateThreadPreview(message.thread, data.preview)
+      );
   }
 
   handlePinMessage(data) {
@@ -311,6 +337,14 @@ export default class ChatChannelSubscriptionManager {
     }
 
     this.#syncPinnedMessagesCount(data, alreadyApplied, -1);
+  }
+
+  #updateThreadPreview(thread, preview) {
+    if (thread.preview) {
+      thread.preview.update(preview);
+    } else {
+      thread.preview = ChatThreadPreview.create(preview);
+    }
   }
 
   // assign the authoritative count (idempotent under replayed/duplicate

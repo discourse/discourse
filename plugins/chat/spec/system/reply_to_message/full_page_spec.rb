@@ -9,13 +9,17 @@ RSpec.describe "Reply to message - channel - full page" do
   fab!(:current_user, :user)
   fab!(:channel_1, :category_channel)
   fab!(:original_message) do
-    Fabricate(
-      :chat_message,
-      chat_channel: channel_1,
-      message: "This is a message to reply to!",
-      user: current_user,
-      use_service: true,
-    )
+    message =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        message: "This is a message to reply to!",
+        user: current_user,
+      )
+    message.update!(excerpt: message.build_excerpt)
+    channel_1.add(message.user).mark_read!(message.id)
+    channel_1.update_last_message_id!
+    message
   end
 
   before do
@@ -58,7 +62,18 @@ RSpec.describe "Reply to message - channel - full page" do
   end
 
   context "when the message has an existing thread" do
-    fab!(:message_1) { Fabricate(:chat_message, in_reply_to: original_message, use_service: true) }
+    fab!(:message_1) do
+      thread =
+        chat_thread_with_replies(
+          channel: channel_1,
+          original_message: original_message,
+          link_replies: true,
+          track_replies: true,
+        )
+      reply = thread.last_message
+      channel_1.add(reply.user)
+      reply
+    end
 
     before { original_message.thread.add(current_user) }
 

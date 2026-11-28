@@ -6,7 +6,12 @@ describe "Thread tracking state | drawer" do
   fab!(:current_user, :admin)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user, :user)
-  fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+  fab!(:thread) do
+    thread = Fabricate(:chat_thread, channel: channel, original_message_user: other_user)
+    channel.add(other_user).mark_read!(thread.original_message_id)
+    channel.update_last_message_id!
+    thread
+  end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -23,25 +28,17 @@ describe "Thread tracking state | drawer" do
 
   context "when the user has unread messages for a thread" do
     fab!(:message_1) do
-      Fabricate(:chat_message, thread: thread, user: current_user, use_service: true)
+      Fabricate(:chat_message, chat_channel: channel, thread: thread, user: current_user)
     end
-    fab!(:message_2) { Fabricate(:chat_message, thread: thread, use_service: true) }
+    fab!(:message_2) do
+      message = Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
+      thread.membership_for(other_user).mark_read!(message.id)
+      thread.update!(replies_count: 2)
+      thread.update_last_message_id!
+      message
+    end
 
-    it "shows the count of threads with unread messages on the thread list button" do
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.open_channel(channel)
-      expect(drawer_page).to have_unread_thread_indicator(count: 1)
-    end
-
-    it "shows an indicator on the unread thread in the list" do
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.open_channel(channel)
-      drawer_page.open_thread_list
-      expect(drawer_page).to have_open_thread_list
-      expect(thread_list_page).to have_unread_item(thread.id)
-    end
+    before { thread.membership_for(current_user).mark_read!(message_1.id) }
 
     it "shows an urgent indicator on the watched thread in the list" do
       thread.membership_for(current_user).update!(
@@ -60,7 +57,12 @@ describe "Thread tracking state | drawer" do
       visit("/")
       chat_page.open_from_header
       drawer_page.open_channel(channel)
+      expect(drawer_page).to have_unread_thread_indicator(count: 1)
+
       drawer_page.open_thread_list
+      expect(drawer_page).to have_open_thread_list
+      expect(thread_list_page).to have_unread_item(thread.id)
+
       thread_list_page.open_thread(thread)
 
       expect(drawer_page).to have_no_unread_thread_indicator
@@ -93,12 +95,6 @@ describe "Thread tracking state | drawer" do
 
       before { other_channel.add(current_user) }
 
-      it "shows an unread indicator for the channel with unread threads in the index" do
-        visit("/")
-        chat_page.open_from_header
-        expect(drawer_page).to have_unread_channel(channel)
-      end
-
       it "does not show an unread indicator for the channel if the user has visited the channel since the unread thread message arrived" do
         channel.membership_for(current_user).update!(last_viewed_at: Time.zone.now)
         visit("/")
@@ -106,9 +102,11 @@ describe "Thread tracking state | drawer" do
         expect(drawer_page).to have_no_unread_channel(channel)
       end
 
-      it "clears the index unread indicator for the channel when opening it but keeps the thread list unread indicator" do
+      it "clears the channel’s unread indicator in the index when opened but keeps the thread list indicator" do
         visit("/")
         chat_page.open_from_header
+        expect(drawer_page).to have_unread_channel(channel)
+
         drawer_page.open_channel(channel)
         expect(channel_page).to have_unread_thread_indicator(count: 1)
         drawer_page.back

@@ -33,23 +33,24 @@ RSpec.describe "Channel - Info - Members page" do
     end
 
     context "with members" do
+      fab!(:cat) { Fabricate(:user, username: "cat") }
+
       before do
         channel_1.add(current_user)
-        channel_1.add(Fabricate(:user, username: "cat"))
+        channel_1.add(cat)
       end
 
       it "loads more members on scroll" do
-        20.times { channel_1.add(Fabricate(:user)) }
+        19.times { channel_1.add(Fabricate(:user)) }
         Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
 
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_css("li.c-channel-members__list-item", minimum: 20)
-        initial_count = page.all("li.c-channel-members__list-item").count
+        expect(page).to have_css("li.c-channel-members__list-item", count: 20)
 
         page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-        expect(page).to have_css("li.c-channel-members__list-item", minimum: initial_count + 1)
+        expect(page).to have_css("li.c-channel-members__list-item", count: 21)
       end
 
       it "filters members" do
@@ -155,7 +156,6 @@ RSpec.describe "Channel - Info - Members page" do
     it "hides add member option when group chats are disabled for members" do
       SiteSetting.chat_max_direct_message_users = 1
 
-      visit("/")
       chat_page.visit_channel_members(channel_1)
 
       expect(chat_page).to have_no_add_member_button
@@ -165,7 +165,6 @@ RSpec.describe "Channel - Info - Members page" do
       SiteSetting.chat_max_direct_message_users = 1
       current_user.update!(admin: true)
 
-      visit("/")
       chat_page.visit_channel_members(channel_1)
 
       expect(chat_page).to have_add_member_button
@@ -174,8 +173,9 @@ RSpec.describe "Channel - Info - Members page" do
 
   describe "removing members" do
     fab!(:current_user, :admin)
+    fab!(:extra_member, :user)
 
-    before { channel_1.add(Fabricate(:user)) }
+    before { channel_1.add(extra_member) }
 
     context "when the channel is a category channel" do
       it "allows removing members" do
@@ -203,11 +203,12 @@ RSpec.describe "Channel - Info - Members page" do
     end
 
     context "when the channel is a one-on-one DM" do
+      fab!(:other_participant, :user)
       fab!(:channel_1) do
         Fabricate(
           :direct_message_channel,
           slug: "test-channel",
-          users: [current_user, Fabricate(:user)],
+          users: [current_user, other_participant],
           group: false,
         )
       end
@@ -215,6 +216,10 @@ RSpec.describe "Channel - Info - Members page" do
       it "does not allow removing members" do
         chat_page.visit_channel_members(channel_1)
 
+        expect(chat_page).to have_css(
+          ".c-channel-members__list-item",
+          text: other_participant.username,
+        )
         expect(chat_page).to have_no_css(".c-channel-members__list-item .remove-member")
       end
     end

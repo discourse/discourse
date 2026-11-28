@@ -3,8 +3,7 @@
 RSpec.describe "User menu notifications | sidebar" do
   fab!(:current_user, :user)
 
-  let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -16,7 +15,7 @@ RSpec.describe "User menu notifications | sidebar" do
   shared_examples "chat not available" do
     it "doesn’t show the chat tab" do
       visit("/discuss")
-      find(".header-dropdown-toggle.current-user").click
+      user_menu.open
 
       expect(page).to have_no_css("#user-menu-button-chat-notifications")
     end
@@ -204,8 +203,6 @@ RSpec.describe "User menu notifications | sidebar" do
 
   context "when invited to a channel" do
     fab!(:channel_1, :chat_channel)
-
-    let(:user_menu) { PageObjects::Components::UserMenu.new }
 
     before do
       Chat::InviteUsersToChannel.call(

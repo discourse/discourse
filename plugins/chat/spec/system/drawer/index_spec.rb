@@ -17,6 +17,13 @@ RSpec.describe "Drawer - index" do
     expect(drawer_page).to have_open_chat_search
   end
 
+  it "shows an empty state when first opening direct messages from the index" do
+    drawer_page.visit_index
+    drawer_page.click_direct_messages
+    expect(page).to have_css("#c-footer-direct-messages.--active")
+    expect(page).to have_css(".direct-message-channels .empty-state")
+  end
+
   it "can leave a direct message" do
     channel = Fabricate(:direct_message_channel, users: [current_user])
     row = PageObjects::Components::Chat::ChannelRow.new(channel.id)
@@ -59,12 +66,5 @@ RSpec.describe "Drawer - index" do
     drawer_page.channels_index.open_browse
 
     expect(drawer_page.browse).to have_channel(name: channel.name)
-  end
-
-  it "shows empty state when no dms" do
-    drawer_page.visit_index
-    drawer_page.click_direct_messages
-    expect(page).to have_css("#c-footer-direct-messages.--active")
-    expect(page).to have_selector(".empty-state")
   end
 end

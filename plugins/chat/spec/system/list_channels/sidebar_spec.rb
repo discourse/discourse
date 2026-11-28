@@ -24,13 +24,9 @@ RSpec.describe "List channels | sidebar" do
           visit("/")
         end
 
-        it "shows the channel in the correct section" do
-          expect(page.find(".sidebar-section[data-section-name='chat-channels']")).to have_content(
-            category_channel_1.name,
-          )
-        end
+        it "shows the public channel in the sidebar instead of the core channels list" do
+          expect(chat_sidebar_page.channels_section).to have_content(category_channel_1.name)
 
-        it "doesn’t show the core channels list" do
           expect(page).to have_no_selector(".channels-list")
         end
       end
@@ -64,7 +60,7 @@ RSpec.describe "List channels | sidebar" do
         )
       end
 
-      it "sorts them by slug when channel has unread messages" do
+      it "keeps unread channels sorted by slug in the sidebar and drawer" do
         Fabricate(:chat_message, chat_channel: channel_1)
         visit("/")
 
@@ -74,17 +70,8 @@ RSpec.describe "List channels | sidebar" do
         expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
           ".channel-#{channel_1.id}",
         )
-      end
 
-      it "does not change sorting order when using drawer" do
-        Fabricate(:chat_message, chat_channel: channel_1)
-        visit("/")
-
-        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
-          ".channel-#{channel_2.id}",
-        )
-
-        drawer_page.visit_index
+        chat.open_from_header
         drawer_page.click_channels
 
         expect(drawer_page).to have_channel_at_position(channel_2, 1)
@@ -113,18 +100,14 @@ RSpec.describe "List channels | sidebar" do
         before { visit("/") }
 
         it "doesn’t show the channel" do
-          expect(page).to have_no_content(inaccessible_dm_channel_1.title(current_user))
+          expect(chat_sidebar).to have_direct_message_channel(dm_channel_1)
+          expect(chat_sidebar).to have_no_direct_message_channel(inaccessible_dm_channel_1)
         end
       end
     end
   end
 
   context "when no category channels" do
-    it "doesn’t show the section" do
-      visit("/")
-      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-channels']")
-    end
-
     context "when user can create channels" do
       before { current_user.update!(admin: true) }
 
@@ -136,8 +119,11 @@ RSpec.describe "List channels | sidebar" do
   end
 
   context "when no direct message channels" do
-    it "shows the start new dm button" do
+    it "omits the empty public section but lets the user start a DM from the sidebar" do
       visit("/")
+      expect(chat_sidebar).to have_start_new_dm
+      expect(chat_sidebar_page).to have_no_public_channels_section
+
       chat_sidebar.click_start_new_dm
 
       expect(page).to have_selector(".chat-modal-new-message")
@@ -170,7 +156,6 @@ RSpec.describe "List channels | sidebar" do
 
   context "when user has chat disabled" do
     before do
-      SiteSetting.chat_enabled = false
       current_user.user_option.update!(chat_enabled: false)
       visit("/")
     end
@@ -187,6 +172,7 @@ RSpec.describe "List channels | sidebar" do
 
       it "removes it from the sidebar" do
         visit("/")
+        expect(chat_sidebar_page).to have_channel(dm_channel_1)
         chat_sidebar_page.remove_channel(dm_channel_1)
         expect(chat_sidebar_page).to have_no_channel(dm_channel_1)
       end

@@ -4,7 +4,6 @@ RSpec.describe "Read only" do
   fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
 
   before { chat_system_bootstrap }
 
@@ -18,7 +17,6 @@ RSpec.describe "Read only" do
 
     it "shows the read only status" do
       channel_1.read_only!(Discourse.system_user)
-      chat.visit_channel_settings(channel_1)
       chat.visit_channel(channel_1)
 
       expect(page).to have_content(I18n.t("js.chat.channel_status.read_only_header"))
@@ -26,7 +24,6 @@ RSpec.describe "Read only" do
 
     it "disables the composer" do
       channel_1.read_only!(Discourse.system_user)
-      chat.visit_channel_settings(channel_1)
       chat.visit_channel(channel_1)
 
       expect(page).to have_field(
@@ -46,7 +43,6 @@ RSpec.describe "Read only" do
 
     it "disables the composer" do
       channel_1.read_only!(Discourse.system_user)
-      chat.visit_channel_settings(channel_1)
       chat.visit_channel(channel_1)
 
       expect(page).to have_field(

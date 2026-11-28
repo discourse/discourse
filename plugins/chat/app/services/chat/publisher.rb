@@ -56,11 +56,7 @@ module Chat
             channel_id: chat_channel.id,
             thread_id: chat_message.thread_id,
             force_thread: chat_message.thread&.force,
-            message:
-              Chat::MessageSerializer.new(
-                chat_message,
-                { scope: anonymous_guardian, root: false },
-              ).as_json,
+            message: serialize_message_for_unread_tracking(chat_message),
           },
           permissions(chat_channel),
         )
@@ -77,11 +73,7 @@ module Chat
           type: "channel",
           channel_id: chat_channel.id,
           thread_id: chat_message.thread_id,
-          message:
-            Chat::MessageSerializer.new(
-              chat_message,
-              { scope: anonymous_guardian, root: false },
-            ).as_json,
+          message: serialize_message_for_unread_tracking(chat_message),
         },
         permissions(chat_channel),
       )
@@ -565,6 +557,14 @@ module Chat
     end
 
     private
+
+    def self.serialize_message_for_unread_tracking(chat_message)
+      Chat::MessageSerializer
+        .new(chat_message, { scope: anonymous_guardian, root: false })
+        .as_json
+        .merge(created_at: chat_message.created_at.iso8601(3))
+    end
+    private_class_method :serialize_message_for_unread_tracking
 
     def self.permissions(channel)
       if channel.category_channel? && channel.read_restricted?

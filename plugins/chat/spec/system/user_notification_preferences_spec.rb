@@ -27,6 +27,7 @@ RSpec.describe "User notification preferences | Chat notifications" do
     it "does not render the chat notifications section" do
       visit_notifications
 
+      expect(page).to have_css(".control-group.notifications")
       expect(page).to have_no_css(".control-group.chat-notifications")
     end
   end
@@ -37,45 +38,33 @@ RSpec.describe "User notification preferences | Chat notifications" do
     it "does not render the chat notifications section" do
       visit_notifications
 
+      expect(page).to have_css(".control-group.notifications")
       expect(page).to have_no_css(".control-group.chat-notifications")
     end
   end
 
-  it "renders the chat notifications section" do
+  it "previews the selected sound and persists the sound and header settings" do
     visit_notifications
 
     expect(page).to have_css(".control-group.chat-notifications")
-  end
-
-  it "can change and persist the chat notification settings" do
-    visit_notifications
-
-    combo(".chat-header-indicator-preference").expand
-    combo(".chat-header-indicator-preference").select_row_by_value("dm_and_mentions")
+    expect(page).to have_no_css(".chat-sound-preview")
 
     combo(".chat-sound").expand
     combo(".chat-sound").select_row_by_value("retro")
+    expect(page).to have_css(".chat-sound-preview")
+
+    combo(".chat-header-indicator-preference").expand
+    combo(".chat-header-indicator-preference").select_row_by_value("dm_and_mentions")
 
     save
     visit_notifications
 
     expect(combo(".chat-header-indicator-preference").value).to eq("dm_and_mentions")
     expect(combo(".chat-sound").value).to eq("retro")
-  end
-
-  it "shows a sound preview button only while a sound is selected" do
-    visit_notifications
-
-    expect(page).to have_no_css(".chat-sound-preview")
-
-    combo(".chat-sound").expand
-    combo(".chat-sound").select_row_by_value("retro")
-
     expect(page).to have_css(".chat-sound-preview")
 
     combo(".chat-sound").expand
     combo(".chat-sound").select_row_by_name("None")
-
     expect(page).to have_no_css(".chat-sound-preview")
   end
 

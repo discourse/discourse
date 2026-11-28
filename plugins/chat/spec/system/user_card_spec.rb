@@ -14,12 +14,6 @@ RSpec.describe "User card" do
     end
   end
 
-  shared_examples "showing chat button" do
-    it "shows the chat button" do
-      expect(page).to have_css(".chat-direct-message-btn")
-    end
-  end
-
   context "when user" do
     context "when chat disabled" do
       before do
@@ -48,18 +42,13 @@ RSpec.describe "User card" do
           expect(page).to have_css(".user-card.show")
         end
 
-        include_examples "showing chat button"
+        it "shows the chat button and opens a DM with the user on the card" do
+          expect(page).to have_css(".chat-direct-message-btn")
+          find(".chat-direct-message-btn").click
 
-        context "when clicking chat button" do
-          before { find(".chat-direct-message-btn").click }
-
-          it "opens correct channel" do
-            # at this point the ChatChannel is not created yet
-            expect(page).to have_css(".chat-drawer.is-expanded")
-            expect(page).to have_css(
-              ".chat-drawer.is-expanded[data-chat-channel-id='#{Chat::Channel.last.id}']",
-            )
-          end
+          expect(chat).to have_drawer
+          direct_message = Chat::DirectMessage.for_user_ids([current_user.id, topic_1.user_id])
+          expect(chat).to have_drawer(channel_id: direct_message.direct_message_channel.id)
         end
       end
     end

@@ -16,18 +16,21 @@ RSpec.describe "Chat | Select message | channel" do
     sign_in(current_user)
   end
 
-  it "can select multiple messages" do
+  it "selects multiple messages individually or with shift-click" do
     chat_page.visit_channel(channel_1)
 
     channel_page.messages.select(message_1)
     channel_page.messages.select(message_2)
 
     expect(channel_page).to have_selected_messages(message_1, message_2)
-  end
 
-  it "can shift + click to select messages between the first and last" do
-    chat_page.visit_channel(channel_1)
+    channel_page.selection_management.cancel
+    expect(channel_page.selection_management).to be_not_visible
+
     channel_page.messages.select(message_1)
+    expect(page).to have_css(".chat-channel .chat-message-container.-selected", count: 1)
+    expect(channel_page).to have_selected_messages(message_1)
+
     channel_page.messages.shift_select(message_3)
 
     expect(channel_page).to have_selected_messages(message_1, message_2, message_3)
@@ -46,6 +49,7 @@ RSpec.describe "Chat | Select message | channel" do
 
       chat_page.visit_channel(channel_2)
 
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel_2.id}']")
       expect(channel_page.selection_management).to be_not_visible
     end
   end

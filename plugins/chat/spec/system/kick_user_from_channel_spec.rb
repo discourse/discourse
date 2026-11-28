@@ -19,22 +19,20 @@ describe "Kick user from chat channel" do
   end
 
   context "when the user is looking at the channel they are kicked from" do
-    before { chat.visit_channel(channel_1) }
-
     context "when the user presses ok" do
       it "redirects them to the first other public channel they have" do
+        chat.visit_channel(channel_1)
+
         Chat::Publisher.publish_kick_users(channel_1.id, [current_user.id])
         dialog.click_yes
         expect(page).to have_current_path(channel_2.url)
       end
 
       context "when the user has no other public channels" do
-        before do
+        it "redirects them to the chat browse page" do
           channel_2.remove(current_user)
           chat.visit_channel(channel_1)
-        end
 
-        it "redirects them to the chat browse page" do
           Chat::Publisher.publish_kick_users(channel_1.id, [current_user.id])
           dialog.click_yes
           expect(page).to have_current_path("/chat/browse/open")

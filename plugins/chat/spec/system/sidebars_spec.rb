@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Navigation" do
-  fab!(:category)
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:user, :admin)
   fab!(:category_channel)
   fab!(:category_channel_2, :category_channel)

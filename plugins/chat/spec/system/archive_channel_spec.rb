@@ -4,7 +4,7 @@ RSpec.describe "Archive channel" do
   fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -101,7 +101,9 @@ RSpec.describe "Archive channel" do
             visit("/")
             expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
 
-            chat.visit_channel_settings(channel_1)
+            chat.prefers_full_page
+            sidebar_page.open_channel_settings(channel_1)
+            expect(page).to have_current_path("#{channel_1.relative_url}/info/settings")
             click_button(I18n.t("js.chat.channel_settings.archive_channel"))
             find("#split-topic-name").fill_in(with: "An interesting topic for cats")
             click_button(I18n.t("js.chat.channel_archive.title"))

@@ -47,17 +47,12 @@ RSpec.describe "Chat message onebox" do
       )
     end
 
-    it "is oneboxed" do
+    it "shows a full onebox for a bare URL and a new-tab inline onebox within text" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("https://en.wikipedia.org/wiki/Hyperlink")
-
       expect(page).to have_content("This is a test", wait: 20)
-    end
 
-    it "is inline oneboxed with _blank target attribute" do
-      chat_page.visit_channel(channel_1)
       channel_page.send_message("test message - https://example.com")
-
       expect(page).to have_selector(".chat-cooked a[target='_blank']", text: "example.com")
     end
   end

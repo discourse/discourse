@@ -264,10 +264,10 @@ describe Chat::Publisher do
             channel_id: channel.id,
             thread_id: nil,
             message:
-              Chat::MessageSerializer.new(
-                message_1,
-                { scope: Guardian.new(nil), root: false },
-              ).as_json,
+              Chat::MessageSerializer
+                .new(message_1, { scope: Guardian.new(nil), root: false })
+                .as_json
+                .merge(created_at: message_1.created_at.iso8601(3)),
           },
         )
       end
@@ -500,10 +500,10 @@ describe Chat::Publisher do
               thread_id: thread.id,
               force_thread: false,
               message:
-                Chat::MessageSerializer.new(
-                  message_1,
-                  { scope: Guardian.new(nil), root: false },
-                ).as_json,
+                Chat::MessageSerializer
+                  .new(message_1, { scope: Guardian.new(nil), root: false })
+                  .as_json
+                  .merge(created_at: message_1.created_at.iso8601(3)),
             },
           )
         end

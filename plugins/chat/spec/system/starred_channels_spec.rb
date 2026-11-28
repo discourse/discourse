@@ -21,10 +21,13 @@ RSpec.describe "Starred channels" do
       channel_2.add(current_user)
     end
 
-    it "shows the starred channel in the Starred Channels section" do
+    it "moves a starred channel to the Starred Channels section after reload" do
       visit("/")
 
       expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
+      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+        ".channel-#{channel_1.id}",
+      )
 
       chat_page.visit_channel(channel_1)
 
@@ -37,29 +40,9 @@ RSpec.describe "Starred channels" do
 
       visit("/")
 
-      expect(page).to have_css("#sidebar-section-content-chat-starred-channels")
       expect(
         page.find("#sidebar-section-content-chat-starred-channels li:nth-child(1)"),
       ).to have_css(".channel-#{channel_1.id}")
-    end
-
-    it "removes the starred channel from the regular Channels section" do
-      visit("/")
-
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
-
-      chat_page.visit_channel(channel_1)
-
-      find(".c-navbar__star-channel-button").click
-      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
-
-      visit("/")
-
-      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
       expect(page.find("#sidebar-section-content-chat-channels")).to have_no_css(
         ".channel-#{channel_1.id}",
       )
@@ -198,8 +181,6 @@ RSpec.describe "Starred channels" do
     end
 
     it "shows the starred DM channel in the Starred Channels section" do
-      visit("/")
-
       chat_page.visit_channel(dm_channel_1)
 
       membership = dm_channel_1.membership_for(current_user)
@@ -274,23 +255,18 @@ RSpec.describe "Starred channels" do
 
     before { channel_1.add(current_user) }
 
-    it "can star a channel from the navbar" do
-      chat_page.visit_channel(channel_1)
-
-      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
-
-      find(".c-navbar__star-channel-button").click
-
-      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
-      expect(channel_1.membership_for(current_user).reload.starred).to eq(true)
-    end
-
-    it "can unstar a channel from the navbar" do
+    it "shows the unstar tooltip and unstars a channel from the navbar" do
       channel_1.membership_for(current_user).update!(starred: true)
 
       chat_page.visit_channel(channel_1)
 
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+
+      find(".c-navbar__star-channel-button").hover
+      expect(page).to have_css(
+        ".fk-d-tooltip__content",
+        text: I18n.t("js.chat.channel_settings.unstar_channel"),
+      )
 
       find(".c-navbar__star-channel-button").click
 
@@ -299,33 +275,10 @@ RSpec.describe "Starred channels" do
       expect(channel_1.membership_for(current_user).reload.starred).to eq(false)
     end
 
-    it "shows the correct tooltip when hovering over the star button" do
+    it "stars the channel from the navbar and updates the tooltip" do
       chat_page.visit_channel(channel_1)
 
-      find(".c-navbar__star-channel-button").hover
-
-      expect(page).to have_css(
-        ".fk-d-tooltip__content",
-        text: I18n.t("js.chat.channel_settings.star_channel"),
-      )
-    end
-
-    it "shows the correct tooltip when channel is already starred" do
-      channel_1.membership_for(current_user).update!(starred: true)
-
-      chat_page.visit_channel(channel_1)
-
-      find(".c-navbar__star-channel-button").hover
-
-      expect(page).to have_css(
-        ".fk-d-tooltip__content",
-        text: I18n.t("js.chat.channel_settings.unstar_channel"),
-      )
-    end
-
-    it "updates tooltip after toggling starred state" do
-      chat_page.visit_channel(channel_1)
-
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
       find(".c-navbar__star-channel-button").hover
       expect(page).to have_css(
         ".fk-d-tooltip__content",
@@ -333,7 +286,8 @@ RSpec.describe "Starred channels" do
       )
 
       find(".c-navbar__star-channel-button").click
-      expect(page).to have_css(".c-navbar__star-channel-button.--starred")
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+      expect(channel_1.membership_for(current_user).reload.starred).to eq(true)
 
       find(".c-navbar__star-channel-button").hover
       expect(page).to have_css(
@@ -375,7 +329,7 @@ RSpec.describe "Starred channels" do
       channel_1.membership_for(current_user).update!(starred: true)
     end
 
-    it "returns to starred channels when starred channels exist" do
+    it "returns to starred channels until the last channel is unstarred" do
       visit("/")
       chat_page.open_from_header
       find("#c-footer-starred").click
@@ -383,12 +337,7 @@ RSpec.describe "Starred channels" do
 
       find(".c-navbar__back-button").click
       expect(page).to have_current_path("/chat/starred-channels")
-    end
 
-    it "redirects to channels list after unstarring the last channel" do
-      visit("/")
-      chat_page.open_from_header
-      find("#c-footer-starred").click
       find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
 
       find(".c-navbar__star-channel-button").click

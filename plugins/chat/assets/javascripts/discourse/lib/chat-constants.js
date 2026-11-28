@@ -1,6 +1,9 @@
+import { INPUT_DELAY, isRailsTesting } from "discourse/lib/environment";
+
 export const PAST = "past";
 export const FUTURE = "future";
-export const READ_INTERVAL_MS = 500;
+export const READ_INTERVAL_MS = isRailsTesting() ? 100 : 500;
+export const CHAT_INPUT_DELAY = isRailsTesting() ? 100 : INPUT_DELAY;
 export const DEFAULT_MESSAGE_PAGE_SIZE = 50;
 export const THREAD_TITLE_PROMPT_THRESHOLD = 5;
 export const CHANNEL_NAME_MAX_LENGTH = 80;

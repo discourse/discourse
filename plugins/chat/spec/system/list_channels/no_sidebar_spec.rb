@@ -67,21 +67,23 @@ RSpec.describe "List channels | no sidebar" do
       context "when not member of the channel" do
         it "doesn’t show the channel" do
           visit("/chat")
-          expect(page).to have_no_content(inaccessible_dm_channel_1.title(current_user))
+          dm_list = find(".direct-message-channels")
+          expect(dm_list).to have_css(
+            ".chat-channel-row[data-chat-channel-id='#{dm_channel_1.id}']",
+          )
+          expect(dm_list).to have_no_css(
+            ".chat-channel-row[data-chat-channel-id='#{inaccessible_dm_channel_1.id}']",
+          )
         end
       end
     end
   end
 
-  context "when no category channels" do
-    it "shows the empty channel list" do
+  context "when no channels" do
+    it "does not show the create channel button for a regular user" do
       visit("/chat")
       expect(page).to have_css(".c-list-empty-state")
-    end
-
-    it "does not show the create channel button" do
-      visit("/chat")
-      expect(page).to have_no_css(".-navbar__new-channel-button")
+      expect(chat).to have_no_new_channel_button
     end
 
     context "when user can create channels" do
@@ -91,13 +93,6 @@ RSpec.describe "List channels | no sidebar" do
         visit("/chat")
         expect(page).to have_css(".c-navbar__new-channel-button")
       end
-    end
-  end
-
-  context "when no direct message channels" do
-    it "shows the empty channel list" do
-      visit("/chat")
-      expect(page).to have_css(".c-list-empty-state")
     end
   end
 
@@ -112,13 +107,11 @@ RSpec.describe "List channels | no sidebar" do
   end
 
   context "when user has chat disabled" do
-    before do
-      SiteSetting.chat_enabled = false
-      current_user.user_option.update!(chat_enabled: false)
-    end
+    before { current_user.user_option.update!(chat_enabled: false) }
 
-    it "doesn’t show the sections" do
+    it "shows the disabled screen instead of the sections" do
       visit("/chat")
+      expect(page).to have_css(".chat-disabled")
       expect(page).to have_no_css(".public-channels-section")
       expect(page).to have_no_css(".direct-message-channels-section")
     end

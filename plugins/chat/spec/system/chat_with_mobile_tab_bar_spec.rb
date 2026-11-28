@@ -37,8 +37,13 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     )
   end
 
-  it "starts a new chat from the create button, offered first in the chat section" do
+  it "shows the list options beside the chat tabs and offers new chat first in the create menu" do
     visit("/chat")
+
+    expect(page).to have_css(
+      ".c-footer.--pills .c-footer__options .chat-channel-list-options-button",
+    )
+    expect(page).to have_no_css(".c-routes.--channels > .c-navbar-container")
 
     tab_bar.click_create
 
@@ -52,7 +57,9 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
   it "shows the user their unread direct messages on the chat tab" do
     other_user = Fabricate(:user)
     dm_channel = Fabricate(:direct_message_channel, users: [current_user, other_user])
-    Fabricate(:chat_message_with_service, chat_channel: dm_channel, user: other_user)
+    message = Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
+    dm_channel.update!(last_message: message)
+    dm_channel.membership_for(other_user).update!(last_read_message: message)
 
     visit("/latest")
 
@@ -89,15 +96,6 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     find(".d-header .c-navbar .search-dropdown button").click
 
     expect(page).to have_no_css(".chat-channel__filter-bar")
-  end
-
-  it "lets the chat tabs name the list and holds its options beside them" do
-    visit("/chat")
-
-    expect(page).to have_css(
-      ".c-footer.--pills .c-footer__options .chat-channel-list-options-button",
-    )
-    expect(page).to have_no_css(".c-routes.--channels > .c-navbar-container")
   end
 
   it "keeps the list's options for a member with only the channels to view" do

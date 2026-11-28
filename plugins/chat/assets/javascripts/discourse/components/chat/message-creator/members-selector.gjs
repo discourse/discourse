@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import { CHAT_INPUT_DELAY } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatablesLoader from "./lib/chatables-loader.js";
 import listKeyboardNavigation from "./lib/list-keyboard-navigation.js";
 import List from "./list.gjs";
@@ -80,7 +80,7 @@ export default class MembersSelector extends Component {
       this,
       this.fetch,
       event.target.value,
-      INPUT_DELAY
+      CHAT_INPUT_DELAY
     );
   }
 

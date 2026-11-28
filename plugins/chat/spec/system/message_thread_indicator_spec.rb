@@ -15,50 +15,24 @@ describe "Thread indicator for chat messages" do
   end
 
   context "when threading_enabled is false for the channel" do
-    fab!(:channel, :chat_channel)
-    before { channel.update!(threading_enabled: false) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: false) }
+    fab!(:thread) { create_thread_with_reply_excerpts([other_user, current_user]) }
 
-    it "shows no thread inidcators in the channel" do
-      thread = chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
+    it "shows no thread indicators in the channel" do
       chat_page.visit_channel(channel)
       expect(channel_page).to have_no_thread_indicator(thread.original_message)
     end
   end
 
   context "when threading is enabled for the channel" do
-    fab!(:channel, :chat_channel)
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread_1) do
-      chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
-    end
-    fab!(:thread_2) do
-      chat_thread_chain_bootstrap(
-        channel: channel,
-        users: [current_user, other_user],
-        messages_count: 2,
-      )
-    end
-
-    before { channel.update!(threading_enabled: true) }
-
-    it "throws thread indicators on all original messages" do
-      chat_page.visit_channel(channel)
-      expect(channel_page).to have_thread_indicator(thread_1.original_message)
-      expect(channel_page).to have_thread_indicator(thread_2.original_message)
-    end
-
-    it "shows the correct reply counts" do
-      chat_page.visit_channel(channel)
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
-        3,
-      )
-      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_reply_count(
-        1,
-      )
+      create_thread_with_reply_excerpts([other_user, current_user, other_user, current_user])
     end
 
     it "shows the reply count but no participant avatars when there is only one participant" do
       single_user_thread =
-        chat_thread_chain_bootstrap(channel: channel, users: [current_user], messages_count: 3)
+        create_thread_with_reply_excerpts([current_user, current_user, current_user])
 
       chat_page.visit_channel(channel)
       expect(
@@ -67,12 +41,6 @@ describe "Thread indicator for chat messages" do
       expect(
         channel_page.message_thread_indicator(single_user_thread.original_message),
       ).to have_no_participants
-    end
-
-    it "clicking a thread indicator opens the thread panel" do
-      chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator(thread_1.original_message).click
-      expect(side_panel).to have_open_thread(thread_1)
     end
 
     it "shows the thread indicator and hides the sent message when a user first replies to a message without a thread" do
@@ -89,32 +57,27 @@ describe "Thread indicator for chat messages" do
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end
 
-    it "increments the indicator when a new reply is sent in the thread" do
+    it "shows thread indicators with counts and participants, and updates the count after replying" do
+      thread_2 = create_thread_with_reply_excerpts([other_user, current_user])
       chat_page.visit_channel(channel)
 
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
-        3,
+      expect(channel_page).to have_thread_indicator(thread_1.original_message)
+      expect(channel_page).to have_thread_indicator(thread_2.original_message)
+      first_indicator = channel_page.message_thread_indicator(thread_1.original_message)
+      expect(first_indicator).to have_reply_count(3)
+      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_reply_count(
+        1,
       )
+      expect(first_indicator).to have_participant(current_user)
+      expect(first_indicator).to have_participant(other_user)
 
-      channel_page.message_thread_indicator(thread_1.original_message).click
+      first_indicator.click
 
       expect(side_panel).to have_open_thread(thread_1)
 
       open_thread.send_message
 
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
-        4,
-      )
-    end
-
-    it "shows avatars for the participants of the thread" do
-      chat_page.visit_channel(channel)
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
-        current_user,
-      )
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
-        other_user,
-      )
+      expect(first_indicator).to have_reply_count(4)
     end
 
     it "shows an excerpt of the last reply in the thread" do
@@ -171,5 +134,26 @@ describe "Thread indicator for chat messages" do
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,
       ).to have_content(thread_excerpt(new_message))
     end
+  end
+
+  private
+
+  def create_thread_with_reply_excerpts(authors)
+    original_author, *reply_authors = authors
+    thread =
+      chat_thread_with_replies(
+        channel: channel,
+        original_message_user: original_author,
+        reply_users: reply_authors,
+        link_replies: true,
+      )
+    channel.add(original_author).mark_read!(thread.original_message_id)
+    thread.replies.each do |reply|
+      reply.update!(excerpt: reply.build_excerpt)
+      channel.add(reply.user)
+      thread.add(reply.user).mark_read!(reply.id)
+    end
+    channel.update_last_message_id!
+    thread
   end
 end

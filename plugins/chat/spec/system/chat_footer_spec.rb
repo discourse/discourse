@@ -5,13 +5,13 @@ RSpec.describe "Mobile Chat footer", mobile: true do
   fab!(:other_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
+  fab!(:other_membership) { channel.add(other_user) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   before do
     chat_system_bootstrap
     sign_in(current_user)
     channel.add(current_user)
-    channel.add(other_user)
   end
 
   context "with multiple tabs" do
@@ -41,13 +41,15 @@ RSpec.describe "Mobile Chat footer", mobile: true do
     end
 
     context "when user has viewable threads" do
-      before do
-        SiteSetting.chat_threads_enabled = true
-        thread = Fabricate(:chat_thread, channel: channel, original_message: message)
-        thread.add(current_user)
-        Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
-        thread.set_replies_count_cache(1, update_db: true)
+      fab!(:thread) do
+        chat_thread_with_replies(
+          channel: channel,
+          original_message: message,
+          reply_users: [other_user],
+        )
       end
+
+      before { SiteSetting.chat_threads_enabled = true }
 
       it "shows threads tab when user has threads" do
         visit("/")
@@ -59,11 +61,10 @@ RSpec.describe "Mobile Chat footer", mobile: true do
     end
 
     context "when user is not a member of any channel with threads" do
-      before do
-        other_channel = Fabricate(:chat_channel, threading_enabled: false)
-        other_channel.add(current_user)
-        channel.remove(current_user)
-      end
+      fab!(:other_channel) { Fabricate(:chat_channel, threading_enabled: false) }
+      fab!(:other_channel_membership) { other_channel.add(current_user) }
+
+      before { channel.remove(current_user) }
 
       it "does not show my threads" do
         SiteSetting.chat_threads_enabled = true
@@ -83,18 +84,12 @@ RSpec.describe "Mobile Chat footer", mobile: true do
       SiteSetting.direct_message_enabled_groups = "3" # staff only
     end
 
-    it "does not render footer" do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(page).to have_no_css(".c-footer")
-    end
-
-    it "redirects user to channels page" do
+    it "opens the channels page without a footer" do
       visit("/")
       chat_page.open_from_header
 
       expect(page).to have_current_path("/chat/channels")
+      expect(page).to have_no_css(".c-footer")
     end
   end
 
@@ -179,14 +174,9 @@ RSpec.describe "Mobile Chat footer", mobile: true do
 
     context "for my threads" do
       context "with public channels" do
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: message) }
-        fab!(:thread_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+        fab!(:thread) { chat_thread_with_replies(channel: channel, original_message: message) }
 
-        before do
-          SiteSetting.chat_threads_enabled = true
-          thread.add(current_user)
-          thread.set_replies_count_cache(1, update_db: true)
-        end
+        before { SiteSetting.chat_threads_enabled = true }
 
         it "is unread" do
           visit("/")
@@ -226,17 +216,14 @@ RSpec.describe "Mobile Chat footer", mobile: true do
         end
         fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
         fab!(:dm_thread) do
-          Fabricate(:chat_thread, channel: dm_channel, original_message: dm_message)
-        end
-        fab!(:dm_thread_message) do
-          Fabricate(:chat_message, chat_channel: dm_channel, thread: dm_thread, user: other_user)
+          chat_thread_with_replies(
+            channel: dm_channel,
+            original_message: dm_message,
+            reply_users: [other_user],
+          )
         end
 
-        before do
-          SiteSetting.chat_threads_enabled = true
-          dm_thread.add(current_user)
-          dm_thread.set_replies_count_cache(1, update_db: true)
-        end
+        before { SiteSetting.chat_threads_enabled = true }
 
         it "is unread" do
           visit("/")

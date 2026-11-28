@@ -83,13 +83,35 @@ module PageObjects
 
       # Scrolls to the top to load the previous page of messages.
       def scroll_to_top
-        3.times do
-          page.execute_script(<<~JS)
-            const scroller = document.querySelector("#{PageObjects::Components::Chat::Messages::SELECTOR}");
-            scroller.scrollTop = -scroller.scrollHeight;
-            scroller.dispatchEvent(new Event("scroll"));
+        scroller =
+          find(".chat-channel.--loaded #{PageObjects::Components::Chat::Messages::SELECTOR}")
+        oldest_message_id =
+          page.evaluate_script(
+            'arguments[0].querySelector(".chat-message-container")?.dataset.id',
+            scroller,
+          )
+
+        try_until_success do
+          loaded = page.evaluate_script(<<~JS, scroller, oldest_message_id)
+            ((scroller, oldestMessageId) => {
+              const channel = scroller.closest(".chat-channel");
+              const atStart = channel.classList.contains("is-empty") || scroller.querySelector(".all-loaded-message");
+              if (atStart) {
+                scroller.scrollTop = -scroller.scrollHeight;
+                return true;
+              }
+              if (scroller.querySelector(".chat-message-container")?.dataset.id !== oldestMessageId) {
+                return true;
+              }
+              // The channel can ignore the scroll event after positioning the initial page.
+              if (!channel.classList.contains("loading")) {
+                scroller.scrollTop = -scroller.scrollHeight;
+                scroller.dispatchEvent(new Event("scroll"));
+              }
+              return false;
+            })(...arguments)
           JS
-          sleep 0.1
+          raise Capybara::ExpectationNotMet, "Older chat messages did not load" unless loaded
         end
       end
 

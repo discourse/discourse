@@ -3,24 +3,29 @@
 RSpec.describe "Message notifications - with sidebar" do
   fab!(:current_user, :user)
 
-  let!(:chat_page) { PageObjects::Pages::Chat.new }
-  let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let!(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let!(:sidebar) { PageObjects::Pages::ChatSidebar.new }
-
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
   end
 
-  def create_message(text: nil, channel: nil, thread: nil, creator: Fabricate(:user))
-    Fabricate(
-      :chat_message_with_service,
-      chat_channel: channel,
-      thread: thread,
-      message: text,
-      user: creator,
-    )
+  let(:sidebar) { PageObjects::Pages::ChatSidebar.new }
+  let(:header) { PageObjects::Components::Chat::Header.new }
+
+  def create_message(text: nil, channel: nil, thread: nil, creator:)
+    result =
+      Chat::CreateMessage.call(
+        guardian: creator.guardian,
+        params: {
+          chat_channel_id: (channel || thread.channel).id,
+          thread_id: thread&.id,
+          message: text || fake_chat_message,
+        },
+        options: {
+          process_inline: true,
+        },
+      )
+    service_failed!(result) if result.failure?
+    result.message_instance
   end
 
   context "as a user" do
@@ -29,7 +34,6 @@ RSpec.describe "Message notifications - with sidebar" do
     context "when on homepage" do
       context "with public channel" do
         fab!(:channel_1, :category_channel)
-        fab!(:channel_2, :category_channel)
         fab!(:user_1, :user)
 
         before { channel_1.add(user_1) }
@@ -40,8 +44,9 @@ RSpec.describe "Message notifications - with sidebar" do
               visit("/")
               create_message(channel: channel_1, creator: user_1)
 
+              expect(header).to have_open_chat_button
+              expect(sidebar).to have_no_channel(channel_1)
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
-              expect(page).to have_no_css(".sidebar-row.channel-#{channel_1.id}")
             end
           end
         end
@@ -50,7 +55,7 @@ RSpec.describe "Message notifications - with sidebar" do
           before { channel_1.add(current_user) }
 
           context "when user is in DnD" do
-            before do
+            fab!(:dnd) do
               Fabricate(
                 :do_not_disturb_timing,
                 user: current_user,
@@ -64,6 +69,8 @@ RSpec.describe "Message notifications - with sidebar" do
               create_message(channel: channel_1, creator: user_1)
 
               expect(page).to have_css(".do-not-disturb-background")
+              expect(header).to have_open_chat_button
+              expect(sidebar).to have_unread_channel(channel_1)
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
             end
           end
@@ -76,8 +83,10 @@ RSpec.describe "Message notifications - with sidebar" do
                 visit("/")
                 create_message(channel: channel_1, creator: user_1)
 
+                expect(header).to have_open_chat_button
+                expect(sidebar).to have_channel(channel_1)
                 expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
-                expect(page).to have_no_css(".sidebar-row.channel-#{channel_1.id} .unread")
+                expect(sidebar).to have_no_unread_channel(channel_1)
               end
             end
           end
@@ -94,6 +103,9 @@ RSpec.describe "Message notifications - with sidebar" do
               it "doesn't show any indicator on chat-header-icon" do
                 visit("/")
                 create_message(channel: channel_1, creator: user_1)
+
+                expect(header).to have_open_chat_button
+                expect(sidebar).to have_unread_channel(channel_1)
 
                 expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
               end
@@ -112,6 +124,9 @@ RSpec.describe "Message notifications - with sidebar" do
               it "doesn't show any indicator on chat-header-icon" do
                 visit("/")
                 create_message(channel: channel_1, creator: user_1)
+
+                expect(header).to have_open_chat_button
+                expect(sidebar).to have_unread_channel(channel_1)
 
                 expect(page).to have_no_css(
                   ".chat-header-icon .chat-channel-unread-indicator.-urgent",
@@ -194,10 +209,7 @@ RSpec.describe "Message notifications - with sidebar" do
       context "with dm channel" do
         fab!(:current_user, :admin)
         fab!(:user_1, :user)
-        fab!(:user_2, :user)
-
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
-        fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
 
         context "when chat_header_indicator_preference is 'only_mentions'" do
           before do
@@ -210,6 +222,8 @@ RSpec.describe "Message notifications - with sidebar" do
           it "doesn't show indicator on chat-header-icon for messages" do
             visit("/")
             create_message(channel: dm_channel_1, creator: user_1)
+            expect(header).to have_open_chat_button
+            expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .urgent")
             expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator.-urgent")
           end
 
@@ -239,24 +253,31 @@ RSpec.describe "Message notifications - with sidebar" do
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
 
-          it "reorders channels" do
-            visit("/chat")
+          context "with a second DM channel" do
+            fab!(:user_2, :user)
+            fab!(:dm_channel_2) do
+              Fabricate(:direct_message_channel, users: [current_user, user_2])
+            end
 
-            expect(page).to have_css(
-              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_1.id}",
-            )
-            expect(page).to have_css(
-              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_2.id}",
-            )
+            it "reorders channels" do
+              visit("/chat")
 
-            create_message(channel: dm_channel_2, creator: user_2)
+              expect(page).to have_css(
+                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_1.id}",
+              )
+              expect(page).to have_css(
+                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_2.id}",
+              )
 
-            expect(page).to have_css(
-              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_2.id}",
-            )
-            expect(page).to have_css(
-              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_1.id}",
-            )
+              create_message(channel: dm_channel_2, creator: user_2)
+
+              expect(page).to have_css(
+                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_2.id}",
+              )
+              expect(page).to have_css(
+                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_1.id}",
+              )
+            end
           end
         end
       end
@@ -267,17 +288,27 @@ RSpec.describe "Message notifications - with sidebar" do
         context "with public channels" do
           fab!(:channel) { Fabricate(:category_channel, threading_enabled: true) }
           fab!(:thread) do
-            chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
+            Fabricate(:chat_thread, channel: channel, original_message_user: current_user)
+          end
+          fab!(:reply) do
+            Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
           end
 
           before do
-            channel.membership_for(current_user).mark_read!
-            thread.membership_for(current_user).mark_read!
+            channel.add(other_user)
+            channel.update!(last_message_id: thread.original_message_id, messages_count: 1)
+            channel.add(current_user).mark_read!(thread.original_message_id)
+            thread.update_last_message_id!
+            thread.set_replies_count_cache(1, update_db: true)
+            thread.add(other_user).mark_read!(reply.id)
+            thread.membership_for(current_user).mark_read!(reply.id)
 
             visit("/")
           end
 
           it "shows the unread badge in chat header" do
+            expect(header).to have_open_chat_button
+            expect(sidebar).to have_channel(channel)
             expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
 
             create_message(thread: thread, creator: other_user, text: "this is a test")
@@ -295,17 +326,25 @@ RSpec.describe "Message notifications - with sidebar" do
             )
           end
           fab!(:thread) do
-            chat_thread_chain_bootstrap(channel: dm_channel, users: [current_user, other_user])
+            Fabricate(:chat_thread, channel: dm_channel, original_message_user: current_user)
+          end
+          fab!(:reply) do
+            Fabricate(:chat_message, chat_channel: dm_channel, thread: thread, user: other_user)
           end
 
           before do
-            dm_channel.membership_for(current_user).mark_read!
-            thread.membership_for(current_user).mark_read!
+            dm_channel.update!(last_message_id: thread.original_message_id, messages_count: 1)
+            dm_channel.membership_for(current_user).mark_read!(thread.original_message_id)
+            thread.update_last_message_id!
+            thread.set_replies_count_cache(1, update_db: true)
+            thread.add(other_user).mark_read!(reply.id)
+            thread.membership_for(current_user).mark_read!(reply.id)
 
             visit("/")
           end
 
           it "shows the unread indicator in the sidebar for tracked threads" do
+            expect(sidebar).to have_channel(dm_channel)
             expect(page).to have_no_css(".sidebar-row.channel-#{dm_channel.id} .unread")
 
             create_message(channel: dm_channel, thread: thread, creator: other_user)
@@ -314,6 +353,7 @@ RSpec.describe "Message notifications - with sidebar" do
           end
 
           it "shows the urgent indicator in the sidebar for tracked threads" do
+            expect(sidebar).to have_channel(dm_channel)
             expect(page).to have_no_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
 
             thread.membership_for(current_user).update!(notification_level: :watching)
@@ -324,6 +364,7 @@ RSpec.describe "Message notifications - with sidebar" do
           end
 
           it "shows the urgent indicator in the chat sidebar for mentions" do
+            expect(sidebar).to have_channel(dm_channel)
             expect(page).to have_no_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
 
             create_message(
@@ -342,12 +383,17 @@ RSpec.describe "Message notifications - with sidebar" do
             Fabricate(:direct_message_channel, users: [current_user, other_user])
           end
 
+          fab!(:first_message) do
+            Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
+          end
+
           it "shows the urgent indicator when someone replies to a message" do
-            first_message =
-              Fabricate(:chat_message_with_service, chat_channel: dm_channel, user: other_user)
+            dm_channel.update!(last_message: first_message, messages_count: 1)
+            dm_channel.membership_for(other_user).mark_read!(first_message.id)
             dm_channel.membership_for(current_user).mark_read!(first_message.id)
 
             visit("/")
+            expect(sidebar).to have_channel(dm_channel)
             expect(page).to have_no_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
 
             Chat::CreateMessage.call(
@@ -366,13 +412,13 @@ RSpec.describe "Message notifications - with sidebar" do
         context "with category channel replies (threading disabled)" do
           fab!(:channel) { Fabricate(:category_channel, threading_enabled: false) }
           fab!(:first_message) do
-            Fabricate(:chat_message_with_service, chat_channel: channel, user: current_user)
+            Fabricate(:chat_message, chat_channel: channel, user: current_user)
           end
 
           before do
-            channel.add(current_user)
+            channel.update!(last_message: first_message, messages_count: 1)
+            channel.add(current_user).mark_read!(first_message.id)
             channel.add(other_user)
-            channel.membership_for(current_user).mark_read!(first_message.id)
           end
 
           def reply_to_first_message
@@ -388,7 +434,8 @@ RSpec.describe "Message notifications - with sidebar" do
 
           it "shows the unread indicator when someone replies to the user's message" do
             visit("/")
-            expect(page).to have_no_css(".sidebar-row.channel-#{channel.id} .unread")
+            expect(sidebar).to have_channel(channel)
+            expect(sidebar).to have_no_unread_channel(channel)
 
             reply_to_first_message
 

@@ -25,49 +25,48 @@ RSpec.describe "Deleted message" do
       expect(channel_page.messages).to have_deleted_message(message_1, count: 1)
     end
 
-    it "does not error when coming back to the channel from another channel" do
-      message = Fabricate(:chat_message, chat_channel: channel_1)
-      channel_2 = Fabricate(:category_channel, name: "other channel")
-      channel_2.add(current_user)
-      channel_1
-        .user_chat_channel_memberships
-        .find_by(user: current_user)
-        .update!(last_read_message_id: message.id)
-      chat_page.visit_channel(channel_1)
-      channel_page.messages.delete(message)
-      expect(channel_page.messages).to have_deleted_message(message, count: 1)
-      sidebar_component.click_link(channel_2.name)
-      expect(channel_page).to have_no_loading_skeleton
+    context "when returning to a channel with read history" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:channel_2) { Fabricate(:category_channel, name: "other channel") }
 
-      sidebar_component.click_link(channel_1.name)
-      expect(channel_page.messages).to have_deleted_message(message, count: 1)
-    end
-
-    context "when the current user is not admin" do
-      fab!(:current_user, :user)
-
-      it "does not error when coming back to the channel from another channel" do
-        message = Fabricate(:chat_message, chat_channel: channel_1)
-        channel_2 = Fabricate(:category_channel, name: "other channel")
+      before do
         channel_2.add(current_user)
         channel_1
           .user_chat_channel_memberships
           .find_by(user: current_user)
           .update!(last_read_message_id: message.id)
+      end
+
+      it "shows as deleted after returning to the channel as staff" do
         chat_page.visit_channel(channel_1)
+        channel_page.messages.delete(message)
+        expect(channel_page.messages).to have_deleted_message(message, count: 1)
         sidebar_component.click_link(channel_2.name)
-
-        other_user = Fabricate(:admin)
-        chat_system_user_bootstrap(user: other_user, channel: channel_1)
-
-        using_session(:tab_2) do
-          sign_in(other_user)
-          chat_page.visit_channel(channel_1)
-          channel_page.messages.delete(message)
-        end
+        expect(channel_page).to have_no_loading_skeleton
 
         sidebar_component.click_link(channel_1.name)
-        expect(channel_page.messages).to have_no_message(id: message.id)
+        expect(channel_page.messages).to have_deleted_message(message, count: 1)
+      end
+
+      context "when the current user is not admin" do
+        fab!(:current_user, :user)
+
+        it "does not error when coming back to the channel from another channel" do
+          chat_page.visit_channel(channel_1)
+          sidebar_component.click_link(channel_2.name)
+
+          other_user = Fabricate(:admin)
+          chat_system_user_bootstrap(user: other_user, channel: channel_1)
+
+          using_session(:tab_2) do
+            sign_in(other_user)
+            chat_page.visit_channel(channel_1)
+            channel_page.messages.delete(message)
+          end
+
+          sidebar_component.click_link(channel_1.name)
+          expect(channel_page.messages).to have_no_message(id: message.id)
+        end
       end
     end
   end
@@ -80,7 +79,7 @@ RSpec.describe "Deleted message" do
     fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-    it "allows user to bulk delete" do
+    it "bulk deletes non-adjacent messages" do
       chat_page.visit_channel(channel_1)
 
       channel_page.messages.select(message_2)
@@ -92,11 +91,13 @@ RSpec.describe "Deleted message" do
       expect(channel_page.messages).to have_deleted_messages(message_2, message_4, message_6)
     end
 
-    it "groups them" do
+    it "groups a deleted message with its already-deleted predecessor" do
       chat_page.visit_channel(channel_1)
 
       trash_message!(message_1)
       trash_message!(message_3)
+      expect(channel_page.messages).to have_deleted_message(message_3, count: 1)
+
       trash_message!(message_4)
       trash_message!(message_6)
 
@@ -139,7 +140,8 @@ RSpec.describe "Deleted message" do
     before do
       channel_1.update!(threading_enabled: true)
       chat_system_user_bootstrap(user: other_user, channel: channel_1)
-      Chat::Thread.update_counts
+      thread_1.update_last_message_id!
+      thread_1.update!(replies_count: 2)
       thread_1.add(current_user)
     end
 

@@ -3,7 +3,6 @@
 describe "Uploading files in chat messages" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -40,7 +39,7 @@ describe "Uploading files in chat messages" do
       )
     end
 
-    it "allows uploading a single file" do
+    it "sends single-image uploads with or without text and renders their dominant color" do
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("logo.png", "images").path
       attach_file("channel-file-uploader", file_path, make_visible: true)
@@ -56,14 +55,18 @@ describe "Uploading files in chat messages" do
         exact: false,
       )
       expect(Chat::Message.last.uploads.count).to eq(1)
+
+      attach_file("channel-file-uploader", file_path, make_visible: true)
+      channel_page.click_send_message
+
+      expect(channel_page.messages).to have_css(".chat-img-upload[data-dominant-color]", count: 2)
     end
 
     it "adds a thumbnail for large images" do
       SiteSetting.create_thumbnails = true
-      SiteSetting.max_image_megapixels = 150
 
       chat.visit_channel(channel_1)
-      file_path = file_from_fixtures("huge.jpg", "images").path
+      file_path = file_from_fixtures("2000x2000.png", "images").path
       attach_file("channel-file-uploader", file_path, make_visible: true)
 
       expect(page).to have_css(".chat-composer-upload .preview .preview-img")
@@ -81,20 +84,9 @@ describe "Uploading files in chat messages" do
         expect(upload.thumbnail&.url).to be_present
       end
 
-      # image has src attribute with thumbnail url
-      expect(channel_page).to have_css(".chat-uploads img[src$='#{upload.thumbnail.url}']")
-
-      # image has data-large-src with original image src
-      expect(channel_page).to have_css(".chat-uploads img[data-large-src$='#{upload.url}']")
-    end
-
-    it "adds dominant color attribute to images" do
-      chat.visit_channel(channel_1)
-      file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("channel-file-uploader", file_path, make_visible: true)
-      channel_page.click_send_message
-
-      expect(channel_page.messages).to have_css(".chat-img-upload[data-dominant-color]", count: 1)
+      expect(channel_page).to have_css(
+        ".chat-uploads img[src$='#{upload.thumbnail.url}'][data-large-src$='#{upload.url}']",
+      )
     end
 
     it "allows uploading multiple files" do

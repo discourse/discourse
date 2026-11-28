@@ -19,7 +19,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels" do
     sign_in(user)
   end
 
-  it "searches for channels, categories, and tags with # and prioritises channels in the results" do
+  it "prioritises channels in chat autocomplete and renders saved channel, category, and tag hashtags" do
     chat_page.visit_channel(channel1)
     chat_channel_page.composer.send_keys("this is #ra")
     expect(page).to have_css(
@@ -30,24 +30,8 @@ describe "Using #hashtag autocompletion to search for and lookup channels" do
     expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
       ["Random", "Raspberry", "razed (x0)"],
     )
-  end
 
-  it "searches for channels as well with # in a topic composer and deprioritises them" do
-    topic_page.visit_topic_and_open_composer(topic)
-    expect(topic_page).to have_expanded_composer
-    topic_page.type_in_composer("something #ra")
-    expect(page).to have_css(
-      ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
-      count: 3,
-    )
-    hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
-    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
-      ["Raspberry", "razed (x0)", "Random"],
-    )
-  end
-
-  it "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do
-    chat_page.visit_channel(channel1)
+    chat_channel_page.fill_composer("")
     chat_channel_page.type_in_composer(
       "this is #random and this is #raspberry-beret and this is #razed which is cool",
     )
@@ -172,10 +156,20 @@ describe "Using #hashtag autocompletion to search for and lookup channels" do
   end
 
   describe "using channel hashtags in the topic composer" do
-    it "renders the selected channel hashtag correctly in the topic composer preview" do
+    it "deprioritises channels in topic autocomplete and shows the selected channel in preview" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      topic_page.type_in_composer("something #rando")
+      topic_page.type_in_composer("something #ra")
+      expect(page).to have_css(
+        ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
+        count: 3,
+      )
+      hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
+      expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+        ["Raspberry", "razed (x0)", "Random"],
+      )
+
+      topic_page.type_in_composer("ndo")
       expect(page).to have_css(
         ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
         count: 1,

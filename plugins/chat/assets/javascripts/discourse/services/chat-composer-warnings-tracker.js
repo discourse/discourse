@@ -4,6 +4,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { isRailsTesting } from "discourse/lib/environment";
 
 const MENTION_RESULT = {
   invalid: -1,
@@ -11,7 +12,7 @@ const MENTION_RESULT = {
   over_members_limit: 1,
 };
 
-const MENTION_DEBOUNCE_MS = 1000;
+const MENTION_DEBOUNCE_MS = isRailsTesting() ? 100 : 1000;
 
 export default class ChatComposerWarningsTracker extends Service {
   @service siteSettings;
