@@ -2,9 +2,12 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import LiveRoomPage from "discourse/plugins/live/discourse/components/live/room-page";
 
 class LiveRoomsStub extends Service {
@@ -26,7 +29,12 @@ class LiveWebrtcStub extends Service {
   @tracked localVideoKind = null;
   @tracked pttEnabled = false;
 
+  inputDeviceId = "system_default";
+  noiseSuppressionMode = "none";
+  noiseSuppressionState = "off";
+  outputDeviceId = "system_default";
   screenShareSupported = true;
+  videoInputDeviceId = "system_default";
   watchingCalls = [];
 
   get activeRoom() {
@@ -736,5 +744,54 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       .exists("renders Move to audience control for stage speakers");
     await click(".live-call-controls__step-down");
     assert.deepEqual(this.liveWebrtc.steppedDownRoomIds, [1]);
+  });
+
+  test("the open device submenu follows devices plugged in after it opened", async function (assert) {
+    let devices = [
+      { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
+    ];
+    sinon
+      .stub(navigator.mediaDevices, "enumerateDevices")
+      .callsFake(async () => devices);
+    const submenuRows = () =>
+      [
+        ...document.querySelectorAll(
+          "[data-content][data-identifier='live-call-submenu'] .btn"
+        ),
+      ].map((row) => row.textContent.trim());
+    const systemDefault = i18n("live.devices.system_default");
+    // On a desktop viewport the submenu floats beside the menu; a mobile one
+    // would draw it as a modal.
+    this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
+
+    await render(
+      <template>
+        <DMenus />
+        <LiveRoomPage @room={{this.room}} />
+      </template>
+    );
+    await click(
+      ".live-call-controls__mic-combo .live-call-controls__combo-caret"
+    );
+    await click(".live-call-menu__device-row");
+
+    assert.deepEqual(
+      submenuRows(),
+      [systemDefault, "Desk mic"],
+      "the submenu lists the microphones known when it opened"
+    );
+
+    devices = [
+      ...devices,
+      { kind: "audioinput", deviceId: "headset", label: "Headset" },
+    ];
+    navigator.mediaDevices.dispatchEvent(new Event("devicechange"));
+    await settled();
+
+    assert.deepEqual(
+      submenuRows(),
+      [systemDefault, "Desk mic", "Headset"],
+      "a microphone plugged in while it is open joins the list"
+    );
   });
 });
