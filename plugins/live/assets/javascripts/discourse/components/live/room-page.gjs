@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -20,6 +20,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import {
   toggleFullscreen,
@@ -97,6 +98,7 @@ export default class LiveRoomPage extends Component {
   @service modal;
   @service routeHistory;
   @service router;
+  @service siteSettings;
   @service liveRooms;
   @service liveWebrtc;
 
@@ -375,6 +377,26 @@ export default class LiveRoomPage extends Component {
       !isTesting() &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
+  }
+
+  get layoutOptions() {
+    return [
+      {
+        id: LAYOUT_AUTO,
+        name: i18n("live.video.layout_auto"),
+        icon: "wand-magic-sparkles",
+      },
+      {
+        id: LAYOUT_PRESENTATION,
+        name: i18n("live.video.layout_presentation"),
+        icon: "person-chalkboard",
+      },
+      {
+        id: LAYOUT_TILED,
+        name: i18n("live.video.layout_tiled"),
+        icon: "table-cells",
+      },
+    ];
   }
 
   get layoutIcon() {
@@ -1054,16 +1076,35 @@ export default class LiveRoomPage extends Component {
                       @item={{dropdown.item}}
                       @room={{this.room}}
                     />
-                    <dropdown.item>
-                      <DButton
-                        class="btn-transparent live-room-page__layout-trigger"
-                        @action={{this.openLayoutMenu}}
-                        @forwardEvent={{true}}
-                        @icon={{this.layoutIcon}}
-                        @label="live.room.layout"
-                        @suffixIcon="angle-right"
-                      />
-                    </dropdown.item>
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <dropdown.item>
+                        <DSelect
+                          class="live-room-page__layout-select"
+                          @clearMode="never"
+                          @icon={{this.layoutIcon}}
+                          @iconField="icon"
+                          @menuItem={{true}}
+                          @onChange={{this.setLayoutMode}}
+                          @options={{this.layoutOptions}}
+                          @selectedIcon="check"
+                          @texts={{hash caption=(i18n "live.room.layout")}}
+                          @value={{this.layoutMode}}
+                          @variant="static"
+                        />
+                      </dropdown.item>
+                    {{else}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent live-room-page__layout-trigger"
+                          @action={{this.openLayoutMenu}}
+                          @forwardEvent={{true}}
+                          @icon={{this.layoutIcon}}
+                          @label="live.room.layout"
+                          @suffixIcon="angle-right"
+                        />
+                      </dropdown.item>
+                    {{/if}}
                     <dropdown.item>
                       <DButton
                         class="btn-transparent"

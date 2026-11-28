@@ -236,6 +236,16 @@ en:
           ai_rnnoise: "AI — RNNoise (lightweight)"
           ai_dtln: "AI — DTLN (balanced)"
           ai_dfn3: "AI — DeepFilterNet (best quality)"
+        noise_suppression_ai_modes:
+          ai_rnnoise:
+            name: "AI — RNNoise"
+            description: "Lightweight"
+          ai_dtln:
+            name: "AI — DTLN"
+            description: "Balanced"
+          ai_dfn3:
+            name: "AI — DeepFilterNet"
+            description: "Best quality"
         noise_suppression_failed: "AI noise cancellation couldn't run, so it was switched off."
         echo_cancellation: "Echo cancellation"
         echo_cancellation_hint: "Prevents others from hearing their own audio through your microphone."
@@ -463,6 +473,7 @@ en:
           add_placeholder: "Enter username..."
           add_button: "Add"
           role: "Role"
+          role_for: "Role for %{username}"
           moderator: "Moderator"
           speaker: "Speaker"
           participant: "Participant"

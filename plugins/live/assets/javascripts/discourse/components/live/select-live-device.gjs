@@ -32,8 +32,7 @@ const LiveDeviceName = <template>
  * - `@onChange`: called with the picked device id.
  * - `@ariaLabelledBy`: the id of the field's label, or
  * - `@caption`: a caption drawn in the trigger that names the field instead.
- * - `@icon`, `@menuGroupIdentifier` and `@menuItem`: passed to the select, for one that sits in
- *   a menu.
+ * - `@icon` and `@menuItem`: passed to the select, for one that sits in a menu.
  */
 export default class SelectLiveDevice extends Component {
   @action
@@ -96,7 +95,6 @@ export default class SelectLiveDevice extends Component {
       @icon={{@icon}}
       @load={{this.load}}
       @loadContext={{hash devices=@devices held=@value}}
-      @menuGroupIdentifier={{@menuGroupIdentifier}}
       @menuItem={{@menuItem}}
       @onChange={{@onChange}}
       @resolveValue={{this.resolve}}

@@ -24,6 +24,7 @@ import { prefetchEngineAssets } from "../../lib/live/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
+  noiseSuppressionModeOption,
 } from "../../lib/live/ns-engines.js";
 import { STT_MODELS, sttModelLabel } from "../../lib/live/stt-models.js";
 import SelectLiveDevice from "../live/select-live-device.gjs";
@@ -98,6 +99,10 @@ export default class LiveVoiceSettingsModal extends Component {
       id: mode,
       name: noiseSuppressionModeLabel(mode),
     }));
+  }
+
+  get noiseSuppressionModeChoices() {
+    return NOISE_SUPPRESSION_MODES.map(noiseSuppressionModeOption);
   }
 
   get sttModelOptions() {
@@ -476,9 +481,10 @@ export default class LiveVoiceSettingsModal extends Component {
                 class="live-voice-settings__noise-suppression-select"
                 @ariaLabelledBy="live-voice-settings-noise-suppression-label"
                 @clearMode="never"
+                @descriptionField="description"
                 @disabled={{this.busy}}
                 @onChange={{this.onNoiseSuppressionModeChange}}
-                @options={{this.noiseSuppressionModeOptions}}
+                @options={{this.noiseSuppressionModeChoices}}
                 @value={{this.liveWebrtc.noiseSuppressionMode}}
                 @variant="static"
               />

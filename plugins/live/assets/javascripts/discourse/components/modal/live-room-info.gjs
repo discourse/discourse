@@ -14,6 +14,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import LiveRoomForm from "discourse/plugins/live/discourse/components/live-room-form";
@@ -352,13 +353,31 @@ export default class LiveRoomInfoModal extends Component {
 
                       {{#if (neq membership.user_id this.room.creator_id)}}
                         <div class="live-room-info-modal__member-actions">
-                          <ComboBox
-                            class="live-room-info-modal__role-select"
-                            @content={{this.roleOptions}}
-                            @onChange={{fn this.updateMemberRole membership}}
-                            @options={{hash none=false}}
-                            @value={{membership.role_name}}
-                          />
+                          {{! TODO (select-kit-replacement-cleanup) }}
+                          {{#if this.siteSettings.enable_new_select_controls}}
+                            <DSelect
+                              class="live-room-info-modal__role-select"
+                              @clearMode="never"
+                              @onChange={{fn this.updateMemberRole membership}}
+                              @options={{this.roleOptions}}
+                              @texts={{hash
+                                ariaLabel=(i18n
+                                  "live.room_info.members.role_for"
+                                  username=membership.user.username
+                                )
+                              }}
+                              @value={{membership.role_name}}
+                              @variant="static"
+                            />
+                          {{else}}
+                            <ComboBox
+                              class="live-room-info-modal__role-select"
+                              @content={{this.roleOptions}}
+                              @onChange={{fn this.updateMemberRole membership}}
+                              @options={{hash none=false}}
+                              @value={{membership.role_name}}
+                            />
+                          {{/if}}
                           <DButton
                             class="btn-flat btn-small live-room-info-modal__remove-btn"
                             @action={{fn this.removeMember membership}}
@@ -401,13 +420,28 @@ export default class LiveRoomInfoModal extends Component {
                         @value={{this.selectedUsernames}}
                       />
                     {{/if}}
-                    <ComboBox
-                      class="live-room-info-modal__role-chooser"
-                      @content={{this.roleOptions}}
-                      @onChange={{this.setSelectedRole}}
-                      @options={{hash none=false}}
-                      @value={{this.selectedRole}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelect
+                        class="live-room-info-modal__role-chooser"
+                        @clearMode="never"
+                        @onChange={{this.setSelectedRole}}
+                        @options={{this.roleOptions}}
+                        @texts={{hash
+                          ariaLabel=(i18n "live.room_info.members.role")
+                        }}
+                        @value={{this.selectedRole}}
+                        @variant="static"
+                      />
+                    {{else}}
+                      <ComboBox
+                        class="live-room-info-modal__role-chooser"
+                        @content={{this.roleOptions}}
+                        @onChange={{this.setSelectedRole}}
+                        @options={{hash none=false}}
+                        @value={{this.selectedRole}}
+                      />
+                    {{/if}}
                     <DButton
                       class="btn-primary live-room-info-modal__add-btn"
                       @action={{this.addMember}}

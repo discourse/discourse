@@ -222,6 +222,22 @@ module("Integration | Component | LiveVoiceSettingsModal", function (hooks) {
       .dSelect(NOISE_SUPPRESSION)
       .hasOptions(NOISE_SUPPRESSION_MODES, "every mode is offered");
 
+    const rnnoise = ".d-select__option[data-value='ai:rnnoise']";
+    assert
+      .dom(`${rnnoise} .d-select__option-content > span:first-child`)
+      .hasText(
+        i18n("live.voice_settings.noise_suppression_ai_modes.ai_rnnoise.name"),
+        "an AI mode is named by its engine"
+      );
+    assert
+      .dom(`${rnnoise} .d-select__option-description`)
+      .hasText(
+        i18n(
+          "live.voice_settings.noise_suppression_ai_modes.ai_rnnoise.description"
+        ),
+        "and describes its trade-off"
+      );
+
     await dSelect(NOISE_SUPPRESSION).select("none");
 
     assert.deepEqual(

@@ -31,16 +31,22 @@ class LiveWebrtcStub extends Service {
   @tracked pttEnabled = false;
 
   @tracked inputDeviceId = "system_default";
-  noiseSuppressionMode = "none";
-  noiseSuppressionState = "off";
+  @tracked noiseSuppressionMode = "none";
+  @tracked noiseSuppressionState = "off";
   outputDeviceId = "system_default";
   screenShareSupported = true;
   videoInputDeviceId = "system_default";
   watchingCalls = [];
   inputDevicePicks = [];
+  noiseSuppressionPicks = [];
 
   get activeRoom() {
     return this.liveRooms.roomById(this.activeRoomId);
+  }
+
+  setNoiseSuppressionMode(mode) {
+    this.noiseSuppressionPicks.push(mode);
+    this.noiseSuppressionMode = mode;
   }
 
   async setInputDevice(deviceId) {
@@ -843,7 +849,7 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     );
   });
 
-  test("opening another submenu closes an open device list", async function (assert) {
+  test("only one of the audio menu's lists is open at a time", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
     sinon
@@ -851,7 +857,8 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       .resolves([
         { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
       ]);
-    const field = ".live-call-menu__input-select";
+    const devices = ".live-call-menu__input-select";
+    const modes = ".live-call-menu__noise-suppression-select";
 
     await render(
       <template>
@@ -862,20 +869,22 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     await click(
       ".live-call-controls__mic-combo .live-call-controls__combo-caret"
     );
-    await dSelect(field).open();
-    await click(".live-call-menu__noise-suppression");
+    await dSelect(devices).open();
+    await dSelect(modes).open();
 
-    assert.dSelect(field).isClosed("only one submenu is open at a time");
+    assert.dSelect(modes).isOpen("the noise suppression list opens");
+    assert.dSelect(devices).isClosed("the device list closes");
+
+    await dSelect(devices).open();
+
+    assert.dSelect(modes).isClosed("opening the device list closes it again");
   });
 
-  test("opening a device list closes another open submenu", async function (assert) {
+  test("picks the noise suppression mode from the audio menu", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
-    this.owner.lookup("service:capabilities").viewport = { sm: true, md: true };
-    sinon
-      .stub(navigator.mediaDevices, "enumerateDevices")
-      .resolves([
-        { kind: "audioinput", deviceId: "desk-mic", label: "Desk mic" },
-      ]);
+    sinon.stub(navigator.mediaDevices, "enumerateDevices").resolves([]);
+    const field = ".live-call-menu__noise-suppression-select";
+
     await render(
       <template>
         <DMenus />
@@ -885,13 +894,89 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     await click(
       ".live-call-controls__mic-combo .live-call-controls__combo-caret"
     );
-    await click(".live-call-menu__noise-suppression");
-    await dSelect(".live-call-menu__input-select").open();
 
     assert
-      .dom(
-        "[data-content][data-identifier='live-call-submenu']:not(.d-select__content)"
-      )
-      .doesNotExist("only one submenu is open at a time");
+      .dom(`${field} .d-select__caption`)
+      .hasText(
+        i18n("live.voice_settings.noise_suppression"),
+        "the select's caption names the field"
+      );
+    assert
+      .dSelect(field)
+      .hasName(
+        i18n("live.voice_settings.noise_suppression_modes.none"),
+        "it names the current mode"
+      );
+
+    await dSelect(field).open();
+
+    const rnnoise = ".d-select__option[data-value='ai:rnnoise']";
+    assert
+      .dom(`${rnnoise} .d-select__option-content > span:first-child`)
+      .hasText(
+        i18n("live.voice_settings.noise_suppression_ai_modes.ai_rnnoise.name"),
+        "an AI mode is named by its engine"
+      );
+    assert
+      .dom(`${rnnoise} .d-select__option-description`)
+      .hasText(
+        i18n(
+          "live.voice_settings.noise_suppression_ai_modes.ai_rnnoise.description"
+        ),
+        "and describes its trade-off"
+      );
+
+    await dSelect(field).select("standard");
+
+    assert.deepEqual(
+      this.liveWebrtc.noiseSuppressionPicks,
+      ["standard"],
+      "the picked mode is handed to the call"
+    );
+  });
+
+  test("locks the noise suppression mode while it starts", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    sinon.stub(navigator.mediaDevices, "enumerateDevices").resolves([]);
+    this.liveWebrtc.noiseSuppressionState = "starting";
+
+    await render(
+      <template>
+        <DMenus />
+        <LiveRoomPage @room={{this.room}} />
+      </template>
+    );
+    await click(
+      ".live-call-controls__mic-combo .live-call-controls__combo-caret"
+    );
+
+    assert
+      .dSelect(".live-call-menu__noise-suppression-select")
+      .isDisabled("the mode can't change until the current one has started");
+  });
+
+  test("picks the layout from the room menu", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const field = ".live-room-page__layout-select";
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+    await click(".live-room-menu-trigger");
+
+    assert
+      .dom(`${field} .d-select__caption`)
+      .hasText(
+        i18n("live.room.layout"),
+        "the select's caption names the field"
+      );
+    assert
+      .dSelect(field)
+      .hasName(i18n("live.video.layout_auto"), "it names the current layout");
+
+    await dSelect(field).open();
+    await dSelect(field).select("presentation");
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "the picked layout is shown");
   });
 });

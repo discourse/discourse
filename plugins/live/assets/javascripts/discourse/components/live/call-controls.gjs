@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -11,6 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import {
   isAiMode,
@@ -26,6 +27,7 @@ import { prefetchEngineAssets } from "../../lib/live/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
+  noiseSuppressionModeOption,
 } from "../../lib/live/ns-engines.js";
 import { queuePosition } from "../../lib/live/speak-queue.js";
 import LiveVideoSettingsModal from "../modal/live-video-settings.gjs";
@@ -199,6 +201,10 @@ export default class LiveCallControls extends Component {
     return this.liveWebrtc.noiseSuppressionState === "on";
   }
 
+  get noiseSuppressionModeOptions() {
+    return NOISE_SUPPRESSION_MODES.map(noiseSuppressionModeOption);
+  }
+
   get noiseSuppressionStarting() {
     return this.liveWebrtc.noiseSuppressionState === "starting";
   }
@@ -364,6 +370,11 @@ export default class LiveCallControls extends Component {
   openVideoSettings(closeMenu) {
     closeMenu?.();
     this.modal.show(LiveVideoSettingsModal);
+  }
+
+  @action
+  pickNoiseSuppressionMode(mode) {
+    this.liveWebrtc.setNoiseSuppressionMode(mode);
   }
 
   @action
@@ -562,7 +573,6 @@ export default class LiveCallControls extends Component {
                     @devices={{this.inputDeviceChoices}}
                     @icon="microphone"
                     @kind="audioinput"
-                    @menuGroupIdentifier={{SUBMENU}}
                     @menuItem={{true}}
                     @onChange={{this.pickInputDevice}}
                     @value={{this.liveWebrtc.inputDeviceId}}
@@ -596,7 +606,6 @@ export default class LiveCallControls extends Component {
                       @devices={{this.outputDeviceChoices}}
                       @icon="volume-high"
                       @kind="audiooutput"
-                      @menuGroupIdentifier={{SUBMENU}}
                       @menuItem={{true}}
                       @onChange={{this.pickOutputDevice}}
                       @value={{this.liveWebrtc.outputDeviceId}}
@@ -622,21 +631,44 @@ export default class LiveCallControls extends Component {
                 {{/if}}
               {{/if}}
               <dropdown.divider />
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent live-call-menu__device-row live-call-menu__noise-suppression"
-                  @action={{this.openNoiseSuppressionMenu}}
-                  @disabled={{this.noiseSuppressionStarting}}
-                  @forwardEvent={{true}}
-                  @icon="discourse-sparkles"
-                  @label="live.voice_settings.noise_suppression"
-                  @suffixIcon="angle-right"
-                >
-                  <span class="live-call-menu__current-device">
-                    {{this.currentNoiseSuppressionModeName}}
-                  </span>
-                </DButton>
-              </dropdown.item>
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <dropdown.item>
+                  <DSelect
+                    class="live-call-menu__noise-suppression-select"
+                    @clearMode="never"
+                    @descriptionField="description"
+                    @disabled={{this.noiseSuppressionStarting}}
+                    @icon="discourse-sparkles"
+                    @menuItem={{true}}
+                    @onChange={{this.pickNoiseSuppressionMode}}
+                    @options={{this.noiseSuppressionModeOptions}}
+                    @selectedIcon="check"
+                    @texts={{hash
+                      caption=(i18n "live.voice_settings.noise_suppression")
+                    }}
+                    @value={{this.liveWebrtc.noiseSuppressionMode}}
+                    @variant="static"
+                  />
+                </dropdown.item>
+              {{else}}
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent live-call-menu__device-row live-call-menu__noise-suppression"
+                    @action={{this.openNoiseSuppressionMenu}}
+                    @disabled={{this.noiseSuppressionStarting}}
+                    @forwardEvent={{true}}
+                    @icon="discourse-sparkles"
+                    @label="live.voice_settings.noise_suppression"
+                    @suffixIcon="angle-right"
+                  >
+                    <span class="live-call-menu__current-device">
+                      {{this.currentNoiseSuppressionModeName}}
+                    </span>
+                  </DButton>
+                </dropdown.item>
+              {{/if}}
+              <dropdown.divider />
               <dropdown.item>
                 <DButton
                   class="btn-transparent"
@@ -672,7 +704,6 @@ export default class LiveCallControls extends Component {
                     @devices={{this.outputDeviceChoices}}
                     @icon="volume-high"
                     @kind="audiooutput"
-                    @menuGroupIdentifier={{SUBMENU}}
                     @menuItem={{true}}
                     @onChange={{this.pickOutputDevice}}
                     @value={{this.liveWebrtc.outputDeviceId}}
@@ -776,7 +807,6 @@ export default class LiveCallControls extends Component {
                     @devices={{this.cameraChoices}}
                     @icon="video"
                     @kind="videoinput"
-                    @menuGroupIdentifier={{SUBMENU}}
                     @menuItem={{true}}
                     @onChange={{this.pickCamera}}
                     @value={{this.liveWebrtc.videoInputDeviceId}}

@@ -40,3 +40,19 @@ export function noiseSuppressionModeLabel(mode) {
     `live.voice_settings.noise_suppression_modes.${mode.replace(":", "_")}`
   );
 }
+
+/**
+ * A mode as a select option. An AI mode is named by its engine, with its trade-off as the
+ * description.
+ */
+export function noiseSuppressionModeOption(mode) {
+  if (!engineForMode(mode)) {
+    return { id: mode, name: noiseSuppressionModeLabel(mode) };
+  }
+  const key = `live.voice_settings.noise_suppression_ai_modes.${mode.replace(":", "_")}`;
+  return {
+    id: mode,
+    name: i18n(`${key}.name`),
+    description: i18n(`${key}.description`),
+  };
+}
